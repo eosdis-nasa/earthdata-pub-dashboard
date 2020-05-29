@@ -1,0 +1,68 @@
+.metadata__details {
+  font-size: .86em;
+  @extend .clearfix;
+  dt {
+    font-weight: $base-font-semibold;
+    width: 22%;
+    padding-right: 8px;
+  }
+  dd {
+    width: 20%;
+    color: $dark-grey;
+    &:nth-of-type(odd) {
+      margin-right: 10%;
+    }
+  }
+  dt, dd {
+    display: inline-block;
+    vertical-align: middle;
+    margin: .75em 0;
+  }
+}
+
+.metadata__provider__collections {
+  a {
+    font-size: .86em;
+  }
+  @extend .clearfix;
+  width: 25%;
+  float: left;
+  margin: .5em 0;
+}
+
+.logs__item {
+  margin-bottom: .5em;
+}
+
+.logs__item--date {
+  color: $light-grey;
+}
+
+.logs__item--level {
+  color: $black;
+}
+
+.logs__item--debug,
+.logs__item--trace {
+  color: $grey;
+}
+
+.logs__item--info {
+  color: $light-green;
+}
+
+.logs__item--warn {
+  color: $orange;
+}
+
+.logs__item--error {
+  color: $error-red;
+}
+
+.logs__item--fatal {
+  color: $error-text-red;
+}
+
+.logs__item--meta {
+  color: $sky-blue;
+}

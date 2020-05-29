@@ -1,0 +1,23 @@
+/******************************************************************
+                    Bootstrap UI
+******************************************************************/
+/*
+We are incorporating the following Bootstrap UI styling
+and behaviors for our Earthdatapub Dashboard components
+*/
+
+/* Bootstrap Variables */
+@import "vars";
+
+/* Bootstrap Utilities */
+@import "utils";
+
+/* Bootstrap Components */
+@import "components";
+
+/* Bootstrap Overrides */
+@import "overrides/breadcrumb";
+@import "overrides/pagination";
+@import "overrides/modal";
+
+/*@import "overrides/reboot";*/

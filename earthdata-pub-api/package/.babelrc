@@ -1,0 +1,14 @@
+{
+  "comments": false,
+  "sourceMaps": "both",
+  "presets": [
+    ["env", {
+      "targets": {
+        "node": "12.18.0"
+      }
+    }]
+  ],
+  "plugins": [
+    "source-map-support"
+  ]
+}

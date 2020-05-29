@@ -1,0 +1,30 @@
+version: "3"
+services:
+  serve_api:
+    image: node:12.18.0
+    network_mode: "service:shim"
+    depends_on:
+      - localstack
+      - elasticsearch
+    command: [ "./localAPI/wait-for-stack.sh", "./node_modules/earthdata-pub-api/api/bin/cli.js", "serve", "--no-reseed" ]
+    working_dir:
+      /dashboard
+    volumes:
+      - ../:/dashboard:cached
+    environment:
+      - LOCALSTACK_HOST=localhost
+      - LOCAL_ES_HOST=localhost
+      - NODE_ENV=test
+      - cmr_provider=EDPUB
+      - FAKE_AUTH=true
+  shim:   # empty container to open ports
+    image: node:12.18.0
+    network_mode: "host"
+    command:
+      bash -c "tail -f /dev/null"
+    working_dir:
+      /dashboard
+    volumes:
+      - ../:/dashboard:cached
+    ports:
+      - "5001:5001"

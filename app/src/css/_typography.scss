@@ -1,0 +1,72 @@
+/***** Fonts Imports ********/
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700&display=swap');
+
+/******* Typography *******/
+h1, h2, h3, h4, h5, h6 {
+  color: $black;
+  margin-bottom: .5em;
+}
+
+.heading--xxlarge {
+  font-size: 3.2em;
+  font-weight: $base-font-bold;
+  color: $white;
+}
+
+.heading--xlarge {
+  font-size: 2em;
+  font-weight: $base-font-semibold;
+  color: $white;
+}
+
+.heading--large {
+  font-size: 1.250em;
+  font-weight: $base-font-regular;
+}
+
+.heading--medium {
+  font-size: 1.125em;
+  font-weight: $base-font-regular;
+}
+
+.heading--small {
+  font-size: 1em;
+  font-weight: $base-font-bold;
+}
+
+.heading--shared-content {
+  display: inline-block;
+}
+
+.heading--shared-content--right {
+  display: inline-block;
+  margin-right: .6em;
+}
+
+.heading__wrapper {
+    &--border {
+      border-bottom: 1px solid $lightest-grey;
+      padding-bottom: .3em;
+      margin-bottom: 1em;
+      margin-top: 2em;
+      h2, h3, h4 {
+      margin-bottom: .5em;
+    }
+  }
+    &--topborder {
+      border-top: 1px solid $lightest-grey;
+      margin-top: 1em;
+      padding-top: 1.5em;
+
+    }
+}
+ 
+
+.with-description {
+  margin-bottom: .1em;
+}
+
+.breadcrumb, .caption {
+  font-size: 0.875em;
+}

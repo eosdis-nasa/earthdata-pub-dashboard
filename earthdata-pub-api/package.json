@@ -1,0 +1,11 @@
+{
+  "name": "earthdata-pub-api",
+  "version": "1.0.0",
+  "description": "Mock api for local dev",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

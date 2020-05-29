@@ -1,0 +1,56 @@
+{
+    "isFulfilled": true,
+    "isRejected": false,
+    "fulfillmentValue": {
+      "type": "PROVIDERS",
+      "data": {
+        "meta": {
+          "name": "cumulus-api",
+          "stack": "localrun",
+          "table": "provider",
+          "limit": 50,
+          "page": 1,
+          "count": 2
+        },
+        "results": [
+          {
+            "createdAt": 1539104943690,
+            "id": "s3_provider",
+            "protocol": "s3",
+            "globalConnectionLimit": 10,
+            "host": "earthdata-pub-test-sandbox-internal",
+            "updatedAt": 1593096647307,
+            "timestamp": 1593096647373
+          },
+          {
+            "createdAt": 1524686535230,
+            "id": "PODAAC_SWOT",
+            "protocol": "s3",
+            "globalConnectionLimit": 10,
+            "host": "earthdata-pub-test-sandbox-internal",
+            "updatedAt": 1593096647302,
+            "timestamp": 1593096647346
+          }
+        ]
+      },
+      "config": {
+        "json": true,
+        "resolveWithFullResponse": true,
+        "simple": false,
+        "type": "PROVIDERS",
+        "method": "GET",
+        "url": "http://localhost:5001/providers",
+        "qs": {
+          "limit": 50,
+          "page": 1,
+          "order": "desc",
+          "sort_by": "timestamp",
+          "timestamp__from": 1593014327158
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTMxODMxMTMsImFjY2Vzc1Rva2VuIjoib2F1dGhjb2RlNzRmYmFmMTkzZCIsInVzZXJuYW1lIjoidGVzdFVzZXIifQ.EBg4QfsP_pNpEruV6oIm9SmViEWiWCTL0USKnCH9uNA"
+        }
+      }
+    }
+  }
