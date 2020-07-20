@@ -1,8 +1,8 @@
 'use strict';
 
-const { CollectionConfigStore } = require('@cumulus/common/collection-config-store');
-const { publishSnsMessage } = require('@cumulus/aws-client/SNS');
-const log = require('@cumulus/common/log');
+const { CollectionConfigStore } = require('earthdata-pub-api/common/collection-config-store');
+const { publishSnsMessage } = require('earthdata-pub-api/aws-client/SNS');
+const log = require('earthdata-pub-api/common/log');
 const Manager = require('./base');
 const { collection: collectionSchema } = require('./schemas');
 const Rule = require('./rules');

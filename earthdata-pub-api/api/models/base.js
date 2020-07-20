@@ -3,10 +3,10 @@
 const get = require('lodash/get');
 const Ajv = require('ajv');
 const pWaitFor = require('p-wait-for');
-const awsServices = require('@cumulus/aws-client/services');
-const DynamoDb = require('@cumulus/aws-client');
-const { RecordDoesNotExist } = require('@cumulus/errors');
-const { inTestMode } = require('@cumulus/common/test-utils');
+const awsServices = require('earthdata-pub-api/aws-client/services');
+const DynamoDb = require('earthdata-pub-api/aws-client');
+const { RecordDoesNotExist } = require('earthdata-pub-api/errors');
+const { inTestMode } = require('earthdata-pub-api/common/test-utils');
 const { errorify } = require('../lib/utils');
 
 async function enableStream(tableName) {

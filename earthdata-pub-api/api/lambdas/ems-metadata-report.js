@@ -5,11 +5,11 @@ const get = require('lodash/get');
 const isFunction = require('lodash/isFunction');
 const sortBy = require('lodash/sortBy');
 
-const { buildS3Uri, deleteS3Files } = require('@cumulus/aws-client/S3');
-const { s3 } = require('@cumulus/aws-client/services');
-const { constructCollectionId } = require('@cumulus/message/Collections');
-const log = require('@cumulus/common/log');
-const CMRSearchConceptQueue = require('@cumulus/cmr-client/CMRSearchConceptQueue');
+const { buildS3Uri, deleteS3Files } = require('earthdata-pub-api/aws-client/S3');
+const { s3 } = require('earthdata-pub-api/aws-client/services');
+const { constructCollectionId } = require('earthdata-pub-api/message/Collections');
+const log = require('earthdata-pub-api/common/log');
+const CMRSearchConceptQueue = require('earthdata-pub-api/cmr-client/CMRSearchConceptQueue');
 const {
   determineReportKey, getExpiredS3Objects, submitReports
 } = require('../lib/ems');

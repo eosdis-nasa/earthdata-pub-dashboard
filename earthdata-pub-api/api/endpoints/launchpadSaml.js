@@ -7,14 +7,14 @@ const { parseString } = require('xml2js');
 const { promisify } = require('util');
 const flatten = require('lodash/flatten');
 const get = require('lodash/get');
-const log = require('@cumulus/common/log');
+const log = require('earthdata-pub-api/common/log');
 
 const {
   getS3Object,
   parseS3Uri,
   s3ObjectExists,
   s3PutObject
-} = require('@cumulus/aws-client/S3');
+} = require('earthdata-pub-api/aws-client/S3');
 
 const { AccessToken } = require('../models');
 const { createJwtToken } = require('../lib/token');

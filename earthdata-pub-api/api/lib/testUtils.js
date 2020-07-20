@@ -2,9 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
-const { randomId } = require('@cumulus/common/test-utils');
-const { sqs } = require('@cumulus/aws-client/services');
-const { putJsonS3Object } = require('@cumulus/aws-client/S3');
+const { randomId } = require('earthdata-pub-api/common/test-utils');
+const { sqs } = require('earthdata-pub-api/aws-client/services');
+const { putJsonS3Object } = require('earthdata-pub-api/aws-client/S3');
 
 const { createJwtToken } = require('./token');
 const { authorizedOAuthUsersKey } = require('../app/auth');

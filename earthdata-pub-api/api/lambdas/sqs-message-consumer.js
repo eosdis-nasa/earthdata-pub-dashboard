@@ -1,10 +1,10 @@
 'use strict';
 
 const get = require('lodash/get');
-const { sqs } = require('@cumulus/aws-client/services');
-const { sqsQueueExists } = require('@cumulus/aws-client/SQS');
-const log = require('@cumulus/common/log');
-const { Consumer } = require('@cumulus/ingest/consumer');
+const { sqs } = require('earthdata-pub-api/aws-client/services');
+const { sqsQueueExists } = require('earthdata-pub-api/aws-client/SQS');
+const log = require('earthdata-pub-api/common/log');
+const { Consumer } = require('earthdata-pub-api/ingest/consumer');
 const rulesHelpers = require('../lib/rulesHelpers');
 const Rule = require('../models/rules');
 

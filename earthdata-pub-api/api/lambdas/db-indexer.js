@@ -3,8 +3,8 @@
 const get = require('lodash/get');
 const pMap = require('p-map');
 const { AttributeValue } = require('dynamodb-data-types');
-const { constructCollectionId } = require('@cumulus/message/Collections');
-const log = require('@cumulus/common/log');
+const { constructCollectionId } = require('earthdata-pub-api/message/Collections');
+const log = require('earthdata-pub-api/common/log');
 const indexer = require('../es/indexer');
 const { Search } = require('../es/search');
 const unwrap = AttributeValue.unwrap;

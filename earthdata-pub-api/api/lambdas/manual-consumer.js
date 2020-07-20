@@ -1,7 +1,7 @@
 'use strict';
 
-const awsServices = require('@cumulus/aws-client/services');
-const log = require('@cumulus/common/log');
+const awsServices = require('earthdata-pub-api/aws-client/services');
+const log = require('earthdata-pub-api/common/log');
 
 const messageConsumer = require('./message-consumer');
 

@@ -2,14 +2,14 @@
 
 const get = require('lodash/get');
 const set = require('lodash/set');
-const StepFunctions = require('@cumulus/aws-client/StepFunctions');
-const log = require('@cumulus/common/log');
+const StepFunctions = require('earthdata-pub-api/aws-client/StepFunctions');
+const log = require('earthdata-pub-api/common/log');
 const {
   getStepExitedEvent,
   getTaskExitedEventOutput
-} = require('@cumulus/common/execution-history');
-const { getMessageExecutionArn } = require('@cumulus/message/Executions');
-const { parseStepMessage, pullStepFunctionEvent } = require('@cumulus/message/StepFunctions');
+} = require('earthdata-pub-api/common/execution-history');
+const { getMessageExecutionArn } = require('earthdata-pub-api/message/Executions');
+const { parseStepMessage, pullStepFunctionEvent } = require('earthdata-pub-api/message/StepFunctions');
 
 const executionStatusToWorkflowStatus = (executionStatus) => {
   const statusMap = {

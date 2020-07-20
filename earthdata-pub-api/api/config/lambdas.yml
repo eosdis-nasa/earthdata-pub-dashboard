@@ -2,14 +2,14 @@ sqs2sf:
   handler: index.sqs2sfHandler
   timeout: 200
   memory: 128
-  source: 'node_modules/earthdata-pub-api/api/dist/sfStarter/'
+  source: 'earthdata-pub-api/api/dist/sfStarter/'
   launchInVpc: true
 
 sqs2sfThrottle:
   handler: index.sqs2sfThrottleHandler
   timeout: 200
   memory: 128
-  source: 'node_modules/earthdata-pub-api/api/dist/sfStarter/'
+  source: 'earthdata-pub-api/api/dist/sfStarter/'
   launchInVpc: true
   tables:
     - SemaphoresTable
@@ -20,14 +20,14 @@ log2elasticsearch:
   memory: 320
   useElasticSearch: '{{es.name}}'
   launchInVpc: true
-  source: 'node_modules/earthdata-pub-api/api/dist/indexer/'
+  source: 'earthdata-pub-api/api/dist/indexer/'
   namedLambdaDeadLetterQueue: true
 
 dbIndexer:
   handler: index.handler
   timeout: 300
   memory: 320
-  source: 'node_modules/earthdata-pub-api/api/dist/dbIndexer/'
+  source: 'earthdata-pub-api/api/dist/dbIndexer/'
   useElasticSearch: '{{es.name}}'
   tables:
     - FilesTable
@@ -40,7 +40,7 @@ fallbackConsumer:
   handler: index.handler
   timeout: 100
   memory: 256
-  source: 'node_modules/earthdata-pub-api/api/dist/messageConsumer/'
+  source: 'earthdata-pub-api/api/dist/messageConsumer/'
   deadletterqueue: kinesisFailure
   launchInVpc: true
   tables:
@@ -54,7 +54,7 @@ cleanExecutions:
   handler: index.handler
   timeout: 900
   memory: 192
-  source: 'node_modules/earthdata-pub-api/api/dist/cleanExecutions/'
+  source: 'earthdata-pub-api/api/dist/cleanExecutions/'
   namedLambdaDeadLetterQueue: true
   launchInVpc: true
   tables:
@@ -70,7 +70,7 @@ CustomBootstrap:
   handler: index.handler
   timeout: 300
   memory: 320
-  source: 'node_modules/earthdata-pub-api/api/dist/bootstrap/'
+  source: 'earthdata-pub-api/api/dist/bootstrap/'
   launchInVpc: true
   envs:
     system_bucket: '{{system_bucket}}'
@@ -79,7 +79,7 @@ EmsIngestReport:
   handler: index.handler
   timeout: 300
   memory: 320
-  source: 'node_modules/earthdata-pub-api/api/dist/emsIngestReport/'
+  source: 'earthdata-pub-api/api/dist/emsIngestReport/'
   useElasticSearch: '{{es.name}}'
   launchInVpc: true
   tables:
@@ -101,7 +101,7 @@ EmsDistributionReport:
   handler: index.handler
   timeout: 900
   memory: 320
-  source: 'node_modules/earthdata-pub-api/api/dist/emsDistributionReport/'
+  source: 'earthdata-pub-api/api/dist/emsDistributionReport/'
   launchInVpc: true
   tables:
     - CollectionsTable
@@ -124,7 +124,7 @@ EmsProductMetadataReport:
   handler: index.handler
   timeout: 300
   memory: 320
-  source: 'node_modules/earthdata-pub-api/api/dist/emsProductMetadataReport/'
+  source: 'earthdata-pub-api/api/dist/emsProductMetadataReport/'
   launchInVpc: true
   tables:
     - CollectionsTable
@@ -147,7 +147,7 @@ executeMigrations:
   timeout: 300
   useElasticSearch: '{{es.name}}'
   memory: 1024
-  source: 'node_modules/earthdata-pub-api/api/dist/executeMigrations/'
+  source: 'earthdata-pub-api/api/dist/executeMigrations/'
   launchInVpc: true
   tables:
     - GranulesTable
@@ -166,7 +166,7 @@ messageConsumer:
   handler: index.handler
   timeout: 100
   memory: 256
-  source: 'node_modules/earthdata-pub-api/api/dist/messageConsumer/'
+  source: 'earthdata-pub-api/api/dist/messageConsumer/'
   launchInVpc: true
   tables:
     - RulesTable
@@ -180,7 +180,7 @@ messageConsumer:
 
 CreateReconciliationReport:
   handler: index.handler
-  source: 'node_modules/earthdata-pub-api/api/dist/createReconciliationReport/'
+  source: 'earthdata-pub-api/api/dist/createReconciliationReport/'
   launchInVpc: true
   memory: 256
   useDistributionApi: true
@@ -201,7 +201,7 @@ ScheduleSF:
   handler: index.schedule
   timeout: 100
   memory: 192
-  source: 'node_modules/earthdata-pub-api/api/dist/sfScheduler/'
+  source: 'earthdata-pub-api/api/dist/sfScheduler/'
   launchInVpc: true
   tables:
     - CollectionsTable
@@ -212,28 +212,28 @@ ScheduleSF:
 
 BulkDelete:
   handler: index.handler
-  source: 'node_modules/earthdata-pub-api/api/dist/bulkDelete/'
+  source: 'earthdata-pub-api/api/dist/bulkDelete/'
   launchInVpc: true
 
 KinesisInboundEventLogger:
   handler: index.handler
   timeout: 300
   memory: 128
-  source: 'node_modules/earthdata-pub-api/api/dist/payloadLogger/'
+  source: 'earthdata-pub-api/api/dist/payloadLogger/'
   launchInVpc: true
 
 KinesisOutboundEventLogger:
   handler: index.handler
   timeout: 300
   memory: 512
-  source: 'node_modules/earthdata-pub-api/api/dist/payloadLogger/'
+  source: 'earthdata-pub-api/api/dist/payloadLogger/'
   launchInVpc: true
 
 sfSemaphoreDown:
   handler: index.handler
   timeout: 100
   memory: 512
-  source: 'node_modules/earthdata-pub-api/api/dist/sfSemaphoreDown/'
+  source: 'earthdata-pub-api/api/dist/sfSemaphoreDown/'
   launchInVpc: true
   tables:
     - SemaphoresTable
@@ -242,7 +242,7 @@ IndexFromDatabase:
   handler: index.handler
   timeout: 300
   memory: 512
-  source: 'node_modules/earthdata-pub-api/api/dist/indexFromDatabase/'
+  source: 'earthdata-pub-api/api/dist/indexFromDatabase/'
   launchInVpc: true
   useElasticSearch: '{{es.name}}'
 
@@ -250,7 +250,7 @@ reportExecutions:
   handler: index.handler
   timeout: 30
   memory: 128
-  source: 'node_modules/earthdata-pub-api/api/dist/reportExecutions/'
+  source: 'earthdata-pub-api/api/dist/reportExecutions/'
   launchInVpc: true
   tables:
     - ExecutionsTable
@@ -259,7 +259,7 @@ reportGranules:
   handler: index.handler
   timeout: 30
   memory: 256
-  source: 'node_modules/earthdata-pub-api/api/dist/reportGranules/'
+  source: 'earthdata-pub-api/api/dist/reportGranules/'
   launchInVpc: true
   tables:
     - GranulesTable
@@ -268,7 +268,7 @@ reportSubmissions:
   handler: index.handler
   timeout: 30
   memory: 256
-  source: 'node_modules/earthdata-pub-api/api/dist/reportSubmissions/'
+  source: 'earthdata-pub-api/api/dist/reportSubmissions/'
   launchInVpc: true
   tables:
     - SubmissionsTable
@@ -277,7 +277,7 @@ reportPdrs:
   handler: index.handler
   timeout: 30
   memory: 128
-  source: 'node_modules/earthdata-pub-api/api/dist/reportPdrs/'
+  source: 'earthdata-pub-api/api/dist/reportPdrs/'
   launchInVpc: true
   tables:
     - PdrsTable
@@ -286,7 +286,7 @@ BulkOperation:
   handler: index.handler
   timeout: 300
   memory: 512
-  source: 'node_modules/earthdata-pub-api/api/dist/bulkOperation/'
+  source: 'earthdata-pub-api/api/dist/bulkOperation/'
   launchInVpc: true
   tables:
     - GranulesTable
@@ -300,7 +300,7 @@ sqsMessageConsumer:
   handler: index.handler
   timeout: 100
   memory: 256
-  source: 'node_modules/earthdata-pub-api/api/dist/sqsMessageConsumer/'
+  source: 'earthdata-pub-api/api/dist/sqsMessageConsumer/'
   launchInVpc: true
   tables:
     - RulesTable

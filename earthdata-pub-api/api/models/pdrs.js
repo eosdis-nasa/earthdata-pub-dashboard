@@ -2,11 +2,11 @@
 
 const get = require('lodash/get');
 
-const StepFunctions = require('@cumulus/aws-client/StepFunctions');
-const log = require('@cumulus/common/log');
-const { getCollectionIdFromMessage } = require('@cumulus/message/Collections');
-const { getMessageExecutionArn } = require('@cumulus/message/Executions');
-const pvl = require('@cumulus/pvl');
+const StepFunctions = require('earthdata-pub-api/aws-client/StepFunctions');
+const log = require('earthdata-pub-api/common');
+const { getCollectionIdFromMessage } = require('earthdata-pub-api/message/Collections');
+const { getMessageExecutionArn } = require('earthdata-pub-api/message/Executions');
+const pvl = require('earthdata-pub-api/pvl');
 
 const Manager = require('./base');
 const pdrSchema = require('./schemas').pdr;

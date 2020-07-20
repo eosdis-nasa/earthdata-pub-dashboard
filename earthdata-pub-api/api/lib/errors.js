@@ -1,6 +1,6 @@
 'use strict';
 
-const { createErrorType } = require('@cumulus/errors');
+const { createErrorType } = require('earthdata-pub-api/errors');
 
 module.exports.TokenUnauthorizedUserError = createErrorType('TokenUnauthorizedUserError');
 module.exports.IndexExistsError = createErrorType('IndexExistsError');

@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const Dyno = require('@mapbox/dyno');
-const { inTestMode, getLocalstackEndpoint } = require('@cumulus/common/test-utils');
+const { inTestMode, getLocalstackEndpoint } = require('earthdata-pub-api/common/test-utils');
 const stream = require('stream');
 
 /**

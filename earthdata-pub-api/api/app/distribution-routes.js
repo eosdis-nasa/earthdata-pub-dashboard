@@ -1,7 +1,7 @@
 const router = require('express-promise-router')();
 
-const { randomId } = require('@cumulus/common/test-utils');
-const { RecordDoesNotExist } = require('@cumulus/errors');
+const { randomId } = require('earthdata-pub-api/common/test-utils');
+const { RecordDoesNotExist } = require('earthdata-pub-api/errors');
 const {
   getConfigurations,
   handleRedirectRequest,

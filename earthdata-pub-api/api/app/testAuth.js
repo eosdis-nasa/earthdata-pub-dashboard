@@ -1,6 +1,6 @@
 'use strict';
 
-const { randomId } = require('@cumulus/common/test-utils');
+const { randomId } = require('earthdata-pub-api/common/test-utils');
 const get = require('lodash/get');
 const {
   JsonWebTokenError,

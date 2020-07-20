@@ -1,6 +1,6 @@
 'use strict';
 
-const { constructCollectionId } = require('@cumulus/common/collection-config-store');
+const { constructCollectionId } = require('earthdata-pub-api/common/collection-config-store');
 const cloneDeep = require('lodash/cloneDeep');
 const { BaseSearch } = require('./search');
 

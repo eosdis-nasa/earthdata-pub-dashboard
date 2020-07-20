@@ -10,7 +10,7 @@ const isError = require('lodash/isError');
 const exec = util.promisify(require('child_process').exec);
 const fs = require('fs');
 const url = require('url');
-const Logger = require('@cumulus/logger');
+const Logger = require('earthdata-pub-api/logger');
 
 const logger = new Logger({ sender: 'ecs/async-operation' });
 

@@ -1,8 +1,8 @@
 #!/bin/sh
 # wait-for-stack.sh - Wait until both Elasticsearch and Localstack are available then execute command.
 # for example, a docker-compose.yml file with:
-#     command: [ "./localAPI/wait-for-stack.sh", "./node_modules/earthdata-pub-api/api/bin/cli.js", "serve", "--no-reseed" ]
-# would run the command `./node_modules/earthdata-pub-api/api/bin/cli.js serve --no-reseed` when the stack becomes ready.
+#     command: [ "./localAPI/wait-for-stack.sh", ".earthdata-pub-api/api/bin/cli.js", "serve", "--no-reseed" ]
+# would run the command `.earthdata-pub-api/api/bin/cli.js serve --no-reseed` when the stack becomes ready.
 
 set -e
 

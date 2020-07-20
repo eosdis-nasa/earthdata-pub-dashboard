@@ -1,10 +1,10 @@
 'use strict';
 
-const { getJsonS3Object, listS3ObjectsV2 } = require('@cumulus/aws-client/S3');
+const { getJsonS3Object, listS3ObjectsV2 } = require('earthdata-pub-api/aws-client/S3');
 const {
   getWorkflowsListKeyPrefix,
   getWorkflowFileKey
-} = require('@cumulus/common/workflows');
+} = require('earthdata-pub-api/common/workflows');
 const router = require('express-promise-router')();
 
 /**

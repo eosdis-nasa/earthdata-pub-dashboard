@@ -1,9 +1,9 @@
 'use strict';
 
 const isIp = require('is-ip');
-const KMS = require('@cumulus/aws-client/KMS');
-const { isNil } = require('@cumulus/common/util');
-const { isValidHostname } = require('@cumulus/common/string');
+const KMS = require('earthdata-pub-api/aws-client/KMS');
+const { isNil } = require('earthdata-pub-api/common/util');
+const { isValidHostname } = require('earthdata-pub-api/common/string');
 
 const Manager = require('./base');
 const Rule = require('./rules');

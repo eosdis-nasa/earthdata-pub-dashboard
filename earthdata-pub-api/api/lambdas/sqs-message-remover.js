@@ -2,16 +2,16 @@
 
 const get = require('lodash/get');
 
-const { sqs } = require('@cumulus/aws-client/services');
-const { deleteSQSMessage } = require('@cumulus/aws-client/SQS');
+const { sqs } = require('earthdata-pub-api/aws-client/services');
+const { deleteSQSMessage } = require('earthdata-pub-api/aws-client/SQS');
 const {
   getSfEventMessageObject,
   getSfEventStatus,
   isFailedSfStatus,
   isSfExecutionEvent,
   isTerminalSfStatus
-} = require('@cumulus/common/cloudwatch-event');
-const log = require('@cumulus/common/log');
+} = require('earthdata-pub-api/common/cloudwatch-event');
+const log = require('earthdata-pub-api/common/log');
 
 
 /**

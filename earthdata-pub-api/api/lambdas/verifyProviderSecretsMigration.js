@@ -1,9 +1,9 @@
 'use strict';
 
-const Logger = require('@cumulus/logger');
-const KMS = require('@cumulus/aws-client/KMS');
-const { dynamodbDocClient } = require('@cumulus/aws-client/services');
-const { isNil } = require('@cumulus/common/util');
+const Logger = require('earthdata-pub-api/logger');
+const KMS = require('earthdata-pub-api/aws-client/KMS');
+const { dynamodbDocClient } = require('earthdata-pub-api/aws-client/services');
+const { isNil } = require('earthdata-pub-api/common/util');
 
 const verifyProvider = async (provider) => {
   if (provider.encrypted === true) {

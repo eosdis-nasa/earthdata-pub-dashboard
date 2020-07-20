@@ -17,9 +17,9 @@ const chunk = require('lodash/chunk');
 const get = require('lodash/get');
 const pick = require('lodash/pick');
 const pMap = require('p-map');
-const { noop } = require('@cumulus/common/util');
-const { dynamodb, dynamodbDocClient } = require('@cumulus/aws-client/services');
-const { isNonEmptyString } = require('@cumulus/common/string');
+const { noop } = require('earthdata-pub-api/common/util');
+const { dynamodb, dynamodbDocClient } = require('earthdata-pub-api/aws-client/services');
+const { isNonEmptyString } = require('earthdata-pub-api/common/string');
 
 /**
  * Return the name of the Granule Files cache table

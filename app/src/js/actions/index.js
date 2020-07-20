@@ -4,7 +4,7 @@ import compareVersions from 'compare-versions';
 import { get as getProperty } from 'object-path';
 import requestPromise from 'request-promise';
 import { history } from '../store/configureStore';
-import { CMR } from '@cumulus/cmrjs';
+import { CMR } from 'earthdata-pub-api/cmrjs';
 import isEmpty from 'lodash.isempty';
 import cloneDeep from 'lodash.clonedeep';
 

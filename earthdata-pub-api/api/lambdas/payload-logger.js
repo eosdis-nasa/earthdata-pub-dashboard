@@ -1,7 +1,7 @@
 'use strict';
 
-const log = require('@cumulus/common/log');
-const { inTestMode, throwTestError } = require('@cumulus/common/test-utils');
+const log = require('earthdata-pub-api/common/log');
+const { inTestMode, throwTestError } = require('earthdata-pub-api/common/test-utils');
 
 /**
  * Lambda function dumps the incoming event to a log

@@ -2,7 +2,7 @@
 
 const router = require('express-promise-router')();
 
-const log = require('@cumulus/common/log');
+const log = require('earthdata-pub-api/common/log');
 
 const { AsyncOperation } = require('../models');
 const { IndexExistsError } = require('../lib/errors');

@@ -5,8 +5,8 @@ const {
   TokenExpiredError
 } = require('jsonwebtoken');
 
-const { getJsonS3Object } = require('@cumulus/aws-client/S3');
-const log = require('@cumulus/common/log');
+const { getJsonS3Object } = require('earthdata-pub-api/aws-client/S3');
+const log = require('earthdata-pub-api/common/log');
 
 const { ensureLaunchpadAPIAuthorized, launchpadProtectedAuth } = require('./launchpadAuth');
 const { AccessToken } = require('../models');

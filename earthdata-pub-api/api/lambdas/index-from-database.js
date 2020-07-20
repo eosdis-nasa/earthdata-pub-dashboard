@@ -1,8 +1,8 @@
 'use strict';
 
-const log = require('@cumulus/common/log');
+const log = require('earthdata-pub-api/common/log');
 
-const DynamoDbSearchQueue = require('@cumulus/aws-client/DynamoDbSearchQueue');
+const DynamoDbSearchQueue = require('earthdata-pub-api/aws-client/DynamoDbSearchQueue');
 
 const { Search } = require('../es/search');
 const indexer = require('../es/indexer');

@@ -1,5 +1,5 @@
-const DynamoDbSearchQueue = require('@cumulus/aws-client/DynamoDbSearchQueue');
-const { isNil } = require('@cumulus/common/util');
+const DynamoDbSearchQueue = require('earthdata-pub-api/aws-client/DynamoDbSearchQueue');
+const { isNil } = require('earthdata-pub-api/common/util');
 
 const { translateSubmission } = require('./submissions');
 

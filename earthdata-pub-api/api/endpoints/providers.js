@@ -1,8 +1,8 @@
 'use strict';
 
 const router = require('express-promise-router')();
-const { inTestMode } = require('@cumulus/common/test-utils');
-const { RecordDoesNotExist } = require('@cumulus/errors');
+const { inTestMode } = require('earthdata-pub-api/common/test-utils');
+const { RecordDoesNotExist } = require('earthdata-pub-api/errors');
 const models = require('../models');
 const { AssociatedRulesError } = require('../lib/errors');
 const { Search } = require('../es/search');

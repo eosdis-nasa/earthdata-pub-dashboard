@@ -8,9 +8,9 @@
 'use strict';
 
 const get = require('lodash/get');
-const log = require('@cumulus/common/log');
+const log = require('earthdata-pub-api/common/log');
 const pLimit = require('p-limit');
-const { inTestMode } = require('@cumulus/common/test-utils');
+const { inTestMode } = require('earthdata-pub-api/common/test-utils');
 const { Search, defaultIndexAlias } = require('../es/search');
 const mappings = require('../models/mappings.json');
 

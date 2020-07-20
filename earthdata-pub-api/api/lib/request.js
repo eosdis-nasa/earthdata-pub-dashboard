@@ -1,4 +1,4 @@
-const log = require('@cumulus/common/log');
+const log = require('earthdata-pub-api/common/log');
 
 const {
   TokenUnauthorizedUserError

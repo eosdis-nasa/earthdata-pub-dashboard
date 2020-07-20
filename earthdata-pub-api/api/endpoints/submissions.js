@@ -3,9 +3,9 @@
 const lodashGet = require('lodash/get');
 const pMap = require('p-map');
 const router = require('express-promise-router')();
-const { deleteS3Object } = require('@cumulus/aws-client/S3');
-const log = require('@cumulus/common/log');
-const { inTestMode } = require('@cumulus/common/test-utils');
+const { deleteS3Object } = require('earthdata-pub-api/aws-client/S3');
+const log = require('earthdata-pub-api/common/log');
+const { inTestMode } = require('earthdata-pub-api/common/test-utils');
 const Search = require('../es/search').Search;
 const indexer = require('../es/indexer');
 const models = require('../models');

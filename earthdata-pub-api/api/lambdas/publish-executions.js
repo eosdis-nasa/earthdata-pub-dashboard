@@ -1,7 +1,7 @@
 'use strict';
 
 const attr = require('dynamodb-data-types').AttributeValue;
-const { publishSnsMessage } = require('@cumulus/aws-client/SNS');
+const { publishSnsMessage } = require('earthdata-pub-api/aws-client/SNS');
 
 /**
  * Publish SNS messages for execution reporting.

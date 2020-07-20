@@ -1,9 +1,9 @@
-const DynamoDb = require('@cumulus/aws-client');
+const DynamoDb = require('earthdata-pub-api/aws-client');
 const {
   isConditionalCheckException,
   ResourcesLockedError
-} = require('@cumulus/errors');
-const Logger = require('@cumulus/logger');
+} = require('earthdata-pub-api/errors');
+const Logger = require('earthdata-pub-api/logger');
 
 const log = new Logger({ sender: 'api/Semaphore' });
 

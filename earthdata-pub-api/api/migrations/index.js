@@ -1,9 +1,9 @@
 'use strict';
 
 const path = require('path');
-const { s3 } = require('@cumulus/aws-client/services');
-const { listS3ObjectsV2 } = require('@cumulus/aws-client/S3');
-const log = require('@cumulus/common/log');
+const { s3 } = require('earthdata-pub-api/aws-client/services');
+const { listS3ObjectsV2 } = require('earthdata-pub-api/aws-client/S3');
+const log = require('earthdata-pub-api/common/log');
 
 /**
  * This function compares a list of all migrations against the list of

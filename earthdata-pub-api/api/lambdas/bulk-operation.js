@@ -1,6 +1,6 @@
 const elasticsearch = require('@elastic/elasticsearch');
 
-const log = require('@cumulus/common/log');
+const log = require('earthdata-pub-api/common/log');
 
 const GranuleModel = require('../models/granules');
 const SCROLL_SIZE = 500; // default size in Kibana

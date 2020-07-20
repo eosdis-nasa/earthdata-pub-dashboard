@@ -1,6 +1,6 @@
 'use strict';
 
-const DynamoDb = require('@cumulus/aws-client');
+const DynamoDb = require('earthdata-pub-api/aws-client');
 const Manager = require('./base');
 const { accessToken: accessTokenSchema } = require('./schemas');
 

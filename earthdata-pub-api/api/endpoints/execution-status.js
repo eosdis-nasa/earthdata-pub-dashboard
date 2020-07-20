@@ -1,10 +1,10 @@
 'use strict';
 
 const router = require('express-promise-router')();
-const { getStateMachineArnFromExecutionArn } = require('@cumulus/message/Executions');
-const { pullStepFunctionEvent } = require('@cumulus/message/StepFunctions');
-const StepFunctions = require('@cumulus/aws-client/StepFunctions');
-const { RecordDoesNotExist } = require('@cumulus/errors');
+const { getStateMachineArnFromExecutionArn } = require('earthdata-pub-api/message/Executions');
+const { pullStepFunctionEvent } = require('earthdata-pub-api/message/StepFunctions');
+const StepFunctions = require('earthdata-pub-api/aws-client/StepFunctions');
+const { RecordDoesNotExist } = require('earthdata-pub-api/errors');
 const models = require('../models');
 
 /**

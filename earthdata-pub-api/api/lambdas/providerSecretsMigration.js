@@ -1,10 +1,10 @@
 'use strict';
 
-const KMS = require('@cumulus/aws-client/KMS');
-const { dynamodbDocClient } = require('@cumulus/aws-client/services');
-const { S3KeyPairProvider } = require('@cumulus/common/key-pair-provider');
-const { isNonEmptyString } = require('@cumulus/common/string');
-const { isNil } = require('@cumulus/common/util');
+const KMS = require('earthdata-pub-api/aws-client/KMS');
+const { dynamodbDocClient } = require('earthdata-pub-api/aws-client/services');
+const { S3KeyPairProvider } = require('earthdata-pub-api/common/key-pair-provider');
+const { isNonEmptyString } = require('earthdata-pub-api/common/string');
+const { isNil } = require('earthdata-pub-api/common/util');
 const Provider = require('../models/providers');
 
 const getDecryptedField = async (provider, field) => {

@@ -13,9 +13,9 @@
 const cloneDeep = require('lodash/cloneDeep');
 const isString = require('lodash/isString');
 const zlib = require('zlib');
-const { constructCollectionId } = require('@cumulus/message/Collections');
-const log = require('@cumulus/common/log');
-const { inTestMode } = require('@cumulus/common/test-utils');
+const { constructCollectionId } = require('earthdata-pub-api/message/Collections');
+const log = require('earthdata-pub-api/common/log');
+const { inTestMode } = require('earthdata-pub-api/common/test-utils');
 
 const { Search, defaultIndexAlias } = require('./search');
 const { Granule } = require('../models');

@@ -1,6 +1,6 @@
-const { dynamodbDocClient } = require('@cumulus/aws-client/services');
-const { ResourcesLockedError } = require('@cumulus/errors');
-const log = require('@cumulus/common/log');
+const { dynamodbDocClient } = require('earthdata-pub-api/aws-client/services');
+const { ResourcesLockedError } = require('earthdata-pub-api/errors');
+const log = require('earthdata-pub-api/common/log');
 const Semaphore = require('./Semaphore');
 
 /**

@@ -5,9 +5,9 @@ const flatten = require('lodash/flatten');
 const moment = require('moment');
 const os = require('os');
 const path = require('path');
-const { buildS3Uri, deleteS3Files } = require('@cumulus/aws-client/S3');
-const awsServices = require('@cumulus/aws-client/services');
-const log = require('@cumulus/common/log');
+const { buildS3Uri, deleteS3Files } = require('earthdata-pub-api/aws-client/S3');
+const awsServices = require('earthdata-pub-api/aws-client/services');
+const log = require('earthdata-pub-api/common/log');
 const {
   buildReportFileName,
   buildStartEndTimes,

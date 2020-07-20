@@ -1,9 +1,9 @@
 'use strict';
 
 const pLimit = require('p-limit');
-const { promiseS3Upload } = require('@cumulus/aws-client/S3');
-const { s3 } = require('@cumulus/aws-client/services');
-const { randomId, inTestMode } = require('@cumulus/common/test-utils');
+const { promiseS3Upload } = require('earthdata-pub-api/aws-client/S3');
+const { s3 } = require('earthdata-pub-api/aws-client/services');
+const { randomId, inTestMode } = require('earthdata-pub-api/common/test-utils');
 const bootstrap = require('../lambdas/bootstrap');
 const models = require('../models');
 const testUtils = require('../lib/testUtils');

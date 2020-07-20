@@ -2,7 +2,7 @@ publishReports:
   handler: index.handler
   timeout: 30
   memory: 512
-  source: 'node_modules/earthdata-pub-api/api/dist/publishReports/'
+  source: 'earthdata-pub-api/api/dist/publishReports/'
   launchInVpc: true
   tables:
     - ExecutionsTable

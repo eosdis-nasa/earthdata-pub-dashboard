@@ -1,0 +1,88 @@
+{
+  "_args": [
+    [
+      "earthdata-pub-api/cmrjs@1.11.0",
+      "/home/5kb/git/cumulus-dashboard"
+    ]
+  ],
+  "_from": "earthdata-pub-api/cmrjs@1.11.0",
+  "_id": "earthdata-pub-api/cmrjs@1.11.0",
+  "_inBundle": false,
+  "_integrity": "sha512-hCDz1Qjt4iflK3rIkfT3Aa8NeTkrU3kICpDAriEn8kdmyxX9c/OuNAd2pM+v3w/MZVipoEmkAg0C7l0u9CBLPQ==",
+  "_location": "/earthdata-pub-api/cmrjs",
+  "_phantomChildren": {
+    "dns-packet": "1.3.1",
+    "got": "8.3.2",
+    "is-ip": "2.0.0",
+    "pify": "3.0.0"
+  },
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "earthdata-pub-api/cmrjs@1.11.0",
+    "name": "earthdata-pub-api/cmrjs",
+    "escapedName": "@cumulus%2fcmrjs",
+    "scope": "@cumulus",
+    "rawSpec": "1.11.0",
+    "saveSpec": null,
+    "fetchSpec": "1.11.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/earthdata-pub-api/cmrjs/-/cmrjs-1.11.0.tgz",
+  "_spec": "1.11.0",
+  "_where": "/home/5kb/git/cumulus-dashboard",
+  "author": {
+    "name": "Cumulus Authors"
+  },
+  "ava": {
+    "files": "tests/*.js",
+    "serial": true
+  },
+  "bugs": {
+    "url": "https://github.com/nasa/cumulus/issues"
+  },
+  "dependencies": {
+    "earthdata-pub-api/common": "^1.11.0",
+    "got": "^8.3.0",
+    "lodash.get": "^4.4.2",
+    "lodash.property": "^4.4.2",
+    "public-ip": "^2.3.5",
+    "xml2js": "^0.4.19"
+  },
+  "description": "A node SDK for CMR",
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "lodash.some": "^4.6.0",
+    "nock": "^10.0.2",
+    "nyc": "^11.6.0",
+    "sinon": "^7.1.1"
+  },
+  "engines": {
+    "node": ">=8.10.0"
+  },
+  "homepage": "https://github.com/nasa/cumulus#readme",
+  "keywords": [
+    "CUMULUS"
+  ],
+  "license": "Apache-2.0",
+  "name": "earthdata-pub-api/cmrjs",
+  "nyc": {
+    "exclude": [
+      "tests"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nasa/cumulus.git"
+  },
+  "scripts": {
+    "test": "ava",
+    "test-coverage": "nyc ava"
+  },
+  "version": "1.11.0"
+}

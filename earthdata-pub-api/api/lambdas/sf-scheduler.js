@@ -2,9 +2,9 @@
 
 const get = require('lodash/get');
 
-const SQS = require('@cumulus/aws-client/SQS');
-const { buildQueueMessageFromTemplate } = require('@cumulus/message/Build');
-const { isNil } = require('@cumulus/common/util');
+const SQS = require('earthdata-pub-api/aws-client/SQS');
+const { buildQueueMessageFromTemplate } = require('earthdata-pub-api/message/Build');
+const { isNil } = require('earthdata-pub-api/common/util');
 const Collection = require('../models/collections');
 const Provider = require('../models/providers');
 

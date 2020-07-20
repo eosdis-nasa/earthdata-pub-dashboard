@@ -3,9 +3,9 @@
 const router = require('express-promise-router')();
 const {
   deleteS3Object
-} = require('@cumulus/aws-client/S3');
-const { inTestMode } = require('@cumulus/common/test-utils');
-const { RecordDoesNotExist } = require('@cumulus/errors');
+} = require('earthdata-pub-api/aws-client/S3');
+const { inTestMode } = require('earthdata-pub-api/common/test-utils');
+const { RecordDoesNotExist } = require('earthdata-pub-api/errors');
 const Search = require('../es/search').Search;
 const models = require('../models');
 

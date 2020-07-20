@@ -3,8 +3,8 @@
 const Ajv = require('ajv');
 const get = require('lodash/get');
 const set = require('lodash/set');
-const { sns } = require('@cumulus/aws-client/services');
-const log = require('@cumulus/common/log');
+const { sns } = require('earthdata-pub-api/aws-client/services');
+const log = require('earthdata-pub-api/common/log');
 const Rule = require('../models/rules');
 const kinesisSchema = require('./kinesis-consumer-event-schema.json');
 const { lookupCollectionInEvent, queueMessageForRule } = require('../lib/rulesHelpers');

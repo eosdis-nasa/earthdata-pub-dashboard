@@ -5,12 +5,12 @@ const {
   getSfEventStatus,
   isSfExecutionEvent,
   isTerminalSfStatus
-} = require('@cumulus/common/cloudwatch-event');
+} = require('earthdata-pub-api/common/cloudwatch-event');
 const {
   getQueueName,
   hasQueueAndExecutionLimit
-} = require('@cumulus/message/Queue');
-const stepFunctions = require('@cumulus/message/StepFunctions');
+} = require('earthdata-pub-api/message/Queue');
+const stepFunctions = require('earthdata-pub-api/message/StepFunctions');
 
 const { decrementQueueSemaphore } = require('../lib/SemaphoreUtils');
 

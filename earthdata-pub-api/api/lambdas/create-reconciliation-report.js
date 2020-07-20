@@ -3,17 +3,17 @@
 const cloneDeep = require('lodash/cloneDeep');
 const keyBy = require('lodash/keyBy');
 const moment = require('moment');
-const DynamoDbSearchQueue = require('@cumulus/aws-client/DynamoDbSearchQueue');
-const { buildS3Uri, getJsonS3Object } = require('@cumulus/aws-client/S3');
-const S3ListObjectsV2Queue = require('@cumulus/aws-client/S3ListObjectsV2Queue');
-const { s3 } = require('@cumulus/aws-client/services');
-const BucketsConfig = require('@cumulus/common/BucketsConfig');
-const { getBucketsConfigKey } = require('@cumulus/common/stack');
-const { constructCollectionId } = require('@cumulus/message/Collections');
+const DynamoDbSearchQueue = require('earthdata-pub-api/aws-client/DynamoDbSearchQueue');
+const { buildS3Uri, getJsonS3Object } = require('earthdata-pub-api/aws-client/S3');
+const S3ListObjectsV2Queue = require('earthdata-pub-api/aws-client/S3ListObjectsV2Queue');
+const { s3 } = require('earthdata-pub-api/aws-client/services');
+const BucketsConfig = require('earthdata-pub-api/common/BucketsConfig');
+const { getBucketsConfigKey } = require('earthdata-pub-api/common/stack');
+const { constructCollectionId } = require('earthdata-pub-api/message/Collections');
 
-const CMR = require('@cumulus/cmr-client/CMR');
-const CMRSearchConceptQueue = require('@cumulus/cmr-client/CMRSearchConceptQueue');
-const { constructOnlineAccessUrl } = require('@cumulus/cmrjs/cmr-utils');
+const CMR = require('earthdata-pub-api/cmr-client/CMR');
+const CMRSearchConceptQueue = require('earthdata-pub-api/cmr-client/CMRSearchConceptQueue');
+const { constructOnlineAccessUrl } = require('earthdata-pub-api/cmrjs/cmr-utils');
 
 const GranuleFilesCache = require('../lib/GranuleFilesCache');
 const { Collection, Granule } = require('../models');

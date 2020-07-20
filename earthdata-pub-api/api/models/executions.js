@@ -3,13 +3,13 @@
 const get = require('lodash/get');
 const pLimit = require('p-limit');
 
-const StepFunctions = require('@cumulus/aws-client/StepFunctions');
-const { getCollectionIdFromMessage } = require('@cumulus/message/Collections');
+const StepFunctions = require('earthdata-pub-api/aws-client/StepFunctions');
+const { getCollectionIdFromMessage } = require('earthdata-pub-api/message/Collections');
 const {
   getMessageExecutionArn,
   getMessageExecutionName
-} = require('@cumulus/message/Executions');
-const { isNil, removeNilProperties } = require('@cumulus/common/util');
+} = require('earthdata-pub-api/message/Executions');
+const { isNil, removeNilProperties } = require('earthdata-pub-api/common/util');
 
 const executionSchema = require('./schemas').execution;
 const Manager = require('./base');

@@ -1,8 +1,8 @@
 'use strict';
 
 const get = require('lodash/get');
-const log = require('@cumulus/common/log');
-const { RecordDoesNotExist } = require('@cumulus/errors');
+const log = require('earthdata-pub-api/common/log');
+const { RecordDoesNotExist } = require('earthdata-pub-api/errors');
 const { google } = require('googleapis');
 const {
   JsonWebTokenError,

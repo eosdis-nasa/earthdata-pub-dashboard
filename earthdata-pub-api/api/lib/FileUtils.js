@@ -7,8 +7,8 @@ const isInteger = require('lodash/isInteger');
 const partial = require('lodash/partial');
 const pick = require('lodash/pick');
 const urljoin = require('url-join');
-const { getObjectSize, parseS3Uri } = require('@cumulus/aws-client/S3');
-const { removeNilProperties } = require('@cumulus/common/util');
+const { getObjectSize, parseS3Uri } = require('earthdata-pub-api/aws-client/S3');
+const { removeNilProperties } = require('earthdata-pub-api/common/util');
 const schemas = require('../models/schemas');
 
 const getBucket = (file) => {

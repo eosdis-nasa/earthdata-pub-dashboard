@@ -3,13 +3,13 @@
 const uuidv4 = require('uuid/v4');
 const get = require('lodash/get');
 
-const { sfn } = require('@cumulus/aws-client/services');
-const { parseSQSMessageBody } = require('@cumulus/aws-client/SQS');
+const { sfn } = require('earthdata-pub-api/aws-client/services');
+const { parseSQSMessageBody } = require('earthdata-pub-api/aws-client/SQS');
 const {
   getQueueName,
   getMaximumExecutions
-} = require('@cumulus/message/Queue');
-const { Consumer } = require('@cumulus/ingest/consumer');
+} = require('earthdata-pub-api/message/Queue');
+const { Consumer } = require('earthdata-pub-api/ingest/consumer');
 
 const {
   decrementQueueSemaphore,

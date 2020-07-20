@@ -10,10 +10,10 @@ const {
   s3CopyObject,
   buildS3Uri,
   getTextObject
-} = require('@cumulus/aws-client/S3');
-const { constructCollectionId } = require('@cumulus/message/Collections');
-const log = require('@cumulus/common/log');
-const SftpClient = require('@cumulus/sftp-client');
+} = require('earthdata-pub-api/aws-client/S3');
+const { constructCollectionId } = require('earthdata-pub-api/message/Collections');
+const log = require('earthdata-pub-api/common/log');
+const SftpClient = require('earthdata-pub-api/sftp-client');
 const { Collection } = require('../models');
 
 /**

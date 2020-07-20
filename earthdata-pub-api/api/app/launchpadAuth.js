@@ -1,8 +1,8 @@
 'use strict';
 
-const launchpad = require('@cumulus/common/launchpad');
-const { getSecretString } = require('@cumulus/aws-client/SecretsManager');
-const { RecordDoesNotExist } = require('@cumulus/errors');
+const launchpad = require('earthdata-pub-api/common/launchpad');
+const { getSecretString } = require('earthdata-pub-api/aws-client/SecretsManager');
+const { RecordDoesNotExist } = require('earthdata-pub-api/errors');
 const { AccessToken } = require('../models');
 
 const launchpadProtectedAuth = () => (process.env.OAUTH_PROVIDER === 'launchpad');

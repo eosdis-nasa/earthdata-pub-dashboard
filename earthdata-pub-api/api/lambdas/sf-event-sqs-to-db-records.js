@@ -1,9 +1,9 @@
 'use strict';
 
 const get = require('lodash/get');
-const { parseSQSMessageBody } = require('@cumulus/aws-client/SQS');
-const log = require('@cumulus/common/log');
-const { getMessageExecutionArn } = require('@cumulus/message/Executions');
+const { parseSQSMessageBody } = require('earthdata-pub-api/aws-client/SQS');
+const log = require('earthdata-pub-api/common/log');
+const { getMessageExecutionArn } = require('earthdata-pub-api/message/Executions');
 const Execution = require('../models/executions');
 const Granule = require('../models/granules');
 const Pdr = require('../models/pdrs');

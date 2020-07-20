@@ -7,9 +7,9 @@ const {
   buildS3Uri,
   deleteS3Files,
   listS3ObjectsV2
-} = require('@cumulus/aws-client/S3');
-const awsServices = require('@cumulus/aws-client/services');
-const log = require('@cumulus/common/log');
+} = require('earthdata-pub-api/aws-client/S3');
+const awsServices = require('earthdata-pub-api/aws-client/services');
+const log = require('earthdata-pub-api/common/log');
 
 const DistributionEvent = require('../lib/DistributionEvent');
 const {

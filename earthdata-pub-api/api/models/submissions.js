@@ -5,27 +5,27 @@ const get = require('lodash/get');
 const partial = require('lodash/partial');
 const path = require('path');
 
-const Lambda = require('@cumulus/aws-client/Lambda');
-const s3Utils = require('@cumulus/aws-client/S3');
-const secretsManagerUtils = require('@cumulus/aws-client/SecretsManager');
-const StepFunctions = require('@cumulus/aws-client/StepFunctions');
-const { CMR } = require('@cumulus/cmr-client');
-const cmrjs = require('@cumulus/cmrjs');
-const launchpad = require('@cumulus/common/launchpad');
-const log = require('@cumulus/common/log');
-const { getCollectionIdFromMessage } = require('@cumulus/message/Collections');
-const { getMessageExecutionArn } = require('@cumulus/message/Executions');
-const { getMessageSubmissions } = require('@cumulus/message/Submissions');
-const { buildURL } = require('@cumulus/common/URLUtils');
+const Lambda = require('earthdata-pub-api/aws-client/Lambda');
+const s3Utils = require('earthdata-pub-api/aws-client/S3');
+const secretsManagerUtils = require('earthdata-pub-api/aws-client/SecretsManager');
+const StepFunctions = require('earthdata-pub-api/aws-client/StepFunctions');
+const { CMR } = require('earthdata-pub-api/cmr-client');
+const cmrjs = require('earthdata-pub-api/cmrjs');
+const launchpad = require('earthdata-pub-api/common/launchpad');
+const log = require('earthdata-pub-api/common/log');
+const { getCollectionIdFromMessage } = require('earthdata-pub-api/message/Collections');
+const { getMessageExecutionArn } = require('earthdata-pub-api/message/Executions');
+const { getMessageSubmissions } = require('earthdata-pub-api/message/Submissions');
+const { buildURL } = require('earthdata-pub-api/common/URLUtils');
 const {
   isNil,
   removeNilProperties,
   renameProperty
-} = require('@cumulus/common/util');
+} = require('earthdata-pub-api/common/util');
 const {
   generateMoveFileParams,
   moveSubmissionFiles
-} = require('@cumulus/ingest/submission');
+} = require('earthdata-pub-api/ingest/submission');
 
 const Manager = require('./base');
 

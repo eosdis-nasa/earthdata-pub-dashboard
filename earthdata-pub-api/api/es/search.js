@@ -10,7 +10,7 @@ const omit = require('lodash/omit');
 const aws = require('aws-sdk');
 const { AmazonConnection } = require('aws-elasticsearch-connector');
 const elasticsearch = require('@elastic/elasticsearch');
-const { inTestMode } = require('@cumulus/common/test-utils');
+const { inTestMode } = require('earthdata-pub-api/common/test-utils');
 const queries = require('./queries');
 const aggs = require('./aggregations');
 

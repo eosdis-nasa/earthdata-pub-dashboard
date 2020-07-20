@@ -1,4 +1,4 @@
-const { isNil } = require('@cumulus/common/util');
+const { isNil } = require('earthdata-pub-api/common/util');
 
 const { buildDatabaseFiles } = require('./FileUtils');
 

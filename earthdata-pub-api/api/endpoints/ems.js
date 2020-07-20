@@ -2,8 +2,8 @@
 
 const pick = require('lodash/pick');
 const router = require('express-promise-router')();
-const { lambda } = require('@cumulus/aws-client/services');
-const log = require('@cumulus/common/log');
+const { lambda } = require('earthdata-pub-api/aws-client/services');
+const log = require('earthdata-pub-api/common/log');
 
 /**
  * Creates a new report

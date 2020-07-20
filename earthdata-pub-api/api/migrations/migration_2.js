@@ -1,9 +1,9 @@
 'use strict';
 
 const drop = require('lodash/drop');
-const { parseS3Uri } = require('@cumulus/aws-client/S3');
-const { dynamodb } = require('@cumulus/aws-client/services');
-const DynamoDbSearchQueue = require('@cumulus/aws-client/DynamoDbSearchQueue');
+const { parseS3Uri } = require('earthdata-pub-api/aws-client/S3');
+const { dynamodb } = require('earthdata-pub-api/aws-client/services');
+const DynamoDbSearchQueue = require('earthdata-pub-api/aws-client/DynamoDbSearchQueue');
 
 /**
  * Given a granule, create a DynamoDB PutRequest for each of the granule's files

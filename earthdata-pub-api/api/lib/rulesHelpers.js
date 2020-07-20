@@ -2,7 +2,7 @@
 
 const get = require('lodash/get');
 
-const { removeNilProperties } = require('@cumulus/common/util');
+const { removeNilProperties } = require('earthdata-pub-api/common/util');
 const { schedule } = require('../lambdas/sf-scheduler');
 const Rule = require('../models/rules');
 
