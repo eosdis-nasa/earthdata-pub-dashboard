@@ -42,7 +42,9 @@
     "stop-dashboard": "docker-compose -f ./localAPI/docker-compose.yml -f ./localAPI/docker-compose-serve-api.yml -f ./localAPI/docker-compose-dashboard.yml down",
     "e2e-tests": "docker-compose -f ./localAPI/docker-compose.yml -f ./localAPI/docker-compose-serve-api.yml -f ./localAPI/docker-compose-dashboard.yml -f ./localAPI/docker-compose-cypress.yml up --exit-code-from=e2e --abort-on-container-exit",
     "validation-tests": "docker-compose -f ./localAPI/docker-compose.yml -f ./localAPI/docker-compose-serve-api.yml -f ./localAPI/docker-compose-dashboard.yml -f ./localAPI/docker-compose-validate.yml up --exit-code-from=validate --abort-on-container-exit",
-    "view-docker-logs": "docker-compose -f ./localAPI/docker-compose.yml -f ./localAPI/docker-compose-serve-api.yml -f ./localAPI/docker-compose-dashboard.yml logs -f "
+    "view-docker-logs": "docker-compose -f ./localAPI/docker-compose.yml -f ./localAPI/docker-compose-serve-api.yml -f ./localAPI/docker-compose-dashboard.yml logs -f ",
+    "link-api": "npm link ../api/lambda/modules",
+    "link-repos": "npm run link-api && cd ../forms && npm run link-api"
   },
   "ava": {
     "babel": {
