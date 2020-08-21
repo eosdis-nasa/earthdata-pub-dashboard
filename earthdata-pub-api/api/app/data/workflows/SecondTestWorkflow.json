@@ -1,6 +1,6 @@
 {
   "name": "SecondTestWorkflow",
-  "template": "s3://bucket/cumulus/workflows/SecondTestWorkflow.json",
+  "template": "s3://bucket/earthdatapub/workflows/SecondTestWorkflow.json",
   "definition": {
     "Comment": "Just here to exist.",
     "StartAt": "StartStatus",

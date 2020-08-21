@@ -73,7 +73,6 @@ class AsyncOperation extends Manager {
     // Store the payload to S3
     const payloadBucket = this.systemBucket;
     const payloadKey = `${this.stackName}/async-operation-payloads/${id}.json`;
-
     await s3().putObject({
       Bucket: payloadBucket,
       Key: payloadKey,

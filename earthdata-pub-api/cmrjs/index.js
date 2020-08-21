@@ -13,7 +13,6 @@ const {
   hostId
 } = require('./utils');
 
-
 const logDetails = {
   file: 'lib/cmrjs/index.js',
   source: 'pushToCMR',
@@ -27,7 +26,7 @@ const logDetails = {
  * @param {Array} previousResults - array of results returned in previous recursive calls
  * @returns {Promise.<Array>} - array of search results.
  */
-async function searchConcept(type, searchParams, previousResults = []) {
+async function searchConcept (type, searchParams, previousResults = []) {
   const recordsLimit = process.env.CMR_LIMIT || 100;
   const pageSize = searchParams.pageSize || process.env.CMR_PAGE_SIZE || 50;
 
@@ -52,7 +51,6 @@ async function searchConcept(type, searchParams, previousResults = []) {
   return fetchedResults.slice(0, recordsLimit);
 }
 
-
 /**
  * Posts a records of any kind (collection, granule, etc) to
  * CMR
@@ -64,7 +62,7 @@ async function searchConcept(type, searchParams, previousResults = []) {
  * @param {string} token - the CMR token
  * @returns {Promise.<Object>} the CMR response object
  */
-async function ingestConcept(type, xml, identifierPath, provider, token) {
+async function ingestConcept (type, xml, identifierPath, provider, token) {
   // Accept either an XML file, or an XML string itself
   let xmlString = xml;
   if (fs.existsSync(xml)) {
@@ -78,15 +76,15 @@ async function ingestConcept(type, xml, identifierPath, provider, token) {
     });
   });
 
-  //log.debug('XML object parsed', logDetails);
+  // log.debug('XML object parsed', logDetails);
   const identifier = property(identifierPath)(xmlObject);
   logDetails.granuleId = identifier;
 
   try {
     await validate(type, xmlString, identifier, provider);
-    //log.debug('XML object is valid', logDetails);
+    // log.debug('XML object is valid', logDetails);
 
-    //log.info('Pushing xml metadata to CMR', logDetails);
+    // log.info('Pushing xml metadata to CMR', logDetails);
     const response = await got.put(
       `${getUrl('ingest', provider)}${type}s/${identifier}`,
       {
@@ -98,7 +96,7 @@ async function ingestConcept(type, xml, identifierPath, provider, token) {
       }
     );
 
-    //log.info('Metadata pushed to CMR.', logDetails);
+    // log.info('Metadata pushed to CMR.', logDetails);
 
     xmlObject = await new Promise((resolve, reject) => {
       parseString(response.body, xmlParseOptions, (err, res) => {
@@ -113,8 +111,7 @@ async function ingestConcept(type, xml, identifierPath, provider, token) {
     }
 
     return xmlObject;
-  }
-  catch (e) {
+  } catch (e) {
     log.error(e, logDetails);
     throw e;
   }
@@ -129,7 +126,7 @@ async function ingestConcept(type, xml, identifierPath, provider, token) {
  * @param {string} token - the CMR token
  * @returns {Promise.<Object>} the CMR response object
  */
-async function deleteConcept(type, identifier, provider, token) {
+async function deleteConcept (type, identifier, provider, token) {
   const url = `${getUrl('ingest', provider)}${type}/${identifier}`;
   log.info(`deleteConcept ${url}`);
 
@@ -141,8 +138,7 @@ async function deleteConcept(type, identifier, provider, token) {
         'Content-type': 'application/echo10+xml'
       }
     });
-  }
-  catch (error) {
+  } catch (error) {
     result = error.response;
   }
 
@@ -176,7 +172,7 @@ async function deleteConcept(type, identifier, provider, token) {
  * @returns {Object} - metadata as a JS object, null if not
  * found
  */
-async function getMetadata(cmrLink) {
+async function getMetadata (cmrLink) {
   const response = await got.get(cmrLink);
 
   if (response.statusCode !== 200) {
@@ -196,7 +192,7 @@ async function getMetadata(cmrLink) {
  * link that comes from task output.
  * @returns {Object} - Full metadata as a JS object
  */
-async function getFullMetadata(cmrLink) {
+async function getFullMetadata (cmrLink) {
   const xmlLink = cmrLink.replace('json', 'echo10');
 
   const response = await got.get(xmlLink);
@@ -227,7 +223,7 @@ class CMR {
    * @param {string} username - CMR username
    * @param {string} password - CMR password
    */
-  constructor(provider, clientId, username, password) {
+  constructor (provider, clientId, username, password) {
     this.clientId = clientId;
     this.provider = provider;
     this.username = username;
@@ -239,7 +235,7 @@ class CMR {
    *
    * @returns {Promise.<string>} the token
    */
-  async getToken() {
+  async getToken () {
     return updateToken(this.provider, this.clientId, this.username, this.password);
   }
 
@@ -249,7 +245,7 @@ class CMR {
    * @param {string} xml - the collection xml document
    * @returns {Promise.<Object>} the CMR response
    */
-  async ingestCollection(xml) {
+  async ingestCollection (xml) {
     const token = await this.getToken();
     return ingestConcept('collection', xml, 'Collection.DataSetId', this.provider, token);
   }
@@ -260,7 +256,7 @@ class CMR {
    * @param {string} xml - the granule xml document
    * @returns {Promise.<Object>} the CMR response
    */
-  async ingestGranule(xml) {
+  async ingestGranule (xml) {
     const token = await this.getToken();
     return ingestConcept('granule', xml, 'Granule.GranuleUR', this.provider, token);
   }
@@ -271,7 +267,7 @@ class CMR {
    * @param {string} datasetID - the collection unique id
    * @returns {Promise.<Object>} the CMR response
    */
-  async deleteCollection(datasetID) {
+  async deleteCollection (datasetID) {
     return deleteConcept('collection', datasetID);
   }
 
@@ -281,7 +277,7 @@ class CMR {
    * @param {string} granuleUR - the granule unique id
    * @returns {Promise.<Object>} the CMR response
    */
-  async deleteGranule(granuleUR) {
+  async deleteGranule (granuleUR) {
     const token = await this.getToken();
     return deleteConcept('granules', granuleUR, this.provider, token);
   }
@@ -292,7 +288,7 @@ class CMR {
    * @param {string} searchParams - the search parameters
    * @returns {Promise.<Object>} the CMR response
    */
-  async searchCollections(searchParams) {
+  async searchCollections (searchParams) {
     const params = Object.assign({}, { provider_short_name: this.provider }, searchParams);
     return searchConcept('collections', params, []);
   }
@@ -303,7 +299,7 @@ class CMR {
    * @param {string} searchParams - the search parameters
    * @returns {Promise.<Object>} the CMR response
    */
-  async searchGranules(searchParams) {
+  async searchGranules (searchParams) {
     const params = Object.assign({}, { provider_short_name: this.provider }, searchParams);
     return searchConcept('granules', params, []);
   }

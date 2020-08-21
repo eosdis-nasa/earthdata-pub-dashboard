@@ -1,6 +1,6 @@
 {
   "name": "HelloWorldWorkflow",
-  "template": "s3://bucket/cumulus/workflows/HelloWorldWorkflow.json",
+  "template": "s3://bucket/earthdatapub/workflows/HelloWorldWorkflow.json",
   "definition": {
     "Comment": "Tests Lambda update after redeploy",
     "StartAt": "StartStatus",

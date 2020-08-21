@@ -14,7 +14,7 @@ const router = require('express-promise-router')();
  * @param {Object} res - express response object
  * @returns {Promise<Object>} the promise of express response object
  */
-async function list(req, res) {
+async function list (req, res) {
   const workflows = await listS3ObjectsV2({
     Bucket: process.env.system_bucket,
     Prefix: getWorkflowsListKeyPrefix(process.env.stackName)
@@ -34,7 +34,7 @@ async function list(req, res) {
  * @param {Object} res - express response object
  * @returns {Promise<Object>} the promise of express response object
  */
-async function get(req, res) {
+async function get (req, res) {
   const name = req.params.name;
   try {
     const workflow = await getJsonS3Object(

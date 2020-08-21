@@ -195,6 +195,45 @@ function indexProvider(esClient, payload, index = defaultIndexAlias, type = 'pro
 }
 
 /**
+ * Indexes the form type on ElasticSearch
+ *
+ * @param  {Object} esClient - ElasticSearch Connection object
+ * @param  {Object} payload  - the form record
+ * @param  {string} index    - Elasticsearch index alias (default defined in search.js)
+ * @param  {string} type     - Elasticsearch type (default: form)
+ * @returns {Promise} Elasticsearch response
+ */
+function indexForm(esClient, payload, index = defaultIndexAlias, type = 'form') {
+  return genericRecordUpdate(esClient, payload.id, payload, index, type);
+}
+
+/**
+ * Indexes the user type on ElasticSearch
+ *
+ * @param  {Object} esClient - ElasticSearch Connection object
+ * @param  {Object} payload  - the form record
+ * @param  {string} index    - Elasticsearch index alias (default defined in search.js)
+ * @param  {string} type     - Elasticsearch type (default: user)
+ * @returns {Promise} Elasticsearch response
+ */
+function indexUser(esClient, payload, index = defaultIndexAlias, type = 'user') {
+  return genericRecordUpdate(esClient, payload.id, payload, index, type);
+}
+
+/**
+ * Indexes the group type on ElasticSearch
+ *
+ * @param  {Object} esClient - ElasticSearch Connection object
+ * @param  {Object} payload  - the form record
+ * @param  {string} index    - Elasticsearch index alias (default defined in search.js)
+ * @param  {string} type     - Elasticsearch type (default: group)
+ * @returns {Promise} Elasticsearch response
+ */
+function indexGroup(esClient, payload, index = defaultIndexAlias, type = 'group') {
+  return genericRecordUpdate(esClient, payload.id, payload, index, type);
+}
+
+/**
  * Indexes the rule type on ElasticSearch
  *
  * @param  {Object} esClient - ElasticSearch Connection object
@@ -259,12 +298,6 @@ async function indexSubmission(esClient, payload, index = defaultIndexAlias, typ
     refresh: inTestMode()
   };
   await esClient.delete(delSubmissionParams, { ignore: [404] });
-  //console.log('esClient',esClient)
-  /*console.log('id',payload.submissionId)
-  console.log('payload',payload)
-  console.log('index',index)
-  console.log('type',type)
-  console.log('payload.collectionId',payload.collectionId)*/
   return genericRecordUpdate(
     esClient,
     payload.submissionId,
@@ -405,6 +438,9 @@ module.exports = {
   indexCollection,
   indexLog,
   indexProvider,
+  indexForm,
+  indexUser,
+  indexGroup,
   indexRule,
   indexGranule,
   indexSubmission,

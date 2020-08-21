@@ -87,6 +87,9 @@ module.exports = {
   // The provider info is missing error
   ProviderNotFound: createErrorType('ProviderNotFound'),
 
+  // The user info is missing error
+  UserNotFound: createErrorType('UserNotFound'),
+
   // The FTPError
   FTPError: createErrorType('FTPError'),
 

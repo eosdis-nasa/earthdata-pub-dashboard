@@ -3,13 +3,12 @@ const _get = require('lodash.get');
 const publicIp = require('public-ip');
 const xml2js = require('xml2js');
 
-
 /**
  * Overrides the Error class
  *
  * @param {string} message - the error message
  */
-function E(message) {
+function E (message) {
   Error.captureStackTrace(this, this.constructor);
   this.message = message;
 }
@@ -36,7 +35,7 @@ const ValidationError = createErrorType('ValidationError');
  * @param {string} env - cmr environment ['OPS', 'SIT', 'UAT']
  * @returns {string} - value to use to build correct cmr url for environment.
  */
-function hostId(env) {
+function hostId (env) {
   const id = {
     OPS: '',
     SIT: 'sit',
@@ -44,7 +43,6 @@ function hostId(env) {
   };
   return _get(id, env, 'uat');
 }
-
 
 /**
  * Determines the appropriate CMR host endpoint based on a given
@@ -59,7 +57,7 @@ function hostId(env) {
  *              this has a value, it overrides any values for CMR_ENVIRONMENT
  * @returns {string} the cmr host address
  */
-function getHost(environment = process.env) {
+function getHost (environment = process.env) {
   const env = environment.CMR_ENVIRONMENT;
   if (environment.CMR_HOST) return environment.CMR_HOST;
 
@@ -81,35 +79,33 @@ const xmlParseOptions = {
  * @param {string} cmrProvider - the CMR provider id
  * @returns {string} the cmr url
  */
-function getUrl(type, cmrProvider) {
+function getUrl (type, cmrProvider) {
   let url;
   const host = getHost();
   const env = process.env.CMR_ENVIRONMENT;
   const provider = cmrProvider;
 
   switch (type) {
-  case 'token':
-    if (env === 'OPS') {
-      url = 'https://api.echo.nasa.gov/echo-rest/tokens/';
-    }
-    else if (env === 'SIT') {
-      url = 'https://testbed.echo.nasa.gov/echo-rest/tokens/';
-    }
-    else {
-      url = 'https://api-test.echo.nasa.gov/echo-rest/tokens/';
-    }
-    break;
-  case 'search':
-    url = `https://${host}/search/`;
-    break;
-  case 'validate':
-    url = `https://${host}/ingest/providers/${provider}/validate/`;
-    break;
-  case 'ingest':
-    url = `https://${host}/ingest/providers/${provider}/`;
-    break;
-  default:
-    url = null;
+    case 'token':
+      if (env === 'OPS') {
+        url = 'https://api.echo.nasa.gov/echo-rest/tokens/';
+      } else if (env === 'SIT') {
+        url = 'https://testbed.echo.nasa.gov/echo-rest/tokens/';
+      } else {
+        url = 'https://api-test.echo.nasa.gov/echo-rest/tokens/';
+      }
+      break;
+    case 'search':
+      url = `https://${host}/search/`;
+      break;
+    case 'validate':
+      url = `https://${host}/ingest/providers/${provider}/validate/`;
+      break;
+    case 'ingest':
+      url = `https://${host}/ingest/providers/${provider}/`;
+      break;
+    default:
+      url = null;
   }
 
   return url;
@@ -125,7 +121,7 @@ function getUrl(type, cmrProvider) {
  * @param {string} provider - the CMR provider
  * @returns {Promise.<boolean>} returns true if the document is valid
  */
-async function validate(type, xml, identifier, provider) {
+async function validate (type, xml, identifier, provider) {
   let result;
   try {
     result = await got.post(`${getUrl('validate', provider)}${type}/${identifier}`, {
@@ -138,8 +134,7 @@ async function validate(type, xml, identifier, provider) {
     if (result.statusCode === 200) {
       return true;
     }
-  }
-  catch (e) {
+  } catch (e) {
     result = e.response;
   }
 
@@ -165,7 +160,7 @@ async function validate(type, xml, identifier, provider) {
  *
  * @returns {string} IP address
  */
-async function getIp() {
+async function getIp () {
   return publicIp.v4()
     .catch((err) => {
       if (err.message === 'Query timed out') {
@@ -185,7 +180,7 @@ async function getIp() {
  * @param {string} password - CMR password
  * @returns {Promise.<string>} the token
  */
-async function updateToken(cmrProvider, clientId, username, password) {
+async function updateToken (cmrProvider, clientId, username, password) {
   // Update the saved ECHO token
   // for info on how to add collections to CMR: https://cmr.earthdata.nasa.gov/ingest/site/ingest_api_docs.html#validate-collection
   let response;
@@ -203,8 +198,7 @@ async function updateToken(cmrProvider, clientId, username, password) {
         }
       }
     });
-  }
-  catch (err) {
+  } catch (err) {
     if (err.response.body.errors) throw new Error(`CMR Error: ${err.response.body.errors[0]}`);
     throw err;
   }

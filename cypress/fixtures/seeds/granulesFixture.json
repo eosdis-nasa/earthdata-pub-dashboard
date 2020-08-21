@@ -22,7 +22,7 @@
       "duration": 26.966,
       "cmrLink": "https://cmr.uat.earthdata.nasa.gov/search/granules.json?concept_id=G1224020882-EDPUB",
       "createdAt": 1537831756154,
-      "provider": "s3_provider",
+      "": "s3_provider",
       "beginningDateTime": "2017-10-24T00:00:00.000Z",
       "timeToArchive": 0.01,
       "files": [

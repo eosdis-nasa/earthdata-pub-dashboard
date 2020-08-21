@@ -49,6 +49,39 @@ async function addProviders(providers) {
   );
 }
 
+async function addForms(forms) {
+  const formModel = new models.Form();
+  const es = await getESClientAndIndex();
+  return Promise.all(
+    forms.map((p) =>
+      formModel
+        .create(p)
+        .then((form) => indexer.indexForm(es.client, form, es.index)))
+  );
+}
+
+async function addUsers(users) {
+  const userModel = new models.User();
+  const es = await getESClientAndIndex();
+  return Promise.all(
+    users.map((p) =>
+      userModel
+        .create(p)
+        .then((user) => indexer.indexUser(es.client, user, es.index)))
+  );
+}
+
+async function addGroups(groups) {
+  const groupModel = new models.Group();
+  const es = await getESClientAndIndex();
+  return Promise.all(
+    groups.map((p) =>
+      groupModel
+        .create(p)
+        .then((group) => indexer.indexGroup(es.client, group, es.index)))
+  );
+}
+
 async function addRules(rules) {
   const ruleModel = new models.Rule();
   const es = await getESClientAndIndex();
@@ -88,5 +121,8 @@ module.exports = {
   addSubmissions,
   addPdrs,
   addProviders,
+  addForms,
+  addUsers,
+  addGroups,
   addRules
 };

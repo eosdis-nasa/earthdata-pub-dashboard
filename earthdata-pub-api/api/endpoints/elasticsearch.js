@@ -221,8 +221,12 @@ async function indexFromDatabase(req, res) {
           collectionsTable: process.env.CollectionsTable,
           executionsTable: process.env.ExecutionsTable,
           granulesTable: process.env.GranulesTable,
+          submissionsTable: process.env.SubmissionsTable,
           pdrsTable: process.env.PdrsTable,
           providersTable: process.env.ProvidersTable,
+          formsTable: process.env.FormsTable,
+          usersTable: process.env.UsersTable,
+          groupsTable: process.env.GroupsTable,
           rulesTable: process.env.RulesTable,
           asyncOperationsTable: process.env.AsyncOperationsTable
         },

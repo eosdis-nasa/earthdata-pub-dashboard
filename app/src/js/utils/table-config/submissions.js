@@ -79,7 +79,7 @@ export const tableColumns = [
   }
 ];
 
-export const errorTableColumns = [
+export const errorTableColumns2 = [
   {
     Header: 'Error',
     accessor: row => <ErrorReport report={get(row, 'error.Cause', nullValue)} truncate={true} />,

@@ -10,17 +10,20 @@ import { strings } from '../locale';
 import { kibanaAllLogsLink } from '../../utils/kibana';
 
 const paths = [
-  ['', '/pdrs'],
+  // ['', '/pdrs'],
   ['Providers', '/providers'],
-  [strings.collections, '/collections'],
-  [strings.granules, '/granules'],
+  // [strings.collections, '/collections'],
+  // [strings.granules, '/granules'],
   [strings.submissions, '/submissions'],
   ['Workflows', '/workflows'],
-  ['Executions', '/executions'],
-  ['Operations', '/operations'],
-  ['Rules', '/rules'],
-  ['Logs', 'logs'],
-  ['Reconciliation Reports', '/reconciliation-reports']
+  // ['Executions', '/executions'],
+  // ['Operations', '/operations'],
+  // ['Rules', '/rules'],
+  // ['Logs', 'logs'],
+  // ['Reconciliation Reports', '/reconciliation-reports']
+  ['Forms', '/forms'],
+  ['Users', '/users'],
+  ['Groups', '/groups'],
 ];
 
 class Header extends React.Component {

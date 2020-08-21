@@ -6,6 +6,11 @@ const templateKey = (stack) => `${stack}/workflow_template.json`;
 
 const workflowTemplateUri = (bucket, stack) => `s3://${bucket}/${templateKey(stack)}`;
 
+const getWorkflowFileKey = (stackName, workflowName) =>
+  `${stackName}/workflows/${workflowName}.json`;
+
+const getWorkflowsListKeyPrefix = (stackName) => `${stackName}/workflows/`;
+
 /**
  * Get the template JSON from S3 for the workflow
  *
@@ -13,9 +18,10 @@ const workflowTemplateUri = (bucket, stack) => `s3://${bucket}/${templateKey(sta
  * @param {string} bucketName - S3 internal bucket name
  * @returns {Promise.<Object>} template as a JSON object
  */
-async function getWorkflowTemplate(stackName, bucketName) {
+async function getWorkflowTemplate (stackName, bucketName) {
   const key = templateKey(stackName);
   const templateJson = await getS3Object(bucketName, key);
+  console.log(templateJson)
   return JSON.parse(templateJson.Body.toString());
 }
 
@@ -27,9 +33,10 @@ async function getWorkflowTemplate(stackName, bucketName) {
  * @param {string} workflowName - workflow name
  * @returns {Promise.<Object>} definition file as a JSON object
  */
-async function getWorkflowFile(stackName, bucketName, workflowName) {
+async function getWorkflowFile (stackName, bucketName, workflowName) {
   const key = `${stackName}/workflows/${workflowName}.json`;
   const wfJson = await getS3Object(bucketName, key);
+  console.log(wfJson.Body.toString());
   return JSON.parse(wfJson.Body.toString());
 }
 
@@ -43,7 +50,7 @@ async function getWorkflowFile(stackName, bucketName, workflowName) {
  * @param {string} workflowName - workflow name
  * @returns {Promise.<string>} workflow arn
  */
-async function getWorkflowArn(stackName, bucketName, workflowName) {
+async function getWorkflowArn (stackName, bucketName, workflowName) {
   const workflow = await getWorkflowFile(stackName, bucketName, workflowName);
   return workflow.arn;
 }
@@ -56,7 +63,7 @@ async function getWorkflowArn(stackName, bucketName, workflowName) {
  *
  * @returns {Promise.<Array>} list of workflows
  */
-async function getWorkflowList(stackName, bucketName) {
+async function getWorkflowList (stackName, bucketName) {
   const workflowsListKey = `${stackName}/workflows/`;
   const workflows = await listS3ObjectsV2({
     Bucket: bucketName,
@@ -68,8 +75,10 @@ async function getWorkflowList(stackName, bucketName) {
 
 module.exports = {
   getWorkflowArn,
+  getWorkflowFileKey,
   getWorkflowFile,
   getWorkflowList,
+  getWorkflowsListKeyPrefix,
   getWorkflowTemplate,
   templateKey,
   workflowTemplateUri

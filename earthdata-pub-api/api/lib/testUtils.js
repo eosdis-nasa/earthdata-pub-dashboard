@@ -87,10 +87,33 @@ function fakeGranuleFactoryV2(options = {}) {
 /**
  * Returns a fake Submission record
  *
+ * @param {string} status - submission status (default to completed)
+ * @returns {Object} fake submission object
+ */
+function fakeSubmissionFactory(status = 'completed') {
+  return {
+    submissionId: randomId('submission'),
+    dataType: randomId('datatype'),
+    version: randomId('vers'),
+    collectionId: 'fakeCollection___v1',
+    status,
+    execution: randomId('execution'),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    published: true,
+    cmrLink: 'example.com',
+    productVolume: 100,
+    duration: 0
+  };
+}
+
+/**
+ * Returns a fake Submission record
+ *
  * @param {Object} options - properties to set on the submission
  * @returns {Object} fake submission object
  */
-function fakeSubmissionFactory(options = {}) {
+function fakeSubmissionFactoryV2(options = {}) {
   return Object.assign(
     fakeSubmissionFactory(),
     options
@@ -261,6 +284,44 @@ function fakeProviderFactory(options = {}) {
   };
 }
 
+/**
+ * creates fake form records
+ *
+ * @param {Object} options - properties to set on the form
+ * @returns {Object} fake form object
+ */
+function fakeFormFactory(options = {}) {
+  return {
+    id: randomId('id'),
+    ...options
+  };
+}
+
+/**
+ * creates fake user records
+ *
+ * @param {Object} options - properties to set on the user
+ * @returns {Object} fake user object
+ */
+function fakeUserFactory(options = {}) {
+  return {
+    id: randomId('id'),
+    ...options
+  };
+}
+/**
+ * creates fake group records
+ *
+ * @param {Object} options - properties to set on the group
+ * @returns {Object} fake group object
+ */
+function fakeGroupFactory(options = {}) {
+  return {
+    id: randomId('id'),
+    ...options
+  };
+}
+
 function fakeAccessTokenFactory(params = {}) {
   return {
     accessToken: randomId('accessToken'),
@@ -357,6 +418,7 @@ module.exports = {
   fakeGranuleFactory,
   fakeGranuleFactoryV2,
   fakeSubmissionFactory,
+  fakeSubmissionFactoryV2,
   fakePdrFactory,
   fakePdrFactoryV2,
   fakeCollectionFactory,
@@ -367,6 +429,9 @@ module.exports = {
   fakeRuleFactoryV2,
   fakeFileFactory,
   fakeProviderFactory,
+  fakeFormFactory,
+  fakeUserFactory,
+  fakeGroupFactory,
   getSqsQueueMessageCounts,
   getWorkflowList,
   isLocalApi,

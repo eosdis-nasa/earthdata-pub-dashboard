@@ -9,6 +9,9 @@ const granules = require('../endpoints/granules');
 const submissions = require('../endpoints/submissions');
 const granuleCsv = require('../endpoints/granule-csv');
 const providers = require('../endpoints/providers');
+const forms = require('../endpoints/forms');
+const users = require('../endpoints/users');
+const groups = require('../endpoints/groups');
 const pdrs = require('../endpoints/pdrs');
 const rules = require('../endpoints/rules');
 const executionStatus = require('../endpoints/execution-status');
@@ -50,6 +53,15 @@ router.use('/granule-csv', ensureAuthorized, granuleCsv);
 
 // provider endpoints
 router.use('/providers', ensureAuthorized, providers);
+
+// forms endpoints
+router.use('/forms', ensureAuthorized, forms);
+
+// users endpoints
+router.use('/users', ensureAuthorized, users);
+
+// groups endpoints
+router.use('/groups', ensureAuthorized, groups);
 
 // pdr endpoints
 router.use('/pdrs', ensureAuthorized, pdrs);

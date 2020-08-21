@@ -34,6 +34,10 @@ const getTableIndexDetails = (tableName) => {
       indexFnName: 'indexGranule',
       indexType: 'granule'
     },
+    [process.env.SubmissionsTable]: {
+      indexFnName: 'indexSubmission',
+      indexType: 'submission'
+    },
     [process.env.PdrsTable]: {
       indexFnName: 'indexPdr',
       indexType: 'pdr'
@@ -41,6 +45,18 @@ const getTableIndexDetails = (tableName) => {
     [process.env.ProvidersTable]: {
       indexFnName: 'indexProvider',
       indexType: 'provider'
+    },
+    [process.env.FormsTable]: {
+      indexFnName: 'indexForm',
+      indexType: 'form'
+    },
+    [process.env.UsersTable]: {
+      indexFnName: 'indexUser',
+      indexType: 'user'
+    },
+    [process.env.GroupsTable]: {
+      indexFnName: 'indexGroup',
+      indexType: 'group'
     },
     [process.env.RulesTable]: {
       indexFnName: 'indexRule',

@@ -8,6 +8,9 @@ const executions = require('../fixtures/seeds/executionsFixture.json');
 const granules = require('../fixtures/seeds/granulesFixture.json');
 const submissions = require('../fixtures/seeds/submissionsFixture.json');
 const providers = require('../fixtures/seeds/providersFixture.json');
+const forms = require('../fixtures/seeds/formsFixture.json');
+const users = require('../fixtures/seeds/usersFixture.json');
+const groups = require('../fixtures/seeds/groupsFixture.json');
 const rules = require('../fixtures/seeds/rulesFixture.json');
 
 function resetIt () {
@@ -19,6 +22,18 @@ function resetIt () {
 
 function seedProviders () {
   return serveUtils.addProviders(providers.results);
+}
+
+function seedForms () {
+  return serveUtils.addForms(forms.results);
+}
+
+function seedUsers () {
+  return serveUtils.addUsers(users.results);
+}
+
+function seedGroups () {
+  return serveUtils.addGroups(groups.results);
 }
 
 function seedCollections () {
@@ -48,7 +63,10 @@ function seedEverything () {
     .then(seedGranules)
     .then(seedSubmissions)
     .then(seedExecutions)
-    .then(seedProviders);
+    .then(seedProviders)
+    .then(seedForms)
+    .then(seedUsers)
+    .then(seedGroups);
 }
 
 module.exports = {

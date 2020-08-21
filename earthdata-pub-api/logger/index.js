@@ -22,7 +22,7 @@ class Logger {
    *   log events to
    * @param {string} [options.version] - Lambda function version
    */
-  constructor(options) {
+  constructor (options) {
     privates.set(
       this,
       {
@@ -44,7 +44,7 @@ class Logger {
    *
    * @param {string} messageArgs - the message to log
    */
-  debug(...messageArgs) {
+  debug (...messageArgs) {
     this._writeLogEvent('debug', messageArgs);
   }
 
@@ -53,7 +53,7 @@ class Logger {
    *
    * @param {string} messageArgs - the message to log
    */
-  error(...messageArgs) {
+  error (...messageArgs) {
     const lastMessageArg = messageArgs[messageArgs.length - 1];
 
     if (isError(lastMessageArg)) {
@@ -85,7 +85,7 @@ class Logger {
    *
    * @param {string} messageArgs - the message to log
    */
-  fatal(...messageArgs) {
+  fatal (...messageArgs) {
     this._writeLogEvent('fatal', messageArgs);
   }
 
@@ -94,7 +94,7 @@ class Logger {
    *
    * @param {string} messageArgs - the message to log
    */
-  info(...messageArgs) {
+  info (...messageArgs) {
     this._writeLogEvent('info', messageArgs);
   }
 
@@ -104,7 +104,7 @@ class Logger {
    * @param {Object} additionalKeys
    * @param {...any} messageArgs
    */
-  infoWithAdditionalKeys(additionalKeys, ...messageArgs) {
+  infoWithAdditionalKeys (additionalKeys, ...messageArgs) {
     this._writeLogEvent('info', messageArgs, additionalKeys);
   }
 
@@ -113,7 +113,7 @@ class Logger {
    *
    * @param {string} messageArgs - the message to log
    */
-  trace(...messageArgs) {
+  trace (...messageArgs) {
     this._writeLogEvent('trace', messageArgs);
   }
 
@@ -122,11 +122,11 @@ class Logger {
    *
    * @param {string} messageArgs - the message to log
    */
-  warn(...messageArgs) {
+  warn (...messageArgs) {
     this._writeLogEvent('warn', messageArgs);
   }
 
-  _writeLogEvent(level, messageArgs, additionalKeys = {}) {
+  _writeLogEvent (level, messageArgs, additionalKeys = {}) {
     const {
       asyncOperationId,
       executions,

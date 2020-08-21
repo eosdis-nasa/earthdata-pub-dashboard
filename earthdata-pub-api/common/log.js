@@ -4,7 +4,7 @@ const Logger = require('earthdata-pub-api/logger');
 const isNumber = require('lodash.isnumber');
 const isString = require('lodash.isstring');
 
-function logger() {
+function logger () {
   return new Logger({
     asyncOperationId: process.env.ASYNCOPERATIONID,
     executions: process.env.EXECUTIONS,
@@ -23,7 +23,7 @@ function logger() {
  * @param {string} args - Message to log and any other information
  * @returns {undefined} - log is printed to stdout, nothing is returned
  */
-function logAdditionalKeys(additionalKeys, ...args) {
+function logAdditionalKeys (additionalKeys, ...args) {
   logger().infoWithAdditionalKeys(additionalKeys, ...args);
 }
 
@@ -32,7 +32,7 @@ function logAdditionalKeys(additionalKeys, ...args) {
  *
  * @param {string} args - Includes message and any other information to log
  */
-function info(...args) {
+function info (...args) {
   logger().info(...args);
 }
 
@@ -41,7 +41,7 @@ function info(...args) {
  *
  * @param {Object} args - Includes error and any other information to log
  */
-function error(...args) {
+function error (...args) {
   logger().error(...args);
 }
 
@@ -50,7 +50,7 @@ function error(...args) {
  *
  * @param {Object} args - Includes debugger message and any other information to log
  */
-function debug(...args) {
+function debug (...args) {
   logger().debug(...args);
 }
 
@@ -59,7 +59,7 @@ function debug(...args) {
  *
  * @param {Object} args - Includes Warn message and any other information to log
  */
-function warn(...args) {
+function warn (...args) {
   logger().warn(...args);
 }
 
@@ -68,7 +68,7 @@ function warn(...args) {
  *
  * @param {Object} args - Includes Fatal message and any other information to log
  */
-function fatal(...args) {
+function fatal (...args) {
   logger().fatal(...args);
 }
 /**
@@ -76,7 +76,7 @@ function fatal(...args) {
  *
  * @param {Object} args - Includes Trace message and any other information to log
  */
-function trace(...args) {
+function trace (...args) {
   logger().trace(...args);
 }
 
@@ -86,7 +86,7 @@ function trace(...args) {
  * @param {string/number} level - log level in string or number
  * @returns {number/string} - level in number or string
  */
-function convertLogLevel(level) {
+function convertLogLevel (level) {
   const mapping = {
     fatal: 60,
     error: 50,

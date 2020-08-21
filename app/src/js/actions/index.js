@@ -706,6 +706,213 @@ export const clearProvidersSearch = () => ({ type: types.CLEAR_PROVIDERS_SEARCH 
 export const filterProviders = (param) => ({ type: types.FILTER_PROVIDERS, param: param });
 export const clearProvidersFilter = (paramKey) => ({ type: types.CLEAR_PROVIDERS_FILTER, paramKey: paramKey });
 
+export const listForms = (options = {}) => {
+  const { listAll = false, ...queryOptions } = options;
+  return (dispatch, getState) => {
+    const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
+    return dispatch({
+      [CALL_API]: {
+        type: types.FORMS,
+        method: 'GET',
+        url: new URL('forms', root).href,
+        qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
+      }
+    });
+  };
+};
+
+export const getOptionsFormGroup = () => ({
+  [CALL_API]: {
+    type: types.OPTIONS_FORMGROUP,
+    method: 'GET',
+    url: new URL('forms', root).href,
+    qs: { limit: 100, fields: 'formName' }
+  }
+});
+
+export const getForm = (formId) => ({
+  [CALL_API]: {
+    type: types.FORM,
+    id: formId,
+    method: 'GET',
+    path: `forms/${formId}`
+  }
+});
+
+export const createForm = (formId, payload) => ({
+  [CALL_API]: {
+    type: types.NEW_FORM,
+    id: formId,
+    method: 'POST',
+    path: 'forms',
+    body: payload
+  }
+});
+
+export const updateForm = (formId, payload) => ({
+  [CALL_API]: {
+    type: types.UPDATE_FORM,
+    id: formId,
+    method: 'PUT',
+    path: `forms/${formId}`,
+    body: payload
+  }
+});
+
+export const clearUpdateForm = (formId) => ({ type: types.UPDATE_FORM_CLEAR, id: formId });
+
+export const deleteForm = (formId) => ({
+  [CALL_API]: {
+    type: types.FORM_DELETE,
+    id: formId,
+    method: 'DELETE',
+    path: `forms/${formId}`
+  }
+});
+
+export const searchForms = (prefix) => ({ type: types.SEARCH_FORMS, prefix: prefix });
+export const clearFormsSearch = () => ({ type: types.CLEAR_FORMS_SEARCH });
+export const filterForms = (param) => ({ type: types.FILTER_FORMS, param: param });
+export const clearFormsFilter = (paramKey) => ({ type: types.CLEAR_FORMS_FILTER, paramKey: paramKey });
+
+export const listUsers = (options = {}) => {
+  const { listAll = false, ...queryOptions } = options;
+  return (dispatch, getState) => {
+    const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
+    return dispatch({
+      [CALL_API]: {
+        type: types.USERS,
+        method: 'GET',
+        url: new URL('users', root).href,
+        qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
+      }
+    });
+  };
+};
+
+export const getOptionsUserGroup = () => ({
+  [CALL_API]: {
+    type: types.OPTIONS_USERGROUP,
+    method: 'GET',
+    url: new URL('users', root).href,
+    qs: { limit: 100, fields: 'userName' }
+  }
+});
+
+export const getUser = (userId) => ({
+  [CALL_API]: {
+    type: types.USER,
+    id: userId,
+    method: 'GET',
+    path: `users/${userId}`
+  }
+});
+
+export const createUser = (userId, payload) => ({
+  [CALL_API]: {
+    type: types.NEW_USER,
+    id: userId,
+    method: 'POST',
+    path: 'users',
+    body: payload
+  }
+});
+
+export const updateUser = (userId, payload) => ({
+  [CALL_API]: {
+    type: types.UPDATE_USER,
+    id: userId,
+    method: 'PUT',
+    path: `users/${userId}`,
+    body: payload
+  }
+});
+
+export const clearUpdateUser = (userId) => ({ type: types.UPDATE_USER_CLEAR, id: userId });
+
+export const deleteUser = (userId) => ({
+  [CALL_API]: {
+    type: types.USER_DELETE,
+    id: userId,
+    method: 'DELETE',
+    path: `users/${userId}`
+  }
+});
+
+export const searchUsers = (prefix) => ({ type: types.SEARCH_USERS, prefix: prefix });
+export const clearUsersSearch = () => ({ type: types.CLEAR_USERS_SEARCH });
+export const filterUsers = (param) => ({ type: types.FILTER_USERS, param: param });
+export const clearUsersFilter = (paramKey) => ({ type: types.CLEAR_USERS_FILTER, paramKey: paramKey });
+
+export const listGroups = (options = {}) => {
+  const { listAll = false, ...queryOptions } = options;
+  return (dispatch, getState) => {
+    const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
+    return dispatch({
+      [CALL_API]: {
+        type: types.GROUPS,
+        method: 'GET',
+        url: new URL('groups', root).href,
+        qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
+      }
+    });
+  };
+};
+
+export const getOptionsGroupGroup = () => ({
+  [CALL_API]: {
+    type: types.OPTIONS_GROUPGROUP,
+    method: 'GET',
+    url: new URL('groups', root).href,
+    qs: { limit: 100, fields: 'groupName' }
+  }
+});
+
+export const getGroup = (groupId) => ({
+  [CALL_API]: {
+    type: types.GROUP,
+    id: groupId,
+    method: 'GET',
+    path: `groups/${groupId}`
+  }
+});
+
+export const createGroup = (groupId, payload) => ({
+  [CALL_API]: {
+    type: types.NEW_GROUP,
+    id: groupId,
+    method: 'POST',
+    path: 'groups',
+    body: payload
+  }
+});
+
+export const updateGroup = (groupId, payload) => ({
+  [CALL_API]: {
+    type: types.UPDATE_GROUP,
+    id: groupId,
+    method: 'PUT',
+    path: `groups/${groupId}`,
+    body: payload
+  }
+});
+
+export const clearUpdateGroup = (groupId) => ({ type: types.UPDATE_GROUP_CLEAR, id: groupId });
+
+export const deleteGroup = (groupId) => ({
+  [CALL_API]: {
+    type: types.GROUP_DELETE,
+    id: groupId,
+    method: 'DELETE',
+    path: `groups/${groupId}`
+  }
+});
+
+export const searchGroups = (prefix) => ({ type: types.SEARCH_GROUPS, prefix: prefix });
+export const clearGroupsSearch = () => ({ type: types.CLEAR_GROUPS_SEARCH });
+export const filterGroups = (param) => ({ type: types.FILTER_GROUPS, param: param });
+export const clearGroupsFilter = (paramKey) => ({ type: types.CLEAR_GROUPS_FILTER, paramKey: paramKey });
+
 export const deletePdr = (pdrName) => ({
   [CALL_API]: {
     type: types.PDR_DELETE,

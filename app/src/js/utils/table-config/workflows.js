@@ -26,7 +26,7 @@ export const tableColumns = [
     id: 'name'
   },
   {
-    Header: 'AWS Step Function',
+    Header: 'Description',
     accessor: buildLink,
     id: 'template'
   },

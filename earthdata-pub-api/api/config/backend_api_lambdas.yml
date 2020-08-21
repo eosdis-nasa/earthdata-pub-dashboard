@@ -14,6 +14,7 @@ ApiEndpoints:
     EARTHDATA_CLIENT_ID: '{{EARTHDATA_CLIENT_ID}}'
     EARTHDATA_CLIENT_PASSWORD: '{{EARTHDATA_CLIENT_PASSWORD}}'
     OAUTH_PROVIDER: '{{parent.oauth.provider}}'
+    OAUTH_USER: '{{parent.oauth.user}}'
     oauth_user_group: '{{parent.oauth.userGroup}}'
     METRICS_ES_HOST: '{{METRICS_ES_HOST}}'
     METRICS_ES_AUTH: '{{METRICS_ES_USER}}:{{METRICS_ES_PASS}}'
@@ -45,6 +46,15 @@ ApiEndpoints:
     ProvidersTable:
       function: Ref
       value: ProvidersTableDynamoDB
+    FormsTable:
+      function: Ref
+      value: FormsTableDynamoDB
+    UsersTable:
+      function: Ref
+      value: UsersTableDynamoDB
+    GroupsTable:
+      function: Ref
+      value: GroupsTableDynamoDB
     RulesTable:
       function: Ref
       value: RulesTableDynamoDB

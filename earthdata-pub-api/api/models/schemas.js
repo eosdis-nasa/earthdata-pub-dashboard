@@ -752,6 +752,169 @@ module.exports.provider = {
   ]
 };
 
+// Form Schema => the model keeps information about each ingest location
+module.exports.form = {
+  title: 'Form Object',
+  description: 'Forms that capture question information',
+  type: 'object',
+  properties: {
+    id: {
+      title: 'Form Name',
+      type: 'string'
+    },
+    name: {
+      title: 'Form Name',
+      type: 'string'
+    },
+    user: {
+      type: 'string'
+    },
+    password: {
+      type: 'string'
+    },
+    encrypted: {
+      type: 'boolean',
+      readonly: true
+    },
+    createdAt: {
+      type: 'integer',
+      readonly: true
+    },
+    updatedAt: {
+      type: 'integer',
+      readonly: true
+    },
+    privateKey: {
+      type: 'string',
+      description: 'filename assumed to be in s3://bucketInternal/stackName/crypto'
+    },
+    cmKeyId: {
+      type: 'string',
+      description: 'AWS KMS Customer Master Key arn or alias'
+    }
+  },
+  required: [
+    'id',
+    'createdAt'
+  ]
+};
+
+module.exports.user = {
+  title: 'User Object',
+  description: 'Users that are allowed access to Earthdata Pub',
+  type: 'object',
+  properties: {
+    id: {
+      title: 'User Name',
+      type: 'string'
+    },
+    name: {
+      title: 'User Name',
+      type: 'string'
+    },
+    email: {
+      title: 'User Email',
+      type: 'string'
+    },
+    groups: {
+      title: 'Groups',
+      type: 'string'
+    },
+    permissions: {
+      title: 'Permissions',
+      type: 'string'
+    },
+    subscriptions: {
+      title: 'Subscriptions',
+      type: 'string'
+    },
+    user: {
+      type: 'string'
+    },
+    password: {
+      type: 'string'
+    },
+    encrypted: {
+      type: 'boolean',
+      readonly: true
+    },
+    createdAt: {
+      type: 'integer',
+      readonly: true
+    },
+    updatedAt: {
+      type: 'integer',
+      readonly: true
+    },
+    privateKey: {
+      type: 'string',
+      description: 'filename assumed to be in s3://bucketInternal/stackName/crypto'
+    },
+    cmKeyId: {
+      type: 'string',
+      description: 'AWS KMS Customer Master Key arn or alias'
+    }
+  },
+  required: [
+    'id',
+    'createdAt'
+  ]
+};
+
+module.exports.group = {
+  title: 'Group Object',
+  description: 'Groups that are allowed access to Earthdata Pub',
+  type: 'object',
+  properties: {
+    id: {
+      title: 'Group Name',
+      type: 'string'
+    },
+    name: {
+      title: 'Group Name',
+      type: 'string'
+    },
+    permissions: {
+      title: 'Permissions',
+      type: 'string'
+    },
+    subscriptions: {
+      title: 'Subscriptions',
+      type: 'string'
+    },
+    group: {
+      type: 'string'
+    },
+    password: {
+      type: 'string'
+    },
+    encrypted: {
+      type: 'boolean',
+      readonly: true
+    },
+    createdAt: {
+      type: 'integer',
+      readonly: true
+    },
+    updatedAt: {
+      type: 'integer',
+      readonly: true
+    },
+    privateKey: {
+      type: 'string',
+      description: 'filename assumed to be in s3://bucketInternal/stackName/crypto'
+    },
+    cmKeyId: {
+      type: 'string',
+      description: 'AWS KMS Customer Master Key arn or alias'
+    }
+  },
+  required: [
+    'id',
+    'createdAt'
+  ]
+};
+
 // Execution Schema => the model keeps information about each step function execution
 module.exports.execution = {
   title: 'Execution Object',

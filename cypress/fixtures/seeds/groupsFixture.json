@@ -1,0 +1,296 @@
+{
+  "meta": {
+    "name": "earthdata-pub-api",
+    "stack": "test-src-integration",
+    "table": "group",
+    "limit": 10,
+    "page": 1,
+    "count": 2
+  },
+  "results": [
+    {
+      "groupId": "1",
+      "id": "1",
+      "createdAt": 1524686535230,
+      "name": "ORNL DAAC",
+      "permissions": [
+        {
+          "id":"1",
+          "permissionId":"1",
+          "entityId":"1",
+          "table_name":"Submissions"
+        },
+        {
+          "id":"2",
+          "permissionId":"2",
+          "entityId":"2",
+          "table_name":"Workflows"
+        },
+        {
+          "id":"3",
+          "permissionId":"3",
+          "entityId":"3",
+          "table_name":"Forms"
+        },
+        {
+          "id":"4",
+          "permissionId":"4",
+          "entityId":"4",
+          "table_name":"Users"
+        },
+        {
+          "id":"5",
+          "permissionId":"5",
+          "entityId":"5",
+          "table_name":"Groups"
+        }
+      ],
+      "subscriptions": [
+        {
+          "id":"1",
+          "subscriptionId":"1",
+          "sourceId":"1",
+          "table_name":"Submissions"
+        },
+        {
+          "id":"2",
+          "subscriptionId":"2",
+          "sourceId":"2",
+          "table_name":"Workflows"
+        },
+        {
+          "id":"3",
+          "subscriptionId":"3",
+          "sourceId":"3",
+          "table_name":"Forms"
+        },
+        {
+          "id":"4",
+          "subscriptionId":"4",
+          "sourceId":"4",
+          "table_name":"Users"
+        },
+        {
+          "id":"5",
+          "subscriptionId":"5",
+          "sourceId":"5",
+          "table_name":"Groups"
+        }
+      ],
+      "updatedAt": 1525982459499
+    },
+    {
+      "groupId": "2",
+      "id": "2",
+      "createdAt": 1524686535230,
+      "name": "Admin",
+      "permissions": [
+        {
+          "id":"1",
+          "permissionId":"1",
+          "entityId":"1",
+          "table_name":"Submissions"
+        },
+        {
+          "id":"2",
+          "permissionId":"2",
+          "entityId":"2",
+          "table_name":"Workflows"
+        },
+        {
+          "id":"3",
+          "permissionId":"3",
+          "entityId":"3",
+          "table_name":"Forms"
+        },
+        {
+          "id":"4",
+          "permissionId":"4",
+          "entityId":"4",
+          "table_name":"Users"
+        },
+        {
+          "id":"5",
+          "permissionId":"5",
+          "entityId":"5",
+          "table_name":"Groups"
+        }
+      ],
+      "subscriptions": [
+        {
+          "id":"1",
+          "subscriptionId":"1",
+          "sourceId":"1",
+          "table_name":"Submissions"
+        },
+        {
+          "id":"2",
+          "subscriptionId":"2",
+          "sourceId":"2",
+          "table_name":"Workflows"
+        },
+        {
+          "id":"3",
+          "subscriptionId":"3",
+          "sourceId":"3",
+          "table_name":"Forms"
+        },
+        {
+          "id":"4",
+          "subscriptionId":"4",
+          "sourceId":"4",
+          "table_name":"Users"
+        },
+        {
+          "id":"5",
+          "subscriptionId":"5",
+          "sourceId":"5",
+          "table_name":"Groups"
+        }
+      ],
+      "updatedAt": 1525982459499
+    },
+    {
+      "groupId": "3",
+      "id": "3",
+      "createdAt": 1524686535230,
+      "name": "Blah",
+      "permissions": [
+        {
+          "id":"1",
+          "permissionId":"1",
+          "entityId":"1",
+          "table_name":"Submissions"
+        },
+        {
+          "id":"2",
+          "permissionId":"2",
+          "entityId":"2",
+          "table_name":"Workflows"
+        },
+        {
+          "id":"3",
+          "permissionId":"3",
+          "entityId":"3",
+          "table_name":"Forms"
+        },
+        {
+          "id":"4",
+          "permissionId":"4",
+          "entityId":"4",
+          "table_name":"Users"
+        },
+        {
+          "id":"5",
+          "permissionId":"5",
+          "entityId":"5",
+          "table_name":"Groups"
+        }
+      ],
+      "subscriptions": [
+        {
+          "id":"1",
+          "subscriptionId":"1",
+          "sourceId":"1",
+          "table_name":"Submissions"
+        },
+        {
+          "id":"2",
+          "subscriptionId":"2",
+          "sourceId":"2",
+          "table_name":"Workflows"
+        },
+        {
+          "id":"3",
+          "subscriptionId":"3",
+          "sourceId":"3",
+          "table_name":"Forms"
+        },
+        {
+          "id":"4",
+          "subscriptionId":"4",
+          "sourceId":"4",
+          "table_name":"Users"
+        },
+        {
+          "id":"5",
+          "subscriptionId":"5",
+          "sourceId":"5",
+          "table_name":"Groups"
+        }
+      ],
+      "updatedAt": 1525982459499
+    },
+    {
+      "groupId": "4",
+      "id": "4",
+      "createdAt": 1524686535230,
+      "name": "User",
+      "permissions": [
+        {
+          "id":"1",
+          "permissionId":"1",
+          "entityId":"1",
+          "table_name":"Submissions"
+        },
+        {
+          "id":"2",
+          "permissionId":"2",
+          "entityId":"2",
+          "table_name":"Workflows"
+        },
+        {
+          "id":"3",
+          "permissionId":"3",
+          "entityId":"3",
+          "table_name":"Forms"
+        },
+        {
+          "id":"4",
+          "permissionId":"4",
+          "entityId":"4",
+          "table_name":"Users"
+        },
+        {
+          "id":"5",
+          "permissionId":"5",
+          "entityId":"5",
+          "table_name":"Groups"
+        }
+      ],
+      "subscriptions": [
+        {
+          "id":"1",
+          "subscriptionId":"1",
+          "sourceId":"1",
+          "table_name":"Submissions"
+        },
+        {
+          "id":"2",
+          "subscriptionId":"2",
+          "sourceId":"2",
+          "table_name":"Workflows"
+        },
+        {
+          "id":"3",
+          "subscriptionId":"3",
+          "sourceId":"3",
+          "table_name":"Forms"
+        },
+        {
+          "id":"4",
+          "subscriptionId":"4",
+          "sourceId":"4",
+          "table_name":"Users"
+        },
+        {
+          "id":"5",
+          "subscriptionId":"5",
+          "sourceId":"5",
+          "table_name":"Groups"
+        }
+      ],
+      "updatedAt": 1525982459499
+    }
+  ]
+}

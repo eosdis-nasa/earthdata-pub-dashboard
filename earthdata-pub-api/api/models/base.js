@@ -4,7 +4,7 @@ const get = require('lodash/get');
 const Ajv = require('ajv');
 const pWaitFor = require('p-wait-for');
 const awsServices = require('earthdata-pub-api/aws-client/services');
-const DynamoDb = require('earthdata-pub-api/aws-client');
+const { DynamoDb } = require('earthdata-pub-api/aws-client');
 const { RecordDoesNotExist } = require('earthdata-pub-api/errors');
 const { inTestMode } = require('earthdata-pub-api/common/test-utils');
 const { errorify } = require('../lib/utils');
@@ -153,7 +153,6 @@ class Manager {
     // Make sure all required parameters are present
     if (!params.tableName) throw new TypeError('params.tableName is required');
     if (!params.tableHash) throw new TypeError('params.tableHash is required');
-
     this.tableName = params.tableName;
     this.tableHash = params.tableHash;
     this.tableRange = params.tableRange;

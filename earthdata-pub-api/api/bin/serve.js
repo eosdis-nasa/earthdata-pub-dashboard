@@ -18,9 +18,7 @@ const {
 
 const workflowList = testUtils.getWorkflowList();
 
-async function createTable(Model, tableName) {
-  console.log(Model)
-  console.log(tableName)
+async function createTable (Model, tableName) {
   try {
     const model = new Model({
       tableName,
@@ -37,7 +35,7 @@ async function createTable(Model, tableName) {
   }
 }
 
-async function populateBucket(bucket, stackName) {
+async function populateBucket (bucket, stackName) {
   // upload workflow files
   const workflowPromises = workflowList.map((obj) => promiseS3Upload({
     Bucket: bucket,
@@ -55,7 +53,7 @@ async function populateBucket(bucket, stackName) {
   await Promise.all([...workflowPromises, templatePromise]);
 }
 
-function setTableEnvVariables(stackName) {
+function setTableEnvVariables (stackName) {
   process.env.FilesTable = `${stackName}-FilesTable`;
 
   const tableModels = Object
@@ -80,7 +78,7 @@ function setTableEnvVariables(stackName) {
 
 // check if the tables and Elasticsearch indices exist
 // if not create them
-async function checkOrCreateTables(stackName) {
+async function checkOrCreateTables (stackName) {
   const tables = setTableEnvVariables(stackName);
 
   const limit = pLimit(1);
@@ -96,21 +94,20 @@ async function checkOrCreateTables(stackName) {
   await Promise.all(promises);
 }
 
-
-async function prepareServices(stackName, bucket) {
+async function prepareServices (stackName, bucket) {
   setLocalEsVariables(stackName);
   await bootstrap.bootstrapElasticSearch(process.env.ES_HOST, process.env.ES_INDEX);
   await s3().createBucket({ Bucket: bucket }).promise();
 }
 
-function getRequiredAuthEnvVariables() {
+function getRequiredAuthEnvVariables () {
   const authEnvVariables = process.env.FAKE_AUTH
     ? []
     : ['EARTHDATA_CLIENT_ID', 'EARTHDATA_CLIENT_PASSWORD'];
   return authEnvVariables;
 }
 
-function setAuthEnvVariables() {
+function setAuthEnvVariables () {
   if (process.env.FAKE_AUTH) {
     process.env.EARTHDATA_CLIENT_ID = randomId('EARTHDATA_CLIENT_ID');
     process.env.EARTHDATA_CLIENT_PASSWORD = randomId('EARTHDATA_CLIENT_PASSWORD');
@@ -118,7 +115,7 @@ function setAuthEnvVariables() {
   }
 }
 
-function checkEnvVariablesAreSet(moreRequiredEnvVars) {
+function checkEnvVariablesAreSet (moreRequiredEnvVars) {
   const authEnvVariables = getRequiredAuthEnvVariables();
   const requiredEnvVars = authEnvVariables.concat(moreRequiredEnvVars);
   requiredEnvVars.forEach((env) => {
@@ -133,7 +130,7 @@ function checkEnvVariablesAreSet(moreRequiredEnvVars) {
  * @param {any} esClient - Elasticsearch client
  * @param {any} esIndex - index to delete
  */
-async function eraseElasticsearchIndices(esClient, esIndex) {
+async function eraseElasticsearchIndices (esClient, esIndex) {
   try {
     await esClient.indices.delete({ index: esIndex });
   } catch (error) {
@@ -147,7 +144,7 @@ async function eraseElasticsearchIndices(esClient, esIndex) {
  * @param {string} stackName - The name of local stack. Used to prefix stack resources.
  * @returns {Object} - Elasticsearch client and index
  */
-async function initializeLocalElasticsearch(stackName) {
+async function initializeLocalElasticsearch (stackName) {
   const es = await getESClientAndIndex(stackName);
   await eraseElasticsearchIndices(es.client, es.index);
   return bootstrap.bootstrapElasticSearch(process.env.ES_HOST, es.index);
@@ -158,7 +155,7 @@ async function initializeLocalElasticsearch(stackName) {
  * @param {string} stackName - The name of local stack. Used to prefix stack resources.
  * @param {string} user - username
  */
-async function createDBRecords(stackName, user) {
+async function createDBRecords (stackName, user) {
   await initializeLocalElasticsearch(stackName);
 
   if (user) {
@@ -180,6 +177,18 @@ async function createDBRecords(stackName, user) {
   // add provider records
   const provider = testUtils.fakeProviderFactory({ id: `${stackName}-provider` });
   await serveUtils.addProviders([provider]);
+
+  // add form records
+  const form = testUtils.fakeFormFactory({ id: `${stackName}-form` });
+  await serveUtils.addForms([form]);
+
+  // add user records
+  const users = testUtils.fakeUserFactory({ id: `${stackName}-user` });
+  await serveUtils.addUsers([users]);
+
+  // add group records
+  const group = testUtils.fakeGroupFactory({ id: `${stackName}-group` });
+  await serveUtils.addGroups([group]);
 
   // add rule records
   const rule = testUtils.fakeRuleFactoryV2({
@@ -210,7 +219,7 @@ async function createDBRecords(stackName, user) {
  * @param {bool} reseed - boolean to control whether to load new data into
  *                        dynamo and elastic search.
  */
-async function serveApi(user, stackName = localStackName, reseed = true) {
+async function serveApi (user, stackName = localStackName, reseed = true) {
   const port = process.env.PORT || 5001;
   const requiredEnvVars = [
     'stackName',
@@ -257,7 +266,7 @@ async function serveApi(user, stackName = localStackName, reseed = true) {
  * @param {string} stackName - The name of local stack. Used to prefix stack resources.
  * @param {function} done - Optional callback to fire when app has started listening.
  */
-async function serveDistributionApi(stackName = localStackName, done) {
+async function serveDistributionApi (stackName = localStackName, done) {
   const port = process.env.PORT || 5002;
   const requiredEnvVars = [
     'DISTRIBUTION_REDIRECT_ENDPOINT',
@@ -299,7 +308,7 @@ async function serveDistributionApi(stackName = localStackName, done) {
  * @param {string} stackName - stack name (generally 'localrun')
  * @param {string} systemBucket - stystem bucket (generally 'localbucket' )
  */
-async function eraseDynamoTables(stackName, systemBucket) {
+async function eraseDynamoTables (stackName, systemBucket) {
   setTableEnvVariables(stackName);
   process.env.system_bucket = systemBucket;
   process.env.stackName = stackName;
@@ -311,6 +320,9 @@ async function eraseDynamoTables(stackName, systemBucket) {
   const executionModel = new models.Execution();
   const granulesModel = new models.Granule();
   const submissionsModel = new models.Submission();
+  const formsModel = new models.Form();
+  const usersModel = new models.User();
+  const groupsModel = new models.Group();
   const pdrsModel = new models.Pdr();
 
   try {
@@ -321,6 +333,9 @@ async function eraseDynamoTables(stackName, systemBucket) {
       executionModel.deleteExecutions(),
       granulesModel.deleteGranules(),
       submissionsModel.deleteSubmissions(),
+      formsModel.deleteForms(),
+      usersModel.deleteUsers(),
+      groupsModel.deleteGroups(),
       pdrsModel.deletePdrs()
     ]);
   } catch (error) {
@@ -334,7 +349,7 @@ async function eraseDynamoTables(stackName, systemBucket) {
  * @param {string} stackName - defaults to local stack, 'localrun'
  * @param {string} systemBucket - defaults to 'localbucket'
  */
-async function eraseDataStack(
+async function eraseDataStack (
   stackName = localStackName,
   systemBucket = localSystemBucket
 ) {
@@ -350,7 +365,7 @@ async function eraseDataStack(
  * @param {string} systemBucket - defaults to 'localbucket', localrun
  * @param {bool} runIt - Override check to prevent accidental AWS run.  default: 'false'.
  */
-async function resetTables(
+async function resetTables (
   user = localUserName,
   stackName = localStackName,
   systemBucket = localSystemBucket,

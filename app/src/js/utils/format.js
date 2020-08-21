@@ -115,21 +115,17 @@ export const providerLink = function (provider) {
   if (!provider) return nullValue;
   return <Link to={`/providers/provider/${provider}`}>{provider}</Link>;
 };
-export const roleLink = function (role) {
-  if (!role) return nullValue;
-  return <Link to={`/roles/role/${role}`}>{role}</Link>;
+export const groupLink = function (groupId) {
+  if (groupId) return nullValue;
+  return <Link to={`/groups/group/${groupId}`}>{groupId}</Link>;
 };
-export const groupLink = function (group) {
-  if (!group) return nullValue;
-  return <Link to={`/groups/group/${group}`}>{group}</Link>;
+export const userLink = function (userId) {
+  if (userId) return nullValue;
+  return <Link to={`/users/user/${userId}`}>{userId}</Link>;
 };
-export const userLink = function (user) {
-  if (!user) return nullValue;
-  return <Link to={`/users/user/${user}`}>{user}</Link>;
-};
-export const formLink = function (form) {
-  if (!form) return nullValue;
-  return <Link to={`/forms/form/${form}`}>{form}</Link>;
+export const formLink = function (formId) {
+  if (formId) return nullValue;
+  return <Link to={`/forms/form/${formId}`}>{formId}</Link>;
 };
 export const workflowLink = function (workflowId) {
   if (workflowId) return nullValue;

@@ -13,6 +13,18 @@
       "granuleId": {
         "type": "keyword"
       },
+      "submissionId": {
+        "type": "keyword"
+      },
+      "formId": {
+        "type": "keyword"
+      },
+      "userId": {
+        "type": "keyword"
+      },
+      "groupId": {
+        "type": "keyword"
+      },
       "collectionId": {
         "type": "keyword"
       },
@@ -404,6 +416,69 @@
         "type": "date"
       },
       "deletedAt": {
+        "type": "date"
+      }
+    }
+  },
+  "form": {
+    "dynamic_templates": [
+      {
+        "all_date_fileds": {
+          "match": "*At",
+          "match_mapping_type": "long",
+          "mapping": {
+            "type": "date"
+          }
+        }
+      }
+    ],
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "timestamp": {
+        "type": "date"
+      }
+    }
+  },
+  "user": {
+    "dynamic_templates": [
+      {
+        "all_date_fileds": {
+          "match": "*At",
+          "match_mapping_type": "long",
+          "mapping": {
+            "type": "date"
+          }
+        }
+      }
+    ],
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "timestamp": {
+        "type": "date"
+      }
+    }
+  },
+  "group": {
+    "dynamic_templates": [
+      {
+        "all_date_fileds": {
+          "match": "*At",
+          "match_mapping_type": "long",
+          "mapping": {
+            "type": "date"
+          }
+        }
+      }
+    ],
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "timestamp": {
         "type": "date"
       }
     }

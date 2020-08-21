@@ -22,6 +22,9 @@ import Granules from './components/Granules';
 import Submissions from './components/Submissions';
 import Pdrs from './components/Pdr';
 import Providers from './components/Providers';
+import Users from './components/Users';
+import Groups from './components/Groups';
+import Forms from './components/Forms';
 import Workflows from './components/Workflows';
 import Executions from './components/Executions';
 import Operations from './components/Operations';
@@ -47,6 +50,9 @@ const MainRoutes = () => {
         <Route path='/submissions' component={Submissions} />
         <Route path='/pdrs' component={Pdrs} />
         <Route path='/providers' component={Providers} />
+        <Route path='/forms' component={Forms} />
+        <Route path='/users' component={Users} />
+        <Route path='/groups' component={Groups} />
         <Route path='/workflows' component={Workflows} />
         <Route path='/executions' component={Executions} />
         <Route path='/operations' component={Operations} />

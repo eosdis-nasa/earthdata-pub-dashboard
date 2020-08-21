@@ -81,9 +81,9 @@ class SubmissionOverview extends React.Component {
     this.fastReload = this.fastReload.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
     this.queryWorkflows = this.queryWorkflows.bind(this);
-    this.reingest = this.reingest.bind(this);
+    //  this.reingest = this.reingest.bind(this);
     this.applyWorkflow = this.applyWorkflow.bind(this);
-    this.remove = this.remove.bind(this);
+    //  this.remove = this.remove.bind(this);
     this.delete = this.delete.bind(this);
     this.errors = this.errors.bind(this);
     this.selectWorkflow = this.selectWorkflow.bind(this);

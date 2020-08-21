@@ -28,6 +28,24 @@ ProvidersTable:
       type: S
       schema: HASH
 
+FormsTable:
+  read: 5
+  write: 1
+  pointInTime: '{{enablePointInTime}}'
+  attributes:
+    - name: id
+      type: S
+      schema: HASH
+
+GroupsTable:
+  read: 5
+  write: 1
+  pointInTime: '{{enablePointInTime}}'
+  attributes:
+    - name: id
+      type: S
+      schema: HASH
+
 RulesTable:
   read: 5
   write: 1
@@ -67,6 +85,30 @@ GranulesTable:
         AttributeName: collectionId
       - KeyType: RANGE
         AttributeName: granuleId
+      Projection:
+        ProjectionType: ALL
+
+SubmissionsTable:
+  read: 5
+  write: 10
+  pointInTime: '{{enablePointInTime}}'
+  attributes:
+    - name: submissionId
+      type: S
+      schema: HASH
+    - name: collectionId
+      type: S
+  # overrides the default behavior of adding all defined attributes to KeySchema
+  KeySchema:
+    - KeyType: HASH
+      AttributeName: submissionId
+  GlobalSecondaryIndexes:
+    - IndexName: collectionId-submissionId-index
+      KeySchema:
+      - KeyType: HASH
+        AttributeName: collectionId
+      - KeyType: RANGE
+        AttributeName: submissionId
       Projection:
         ProjectionType: ALL
 
