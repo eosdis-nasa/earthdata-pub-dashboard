@@ -1,8 +1,7 @@
 {
   "_args": [
     [
-      "earthdata-pub-api/cmrjs@1.11.0",
-      "/home/5kb/git/cumulus-dashboard"
+      "earthdata-pub-api/cmrjs@1.11.0"
     ]
   ],
   "_from": "earthdata-pub-api/cmrjs@1.11.0",
@@ -32,7 +31,7 @@
   ],
   "_resolved": "https://registry.npmjs.org/earthdata-pub-api/cmrjs/-/cmrjs-1.11.0.tgz",
   "_spec": "1.11.0",
-  "_where": "/home/5kb/git/cumulus-dashboard",
+  "_where": "",
   "author": {
     "name": "Cumulus Authors"
   },

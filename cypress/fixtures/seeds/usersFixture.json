@@ -9,11 +9,11 @@
   },
   "results": [
     {
-      "userId": "5kb",
-      "id":"5kb",
+      "userId": "user1",
+      "id":"user1",
       "createdAt": 1524686535230,
-      "username": "Kimberly Broughton",
-      "email": "broughtonkk@ornl.gov",
+      "username": "User One",
+      "email": "user1@example.com",
       "groups": [
         {
           "id":"1",
@@ -74,11 +74,11 @@
       "updatedAt": 1525982459499
     },
     {
-      "userId": "dw2",
-      "id": "dw2",
+      "userId": "user2",
+      "id": "user2",
       "createdAt": 1524686535230,
-      "username": "Daine Wright",
-      "email": "wrightdm@ornl.gov",
+      "username": "User Two",
+      "email": "user2@example.com",
       "groups": [
         {
           "id":"1",
@@ -163,11 +163,11 @@
       "updatedAt": 1525982459499
     },
     {
-      "userId": "will",
-      "id": "will",
+      "userId": "user3",
+      "id": "user3",
       "createdAt": 1524686535230,
-      "username": "Will Ellet",
-      "email": "will@example.com",
+      "username": "User Three",
+      "email": "user3@example.com",
       "groups": [
         {
           "id":"1",
@@ -227,7 +227,7 @@
       "id": "test-user",
       "createdAt": 1524686535230,
       "username": "Test User",
-      "email": "blah@example.com",
+      "email": "testuser@example.com",
       "groups": [
         {
           "id":"2",
