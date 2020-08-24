@@ -21,7 +21,7 @@
       "id": "dataSubmissionRequest_SUBMITTED.A1530852.CljGDp.006.2163412421938.json",
       "createdAt": 1524686535230,
       "name": "Data Submission Request",
-      "username": "5kb",
+      "username": "user1",
       "updatedAt": 1525982459499
     },
     {
@@ -29,7 +29,7 @@
       "id": "dataProductQuestionaire_SUBMITTED.A1530852.CljGDp.006.2163412421938.json",
       "createdAt": 1539104943690,
       "name": "Data Product Questionairea",
-      "username": "dw2",
+      "username": "user2",
       "updatedAt": 1539104943690
     },
     {
@@ -37,7 +37,7 @@
       "id": "dataSubmissionRequest_SUBMITTED.A2016358.h13v04.006.2016360104606.hdf.json",
       "createdAt": 1524686535230,
       "name": "Data Submission Request",
-      "username": "dw2",
+      "username": "user2",
       "updatedAt": 1525982459499
     },
     {
@@ -45,7 +45,7 @@
       "id": "dataProductQuestionaire_SUBMITTED.A2016358.h13v04.006.2016360104606.hdf.json",
       "createdAt": 1539104943690,
       "name": "Data Product Questionairea",
-      "username": "5kb",
+      "username": "user1",
       "updatedAt": 1539104943690
     }
   ]
