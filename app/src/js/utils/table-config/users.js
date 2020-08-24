@@ -16,7 +16,7 @@ export const tableColumns = [
   },
   {
     Header: 'Groups',
-    accessor: row => <Link to={`groups/group/${row.id}`}>{row.id}</Link>,
+    accessor: row => <Link to={`groups/group/${row.groupId}`}>{row.groupId}</Link>,
     id: 'groups'
   },
   {

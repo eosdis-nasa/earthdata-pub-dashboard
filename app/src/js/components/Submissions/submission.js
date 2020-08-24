@@ -181,21 +181,6 @@ class SubmissionOverview extends React.Component {
       for (const key in get(submission, 'files', {})) { files.push(submission.files[key]); }
     }
     const dropdownConfig = [{
-      text: 'Reingest',
-      action: this.reingest,
-      status: get(this.props.submissions.reingested, [submissionId, 'status']),
-      success: this.fastReload,
-      confirmAction: true,
-      confirmText: `Reingest ${submissionId}? Note: the submission files will be overwritten.`
-    }, {
-      text: 'Execute',
-      action: this.applyWorkflow,
-      status: get(this.props.submissions.executed, [submissionId, 'status']),
-      success: this.fastReload,
-      confirmAction: true,
-      confirmText: `Execute on ${submissionId}?`,
-      confirmOptions: this.getExecuteOptions()
-    }, {
       text: 'Delete',
       action: this.delete,
       disabled: !!submission.submitted,
