@@ -21,7 +21,6 @@ const getWorkflowsListKeyPrefix = (stackName) => `${stackName}/workflows/`;
 async function getWorkflowTemplate (stackName, bucketName) {
   const key = templateKey(stackName);
   const templateJson = await getS3Object(bucketName, key);
-  console.log(templateJson)
   return JSON.parse(templateJson.Body.toString());
 }
 
@@ -36,7 +35,6 @@ async function getWorkflowTemplate (stackName, bucketName) {
 async function getWorkflowFile (stackName, bucketName, workflowName) {
   const key = `${stackName}/workflows/${workflowName}.json`;
   const wfJson = await getS3Object(bucketName, key);
-  console.log(wfJson.Body.toString());
   return JSON.parse(wfJson.Body.toString());
 }
 

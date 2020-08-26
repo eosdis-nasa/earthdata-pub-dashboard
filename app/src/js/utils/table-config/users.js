@@ -6,8 +6,8 @@ import { fromNow } from '../format';
 export const tableColumns = [
   {
     Header: 'Name',
-    accessor: row => <Link to={`users/user/${row.id}`}>{row.id}</Link>,
-    id: 'username'
+    accessor: row => <Link to={`users/user/${row.userId}`}>{row.userId}</Link>,
+    id: 'userName'
   },
   {
     Header: 'Email',

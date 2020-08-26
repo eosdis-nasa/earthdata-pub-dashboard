@@ -5,17 +5,19 @@ import { fromNow } from '../format';
 
 export const tableColumns = [
   {
-    Header: 'Name',
-    accessor: row => <Link to={`groups/group/${row.id}`}>{row.id}</Link>,
+    Header: 'Group Name',
+    accessor: row => <Link to={`groups/group/${row.groupId}`}>{row.groupId}</Link>,
     id: 'name'
   },
   {
     Header: 'Permissions',
-    accessor: 'permissions'
+    accessor: row => row.permissions,
+    id: 'permissions'
   },
   {
     Header: 'Subscriptions',
-    accessor: 'subscriptions'
+    accessor: row => row.subscriptions,
+    id: 'subscriptions'
   },
   {
     Header: 'Last Updated',

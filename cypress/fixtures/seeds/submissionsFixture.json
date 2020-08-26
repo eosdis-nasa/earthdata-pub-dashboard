@@ -254,6 +254,20 @@
       "timeToArchive": 0.043,
       "files": [
         {
+          "bucket": "earthdatapub-test-sandbox-protected",
+          "fileName": "s3://earthdatapub-test-sandbox-protected/MOD09GQ___006/2017/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140.hdf"
+        },
+        {
+          "bucket": "earthdatapub-test-sandbox-private",
+          "fileName": "s3://earthdatapub-test-sandbox-private/MOD09GQ___006/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140.hdf.met"
+        },
+        {
+          "bucket": "earthdatapub-test-sandbox-public",
+          "fileName": "s3://earthdatapub-test-sandbox-public/MOD09GQ___006/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140_ndvi.jpg"
+        },
+        {
+          "bucket": "earthdatapub-test-sandbox-protected-2",
+          "fileName": "s3://earthdatapub-test-sandbox-protected-2/MOD09GQ___006/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140.cmr.xml"
         }
       ],
       "collectionId": "MOD09GQ___006",
