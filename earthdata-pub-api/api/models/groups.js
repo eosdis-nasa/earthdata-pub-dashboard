@@ -92,7 +92,7 @@ class Group extends Manager {
 
     const scanResult = await ruleModel.scan({
       filter: 'group = :group',
-      values: { ':group': groupId }
+      values: { ':group': id }
     });
 
     return scanResult.Items;

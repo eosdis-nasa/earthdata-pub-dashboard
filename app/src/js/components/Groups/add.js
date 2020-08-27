@@ -18,7 +18,7 @@ class AddGroup extends React.Component {
     return (
       <AddRecord
         schemaKey={SCHEMA_KEY}
-        primaryProperty={'id'}
+        primaryProperty={'name'}
         title={'Create a group'}
         state={this.props.groups}
         baseRoute={'/groups/group'}

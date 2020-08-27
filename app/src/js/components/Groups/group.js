@@ -137,7 +137,7 @@ class GroupOverview extends React.Component {
     const group = record.data;
     const logsQuery = { 'meta.group': groupId };
     const errors = this.errors();
-
+    
     const deleteStatus = get(this.props.groups.deleted, [groupId, 'status']);
     const dropdownConfig = [{
       text: 'Delete',
@@ -168,7 +168,7 @@ class GroupOverview extends React.Component {
           </div>
           <Metadata data={group} accessors={metaAccessors} />
         </section>
-
+        {/*
 
         
         <section className='page__section list--submissions'>
@@ -187,7 +187,7 @@ class GroupOverview extends React.Component {
             />
           </div>
         </section>
-
+        */}
 
         <section className='page__section'>
           <LogViewer

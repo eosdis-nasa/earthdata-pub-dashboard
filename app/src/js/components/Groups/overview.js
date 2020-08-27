@@ -64,11 +64,11 @@ class GroupsOverview extends React.Component {
     const { list } = this.props.groups;
     const { stats } = this.props;
     const { count, queriedAt } = list.meta;
-
+    
     // Incorporate the collection counts into the `list`
     const mutableList = cloneDeep(list);
     const collectionCounts = get(stats.count, 'data.collections.count', []);
-
+    
     mutableList.data.forEach(d => {
       d.collections = get(collectionCounts.find(c => c.key === d.name), 'count', 0);
     });

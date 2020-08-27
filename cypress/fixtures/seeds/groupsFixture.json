@@ -139,11 +139,6 @@
           "table_name":"Submissions"
         },
         {
-          "permissionId":"2",
-          "entityId":"2",
-          "table_name":"Workflows"
-        },
-        {
           "permissionId":"3",
           "entityId":"3",
           "table_name":"Forms"
@@ -207,16 +202,6 @@
           "permissionId":"3",
           "entityId":"3",
           "table_name":"Forms"
-        },
-        {
-          "permissionId":"4",
-          "entityId":"4",
-          "table_name":"Users"
-        },
-        {
-          "permissionId":"5",
-          "entityId":"5",
-          "table_name":"Groups"
         }
       ],
       "subscriptions": [
@@ -234,16 +219,6 @@
           "subscriptionId":"3",
           "sourceId":"3",
           "table_name":"Forms"
-        },
-        {
-          "subscriptionId":"4",
-          "sourceId":"4",
-          "table_name":"Users"
-        },
-        {
-          "subscriptionId":"5",
-          "sourceId":"5",
-          "table_name":"Groups"
         }
       ],
       "updatedAt": 1525982459499

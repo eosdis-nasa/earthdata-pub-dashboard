@@ -80,6 +80,9 @@ class UsersOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content'>Users <span className='num--title'>{count ? `${count}` : 0}</span></h2>
           </div>
+          <div className='filter__button--add'>
+            <Link className='button button--green button--add button--small form-group__element' to='/users/add'>Add User</Link>
+          </div>
           <List
             list={mutableList}
             dispatch={this.props.dispatch}
