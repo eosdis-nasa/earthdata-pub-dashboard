@@ -58,36 +58,6 @@ class Group extends Manager {
     return super.exists({ id });
   }
 
-  async update(key, item, keysToDelete = []) {
-    const record = { ...item };
-
-    if (item.username || item.password) record.encrypted = true;
-
-    if (item.username) {
-      record.username = await encryptValueWithKMS(item.username);
-    }
-    if (item.password) {
-      record.password = await encryptValueWithKMS(item.password);
-    }
-
-    return super.update(key, record, keysToDelete);
-  }
-
-  async create(item) {
-    const record = { ...item };
-
-    if (item.username || item.password) record.encrypted = true;
-
-    if (item.username) {
-      record.username = await encryptValueWithKMS(item.username);
-    }
-    if (item.password) {
-      record.password = await encryptValueWithKMS(item.password);
-    }
-
-    return super.create(record);
-  }
-
   /**
    * Delete a group
    *
