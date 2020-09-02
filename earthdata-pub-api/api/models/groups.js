@@ -64,7 +64,7 @@ class Group extends Manager {
    * @param {string} id - the group id
    */
   async delete({ id }) {
-    const associatedRuleNames = (await this.getAssociatedRules(id))
+    /*const associatedRuleNames = (await this.getAssociatedRules(id))
       .map((rule) => rule.name);
 
     if (associatedRuleNames.length > 0) {
@@ -72,7 +72,7 @@ class Group extends Manager {
         'Cannot delete a group that has associated rules',
         associatedRuleNames
       );
-    }
+    }*/
 
     await super.delete({ id });
   }
@@ -92,7 +92,6 @@ class Group extends Manager {
     const ruleModel = new Rule();
 
     const scanResult = await ruleModel.scan({
-      filter: 'group = :group',
       values: { ':group': id }
     });
 

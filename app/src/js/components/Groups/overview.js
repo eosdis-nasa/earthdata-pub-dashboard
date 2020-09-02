@@ -12,7 +12,7 @@ import {
   filterGroups,
   clearGroupsFilter
 } from '../../actions';
-import { lastUpdated, tally, displayCase } from '../../utils/format';
+import { tally, displayCase } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/groups';
 import List from '../Table/Table';
 import PropTypes from 'prop-types';
@@ -42,12 +42,8 @@ class GroupsOverview extends React.Component {
 
   queryStats () {
     this.props.dispatch(getCount({
-      type: 'collections',
-      field: 'groups'
-    }));
-    this.props.dispatch(getCount({
       type: 'groups',
-      field: 'status'
+      field: 'stage'
     }));
   }
 
@@ -63,7 +59,7 @@ class GroupsOverview extends React.Component {
   render () {
     const { list } = this.props.groups;
     const { stats } = this.props;
-    const { count, queriedAt } = list.meta;
+    const { count } = list.meta;
 
     // Incorporate the collection counts into the `list`
     const mutableList = cloneDeep(list);
@@ -72,24 +68,18 @@ class GroupsOverview extends React.Component {
     mutableList.data.forEach(d => {
       d.collections = get(collectionCounts.find(c => c.key === d.name), 'count', 0);
     });
-    const groupStatus = get(stats.count, 'data.groups.count', []);
-    const overview = this.renderOverview(groupStatus);
+
     return (
       <div className='page__component'>
-        <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>Group Overview</h1>
-          {lastUpdated(queriedAt)}
-          {overview}
-        </section>
         <section className='page__section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content'>Ingesting Groups <span className='num--title'>{count ? `${count}` : 0}</span></h2>
+            <h2 className='heading--medium heading--shared-content'>Groups <span className='num--title'>{count ? `${count}` : 0}</span></h2>
           </div>
           <div className='filter__button--add'>
             <Link className='button button--green button--add button--small form-group__element' to='/groups/add'>Add Group</Link>
           </div>
           <List
-            list={mutableList}
+            list={list}
             dispatch={this.props.dispatch}
             action={listGroups}
             tableColumns={tableColumns}

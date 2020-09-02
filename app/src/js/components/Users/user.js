@@ -6,19 +6,16 @@ import { withRouter, Link } from 'react-router-dom';
 import {
   interval,
   getUser,
-  deleteUser,
-  listCollections
+  deleteUser
 } from '../../actions';
 import { get } from 'object-path';
 import {
   fromNow,
   lastUpdated,
-  deleteText,
-  link,
-  tally
+  deleteText
 } from '../../utils/format';
+import Table from '../SortableTable/SortableTable';
 import Loading from '../LoadingIndicator/loading-indicator';
-import LogViewer from '../Logs/viewer';
 import AsyncCommands from '../DropDown/dropdown-async-command';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
@@ -26,7 +23,36 @@ import _config from '../../config';
 
 const { updateInterval } = _config;
 
+const groupTableColumns = [
+  {
+    Header: 'Table Name',
+    accessor: row => row,
+  }
+];
+
+const permissionTableColumns = [
+  {
+    Header: 'Table Name',
+    accessor: row => row
+  }
+];
+
+const subscriptionTableColumns = [
+  {
+    Header: 'Table Name',
+    accessor: row => row,
+  }
+];
+
 const metaAccessors = [
+  {
+    label: 'User Name',
+    property: 'userName'
+  },
+  {
+    label: 'Email',
+    property: 'email'
+  },
   {
     label: 'Created',
     property: 'createdAt',
@@ -36,20 +62,6 @@ const metaAccessors = [
     label: 'Updated',
     property: 'updatedAt',
     accessor: fromNow
-  },
-  {
-    label: 'Protocol',
-    property: 'protocol'
-  },
-  {
-    label: 'Host',
-    property: 'host',
-    accessor: link
-  },
-  {
-    label: 'Global Connection Limit',
-    property: 'globalConnectionLimit',
-    accessor: tally
   }
 ];
 
@@ -66,11 +78,11 @@ class UserOverview extends React.Component {
     const { userId } = this.props.match.params;
     const immediate = !this.props.users.map[userId];
     this.reload(immediate);
-    this.props.dispatch(listCollections({
+    /* this.props.dispatch(listCollections({
       limit: 100,
       fields: 'collectionName',
       users: userId
-    }));
+    })); */
   }
 
   componentWillUnmount () {
@@ -116,9 +128,8 @@ class UserOverview extends React.Component {
       return <ErrorReport report={record.error} truncate={true} />;
     }
     const user = record.data;
-    const logsQuery = { 'meta.user': userId };
     const errors = this.errors();
-
+    
     const deleteStatus = get(this.props.users.deleted, [userId, 'status']);
     const dropdownConfig = [{
       text: 'Delete',
@@ -151,11 +162,32 @@ class UserOverview extends React.Component {
         </section>
 
         <section className='page__section'>
-          <LogViewer
-            query={logsQuery}
-            dispatch={this.props.dispatch}
-            logs={this.props.logs}
-            notFound={`No recent logs for ${userId}`}
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium heading--shared-content with-description'>Groups</h2>
+          </div>
+          <Table
+            data={user.groups}
+            tableColumns={groupTableColumns}
+          />
+        </section>
+
+        <section className='page__section'>
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium heading--shared-content with-description'>Permissions</h2>
+          </div>
+          <Table
+            data={user.permissions}
+            tableColumns={permissionTableColumns}
+          />
+        </section>
+
+        <section className='page__section'>
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium heading--shared-content with-description'>Subscriptions</h2>
+          </div>
+          <Table
+            data={user.subscriptions}
+            tableColumns={subscriptionTableColumns}
           />
         </section>
       </div>

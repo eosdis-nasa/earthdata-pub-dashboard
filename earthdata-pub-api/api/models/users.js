@@ -94,7 +94,7 @@ class User extends Manager {
    * @param {string} id - the user id
    */
   async delete ({ id }) {
-    const associatedRuleNames = (await this.getAssociatedRules(id))
+    /*const associatedRuleNames = (await this.getAssociatedRules(id))
       .map((rule) => rule.name);
 
     if (associatedRuleNames.length > 0) {
@@ -103,7 +103,7 @@ class User extends Manager {
         associatedRuleNames
       );
     }
-
+    */
     await super.delete({ id });
   }
 
@@ -122,7 +122,6 @@ class User extends Manager {
     const ruleModel = new Rule();
 
     const scanResult = await ruleModel.scan({
-      filter: 'user = :user',
       values: { ':user': id }
     });
 
