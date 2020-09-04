@@ -64,9 +64,9 @@ function seedEverything () {
     .then(seedSubmissions)
     .then(seedExecutions)
     .then(seedProviders)
-    //.then(seedForms)
     .then(seedUsers)
-    .then(seedGroups);
+    .then(seedGroups)
+    .then(seedForms);
 }
 
 module.exports = {

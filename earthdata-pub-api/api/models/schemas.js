@@ -793,23 +793,31 @@ module.exports.form = {
   title: 'Form Object',
   description: 'Forms that capture question information',
   type: 'object',
+  additionalProperties:true,
   properties: {
     id: {
-      title: 'Form Name',
-      type: 'string'
+      title: 'Form ID',
+      type: 'string',
+      readonly: true
     },
     name: {
       title: 'Form Name',
-      type: 'string'
+      type: 'string',
+      readonly: true
     },
-    user: {
-      type: 'string'
+    userId: {
+      title: 'User ID',
+      type: 'string',
+      readonly: true
     },
-    password: {
-      type: 'string'
+    userName: {
+      title: 'User Name',
+      type: 'string',
+      readonly: true
     },
-    encrypted: {
-      type: 'boolean',
+    version: {
+      title: 'Form Version',
+      type: 'integer',
       readonly: true
     },
     createdAt: {
@@ -820,14 +828,81 @@ module.exports.form = {
       type: 'integer',
       readonly: true
     },
-    privateKey: {
-      type: 'string',
-      description: 'filename assumed to be in s3://bucketInternal/stackName/crypto'
+    sections: {
+      title: 'Question Sections',
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties:true,
+        properties: {
+          heading: {
+            title: 'Heading Text',
+            type: 'string',
+            readonly: true
+          },
+          questions: {
+            title: 'Heading Questions',
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties:true,
+              properties: {
+                id: {
+                  title: 'Question ID',
+                  type: 'string',
+                  readonly:true
+                },
+                version: {
+                  title: 'Question Version',
+                  type: 'integer',
+                  readonly:true
+                },
+                unique_name: {
+                  title: 'Question Name',
+                  type: 'string',
+                  readonly:true
+                },
+                title: {
+                  title: 'Question Title',
+                  type: 'string',
+                  readonly:true
+                },
+                text: {
+                  title: 'Question Text',
+                  type: 'string',
+                  readonly:true
+                },
+                inputs: {
+                  title: 'Inputs',
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    additionalProperties:true,
+                    properties: {
+                      id: {
+                        title: 'Input ID',
+                        type: 'string',
+                        readonly:true
+                      },
+                      label: {
+                        title: 'Input Label',
+                        type: 'string',
+                        readonly:true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
-    cmKeyId: {
-      type: 'string',
-      description: 'AWS KMS Customer Master Key arn or alias'
-    }
+    forms_data: {
+      type: 'object',
+      additionalProperties:true,
+      readonly: true
+    },
   },
   required: [
     'id',

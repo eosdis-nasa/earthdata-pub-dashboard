@@ -25,6 +25,10 @@ const { updateInterval } = _config;
 
 const metaAccessors = [
   {
+    label: 'User Name',
+    property: 'userName',
+  },
+  {
     label: 'Created',
     property: 'createdAt',
     accessor: fromNow
@@ -89,6 +93,17 @@ class FormOverview extends React.Component {
     ].filter(Boolean);
   }
 
+  getRandom(){
+    return  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+
+  getAnswer(id){
+    const formId = this.props.match.params.formId;
+    const record = this.props.forms.map[formId];
+    const form = record.data;
+    return (form.form_data[id])
+  }
+
   render () {
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
@@ -99,30 +114,45 @@ class FormOverview extends React.Component {
       return <ErrorReport report={record.error} truncate={true} />;
     }
     const form = record.data;
-    const logsQuery = { 'meta.form': formId };
     const errors = this.errors();
-
-    const deleteStatus = get(this.props.forms.deleted, [formId, 'status']);
-    const dropdownConfig = [{
-      text: 'Delete',
-      action: this.delete,
-      disabled: form.published,
-      status: deleteStatus,
-      success: this.navigateBack,
-      confirmAction: true,
-      confirmText: deleteText(formId)
-    }];
-
+    const sections = form.sections
+    
+    let question_items = []
+    for (const ea in sections){
+      let section = ''
+      for (const i in sections[ea]){
+        if (typeof sections[ea][i] == 'string'){
+          section = sections[ea][i]
+          question_items.push(<h2>{sections[ea][i]}</h2>)
+        } else if (typeof sections[ea][i] == 'object'){
+          for (const q in sections[ea][i]){
+            try {
+              const question = sections[ea][i][q]
+              question_items.push(<li key={this.getRandom()}>{question.title}</li>)
+              question_items.push(<li key={this.getRandom()}>{question.text}</li>)
+              if (question.inputs){
+                for (const a in question.inputs){
+                  question_items.push(
+                    <li key={this.getRandom()} style={{marginTop:'3px', marginBottom: '3px'}}>
+                      <div style={{width: '22%', display: 'inline-block', float:'left'}}><strong>{question.inputs[a]['label']}:</strong></div>
+                      <div>{this.getAnswer(question.inputs[a]['id'])}</div>
+                    </li>
+                  )
+                }
+              }
+            } 
+            catch(err) {
+              console.log(err)
+            }
+          }
+        }
+      }
+    }
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{formId}</h1>
-          <AsyncCommands config={dropdownConfig} />
-          <Link
-            className='button button--small button--green button--edit form-group__element--right'
-            to={'/forms/edit/' + formId}>Edit</Link>
-
-          {lastUpdated(form.queriedAt)}
+          <h1 className='heading--large heading--shared-content with-description'>{form.name} (Verson {form.version})</h1>
+          {lastUpdated(form.updatedAt)}
         </section>
 
         <section className='page__section'>
@@ -134,12 +164,11 @@ class FormOverview extends React.Component {
         </section>
 
         <section className='page__section'>
-          <LogViewer
-            query={logsQuery}
-            dispatch={this.props.dispatch}
-            logs={this.props.logs}
-            notFound={`No recent logs for ${formId}`}
-          />
+          {errors.length ? <ErrorReport report={errors} truncate={true} /> : null}
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium with-description'>Questions</h2>
+          </div>
+          <div><ul>{question_items}</ul></div>
         </section>
       </div>
     );
