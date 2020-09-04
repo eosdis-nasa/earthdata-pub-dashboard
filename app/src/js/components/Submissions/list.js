@@ -18,7 +18,7 @@ import { get } from 'object-path';
 import { lastUpdated, tally, displayCase } from '../../utils/format';
 import {
   tableColumns,
-  errorTableColumns2,
+  errorTableColumns,
   bulkActions,
   simpleDropdownOption
 } from '../../utils/table-config/submissions';
@@ -150,7 +150,7 @@ class AllSubmissions extends React.Component {
           <List
             list={list}
             action={listSubmissions}
-            tableColumns={view === 'failed' ? errorTableColumns2 : tableColumns}
+            tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
             query={query}
             bulkActions={this.generateBulkActions()}
             rowId='submissionId'

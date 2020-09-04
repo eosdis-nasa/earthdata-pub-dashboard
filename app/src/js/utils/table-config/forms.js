@@ -12,7 +12,7 @@ export const tableColumns = [
   {
     Header: 'User Name',
     accessor: row => <Link to={`users/user/${row.id}`}>{row.id}</Link>,
-    id: 'username'
+    id: 'userName'
   },
   {
     Header: 'Last Updated',

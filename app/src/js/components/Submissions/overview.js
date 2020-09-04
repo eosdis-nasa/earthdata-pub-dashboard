@@ -122,6 +122,7 @@ class SubmissionsOverview extends React.Component {
     const { list, dropdowns } = submissions;
     const { count, queriedAt } = list.meta;
     const statsCount = get(stats, 'count.data.submissions.count', []);
+    //const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
       <div className='page__component'>

@@ -77,13 +77,8 @@ class UsersOverview extends React.Component {
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>User Overview</h1>
-          {lastUpdated(queriedAt)}
-          {overview}
-        </section>
-        <section className='page__section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content'>Ingesting Users <span className='num--title'>{count ? `${count}` : 0}</span></h2>
+            <h2 className='heading--medium heading--shared-content'>Users <span className='num--title'>{count ? `${count}` : 0}</span></h2>
           </div>
           <div className='filter__button--add'>
             <Link className='button button--green button--add button--small form-group__element' to='/users/add'>Add User</Link>

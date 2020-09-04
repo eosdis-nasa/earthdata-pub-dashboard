@@ -52,7 +52,7 @@ export const tableColumns = [
   },
   {
     Header: 'Submission Date',
-    accessor: row => row.submitted ? <a href={row.submitted} target='_blank'>{bool(row.submitted)}</a> : bool(row.submitted),
+    accessor: row => fromNow(row.submitted),
     id: 'submitted'
   },
   {
@@ -79,7 +79,7 @@ export const tableColumns = [
   }
 ];
 
-export const errorTableColumns2 = [
+export const errorTableColumns = [
   {
     Header: 'Error',
     accessor: row => <ErrorReport report={get(row, 'error.Cause', nullValue)} truncate={true} />,
