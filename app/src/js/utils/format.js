@@ -94,17 +94,21 @@ export const submissionLink = function (submissionId) {
   if (!submissionId) return nullValue;
   return <Link to={`/submissions/submission/${submissionId}`}>{submissionId}</Link>;
 };
-export const dataProducerLink = function (formId) {
+export const dataProducerLink = function (formId, name) {
   if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{formId}</Link>;
+  return <Link to={`/forms/form/${formId}#${name}`}>{name}</Link>;
 };
-export const dataProductQuestionaireLink = function (formId) {
+export const pointOfContactLink = function (formId, name) {
   if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{formId}</Link>;
+  return <Link to={`/forms/form/${formId}#${name}`}>{name}</Link>;
 };
-export const dataSubmissionRequestLink = function (formId) {
+export const dataProductQuestionaireLink = function (formId, name) {
   if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{formId}</Link>;
+  return <Link to={`/forms/form/${formId}`}>{name}</Link>;
+};
+export const dataSubmissionRequestLink = function (formId, name) {
+  if (!formId) return nullValue;
+  return <Link to={`/forms/form/${formId}`}>{name}</Link>;
 };
 export const pdrLink = function (pdrName) {
   if (!pdrName) return nullValue;

@@ -140,7 +140,7 @@ class GroupOverview extends React.Component {
             className='button button--small button--green button--edit form-group__element--right'
             to={'/groups/edit/' + groupId}>Edit</Link>
 
-          {lastUpdated(group.queriedAt)}
+          {lastUpdated(group.updatedAt)}
         </section>
 
         <section className='page__section'>

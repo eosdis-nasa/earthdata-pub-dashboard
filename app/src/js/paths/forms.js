@@ -6,7 +6,7 @@ const formRoutes = [
 ];
 
 const singleFormRoutes = [
-  ['Back to Forms', null, 'sidebar__nav--back']
+  ['View List of Forms', null, 'sidebar__nav--back']
 ];
 
 const empty = [['', '']];

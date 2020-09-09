@@ -129,7 +129,7 @@ class UserOverview extends React.Component {
     }
     const user = record.data;
     const errors = this.errors();
-    
+
     const deleteStatus = get(this.props.users.deleted, [userId, 'status']);
     const dropdownConfig = [{
       text: 'Delete',
@@ -150,7 +150,7 @@ class UserOverview extends React.Component {
             className='button button--small button--green button--edit form-group__element--right'
             to={'/users/edit/' + userId}>Edit</Link>
 
-          {lastUpdated(user.queriedAt)}
+          {lastUpdated(user.updatedAt)}
         </section>
 
         <section className='page__section'>

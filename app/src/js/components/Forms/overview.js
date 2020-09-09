@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { get } from 'object-path';
 import cloneDeep from 'lodash.clonedeep';
 import {
@@ -72,8 +72,6 @@ class FormsOverview extends React.Component {
     mutableList.data.forEach(d => {
       d.collections = get(collectionCounts.find(c => c.key === d.name), 'count', 0);
     });
-    const formStatus = get(stats.count, 'data.forms.count', []);
-    const overview = this.renderOverview(formStatus);
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>

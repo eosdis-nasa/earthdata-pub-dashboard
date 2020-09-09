@@ -214,7 +214,7 @@ class SubmissionOverview extends React.Component {
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{submissionId}</h1>
           <AsyncCommands config={dropdownConfig} />
-          {lastUpdated(submission.createdAt, 'Created')}
+          {lastUpdated(submission.updatedAt, 'Updated')}
 
           <dl className='status--process'>
             <dt>Status:</dt>
