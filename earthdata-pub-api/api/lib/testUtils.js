@@ -13,7 +13,9 @@ const isLocalApi = () => process.env.CUMULUS_ENV === 'local';
 
 const dataDir = path.join(__dirname, '../app/data');
 const workflowDir = path.join(dataDir, 'workflows');
+const metricDir = path.join(dataDir, 'metrics');
 const getWorkflowList = () => fs.readdirSync(workflowDir).map((f) => JSON.parse(fs.readFileSync(`${workflowDir}/${f}`).toString()));
+const getMetricList = () => fs.readdirSync(metricDir).map((f) => JSON.parse(fs.readFileSync(`${metricDir}/${f}`).toString()));
 
 
 /**
@@ -434,6 +436,7 @@ module.exports = {
   fakeGroupFactory,
   getSqsQueueMessageCounts,
   getWorkflowList,
+  getMetricList,
   isLocalApi,
   testEndpoint,
   setAuthorizedOAuthUsers

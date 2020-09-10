@@ -15,6 +15,18 @@ export const workflowOptionNames = ({ workflows }) => {
   return get(workflows, 'list.data', []).map(workflow => workflow.name);
 };
 
+export const metricOptions = ({ metrics }) => {
+  const options = { '': '' };
+  get(metrics, 'list.data', []).forEach(d => {
+    options[d.name] = d.name;
+  });
+  return options;
+};
+
+export const metricOptionNames = ({ metrics }) => {
+  return get(metrics, 'list.data', []).map(metric => metric.name);
+};
+
 export const collectionOptions = ({ collections }) => {
   const options = { '': '' };
   get(collections, 'list.data', []).forEach(d => {

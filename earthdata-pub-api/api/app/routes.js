@@ -26,6 +26,7 @@ const schemas = require('../endpoints/schemas');
 const stats = require('../endpoints/stats');
 const version = require('../endpoints/version');
 const workflows = require('../endpoints/workflows');
+const metrics = require('../endpoints/metrics');
 const dashboard = require('../endpoints/dashboard');
 const elasticsearch = require('../endpoints/elasticsearch');
 const ems = require('../endpoints/ems');
@@ -103,6 +104,9 @@ router.use('/version', version);
 
 // workflows endpoint
 router.use('/workflows', ensureAuthorized, workflows);
+
+// metrics endpoint
+router.use('/metrics', ensureAuthorized, metrics);
 
 // OAuth Token endpoints
 if (launchpadProtectedAuth()) {

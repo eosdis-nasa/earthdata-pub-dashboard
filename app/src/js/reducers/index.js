@@ -18,6 +18,7 @@ import groups from './groups';
 import logs from './logs';
 import schema from './schema';
 import workflows from './workflows';
+import metrics from './metrics';
 import executions from './executions';
 import executionStatus from './execution-status';
 import executionLogs from './execution-logs';
@@ -51,6 +52,7 @@ export const reducers = {
   logs,
   schema,
   workflows,
+  metrics,
   executions,
   executionStatus,
   executionLogs,
