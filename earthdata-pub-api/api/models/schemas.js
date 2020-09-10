@@ -758,17 +758,23 @@ module.exports.form = {
   description: 'Forms that capture question information',
   type: 'object',
   properties: {
-    formId: {
-      title: 'Form ID',
-      type: 'string',
-      readonly: true
+    id: {
+      title: 'Form Name',
+      type: 'string'
     },
     name: {
       title: 'Form Name',
       type: 'string'
     },
-    userName: {
+    user: {
       type: 'string'
+    },
+    password: {
+      type: 'string'
+    },
+    encrypted: {
+      type: 'boolean',
+      readonly: true
     },
     createdAt: {
       type: 'integer',
@@ -777,12 +783,19 @@ module.exports.form = {
     updatedAt: {
       type: 'integer',
       readonly: true
+    },
+    privateKey: {
+      type: 'string',
+      description: 'filename assumed to be in s3://bucketInternal/stackName/crypto'
+    },
+    cmKeyId: {
+      type: 'string',
+      description: 'AWS KMS Customer Master Key arn or alias'
     }
   },
   required: [
-    'formId',
-    'createdAt',
-    'name'
+    'id',
+    'createdAt'
   ]
 };
 
@@ -791,12 +804,11 @@ module.exports.user = {
   description: 'Users that are allowed access to Earthdata Pub',
   type: 'object',
   properties: {
-    userId: {
-      title: 'User ID',
-      type: 'string',
-      readonly: true
+    id: {
+      title: 'User Name',
+      type: 'string'
     },
-    userName: {
+    name: {
       title: 'User Name',
       type: 'string'
     },
@@ -806,54 +818,25 @@ module.exports.user = {
     },
     groups: {
       title: 'Groups',
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          groupId: {
-            type: 'string'
-          },
-          name: {
-            type: 'string'
-          }
-        }
-      }
+      type: 'string'
     },
     permissions: {
       title: 'Permissions',
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          permissionId: {
-            type: 'string'
-          },
-          entityId: {
-            type: 'string'
-          },
-          table_name: {
-            type: 'string'
-          }
-        }
-      }
+      type: 'string'
     },
     subscriptions: {
       title: 'Subscriptions',
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          subscriptionId: {
-            type: 'string'
-          },
-          sourceId: {
-            type: 'string'
-          },
-          table_name: {
-            type: 'string'
-          }
-        }
-      }
+      type: 'string'
+    },
+    user: {
+      type: 'string'
+    },
+    password: {
+      type: 'string'
+    },
+    encrypted: {
+      type: 'boolean',
+      readonly: true
     },
     createdAt: {
       type: 'integer',
@@ -862,12 +845,19 @@ module.exports.user = {
     updatedAt: {
       type: 'integer',
       readonly: true
+    },
+    privateKey: {
+      type: 'string',
+      description: 'filename assumed to be in s3://bucketInternal/stackName/crypto'
+    },
+    cmKeyId: {
+      type: 'string',
+      description: 'AWS KMS Customer Master Key arn or alias'
     }
   },
   required: [
-    'userId',
-    'createdAt',
-    'userName'
+    'id',
+    'createdAt'
   ]
 };
 
@@ -876,10 +866,9 @@ module.exports.group = {
   description: 'Groups that are allowed access to Earthdata Pub',
   type: 'object',
   properties: {
-    groupId: {
-      title: 'Group ID',
-      type: 'string',
-      readonly: true
+    id: {
+      title: 'Group Name',
+      type: 'string'
     },
     name: {
       title: 'Group Name',
@@ -887,39 +876,21 @@ module.exports.group = {
     },
     permissions: {
       title: 'Permissions',
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          permissionId: {
-            type: 'string'
-          },
-          entityId: {
-            type: 'string'
-          },
-          table_name: {
-            type: 'string'
-          }
-        }
-      }
+      type: 'string'
     },
     subscriptions: {
       title: 'Subscriptions',
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          subscriptionId: {
-            type: 'string'
-          },
-          sourceId: {
-            type: 'string'
-          },
-          table_name: {
-            type: 'string'
-          }
-        }
-      }
+      type: 'string'
+    },
+    group: {
+      type: 'string'
+    },
+    password: {
+      type: 'string'
+    },
+    encrypted: {
+      type: 'boolean',
+      readonly: true
     },
     createdAt: {
       type: 'integer',
@@ -929,11 +900,18 @@ module.exports.group = {
       type: 'integer',
       readonly: true
     },
+    privateKey: {
+      type: 'string',
+      description: 'filename assumed to be in s3://bucketInternal/stackName/crypto'
+    },
+    cmKeyId: {
+      type: 'string',
+      description: 'AWS KMS Customer Master Key arn or alias'
+    }
   },
   required: [
-    'groupId',
-    'createdAt',
-    'name'
+    'id',
+    'createdAt'
   ]
 };
 

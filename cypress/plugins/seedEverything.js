@@ -2,6 +2,7 @@ const { testUtils } = require('earthdata-pub-api/api');
 const serveUtils = require('earthdata-pub-api/api/bin/serveUtils');
 const { eraseDataStack } = require('earthdata-pub-api/api/bin/serve');
 const { localUserName } = require('earthdata-pub-api/api/bin/local-test-defaults');
+
 const collections = require('../fixtures/seeds/collectionsFixture.json');
 const executions = require('../fixtures/seeds/executionsFixture.json');
 const granules = require('../fixtures/seeds/granulesFixture.json');
@@ -63,9 +64,9 @@ function seedEverything () {
     .then(seedSubmissions)
     .then(seedExecutions)
     .then(seedProviders)
-    .then(seedGroups)
     .then(seedForms)
     .then(seedUsers)
+    .then(seedGroups);
 }
 
 module.exports = {

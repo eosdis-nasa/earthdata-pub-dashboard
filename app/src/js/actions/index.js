@@ -603,7 +603,7 @@ export const getCount = (options) => {
         method: 'GET',
         id: null,
         url: new URL('stats/aggregate', root).href,
-        qs: Object.assign({ type: 'must-include-type', field: 'stage' }, options, timeFilters)
+        qs: Object.assign({ type: 'must-include-type', field: 'status' }, options, timeFilters)
       }
     });
   };

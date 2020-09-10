@@ -2,14 +2,11 @@
 
 ## Documentation
 
-The [cumulus dashboard](https://github.com/nasa/cumulus-dashboard) has a lot of documentation that shows a lot of how Earthdata Pub Dashboard works.  
-We used the Cumulus Dashboard as a base of which to build from. 
-
 ## Wireframes and mocks
 
 ## Configuration
 
-## Building and Quickstarts
+## Building or running locally
 
 The dashboard uses node v12.18.0. To build/run the dashboard on your local
 machine, install [nvm](https://github.com/creationix/nvm) and run `nvm install v12.18.0`
@@ -20,9 +17,6 @@ We use npm for local package management, to install the requirements:
   nvm use
   npm install
 ```
-
-If you need any other docs, the [cumulus dashboard](https://github.com/nasa/cumulus-dashboard) has a lot of documentation that shows a lot of how Earthdata Pub Dashboard works.  
-We used the Cumulus Dashboard as a base of which to build from. 
 
 ## Building the dashboard
 
@@ -35,14 +29,6 @@ We used the Cumulus Dashboard as a base of which to build from.
 ## Running the dashboard
 
 ### Running locally
-
-in localAPI: docker-compose down --remove-orphans (if previously built)
-in main dir: npm run start-earthdata-pub-api,
-npm run start-dashboard
-npm run seed-database (You have to wait about 30 seconds for everything to build first),
-You may have to click 'log out' then 'log in' for data to appear
-
-http://localhost:3000/
 
 #### local API server
 

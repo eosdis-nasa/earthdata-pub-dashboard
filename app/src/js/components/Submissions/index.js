@@ -32,7 +32,7 @@ const Submissions = ({
   function query () {
     dispatch(getCount({
       type: 'submissions',
-      field: 'stage'
+      field: 'status'
     }));
     dispatch(listSubmissions(queryOptions));
   }

@@ -10,18 +10,18 @@ import { strings } from '../locale';
 import { kibanaAllLogsLink } from '../../utils/kibana';
 
 const paths = [
-  //['', '/pdrs'],
-  //['Providers', '/providers'],
-  //[strings.collections, '/collections'],
-  //[strings.granules, '/granules'],
+  // ['', '/pdrs'],
+  ['Providers', '/providers'],
+  // [strings.collections, '/collections'],
+  // [strings.granules, '/granules'],
   [strings.submissions, '/submissions'],
   ['Workflows', '/workflows'],
-  //['Executions', '/executions'],
-  //['Operations', '/operations'],
-  //['Rules', '/rules'],
-  //['Logs', 'logs'],
-  //['Reconciliation Reports', '/reconciliation-reports'],
-  //['Forms', '/forms'],
+  // ['Executions', '/executions'],
+  // ['Operations', '/operations'],
+  // ['Rules', '/rules'],
+  // ['Logs', 'logs'],
+  // ['Reconciliation Reports', '/reconciliation-reports']
+  ['Forms', '/forms'],
   ['Users', '/users'],
   ['Groups', '/groups'],
 ];

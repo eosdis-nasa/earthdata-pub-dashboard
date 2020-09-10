@@ -10,45 +10,54 @@
   "results": [
     {
       "userId": "user1",
+      "id":"user1",
       "createdAt": 1524686535230,
-      "userName": "User One",
+      "username": "User One",
       "email": "user1@example.com",
       "groups": [
         {
+          "id":"1",
           "groupId":"1",
           "name":"ORNL DAAC"
         },
         {
+          "id":"2",
           "groupId":"2",
           "name":"Admin"
         },
         {
+          "id":"3",
           "groupId":"3",
           "name":"Blah"
         }
       ],
       "permissions": [
         {
+          "id":"1",
           "permissionId":"1",
           "entityId":"1",
           "table_name":"Submissions"
         },
         {
+          "id":"2",
           "permissionId":"2",
           "entityId":"2",
           "table_name":"Workflows"
         },
         {
+          "id":"3",
           "permissionId":"3",
           "entityId":"3",
           "table_name":"Forms"
         },
         {
+          "id":"4",
           "permissionId":"4",
           "entityId":"4",
           "table_name":"Users"
         },
         {
+          "id":"5",
           "permissionId":"5",
           "entityId":"5",
           "table_name":"Groups"
@@ -56,6 +65,7 @@
       ],
       "subscriptions": [
         {
+          "id":"3",
           "subscriptionId":"3",
           "sourceId":"3",
           "table_name":"Forms"
@@ -65,45 +75,54 @@
     },
     {
       "userId": "user2",
+      "id": "user2",
       "createdAt": 1524686535230,
-      "userName": "User Two",
+      "username": "User Two",
       "email": "user2@example.com",
       "groups": [
         {
+          "id":"1",
           "groupId":"1",
           "name":"ORNL DAAC"
         },
         {
+          "id":"2",
           "groupId":"2",
           "name":"Admin"
         },
         {
+          "id":"3",
           "groupId":"3",
           "name":"Blah"
         }
       ],
       "permissions": [
         {
+          "id":"1",
           "permissionId":"1",
           "entityId":"1",
           "table_name":"Submissions"
         },
         {
+          "id":"2",
           "permissionId":"2",
           "entityId":"2",
           "table_name":"Workflows"
         },
         {
+          "id":"3",
           "permissionId":"3",
           "entityId":"3",
           "table_name":"Forms"
         },
         {
+          "id":"4",
           "permissionId":"4",
           "entityId":"4",
           "table_name":"Users"
         },
         {
+          "id":"5",
           "permissionId":"5",
           "entityId":"5",
           "table_name":"Groups"
@@ -111,26 +130,31 @@
       ],
       "subscriptions": [
         {
+          "id":"1",
           "subscriptionId":"1",
           "sourceId":"1",
           "table_name":"Submissions"
         },
         {
+          "id":"2",
           "subscriptionId":"2",
           "sourceId":"2",
           "table_name":"Workflows"
         },
         {
+          "id":"3",
           "subscriptionId":"3",
           "sourceId":"3",
           "table_name":"Forms"
         },
         {
+          "id":"4",
           "subscriptionId":"4",
           "sourceId":"4",
           "table_name":"Users"
         },
         {
+          "id":"5",
           "subscriptionId":"5",
           "sourceId":"5",
           "table_name":"Groups"
@@ -140,31 +164,37 @@
     },
     {
       "userId": "user3",
+      "id": "user3",
       "createdAt": 1524686535230,
-      "userName": "User Three",
+      "username": "User Three",
       "email": "user3@example.com",
       "groups": [
         {
+          "id":"1",
           "groupId":"1",
           "name":"GHRC"
         },
         {
+          "id":"2",
           "groupId":"2",
           "name":"Admin"
         }
       ],
       "permissions": [
         {
+          "id":"1",
           "permissionId":"1",
           "entityId":"1",
           "table_name":"Submissions"
         },
         {
+          "id":"2",
           "permissionId":"2",
           "entityId":"2",
           "table_name":"Workflows"
         },
         {
+          "id":"3",
           "permissionId":"3",
           "entityId":"3",
           "table_name":"Forms"
@@ -172,16 +202,19 @@
       ],
       "subscriptions": [
         {
+          "id":"1",
           "subscriptionId":"1",
           "sourceId":"1",
           "table_name":"Submissions"
         },
         {
+          "id":"4",
           "subscriptionId":"4",
           "sourceId":"4",
           "table_name":"Users"
         },
         {
+          "id":"5",
           "subscriptionId":"5",
           "sourceId":"5",
           "table_name":"Groups"
@@ -191,41 +224,49 @@
     },
     {
       "userId": "test-user",
+      "id": "test-user",
       "createdAt": 1524686535230,
-      "userName": "Test User",
+      "username": "Test User",
       "email": "testuser@example.com",
       "groups": [
         {
+          "id":"2",
           "groupId":"2",
           "name":"Admin"
         },
         {
+          "id":"4",
           "groupId":"4",
           "name":"User"
         }
       ],
       "permissions": [
         {
+          "id":"1",
           "permissionId":"1",
           "entityId":"1",
           "table_name":"Submissions"
         },
         {
+          "id":"2",
           "permissionId":"2",
           "entityId":"2",
           "table_name":"Workflows"
         },
         {
+          "id":"3",
           "permissionId":"3",
           "entityId":"3",
           "table_name":"Forms"
         },
         {
+          "id":"4",
           "permissionId":"4",
           "entityId":"4",
           "table_name":"Users"
         },
         {
+          "id":"5",
           "permissionId":"5",
           "entityId":"5",
           "table_name":"Groups"
@@ -233,26 +274,31 @@
       ],
       "subscriptions": [
         {
+          "id":"1",
           "subscriptionId":"1",
           "sourceId":"1",
           "table_name":"Submissions"
         },
         {
+          "id":"2",
           "subscriptionId":"2",
           "sourceId":"2",
           "table_name":"Workflows"
         },
         {
+          "id":"3",
           "subscriptionId":"3",
           "sourceId":"3",
           "table_name":"Forms"
         },
         {
+          "id":"4",
           "subscriptionId":"4",
           "sourceId":"4",
           "table_name":"Users"
         },
         {
+          "id":"5",
           "subscriptionId":"5",
           "sourceId":"5",
           "table_name":"Groups"

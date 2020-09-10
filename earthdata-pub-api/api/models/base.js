@@ -92,6 +92,7 @@ class Manager {
     if (!schema) {
       throw new Error(`schema is not defined: ${schema}`);
     }
+
     const schemaWithAdditionalPropertiesProhibited = JSON.parse(
       JSON.stringify(
         schema,
@@ -102,10 +103,12 @@ class Manager {
               ...value
             };
           }
+
           return value;
         }
       )
     );
+
     const ajv = new Ajv({
       removeAdditional,
       useDefaults: true,
@@ -158,6 +161,7 @@ class Manager {
     this.schema = params.schema;
     this.dynamodbDocClient = awsServices.dynamodbDocClient({ convertEmptyValues: true });
     this.removeAdditional = false;
+
     this.validate = get(params, 'validate', true);
   }
 
@@ -250,7 +254,7 @@ class Manager {
       ...item,
       updatedAt: now
     }));
-    
+
     if (this.validate) {
       putsWithTimestamps.forEach((item) => {
         this.constructor.recordIsValid(item, this.schema, this.removeAdditional);

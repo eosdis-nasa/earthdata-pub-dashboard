@@ -3,45 +3,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { fromNow } from '../format';
 
-export const makePermissions = (row) => {
-  try {
-    let permissions = []
-    for(let ea in row.permissions){
-      permissions.push(row.permissions[ea].table_name)
-    }
-    return permissions.join(', ')
-  } catch(error){
-    return '';
-  }
-};
-
-export const makeSubscriptions = (row) => {
-  try {
-    let subscriptions = []
-    for(let ea in row.subscriptions){
-      subscriptions.push(row.subscriptions[ea].table_name)
-    }
-    return subscriptions.join(', ')
-  } catch(error){
-    return '';
-  }
-};
-
 export const tableColumns = [
   {
-    Header: 'Group Name',
-    accessor: row => <Link to={`groups/group/${row.groupId}`}>{row.name}</Link>,
+    Header: 'Name',
+    accessor: row => <Link to={`groups/group/${row.id}`}>{row.id}</Link>,
     id: 'name'
   },
   {
     Header: 'Permissions',
-    accessor: makePermissions,
-    id: 'permissions'
+    accessor: 'permissions'
   },
   {
     Header: 'Subscriptions',
-    accessor: makeSubscriptions,
-    id: 'subscriptions'
+    accessor: 'subscriptions'
   },
   {
     Header: 'Last Updated',
