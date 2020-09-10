@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  searchSubmissions,
-  clearSubmissionsSearch,
-  filterSubmissions,
-  clearSubmissionsFilter,
-  listSubmissions,
+  searchUsers,
+  clearUsersSearch,
+  filterUsers,
+  clearUsersFilter,
+  listUsers,
   getOptionsCollectionName,
   listWorkflows,
-  applyWorkflowToSubmission,
+  applyWorkflowToUser,
   interval
 } from '../../actions';
 import { get } from 'object-path';
@@ -21,7 +21,7 @@ import {
   errorTableColumns,
   bulkActions,
   simpleDropdownOption
-} from '../../utils/table-config/submissions';
+} from '../../utils/table-config/users';
 import List from '../Table/Table';
 import LogViewer from '../Logs/viewer';
 import Dropdown from '../DropDown/dropdown';
@@ -36,10 +36,10 @@ import pageSizeOptions from '../../utils/page-size';
 
 const { updateInterval } = _config;
 
-class AllSubmissions extends React.Component {
+class AllUsers extends React.Component {
   constructor () {
     super();
-    this.displayName = strings.all_submissions;
+    this.displayName = strings.all_users;
     this.queryWorkflows = this.queryWorkflows.bind(this);
     this.generateQuery = this.generateQuery.bind(this);
     this.generateBulkActions = this.generateBulkActions.bind(this);
@@ -78,16 +78,16 @@ class AllSubmissions extends React.Component {
         action: this.applyWorkflow
       }
     };
-    const { submissions } = this.props;
-    return bulkActions(submissions, config);
+    const { users } = this.props;
+    return bulkActions(users, config);
   }
 
   selectWorkflow (selector, workflow) {
     this.setState({ workflow });
   }
 
-  applyWorkflow (submissionId) {
-    return applyWorkflowToSubmission(submissionId, this.state.workflow);
+  applyWorkflow (userId) {
+    return applyWorkflowToUser(userId, this.state.workflow);
   }
 
   getExecuteOptions () {
@@ -103,30 +103,30 @@ class AllSubmissions extends React.Component {
 
   getView () {
     const { pathname } = this.props.location;
-    if (pathname === '/submissions/completed') return 'completed';
-    else if (pathname === '/submissions/processing') return 'running';
-    else if (pathname === '/submissions/failed') return 'failed';
+    if (pathname === '/users/completed') return 'completed';
+    else if (pathname === '/users/processing') return 'running';
+    else if (pathname === '/users/failed') return 'failed';
     else return 'all';
   }
 
   render () {
-    const { submissions, dispatch, logs } = this.props;
-    const { list, dropdowns } = submissions;
+    const { users, dispatch, logs } = this.props;
+    const { list, dropdowns } = users;
     const { count, queriedAt } = list.meta;
-    const logsQuery = { submissionId__exists: 'true' };
+    const logsQuery = { userId__exists: 'true' };
     const query = this.generateQuery();
     const view = this.getView();
     const displayCaseView = displayCase(view);
     const statusOpts = (view === 'all') ? statusOptions : null;
-    const tableSortIdx = view === 'failed' ? 'submissionId' : 'timestamp';
+    const tableSortIdx = view === 'failed' ? 'userId' : 'timestamp';
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
         href: '/'
       },
       {
-        label: 'Submissions',
-        href: '/submissions'
+        label: 'Users',
+        href: '/users'
       },
       {
         label: displayCaseView,
@@ -141,7 +141,7 @@ class AllSubmissions extends React.Component {
           </section>
           <div className='page__section__header page__section__header-wrapper'>
             <h1 className='heading--large heading--shared-content with-description '>
-              {displayCaseView} {strings.submissions} <span className='num--title'>{ !isNaN(count) ? `${tally(count)}` : 0 }</span>
+              {displayCaseView} {strings.users} <span className='num--title'>{ !isNaN(count) ? `${tally(count)}` : 0 }</span>
             </h1>
             {lastUpdated(queriedAt)}
           </div>
@@ -149,19 +149,19 @@ class AllSubmissions extends React.Component {
         <section className='page__section'>
           <List
             list={list}
-            action={listSubmissions}
+            action={listUsers}
             tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
             query={query}
             bulkActions={this.generateBulkActions()}
-            rowId='submissionId'
+            rowId='userId'
             sortIdx={tableSortIdx}
           >
             <ListFilters>
               <Dropdown
                 getOptions={getOptionsCollectionName}
                 options={get(dropdowns, ['collectionName', 'options'])}
-                action={filterSubmissions}
-                clear={clearSubmissionsFilter}
+                action={filterUsers}
+                clear={clearUsersFilter}
                 paramKey='collectionId'
                 label='Collection'
                 inputProps={{
@@ -171,8 +171,8 @@ class AllSubmissions extends React.Component {
               {statusOpts &&
                 <Dropdown
                   options={statusOpts}
-                  action={filterSubmissions}
-                  clear={clearSubmissionsFilter}
+                  action={filterUsers}
+                  clear={clearUsersFilter}
                   paramKey='status'
                   label='Status'
                   inputProps={{
@@ -182,15 +182,15 @@ class AllSubmissions extends React.Component {
               }
               <Search
                 dispatch={dispatch}
-                action={searchSubmissions}
-                clear={clearSubmissionsSearch}
+                action={searchUsers}
+                clear={clearUsersSearch}
                 label='Search'
-                placeholder='Submission ID'
+                placeholder='User ID'
               />
               <Dropdown
                 options={pageSizeOptions}
-                action={filterSubmissions}
-                clear={clearSubmissionsFilter}
+                action={filterUsers}
+                clear={clearUsersFilter}
                 paramKey='limit'
                 label='Results Per Page'
                 inputProps={{
@@ -204,15 +204,15 @@ class AllSubmissions extends React.Component {
           query={logsQuery}
           dispatch={dispatch}
           logs={logs}
-          notFound='No recent logs for submissions'
+          notFound='No recent logs for users'
         />
       </div>
     );
   }
 }
 
-AllSubmissions.propTypes = {
-  submissions: PropTypes.object,
+AllUsers.propTypes = {
+  users: PropTypes.object,
   logs: PropTypes.object,
   dispatch: PropTypes.func,
   location: PropTypes.object,
@@ -220,10 +220,10 @@ AllSubmissions.propTypes = {
   onQueryChange: PropTypes.func
 };
 
-export { listSubmissions };
+export { listUsers };
 
 export default withRouter(connect(state => ({
   logs: state.logs,
-  submissions: state.submissions,
+  users: state.users,
   workflowOptions: workflowOptionNames(state)
-}))(AllSubmissions));
+}))(AllUsers));

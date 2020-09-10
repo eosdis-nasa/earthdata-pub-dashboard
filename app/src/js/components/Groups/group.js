@@ -14,8 +14,8 @@ import {
   lastUpdated,
   deleteText
 } from '../../utils/format';
+import Table from '../SortableTable/SortableTable';
 import Loading from '../LoadingIndicator/loading-indicator';
-import LogViewer from '../Logs/viewer';
 import AsyncCommands from '../DropDown/dropdown-async-command';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
@@ -23,7 +23,25 @@ import _config from '../../config';
 
 const { updateInterval } = _config;
 
+const permissionTableColumns = [
+  {
+    Header: 'Table Name',
+    accessor: row => row
+  }
+];
+
+const subscriptionTableColumns = [
+  {
+    Header: 'Table Name',
+    accessor: row => row,
+  }
+];
+
 const metaAccessors = [
+  {
+    label: 'Group Name',
+    property: 'name'
+  },
   {
     label: 'Created',
     property: 'createdAt',
@@ -99,7 +117,7 @@ class GroupOverview extends React.Component {
       return <ErrorReport report={record.error} truncate={true} />;
     }
     const group = record.data;
-    const logsQuery = { 'meta.group': groupId };
+
     const errors = this.errors();
 
     const deleteStatus = get(this.props.groups.deleted, [groupId, 'status']);
@@ -122,7 +140,7 @@ class GroupOverview extends React.Component {
             className='button button--small button--green button--edit form-group__element--right'
             to={'/groups/edit/' + groupId}>Edit</Link>
 
-          {lastUpdated(group.queriedAt)}
+          {lastUpdated(group.updatedAt)}
         </section>
 
         <section className='page__section'>
@@ -134,11 +152,22 @@ class GroupOverview extends React.Component {
         </section>
 
         <section className='page__section'>
-          <LogViewer
-            query={logsQuery}
-            dispatch={this.props.dispatch}
-            logs={this.props.logs}
-            notFound={`No recent logs for ${groupId}`}
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium heading--shared-content with-description'>Permissions</h2>
+          </div>
+          <Table
+            data={group.permissions}
+            tableColumns={permissionTableColumns}
+          />
+        </section>
+
+        <section className='page__section'>
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium heading--shared-content with-description'>Subscriptions</h2>
+          </div>
+          <Table
+            data={group.subscriptions}
+            tableColumns={subscriptionTableColumns}
           />
         </section>
       </div>

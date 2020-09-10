@@ -162,7 +162,8 @@ const CommonConfig = {
         ENABLE_RECOVERY: config.enableRecovery,
         ES_USER: config.esUser,
         ES_PASSWORD: config.esPassword,
-        SERVED_BY_EDPUB_API: config.servedByEarthdatapubAPI
+        SERVED_BY_EDPUB_API: config.servedByEarthdatapubAPI,
+        VUE_FORMS_URL: config.vueFormsUrl
       }
     )
   ]

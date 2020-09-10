@@ -3,8 +3,7 @@ import React from 'react';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import PropTypes from 'prop-types';
-import AddForm from './add';
-import EditForm from './edit';
+import EditGroup from './edit';
 import FormsOverview from './overview';
 import FormOverview from './form';
 
@@ -33,8 +32,7 @@ class Forms extends React.Component {
             <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
               <Switch>
                 <Route exact path='/forms' component={FormsOverview} />
-                <Route path='/forms/add' component={AddForm} />
-                <Route path='/forms/edit/:formId' component={EditForm} />
+                <Route path='/forms/edit/:formId' component={EditGroup} />
                 <Route path='/forms/form/:formId' component={FormOverview} />
               </Switch>
             </div>

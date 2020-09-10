@@ -17,6 +17,7 @@ import {
   nullValue,
   bool,
   dataProducerLink,
+  pointOfContactLink,
   deleteText
 } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
@@ -61,6 +62,11 @@ const metaAccessors = [
     label: 'Primary Data Producer',
     property: 'dataProducer',
     accessor: dataProducerLink
+  },
+  {
+    label: 'Primary Contact',
+    property: 'contact',
+    accessor: pointOfContactLink
   },
   {
     label: 'Submitted',
@@ -181,21 +187,6 @@ class SubmissionOverview extends React.Component {
       for (const key in get(submission, 'files', {})) { files.push(submission.files[key]); }
     }
     const dropdownConfig = [{
-      text: 'Reingest',
-      action: this.reingest,
-      status: get(this.props.submissions.reingested, [submissionId, 'status']),
-      success: this.fastReload,
-      confirmAction: true,
-      confirmText: `Reingest ${submissionId}? Note: the submission files will be overwritten.`
-    }, {
-      text: 'Execute',
-      action: this.applyWorkflow,
-      status: get(this.props.submissions.executed, [submissionId, 'status']),
-      success: this.fastReload,
-      confirmAction: true,
-      confirmText: `Execute on ${submissionId}?`,
-      confirmOptions: this.getExecuteOptions()
-    }, {
       text: 'Delete',
       action: this.delete,
       disabled: !!submission.submitted,
@@ -229,7 +220,7 @@ class SubmissionOverview extends React.Component {
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{submissionId}</h1>
           <AsyncCommands config={dropdownConfig} />
-          {lastUpdated(submission.createdAt, 'Created')}
+          {lastUpdated(submission.updatedAt, 'Updated')}
 
           <dl className='status--process'>
             <dt>Status:</dt>

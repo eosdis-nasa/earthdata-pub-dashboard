@@ -58,43 +58,13 @@ class Group extends Manager {
     return super.exists({ id });
   }
 
-  async update(key, item, keysToDelete = []) {
-    const record = { ...item };
-
-    if (item.username || item.password) record.encrypted = true;
-
-    if (item.username) {
-      record.username = await encryptValueWithKMS(item.username);
-    }
-    if (item.password) {
-      record.password = await encryptValueWithKMS(item.password);
-    }
-
-    return super.update(key, record, keysToDelete);
-  }
-
-  async create(item) {
-    const record = { ...item };
-
-    if (item.username || item.password) record.encrypted = true;
-
-    if (item.username) {
-      record.username = await encryptValueWithKMS(item.username);
-    }
-    if (item.password) {
-      record.password = await encryptValueWithKMS(item.password);
-    }
-
-    return super.create(record);
-  }
-
   /**
    * Delete a group
    *
    * @param {string} id - the group id
    */
   async delete({ id }) {
-    const associatedRuleNames = (await this.getAssociatedRules(id))
+    /*const associatedRuleNames = (await this.getAssociatedRules(id))
       .map((rule) => rule.name);
 
     if (associatedRuleNames.length > 0) {
@@ -102,7 +72,7 @@ class Group extends Manager {
         'Cannot delete a group that has associated rules',
         associatedRuleNames
       );
-    }
+    }*/
 
     await super.delete({ id });
   }
@@ -122,7 +92,6 @@ class Group extends Manager {
     const ruleModel = new Rule();
 
     const scanResult = await ruleModel.scan({
-      filter: 'group = :group',
       values: { ':group': id }
     });
 

@@ -9,7 +9,6 @@ import {
   clearUpdateGroup
 } from '../../actions';
 import EditRecord from '../Edit/edit';
-
 const SCHEMA_KEY = 'group';
 
 class EditGroup extends React.Component {

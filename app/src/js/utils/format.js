@@ -94,17 +94,21 @@ export const submissionLink = function (submissionId) {
   if (!submissionId) return nullValue;
   return <Link to={`/submissions/submission/${submissionId}`}>{submissionId}</Link>;
 };
-export const dataProducerLink = function (formId) {
+export const dataProducerLink = function (formId, name) {
   if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{formId}</Link>;
+  return <Link to={`/forms/form/${formId}#${name}`}>{name}</Link>;
 };
-export const dataProductQuestionaireLink = function (formId) {
+export const pointOfContactLink = function (formId, name) {
   if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{formId}</Link>;
+  return <Link to={`/forms/form/${formId}#${name}`}>{name}</Link>;
 };
-export const dataSubmissionRequestLink = function (formId) {
+export const dataProductQuestionaireLink = function (formId, name) {
   if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{formId}</Link>;
+  return <Link to={`/forms/form/${formId}`}>{name}</Link>;
+};
+export const dataSubmissionRequestLink = function (formId, name) {
+  if (!formId) return nullValue;
+  return <Link to={`/forms/form/${formId}`}>{name}</Link>;
 };
 export const pdrLink = function (pdrName) {
   if (!pdrName) return nullValue;
@@ -116,20 +120,20 @@ export const providerLink = function (provider) {
   return <Link to={`/providers/provider/${provider}`}>{provider}</Link>;
 };
 export const groupLink = function (groupId) {
-  if (groupId) return nullValue;
+  if (!groupId) return nullValue;
   return <Link to={`/groups/group/${groupId}`}>{groupId}</Link>;
 };
 export const userLink = function (userId) {
-  if (userId) return nullValue;
+  if (!userId) return nullValue;
   return <Link to={`/users/user/${userId}`}>{userId}</Link>;
 };
 export const formLink = function (formId) {
-  if (formId) return nullValue;
+  if (!formId) return nullValue;
   return <Link to={`/forms/form/${formId}`}>{formId}</Link>;
 };
-export const workflowLink = function (workflowId) {
-  if (workflowId) return nullValue;
-  return <Link to={`/workflows/workflow/${workflowId}`}>{workflowId}</Link>;
+export const workflowLink = function (name) {
+  if (!name) return nullValue;
+  return <Link to={`/workflows/workflow/${name}`}>{name}</Link>;
 };
 export const messageLink = function (message) {
   if (!message) return nullValue;

@@ -6,20 +6,27 @@ import { fromNow } from '../format';
 export const tableColumns = [
   {
     Header: 'Name',
-    accessor: row => <Link to={`groups/group/${row.id}`}>{row.id}</Link>,
+    accessor: row => <Link to={`groups/group/${row.id}`}>{row.name}</Link>,
     id: 'name'
   },
   {
     Header: 'Permissions',
-    accessor: 'permissions'
+    accessor: row => row.permissions.join(', '),
+    id: 'permissions'
   },
   {
     Header: 'Subscriptions',
-    accessor: 'subscriptions'
+    accessor: row => row.subscriptions.join(', '),
+    id: 'subscriptions'
+  },
+  {
+    Header: 'Created',
+    accessor: row => fromNow(row.createdAt),
+    id: 'createdAt'
   },
   {
     Header: 'Last Updated',
-    accessor: row => fromNow(row.timestamp),
-    id: 'timestamp'
+    accessor: row => fromNow(row.updatedAt),
+    id: 'updatedAt'
   }
 ];
