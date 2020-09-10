@@ -326,7 +326,6 @@ class Submission extends Manager {
       pdrName: get(message, 'meta.pdr.name'),
       collectionId,
       status: get(message, 'meta.status', get(submission, 'status')),
-      stage: get(message, 'meta.stage', get(submission, 'stage')),
       provider: get(message, 'meta.provider.id'),
       execution: executionUrl,
       cmrLink: submission.cmrLink,

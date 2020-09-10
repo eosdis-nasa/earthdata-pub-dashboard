@@ -16,6 +16,7 @@ import {
   interval,
   listExecutions,
   listGranules,
+  listSubmissions,
   listRules
 } from '../actions';
 import {
@@ -25,7 +26,9 @@ import {
 } from '../utils/format';
 import List from './Table/Table';
 import GranulesProgress from './Granules/progress';
+import SubmissionsProgress from './Submissions/progress';
 import { errorTableColumns } from '../utils/table-config/granules';
+import { errorTableColumns2 } from '../utils/table-config/submissions';
 import { updateInterval } from '../config';
 import {
   kibanaS3AccessErrorsLink,
@@ -73,12 +76,14 @@ class Home extends React.Component {
     const { dispatch } = this.props;
     dispatch(getStats());
     dispatch(getCount({ type: 'granules', field: 'status' }));
+    dispatch(getCount({ type: 'submissions', field: 'status' }));
     dispatch(getDistApiGatewayMetrics(this.props.earthdatapubInstance));
     dispatch(getTEALambdaMetrics(this.props.earthdatapubInstance));
     dispatch(getDistApiLambdaMetrics(this.props.earthdatapubInstance));
     dispatch(getDistS3AccessMetrics(this.props.earthdatapubInstance));
     dispatch(listExecutions({}));
     dispatch(listGranules(this.generateQuery()));
+    dispatch(listSubmissions(this.generateQuery()));
     dispatch(listRules({}));
   }
 
@@ -135,12 +140,14 @@ class Home extends React.Component {
 
   render () {
     const { list } = this.props.granules;
+    const { list2 } = this.props.submissions;
     const { stats, count } = this.props.stats;
     const { dist } = this.props;
     const overview = [
       [tally(get(stats.data, 'errors.value')), 'Errors', kibanaAllLogsLink(this.props.earthdatapubInstance)],
       [tally(get(stats.data, 'collections.value')), strings.collections, '/collections'],
       [tally(get(stats.data, 'granules.value')), strings.granules, '/granules'],
+      [tally(get(stats.data, 'submissions.value')), strings.submissions, '/submissions'],
       [tally(get(this.props.executions, 'list.meta.count')), 'Executions', '/executions'],
       [tally(get(this.props.rules, 'list.meta.count')), 'Ingest Rules', '/rules'],
       [seconds(get(stats.data, 'processingTime.value', nullValue)), 'Average processing Time', '/']
@@ -165,6 +172,10 @@ class Home extends React.Component {
     const granuleCount = get(count.data, 'granules.meta.count');
     const numGranules = !isNaN(granuleCount) ? `${tally(granuleCount)}` : 0;
     const granuleStatus = get(count.data, 'granules.count', []);
+
+    const submissionCount = get(count.data, 'submissions.meta.count');
+    const numSubmissions = !isNaN(submissionCount) ? `${tally(submissionCount)}` : 0;
+    const submissionStatus = get(count.data, 'submissions.count', []);
 
     return (
       <div className='page__home'>
@@ -227,6 +238,35 @@ class Home extends React.Component {
               />
             </div>
           </section>
+          <section className='page__section update--submissions'>
+            <div className='row'>
+              <div className='heading__wrapper--border'>
+                <h2 className='heading--large heading--shared-content--right'>Submissions Updates</h2>
+                <Link className='link--secondary link--learn-more' to='/submissions'>{strings.view_submissions_overview}</Link>
+              </div>
+              <div className="heading__wrapper">
+                <h2 className='heading--medium heading--shared-content--right'>{strings.submissions_updated}<span className='num--title'>{numSubmissions}</span></h2>
+              </div>
+
+              <SubmissionsProgress submissions={submissionStatus} />
+            </div>
+          </section>
+          <section className='page__section list--submissions'>
+            <div className='row'>
+              <div className='heading__wrapper'>
+                <h2 className='heading--medium heading--shared-content--right'>{strings.submissions_errors}</h2>
+                <Link className='link--secondary link--learn-more' to='/logs'>{strings.view_logs}</Link>
+              </div>
+              <List
+                list={list2}
+                dispatch={this.props.dispatch}
+                action={listSubmissions}
+                tableColumns={errorTableColumns2}
+                sortIdx='timestamp'
+                query={this.generateQuery()}
+              />
+            </div>
+          </section>
         </div>
       </div>
     );
@@ -239,6 +279,7 @@ Home.propTypes = {
   dist: PropTypes.object,
   executions: PropTypes.object,
   granules: PropTypes.object,
+  submissions: PropTypes.object,
   pdrs: PropTypes.object,
   rules: PropTypes.object,
   stats: PropTypes.object,
@@ -256,6 +297,7 @@ export default withRouter(withQueryParams()(connect((state) => ({
   dist: state.dist,
   executions: state.executions,
   granules: state.granules,
+  submissions: state.submissions,
   pdrs: state.pdrs,
   rules: state.rules,
   stats: state.stats

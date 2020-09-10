@@ -8,7 +8,7 @@
   },
   "results": [
     {
-      "submissionId": "MOD09GQ.A1530852.CljGDp.006.2163412421938",
+      "submissionId": "SUBMITTED.A1530852.CljGDp.006.2163412421938",
       "execution": "https://console.aws.amazon.com/states/home?region=us-east-1#/executions/details/arn:aws:states:us-east-1:123456789012:execution:TestSourceIntegrationIngestSubmissionStateMachine-Rcei43QwgSP6:e931b74d-324c-4ee1-8d3e-e7fd7330bfb4",
       "lastUpdateDateTime": "2018-04-25T21:45:45.524Z",
       "published": true,
@@ -28,30 +28,30 @@
       "files": [
         {
           "bucket": "earthdatapub-test-sandbox-protected",
-          "key": "MOD09GQ___006/2017/MOD/MOD09GQ.A1530852.CljGDp.006.2163412421938.hdf",
-          "fileName": "MOD09GQ.A1530852.CljGDp.006.2163412421938.hdf"
+          "key": "SUBMITTED___006/2017/MOD/SUBMITTED.A1530852.CljGDp.006.2163412421938.hdf",
+          "fileName": "SUBMITTED.A1530852.CljGDp.006.2163412421938.hdf"
         },
         {
           "bucket": "earthdatapub-test-sandbox-private",
-          "key": "MOD09GQ___006/MOD/MOD09GQ.A1530852.CljGDp.006.2163412421938.hdf.met",
-          "fileName": "MOD09GQ.A1530852.CljGDp.006.2163412421938.hdf.met"
+          "key": "SUBMITTED___006/MOD/SUBMITTED.A1530852.CljGDp.006.2163412421938.hdf.met",
+          "fileName": "SUBMITTED.A1530852.CljGDp.006.2163412421938.hdf.met"
         },
         {
           "bucket": "earthdatapub-test-sandbox-public",
-          "key": "MOD09GQ___006/MOD/MOD09GQ.A1530852.CljGDp.006.2163412421938_ndvi.jpg",
-          "fileName": "MOD09GQ.A1530852.CljGDp.006.2163412421938_ndvi.jpg"
+          "key": "SUBMITTED___006/MOD/SUBMITTED.A1530852.CljGDp.006.2163412421938_ndvi.jpg",
+          "fileName": "SUBMITTED.A1530852.CljGDp.006.2163412421938_ndvi.jpg"
         },
         {
           "bucket": "earthdatapub-test-sandbox-protected-2",
-          "key": "MOD09GQ___006/MOD/MOD09GQ.A1530852.CljGDp.006.2163412421938.cmr.xml",
-          "fileName": "MOD09GQ.A1530852.CljGDp.006.2163412421938.cmr.xml"
+          "key": "SUBMITTED___006/MOD/SUBMITTED.A1530852.CljGDp.006.2163412421938.cmr.xml",
+          "fileName": "SUBMITTED.A1530852.CljGDp.006.2163412421938.cmr.xml"
         }
       ],
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "status": "completed",
       "stage":"submitted",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A1530852.CljGDp.006.2163412421938.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A1530852.CljGDp.006.2163412421938.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A1530852.CljGDp.006.2163412421938.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A1530852.CljGDp.006.2163412421938.json",
       "dataProducer":"Joe Producer",
       "contact":"Joe Contact",
       "workflow":"A",
@@ -60,7 +60,7 @@
       "updatedAt": 1537831783389
     },
     {
-      "submissionId": "MOD09GQ.A1657416.CbyoRi.006.9697917818587",
+      "submissionId": "SUBMITTED.A1657416.CbyoRi.006.9697917818587",
       "execution": "https://console.aws.amazon.com/states/home?region=us-east-1#/executions/details/arn:aws:states:us-east-1:123456789012:execution:TestSourceIntegrationPublishSubmissionStateMachine-SCBn8QOiQeE0:b8f44f55-7b49-49ba-a9b6-a64ebf77e655",
       "lastUpdateDateTime": "2018-04-25T21:45:45.524Z",
       "processingEndDateTime": "2018-09-24T23:28:45.731Z",
@@ -81,30 +81,30 @@
       "files": [
         {
           "bucket": "earthdatapub-test-sandbox-protected",
-          "key": "MOD09GQ___006/2017/MOD/MOD09GQ.A1657416.CbyoRi.006.9697917818587.hdf",
-          "fileName": "MOD09GQ.A1657416.CbyoRi.006.9697917818587.hdf"
+          "key": "SUBMITTED___006/2017/MOD/SUBMITTED.A1657416.CbyoRi.006.9697917818587.hdf",
+          "fileName": "SUBMITTED.A1657416.CbyoRi.006.9697917818587.hdf"
         },
         {
           "bucket": "earthdatapub-test-sandbox-private",
-          "key": "MOD09GQ___006/MOD/MOD09GQ.A1657416.CbyoRi.006.9697917818587.hdf.met",
-          "fileName": "MOD09GQ.A1657416.CbyoRi.006.9697917818587.hdf.met"
+          "key": "SUBMITTED___006/MOD/SUBMITTED.A1657416.CbyoRi.006.9697917818587.hdf.met",
+          "fileName": "SUBMITTED.A1657416.CbyoRi.006.9697917818587.hdf.met"
         },
         {
           "bucket": "earthdatapub-test-sandbox-public",
-          "key": "MOD09GQ___006/MOD/MOD09GQ.A1657416.CbyoRi.006.9697917818587_ndvi.jpg",
-          "fileName": "MOD09GQ.A1657416.CbyoRi.006.9697917818587_ndvi.jpg"
+          "key": "SUBMITTED___006/MOD/SUBMITTED.A1657416.CbyoRi.006.9697917818587_ndvi.jpg",
+          "fileName": "SUBMITTED.A1657416.CbyoRi.006.9697917818587_ndvi.jpg"
         },
         {
           "bucket": "earthdatapub-test-sandbox-protected-2",
-          "key": "MOD09GQ___006/MOD/MOD09GQ.A1657416.CbyoRi.006.9697917818587.cmr.xml",
-          "fileName": "MOD09GQ.A1657416.CbyoRi.006.9697917818587.cmr.xml"
+          "key": "SUBMITTED___006/MOD/SUBMITTED.A1657416.CbyoRi.006.9697917818587.cmr.xml",
+          "fileName": "SUBMITTED.A1657416.CbyoRi.006.9697917818587.cmr.xml"
         }
       ],
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "status": "running",
       "stage":"in-progress",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A1657416.CbyoRi.006.9697917818587.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A1657416.CbyoRi.006.9697917818587.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A1657416.CbyoRi.006.9697917818587.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A1657416.CbyoRi.006.9697917818587.json",
       "dataProducer":"Jim Producer",
       "contact":"Jim Contact",
       "workflow":"A",
@@ -113,7 +113,7 @@
       "updatedAt": 1537831750922
     },
     {
-      "submissionId": "MOD09GQ.A2016358.h13v04.006.2016360104606.hdf",
+      "submissionId": "SUBMITTED.A2016358.h13v04.006.2016360104606.hdf",
       "execution": "https://console.aws.amazon.com/states/home?region=us-east-1#/executions/details/arn:aws:states:us-east-1:123456789012:execution:TestSourceIntegrationSyncSubmissionStateMachine-YBWU89xSgeQb:2890dde4-3ef8-45c2-a190-d21e26d503a3",
       "published": false,
       "error": {
@@ -130,18 +130,18 @@
       "files": [
         {
           "bucket": "earthdatapub-test-sandbox-internal",
-          "fileName": "s3://earthdatapub-test-sandbox-internal/custom-staging-dir/test-src-integration/MOD09GQ___006/MOD09GQ.A2016358.h13v04.006.2016360104606.hdf"
+          "fileName": "s3://earthdatapub-test-sandbox-internal/custom-staging-dir/test-src-integration/SUBMITTED___006/SUBMITTED.A2016358.h13v04.006.2016360104606.hdf"
         },
         {
           "bucket": "earthdatapub-test-sandbox-internal",
-          "fileName": "s3://earthdatapub-test-sandbox-internal/custom-staging-dir/test-src-integration/MOD09GQ___006/MOD09GQ.A2016358.h13v04.006.2016360104606.hdf.met"
+          "fileName": "s3://earthdatapub-test-sandbox-internal/custom-staging-dir/test-src-integration/SUBMITTED___006/SUBMITTED.A2016358.h13v04.006.2016360104606.hdf.met"
         }
       ],
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "status": "completed",
       "stage":"submitted",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A2016358.h13v04.006.2016360104606.hdf.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A2016358.h13v04.006.2016360104606.hdf.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A2016358.h13v04.006.2016360104606.hdf.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A2016358.h13v04.006.2016360104606.hdf.json",
       "dataProducer":"Joel Producer",
       "contact":"Joel Contact",
       "workflow":"A",
@@ -150,8 +150,8 @@
       "updatedAt": 1537831677777
     },
     {
-      "submissionId": "MOD09GQ.A2016358.h13v04.006.2016360104606",
-      "pdrName": "MOD09GQ_1submission_v3.PDR",
+      "submissionId": "SUBMITTED.A2016358.h13v04.006.2016360104606",
+      "pdrName": "SUBMITTED_1submission_v3.PDR",
       "execution": "https://console.aws.amazon.com/states/home?region=us-east-1#/executions/details/arn:aws:states:us-east-1:123456789012:execution:TestSourceIntegrationIngestSubmissionStateMachine-MOyI0myKEXzf:50eaad71-bba8-4376-83d7-bb9cc1309b92",
       "published": false,
       "error": {
@@ -167,22 +167,22 @@
       "files": [
         {
           "bucket": "earthdatapub-test-sandbox-protected",
-          "fileName": "s3://earthdatapub-test-sandbox-protected/MOD09GQ___006/2017/MOD/MOD09GQ.A2016358.h13v04.006.2016360104606.hdf"
+          "fileName": "s3://earthdatapub-test-sandbox-protected/SUBMITTED___006/2017/MOD/SUBMITTED.A2016358.h13v04.006.2016360104606.hdf"
         },
         {
           "bucket": "earthdatapub-test-sandbox-private",
-          "fileName": "s3://earthdatapub-test-sandbox-private/MOD09GQ___006/MOD/MOD09GQ.A2016358.h13v04.006.2016360104606.hdf.met"
+          "fileName": "s3://earthdatapub-test-sandbox-private/SUBMITTED___006/MOD/SUBMITTED.A2016358.h13v04.006.2016360104606.hdf.met"
         },
         {
           "bucket": "earthdatapub-test-sandbox-protected-2",
-          "fileName": "s3://earthdatapub-test-sandbox-protected-2/MOD09GQ___006/MOD/MOD09GQ.A2016358.h13v04.006.2016360104606.cmr.xml"
+          "fileName": "s3://earthdatapub-test-sandbox-protected-2/SUBMITTED___006/MOD/SUBMITTED.A2016358.h13v04.006.2016360104606.cmr.xml"
         }
       ],
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "status": "completed",
       "stage":"review",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A2016358.h13v04.006.2016360104606.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A2016358.h13v04.006.2016360104606.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A2016358.h13v04.006.2016360104606.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A2016358.h13v04.006.2016360104606.json",
       "dataProducer":"John Producer",
       "contact":"John Contact",
       "workflow":"B",
@@ -191,7 +191,7 @@
       "updatedAt": 1542053130920
     },
     {
-      "submissionId": "MOD09GQ.A5456658.rso6Y4.006.4979096122140",
+      "submissionId": "SUBMITTED.A5456658.rso6Y4.006.4979096122140",
       "execution": "https://console.aws.amazon.com/states/home?region=us-east-1#/executions/details/arn:aws:states:us-east-1:123456789012:execution:TestSourceIntegrationIngestSubmissionStateMachine-Rcei43QwgSP6:0eb48d9c-95aa-4f76-8f55-2d5f3393b50d",
       "lastUpdateDateTime": "2018-04-25T21:45:45.524Z",
       "published": true,
@@ -211,26 +211,26 @@
       "files": [
         {
           "bucket": "earthdatapub-test-sandbox-protected",
-          "fileName": "s3://earthdatapub-test-sandbox-protected/MOD09GQ___006/2017/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140.hdf"
+          "fileName": "s3://earthdatapub-test-sandbox-protected/SUBMITTED___006/2017/MOD/SUBMITTED.A5456658.rso6Y4.006.4979096122140.hdf"
         },
         {
           "bucket": "earthdatapub-test-sandbox-private",
-          "fileName": "s3://earthdatapub-test-sandbox-private/MOD09GQ___006/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140.hdf.met"
+          "fileName": "s3://earthdatapub-test-sandbox-private/SUBMITTED___006/MOD/SUBMITTED.A5456658.rso6Y4.006.4979096122140.hdf.met"
         },
         {
           "bucket": "earthdatapub-test-sandbox-public",
-          "fileName": "s3://earthdatapub-test-sandbox-public/MOD09GQ___006/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140_ndvi.jpg"
+          "fileName": "s3://earthdatapub-test-sandbox-public/SUBMITTED___006/MOD/SUBMITTED.A5456658.rso6Y4.006.4979096122140_ndvi.jpg"
         },
         {
           "bucket": "earthdatapub-test-sandbox-protected-2",
-          "fileName": "s3://earthdatapub-test-sandbox-protected-2/MOD09GQ___006/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140.cmr.xml"
+          "fileName": "s3://earthdatapub-test-sandbox-protected-2/SUBMITTED___006/MOD/SUBMITTED.A5456658.rso6Y4.006.4979096122140.cmr.xml"
         }
       ],
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "status": "completed",
       "stage":"review",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A5456658.rso6Y4.006.4979096122140.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A5456658.rso6Y4.006.4979096122140.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A5456658.rso6Y4.006.4979096122140.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A5456658.rso6Y4.006.4979096122140.json",
       "dataProducer":"Jacob Producer",
       "contact":"Jacob Contact",
       "workflow":"B",
@@ -239,7 +239,7 @@
       "updatedAt": 1537830693542
     },
     {
-      "submissionId": "MOD09GQ.A2417309.YZ9tCV.006.4640974889044",
+      "submissionId": "SUBMITTED.A2417309.YZ9tCV.006.4640974889044",
       "execution": "https://console.aws.amazon.com/states/home?region=us-east-1#/executions/details/arn:aws:states:us-east-1:123456789012:execution:TestSourceIntegrationIngestSubmissionStateMachine-Rcei43QwgSP6:ffdb0984-c64e-4b1d-8af0-81938ec8acf9",
       "published": false,
       "error": {
@@ -254,27 +254,13 @@
       "timeToArchive": 0.043,
       "files": [
         {
-          "bucket": "earthdatapub-test-sandbox-protected",
-          "fileName": "s3://earthdatapub-test-sandbox-protected/MOD09GQ___006/2017/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140.hdf"
-        },
-        {
-          "bucket": "earthdatapub-test-sandbox-private",
-          "fileName": "s3://earthdatapub-test-sandbox-private/MOD09GQ___006/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140.hdf.met"
-        },
-        {
-          "bucket": "earthdatapub-test-sandbox-public",
-          "fileName": "s3://earthdatapub-test-sandbox-public/MOD09GQ___006/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140_ndvi.jpg"
-        },
-        {
-          "bucket": "earthdatapub-test-sandbox-protected-2",
-          "fileName": "s3://earthdatapub-test-sandbox-protected-2/MOD09GQ___006/MOD/MOD09GQ.A5456658.rso6Y4.006.4979096122140.cmr.xml"
         }
       ],
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "status": "failed",
       "stage":"error",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A2417309.YZ9tCV.006.4640974889044.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A2417309.YZ9tCV.006.4640974889044.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A2417309.YZ9tCV.006.4640974889044.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A2417309.YZ9tCV.006.4640974889044.json",
       "dataProducer":"Jason Producer",
       "contact":"Jason Contact",
       "workflow":"B",
@@ -283,7 +269,7 @@
       "updatedAt": 1537830620074
     },
     {
-      "submissionId": "MOD09GQ.A0142558.ee5lpE.006.5112577830916",
+      "submissionId": "SUBMITTED.A0142558.ee5lpE.006.5112577830916",
       "execution": "https://console.aws.amazon.com/states/home?region=us-east-1#/executions/details/arn:aws:states:us-east-1:123456789012:execution:TestSourceIntegrationIngestSubmissionStateMachine-Rcei43QwgSP6:bab9c234-e492-40e6-a34c-a0f76a4c7968",
       "lastUpdateDateTime": "2018-04-25T21:45:45.524Z",
       "published": true,
@@ -303,26 +289,26 @@
       "files": [
         {
           "bucket": "earthdatapub-test-sandbox-protected",
-          "fileName": "s3://earthdatapub-test-sandbox-protected/MOD09GQ___006/2017/MOD/MOD09GQ.A0142558.ee5lpE.006.5112577830916.hdf"
+          "fileName": "s3://earthdatapub-test-sandbox-protected/SUBMITTED___006/2017/MOD/SUBMITTED.A0142558.ee5lpE.006.5112577830916.hdf"
         },
         {
           "bucket": "earthdatapub-test-sandbox-private",
-          "fileName": "s3://earthdatapub-test-sandbox-private/MOD09GQ___006/MOD/MOD09GQ.A0142558.ee5lpE.006.5112577830916.hdf.met"
+          "fileName": "s3://earthdatapub-test-sandbox-private/SUBMITTED___006/MOD/SUBMITTED.A0142558.ee5lpE.006.5112577830916.hdf.met"
         },
         {
           "bucket": "earthdatapub-test-sandbox-public",
-          "fileName": "s3://earthdatapub-test-sandbox-public/MOD09GQ___006/MOD/MOD09GQ.A0142558.ee5lpE.006.5112577830916_ndvi.jpg"
+          "fileName": "s3://earthdatapub-test-sandbox-public/SUBMITTED___006/MOD/SUBMITTED.A0142558.ee5lpE.006.5112577830916_ndvi.jpg"
         },
         {
           "bucket": "earthdatapub-test-sandbox-protected-2",
-          "fileName": "s3://earthdatapub-test-sandbox-protected-2/MOD09GQ___006/MOD/MOD09GQ.A0142558.ee5lpE.006.5112577830916.cmr.xml"
+          "fileName": "s3://earthdatapub-test-sandbox-protected-2/SUBMITTED___006/MOD/SUBMITTED.A0142558.ee5lpE.006.5112577830916.cmr.xml"
         }
       ],
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "status": "completed",
       "stage":"submitted",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A0142558.ee5lpE.006.5112577830916.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A0142558.ee5lpE.006.5112577830916.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A0142558.ee5lpE.006.5112577830916.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A0142558.ee5lpE.006.5112577830916.json",
       "dataProducer":"Jack Producer",
       "contact":"Jack Contact",
       "workflow":"C",
@@ -331,7 +317,7 @@
       "updatedAt": 1537811616392
     },
     {
-      "submissionId": "MOD09GQ.A0501579.PZB_CG.006.8580266395214",
+      "submissionId": "SUBMITTED.A0501579.PZB_CG.006.8580266395214",
       "execution": "https://console.aws.amazon.com/states/home?region=us-east-1#/executions/details/arn:aws:states:us-east-1:123456789012:execution:TestSourceIntegrationPublishSubmissionStateMachine-SCBn8QOiQeE0:77dafa83-0a0b-4fa4-8b4e-e9b037043282",
       "lastUpdateDateTime": "2018-04-25T21:45:45.524Z",
       "processingEndDateTime": "2018-09-24T17:52:34.578Z",
@@ -352,26 +338,26 @@
       "files": [
         {
           "bucket": "earthdatapub-test-sandbox-protected",
-          "fileName": "s3://earthdatapub-test-sandbox-protected/MOD09GQ___006/2017/MOD/MOD09GQ.A0501579.PZB_CG.006.8580266395214.hdf"
+          "fileName": "s3://earthdatapub-test-sandbox-protected/SUBMITTED___006/2017/MOD/SUBMITTED.A0501579.PZB_CG.006.8580266395214.hdf"
         },
         {
           "bucket": "earthdatapub-test-sandbox-private",
-          "fileName": "s3://earthdatapub-test-sandbox-private/MOD09GQ___006/MOD/MOD09GQ.A0501579.PZB_CG.006.8580266395214.hdf.met"
+          "fileName": "s3://earthdatapub-test-sandbox-private/SUBMITTED___006/MOD/SUBMITTED.A0501579.PZB_CG.006.8580266395214.hdf.met"
         },
         {
           "bucket": "earthdatapub-test-sandbox-public",
-          "fileName": "s3://earthdatapub-test-sandbox-public/MOD09GQ___006/MOD/MOD09GQ.A0501579.PZB_CG.006.8580266395214_ndvi.jpg"
+          "fileName": "s3://earthdatapub-test-sandbox-public/SUBMITTED___006/MOD/SUBMITTED.A0501579.PZB_CG.006.8580266395214_ndvi.jpg"
         },
         {
           "bucket": "earthdatapub-test-sandbox-protected-2",
-          "fileName": "s3://earthdatapub-test-sandbox-protected-2/MOD09GQ___006/MOD/MOD09GQ.A0501579.PZB_CG.006.8580266395214.cmr.xml"
+          "fileName": "s3://earthdatapub-test-sandbox-protected-2/SUBMITTED___006/MOD/SUBMITTED.A0501579.PZB_CG.006.8580266395214.cmr.xml"
         }
       ],
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "status": "running",
       "stage":"in-progress",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A0501579.PZB_CG.006.8580266395214.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A0501579.PZB_CG.006.8580266395214.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A0501579.PZB_CG.006.8580266395214.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A0501579.PZB_CG.006.8580266395214.json",
       "dataProducer":"James Producer",
       "contact":"James Contact",
       "workflow":"C",
@@ -380,7 +366,7 @@
       "updatedAt": 1537811586313
     },
     {
-      "submissionId": "MOD09GQ.A8022119.sk3Sph.006.0494433853533",
+      "submissionId": "SUBMITTED.A8022119.sk3Sph.006.0494433853533",
       "execution": "https://console.aws.amazon.com/states/home?region=us-east-1#/executions/details/arn:aws:states:us-east-1:123456789012:execution:TestSourceIntegrationIngestSubmissionStateMachine-Rcei43QwgSP6:077bbb36-0469-4fc2-961c-b24529e30fed",
       "lastUpdateDateTime": "2018-04-25T21:45:45.524Z",
       "published": true,
@@ -400,26 +386,26 @@
       "files": [
         {
           "bucket": "earthdatapub-test-sandbox-protected",
-          "fileName": "s3://earthdatapub-test-sandbox-protected/MOD09GQ___006/2017/MOD/MOD09GQ.A8022119.sk3Sph.006.0494433853533.hdf"
+          "fileName": "s3://earthdatapub-test-sandbox-protected/SUBMITTED___006/2017/MOD/SUBMITTED.A8022119.sk3Sph.006.0494433853533.hdf"
         },
         {
           "bucket": "earthdatapub-test-sandbox-private",
-          "fileName": "s3://earthdatapub-test-sandbox-private/MOD09GQ___006/MOD/MOD09GQ.A8022119.sk3Sph.006.0494433853533.hdf.met"
+          "fileName": "s3://earthdatapub-test-sandbox-private/SUBMITTED___006/MOD/SUBMITTED.A8022119.sk3Sph.006.0494433853533.hdf.met"
         },
         {
           "bucket": "earthdatapub-test-sandbox-public",
-          "fileName": "s3://earthdatapub-test-sandbox-public/MOD09GQ___006/MOD/MOD09GQ.A8022119.sk3Sph.006.0494433853533_ndvi.jpg"
+          "fileName": "s3://earthdatapub-test-sandbox-public/SUBMITTED___006/MOD/SUBMITTED.A8022119.sk3Sph.006.0494433853533_ndvi.jpg"
         },
         {
           "bucket": "earthdatapub-test-sandbox-protected-2",
-          "fileName": "s3://earthdatapub-test-sandbox-protected-2/MOD09GQ___006/MOD/MOD09GQ.A8022119.sk3Sph.006.0494433853533.cmr.xml"
+          "fileName": "s3://earthdatapub-test-sandbox-protected-2/SUBMITTED___006/MOD/SUBMITTED.A8022119.sk3Sph.006.0494433853533.cmr.xml"
         }
       ],
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "status": "completed",
       "stage":"review",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A8022119.sk3Sph.006.0494433853533.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A8022119.sk3Sph.006.0494433853533.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A8022119.sk3Sph.006.0494433853533.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A8022119.sk3Sph.006.0494433853533.json",
       "dataProducer":"Jayden Producer",
       "contact":"Jayden Contact",
       "workflow":"C",
@@ -428,7 +414,7 @@
       "updatedAt": 1537810722395
     },
     {
-      "submissionId": "MOD09GQ.A9344328.K9yI3O.006.4625818663028",
+      "submissionId": "SUBMITTED.A9344328.K9yI3O.006.4625818663028",
       "execution": "https://console.aws.amazon.com/states/home?region=us-east-1#/executions/details/arn:aws:states:us-east-1:123456789012:execution:TestSourceIntegrationIngestSubmissionStateMachine-Rcei43QwgSP6:954bda4c-712c-49b1-b3ff-ff37145e0dd5",
       "published": false,
       "error": {
@@ -445,11 +431,11 @@
         {
         }
       ],
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "status": "failed",
       "stage":"error",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A9344328.K9yI3O.006.4625818663028.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A9344328.K9yI3O.006.4625818663028.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A9344328.K9yI3O.006.4625818663028.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A9344328.K9yI3O.006.4625818663028.json",
       "dataProducer":"Joshua Producer",
       "contact":"Joshua Contact",
       "workflow":"D",
@@ -459,7 +445,7 @@
     },
     {
       "beginningDateTime": "2017-10-24T00:00:00Z",
-      "collectionId": "MOD09GQ___006",
+      "collectionId": "SUBMITTED___006",
       "createdAt": 1576106363823,
       "duration": 7.546,
       "endingDateTime": "2017-11-08T23:59:59Z",
@@ -471,14 +457,14 @@
       "files": [
         {
           "bucket": "earthdatapub-test-sandbox-protected-2",
-          "fileName": "MOD09GQ.A4622742.B7A8Ma.006.7857260550036.cmr.xml",
-          "key": "MOD09GQ___006/MOD/MOD09GQ.A4622742.B7A8Ma.006.7857260550036.cmr.xml",
+          "fileName": "SUBMITTED.A4622742.B7A8Ma.006.7857260550036.cmr.xml",
+          "key": "SUBMITTED___006/MOD/SUBMITTED.A4622742.B7A8Ma.006.7857260550036.cmr.xml",
           "size": 2488,
-          "source": "s3://earthdatapub-test-sandbox-protected-2/MOD09GQ___006/MOD/MOD09GQ.A4622742.B7A8Ma.006.7857260550036.cmr.xml",
+          "source": "s3://earthdatapub-test-sandbox-protected-2/SUBMITTED___006/MOD/SUBMITTED.A4622742.B7A8Ma.006.7857260550036.cmr.xml",
           "type": "metadata"
         }
       ],
-      "submissionId": "MOD09GQ.A4622742.B7A8Ma.006.7857260550036",
+      "submissionId": "SUBMITTED.A4622742.B7A8Ma.006.7857260550036",
       "lastUpdateDateTime": "2018-04-25T21:45:45.524053",
       "processingEndDateTime": "2019-12-11T23:19:30.946Z",
       "processingStartDateTime": "2019-12-11T23:19:23.823Z",
@@ -488,8 +474,8 @@
       "published": false,
       "status": "completed",
       "stage": "submitted",
-      "dataSubmissionRequest":"dataSubmissionRequest_MOD09GQ.A4622742.B7A8Ma.006.7857260550036.json",
-      "dataProductQuestionaire":"dataProductQuestionaire_MOD09GQ.A4622742.B7A8Ma.006.7857260550036.json",
+      "dataSubmissionRequest":"dataSubmissionRequest_SUBMITTED.A4622742.B7A8Ma.006.7857260550036.json",
+      "dataProductQuestionaire":"dataProductQuestionaire_SUBMITTED.A4622742.B7A8Ma.006.7857260550036.json",
       "dataProducer":"Jake Producer",
       "contact":"Jake Contact",
       "workflow":"D",

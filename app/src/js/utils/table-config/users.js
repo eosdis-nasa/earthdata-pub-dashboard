@@ -3,47 +3,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { fromNow } from '../format';
 
-export const makePermissions = (row) => {
-  try {
-    let permissions = []
-    for(let ea in row.permissions){
-      permissions.push(row.permissions[ea].table_name)
-    }
-    return permissions.join(', ')
-  } catch(error){
-    return '';
-  }
-};
-
-export const makeSubscriptions = (row) => {
-  try {
-    let subscriptions = []
-    for(let ea in row.subscriptions){
-      subscriptions.push(row.subscriptions[ea].table_name)
-    }
-    return subscriptions.join(', ')
-  } catch(error){
-    return '';
-  }
-};
-
-export const makeGroups = (row) => {
-  try {
-    let groups = []
-    for(let ea in row.groups){
-      groups.push(row.groups[ea].name)
-    }
-    return groups.join(', ')
-  } catch(error){
-    return '';
-  }
-};
-
 export const tableColumns = [
   {
     Header: 'Name',
-    accessor: row => userLink(row.userId),
-    id: 'userName',
+    accessor: row => <Link to={`users/user/${row.id}`}>{row.id}</Link>,
+    id: 'username'
   },
   {
     Header: 'Email',
@@ -52,18 +16,16 @@ export const tableColumns = [
   },
   {
     Header: 'Groups',
-    accessor: makeGroups,
+    accessor: row => <Link to={`groups/group/${row.id}`}>{row.id}</Link>,
     id: 'groups'
   },
   {
     Header: 'Permissions',
-    accessor: makePermissions,
-    id: 'permissions'
+    accessor: 'permissions'
   },
   {
     Header: 'Subscriptions',
-    accessor: makeSubscriptions,
-    id: 'subscriptions'
+    accessor: 'subscriptions'
   },
   {
     Header: 'Last Updated',

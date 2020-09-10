@@ -33,7 +33,7 @@ FormsTable:
   write: 1
   pointInTime: '{{enablePointInTime}}'
   attributes:
-    - name: formId
+    - name: id
       type: S
       schema: HASH
 
@@ -42,7 +42,7 @@ GroupsTable:
   write: 1
   pointInTime: '{{enablePointInTime}}'
   attributes:
-    - name: groupId
+    - name: id
       type: S
       schema: HASH
 
@@ -60,7 +60,7 @@ UsersTable:
   write: 1
   pointInTime: '{{enablePointInTime}}'
   attributes:
-    - name: userId
+    - name: userName
       type: S
       schema: HASH
 

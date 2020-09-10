@@ -93,7 +93,7 @@ class User extends Manager {
    *
    * @param {string} id - the user id
    */
-  /*async delete ({ id }) {
+  async delete ({ id }) {
     const associatedRuleNames = (await this.getAssociatedRules(id))
       .map((rule) => rule.name);
 
@@ -105,7 +105,7 @@ class User extends Manager {
     }
 
     await super.delete({ id });
-  }*/
+  }
 
   async deleteUsers () {
     const users = await this.scan();
@@ -118,7 +118,7 @@ class User extends Manager {
    * @param {string} id - the user id
    * @returns {Promise<boolean>}
    */
-  /*async getAssociatedRules (id) {
+  async getAssociatedRules (id) {
     const ruleModel = new Rule();
 
     const scanResult = await ruleModel.scan({
@@ -127,7 +127,7 @@ class User extends Manager {
     });
 
     return scanResult.Items;
-  }*/
+  }
 }
 
 module.exports = User;

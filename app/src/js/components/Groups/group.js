@@ -6,16 +6,13 @@ import { withRouter, Link } from 'react-router-dom';
 import {
   interval,
   getGroup,
-  deleteGroup,
-  filterUsers,
-  listUsers
+  deleteGroup
 } from '../../actions';
 import { get } from 'object-path';
 import {
   fromNow,
   lastUpdated,
-  deleteText,
-  userLink
+  deleteText
 } from '../../utils/format';
 import Loading from '../LoadingIndicator/loading-indicator';
 import LogViewer from '../Logs/viewer';
@@ -25,34 +22,6 @@ import Metadata from '../Table/Metadata';
 import _config from '../../config';
 
 const { updateInterval } = _config;
-
-const tableColumns = [
-  {
-    Header: 'User Name',
-    accessor: row => <Link to={`users/user/${row.userId}`}>{row.userId}</Link>,
-    id: 'userName'
-  },
-  {
-    Header: 'Email',
-    accessor: row => row.email,
-    id: 'email'
-  },
-  {
-    Header: 'Groups',
-    accessor: row => row.groups,
-    id: 'groups'
-  },
-  {
-    Header: 'Permissions',
-    accessor: row => row.permissions,
-    id: 'permissions'
-  },
-  {
-    Header: 'Subscriptions',
-    accessor: row => row.subscriptions,
-    id: 'subscriptions'
-  }
-];
 
 const metaAccessors = [
   {
@@ -79,11 +48,6 @@ class GroupOverview extends React.Component {
   componentDidMount () {
     const { groupId } = this.props.match.params;
     const immediate = !this.props.groups.map[groupId];
-    this.props.dispatch(listUsers({
-      limit: 100,
-      fields: 'userName',
-      groups: groupId
-    }))
     this.reload(immediate);
     /* this.props.dispatch(listCollections({
       limit: 100,
@@ -137,7 +101,7 @@ class GroupOverview extends React.Component {
     const group = record.data;
     const logsQuery = { 'meta.group': groupId };
     const errors = this.errors();
-    
+
     const deleteStatus = get(this.props.groups.deleted, [groupId, 'status']);
     const dropdownConfig = [{
       text: 'Delete',
@@ -168,26 +132,6 @@ class GroupOverview extends React.Component {
           </div>
           <Metadata data={group} accessors={metaAccessors} />
         </section>
-        {/*
-
-        
-        <section className='page__section list--submissions'>
-          <div className='row'>
-            <div className='heading__wrapper'>
-              <h2 className='heading--medium heading--shared-content--right'>{strings.submissions_errors}</h2>
-              <Link className='link--secondary link--learn-more' to='/logs'>{strings.view_logs}</Link>
-            </div>
-            <List
-              list={list}
-              dispatch={this.props.dispatch}
-              action={filterUsers}
-              tableColumns={tableColumns}
-              sortIdx='timestamp'
-              query={this.generateQuery()}
-            />
-          </div>
-        </section>
-        */}
 
         <section className='page__section'>
           <LogViewer
