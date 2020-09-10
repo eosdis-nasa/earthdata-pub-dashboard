@@ -1000,6 +1000,17 @@ export const listWorkflows = (options) => ({
 export const searchWorkflows = (searchString) => ({ type: types.SEARCH_WORKFLOWS, searchString });
 export const clearWorkflowsSearch = () => ({ type: types.CLEAR_WORKFLOWS_SEARCH });
 
+export const listMetrics = (options) => ({
+  [CALL_API]: {
+    type: types.METRICS,
+    method: 'GET',
+    url: new URL('metrics', root).href,
+    qs: Object.assign({ limit: defaultPageLimit }, options)
+  }
+});
+export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });
+export const clearMetricsSearch = () => ({ type: types.CLEAR_METRICS_SEARCH });
+
 export const searchExecutionEvents = (searchString) => ({ type: types.SEARCH_EXECUTION_EVENTS, searchString });
 export const clearExecutionEventsSearch = () => ({ type: types.CLEAR_EXECUTION_EVENTS_SEARCH });
 

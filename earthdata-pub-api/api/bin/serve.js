@@ -17,6 +17,7 @@ const {
 } = require('./local-test-defaults');
 
 const workflowList = testUtils.getWorkflowList();
+const metricList = testUtils.getMetricList();
 
 async function createTable (Model, tableName) {
   try {
@@ -43,6 +44,13 @@ async function populateBucket (bucket, stackName) {
     Body: JSON.stringify(obj)
   }));
 
+  // upload metric files
+  const metricPromises = metricList.map((obj) => promiseS3Upload({
+    Bucket: bucket,
+    Key: `${stackName}/metrics/${obj.name}.json`,
+    Body: JSON.stringify(obj)
+  }));
+
   // upload workflow template
   const workflow = `${stackName}/workflow_template.json`;
   const templatePromise = promiseS3Upload({
@@ -50,7 +58,12 @@ async function populateBucket (bucket, stackName) {
     Key: workflow,
     Body: JSON.stringify({})
   });
-  await Promise.all([...workflowPromises, templatePromise]);
+  const metricTemplatePromise = promiseS3Upload({
+    Bucket: bucket,
+    Key: `${stackName}/metric_template.json`,
+    Body: JSON.stringify({})
+  })
+  await Promise.all([...workflowPromises, ...metricPromises, metricTemplatePromise, templatePromise]);
 }
 
 function setTableEnvVariables (stackName) {

@@ -15,5 +15,6 @@ exports.stringUtils = require('./string');
 exports.testUtils = require('./test-utils');
 exports.util = require('./util');
 exports.workflows = require('./workflows');
+exports.metrics = require('./metrics');
 exports.concurrency = require('./concurrency');
 exports.Semaphore = require('./Semaphore');

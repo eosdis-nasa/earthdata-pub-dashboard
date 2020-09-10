@@ -131,6 +131,10 @@ export const workflowLink = function (workflowId) {
   if (workflowId) return nullValue;
   return <Link to={`/workflows/workflow/${workflowId}`}>{workflowId}</Link>;
 };
+export const metricLink = function (metricId) {
+  if (metricId) return nullValue;
+  return <Link to={`/metrics/metric/${metricId}`}>{metricId}</Link>;
+};
 export const messageLink = function (message) {
   if (!message) return nullValue;
   return <Link to={`/messages/message/${message}`}>{message}</Link>;
