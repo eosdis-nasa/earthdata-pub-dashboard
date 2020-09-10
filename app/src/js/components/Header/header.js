@@ -21,7 +21,7 @@ const paths = [
   // ['Rules', '/rules'],
   // ['Logs', 'logs'],
   // ['Reconciliation Reports', '/reconciliation-reports']
-  ['Forms', '/forms'],
+  // ['Forms', '/forms'],
   ['Users', '/users'],
   ['Groups', '/groups'],
 ];

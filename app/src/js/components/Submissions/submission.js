@@ -17,6 +17,7 @@ import {
   nullValue,
   bool,
   dataProducerLink,
+  pointOfContactLink,
   deleteText
 } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
@@ -61,6 +62,11 @@ const metaAccessors = [
     label: 'Primary Data Producer',
     property: 'dataProducer',
     accessor: dataProducerLink
+  },
+  {
+    label: 'Primary Contact',
+    property: 'contact',
+    accessor: pointOfContactLink
   },
   {
     label: 'Submitted',

@@ -54,7 +54,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"Joe Producer",
       "contact":"Joe Contact",
-      "workflow":"A",
+      "workflow":"HelloWorldWorkflow",
       "timestamp": 1537831783729,
       "submitted": 1537831783389,
       "updatedAt": 1537831783389
@@ -107,7 +107,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"Jim Producer",
       "contact":"Jim Contact",
-      "workflow":"A",
+      "workflow":"HelloWorldWorkflow",
       "timestamp": 1537831751216,
       "submitted": 1537831750922,
       "updatedAt": 1537831750922
@@ -144,7 +144,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"Joel Producer",
       "contact":"Joel Contact",
-      "workflow":"A",
+      "workflow":"HelloWorldWorkflow",
       "timestamp": 1537831678152,
       "submitted": 1537831677777,
       "updatedAt": 1537831677777
@@ -185,7 +185,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"John Producer",
       "contact":"John Contact",
-      "workflow":"B",
+      "workflow":"SecondTestWorkflow",
       "timestamp": 1542053131328,
       "submitted": 1542053130920,
       "updatedAt": 1542053130920
@@ -233,7 +233,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"Jacob Producer",
       "contact":"Jacob Contact",
-      "workflow":"B",
+      "workflow":"SecondTestWorkflow",
       "timestamp": 1537830693975,
       "submitted": 1537830693542,
       "updatedAt": 1537830693542
@@ -263,7 +263,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"Jason Producer",
       "contact":"Jason Contact",
-      "workflow":"B",
+      "workflow":"SecondTestWorkflow",
       "timestamp": 1537830620568,
       "submitted": 1537830620074,
       "updatedAt": 1537830620074
@@ -311,7 +311,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"Jack Producer",
       "contact":"Jack Contact",
-      "workflow":"C",
+      "workflow":"HelloWorldWorkflow",
       "timestamp": 1537811617065,
       "submitted": 1537811616392,
       "updatedAt": 1537811616392
@@ -360,7 +360,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"James Producer",
       "contact":"James Contact",
-      "workflow":"C",
+      "workflow":"HelloWorldWorkflow",
       "timestamp": 1537811586955,
       "submitted": 1537811586313,
       "updatedAt": 1537811586313
@@ -408,7 +408,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"Jayden Producer",
       "contact":"Jayden Contact",
-      "workflow":"C",
+      "workflow":"HelloWorldWorkflow",
       "timestamp": 1537810722632,
       "submitted": 1537810722395,
       "updatedAt": 1537810722395
@@ -438,7 +438,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"Joshua Producer",
       "contact":"Joshua Contact",
-      "workflow":"D",
+      "workflow":"SecondTestWorkflow",
       "timestamp": 1537810219425,
       "submitted": 1537810218839,
       "updatedAt": 1537810218839
@@ -478,7 +478,7 @@
       "dataProductQuestionaire":"6c544723-241c-4896-a38c-adbc0a364294",
       "dataProducer":"Jake Producer",
       "contact":"Jake Contact",
-      "workflow":"D",
+      "workflow":"SecondTestWorkflow",
       "timestamp": 1576106371369,
       "timeToArchive": 0.01,
       "timeToPreprocess": 0.318,

@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import {
   interval,
   getForm,
@@ -17,8 +17,6 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 import _config from '../../config';
-
-console.log(_config);
 
 const { updateInterval } = _config;
 
@@ -160,14 +158,13 @@ class FormOverview extends React.Component {
         newSections.push(this.renderQuestions(sections, sections[ea][i]));
       }
     }
-    const vueFormsUrl = process.env.VUE_FORMS_URL || 'https://pub.uat.earthdata.nasa.gov/';
-    
+
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>{form.name} (Verson {form.version})</h1>
           {lastUpdated(form.updatedAt)}
-          <a className='button button--small button--green button--edit form-group__element--right' href={vueFormsUrl}>Edit</a>
+          <a className='button button--small button--green button--edit form-group__element--right' href={_config.vueFormsUrl}>Edit</a>
         </section>
 
         <section className='page__section'>

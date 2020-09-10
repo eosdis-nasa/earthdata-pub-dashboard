@@ -12,7 +12,7 @@ import {
   filterGroups,
   clearGroupsFilter
 } from '../../actions';
-import { tally, displayCase } from '../../utils/format';
+import { lastUpdated, tally, displayCase } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/groups';
 import List from '../Table/Table';
 import PropTypes from 'prop-types';
@@ -59,7 +59,7 @@ class GroupsOverview extends React.Component {
   render () {
     const { list } = this.props.groups;
     const { stats } = this.props;
-    const { count } = list.meta;
+    const { count, queriedAt } = list.meta;
 
     // Incorporate the collection counts into the `list`
     const mutableList = cloneDeep(list);
@@ -72,6 +72,10 @@ class GroupsOverview extends React.Component {
     return (
       <div className='page__component'>
         <section className='page__section'>
+          <section className='page__section page__section__header-wrapper'>
+            <h1 className='heading--large heading--shared-content with-description'>Group Overview</h1>
+            {lastUpdated(queriedAt)}
+          </section>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content'>Groups <span className='num--title'>{count ? `${count}` : 0}</span></h2>
           </div>
