@@ -35,9 +35,9 @@ Wraps `sortable-table` and implements auto-update and smart sort. When a new sor
 
 **Props**
 
-- **list**: Parent data structure, ie `state.granules.list` or `state.collections.list`. Expected to contain `{ data, inflight, error, meta }` properties corresponding to all `list` state objects.
+- **list**: Parent data structure, ie `state.submissions.list`. Expected to contain `{ data, inflight, error, meta }` properties corresponding to all `list` state objects.
 - **dispatch**: Redux dispatch function.
-- **action**: Redux-style action to send, ie `listCollections`.
+- **action**: Redux-style action to send, ie `listSubmissions`.
 - **sortIdx**: Corresponds to `sortableTable#sortIdx`.
 - **query**: Array of configuration objects passed to `batch-async-command`.
 - **rowId** Corresponds to `sortableTable#rowId`.
