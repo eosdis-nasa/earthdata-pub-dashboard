@@ -19,7 +19,6 @@ services:
       - FAKE_AUTH=true
   shim:   # empty container to open ports
     image: node:12.18.0
-    network_mode: "host"
     command:
       bash -c "tail -f /dev/null"
     working_dir:

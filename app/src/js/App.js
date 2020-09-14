@@ -26,6 +26,7 @@ import Users from './components/Users';
 import Groups from './components/Groups';
 import Forms from './components/Forms';
 import Workflows from './components/Workflows';
+import Metrics from './components/Metrics';
 import Executions from './components/Executions';
 import Operations from './components/Operations';
 import Rules from './components/Rules';
@@ -54,6 +55,7 @@ const MainRoutes = () => {
         <Route path='/users' component={Users} />
         <Route path='/groups' component={Groups} />
         <Route path='/workflows' component={Workflows} />
+        <Route path='/metrics' component={Metrics} />
         <Route path='/executions' component={Executions} />
         <Route path='/operations' component={Operations} />
         <Route path='/rules' component={Rules} />
