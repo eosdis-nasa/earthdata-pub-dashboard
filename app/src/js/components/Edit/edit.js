@@ -82,7 +82,6 @@ class EditRecord extends React.Component {
       json.changedBy = strings.dashboard;
     }
     this.setState({ error: null });
-    console.log('About to update', json);
     dispatch(updateRecord(pk, json));
   }
 

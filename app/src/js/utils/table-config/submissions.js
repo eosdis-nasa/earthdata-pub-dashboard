@@ -4,13 +4,13 @@ import { get } from 'object-path';
 import { Link } from 'react-router-dom';
 import {
   fromNow,
-  bool,
   nullValue,
   displayCase,
   submissionLink,
   dataSubmissionRequestLink,
   dataProductQuestionaireLink,
   dataProducerLink,
+  pointOfContactLink,
   workflowLink
 } from '../format';
 import {
@@ -40,29 +40,29 @@ export const tableColumns = [
   },
   {
     Header: 'Data Submission Request',
-    accessor: row => dataSubmissionRequestLink(row.formId),
+    accessor: row => dataSubmissionRequestLink(row.dataSubmissionRequest, 'Data Submission Request'),
     id: 'dataSubmissionRequest',
     width: 225
   },
   {
     Header: 'Data Product Questionionnaire',
-    accessor: row => dataProductQuestionaireLink(row.formId),
+    accessor: row => dataProductQuestionaireLink(row.dataProductQuestionaire, 'Product Questionaire (Draft)'),
     id: 'dataProductQuestionaire',
     width: 225
   },
   {
     Header: 'Submission Date',
-    accessor: row => row.submitted ? <a href={row.submitted} target='_blank'>{bool(row.submitted)}</a> : bool(row.submitted),
+    accessor: row => fromNow(row.submitted),
     id: 'submitted'
   },
   {
     Header: 'Primary Data Producer',
-    accessor: row => dataProducerLink(row.dataProducer),
+    accessor: row => dataProducerLink(row.dataSubmissionRequest, row.dataProducer),
     id: 'dataProducer'
   },
   {
     Header: 'Point of Contact',
-    accessor: row => row.contact,
+    accessor: row => pointOfContactLink(row.dataProductQuestionaire, row.contact),
     id: 'contact',
     width: 100
   },
@@ -79,7 +79,7 @@ export const tableColumns = [
   }
 ];
 
-export const errorTableColumns2 = [
+export const errorTableColumns = [
   {
     Header: 'Error',
     accessor: row => <ErrorReport report={get(row, 'error.Cause', nullValue)} truncate={true} />,

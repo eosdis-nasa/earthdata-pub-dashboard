@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import {
   interval,
   getForm,
@@ -11,12 +11,9 @@ import {
 import { get } from 'object-path';
 import {
   fromNow,
-  lastUpdated,
-  deleteText
+  lastUpdated
 } from '../../utils/format';
 import Loading from '../LoadingIndicator/loading-indicator';
-import LogViewer from '../Logs/viewer';
-import AsyncCommands from '../DropDown/dropdown-async-command';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 import _config from '../../config';
@@ -24,6 +21,10 @@ import _config from '../../config';
 const { updateInterval } = _config;
 
 const metaAccessors = [
+  {
+    label: 'User Name',
+    property: 'userName',
+  },
   {
     label: 'Created',
     property: 'createdAt',
@@ -49,11 +50,6 @@ class FormOverview extends React.Component {
     const { formId } = this.props.match.params;
     const immediate = !this.props.forms.map[formId];
     this.reload(immediate);
-    /* this.props.dispatch(listCollections({
-      limit: 100,
-      fields: 'collectionName',
-      forms: formId
-    })); */
   }
 
   componentWillUnmount () {
@@ -89,6 +85,60 @@ class FormOverview extends React.Component {
     ].filter(Boolean);
   }
 
+  getRandom () {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+
+  getAnswer (id) {
+    const formId = this.props.match.params.formId;
+    const record = this.props.forms.map[formId];
+    const form = record.data;
+    return (form.form_data[id]);
+  }
+
+  renderQuestions (sections, whatSection) {
+    for (const ea in sections) {
+      let section = '';
+      const sectionQuestions = [];
+      for (const i in sections[ea]) {
+        if (typeof sections[ea][i] === 'string') {
+          section = sections[ea][i];
+          if (whatSection !== section) {
+            continue;
+          }
+          sectionQuestions.push(<li key={this.getRandom()}><strong>{section}</strong></li>);
+        } else if (typeof sections[ea][i] === 'object') {
+          for (const q in sections[ea][i]) {
+            try {
+              const question = sections[ea][i][q];
+              sectionQuestions.push(<li key={this.getRandom()}>{question.title}</li>);
+              sectionQuestions.push(<li key={this.getRandom()}>{question.text}</li>);
+              if (question.inputs) {
+                for (const a in question.inputs) {
+                  sectionQuestions.push(
+                    <li key={ this.getRandom() } style={{ marginTop: '3px', marginBottom: '3px' }}>
+                      <div style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>{question.inputs[a].label}:</div>
+                      <div>{this.getAnswer(question.inputs[a].id)}</div>
+                    </li>
+                  );
+                }
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }
+        }
+        if (section !== '') {
+          sectionQuestions.unshift(sectionQuestions.pop());
+          sectionQuestions.push(<br key={this.getRandom()} />);
+          sectionQuestions.push(<hr key={this.getRandom()} />);
+          sectionQuestions.push(<br key={this.getRandom()} />);
+          return (sectionQuestions);
+        }
+      }
+    }
+  }
+
   render () {
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
@@ -99,30 +149,22 @@ class FormOverview extends React.Component {
       return <ErrorReport report={record.error} truncate={true} />;
     }
     const form = record.data;
-    const logsQuery = { 'meta.form': formId };
     const errors = this.errors();
+    const sections = form.sections;
+    const newSections = [];
 
-    const deleteStatus = get(this.props.forms.deleted, [formId, 'status']);
-    const dropdownConfig = [{
-      text: 'Delete',
-      action: this.delete,
-      disabled: form.published,
-      status: deleteStatus,
-      success: this.navigateBack,
-      confirmAction: true,
-      confirmText: deleteText(formId)
-    }];
+    for (const ea in sections) {
+      for (const i in sections[ea]) {
+        newSections.push(this.renderQuestions(sections, sections[ea][i]));
+      }
+    }
 
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{formId}</h1>
-          <AsyncCommands config={dropdownConfig} />
-          <Link
-            className='button button--small button--green button--edit form-group__element--right'
-            to={'/forms/edit/' + formId}>Edit</Link>
-
-          {lastUpdated(form.queriedAt)}
+          <h1 className='heading--large heading--shared-content with-description'>{form.name} (Verson {form.version})</h1>
+          {lastUpdated(form.updatedAt)}
+          <a className='button button--small button--green button--edit form-group__element--right' href={_config.vueFormsUrl}>Edit</a>
         </section>
 
         <section className='page__section'>
@@ -134,12 +176,15 @@ class FormOverview extends React.Component {
         </section>
 
         <section className='page__section'>
-          <LogViewer
-            query={logsQuery}
-            dispatch={this.props.dispatch}
-            logs={this.props.logs}
-            notFound={`No recent logs for ${formId}`}
-          />
+          {errors.length ? <ErrorReport report={errors} truncate={true} /> : null}
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium with-description'>Questions</h2>
+          </div>
+          <div>
+            <ul>
+              {newSections}
+            </ul>
+          </div>
         </section>
       </div>
     );

@@ -6,8 +6,8 @@ import { fromNow } from '../format';
 export const tableColumns = [
   {
     Header: 'Name',
-    accessor: row => <Link to={`users/user/${row.id}`}>{row.id}</Link>,
-    id: 'username'
+    accessor: row => <Link to={`users/user/${row.id}`}>{row.userName}</Link>,
+    id: 'userName'
   },
   {
     Header: 'Email',
@@ -16,16 +16,18 @@ export const tableColumns = [
   },
   {
     Header: 'Groups',
-    accessor: row => <Link to={`groups/group/${row.id}`}>{row.id}</Link>,
+    accessor: row => row.groups.join(', '),
     id: 'groups'
   },
   {
     Header: 'Permissions',
-    accessor: 'permissions'
+    accessor: row => row.permissions.join(', '),
+    id: 'permissions'
   },
   {
     Header: 'Subscriptions',
-    accessor: 'subscriptions'
+    accessor: row => row.subscriptions.join(', '),
+    id: 'subscriptions'
   },
   {
     Header: 'Last Updated',

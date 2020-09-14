@@ -11,7 +11,7 @@ import { kibanaAllLogsLink } from '../../utils/kibana';
 
 const paths = [
   // ['', '/pdrs'],
-  ['Providers', '/providers'],
+  // ['Providers', '/providers'],
   // [strings.collections, '/collections'],
   // [strings.granules, '/granules'],
   [strings.submissions, '/submissions'],
@@ -22,7 +22,7 @@ const paths = [
   // ['Logs', '/logs'],
   ['Metrics', '/metrics'],
   // ['Reconciliation Reports', '/reconciliation-reports']
-  ['Forms', '/forms'],
+  // ['Forms', '/forms'],
   ['Users', '/users'],
   ['Groups', '/groups'],
 ];

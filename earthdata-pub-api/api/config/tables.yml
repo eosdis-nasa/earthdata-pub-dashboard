@@ -143,6 +143,24 @@ FilesTable:
       type: S
       schema: RANGE
 
+PermissionsTable:
+  read: 5
+  write: 10
+  pointInTime: '{{enablePointInTime}}'
+  attributes:
+    - name: id
+      type: S
+      schema: HASH
+  
+SubscriptionsTable:
+  read: 5
+  write: 10
+  pointInTime: '{{enablePointInTime}}'
+  attributes:
+    - name: id
+      type: S
+      schema: HASH
+      
 AsyncOperationsTable:
   read: 5
   write: 10

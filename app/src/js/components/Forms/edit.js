@@ -9,7 +9,6 @@ import {
   clearUpdateForm
 } from '../../actions';
 import EditRecord from '../Edit/edit';
-
 const SCHEMA_KEY = 'form';
 
 class EditForm extends React.Component {

@@ -108,7 +108,6 @@ const EditRaw = ({
       return setRecord({ ...record, error: 'Syntax error in JSON' });
     }
     setRecord({ ...record, error: null });
-    console.log('About to update', json);
     dispatch(updateRecord(json));
   }
 

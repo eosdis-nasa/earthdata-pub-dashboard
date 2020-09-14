@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { get } from 'object-path';
 import cloneDeep from 'lodash.clonedeep';
 import {
@@ -72,21 +72,15 @@ class FormsOverview extends React.Component {
     mutableList.data.forEach(d => {
       d.collections = get(collectionCounts.find(c => c.key === d.name), 'count', 0);
     });
-    const formStatus = get(stats.count, 'data.forms.count', []);
-    const overview = this.renderOverview(formStatus);
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>Form Overview</h1>
           {lastUpdated(queriedAt)}
-          {overview}
         </section>
         <section className='page__section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content'>Ingesting Forms <span className='num--title'>{count ? `${count}` : 0}</span></h2>
-          </div>
-          <div className='filter__button--add'>
-            <Link className='button button--green button--add button--small form-group__element' to='/forms/add'>Add Form</Link>
+            <h2 className='heading--medium heading--shared-content'>Forms <span className='num--title'>{count ? `${count}` : 0}</span></h2>
           </div>
           <List
             list={mutableList}
