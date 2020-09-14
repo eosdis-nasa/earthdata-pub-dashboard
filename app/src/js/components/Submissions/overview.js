@@ -13,7 +13,7 @@ import {
   listSubmissions,
   listWorkflows,
   applyWorkflowToSubmission,
-  getOptionsCollectionName
+  getOptionsSubmissionName
 } from '../../actions';
 import { get } from 'object-path';
 import { lastUpdated, tally, displayCase } from '../../utils/format';
@@ -26,6 +26,7 @@ import Dropdown from '../DropDown/dropdown';
 import Search from '../Search/search';
 import Overview from '../Overview/overview';
 import statusOptions from '../../utils/status';
+import stageOptions from '../../utils/stage';
 import _config from '../../config';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
@@ -71,7 +72,7 @@ class SubmissionsOverview extends React.Component {
     dispatch(listWorkflows());
     dispatch(getCount({
       type: 'submissions',
-      field: 'status'
+      field: 'stage'
     }));
   }
 
@@ -137,7 +138,7 @@ class SubmissionsOverview extends React.Component {
         </section>
         <section className='page__section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.submissions} <span className='num--title'>{count ? ` ${tally(count)}` : 0}</span></h2>
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{count ? ` ${tally(count)}` : 0}</span></h2>
           </div>
           <List
             list={list}
@@ -149,12 +150,22 @@ class SubmissionsOverview extends React.Component {
           >
             <ListFilters>
               <Dropdown
-                getOptions={getOptionsCollectionName}
-                options={get(dropdowns, ['collectionName', 'options'])}
+                getOptions={getOptionsSubmissionName}
+                options={get(dropdowns, ['name', 'options'])}
                 action={filterSubmissions}
                 clear={clearSubmissionsFilter}
-                paramKey='collectionId'
-                label={strings.collection}
+                paramKey='submissionId'
+                label={strings.submission}
+                inputProps={{
+                  placeholder: 'All'
+                }}
+              />
+              <Dropdown
+                options={stageOptions}
+                action={filterSubmissions}
+                clear={clearSubmissionsFilter}
+                paramKey='stage'
+                label='Stage'
                 inputProps={{
                   placeholder: 'All'
                 }}
@@ -174,7 +185,9 @@ class SubmissionsOverview extends React.Component {
                 action={searchSubmissions}
                 clear={clearSubmissionsSearch}
                 label='Search'
-                placeholder='Submission ID'
+                inputProps={{
+                  placeholder: 'All'
+                }}
               />
               <Dropdown
                 options={pageSizeOptions}

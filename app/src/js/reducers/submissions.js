@@ -38,12 +38,11 @@ import {
   FILTER_SUBMISSIONS,
   CLEAR_SUBMISSIONS_FILTER,
 
-  OPTIONS_COLLECTIONNAME,
-  OPTIONS_COLLECTIONNAME_INFLIGHT,
-  OPTIONS_COLLECTIONNAME_ERROR
+  OPTIONS_SUBMISSIONNAME,
+  OPTIONS_SUBMISSIONNAME_INFLIGHT,
+  OPTIONS_SUBMISSIONNAME_ERROR
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
-import { getCollectionId } from '../utils/format';
 
 export const initialState = {
   list: {
@@ -184,19 +183,21 @@ export default createReducer(initialState, {
     set(state, ['list', 'params', action.paramKey], null);
   },
 
-  [OPTIONS_COLLECTIONNAME]: (state, action) => {
+  [OPTIONS_SUBMISSIONNAME]: (state, action) => {
+    const { id } = action;
     const options = action.data.results.reduce(
-      (obj, { name, version }) =>
+      (obj, { name }) =>
         Object.assign(obj, {
-          [`${name} ${version}`]: getCollectionId({ name, version })
+          [`${name}`]: id
         }),
       {}
     );
-    set(state, ['dropdowns', 'collectionName', 'options'], options);
+    console.log(options);
+    set(state, ['dropdowns', 'name', 'options'], options);
   },
-  [OPTIONS_COLLECTIONNAME_INFLIGHT]: () => {},
-  [OPTIONS_COLLECTIONNAME_ERROR]: (state, action) => {
-    set(state, ['dropdowns', 'collectionName', 'options'], []);
+  [OPTIONS_SUBMISSIONNAME_INFLIGHT]: () => {},
+  [OPTIONS_SUBMISSIONNAME_ERROR]: (state, action) => {
+    set(state, ['dropdowns', 'name', 'options'], []);
     set(state, ['list', 'error'], action.error);
   }
 });
