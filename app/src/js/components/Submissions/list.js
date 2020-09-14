@@ -9,7 +9,7 @@ import {
   filterSubmissions,
   clearSubmissionsFilter,
   listSubmissions,
-  getOptionsCollectionName,
+  getOptionsSubmissionName,
   listWorkflows,
   applyWorkflowToSubmission,
   interval
@@ -141,7 +141,7 @@ class AllSubmissions extends React.Component {
           </section>
           <div className='page__section__header page__section__header-wrapper'>
             <h1 className='heading--large heading--shared-content with-description '>
-              {displayCaseView} {strings.submissions} <span className='num--title'>{ !isNaN(count) ? `${tally(count)}` : 0 }</span>
+              {displayCaseView} {strings.all_submissions} <span className='num--title'>{ !isNaN(count) ? `${tally(count)}` : 0 }</span>
             </h1>
             {lastUpdated(queriedAt)}
           </div>
@@ -158,12 +158,12 @@ class AllSubmissions extends React.Component {
           >
             <ListFilters>
               <Dropdown
-                getOptions={getOptionsCollectionName}
-                options={get(dropdowns, ['collectionName', 'options'])}
+                getOptions={getOptionsSubmissionName}
+                options={get(dropdowns, ['name', 'options'])}
                 action={filterSubmissions}
                 clear={clearSubmissionsFilter}
-                paramKey='collectionId'
-                label='Collection'
+                param='name'
+                label='Submission'
                 inputProps={{
                   placeholder: 'All'
                 }}

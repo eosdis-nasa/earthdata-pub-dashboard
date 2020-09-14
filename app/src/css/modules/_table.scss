@@ -169,7 +169,18 @@
 .overview-num__wrapper ul li:nth-child(3) .num-status{
   background-color: $orange;
 }
-
+.overview-num__wrapper ul li:first-child .num-stage{
+  background-color: $light-green;
+}
+.overview-num__wrapper ul li:nth-child(2) .num-stage{
+  background-color: $orange;
+}
+.overview-num__wrapper ul li:nth-child(3) .num-stage{
+  background-color: $error-red;
+}
+.overview-num__wrapper ul li:nth-child(4) .num-stage{
+  background-color: $ocean-blue;
+}
 .overview-num, .overview-num:visited {
   background-color: #fff;
   padding: 1.5em 1em .5em;
@@ -196,7 +207,7 @@
   }
 }
 
-.num-status{
+.num-status, .num-stage{
   padding: 5px 0px 5px 0px;
   color: $white;
   width: 100%;

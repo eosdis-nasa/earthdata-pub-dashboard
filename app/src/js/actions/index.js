@@ -497,6 +497,15 @@ export const getOptionsCollectionName = (options) => ({
   }
 });
 
+export const getOptionsSubmissionName = (options) => ({
+  [CALL_API]: {
+    type: types.OPTIONS_SUBMISSIONNAME,
+    method: 'GET',
+    url: new URL('submissions', root).href,
+    qs: { limit: 100, fields: 'name' }
+  }
+});
+
 export const getStats = (options) => {
   return (dispatch, getState) => {
     const timeFilters = fetchCurrentTimeFilters(getState().datepicker);

@@ -45,7 +45,7 @@ const Submissions = ({
 
   return (
     <div className='page__submissions'>
-      <DatePickerHeader onChange={query} heading={strings.submissions}/>
+      <DatePickerHeader onChange={query} heading={strings.all_submissions}/>
       <div className='page__content'>
         <div className='wrapper__sidebar'>
           <Sidebar
