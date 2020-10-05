@@ -44,7 +44,8 @@
     "validation-tests": "docker-compose -f ./localAPI/docker-compose.yml -f ./localAPI/docker-compose-serve-api.yml -f ./localAPI/docker-compose-dashboard.yml -f ./localAPI/docker-compose-validate.yml up --exit-code-from=validate --abort-on-container-exit",
     "view-docker-logs": "docker-compose -f ./localAPI/docker-compose.yml -f ./localAPI/docker-compose-serve-api.yml -f ./localAPI/docker-compose-dashboard.yml logs -f ",
     "link-api": "npm link ../api",
-    "link-repos": "npm run link-api && cd ../forms && npm run link-api"
+    "link-repos": "npm run link-api && cd ../forms && npm run link-api",
+    "start-edpub-local-api": "cd ../api/terraform && localstack start & && terraform init && terraform validate && terraform plan && terraform apply --auto-approve"
   },
   "ava": {
     "babel": {

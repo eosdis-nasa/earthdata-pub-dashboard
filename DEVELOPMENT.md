@@ -24,7 +24,7 @@ When one route is nested within another route, the urls stack. In the following 
 </Route>
 ```
 
-The routes are all defined in `app/src/js/main.js`. Make sure to `import` the necessary component at the top of the file.
+The routes are all defined in `app/src/js/App.js`. Make sure to `import` the necessary component at the top of the file.
 
 ```javascript
 import Submissions from './components/submissions'
