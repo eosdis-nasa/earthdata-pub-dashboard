@@ -45,7 +45,7 @@
     "view-docker-logs": "docker-compose -f ./localAPI/docker-compose.yml -f ./localAPI/docker-compose-serve-api.yml -f ./localAPI/docker-compose-dashboard.yml logs -f ",
     "link-api": "npm link ../api",
     "link-repos": "npm run link-api && cd ../forms && npm run link-api",
-    "start-edpub-local-api": "cd ../api/terraform && localstack start & && terraform init && terraform validate && terraform plan && terraform apply --auto-approve"
+    "start-edpub-local-api": "cd ../api && ENTRYPOINT=-d localstack start --docker && npm run build:localstack && cd ./terraform  && terraform init && terraform validate && terraform plan && terraform apply --auto-approve && cd ../src/nodejs/test-data/src && node dummy.js"
   },
   "ava": {
     "babel": {
@@ -292,7 +292,7 @@
     "normalize-opentype.css": "^0.2.4",
     "normalize.css": "^8.0.1",
     "numeral": "^2.0.4",
-    "object-path": "^0.11.3",
+    "object-path": "^0.11.4",
     "p-limit": "^1.2.0",
     "p-map": "^4.0.0",
     "p-retry": "^2.0.0",
