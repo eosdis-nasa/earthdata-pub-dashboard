@@ -129,7 +129,7 @@ const Submission = React.createClass({
 });
 ```
 
-### Accessing Data form Local EDPUB API
+### Accessing Data from a Local EDPUB API
 
 #### Writing the Source Code
 
@@ -140,7 +140,7 @@ When writing the source code, the main differences will be in the fetch url whic
         ...
         this.state = {data: [{id: 'test',}]};
         //The below value presumably would normally be passed into this file so that you would dynamically query the desired id
-        this.query_id = '6c544723-241c-4896-a38c-adbc0a364293';
+        this.query_id = 'xxxxxx';
         this.url = `http://localhost:4566/restapis/${process.env.APP_ID}/prod/_user_request_/information/form?p_key=${this.query_id}`;
     }
 
@@ -162,7 +162,7 @@ When writing the source code, the main differences will be in the fetch url whic
 ```
 #### Deploying locally
 
-For development purposes, you might want to deploy the EDPUB API locally then reference local values within the dashboard.  To do this, first be sure you have localstack and terraform installed locally as well as a local copy of the api repo in the directory above your local dashboard repo. 
+For development purposes, you might want to deploy the EDPUB API locally then reference local values within the dashboard.  To do this, first be sure you have docker, localstack, and terraform installed locally as well as a local copy of the api repo in the directory above your local dashboard repo. 
 
 To deploy the EDPUB API locally, simply run the following command which will deploy the EDPUB api locally and add some data to test the api calls.
 
