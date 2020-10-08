@@ -129,6 +129,57 @@ const Submission = React.createClass({
 });
 ```
 
+### Accessing Data form Local EDPUB API
+
+#### Writing the Source Code
+
+When writing the source code, the main differences will be in the fetch url which should point to localhost:4566. An example of source code for pulling data from a local EDPUB API instance can be found at ./app/src/js/components/testApi.js with some of the main differences in the snippet below
+
+```javascript
+ constructor () {
+        ...
+        this.state = {data: [{id: 'test',}]};
+        //The below value presumably would normally be passed into this file so that you would dynamically query the desired id
+        this.query_id = '6c544723-241c-4896-a38c-adbc0a364293';
+        this.url = `http://localhost:4566/restapis/${process.env.APP_ID}/prod/_user_request_/information/form?p_key=${this.query_id}`;
+    }
+
+    componentDidMount() {
+        fetch(this.url)
+            .then(response => response.json())
+            .then(data => this.setState(data))
+    }
+
+    render () {
+        const { data } = this.state;
+        return (
+            <div className='page__testApi'>
+                <p>{this.url}</p>
+                <p>{data[0].id}</p>
+            </div>
+        );
+    }
+```
+#### Deploying locally
+
+For development purposes, you might want to deploy the EDPUB API locally then reference local values within the dashboard.  To do this, first be sure you have localstack and terraform installed locally as well as a local copy of the api repo in the directory above your local dashboard repo. 
+
+To deploy the EDPUB API locally, simply run the following command which will deploy the EDPUB api locally and add some data to test the api calls.
+
+```
+npm run start-edpub-local-api
+```
+
+You should then source the .env file which will pull the local EDPUB API instance rest api ID and store this as an environment variable which can be referenced within the source code.
+```
+source .env
+```
+
+You can then serve the dashboard as normal using the following command:
+```
+APIROOT=http://localhost:5001 npm run serve
+```
+
 ## Writing CSS
 
 We follow a [Bem](http://getbem.com/naming/) naming format.
