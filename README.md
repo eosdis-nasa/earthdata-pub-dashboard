@@ -42,13 +42,15 @@ To locate environment variables, see webpack.common.js:
 ## Building and Quickstarts
 
 The dashboard uses node v12.18.0. To build/run the dashboard on your local
-machine, install [nvm](https://github.com/creationix/nvm) and run `nvm install v12.18.0`
+machine, install nvm following the [nvm Install & Update Script](https://github.com/nvm-sh/nvm#install--update-script)
+instructions.
 
 We use npm for local package management, to install the requirements:
 
 ```bash
-  nvm use
-  npm install
+nvm install v12.18.0
+nvm use
+npm install
 ```
 
 ## Building the dashboard
@@ -77,28 +79,14 @@ nvm use
 
 **NOTE**: Only the `APIROOT` environment variable is required.
 
-#### Build the dashboard to be served by the Earthdata Pub API
-
-With the Earthdata Pub API it is possible to serve the dashboard from an s3 Bucket.
-Instructions can be found in this [cumulus dashboard doc](https://nasa.github.io/cumulus-api/#serve-the-dashboard-from-a-bucket).
-If you wish to do this, you must build the dashboard with the environment variable
-`SERVED_BY_EDPUB_API` set to `true`. This configures the dashboard to work from
-the Earthdata Pub `dashboard` endpoint. This option should be considered when you
-can't serve the dashboard from behind CloudFront, for example in NGAP sandbox environments.
-If you wish to serve the dashboard from behind [CloudFront](https://aws.amazon.com/cloudfront/).
-Build a `dist` with your configuration for `APIROOT` and omitting `SERVED_BY_EDPUB_API`
-and follow the docs on serving the cumulus dashboard from~[CloudFront](https://nasa.github.io/cumulus/docs/next/operator-docs/serve-dashboard-from-cloudfront)~_TODO: replace with EDPUB link_.
-
-The compiled files will be placed in the `dist` directory.
-
 ### Building a specific dashboard version
 
-`earthdata-pub-dashboard` versions are distributed using tags in Bitbucket. You
+Earthdata Pub Dashboard versions are distributed using tags in Bitbucket. You
 can pull a specific version in the following manner:
 
 ```bash
 git clone https://git.earthdata.nasa.gov/scm/edpub/dashboard.git
-cd earthdata pub/dashboard
+cd dashboard
 git fetch origin ${tagNumber}:refs/tags/${tagNumber}
 git checkout ${tagNumber}
 ```
@@ -112,12 +100,17 @@ Then follow the steps noted above to build the dashboard locally or using Docker
 ```bash
 npm install
 npm run start-dashboard
-npm run seed-database (You have to wait 30 seconds - 1 minute for everything to build first),
+```
+
+Wait 30s-1min before seeding database to allow time for everything to build.
+
+```bash
+npm run seed-database
 ```
 
 The Dashboard will available at <http://localhost:3000/>
 
-#### Trouble shooting local deployement
+#### Troubleshooting local deployement
 
 If you have previously built the locaAPI, you may need to remove docker orphans.
 In `localAPI/`:
@@ -136,10 +129,12 @@ You may have to 'log out' then 'log in' for data to appear.
 
 #### local API server
 
+TODO: Update these local API instructions for `earthdata-pub-api`
+
 For **development** and **testing** purposes, you can run a Earthdata Pub API locally.
 This requires `docker-compose` in order to stand up the docker containers that serve
 Earthdata Pub API. There are a number of commands that will stand up different portions
-of the stack. See the ~[Cumulus Dashboard Docker Service Diagram](https://github.com/nasa/cumulus-dashboard#dockerdiagram)~_TODO: replace with EDPUB diagram._
+of the stack. See the [Docker Service Diagram](#dockerdiagram)
 and examine the `docker-compose*.yml` file in the `/localAPI/` directory to see all
 of the possible combinations. Described below are each of the provided commands for
 running the dashboard and Earthdata Pub API locally.
@@ -159,8 +154,8 @@ npm run stop-localstack
 ```
 
 After these containers are running, you can start a earthdata pub API locally in
-a terminal window `npm run serve-api`, the dashboard in another window.
-`[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:5001] npm run serve`
+a terminal window `npm run serve-api`, the dashboard in another window
+`[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:5001] npm run serve`,
 and finally cypress in a third window. `npm run cypress`.
 
 Once the docker app is running, If you would like to see sample data you can seed
@@ -213,15 +208,15 @@ npm run view-docker-logs
 
 This can be helpful in debugging problems with the docker application.
 
-A common error is running the dashboard containers when the earthdata pub core
-unit-test-stack is running on your machine. Just stop that stack and restart
-the dashboard stack to resolve.
+A common error is running the dashboard containers when other containers are
+running on your machine. Just stop that stack and restart the dashboard stack
+to resolve.
 
 ```sh
 ERROR: for localapi_shim_1  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
 
 ERROR: for shim  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
-```
+``` -->
 
 ##### Troubleshooting npm errors
 
@@ -249,7 +244,7 @@ npm run validation-tests
 
 #### Docker Container Service Diagram
 
-~![Docker Service Diagram](https://github.com/nasa/cumulus-dashboard/blob/develop/ancillary/DashboardDockerServices.png)~_TODO: replace with EDPUB diagram_
+![Docker Service Diagram](ancillary/DashboardDockerServices.png)
 
 ### Running locally in Docker
 
@@ -361,15 +356,13 @@ a link in the CHANGELOG's release header to changes in the corresponding release
 
 ### 6. Update the version of the Earthdata Pub API
 
-If this release corresponds to a Earthdata Pub Core package release, update the
+If this release corresponds to a Earthdata Pub API package release, update the
 version of `@earthdata-pub-api/api` to the latest package version so that the
 integration tests will run against that version.
 
 ### 7. Manual testing
 
-Test the dashboard against a live API deployed with the latest Earthdata Pub
-packages. The dashboard should be served from an S3 bucket through the
-~[`/dashboard` API endpoint](https://nasa.github.io/earthdata-pub-api/#serve-the-dashboard-from-a-bucket).~ _TODO: replace how the dashboard should be served._
+Run the full cypress test suite in [Integration & Validation Tests](integration-validation-tests).
 
 ### 8. Create a pull request against the develop branch
 
@@ -396,6 +389,6 @@ git push origin 1.x.x
 
 ### 11. Add the release to Bitbucket
 
-Follow the ~[Github documentation to create a new release](https://help.github.com/articles/creating-releases/)~_TODO: replace with Bitbucket link._
-for the dashboard using the tag that you just pushed. Make sure to use the content
+Follow the [Bitbucket Support for Repository tags](https://support.atlassian.com/bitbucket-cloud/docs/repository-tags/)
+for the Dashboard using the tag that you just pushed. Make sure to use the content
 from the CHANGELOG for this release as the description of the release on Bitbucket.
