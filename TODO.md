@@ -10,3 +10,4 @@ This page serves as a place to collect needed actions.
 
 1. Remove `SERVED_BY_EDPUB_API` option from earthdata-pub/dashboard. We will
 not support this option.
+1. Remove tests from `tests/` that do not pertain to EDPUB.
