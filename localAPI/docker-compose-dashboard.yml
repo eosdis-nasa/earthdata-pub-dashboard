@@ -21,6 +21,7 @@ services:
       - SHOW_TEA_METRICS=false
       - AUTH_METHOD=earthdata
   shim:   # empty container to open ports
+    network_mode: "host"
     image: node:12.18.0
     command:
       bash -c "tail -f /dev/null"
