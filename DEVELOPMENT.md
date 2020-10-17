@@ -163,7 +163,10 @@ const Submission = React.createClass({
 
 #### Writing the Source Code
 
-When writing the source code, the main differences will be in the fetch url which should point to localhost:4566. An example of source code for pulling data from a local EDPUB API instance can be found at ./app/src/js/components/testApi.js with some of the main differences in the snippet below
+When writing the source code, the main differences will be in the fetch url which
+should point to localhost:4566. An example of source code for pulling data from a
+local EDPUB API instance can be found at ./app/src/js/components/testApi.js with
+some of the main differences in the snippet below
 
 ```javascript
  constructor () {
@@ -190,23 +193,32 @@ When writing the source code, the main differences will be in the fetch url whic
         );
     }
 ```
+
 #### Deploying locally
 
-For development purposes, you might want to deploy the EDPUB API locally then reference local values within the dashboard.  To do this, first be sure you have docker, localstack, and terraform installed locally as well as a local copy of the api repo in the directory above your local dashboard repo. 
+For development purposes, you might want to deploy the EDPUB API locally then
+reference local values within the dashboard.  To do this, first be sure you have
+docker, localstack, and terraform installed locally as well as a local copy of the
+api repo in the directory above your local dashboard repo.
 
-To deploy the EDPUB API locally, simply run the following command which will deploy the EDPUB api locally and add some data to test the api calls.
+To deploy the EDPUB API locally, simply run the following command which will deploy
+the EDPUB api locally and add some data to test the api calls.
 
-```
+```bash
 npm run start-edpub-local-api
 ```
 
-You should then source the .env file which will pull the local EDPUB API instance rest api ID and store this as an environment variable which can be referenced within the source code.
-```
+You should then source the .env file which will pull the local EDPUB API instance
+rest api ID and store this as an environment variable which can be referenced within
+the source code.
+
+```bash
 source .env
 ```
 
 You can then serve the dashboard as normal using the following command:
-```
+
+```bash
 APIROOT=http://localhost:5001 npm run serve
 ```
 
