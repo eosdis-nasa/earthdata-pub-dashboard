@@ -264,6 +264,21 @@ docker run -e PORT=8181 -p 8181:8181 earthdata pub-dashboard:production-1
 
 In this example, the dashboard would be available at <http://localhost:8181/>.
 
+## Deployment Using S3
+
+First build the site
+
+```bash
+nvm use
+npm run build
+```
+
+Then deploy the `dist` folder
+
+```bash
+aws s3 sync dist s3://my-bucket-to-be-used --acl public-read
+```
+
 ## Tests
 
 ### Unit Tests
