@@ -4,7 +4,6 @@ import compareVersions from 'compare-versions';
 import { get as getProperty } from 'object-path';
 import requestPromise from 'request-promise';
 import { history } from '../store/configureStore';
-import { CMR } from 'earthdata-pub-api/cmrjs';
 import isEmpty from 'lodash.isempty';
 import cloneDeep from 'lodash.clonedeep';
 
@@ -29,15 +28,6 @@ const {
   defaultPageLimit,
   minCompatibleApiVersion
 } = _config;
-
-/**
- * match MMT to CMR environment.
- * @param {string} env - cmr environment defaults to 'SIT'
- * @returns {string} correct hostname for mmt environment
- */
-const hostId = (env = 'SIT') => {
-  return getProperty({ OPS: '', SIT: 'sit', UAT: 'uat' }, env, 'sit');
-};
 
 export const refreshAccessToken = (token) => {
   return (dispatch) => {
@@ -128,7 +118,7 @@ export const checkApiVersion = () => {
 };
 
 export const listCollections = (options = {}) => {
-  const { listAll = false, getMMT = true, ...queryOptions } = options;
+  const { listAll = false, ...queryOptions } = options;
   return (dispatch, getState) => {
     const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
     const urlPath = `collections${isEmpty(timeFilters) || listAll ? '' : '/active'}`;
@@ -140,11 +130,7 @@ export const listCollections = (options = {}) => {
         url: new URL(urlPath, root).href,
         qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
       }
-    }).then(() => {
-      if (getMMT) {
-        dispatch(getMMTLinks());
-      }
-    });
+    })
   };
 };
 
@@ -192,77 +178,6 @@ export const getEarthdatapubInstanceMetadata = () => ({
     path: 'instanceMeta'
   }
 });
-
-/**
- * Iterates over each collection in the application collections state
- * dispatching the action to add the MMT link to the state.
- *
- * @returns {function} anonymous redux-thunk function
- */
-export const getMMTLinks = () =>
-  (dispatch, getState) => {
-    const { data } = getState().collections.list;
-    const doDispatch = ({ name, version }) =>
-      (url) =>
-        dispatch({
-          type: types.ADD_MMTLINK,
-          data: { name, version, url }
-        });
-
-    data.forEach((collection) =>
-      getMMTLinkFromCmr(collection, getState)
-        .then(doDispatch(collection))
-        .catch((error) => console.error(error)));
-  };
-
-/**
- * Returns a Promise for the Metadata Management Toolkit (MMT) URL string for
- * the specified collection, or an empty promise if the collection is not found
- * in the CMR.
- *
- * @param {Object} collection - application collections item
- * @param {function} getState - redux function to access app state
- * @returns {Promise<string>} - Promise for a Metadata Management Toolkit (MMT)
- *    Link (URL string) to the input collection, or undefined if it isn't found
- */
-export const getMMTLinkFromCmr = (collection, getState) => {
-  const {
-    earthdatapubInstance: { cmrProvider, cmrEnvironment }, mmtLinks
-  } = getState();
-
-  if (!cmrProvider || !cmrEnvironment) {
-    return Promise.reject(
-      new Error('Missing Earthdatapub Instance Metadata in state.' +
-                ' Make sure a call to getEarthdatapubInstanceMetadata is dispatched.'));
-  }
-
-  if (getCollectionId(collection) in mmtLinks) {
-    return Promise.resolve(mmtLinks[getCollectionId(collection)]);
-  }
-
-  return new CMR(cmrProvider).searchCollections(
-    {
-      short_name: collection.name,
-      version: collection.version
-    })
-    .then(([result]) =>
-      result && result.id && buildMMTLink(result.id, cmrEnvironment));
-};
-
-/**
- * Returns the MMT URL string for collection based on conceptId and Earthdatapub
- * environment.
- *
- * @param {string} conceptId - CMR's concept id
- * @param {string} cmrEnv - Earthdatapub instance operating environ UAT/SIT/PROD
- * @returns {string} MMT URL string to edit the collection at conceptId
- */
-export const buildMMTLink = (conceptId, cmrEnv) => {
-  const url = ['mmt', hostId(cmrEnv), 'earthdata.nasa.gov']
-    .filter((value) => value)
-    .join('.');
-  return `https://${url}/collections/${conceptId}`;
-};
 
 export const getGranule = (granuleId) => ({
   [CALL_API]: {
