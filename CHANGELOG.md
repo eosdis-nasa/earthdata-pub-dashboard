@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 0.0.2 - 2020-10-16
 
+- [Update NPM to 12.19.0, npm audit fix, update multiple packages](7cc81860677cdec934b78b5da679c34532cdb253)
 - [Clean up markdown formatting in documentation](13c9f4a65d307b63b8fcfb9d291fc194eb03a191)
 
 ## 0.0.1 - 2020-08-20

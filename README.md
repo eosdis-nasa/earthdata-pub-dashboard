@@ -112,7 +112,7 @@ The Dashboard will available at <http://localhost:3000/>
 
 #### Troubleshooting local deployement
 
-If you have previously built the locaAPI, you may need to remove docker orphans.
+If you have previously built using docker, you may need to remove docker orphans.
 In `localAPI/`:
 
 ```bash
@@ -216,6 +216,7 @@ to resolve.
 ERROR: for localapi_shim_1  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
 
 ERROR: for shim  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
+```
 
 ##### Troubleshooting npm errors
 
@@ -279,7 +280,7 @@ Then deploy the `dist` folder
 aws s3 sync dist s3://my-bucket-to-be-used --acl public-read
 ```
 
-## Tests
+## Testing and Linting
 
 ### Unit Tests
 
@@ -287,7 +288,7 @@ aws s3 sync dist s3://my-bucket-to-be-used --acl public-read
 npm run test
 ```
 
-## Integration & Validation Tests
+### Integration & Validation Tests
 
 For the integration tests to work, you have to first run the localstack application,
 launch the localAPI and serve the dashboard first. Run the following commands in
@@ -328,6 +329,20 @@ npm run cypress
 ```
 
 When the cypress editor opens, click on `run all specs`.
+
+### Linting
+
+[ESLint](https://github.com/eslint/eslint) is used for linting. It adheres to the
+[Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) with a few
+minor exceptions. The configuration can be viewed in `eslint.config.json`.
+
+TODO: Verify Linting is formatted for Bamboo
+
+Output from these commands in formatted for Bamboo](<https://www.atlassian.com/software/bamboo>)
+for use in the CICD pipeline.
+
+[Markdownlint](https://github.com/DavidAnson/markdownlint) is used for linting
+Markdown. No markdownlint output is used in the CICD pipeline.
 
 ## develop vs. master branches
 
