@@ -59,13 +59,6 @@ const ListActions = ({
             })}
           </div>
         )}
-        <Timer
-          noheader={!hasActions}
-          dispatch={dispatch}
-          action={action}
-          config={queryConfig}
-          reload={completedBulkActions}
-        />
       </div>
     </div>
   );

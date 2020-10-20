@@ -21,6 +21,7 @@ const paths = [
   // ['Rules', '/rules'],
   // ['Logs', '/logs'],
   ['Metrics', '/metrics'],
+  ['Metadata Editor', '/metadata-editor'],
   // ['Reconciliation Reports', '/reconciliation-reports']
   // ['Forms', '/forms'],
   ['Users', '/users'],

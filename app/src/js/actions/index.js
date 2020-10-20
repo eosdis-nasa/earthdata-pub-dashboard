@@ -297,6 +297,30 @@ export const listSubmissions = (options) => {
   };
 };
 
+export const getQuestion = (questionId) => ({
+  [CALL_API]: {
+    type: types.QUESTION,
+    method: 'GET',
+    id: questionId,
+    path: `data/question/${questionId}`
+  }
+});
+
+export const listQuestions = (options) => {
+  return (dispatch, getState) => {
+    //const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
+    return dispatch({
+      [CALL_API]: {
+        type: types.QUESTIONS,
+        method: 'GET',
+        id: null,
+        url: new URL('data/questions', root).href,
+        qs: Object.assign({ per_page: defaultPageLimit }, options)
+      }
+    });
+  };
+};
+
 export const listGranules = (options) => {
   return (dispatch, getState) => {
     const timeFilters = fetchCurrentTimeFilters(getState().datepicker);

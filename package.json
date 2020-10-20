@@ -231,6 +231,7 @@
     "@fortawesome/react-fontawesome": "^0.1.7",
     "@mapbox/dyno": "^1.4.2",
     "@reduxjs/toolkit": "^1.2.5",
+    "@rjsf/core": "^2.4.0",
     "aggregate-error": "^3.0.1",
     "ajv": "^5.2.2",
     "assert": "^1.4.1",

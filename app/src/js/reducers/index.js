@@ -13,6 +13,7 @@ import stats from './stats';
 import pdrs from './pdrs';
 import providers from './providers';
 import forms from './forms';
+import questions from './questions';
 import users from './users';
 import groups from './groups';
 import logs from './logs';
@@ -47,6 +48,7 @@ export const reducers = {
   pdrs,
   providers,
   forms,
+  questions,
   users,
   groups,
   logs,
