@@ -5,7 +5,6 @@ function ObjectFieldTemplate(props) {
   console.log(props)
   return (
     <div className={className}>
-      {title && (<TitleField title={title} />)}
       <div className="model-builder-object">
         {properties.map(prop => (
           <div
@@ -15,7 +14,6 @@ function ObjectFieldTemplate(props) {
           </div>
         ))}
       </div>
-      {description}
     </div>
   );
 }

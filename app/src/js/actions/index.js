@@ -278,7 +278,7 @@ export const getSubmission = (submissionId) => ({
     type: types.SUBMISSION,
     method: 'GET',
     id: submissionId,
-    path: `submissions/${submissionId}`
+    path: `data/submission/${submissionId}`
   }
 });
 
@@ -290,8 +290,8 @@ export const listSubmissions = (options) => {
         type: types.SUBMISSIONS,
         method: 'GET',
         id: null,
-        url: new URL('submissions', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, options, timeFilters)
+        url: new URL('data/submissions', root).href,
+        qs: Object.assign({ limit: defaultPageLimit }, options)
       }
     });
   };
@@ -320,6 +320,15 @@ export const listQuestions = (options) => {
     });
   };
 };
+
+export const getModel = (model) => ({
+  [CALL_API]: {
+    type: types.MODEL,
+    method: 'GET',
+    id: model,
+    path: `model/${model}`
+  }
+});
 
 export const listGranules = (options) => {
   return (dispatch, getState) => {
@@ -1026,8 +1035,8 @@ export const listWorkflows = (options) => ({
   [CALL_API]: {
     type: types.WORKFLOWS,
     method: 'GET',
-    url: new URL('workflows', root).href,
-    qs: Object.assign({ limit: defaultPageLimit }, options)
+    url: new URL('data/workflows', root).href,
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
   }
 });
 export const searchWorkflows = (searchString) => ({ type: types.SEARCH_WORKFLOWS, searchString });

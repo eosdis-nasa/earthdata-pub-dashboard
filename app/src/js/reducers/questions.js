@@ -46,7 +46,6 @@ export default createReducer(initialState, {
     set(state, ['map', id, 'inflight'], true);
   },
   [QUESTIONS]: (state, action) => {
-    console.log(action);
     const { data } = action;
     set(state, ['list', 'data'], data);
     set(state, ['list', 'meta'], assignDate(data.meta));

@@ -28,7 +28,6 @@ import Forms from './components/Forms';
 import Questions from './components/Questions';
 import Workflows from './components/Workflows';
 import Metrics from './components/Metrics';
-import MetadataEditor from './components/MetadataEditor';
 import Executions from './components/Executions';
 import Operations from './components/Operations';
 import Rules from './components/Rules';
@@ -59,7 +58,6 @@ const MainRoutes = () => {
         <Route path='/groups' component={Groups} />
         <Route path='/workflows' component={Workflows} />
         <Route path='/metrics' component={Metrics} />
-        <Route path='/metadata-editor' component={MetadataEditor} />
         <Route path='/executions' component={Executions} />
         <Route path='/operations' component={Operations} />
         <Route path='/rules' component={Rules} />

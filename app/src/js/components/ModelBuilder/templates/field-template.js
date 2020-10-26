@@ -6,10 +6,12 @@ function FieldTemplate(props) {
   return (
     <div className={`${classNames} model-builder-field`}>
       {label && (<label htmlFor={id}>{label}</label>)}
-      {description}
-      {children}
-      {errors}
-      {help}
+      <div>
+        {description}
+        {children}
+        {errors}
+        {help}
+      </div>
     </div>
   );
 }

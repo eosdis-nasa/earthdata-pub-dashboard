@@ -19,19 +19,6 @@ function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
 function ArrayFieldTemplate(props) {
   return (
     <div className={`${props.className} model-builder-field`}>
-    <ArrayFieldTitle
-        key={`array-field-title-${props.idSchema.$id}`}
-        TitleField={props.TitleField}
-        idSchema={props.idSchema}
-        title={props.uiSchema["ui:title"] || props.title}
-        required={props.required}
-      />
-    <ArrayFieldDescription
-        key={`array-field-description-${props.idSchema.$id}`}
-        DescriptionField={props.DescriptionField}
-        idSchema={props.idSchema}
-        description={props.uiSchema["ui:description"] || props.schema.description}
-      />
       <div className={`${props.className} model-builder-array`}>
       {props.items &&
         props.items.map(element => (
