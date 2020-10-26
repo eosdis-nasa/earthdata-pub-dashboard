@@ -14,13 +14,13 @@ class Footer extends React.Component {
     const { warning, versionNumber } = this.props.apiVersion;
 
     let versionWarning;
-    if (warning) { versionWarning = <h5 className='api__warning'><span className="warning-icon"></span>Warning: { warning }</h5>; }
+    if (warning) { versionWarning = <h3 className='api__warning'><span className="warning-icon"></span>Warning: { warning }</h3>; }
 
     return (
       <div className='footer'>
-        <div className='api__summary'>
+        <div className='api__summary' role="contentinfo" aria-label="Earthdata Pub API Version">
           { authenticated &&
-            <h5 className='api__version'>Earthdatapub API Version: { versionNumber }</h5>
+            <h3 className='api__version'>Earthdatapub API Version: { versionNumber }</h3>
           }
           { versionWarning }
         </div>

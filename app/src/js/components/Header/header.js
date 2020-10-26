@@ -74,9 +74,9 @@ class Header extends React.Component {
     const activePaths = paths.filter(path => nav.exclude[path[0]] !== true);
     const logoPath = graphicsPath.substr(-1) === '/' ? `${graphicsPath}${strings.logo}` : `${graphicsPath}/${strings.logo}`;
     return (
-      <div className='header'>
+      <div className='header' role="navigation" aria-label="Header">
         <div className='row'>
-          <h1 className='logo'><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={logoPath} /></Link></h1>
+          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={logoPath} /></Link></h1>
           <nav>
             { !this.props.minimal ? <ul>
               {activePaths.map(path => <li

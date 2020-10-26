@@ -194,7 +194,7 @@
   height: 94px;
   margin: .8em 1.5em .8em 0;
   /*float: left;*/
-  color: $lighter-grey;
+  color: darken($lighter-grey, 10%);
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   transition: all 0.3s ease 0s;
@@ -231,7 +231,7 @@
   height: 70px;
   margin: .8em 1.5em .8em 0;
   /*float: left;*/
-  color: #8C8C8C;
+  color: darken(#8C8C8C, 10%);
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   transition: all 0.3s ease 0s;
@@ -298,7 +298,7 @@
   }
 
   &--red{
-    color: $error-red;
+    color: $error-text-red;
   }
 }
 
@@ -359,14 +359,14 @@
 
   .pagination__link--disabled {
     cursor: default;
-    color: $lightest-grey;
+    color: darken($lightest-grey, 45%);
   }
   .pagination__link--disabled:before {
     cursor: default;
-    color: $lightest-grey;
+    color: darken($lightest-grey, 45%);
   }
   .pagination__link--disabled:hover {
-    color: $lightest-grey;
+    color: darken($lightest-grey, 45%);
     text-decoration: none;
   }
   .pagination__link--active a, .pagination__link--active a:visited {

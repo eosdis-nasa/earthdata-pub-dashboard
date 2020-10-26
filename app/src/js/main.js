@@ -20,7 +20,7 @@ class Main extends Component {
     return (
       <div className='app'>
         {target !== 'earthdata-pub' ? (
-          <div className='app__target--container'>
+          <div className='app__target--container' role="banner">
             <h4 className='app__target'>{displayCase(target)} ({displayCase(environment)})</h4>
           </div>
         ) : null}
@@ -28,7 +28,7 @@ class Main extends Component {
         <main className='main' role='main'>
           {this.props.children}
         </main>
-        <section className='page__section--top'>
+        <section className='page__section--top' role="navigation" aria-label="Click to go to top of page">
           <TopButton />
         </section>
         <Footer api={this.props.api} apiVersion={this.props.apiVersion} />

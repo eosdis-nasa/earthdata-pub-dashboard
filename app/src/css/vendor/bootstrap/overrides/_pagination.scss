@@ -51,14 +51,14 @@
 
   .pagination__link--disabled {
     cursor: default;
-    color: $lightest-grey;
+    color: darken($lightest-grey, 45%);
   }
   .pagination__link--disabled:before {
     cursor: default;
-    color: $lightest-grey;
+    color: darken($lightest-grey, 45%);
   }
   .pagination__link--disabled:hover {
-    color: $lightest-grey;
+    color: darken($lightest-grey, 45%);
     text-decoration: none;
   }
   .pagination__link--active a, .pagination__link--active a:visited {

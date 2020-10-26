@@ -440,12 +440,12 @@ select option{
   text-align: center;
   position: relative;
   margin: 2em 0em;
-  color: $error-text-red;
+  color: $error-red;
   font-size: .86em;
   border: 1px solid $error-red;
   p {
     margin-bottom: 0;
-    color: $error-text-red;
+    color: $error-red
   }
 }
 
