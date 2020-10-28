@@ -130,7 +130,7 @@ export const listCollections = (options = {}) => {
         url: new URL(urlPath, root).href,
         qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
       }
-    })
+    });
   };
 };
 
