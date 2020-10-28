@@ -19,7 +19,8 @@ const paths = [
   // ['Executions', '/executions'],
   // ['Operations', '/operations'],
   // ['Rules', '/rules'],
-  // ['Logs', 'logs'],
+  // ['Logs', '/logs'],
+  ['Metrics', '/metrics'],
   // ['Reconciliation Reports', '/reconciliation-reports']
   // ['Forms', '/forms'],
   ['Users', '/users'],

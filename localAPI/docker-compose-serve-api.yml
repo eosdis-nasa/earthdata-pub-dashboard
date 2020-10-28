@@ -18,6 +18,7 @@ services:
       - cmr_provider=EDPUB
       - FAKE_AUTH=true
   shim:   # empty container to open ports
+    network_mode: "host"
     image: node:12.18.0
     network_mode: "host"
     command:

@@ -26,10 +26,12 @@ import Users from './components/Users';
 import Groups from './components/Groups';
 import Forms from './components/Forms';
 import Workflows from './components/Workflows';
+import Metrics from './components/Metrics';
 import Executions from './components/Executions';
 import Operations from './components/Operations';
 import Rules from './components/Rules';
 import ReconciliationReports from './components/ReconciliationReports';
+import TestApi from './components/testApi';
 
 import config from './config';
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
@@ -41,25 +43,27 @@ console.log('Environment', config.environment);
 // Wrapper for Main component to include routing
 const MainRoutes = () => {
   return (
-    <Main path='/'>
-      <Switch>
-        <Route exact path='/' component={Home} />
-        <Route path='/404' component={NotFound} />
-        <Route path='/collections' component={Collections} />
-        <Route path='/granules' component={Granules} />
-        <Route path='/submissions' component={Submissions} />
-        <Route path='/pdrs' component={Pdrs} />
-        <Route path='/providers' component={Providers} />
-        <Route path='/forms' component={Forms} />
-        <Route path='/users' component={Users} />
-        <Route path='/groups' component={Groups} />
-        <Route path='/workflows' component={Workflows} />
-        <Route path='/executions' component={Executions} />
-        <Route path='/operations' component={Operations} />
-        <Route path='/rules' component={Rules} />
-        <Route path='/reconciliation-reports' component={ReconciliationReports} />
-      </Switch>
-    </Main>
+      <Main path='/'>
+        <Switch>
+          <Route exact path='/' component={Home} />
+          <Route path='/404' component={NotFound} />
+          <Route path='/collections' component={Collections} />
+          <Route path='/granules' component={Granules} />
+          <Route path='/submissions' component={Submissions} />
+          <Route path='/pdrs' component={Pdrs} />
+          <Route path='/providers' component={Providers} />
+          <Route path='/forms' component={Forms} />
+          <Route path='/users' component={Users} />
+          <Route path='/groups' component={Groups} />
+          <Route path='/workflows' component={Workflows} />
+          <Route path='/metrics' component={Metrics} />
+          <Route path='/executions' component={Executions} />
+          <Route path='/operations' component={Operations} />
+          <Route path='/rules' component={Rules} />
+          <Route path='/reconciliation-reports' component={ReconciliationReports} />
+          <Route path='/test-api' component={TestApi} />
+        </Switch>
+      </Main>
   );
 };
 
@@ -78,19 +82,19 @@ class App extends Component {
 
   render () {
     return (
-      // <ErrorBoundary> // Add after troublshooting other errors
-      // Routes
-      <div className="routes">
-        <Provider store={this.store}>
-          <ConnectedRouter history={history}>
-            <Switch>
-              <Redirect exact from='/login' to='/auth' />
-              <Route path='/auth' render={() => this.isLoggedIn() ? <Redirect to='/' /> : <OAuth />} />
-              <Route path='/' render={() => this.isLoggedIn() ? <MainRoutes /> : <Redirect to='/auth' />} />
-            </Switch>
-          </ConnectedRouter>
-        </Provider>
-      </div>
+        // <ErrorBoundary> // Add after troublshooting other errors
+        // Routes
+        <div className="routes">
+          <Provider store={this.store}>
+            <ConnectedRouter history={history}>
+              <Switch>
+                <Redirect exact from='/login' to='/auth' />
+                <Route path='/auth' render={() => this.isLoggedIn() ? <Redirect to='/' /> : <OAuth />} />
+                <Route path='/' render={() => this.isLoggedIn() ? <MainRoutes /> : <Redirect to='/auth' />} />
+              </Switch>
+            </ConnectedRouter>
+          </Provider>
+        </div>
     );
   }
 }
