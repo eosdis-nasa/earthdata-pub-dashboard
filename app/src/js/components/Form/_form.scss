@@ -79,7 +79,9 @@ select option{
   vertical-align: bottom;
   position: relative;
 }
-
+.filter__item label {
+  display: block;
+}
 .filter__icon{
   &:after {
     color: $ocean-blue;

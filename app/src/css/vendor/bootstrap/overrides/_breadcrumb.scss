@@ -2,7 +2,9 @@
   background-color: initial;
   padding: 0;
 }
-
+.breadcrumb-item.active > span {
+  color: #6A727B;
+}
 .breadcrumb-item+.breadcrumb-item:before {
   content: "|";
 }

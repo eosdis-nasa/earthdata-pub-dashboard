@@ -304,7 +304,7 @@
     "querystring": "^0.2.0",
     "react": "^16.10.2",
     "react-ace": "^6.2.0",
-    "react-autocomplete": "^1.7.1",
+    "react-autocomplete": "^1.8.1",
     "react-bootstrap": "^1.0.0-beta.14",
     "react-collapsible": "^2.6.3",
     "react-dom": "^16.6.3",

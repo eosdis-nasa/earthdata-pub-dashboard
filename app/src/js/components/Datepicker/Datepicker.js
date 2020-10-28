@@ -191,7 +191,7 @@ class Datepicker extends React.PureComponent {
     const utcValue = isNil(value)
       ? null
       : moment(moment.utc(value).format(dateTimeFormat)).toDate();
-
+    const ariaLabel = name + ' input';
     return (
       <DateTimePicker
         dayPlaceholder='DD'
@@ -204,6 +204,16 @@ class Datepicker extends React.PureComponent {
         onChange={(value) => this.handleDateTimeRangeChange(name, value)}
         value={utcValue}
         yearPlaceholder='YYYY'
+        clearAriaLabel={ariaLabel}
+        calendarAriaLabel={ariaLabel}
+        amPmAriaLabel={ariaLabel}
+        dayAriaLabel={ariaLabel}
+        hourAriaLabel={ariaLabel}
+        minuteAriaLabel={ariaLabel}
+        monthAriaLabel={ariaLabel}
+        nativeInputAriaLabel={ariaLabel}
+        secondAriaLabel={ariaLabel}
+        yearAriaLabel={ariaLabel}
       />
     );
   }

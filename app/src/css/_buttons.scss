@@ -80,7 +80,7 @@
     background-color: $light-green;
   
     &:hover {
-      background-color: darken($light-green, 10%);
+      background-color: $light-green;
       color: #fff;
       border: 0;
     }
@@ -88,21 +88,21 @@
 
   &--primary, &--primary:visited {
     &:hover {
-      background-color: darken($light-green, 10%);
+      background-color: $light-green;
       color: $white;
       border: 0;
     }
   }
   
   &--secondary, &--secondary:visited{
-    background-color: darken($dolphin-grey, 18%);
+    background-color: $dolphin-grey;
     &:hover {
-      background-color: darken($dolphin-grey, 25%);
+      background-color: darken($dolphin-grey, 5%);
     }
   }
 
   &--top{
-    background-color: darken($light-green, 16%);
+    background-color: $light-green;
     color: $white;
     border: none;
     border-radius: 4px;
@@ -124,7 +124,7 @@
 
     &:hover{
       &:hover {
-        background-color: darken($light-green, 20%);
+        background-color: darken($light-green, 5%);
       }
     }
   }
@@ -254,7 +254,7 @@
 
     &--remove, &--execute, &--reingest {
       &:hover {
-        background-color: darken($light-green, 10%);
+        background-color: darken($light-green, 5%);
         color: #fff;
         border: 0;
       }

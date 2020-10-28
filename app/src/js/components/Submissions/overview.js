@@ -11,6 +11,10 @@ import {
   filterSubmissions,
   clearSubmissionsFilter,
   listSubmissions,
+  filterStages,
+  filterStatuses,
+  clearStagesFilter,
+  clearStatusesFilter,
   listWorkflows,
   applyWorkflowToSubmission,
   getOptionsSubmissionName
@@ -157,27 +161,27 @@ class SubmissionsOverview extends React.Component {
                 paramKey='submissionId'
                 label={strings.submission}
                 inputProps={{
-                  placeholder: 'All'
+                  placeholder: 'All',
                 }}
               />
               <Dropdown
                 options={stageOptions}
-                action={filterSubmissions}
-                clear={clearSubmissionsFilter}
+                action={filterStages}
+                clear={clearStagesFilter}
                 paramKey='stage'
                 label='Stage'
                 inputProps={{
-                  placeholder: 'All'
+                  placeholder: 'All',
                 }}
               />
               <Dropdown
                 options={statusOptions}
-                action={filterSubmissions}
-                clear={clearSubmissionsFilter}
+                action={filterStatuses}
+                clear={clearStatusesFilter}
                 paramKey='status'
                 label='Status'
                 inputProps={{
-                  placeholder: 'All'
+                  placeholder: 'All',
                 }}
               />
               <Search
@@ -185,18 +189,17 @@ class SubmissionsOverview extends React.Component {
                 action={searchSubmissions}
                 clear={clearSubmissionsSearch}
                 label='Search'
-                inputProps={{
-                  placeholder: 'All'
-                }}
+                placeholder='Search'
+                title='Search'
               />
               <Dropdown
                 options={pageSizeOptions}
                 action={filterSubmissions}
                 clear={clearSubmissionsFilter}
                 paramKey='limit'
-                label='Results Per Page'
+                label='Limit Results'
                 inputProps={{
-                  placeholder: 'Results Per Page'
+                  placeholder: 'Results Per Page',
                 }}
               />
             </ListFilters>

@@ -98,7 +98,7 @@ class FormsOverview extends React.Component {
                 action={filterForms}
                 clear={clearFormsFilter}
                 paramKey={'limit'}
-                label={'Results Per Page'}
+                label={'Limit Results'}
                 inputProps={{
                   placeholder: 'Results Per Page'
                 }}

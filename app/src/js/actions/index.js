@@ -480,6 +480,12 @@ export const clearSubmissionsSearch = () => ({ type: types.CLEAR_SUBMISSIONS_SEA
 export const filterSubmissions = (param) => ({ type: types.FILTER_SUBMISSIONS, param: param });
 export const clearSubmissionsFilter = (paramKey) => ({ type: types.CLEAR_SUBMISSIONS_FILTER, paramKey: paramKey });
 
+export const filterStages = (param) => ({ type: types.FILTER_STAGES, param: param });
+export const clearStagesFilter = (paramKey) => ({ type: types.CLEAR_STAGES_FILTER, paramKey: paramKey });
+
+export const filterStatuses = (param) => ({ type: types.FILTER_STATUSES, param: param });
+export const clearStatusesFilter = (paramKey) => ({ type: types.CLEAR_STATUSES_FILTER, paramKey: paramKey });
+
 export const getGranuleCSV = (options) => ({
   [CALL_API]: {
     type: types.GRANULE_CSV,
