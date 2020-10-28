@@ -11,11 +11,12 @@ import withQueryParams from 'react-router-query-params';
 import { withRouter } from 'react-router-dom';
 
 class ModelBuilder extends React.Component {
-  constructor (props) {
-    super(props);
-    this.displayName = `${props.model} Builder`;
-    this.model = props.model;
-    this.formData = props.formData || {};
+  constructor ({ model, formData, onSubmit, ...rest }) {
+    super({ model, formData, ...rest });
+    this.displayName = `${model} Builder`;
+    this.model = model;
+    this.formData = formData || {};
+    this.onSubmit = onSubmit;
   }
 
   componentDidMount () {
@@ -26,14 +27,21 @@ class ModelBuilder extends React.Component {
       <Form schema={this.model} formData={this.formData}
         ArrayFieldTemplate={ArrayFieldTemplate}
         ObjectFieldTemplate={ObjectFieldTemplate}
-        FieldTemplate={FieldTemplate}/>
+        FieldTemplate={FieldTemplate}
+        noValidate={true}
+        noHtml5Validate={true}
+        liveValidate={true}
+        onSubmit={this.onSubmit} >
+        <button className='button button--small' type="submit">Submit</button>
+      </Form>
     );
   }
 }
 
 ModelBuilder.propTypes = {
   model: PropTypes.object,
-  formData: PropTypes.object
+  formData: PropTypes.object,
+  onSubmit: PropTypes.func
 }
 
 export default ModelBuilder;

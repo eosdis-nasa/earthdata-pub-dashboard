@@ -18,11 +18,11 @@ function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
 
 function ArrayFieldTemplate(props) {
   return (
-    <div className={`${props.className} model-builder-field`}>
-      <div className={`${props.className} model-builder-array`}>
+    <div>
+      <div className={`model-builder-array`}>
       {props.items &&
         props.items.map(element => (
-          <div key={element.key} className={`${element.className} array-item`}>
+          <div key={element.key} className={`array-item`}>
             <div>{element.children}</div>
             <div className="row">
               {element.hasMoveDown && (

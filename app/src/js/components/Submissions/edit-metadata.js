@@ -7,7 +7,8 @@ import ModelBuilder from '../ModelBuilder';
 import Loading from '../LoadingIndicator/loading-indicator';
 import {
   getModel,
-  getSubmission
+  getSubmission,
+  updateSubmissionMetadata
 } from '../../actions';
 import { get } from 'object-path';
 import { tally } from '../../utils/format';
@@ -25,6 +26,11 @@ class EditMetadata extends React.Component {
     dispatch(getModel('UMMC'));
   }
 
+  updateMetadata(payload) {
+    const { dispatch } = this.props;
+    dispatch(updateSubmissionMetadata(payload));
+  }
+
   render () {
     const submissionId = this.props.match.params.submissionId;
     const submissionInflight = get(this.props, ['submissions', 'map', submissionId, 'inflight'], true);
@@ -35,9 +41,11 @@ class EditMetadata extends React.Component {
     }
     const metadata = get(this.props, ['submissions', 'map', submissionId, 'data', 'metadata']);
     const model = get(this.props, ['model', 'data']);
+    const dispatch = this.props;
+    const onSubmit = ({formData}, e) => { this.updateMetadata({ id: submissionId, metadata: formData }) };
     return (
       <div>
-        <ModelBuilder model={model} formData={metadata} />
+        <ModelBuilder model={model} formData={metadata} onSubmit={onSubmit}/>
       </div>
     );
   }
