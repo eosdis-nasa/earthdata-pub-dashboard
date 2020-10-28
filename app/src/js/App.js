@@ -31,6 +31,7 @@ import Executions from './components/Executions';
 import Operations from './components/Operations';
 import Rules from './components/Rules';
 import ReconciliationReports from './components/ReconciliationReports';
+import TestApi from './components/testApi';
 
 import config from './config';
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
@@ -60,6 +61,7 @@ const MainRoutes = () => {
         <Route path='/operations' component={Operations} />
         <Route path='/rules' component={Rules} />
         <Route path='/reconciliation-reports' component={ReconciliationReports} />
+        <Route path='/test-api' component={TestApi} />
       </Switch>
     </Main>
   );
@@ -80,8 +82,8 @@ class App extends Component {
 
   render () {
     return (
-      // <ErrorBoundary> // Add after troublshooting other errors
-      // Routes
+    // <ErrorBoundary> // Add after troublshooting other errors
+    // Routes
       <div className="routes">
         <Provider store={this.store}>
           <ConnectedRouter history={history}>

@@ -19,7 +19,8 @@ const config = {
   enableRecovery: process.env.ENABLE_RECOVERY || false,
   esUser: process.env.ES_USER || '',
   esPassword: process.env.ES_PASSWORD || '',
-  servedByEarthdatapubAPI: process.env.SERVED_BY_EDPUB_API || ''
+  servedByEarthdatapubAPI: process.env.SERVED_BY_EDPUB_API || '',
+  APP_ID: process.env.APP_ID || 'Value is null'
 };
 
 module.exports = config;
