@@ -130,9 +130,9 @@ class FormOverview extends React.Component {
         }
         if (section !== '') {
           sectionQuestions.unshift(sectionQuestions.pop());
-          sectionQuestions.push(<br key={this.getRandom()} />);
-          sectionQuestions.push(<hr key={this.getRandom()} />);
-          sectionQuestions.push(<br key={this.getRandom()} />);
+          sectionQuestions.push(<li><br key={this.getRandom()} /></li>);
+          sectionQuestions.push(<li><hr key={this.getRandom()} /></li>);
+          sectionQuestions.push(<li><br key={this.getRandom()} /></li>);
           return (sectionQuestions);
         }
       }

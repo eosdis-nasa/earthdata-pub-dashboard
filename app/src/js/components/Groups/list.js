@@ -194,7 +194,7 @@ class AllGroups extends React.Component {
                 paramKey='limit'
                 label='Results Per Page'
                 inputProps={{
-                  placeholder: 'Results Per Page'
+                  placeholder: 'Results Per Page',
                 }}
               />
             </ListFilters>

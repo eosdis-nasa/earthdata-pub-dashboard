@@ -101,7 +101,7 @@ class UsersOverview extends React.Component {
                 action={filterUsers}
                 clear={clearUsersFilter}
                 paramKey={'limit'}
-                label={'Results Per Page'}
+                label={'Limit Results'}
                 inputProps={{
                   placeholder: 'Results Per Page'
                 }}

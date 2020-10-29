@@ -106,19 +106,23 @@ class Dropdown extends React.Component {
 
     return (
       <div className='filter__item'>
-        {label ? <label htmlFor={formID}>{label}</label> : null}
         <form className='form-group__element' id={formID} onSubmit={this.onSubmit}>
-          <Autocomplete
-            getItemValue={item => item.value}
-            items={items}
-            renderItem={renderItem}
-            shouldItemRender={shouldItemRender}
-            value={this.state.value}
-            onChange={this.onChange}
-            onSelect={this.onSelect}
-            renderMenu={renderMenu}
-            inputProps={inputProps}
-          />
+          <label htmlFor={formID}>{label}
+            <Autocomplete
+              getItemValue={item => item.value}
+              items={items}
+              renderItem={renderItem}
+              shouldItemRender={shouldItemRender}
+              value={this.state.value}
+              onChange={this.onChange}
+              onSelect={this.onSelect}
+              renderMenu={renderMenu}
+              inputProps={inputProps}
+              wrapperStyle={{
+                display: 'block'
+              }}
+            />
+          </label>
         </form>
       </div>
     );

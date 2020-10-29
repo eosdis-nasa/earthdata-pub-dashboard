@@ -165,7 +165,6 @@ a:active {
   background-color: $ocean-blue;
   border-bottom: 1px solid rgba(255, 255, 255, .06);
   z-index: 2;
-
   h1 {
     float: left;
     margin-right: 2.5em;
@@ -190,7 +189,8 @@ a:active {
     border-bottom: 1px solid $ocean-blue;
     transition: all 0.3s ease 0s;
     a {
-      color: lighten($lightest-grey, 2%);
+      color: $white;
+
     }
     &.active,
     &:hover {
@@ -451,7 +451,7 @@ a:active {
 .metadata__updated, .label__description {
   font-size: .79em;
   font-style: italic;
-  color: lighten($lighter-grey, 10%);
+  color: darken($lighter-grey, 20%);
   dt, dd {
     display: inline;
     padding-right: .5em;
@@ -558,11 +558,11 @@ a:active {
 .progress-bar__indicator--failed {
   right: 20px;
   .pulse__dot {
-    border: 5px solid lighten($error-red, 10%);
-    background-color: $error-red;
+    border: 5px solid lighten($error-text-red, 10%);
+    background-color: $error-text-red;
   }
   .pulse__ring {
-    border: 11px solid $error-red;
+    border: 11px solid $error-text-red;
   }
 }
 
@@ -615,7 +615,7 @@ a:active {
   font-weight: $base-font-semibold;
   dd, dt {
     display: inline-block;
-    font-size: .9em;
+    font-size: 1.9em;
   }
   dd {
     font-weight: $base-font-semibold;
@@ -643,7 +643,7 @@ a:active {
   .failed,
   .disabled {
     &:before {
-      background-color: $error-red;
+      background-color: $error-text-red;
     }
   }
 
@@ -657,7 +657,7 @@ a:active {
     }
 
     &-failed {
-      color: $error-red;
+      color: $error-text-red;
     }
   }
 

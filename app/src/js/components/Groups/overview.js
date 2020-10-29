@@ -98,7 +98,7 @@ class GroupsOverview extends React.Component {
                 action={filterGroups}
                 clear={clearGroupsFilter}
                 paramKey={'limit'}
-                label={'Results Per Page'}
+                label={'Limit Results'}
                 inputProps={{
                   placeholder: 'Results Per Page'
                 }}
