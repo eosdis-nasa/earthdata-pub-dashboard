@@ -1,17 +1,12 @@
 'use strict';
 import React from 'react';
-import { get } from 'object-path';
-import { Link } from 'react-router-dom';
-import {
-  displayCase,
-  questionLink
-} from '../format';
+import { questionLink } from '../format';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 
 export const tableColumns = [
   {
     Header: 'Title',
-    accessor: row => <Link to={`/questions/question/${row.id}`}><h3>{row.title}</h3>{row.question_name}</Link>,
+    accessor: row => questionLink(row.id, row.title, row.question_name),
     id: 'question_name',
     width: 250
   },

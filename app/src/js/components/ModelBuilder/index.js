@@ -1,25 +1,19 @@
 'use strict';
 import React from 'react';
-import { connect } from 'react-redux';
-import Form from "@rjsf/core";
+import Form from '@rjsf/core';
 import ArrayFieldTemplate from './templates/array-field-template';
 import ObjectFieldTemplate from './templates/object-field-template';
 import FieldTemplate from './templates/field-template';
+import SelectWidget from './widgets/select-widget';
 import PropTypes from 'prop-types';
-import { initialValueFromLocation } from '../../utils/url-helper';
-import withQueryParams from 'react-router-query-params';
-import { withRouter } from 'react-router-dom';
 
 class ModelBuilder extends React.Component {
-  constructor ({ model, formData, onSubmit, ...rest }) {
-    super({ model, formData, ...rest });
+  constructor ({ model, formData, onSubmit }) {
+    super();
     this.displayName = `${model} Builder`;
     this.model = model;
     this.formData = formData || {};
     this.onSubmit = onSubmit;
-  }
-
-  componentDidMount () {
   }
 
   render () {
@@ -28,6 +22,7 @@ class ModelBuilder extends React.Component {
         ArrayFieldTemplate={ArrayFieldTemplate}
         ObjectFieldTemplate={ObjectFieldTemplate}
         FieldTemplate={FieldTemplate}
+        widgets={{ SelectWidget }}
         noValidate={true}
         noHtml5Validate={true}
         liveValidate={true}
@@ -42,6 +37,6 @@ ModelBuilder.propTypes = {
   model: PropTypes.object,
   formData: PropTypes.object,
   onSubmit: PropTypes.func
-}
+};
 
 export default ModelBuilder;

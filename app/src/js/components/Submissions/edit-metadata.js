@@ -11,14 +11,8 @@ import {
   updateSubmissionMetadata
 } from '../../actions';
 import { get } from 'object-path';
-import { tally } from '../../utils/format';
-import { strings } from '../locale';
 
 class EditMetadata extends React.Component {
-  constructor (props) {
-    super(props);
-  }
-
   componentDidMount () {
     const { dispatch } = this.props;
     const { submissionId } = this.props.match.params;
@@ -26,7 +20,7 @@ class EditMetadata extends React.Component {
     dispatch(getModel('UMMC'));
   }
 
-  updateMetadata(payload) {
+  updateMetadata (payload) {
     const { dispatch } = this.props;
     dispatch(updateSubmissionMetadata(payload));
   }
@@ -41,8 +35,7 @@ class EditMetadata extends React.Component {
     }
     const metadata = get(this.props, ['submissions', 'map', submissionId, 'data', 'metadata']);
     const model = get(this.props, ['model', 'data']);
-    const dispatch = this.props;
-    const onSubmit = ({formData}, e) => { this.updateMetadata({ id: submissionId, metadata: formData }) };
+    const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: submissionId, metadata: formData }); };
     return (
       <div>
         <ModelBuilder model={model} formData={metadata} onSubmit={onSubmit}/>

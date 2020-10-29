@@ -2,27 +2,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   getCount,
-  searchQuestions,
-  clearQuestionsSearch,
-  filterQuestions,
-  clearQuestionsFilter,
+  // searchQuestions,
+  // clearQuestionsSearch,
+  // filterQuestions,
+  // clearQuestionsFilter,
   listQuestions
 } from '../../actions';
 import { get } from 'object-path';
-import { lastUpdated, tally, displayCase } from '../../utils/format';
+import { tally, displayCase } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/questions';
 import List from '../Table/Table';
-import Dropdown from '../DropDown/dropdown';
-import Search from '../Search/search';
 import Overview from '../Overview/overview';
-import _config from '../../config';
 import { strings } from '../locale';
-import ListFilters from '../ListActions/ListFilters';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import pageSizeOptions from '../../utils/page-size';
 
 const breadcrumbConfig = [
   {
@@ -36,8 +31,8 @@ const breadcrumbConfig = [
 ];
 
 class QuestionsOverview extends React.Component {
-  constructor () {
-    super();
+  constructor (props) {
+    super(props);
     this.generateQuery = this.generateQuery.bind(this);
     this.queryMeta = this.queryMeta.bind(this);
     this.state = {};
@@ -61,9 +56,9 @@ class QuestionsOverview extends React.Component {
   }
 
   render () {
-    const { stats, questions, dispatch } = this.props;
+    const { stats, questions } = this.props;
     const { list } = questions;
-    const { count, queriedAt } = list.meta;
+    const { count } = list.meta;
     const statsCount = get(stats, 'count.data.questions.count', []);
     const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (

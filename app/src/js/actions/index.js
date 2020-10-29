@@ -284,7 +284,6 @@ export const getSubmission = (submissionId) => ({
 
 export const listSubmissions = (options) => {
   return (dispatch, getState) => {
-    const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
     return dispatch({
       [CALL_API]: {
         type: types.SUBMISSIONS,
@@ -301,7 +300,7 @@ export const updateSubmissionMetadata = (payload) => ({
   [CALL_API]: {
     type: types.SUBMISSION_UPDATE_METADATA,
     method: 'POST',
-    path: `submission/metadata`,
+    path: 'submission/metadata',
     body: payload
   }
 });
@@ -317,7 +316,7 @@ export const getQuestion = (questionId) => ({
 
 export const listQuestions = (options) => {
   return (dispatch, getState) => {
-    //const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
+    // const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
     return dispatch({
       [CALL_API]: {
         type: types.QUESTIONS,

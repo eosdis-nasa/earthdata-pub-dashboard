@@ -1,8 +1,7 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-function ObjectFieldTemplate(props) {
-  const { TitleField, className, properties, title, description } = props;
-  console.log(props)
+function ObjectFieldTemplate ({ className, properties }) {
   return (
     <div className={className}>
       <div className="model-builder-object">
@@ -17,5 +16,10 @@ function ObjectFieldTemplate(props) {
     </div>
   );
 }
+
+ObjectFieldTemplate.propTypes = {
+  className: PropTypes.string,
+  properties: PropTypes.array
+};
 
 export default ObjectFieldTemplate;

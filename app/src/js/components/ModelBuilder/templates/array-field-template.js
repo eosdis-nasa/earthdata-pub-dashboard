@@ -1,28 +1,13 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-function ArrayFieldTitle({ TitleField, idSchema, title, required }) {
-  if (!title) {
-    return null;
-  }
-  const id = `${idSchema.$id}__title`;
-  return <TitleField id={id} title={title} required={required}/>;
-}
-
-function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
-  if (!description) {
-    return null;
-  }
-  const id = `${idSchema.$id}__description`;
-  return <DescriptionField id={id} description={description} />;
-}
-
-function ArrayFieldTemplate(props) {
+function ArrayFieldTemplate ({ items, canAdd, onAddClick }) {
   return (
     <div>
-      <div className={`model-builder-array`}>
-      {props.items &&
-        props.items.map(element => (
-          <div key={element.key} className={`array-item`}>
+      <div className={'model-builder-array'}>
+        {items &&
+        items.map(element => (
+          <div key={element.key} className={'array-item'}>
             <div>{element.children}</div>
             <div className="row">
               {element.hasMoveDown && (
@@ -41,15 +26,20 @@ function ArrayFieldTemplate(props) {
             </div>
           </div>
         ))}
-        </div>
-
-      {props.canAdd && (
+      </div>
+      {canAdd && (
         <button
           className="button button--small"
-          onClick={props.onAddClick} type="button">Add Row</button>
+          onClick={onAddClick} type="button">Add Row</button>
       )}
     </div>
   );
 }
+
+ArrayFieldTemplate.propTypes = {
+  items: PropTypes.array,
+  canAdd: PropTypes.bool,
+  onAddClick: PropTypes.func
+};
 
 export default ArrayFieldTemplate;

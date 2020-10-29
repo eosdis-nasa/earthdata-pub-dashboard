@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BatchAsyncCommand from '../BatchAsyncCommands/BatchAsyncCommands';
-import Timer from '../Timer/timer';
+// import Timer from '../Timer/timer';
+// Removed for linter, will add back in, the auto-refresh causes the table to go empty for several
+// seconds on refresh
 
 const ListActions = ({
   children,

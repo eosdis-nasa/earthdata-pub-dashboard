@@ -2,21 +2,21 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'object-path';
 import { connect } from 'react-redux';
-import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import { getCount, listQuestions } from '../../actions';
 import { strings } from '../locale';
-//import AllQuestions from './list';
+// import AllQuestions from './list';
 import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
 import QuestionOverview from './question';
 import QuestionsOverview from './overview';
-import isEqual from 'lodash.isequal';
 
-const withQueryWrapper = (Component, onQueryChange) => (props) => {
-  return (
-    <Component onQueryChange={onQueryChange} {...props} />
-  );
-};
+// const withQueryWrapper = (Component, onQueryChange) => (props) => {
+//   return (
+//     <Component onQueryChange={onQueryChange} {...props} />
+//   );
+// };
+// Removed for linter, will add back in when cleaning up table
 
 const Questions = ({
   dispatch,
@@ -27,7 +27,7 @@ const Questions = ({
   const { pathname } = location;
   const count = get(stats, 'count.data.questions.count');
   dispatch(listQuestions());
-  const [queryOptions, setQueryOptions] = useState({});
+  const [queryOptions] = useState({});
 
   function query () {
     dispatch(getCount({
@@ -36,11 +36,12 @@ const Questions = ({
     dispatch(listQuestions(queryOptions));
   }
 
-  function onQueryChange (newQueryOptions) {
-    if (!isEqual(newQueryOptions, queryOptions)) {
-      setQueryOptions(newQueryOptions);
-    }
-  }
+  // function onQueryChange (newQueryOptions) {
+  //   if (!isEqual(newQueryOptions, queryOptions)) {
+  //     setQueryOptions(newQueryOptions);
+  //   }
+  // }
+  // Removed for linter, will add back in when cleaning up table
 
   return (
     <div className='page__questions'>

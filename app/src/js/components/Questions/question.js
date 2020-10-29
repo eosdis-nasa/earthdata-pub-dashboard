@@ -6,13 +6,40 @@ import { connect } from 'react-redux';
 import {
   getQuestion
 } from '../../actions';
-import { get } from 'object-path';
 import Loading from '../LoadingIndicator/loading-indicator';
-import AsyncCommands from '../DropDown/dropdown-async-command';
-import _config from '../../config';
+import ErrorReport from '../Errors/report';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
+function Question ({ title, version, text, help, inputs }) {
+  return (
+    <div>
+      <h1>Title: {title}</h1>
+      <h3>Version: {version}</h3>
+      <h3>Text: {text}</h3>
+      <h3>Help: {help}</h3>
+      <h3>Inputs: </h3>
+      <div className='model-builder-array'>
+        { inputs.map(input => (
+          <Input
+            key={input.id}
+            id={input.id}
+            label={input.label}
+            type={input.type} />
+        ))}
+      </div>
+    </div>);
+}
+
+function Input ({ id, label, type }) {
+  return (
+    <div className='array-item'>
+      <h4>id: {id}</h4>
+      <h4>label: {label}</h4>
+      <h4>type: {type}</h4>
+    </div>
+  );
+}
 
 class QuestionOverview extends React.Component {
   constructor () {
@@ -30,7 +57,6 @@ class QuestionOverview extends React.Component {
 
   componentWillUnmount () {
   }
-
 
   navigateBack () {
     const { history } = this.props;
@@ -69,12 +95,30 @@ class QuestionOverview extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{question.title}</h1>
+          <Question title={question.title}
+            version={question.version}
+            text={question.text}
+            help={question.help}
+            inputs={question.inputs} />
         </section>
       </div>
     );
   }
 }
+
+Question.propTypes = {
+  title: PropTypes.string,
+  version: PropTypes.number,
+  text: PropTypes.string,
+  help: PropTypes.string,
+  inputs: PropTypes.array
+};
+
+Input.propTypes = {
+  id: PropTypes.string,
+  label: PropTypes.string,
+  type: PropTypes.string
+};
 
 QuestionOverview.propTypes = {
   match: PropTypes.object,
