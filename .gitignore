@@ -19,3 +19,4 @@ yarn.lock
 .history/
 v8-compile-cache-0
 rebuild_and_restart.sh
+.snyk
