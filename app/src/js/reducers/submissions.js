@@ -192,7 +192,6 @@ export default createReducer(initialState, {
         }),
       {}
     );
-    console.log(options);
     set(state, ['dropdowns', 'name', 'options'], options);
   },
   [OPTIONS_SUBMISSIONNAME_INFLIGHT]: () => {},
