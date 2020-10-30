@@ -33,6 +33,22 @@ IndeterminateCheckbox.propTypes = {
   onChange: PropTypes.func
 };
 
+const Header = ({ getToggleAllRowsSelectedProps }) => (
+  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+);
+
+Header.propTypes = {
+  getToggleAllRowsSelectedProps: PropTypes.func
+};
+
+const Cell = ({ row }) => (
+  <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+);
+
+Cell.propTypes = {
+  row: PropTypes.array
+};
+
 const SortableTable = ({
   sortIdx,
   rowId,
@@ -85,12 +101,8 @@ const SortableTable = ({
         hooks.visibleColumns.push(columns => [
           {
             id: 'selection',
-            Header: ({ getToggleAllRowsSelectedProps }) => ( // eslint-disable-line react/prop-types
-              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-            ),
-            Cell: ({ row }) => (
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            ),
+            Header: Header,
+            Cell: Cell,
             minWidth: 61,
             width: 61,
             maxWidth: 61
@@ -192,7 +204,6 @@ SortableTable.propTypes = {
   data: PropTypes.array,
   header: PropTypes.array,
   order: PropTypes.string,
-  row: PropTypes.array,
   sortIdx: PropTypes.string,
   changeSortProps: PropTypes.func,
   onSelect: PropTypes.func,

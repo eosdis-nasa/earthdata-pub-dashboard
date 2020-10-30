@@ -2,14 +2,14 @@
 
 Code to generate and deploy the dashboard for the Earthdata Pub API.
 
-Earthdata Pub Dashboard's codebase is based directly off of the Cumulus Dashboard:
-[github.com/nasa/cumulus-dashboard](https://github.com/nasa/cumulus-dashboard)
-
 ## Documentation
 
 - [Usage](https://git.earthdata.nasa.gov/projects/EDPUB/repos/dashboard/browse/USAGE.md)
 - [Development Guide](https://git.earthdata.nasa.gov/projects/EDPUB/repos/dashboard/browse/DEVELOPMENT.md)
 - [Technical documentation on tables](https://git.earthdata.nasa.gov/projects/EDPUB/repos/dashboard/browse/TABLES.md)
+
+The EDPUB Dashboard codebase was originally based on the Cumulus Dashboard:
+[https://github.com/nasa/cumulus-dashboard](https://github.com/nasa/cumulus-dashboard)
 
 ## Configuration
 
@@ -99,16 +99,12 @@ Then follow the steps noted above to build the dashboard locally or using Docker
 
 ```bash
 npm install
-npm run start-dashboard
-```
-
-Wait 30s-1min before seeding database to allow time for everything to build.
-
-```bash
-npm run seed-database
+npm run start
 ```
 
 The Dashboard will available at <http://localhost:3000/>
+
+The API Swagger will available at <http://localhost:8080/docs/>
 
 #### Troubleshooting local deployement
 
@@ -122,48 +118,34 @@ docker-compose down --remove-orphans
 To start just the API:
 
 ```bash
-npm run start-earthdata-pub-api
+npm run start-api
 ```
 
 You may have to 'log out' then 'log in' for data to appear.
 
 #### local API server
 
-TODO: Update these local API instructions for `earthdata-pub-api`
-
 For **development** and **testing** purposes, you can run a Earthdata Pub API locally.
 This requires `docker-compose` in order to stand up the docker containers that serve
 Earthdata Pub API. There are a number of commands that will stand up different portions
-of the stack. See the [Docker Service Diagram](#dockerdiagram)
+of the stack.
+
+<!-- See the [Docker Service Diagram](#dockerdiagram)
 and examine the `docker-compose*.yml` file in the `/localAPI/` directory to see all
 of the possible combinations. Described below are each of the provided commands for
-running the dashboard and Earthdata Pub API locally.
+running the dashboard and Earthdata Pub API locally. -->
 
 *NOTE: These `docker-compose` commands do not build distributable containers, but
 are a provided as testing conveniences. The docker-compose[-\*].yml files show
 that they work by linking your local directories into the container.*
 
-In order to run the Earthdata Pub API locally you must first [build the dashboard](#buildlocally)
-and then run the containers that provide LocalStack and Elasticsearch services.
-
-These are started and stopped with the commands:
-
-```bash
-npm run start-localstack
-npm run stop-localstack
-```
-
-After these containers are running, you can start a earthdata pub API locally in
-a terminal window `npm run serve-api`, the dashboard in another window
-`[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:5001] npm run serve`,
-and finally cypress in a third window. `npm run cypress`.
-
-Once the docker app is running, If you would like to see sample data you can seed
-the database. This will load the same sample data into the application that is used
-during cypress testing.
+In order to run the Earthdata Pub API locally you must first ensure
+`earthdata-pub/api/` is cloned to an adjacent directory to
+`earthdatapub/dashboard/`. _(TODO: install `earthdata-pub/api/` from package.json
+to avoid manual installation)_
 
 ```bash
-npm run seed-database
+git clone https://git.earthdata.nasa.gov/scm/edpub/api.git
 ```
 
 If you prefer to stand up more of the stack in docker containers, you can include
@@ -171,11 +153,11 @@ the earthdata pub api in the docker-compose stack. To run the Earthdata Pub API
 in a docker container, (which still leaves running the dashboard and cypress up
 to you), just run the `earthdata pub api` service.
 
-The earthdata pub api docker service is started and stopped:
+The earthdata pub api docker stack is started and stopped:
 
 ```bash
-npm run start-earthdata-pub-api
-npm run stop-earthdata-pub-api
+npm run start-api
+npm run stop-api
 ```
 
 Then you can run the dashboard locally (without docker)
@@ -188,13 +170,13 @@ development containers with a single command.
 Bring up and down the entire stack (the localAPI and the dashboard) with:
 
 ```bash
-npm run start-dashboard
-npm run stop-dashboard
+npm run start
+npm run stop
 ```
 
-This runs everything, the backing Localstack and Elasticsearch containers, the
-local Earthdata Pub API and dashboard. Edits to your code will be reflected in
-the running dashboard. You can run cypress tests still with `npm run cypress`.
+This runs everything, the local Earthdata Pub API and dashboard.
+Edits to your code will be reflected in the running dashboard. You can run
+cypress tests still with `npm run cypress`.
 
 ##### Troubleshooting docker containers
 
@@ -203,7 +185,7 @@ the logs with a helper script, this will print out logs from each of the running
 docker containers.
 
 ```bash
-npm run view-docker-logs
+npm run view-logs
 ```
 
 This can be helpful in debugging problems with the docker application.
@@ -242,9 +224,9 @@ Likewise the validation tests can be run with this command:
 npm run validation-tests
 ```
 
-#### Docker Container Service Diagram
+<!-- #### Docker Container Service Diagram
 
-![Docker Service Diagram](ancillary/DashboardDockerServices.png)
+![Docker Service Diagram](ancillary/DashboardDockerServices.png) -->
 
 ### Running locally in Docker
 
@@ -338,7 +320,7 @@ minor exceptions. The configuration can be viewed in `eslint.config.json`.
 
 TODO: Verify Linting is formatted for Bamboo
 
-Output from these commands in formatted for Bamboo](<https://www.atlassian.com/software/bamboo>)
+Output from these commands in formatted for [Bamboo](https://www.atlassian.com/software/bamboo)
 for use in the CICD pipeline.
 
 [Markdownlint](https://github.com/DavidAnson/markdownlint) is used for linting

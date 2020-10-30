@@ -193,24 +193,65 @@ export const getSubmission = (submissionId) => ({
     type: types.SUBMISSION,
     method: 'GET',
     id: submissionId,
-    path: `submissions/${submissionId}`
+    path: `data/submission/${submissionId}`
   }
 });
 
 export const listSubmissions = (options) => {
   return (dispatch, getState) => {
-    const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
     return dispatch({
       [CALL_API]: {
         type: types.SUBMISSIONS,
         method: 'GET',
         id: null,
-        url: new URL('submissions', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, options, timeFilters)
+        url: new URL('data/submissions', root).href,
+        qs: Object.assign({ limit: defaultPageLimit }, options)
       }
     });
   };
 };
+
+export const updateSubmissionMetadata = (payload) => ({
+  [CALL_API]: {
+    type: types.SUBMISSION_UPDATE_METADATA,
+    method: 'POST',
+    path: 'submission/metadata',
+    body: payload
+  }
+});
+
+export const getQuestion = (questionId) => ({
+  [CALL_API]: {
+    type: types.QUESTION,
+    method: 'GET',
+    id: questionId,
+    path: `data/question/${questionId}`
+  }
+});
+
+export const listQuestions = (options) => {
+  return (dispatch, getState) => {
+    // const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
+    return dispatch({
+      [CALL_API]: {
+        type: types.QUESTIONS,
+        method: 'GET',
+        id: null,
+        url: new URL('data/questions', root).href,
+        qs: Object.assign({ per_page: defaultPageLimit }, options)
+      }
+    });
+  };
+};
+
+export const getModel = (model) => ({
+  [CALL_API]: {
+    type: types.MODEL,
+    method: 'GET',
+    id: model,
+    path: `model/${model}`
+  }
+});
 
 export const listGranules = (options) => {
   return (dispatch, getState) => {
@@ -923,8 +964,8 @@ export const listWorkflows = (options) => ({
   [CALL_API]: {
     type: types.WORKFLOWS,
     method: 'GET',
-    url: new URL('workflows', root).href,
-    qs: Object.assign({ limit: defaultPageLimit }, options)
+    url: new URL('data/workflows', root).href,
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
   }
 });
 export const searchWorkflows = (searchString) => ({ type: types.SEARCH_WORKFLOWS, searchString });

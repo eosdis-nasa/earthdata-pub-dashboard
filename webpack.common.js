@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const ESLintPlugin = require('eslint-webpack-plugin');
 // const nodeExternals = require('webpack-node-externals');
 
 const config = require('./app/src/js/config');
@@ -49,12 +50,6 @@ const CommonConfig = {
                 '@babel/preset-env',
                 '@babel/preset-react'
               ]
-            }
-          },
-          {
-            loader: 'eslint-loader',
-            options: {
-              emitWarning: true
             }
           }
         ]
@@ -133,6 +128,9 @@ const CommonConfig = {
     ]
   },
   plugins: [
+    // new ESLintPlugin({
+    //   emitWarning: true
+    // }),
     new HtmlWebPackPlugin({
       template: path.join(__dirname, 'app/src/template.html'),
       filename: 'index.html',
