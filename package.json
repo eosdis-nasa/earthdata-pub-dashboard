@@ -95,7 +95,6 @@
     "@babel/register": "^7.12.1",
     "@babel/runtime": "^7.12.1",
     "@cypress/webpack-preprocessor": "^4.1.2",
-    "@earthdatapub/api": "git+https://git.earthdata.nasa.gov/scm/edpub/api.git",
     "@mapbox/dyno": "^1.4.2",
     "@sindresorhus/is": "0.14.0",
     "@szmarczak/http-timer": "1.1.2",
