@@ -28,3 +28,8 @@ not support this option.
 1. ava fails: 6 tests failed, 2 uncaught exceptions
 1. cypress still looking for earthdata-pub-api/api
 
+## Fit eslint-webpack-plugin
+
+`eslint-webpack-plugin` disagrees with `eslint app/src/js/ --ext .js` and
+generates a lot of errors when turned on. It has been commented out for now.
+Make them happy together later.
