@@ -1,6 +1,6 @@
 {
   "name": "earthdata-pub-dashboard",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A dashboard for Earthdatapub API",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     "start-api": "npm run link-api; docker-compose -f ./node_modules/earthdata-pub-modules//docker-compose.yml up -d; ",
     "stop-api": "docker-compose -f ./node_modules/earthdata-pub-modules/docker-compose.yml down",
     "start-dashboard": "docker-compose -f ./localAPI/docker-compose-dashboard.yml up -d",
-    "stop-dashboard": "docker-compose -f ./localAPI/docker-compose-dashboard.yml down",    
+    "stop-dashboard": "docker-compose -f ./localAPI/docker-compose-dashboard.yml down",
     "start": "npm run start-api; npm run start-dashboard",
     "stop": "npm run stop-api; npm run stop-dashboard",
     "view-logs": "npm run start-api; docker-compose -f ./localAPI/docker-compose-dashboard.yml up"
