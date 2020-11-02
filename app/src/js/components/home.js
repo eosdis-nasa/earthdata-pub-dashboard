@@ -205,7 +205,7 @@ class Home extends React.Component {
             <div className='row'>
               <div className='heading__wrapper--border'>
                 <h2 className='heading--large heading--shared-content--right'>Submissions Updates</h2>
-                <Link className='link--secondary link--learn-more' to='/submissions'>{strings.view_submissions_overview}</Link>
+                <Link className='link--secondary link--learn-more' to='/submissions' aria-label="Learn more about submissions">{strings.view_submissions_overview}</Link>
               </div>
               <div className="heading__wrapper">
                 <h2 className='heading--medium heading--shared-content--right'>{strings.submissions_updated}<span className='num--title'>{numSubmissions}</span></h2>
@@ -218,7 +218,7 @@ class Home extends React.Component {
             <div className='row'>
               <div className='heading__wrapper'>
                 <h2 className='heading--medium heading--shared-content--right'>{strings.submissions_errors}</h2>
-                <Link className='link--secondary link--learn-more' to='/logs'>{strings.view_logs}</Link>
+                <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
               </div>
               <List
                 list={list}

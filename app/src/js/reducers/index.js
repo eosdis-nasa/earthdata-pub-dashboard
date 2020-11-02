@@ -12,7 +12,9 @@ import granuleCSV from './granule-csv';
 import stats from './stats';
 import pdrs from './pdrs';
 import providers from './providers';
+import model from './model';
 import forms from './forms';
+import questions from './questions';
 import users from './users';
 import groups from './groups';
 import logs from './logs';
@@ -46,7 +48,9 @@ export const reducers = {
   stats,
   pdrs,
   providers,
+  model,
   forms,
+  questions,
   users,
   groups,
   logs,

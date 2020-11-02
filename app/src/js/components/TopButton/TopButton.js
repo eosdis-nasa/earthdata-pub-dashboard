@@ -14,7 +14,7 @@ class TopButton extends React.Component {
   render () {
     return (
       <div className='top'>
-        <button className='button--top' onClick={this.topPage}> Go To &nbsp;<span> Top </span>&nbsp; of Page
+        <button className='button--top' onClick={this.topPage} > Go To &nbsp;<span> Top </span>&nbsp; of Page
         </button>
       </div>
     );
