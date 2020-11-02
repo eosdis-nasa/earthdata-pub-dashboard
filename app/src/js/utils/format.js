@@ -94,6 +94,10 @@ export const submissionLink = function (submissionId) {
   if (!submissionId) return nullValue;
   return <Link to={`/submissions/submission/${submissionId}`}>{submissionId}</Link>;
 };
+export const questionLink = function (questionId, questionTitle, questionName) {
+  if (!questionId) return nullValue;
+  return <Link to={`/questions/question/${questionId}`}><h3>{questionTitle}</h3>{questionName}</Link>;
+};
 export const dataProducerLink = function (formId, name) {
   if (!formId) return nullValue;
   return <Link to={`/forms/form/${formId}#${name}`}>{name}</Link>;
