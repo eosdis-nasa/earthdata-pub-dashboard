@@ -27,7 +27,6 @@ class Sidebar extends React.Component {
       ...(this.props.params || {}),
       ...(this.props.match ? this.props.match.params : {})
     };
-
     return (
       <div key={base}>
         <ul>
@@ -39,10 +38,10 @@ class Sidebar extends React.Component {
                 typeof d[2] === 'string' ? d[2] : '',
                 path === currentPath ? currentPathClass : ''
               ].join(' ');
-
+              const title = base + ' link';
               return (
                 <li key={base + i}>
-                  <Link className={classes} to={path}>
+                  <Link className={classes} to={path} title={title}>
                     {d[0]}
                   </Link>
                 </li>

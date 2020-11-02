@@ -185,7 +185,9 @@ class AllSubmissions extends React.Component {
                 action={searchSubmissions}
                 clear={clearSubmissionsSearch}
                 label='Search'
-                placeholder='Submission ID'
+                inputProps={{
+                  placeholder: 'Search'
+                }}
               />
               <Dropdown
                 options={pageSizeOptions}

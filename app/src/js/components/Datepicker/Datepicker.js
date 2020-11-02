@@ -145,6 +145,7 @@ class Datepicker extends React.PureComponent {
             value={this.props.dateRange.value}
             onChange={this.handleDropdownChange}
             data-cy='datetime-dropdown'
+            aria-label="datetime-dropdown"
           >
             {allDateRanges.map((option, i) => (
               <option value={option.value} key={i}>
@@ -168,6 +169,7 @@ class Datepicker extends React.PureComponent {
             name={name}
             value={this.props.hourFormat.value}
             onChange={this.handleHourFormatChange}
+            aria-label="datetime-hour-format"
           >
             {allHourFormats.map((option, i) => (
               <option value={option.value} key={i}>
@@ -189,7 +191,7 @@ class Datepicker extends React.PureComponent {
     const utcValue = isNil(value)
       ? null
       : moment(moment.utc(value).format(dateTimeFormat)).toDate();
-
+    const ariaLabel = name + ' input';
     return (
       <DateTimePicker
         dayPlaceholder='DD'
@@ -202,6 +204,16 @@ class Datepicker extends React.PureComponent {
         onChange={(value) => this.handleDateTimeRangeChange(name, value)}
         value={utcValue}
         yearPlaceholder='YYYY'
+        clearAriaLabel={ariaLabel}
+        calendarAriaLabel={ariaLabel}
+        amPmAriaLabel={ariaLabel}
+        dayAriaLabel={ariaLabel}
+        hourAriaLabel={ariaLabel}
+        minuteAriaLabel={ariaLabel}
+        monthAriaLabel={ariaLabel}
+        nativeInputAriaLabel={ariaLabel}
+        secondAriaLabel={ariaLabel}
+        yearAriaLabel={ariaLabel}
       />
     );
   }
@@ -234,6 +246,7 @@ class Datepicker extends React.PureComponent {
                     className='button button--secondary button--small'
                     onClick={this.clear}
                     data-cy='datetime-clear'
+                    aria-label="Clear Button"
                   >
                     Clear All
                   </button>
@@ -253,6 +266,7 @@ class Datepicker extends React.PureComponent {
                       className='button button--small'
                       onClick={this.refresh}
                       data-cy='datetime-refresh'
+                      aria-label="Refresh Button"
                     >
                       Refresh Time
                     </button>

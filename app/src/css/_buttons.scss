@@ -1,3 +1,4 @@
+
 .button {
   position: relative;
   padding: .65em 1.2em .65em 2.5em;
@@ -46,6 +47,15 @@
     }
   }
   
+  &--medium{
+    font-size: .93em;
+    padding: .4em 1.5em .4em 2.5em;
+
+    &.button--no-icon {
+      padding: .4em 1.5em;
+    }
+  }
+
   &--large{
     padding: .7em 2em;
     font-weight: $base-font-bold;
@@ -70,7 +80,7 @@
     background-color: $light-green;
   
     &:hover {
-      background-color: darken($light-green, 10%);
+      background-color: $light-green;
       color: #fff;
       border: 0;
     }
@@ -78,7 +88,7 @@
 
   &--primary, &--primary:visited {
     &:hover {
-      background-color: darken($light-green, 10%);
+      background-color: $light-green;
       color: $white;
       border: 0;
     }
@@ -87,7 +97,7 @@
   &--secondary, &--secondary:visited{
     background-color: $dolphin-grey;
     &:hover {
-      background-color: darken($dolphin-grey, 20%);
+      background-color: darken($dolphin-grey, 5%);
     }
   }
 
@@ -244,7 +254,7 @@
 
     &--remove, &--execute, &--reingest {
       &:hover {
-        background-color: darken($light-green, 10%);
+        background-color: darken($light-green, 5%);
         color: #fff;
         border: 0;
       }
