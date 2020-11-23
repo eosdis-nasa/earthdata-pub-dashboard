@@ -170,7 +170,7 @@ class FormOverview extends React.Component {
         <section className='page__section'>
           {errors.length ? <ErrorReport report={errors} truncate={true} /> : null}
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium with-description'>Form Overview</h2>
+            <h2 className='heading--medium with-description'>Form Data</h2>
           </div>
           <Metadata data={form} accessors={metaAccessors} />
         </section>

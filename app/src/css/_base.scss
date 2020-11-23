@@ -168,10 +168,14 @@ a:active {
   h1 {
     float: left;
     margin-right: 2.5em;
-    padding-top: 1.3em;
+    color:white;
+    font-weight: 1000;
+    text-align: center;
+    max-height: 15px;
     img {
-      height: 26px;
-      width: 165px;
+      padding-top: 7px;
+      height: 30px;
+      width: 60px;
     }
   }
   nav{
