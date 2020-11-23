@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
-import { tally } from '../../utils/format';
+import { lastUpdated, tally } from '../../utils/format';
 import {
   listMetrics,
   searchMetrics,
@@ -19,11 +19,12 @@ const MetricOverview = ({ metrics }) => {
     dispatch(listMetrics());
   }, [metrics.searchString, dispatch]);
   const count = metrics.list.data.length;
+  const { queriedAt } = metrics.list.meta;
 
   return (
     <div className='page__component'>
       <section className='page__section page__section__header-wrapper'>
-        <h1 className='heading--large heading--shared-content with-description'>Metric Overview</h1>
+        {lastUpdated(queriedAt)}
       </section>
       <section className='page__section'>
         <div className='heading__wrapper--border'>

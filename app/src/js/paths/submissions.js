@@ -4,7 +4,7 @@ import tally from './tally';
 import { strings } from '../components/locale';
 
 const submissionRoutes = [
-  ['Overview', null],
+  ['', null],
   ['Completed', 'completed', (d) => d.key === 'completed'],
   ['Running', 'processing', (d) => d.key === 'running'],
   ['Failed', 'failed', (d) => d.key === 'failed']

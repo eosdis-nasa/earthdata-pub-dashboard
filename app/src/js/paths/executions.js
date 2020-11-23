@@ -3,7 +3,7 @@ import { encode } from '../utils/browser';
 // import executions from "../reducers/executions";
 
 const routes = [
-  ['Overview', null]
+  ['', null]
 ];
 
 const singleRoutes = [

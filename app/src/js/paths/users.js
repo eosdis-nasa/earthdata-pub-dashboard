@@ -2,7 +2,7 @@
 import tally from './tally';
 
 const userRoutes = [
-  ['Overview', null]
+  ['', null]
 ];
 
 const singleUserRoutes = [

@@ -76,7 +76,6 @@ class UsersOverview extends React.Component {
       <div className='page__component'>
         <section className='page__section'>
           <section className='page__section page__section__header-wrapper'>
-            <h1 className='heading--large heading--shared-content with-description'>User Overview</h1>
             {lastUpdated(queriedAt)}
           </section>
           <div className='heading__wrapper--border'>

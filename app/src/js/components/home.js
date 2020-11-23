@@ -192,7 +192,7 @@ class Home extends React.Component {
           <section className='page__section metrics--overview'>
             <div className='row'>
               <div className='heading__wrapper--border'>
-                <h2 className='heading--large heading--shared-content--right'>Metrics Overview</h2>
+                <h2 className='heading--large heading--shared-content--right'>Metrics</h2>
               </div>
             </div>
           </section>
