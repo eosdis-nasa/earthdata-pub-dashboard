@@ -12,6 +12,7 @@ import {
 import List from '../Table/Table';
 import Search from '../Search/search';
 import { tableColumns } from '../../utils/table-config/workflows';
+import ListFilters from '../ListActions/ListFilters';
 
 const WorkflowOverview = ({ workflows }) => {
   const dispatch = useDispatch();
@@ -31,25 +32,26 @@ const WorkflowOverview = ({ workflows }) => {
           <h2 className='heading--medium heading--shared-content with-description'>All Workflows <span className='num--title'>{count ? ` ${tally(count)}` : 0}</span></h2>
         </div>
         {/* Someone needs to define the search parameters for workflows, e.g. steps, collections, granules, etc. } */}
-        <div className='filters'>
-          <Search
-            dispatch={dispatch}
-            action={searchWorkflows}
-            clear={clearWorkflowsSearch}
-            label='Search'
-            placeholder="Workflow Name"
-          />
-        </div>
-
         <List
           list={workflows.list}
           dispatch={dispatch}
           action={listWorkflows}
           tableColumns={tableColumns}
           query={{}}
-          sortIdx='name'
+          bulkActions={[]}
           rowId='name'
-        />
+          sortIdx='name'
+        >
+          <ListFilters>
+            <Search
+              dispatch={dispatch}
+              action={searchWorkflows}
+              clear={clearWorkflowsSearch}
+              label='Search'
+              placeholder="Workflow Name"
+            />
+          </ListFilters>
+        </List>
       </section>
     </div>
   );
