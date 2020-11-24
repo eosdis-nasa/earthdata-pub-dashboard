@@ -212,6 +212,20 @@ export const listSubmissions = (options) => {
   };
 };
 
+export const listSubmissions2 = (options) => {
+  return (dispatch, getState) => {
+    const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
+    return dispatch({
+      [CALL_API]: {
+        type: types.SUBMISSIONS,
+        method: 'GET',
+        id: null,
+        url: new URL('submissions', root).href,
+        qs: Object.assign({ limit: defaultPageLimit }, options, timeFilters)
+      }
+    });
+  };
+};
 export const listGranules = (options) => {
   return (dispatch, getState) => {
     const timeFilters = fetchCurrentTimeFilters(getState().datepicker);

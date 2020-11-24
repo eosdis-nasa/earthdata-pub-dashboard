@@ -13,6 +13,16 @@ export const fullDate = function (datestring) {
   return moment(datestring).format('kk:mm:ss MM/DD/YY');
 };
 
+export const shortDateNoTime = function (datestring) {
+  if (!datestring) { return nullValue; }
+  return moment(datestring).format('MM/DD/YYYY');
+};
+
+export const shortDateNoTimeYearFirst = function (datestring) {
+  if (!datestring) { return nullValue; }
+  return moment(datestring).format('YYYY-MM-DD');
+};
+
 export const parseJson = function (jsonString) {
   const parsed = JSON.parse(jsonString);
   return JSON.stringify(parsed, null, 2);

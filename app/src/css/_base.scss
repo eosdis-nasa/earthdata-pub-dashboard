@@ -411,9 +411,12 @@ a:active {
 .page_section.metrics--overview .heading__wrapper--border {
   margin-top: 0em;
 }
+.wrapper--border {
+  border-bottom: 1px solid #e2dfdf;
+}
 
 .page__section.datetime{
-  margin-bottom: 7.5em;
+  margin-bottom: 9em;
 }
 
 .collection__options--top ul{

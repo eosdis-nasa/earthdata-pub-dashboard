@@ -23,6 +23,7 @@ To locate environment variables, see webpack.common.js:
 
 | Env Name | Description | Default |
 | -------- | ----------- | -------- |
+| OVERVIEW_URL | URL of the instructional overview of Earthdata Pub Dashboard | |
 | VUE_FORMS_URL | URL of the questions and answer forms that are outside of Earthdata Pub Dashboard | |
 | HIDE\_PDR | Whether to hide the PDR menu. | *true* |
 | AWS\_REGION | Region in which Earthdata Pub API is running. | *us-west-2*  |
