@@ -13,10 +13,10 @@ services:
       - APIROOT=http://localhost:8080
       - FORMS_URL=http://localhost:8081
       - OVERVIEW_URL=/
-      - HIDE_PDR=false
+      - HIDE_PDR=true
       - DAAC_NAME=local
       - STAGE=LOCALHOST-Development
-      - SHOW_DISTRIBUTION_API_METRICS=true
+      - SHOW_DISTRIBUTION_API_METRICS=false
       - SHOW_TEA_METRICS=false
       - AUTH_METHOD=earthdata
   shim:   # empty container to open ports
