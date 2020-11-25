@@ -2,18 +2,16 @@
 Earthdata Pub Dev Team
 ====================================================================================
 
-Product Owner: Lauren Frederick
-Scrum Master: Katherine "Katie" Kelly
+Product Owner: Will Ellett (GHRC)
+Scrum Master: Taylor Wright (GHRC)
 
 ------------------------------------------------------------------------------------
 
-/* Developers */
-Jacob Campbell
-Chuck Daniels
-Jenny Liu
-Matt Savoie
-Brian Tennity
+/* Architects */
+Ajinkya Kilkarni (GHRC)
+Daine Wright (ORNL DAAC)
 
-/* UI/UX */
-Juanisa McCoy
-Jeff Siarto
+/* Developers */
+Brian Ellingston (GHRC)
+Eddie Campos (GHRC)
+Kimberly Broughton (ORNL DAAC)
