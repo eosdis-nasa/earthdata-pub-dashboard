@@ -11,13 +11,14 @@ services:
       - ../:/dashboard:cached
     environment:
       - APIROOT=http://localhost:8080
-      - ESROOT=http://example.com
+      - FORMS_URL=http://localhost:8081
+      - OVERVIEW_URL=/
       - HIDE_PDR=false
       - DAAC_NAME=local
       - STAGE=LOCALHOST-Development
       - SHOW_DISTRIBUTION_API_METRICS=true
       - SHOW_TEA_METRICS=false
-      - AUTH_METHOD=none
+      - AUTH_METHOD=earthdata
   shim:   # empty container to open ports
     network_mode: "host"
     image: node:12.18.0

@@ -162,7 +162,7 @@ const CommonConfig = {
         ES_PASSWORD: config.esPassword,
         SERVED_BY_EDPUB_API: config.servedByEarthdatapubAPI,
         APP_ID: config.APP_ID,
-        VUE_FORMS_URL: config.vueFormsUrl,
+        FORMS_URL: config.formsUrl,
         OVERVIEW_URL: config.overviewUrl
       }
     )

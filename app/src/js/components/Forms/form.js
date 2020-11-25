@@ -164,7 +164,7 @@ class FormOverview extends React.Component {
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>{form.name} (Verson {form.version})</h1>
           {lastUpdated(form.updatedAt)}
-          <a className='button button--small button--green button--edit form-group__element--right' href={_config.vueFormsUrl}>Edit</a>
+          <a className='button button--small button--green button--edit form-group__element--right' href={_config.formsUrl}>Edit</a>
         </section>
 
         <section className='page__section'>

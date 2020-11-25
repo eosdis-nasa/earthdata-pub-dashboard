@@ -23,8 +23,8 @@ To locate environment variables, see webpack.common.js:
 
 | Env Name | Description | Default |
 | -------- | ----------- | -------- |
-| OVERVIEW_URL | URL of the instructional overview of Earthdata Pub Dashboard | |
-| VUE_FORMS_URL | URL of the questions and answer forms that are outside of Earthdata Pub Dashboard | |
+| OVERVIEW_URL | URL of the instructional overview of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/>* |
+| FORMS_URL | URL of the questions and answer forms that are outside of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/forms>* |
 | HIDE\_PDR | Whether to hide the PDR menu. | *true* |
 | AWS\_REGION | Region in which Earthdata Pub API is running. | *us-west-2*  |
 | DAAC\_NAME    | e.g. LPDAAC, | *Local* |
