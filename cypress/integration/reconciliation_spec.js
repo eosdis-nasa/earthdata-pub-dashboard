@@ -54,13 +54,13 @@ describe('Dashboard Reconciliation Reports Page', () => {
       cy.contains('dl dt', 'Files in DynamoDB and S3')
         .next('dd')
         .contains('129');
-      cy.contains('dl dt', 'Granules in Earthdatapub and CMR')
+      cy.contains('dl dt', 'Granules in Earthdata Pub and CMR')
         .next('dd')
         .contains('7');
-      cy.contains('dl dt', 'Granule files in Earthdatapub and CMR')
+      cy.contains('dl dt', 'Granule files in Earthdata Pub and CMR')
         .next('dd')
         .contains('4');
-      cy.contains('dl dt', 'Collections in Earthdatapub and CMR')
+      cy.contains('dl dt', 'Collections in Earthdata Pub and CMR')
         .next('dd')
         .contains('1');
 
@@ -100,7 +100,7 @@ describe('Dashboard Reconciliation Reports Page', () => {
 
       /** Collections **/
 
-      cy.contains('h3', 'Collections only in Earthdatapub (13)')
+      cy.contains('h3', 'Collections only in Earthdata Pub (13)')
         .next()
         .find('.table .tbody')
         .as('earthdata-pubCollectionsTable');
@@ -126,7 +126,7 @@ describe('Dashboard Reconciliation Reports Page', () => {
 
       /** Granules **/
 
-      cy.contains('h3', 'Granules only in Earthdatapub (7)')
+      cy.contains('h3', 'Granules only in Earthdata Pub (7)')
         .next()
         .find('.table .tbody')
         .as('earthdata-pubGranulesTable');
@@ -151,7 +151,7 @@ describe('Dashboard Reconciliation Reports Page', () => {
 
       /** Granule files **/
 
-      cy.contains('h3', 'Granule files only in Earthdatapub (1)')
+      cy.contains('h3', 'Granule files only in Earthdata Pub (1)')
         .next()
         .find('.table .tbody')
         .as('earthdata-pubGranulesFilesTable');

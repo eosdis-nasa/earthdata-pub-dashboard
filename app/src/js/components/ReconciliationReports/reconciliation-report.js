@@ -31,9 +31,9 @@ const reportMetaAccessors = [
   { label: 'Created', property: 'reportStartTime' },
   { label: 'Status', property: 'status' },
   { label: 'Files in DynamoDB and S3', property: 'filesInEarthdatapub.okCount' },
-  { label: 'Collections in Earthdatapub and CMR', property: 'collectionsInEarthdatapubCmr.okCount' },
-  { label: 'Granules in Earthdatapub and CMR', property: 'granulesInEarthdatapubCmr.okCount' },
-  { label: 'Granule files in Earthdatapub and CMR', property: 'filesInEarthdatapubCmr.okCount' }
+  { label: 'Collections in Earthdata Pub and CMR', property: 'collectionsInEarthdatapubCmr.okCount' },
+  { label: 'Granules in Earthdata Pub and CMR', property: 'granulesInEarthdatapubCmr.okCount' },
+  { label: 'Granule files in Earthdata Pub and CMR', property: 'filesInEarthdatapubCmr.okCount' }
 ];
 
 const parseFileObject = (d) => {
@@ -222,7 +222,7 @@ class ReconciliationReport extends React.Component {
 
           <ReportTable
             data={collectionsInEarthdatapub}
-            title='Collections only in Earthdatapub'
+            title='Collections only in Earthdata Pub'
             tableColumns={tableColumnsCollections}
           />
 
@@ -234,7 +234,7 @@ class ReconciliationReport extends React.Component {
 
           <ReportTable
             data={granulesInEarthdatapub}
-            title='Granules only in Earthdatapub'
+            title='Granules only in Earthdata Pub'
             tableColumns={tableColumnsGranules}
           />
 
@@ -246,7 +246,7 @@ class ReconciliationReport extends React.Component {
 
           <ReportTable
             data={granuleFilesOnlyInEarthdatapub}
-            title='Granule files only in Earthdatapub'
+            title='Granule files only in Earthdata Pub'
             tableColumns={tableColumnsFiles}
           />
 

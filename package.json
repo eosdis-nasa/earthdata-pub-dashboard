@@ -1,13 +1,13 @@
 {
   "name": "earthdata-pub-dashboard",
   "version": "0.1.0",
-  "description": "A dashboard for Earthdatapub API",
+  "description": "A dashboard for Earthdata Pub API",
   "repository": {
     "type": "git",
     "url": "https://git.earthdata.nasa.gov/scm/EDPUB/dashboard.git"
   },
   "author": {
-    "name": "Earthdatapub Dev Team"
+    "name": "Earthdata Pub Dev Team"
   },
   "license": "Apache-2.0",
   "bugs": {

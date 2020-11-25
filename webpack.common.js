@@ -134,7 +134,7 @@ const CommonConfig = {
     new HtmlWebPackPlugin({
       template: path.join(__dirname, 'app/src/template.html'),
       filename: 'index.html',
-      title: 'Earthdatapub Dashboard'
+      title: 'Earthdata Pub Dashboard'
     }),
     new webpack.HashedModuleIdsPlugin(),
     new CopyWebpackPlugin([
