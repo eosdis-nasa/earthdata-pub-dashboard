@@ -1,6 +1,6 @@
 {
   "name": "earthdata-pub-dashboard",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A dashboard for Earthdata Pub API",
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
     "node": ">=12.18.0"
   },
   "scripts": {
+    "clean-modules": "rm -rf package-lock.json node_modules/",
     "audit-ci": "audit-ci --high -p npm",
     "serve": "NODE_ENV=development webpack serve --config webpack.dev.js",
     "serve-hot": "NODE_ENV=development webpack serve --hot --config webpack.dev.js",
