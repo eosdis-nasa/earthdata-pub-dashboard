@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.1.1 - 2020-11-25
+
+- [Update humans.txt with EDPUB dev team members](764f316d78b6dd556551184d1a57c04eef53e053)
+- [remove cumulus logos](fceb4ae2ea54453877178827ab5a998aaddc324d)
+- [update APIROOT, FORMS_URL and OVERVIEW_URL in examples, defaults, and tests](a6b9f4955bc2006a06f0eec3c5732fe4a158679b)
+- [change Earthdatapub string to Earthdata Pub](a8816f724b3939f2a922f95fcaacd30ae644d011)
+
 ## 0.1.0 - 2020-10-31
 
 - [Remove unused dependencies and remove mock-api](52e33e8093cf64226fcde60909e01e024231a3db)
