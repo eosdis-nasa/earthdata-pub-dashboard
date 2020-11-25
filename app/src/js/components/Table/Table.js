@@ -24,7 +24,7 @@ class List extends React.Component {
     this.onBulkActionError = this.onBulkActionError.bind(this);
     this.getQueryConfig = this.getQueryConfig.bind(this);
 
-    const initialPage = 1;
+    const initialPage = 0;
     const initialSortIdx = props.sortIdx || 0;
     const initialOrder = 'desc';
 
@@ -38,7 +38,7 @@ class List extends React.Component {
       queryConfig: {
         page: initialPage,
         order: initialOrder,
-        sort_by: initialSortIdx,
+        sort: initialSortIdx,
         ...(props.query || {})
       },
       params: {},
@@ -79,7 +79,7 @@ class List extends React.Component {
       ...sortProps,
       queryConfig: this.getQueryConfig({
         order: sortProps.order,
-        sort_by: sortProps.sortIdx
+        sort: sortProps.sortIdx
       }),
       clearSelected: true
     });
@@ -117,7 +117,7 @@ class List extends React.Component {
     return omitBy({
       page: this.state.page,
       order: this.state.order,
-      sort_by: this.state.sortIdx,
+      sort: this.state.sortIdx,
       ...this.state.params,
       ...config,
       ...query

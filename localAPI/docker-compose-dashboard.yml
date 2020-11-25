@@ -1,9 +1,7 @@
-version: "3"
+version: "3.1"
 services:
   dashboard:
     image: node:12.18.0
-    depends_on:
-      - serve_api
     network_mode: "service:shim"
     command:
       bash -c "npm rebuild node-sass && npm run serve"
@@ -12,7 +10,7 @@ services:
     volumes:
       - ../:/dashboard:cached
     environment:
-      - APIROOT=http://localhost:5001
+      - APIROOT=http://localhost:8080
       - ESROOT=http://example.com
       - HIDE_PDR=false
       - DAAC_NAME=local
@@ -23,7 +21,6 @@ services:
   shim:   # empty container to open ports
     network_mode: "host"
     image: node:12.18.0
-    network_mode: "host"
     command:
       bash -c "tail -f /dev/null"
     working_dir:

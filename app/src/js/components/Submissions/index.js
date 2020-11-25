@@ -10,6 +10,7 @@ import AllSubmissions from './list';
 import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
 import SubmissionOverview from './submission';
 import SubmissionsOverview from './overview';
+import EditMetadata from './edit-metadata';
 import isEqual from 'lodash.isequal';
 
 const withQueryWrapper = (Component, onQueryChange) => (props) => {
@@ -57,6 +58,7 @@ const Submissions = ({
             <Switch>
               <Route exact path='/submissions' component={SubmissionsOverview} />
               <Route path='/submissions/submission/:submissionId' component={SubmissionOverview} />
+              <Route path='/submissions/metadata/:submissionId' component={EditMetadata} />
               <Route path='/submissions/completed' component={AllSubmissionsWithWrapper} />
               <Route path='/submissions/processing' component={AllSubmissionsWithWrapper} />
               <Route path='/submissions/failed' component={AllSubmissionsWithWrapper} />

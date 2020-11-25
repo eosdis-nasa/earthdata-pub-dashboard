@@ -10,6 +10,7 @@ export const strings = new LocalizedStrings({
     add_collection: 'Add Collection',
     all_collections: 'All Collections',
     all_granules: 'All Granules',
+    all_questions: 'All Questions',
     all_submissions: 'All Submissions',
     associated_collections: 'Associated Collections',
     back_to_collections: 'Back to Collections',
@@ -30,6 +31,8 @@ export const strings = new LocalizedStrings({
     granules: 'Granules',
     submission: 'Submission',
     submissions: 'Submissions',
+    question: 'Question',
+    questions: 'Questions',
     granules_updated: 'Granules Updated',
     granules_errors: 'Granules Errors',
     granule_overview: 'Granule Overview',
@@ -56,7 +59,8 @@ export const strings = new LocalizedStrings({
     running_submissions: 'Running Submissions',
     total_submissions: 'Total Submissions',
     view_all_submissions: 'View All Submissions',
-    view_submissions_overview: 'View Submissions'
+    view_submissions_overview: 'View Submissions',
+    view_questions_overview: 'View Questions',
   },
   gitc: {
     add_collection: 'Add Layer',
