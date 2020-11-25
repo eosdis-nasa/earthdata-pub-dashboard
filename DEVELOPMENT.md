@@ -219,7 +219,7 @@ source .env
 You can then serve the dashboard as normal using the following command:
 
 ```bash
-APIROOT=http://localhost:5001 npm run serve
+APIROOT=http://localhost:8080 npm run serve
 ```
 
 ## Writing CSS

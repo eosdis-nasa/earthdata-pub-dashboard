@@ -6,7 +6,7 @@ set -e
 
 cmd="$@"
 
-until curl --connect-timeout 5 -sS http://localhost:5001/version 2> /dev/null | grep 'api_version' > /dev/null; do
+until curl --connect-timeout 5 -sS http://localhost:8080/version 2> /dev/null | grep 'api_version' > /dev/null; do
   >&2 echo "Earthdata Pub localAPI is unavailable - sleeping"
   sleep 2
 done

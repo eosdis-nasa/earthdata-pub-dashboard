@@ -162,7 +162,7 @@ npm run stop-api
 ```
 
 Then you can run the dashboard locally (without docker)
-`[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:5001] npm run serve`
+`[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:8080] npm run serve`
 and open cypress tests `npm run cypress`.
 
 The docker compose stack also includes a command to let a developer start all
@@ -292,7 +292,7 @@ npm run serve-api
 Serve the dashboard web application (another terminal)
 
 ```bash
-[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:5001] npm run serve
+[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:8080] npm run serve
 ```
 
 If you're just testing dashboard code, you can generally run all of the above
