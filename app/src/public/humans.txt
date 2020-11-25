@@ -8,7 +8,7 @@ Scrum Master: Taylor Wright (GHRC)
 ------------------------------------------------------------------------------------
 
 /* Architects */
-Ajinkya Kilkarni (GHRC)
+Ajinkya Kulkarni (GHRC)
 Daine Wright (ORNL DAAC)
 
 /* Developers */
