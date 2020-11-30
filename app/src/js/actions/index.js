@@ -244,21 +244,6 @@ export const listQuestions = (options) => {
   };
 };
 
-export const listSubmissions2 = (options) => {
-  return (dispatch, getState) => {
-    const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
-    return dispatch({
-      [CALL_API]: {
-        type: types.SUBMISSIONS,
-        method: 'GET',
-        id: null,
-        url: new URL('submissions', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, options, timeFilters)
-      }
-    });
-  };
-};
-
 export const getModel = (model) => ({
   [CALL_API]: {
     type: types.MODEL,
@@ -478,7 +463,7 @@ export const getOptionsSubmissionName = (options) => ({
   [CALL_API]: {
     type: types.OPTIONS_SUBMISSIONNAME,
     method: 'GET',
-    url: new URL('submissions', root).href,
+    url: new URL('data/submissions', root).href,
     qs: { limit: 100, fields: 'name' }
   }
 });
