@@ -16,7 +16,7 @@ export default createReducer(initialState, {
       ...fromPairs([
         ['cmrEnvironment', get(data, 'cmr.environment')],
         ['cmrProvider', get(data, 'cmr.provider')],
-        ['stackName', get(data, 'earthdata-pub.stackName')]
+        ['stackName', get(data, 'earthdatapub.stackName')]
       ].filter(([_, value]) => value))
     };
   }
