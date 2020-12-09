@@ -884,6 +884,75 @@ export const clearGroupsSearch = () => ({ type: types.CLEAR_GROUPS_SEARCH });
 export const filterGroups = (param) => ({ type: types.FILTER_GROUPS, param: param });
 export const clearGroupsFilter = (paramKey) => ({ type: types.CLEAR_GROUPS_FILTER, paramKey: paramKey });
 
+export const listRoles = (options = {}) => {
+  const { listAll = false, ...queryOptions } = options;
+  return (dispatch, getState) => {
+    const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
+    return dispatch({
+      [CALL_API]: {
+        type: types.ROLES,
+        method: 'GET',
+        url: new URL('roles', root).href,
+        qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
+      }
+    });
+  };
+};
+
+export const getOptionsRoleGroup = () => ({
+  [CALL_API]: {
+    type: types.OPTIONS_ROLEGROUP,
+    method: 'GET',
+    url: new URL('roles', root).href,
+    qs: { limit: 100, fields: 'roleName' }
+  }
+});
+
+export const getRole = (roleId) => ({
+  [CALL_API]: {
+    type: types.ROLE,
+    id: roleId,
+    method: 'GET',
+    path: `roles/${roleId}`
+  }
+});
+
+export const createRole = (roleId, payload) => ({
+  [CALL_API]: {
+    type: types.NEW_ROLE,
+    id: roleId,
+    method: 'POST',
+    path: 'roles',
+    body: payload
+  }
+});
+
+export const updateRole = (roleId, payload) => ({
+  [CALL_API]: {
+    type: types.UPDATE_ROLE,
+    id: roleId,
+    method: 'PUT',
+    path: `roles/${roleId}`,
+    body: payload
+  }
+});
+
+export const clearUpdateRole = (roleId) => ({ type: types.UPDATE_ROLE_CLEAR, id: roleId });
+
+export const deleteRole = (roleId) => ({
+  [CALL_API]: {
+    type: types.ROLE_DELETE,
+    id: roleId,
+    method: 'DELETE',
+    path: `roles/${roleId}`
+  }
+});
+
+export const searchRoles = (prefix) => ({ type: types.SEARCH_ROLES, prefix: prefix });
+export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
+export const filterRoles = (param) => ({ type: types.FILTER_ROLES, param: param });
+export const clearRolesFilter = (paramKey) => ({ type: types.CLEAR_ROLES_FILTER, paramKey: paramKey });
+
 export const deletePdr = (pdrName) => ({
   [CALL_API]: {
     type: types.PDR_DELETE,
