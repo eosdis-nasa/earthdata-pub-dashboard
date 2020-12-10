@@ -24,11 +24,11 @@ import Pdrs from './components/Pdr';
 import Providers from './components/Providers';
 import Users from './components/Users';
 import Groups from './components/Groups';
-import Roles from './components/Roles';
 import Forms from './components/Forms';
 import Questions from './components/Questions';
 import Workflows from './components/Workflows';
 import Metrics from './components/Metrics';
+import Roles from './components/Roles';
 import Executions from './components/Executions';
 import Operations from './components/Operations';
 import Rules from './components/Rules';
@@ -58,9 +58,9 @@ const MainRoutes = () => {
         <Route path='/questions' component={Questions} />
         <Route path='/users' component={Users} />
         <Route path='/groups' component={Groups} />
-        <Route path='/roles' component={Roles} />
         <Route path='/workflows' component={Workflows} />
         <Route path='/metrics' component={Metrics} />
+        <Route path='/roles' component={Roles} />
         <Route path='/executions' component={Executions} />
         <Route path='/operations' component={Operations} />
         <Route path='/rules' component={Rules} />

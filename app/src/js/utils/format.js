@@ -143,6 +143,10 @@ export const metricLink = function (metricId) {
   if (metricId) return nullValue;
   return <Link to={`/metrics/metric/${metricId}`}>{metricId}</Link>;
 };
+export const roleLink = function (roleId) {
+  if (roleId) return nullValue;
+  return <Link to={`/roles/role/${roleId}`}>{roleId}</Link>;
+};
 export const messageLink = function (message) {
   if (!message) return nullValue;
   return <Link to={`/messages/message/${message}`}>{message}</Link>;

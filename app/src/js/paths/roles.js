@@ -1,29 +1,26 @@
 'use strict';
-import tally from './tally';
-
-const roleRoutes = [
+const routes = [
   ['Overview', null]
 ];
 
-const singleRoleRoutes = [
+const singleRoutes = [
   ['Back to Roles', null, 'sidebar__nav--back']
 ];
 
 const empty = [['', '']];
 
-const roles = {
+const handler = {
   base: 'roles',
   heading: 'Roles',
-  routes: (currentRoute, params, count) => {
-    if (currentRoute.indexOf('/roles/role') >= 0) {
-      return singleRoleRoutes;
-    } else if (currentRoute.slice(0, 10) !== '/roles') {
+  routes: (currentRoute, params) => {
+    if (currentRoute.indexOf('roles/role') >= 0) {
+      return singleRoutes;
+    } else if (currentRoute.slice(0, 8) !== '/roles') {
       return empty;
     } else {
-      count = count || [];
-      return roleRoutes.map(d => tally(d, count));
+      return routes;
     }
   }
 };
 
-export default roles;
+export default handler;
