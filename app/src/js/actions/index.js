@@ -982,6 +982,17 @@ export const listMetrics = (options) => ({
 export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });
 export const clearMetricsSearch = () => ({ type: types.CLEAR_METRICS_SEARCH });
 
+export const listRoles = (options) => ({
+  [CALL_API]: {
+    type: types.ROLES,
+    method: 'GET',
+    url: new URL('roles', root).href,
+    qs: Object.assign({ limit: defaultPageLimit }, options)
+  }
+});
+export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
+export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
+
 export const searchExecutionEvents = (searchString) => ({ type: types.SEARCH_EXECUTION_EVENTS, searchString });
 export const clearExecutionEventsSearch = () => ({ type: types.CLEAR_EXECUTION_EVENTS_SEARCH });
 
