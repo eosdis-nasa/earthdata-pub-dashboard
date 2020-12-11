@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [remove cumulus logos](fceb4ae2ea54453877178827ab5a998aaddc324d)
 - [update APIROOT, FORMS_URL and OVERVIEW_URL in examples, defaults, and tests](a6b9f4955bc2006a06f0eec3c5732fe4a158679b)
 - [change Earthdatapub string to Earthdata Pub](a8816f724b3939f2a922f95fcaacd30ae644d011)
+- [removed env file and removed add user button](b39bdbff8c9d6ce2e7f2d5e62e26b8d89fdde546)
+- [updated favicon and logo](452c4bccb10c834c618c7634d0b2447709b47866)
+- [removed the term 'overview' from pages and sidebars](280b119fe6842e7263095ace8ba27d2201d7f27b)
+- [Added short date formats; updated config for overview_url; updated homepage](f7387a1779a805532b043115ecbf81285401dc8d)
+- [fixed bad changes to overviews](d67ed627e936e02162a65dc5073e9f039196b0ee)
+- [changed to real dates instead of 'fromnow' dates](fdd1f3a3db380e4fa8046f277da3dbe4aa56f9da)
 
 ## 0.1.0 - 2020-10-31
 
