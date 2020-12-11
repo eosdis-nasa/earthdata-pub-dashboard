@@ -14,7 +14,7 @@ import { tally } from '../../utils/format';
 const { logsUpdateInterval } = _config;
 
 const noLogs = {
-  displayText: 'There are no Earthdatapub logs from the past 48 hours.',
+  displayText: 'There are no Earthdata Pub logs from the past 48 hours.',
   level: 'meta',
   key: 'no-logs-message'
 };

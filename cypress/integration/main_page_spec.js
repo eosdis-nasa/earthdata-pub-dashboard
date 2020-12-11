@@ -58,7 +58,7 @@ describe('Dashboard Home Page', () => {
       cy.visit('/');
     });
 
-    it('displays a compatible Earthdatapub API Version number', () => {
+    it('displays a compatible Earthdata Pub API Version number', () => {
       const apiVersionNumber = 'a.b.c';
       cy.window().its('appStore').then((store) => {
         store.dispatch({

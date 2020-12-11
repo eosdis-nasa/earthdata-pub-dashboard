@@ -77,7 +77,7 @@ describe('Dashboard Executions Page', () => {
       cy.visit('/executions');
       cy.route({
         method: 'GET',
-        url: `http://localhost:5001/executions/status/${executionArn}`,
+        url: `http://localhost:8080/executions/status/${executionArn}`,
         response: 'fixture:valid-execution.json',
         status: 200
       });
@@ -112,13 +112,13 @@ describe('Dashboard Executions Page', () => {
       cy.server();
       cy.route({
         method: 'GET',
-        url: `http://localhost:5001/executions/status/${executionArn}`,
+        url: `http://localhost:8080/executions/status/${executionArn}`,
         response: 'fixture:valid-execution.json',
         status: 200
       });
       cy.route({
         method: 'GET',
-        url: `http://localhost:5001/logs/${executionName}`,
+        url: `http://localhost:8080/logs/${executionName}`,
         response: 'fixture:execution-logs.json',
         status: 200
       });
@@ -161,7 +161,7 @@ describe('Dashboard Executions Page', () => {
       cy.server();
       cy.route({
         method: 'GET',
-        url: `http://localhost:5001/executions/status/${executionArn}`,
+        url: `http://localhost:8080/executions/status/${executionArn}`,
         response: 'fixture:valid-execution.json',
         status: 200
       });
@@ -212,7 +212,7 @@ describe('Dashboard Executions Page', () => {
       cy.server();
       cy.route({
         method: 'GET',
-        url: `http://localhost:5001/logs/${executionName}`,
+        url: `http://localhost:8080/logs/${executionName}`,
         response: 'fixture:limited-execution.json',
         status: 200
       });
@@ -264,7 +264,7 @@ describe('Dashboard Executions Page', () => {
       cy.server();
       cy.route({
         method: 'GET',
-        url: `http://localhost:5001/executions/status/${executionArn}`,
+        url: `http://localhost:8080/executions/status/${executionArn}`,
         response: 'fixture:valid-execution.json',
         status: 200
       });

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { get } from 'object-path';
 import cloneDeep from 'lodash.clonedeep';
 import {
@@ -76,14 +76,10 @@ class UsersOverview extends React.Component {
       <div className='page__component'>
         <section className='page__section'>
           <section className='page__section page__section__header-wrapper'>
-            <h1 className='heading--large heading--shared-content with-description'>User Overview</h1>
             {lastUpdated(queriedAt)}
           </section>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content'>Users <span className='num--title'>{count ? `${count}` : 0}</span></h2>
-          </div>
-          <div className='filter__button--add'>
-            <Link className='button button--green button--add button--small form-group__element' to='/users/add'>Add User</Link>
           </div>
           <List
             list={mutableList}

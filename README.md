@@ -23,7 +23,8 @@ To locate environment variables, see webpack.common.js:
 
 | Env Name | Description | Default |
 | -------- | ----------- | -------- |
-| VUE_FORMS_URL | URL of the questions and answer forms that are outside of Earthdata Pub Dashboard | |
+| OVERVIEW_URL | URL of the instructional overview of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/>* |
+| FORMS_URL | URL of the questions and answer forms that are outside of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/forms>* |
 | HIDE\_PDR | Whether to hide the PDR menu. | *true* |
 | AWS\_REGION | Region in which Earthdata Pub API is running. | *us-west-2*  |
 | DAAC\_NAME    | e.g. LPDAAC, | *Local* |
@@ -161,7 +162,7 @@ npm run stop-api
 ```
 
 Then you can run the dashboard locally (without docker)
-`[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:5001] npm run serve`
+`[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:8080] npm run serve`
 and open cypress tests `npm run cypress`.
 
 The docker compose stack also includes a command to let a developer start all
@@ -291,7 +292,7 @@ npm run serve-api
 Serve the dashboard web application (another terminal)
 
 ```bash
-[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:5001] npm run serve
+[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:8080] npm run serve
 ```
 
 If you're just testing dashboard code, you can generally run all of the above

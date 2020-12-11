@@ -168,10 +168,14 @@ a:active {
   h1 {
     float: left;
     margin-right: 2.5em;
-    padding-top: 1.3em;
+    color:white;
+    font-weight: 1000;
+    text-align: center;
+    max-height: 15px;
     img {
-      height: 26px;
-      width: 165px;
+      padding-top: 7px;
+      height: 30px;
+      width: 60px;
     }
   }
   nav{
@@ -407,9 +411,12 @@ a:active {
 .page_section.metrics--overview .heading__wrapper--border {
   margin-top: 0em;
 }
+.wrapper--border {
+  border-bottom: 1px solid #e2dfdf;
+}
 
 .page__section.datetime{
-  margin-bottom: 7.5em;
+  margin-bottom: 9em;
 }
 
 .collection__options--top ul{

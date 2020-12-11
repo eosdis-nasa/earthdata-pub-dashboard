@@ -2,7 +2,7 @@
 import tally from './tally';
 
 const formRoutes = [
-  ['Overview', null]
+  ['', null]
 ];
 
 const singleFormRoutes = [

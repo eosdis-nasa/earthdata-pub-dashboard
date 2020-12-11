@@ -41,14 +41,14 @@ export const strings = new LocalizedStrings({
     granules_failed: 'Granule Failed',
     submissions_updated: 'Submissions Updated',
     submissions_errors: 'Submissions Errors',
-    submission_overview: 'Submission Overview',
+    submission_overview: 'Submissions',
     submissions_running: 'Submissions Running',
     submissions_completed: 'Submissions Completed',
     submissions_failed: 'Submissions Failed',
     submissions_submitted: 'Submissions Submitted',
     submissions_inprogress: 'Submissions In-Progress',
     submissions_reviewed: 'Submissions Reviewed',
-    logo: 'earthdatapub-logo.png',
+    logo: 'edpub-logo-white-30-x-60.png',
     operations: 'Operations',
     pdrs: 'Pdrs',
     remove_from_cmr: 'Remove from CMR',
@@ -59,8 +59,8 @@ export const strings = new LocalizedStrings({
     running_submissions: 'Running Submissions',
     total_submissions: 'Total Submissions',
     view_all_submissions: 'View All Submissions',
-    view_submissions_overview: 'View Submissions Overview',
-    view_questions_overview: 'View Questions Overview',
+    view_submissions_overview: 'View Submissions',
+    view_questions_overview: 'View Questions',
   },
   gitc: {
     add_collection: 'Add Layer',
@@ -96,7 +96,7 @@ export const strings = new LocalizedStrings({
     submissions_errors: 'Products Errors',
     submissions_completed: 'Products Completed',
     submissions_failed: 'Products Failed',
-    submission_overview: 'Product Overview',
+    submission_overview: 'Products',
     submissions_running: 'Products Running',
     logo: 'gitc-logo.png',
     operations: 'Operations',
@@ -107,6 +107,6 @@ export const strings = new LocalizedStrings({
     view_all_granules: 'View All Products',
     view_all_submissions: 'View All Products',
     view_granules_overview: 'View Product Overview',
-    view_submissions_overview: 'View Product Overview'
+    view_submissions_overview: 'View Products'
   }
 }, getCustomInterfaceLanguage);
