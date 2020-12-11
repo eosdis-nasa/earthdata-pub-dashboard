@@ -21,11 +21,11 @@ const paths = [
   // ['Rules', '/rules'],
   // ['Logs', '/logs'],
   ['Metrics', '/metrics'],
-  ['Roles', '/roles'],
   // ['Reconciliation Reports', '/reconciliation-reports']
   // ['Forms', '/forms'],
   ['Users', '/users'],
   ['Groups', '/groups'],
+  ['Roles', '/roles'],
 ];
 
 class Header extends React.Component {
