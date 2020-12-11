@@ -59,7 +59,7 @@ class LoginModal extends React.Component {
               aria-labelledby="modal__login-modal"
             >
               <Modal.Header className="login-modal__header" closeButton></Modal.Header>
-              <Modal.Title id="modal__login-modal" className="login-modal__title">Log in to Earthdatapub</Modal.Title>
+              <Modal.Title id="modal__login-modal" className="login-modal__title">Log in to Earthdata Pub</Modal.Title>
               <Modal.Body>
                 <p className='metadata__updated'>{ authenticated ? <strong>Success!</strong> : 'Enter your username and password' }</p>
                 <form>

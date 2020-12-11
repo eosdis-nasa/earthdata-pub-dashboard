@@ -9,7 +9,7 @@ import Footer from '../../../app/src/js/components/Footer/footer.js';
 
 configure({ adapter: new Adapter() });
 
-test('Earthdatapub API Version is not shown on the dashboard when not logged in', function (t) {
+test('Earthdata Pub API Version is not shown on the dashboard when not logged in', function (t) {
   const api = { };
   const apiVersion = {
     versionNumber: '1.11.0',
@@ -27,7 +27,7 @@ test('Earthdatapub API Version is not shown on the dashboard when not logged in'
   t.false(footerWrapper.exists('.api__version'));
 });
 
-test('Earthdatapub API Version is shown on the dashboard', function (t) {
+test('Earthdata Pub API Version is shown on the dashboard', function (t) {
   const api = { authenticated: true };
   const apiVersion = {
     versionNumber: '1.11.0',
@@ -43,12 +43,12 @@ test('Earthdatapub API Version is shown on the dashboard', function (t) {
   );
 
   const apiVersionNumber = footerWrapper.find('[className="api__version"]');
-  t.is(`Earthdatapub API Version: ${apiVersion.versionNumber}`, apiVersionNumber.text());
+  t.is(`Earthdata Pub API Version: ${apiVersion.versionNumber}`, apiVersionNumber.text());
   const hasApiWarning = footerWrapper.hasClass('api__warning');
   t.false(hasApiWarning);
 });
 
-test('Warning is shown when Earthdatapub API Version is not compatible with dashboard', function (t) {
+test('Warning is shown when Earthdata Pub API Version is not compatible with dashboard', function (t) {
   const api = { authenticated: true };
   const apiVersion = {
     versionNumber: '1.0.0',

@@ -2,7 +2,7 @@
 import tally from './tally';
 
 const providerRoutes = [
-  ['Overview', null]
+  ['', null]
 ];
 
 const singleProviderRoutes = [

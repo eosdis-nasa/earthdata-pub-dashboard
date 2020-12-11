@@ -62,6 +62,16 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
  
+.heading--overview {
+  font-size: 1.125em;
+  font-weight: 400;
+  margin-top:2rem;
+}
+
+.heading--overview--wbutton {
+  display:inline-flex;
+  vertical-align:sub;
+}
 
 .with-description {
   margin-bottom: .1em;

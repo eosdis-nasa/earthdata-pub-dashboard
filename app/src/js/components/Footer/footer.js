@@ -20,7 +20,7 @@ class Footer extends React.Component {
       <div className='footer'>
         <div className='api__summary' role="contentinfo" aria-label="Earthdata Pub API Version">
           { authenticated &&
-            <h2 className='api__version'>Earthdatapub API Version: { versionNumber }</h2>
+            <h2 className='api__version'>Earthdata Pub API Version: { versionNumber }</h2>
           }
           { versionWarning }
         </div>
