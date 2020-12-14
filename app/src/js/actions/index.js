@@ -110,7 +110,7 @@ export const checkApiVersion = () => {
       dispatch({
         type: types.API_VERSION_INCOMPATIBLE,
         payload: {
-          warning: `Dashboard incompatible with Earthdatapub API version (${versionNumber}), dashboard requires (>= ${minCompatibleApiVersion})`
+          warning: `Dashboard incompatible with Earthdata Pub API version (${versionNumber}), dashboard requires (>= ${minCompatibleApiVersion})`
         }
       });
     }
@@ -463,7 +463,7 @@ export const getOptionsSubmissionName = (options) => ({
   [CALL_API]: {
     type: types.OPTIONS_SUBMISSIONNAME,
     method: 'GET',
-    url: new URL('submissions', root).href,
+    url: new URL('data/submissions', root).href,
     qs: { limit: 100, fields: 'name' }
   }
 });
@@ -986,7 +986,7 @@ export const listRoles = (options) => ({
   [CALL_API]: {
     type: types.ROLES,
     method: 'GET',
-    url: new URL('roles', root).href,
+    url: new URL('data/roles', root).href,
     qs: Object.assign({ limit: defaultPageLimit }, options)
   }
 });

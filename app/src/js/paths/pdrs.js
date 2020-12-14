@@ -2,7 +2,7 @@
 import tally from './tally';
 
 const pdrRoutes = [
-  ['Overview', null],
+  ['', null],
   ['Completed', 'completed', (d) => d.key === 'completed'],
   ['Active', 'active', (d) => d.key === 'running'],
   ['Failed', 'failed', (d) => d.key === 'failed']

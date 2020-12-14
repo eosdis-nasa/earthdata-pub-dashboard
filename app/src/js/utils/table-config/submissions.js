@@ -3,8 +3,9 @@ import React from 'react';
 import { get } from 'object-path';
 import { Link } from 'react-router-dom';
 import {
-  fromNow,
+  shortDateNoTimeYearFirst,
   nullValue,
+  fromNow,
   displayCase,
   submissionLink,
   dataSubmissionRequestLink,
@@ -52,7 +53,7 @@ export const tableColumns = [
   },
   {
     Header: 'Submission Date',
-    accessor: row => fromNow(row.submitted),
+    accessor: row => shortDateNoTimeYearFirst(row.submitted),
     id: 'submitted'
   },
   {
@@ -74,7 +75,7 @@ export const tableColumns = [
   },
   {
     Header: 'Latest Edit',
-    accessor: row => fromNow(row.timestamp),
+    accessor: row => shortDateNoTimeYearFirst(row.timestamp),
     id: 'timestamp'
   }
 ];

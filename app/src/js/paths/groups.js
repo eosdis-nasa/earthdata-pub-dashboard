@@ -2,7 +2,7 @@
 import tally from './tally';
 
 const groupRoutes = [
-  ['Overview', null]
+  ['', null]
 ];
 
 const singleGroupRoutes = [
