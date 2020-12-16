@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { fromNow } from '../format';
+import { shortDateNoTimeYearFirst } from '../format';
 
 export const tableColumns = [
   {
@@ -21,12 +21,12 @@ export const tableColumns = [
   },
   {
     Header: 'Created',
-    accessor: row => fromNow(row.createdAt),
+    accessor: row => shortDateNoTimeYearFirst(row.createdAt),
     id: 'createdAt'
   },
   {
     Header: 'Last Updated',
-    accessor: row => fromNow(row.timestamp),
+    accessor: row => shortDateNoTimeYearFirst(row.timestamp),
     id: 'timestamp'
   }
 ];

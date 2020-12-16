@@ -25,7 +25,7 @@ export default createReducer(initialState, {
     return {
       ...state,
       apiVersion: action.payload.error.message,
-      warning: 'Failed to acquire Earthdatapub API Version'
+      warning: 'Failed to acquire Earthdata Pub API Version'
     };
   },
   [API_VERSION_COMPATIBLE]: (state, action) => {

@@ -1,6 +1,6 @@
 'use strict';
 import test from 'ava';
-import reducer from '../../app/src/js/reducers/earthdata-pub-instance';
+import reducer from '../../app/src/js/reducers/earthdatapub-instance';
 import { ADD_INSTANCE_META } from '../../app/src/js/actions/types';
 
 test('verify initial state', (t) => {

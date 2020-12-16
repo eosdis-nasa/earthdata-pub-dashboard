@@ -110,7 +110,7 @@ export const checkApiVersion = () => {
       dispatch({
         type: types.API_VERSION_INCOMPATIBLE,
         payload: {
-          warning: `Dashboard incompatible with Earthdatapub API version (${versionNumber}), dashboard requires (>= ${minCompatibleApiVersion})`
+          warning: `Dashboard incompatible with Earthdata Pub API version (${versionNumber}), dashboard requires (>= ${minCompatibleApiVersion})`
         }
       });
     }
@@ -463,7 +463,7 @@ export const getOptionsSubmissionName = (options) => ({
   [CALL_API]: {
     type: types.OPTIONS_SUBMISSIONNAME,
     method: 'GET',
-    url: new URL('submissions', root).href,
+    url: new URL('data/submissions', root).href,
     qs: { limit: 100, fields: 'name' }
   }
 });
@@ -981,6 +981,17 @@ export const listMetrics = (options) => ({
 });
 export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });
 export const clearMetricsSearch = () => ({ type: types.CLEAR_METRICS_SEARCH });
+
+export const listRoles = (options) => ({
+  [CALL_API]: {
+    type: types.ROLES,
+    method: 'GET',
+    url: new URL('data/roles', root).href,
+    qs: Object.assign({ limit: defaultPageLimit }, options)
+  }
+});
+export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
+export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
 
 export const searchExecutionEvents = (searchString) => ({ type: types.SEARCH_EXECUTION_EVENTS, searchString });
 export const clearExecutionEventsSearch = () => ({ type: types.CLEAR_EXECUTION_EVENTS_SEARCH });

@@ -13,6 +13,16 @@ export const fullDate = function (datestring) {
   return moment(datestring).format('kk:mm:ss MM/DD/YY');
 };
 
+export const shortDateNoTime = function (datestring) {
+  if (!datestring) { return nullValue; }
+  return moment(datestring).format('MM/DD/YYYY');
+};
+
+export const shortDateNoTimeYearFirst = function (datestring) {
+  if (!datestring) { return nullValue; }
+  return moment(datestring).format('YYYY-MM-DD');
+};
+
 export const parseJson = function (jsonString) {
   const parsed = JSON.parse(jsonString);
   return JSON.stringify(parsed, null, 2);
@@ -142,6 +152,10 @@ export const workflowLink = function (name) {
 export const metricLink = function (metricId) {
   if (metricId) return nullValue;
   return <Link to={`/metrics/metric/${metricId}`}>{metricId}</Link>;
+};
+export const roleLink = function (roleId) {
+  if (roleId) return nullValue;
+  return <Link to={`/roles/role/${roleId}`}>{roleId}</Link>;
 };
 export const messageLink = function (message) {
   if (!message) return nullValue;

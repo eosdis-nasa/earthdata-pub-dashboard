@@ -25,6 +25,7 @@ const paths = [
   // ['Forms', '/forms'],
   ['Users', '/users'],
   ['Groups', '/groups'],
+  ['Roles', '/roles'],
 ];
 
 class Header extends React.Component {
@@ -77,7 +78,7 @@ class Header extends React.Component {
     return (
       <div className='header' role="navigation" aria-label="Header">
         <div className='row'>
-          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={logoPath} /></Link></h1>
+          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={logoPath} /></Link><div id="logo_words">EDPUB</div></h1>
           <nav>
             { !this.props.minimal ? <ul>
               {activePaths.map(path => <li

@@ -9,11 +9,12 @@ import questions from './questions';
 import users from './users';
 import groups from './groups';
 // import errors from './errors';
+import roles from './roles';
 import workflows from './workflows';
 // import executions from './executions';
 // import operations from './operations';
 // import rules from './rules';
 // import reconciliationReports from './reconciliation-reports';
 
-const paths = [submissions, forms, questions, users, groups, workflows];
+const paths = [submissions, forms, questions, users, groups, workflows, roles];
 export default paths;

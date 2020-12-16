@@ -149,6 +149,12 @@ export const METRICS_INFLIGHT = 'METRICS_INFLIGHT';
 export const METRICS_ERROR = 'METRICS_ERROR';
 export const SEARCH_METRICS = 'SEARCH_METRICS';
 export const CLEAR_METRICS_SEARCH = 'CLEAR_METRICS_SEARCH';
+// Roles
+export const ROLES = 'ROLES';
+export const ROLES_INFLIGHT = 'ROLES_INFLIGHT';
+export const ROLES_ERROR = 'ROLES_ERROR';
+export const SEARCH_ROLES = 'SEARCH_ROLES';
+export const CLEAR_ROLES_SEARCH = 'CLEAR_ROLES_SEARCH';
 // Logs
 export const LOGS = 'LOGS';
 export const LOGS_INFLIGHT = 'LOGS_INFLIGHT';

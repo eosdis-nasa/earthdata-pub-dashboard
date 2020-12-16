@@ -1,4 +1,9 @@
-
+#overview_button{
+  margin-left:1rem;
+  padding: .25em .5em .5em .5em;
+  height:2rem;
+  margin-bottom:.2em;
+}
 .button {
   position: relative;
   padding: .65em 1.2em .65em 2.5em;
@@ -129,6 +134,22 @@
     }
   }
 
+  &--eui-green{
+    background-color: $light-green;
+    color: $white;
+    border: none;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    position: relative;
+  
+    &:hover{
+      &:hover {
+        background-color: darken($light-green, 5%);
+      }
+    }
+  }
   &--close{
     padding: .65em 1.2em .65em 1.2em;
   }

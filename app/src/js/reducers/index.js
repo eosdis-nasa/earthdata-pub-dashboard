@@ -21,6 +21,7 @@ import logs from './logs';
 import schema from './schema';
 import workflows from './workflows';
 import metrics from './metrics';
+import roles from './roles';
 import executions from './executions';
 import executionStatus from './execution-status';
 import executionLogs from './execution-logs';
@@ -57,6 +58,7 @@ export const reducers = {
   schema,
   workflows,
   metrics,
+  roles,
   executions,
   executionStatus,
   executionLogs,

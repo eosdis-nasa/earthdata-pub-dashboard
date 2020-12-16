@@ -23,7 +23,7 @@ import { initialState } from '../../app/src/js/reducers/datepicker';
 const middlewares = [requestMiddleware, thunk];
 const mockStore = configureMockStore(middlewares);
 
-test('listGranules injects timestamps from datepicker state when calling the Earthdatapub API.', (t) => {
+test('listGranules injects timestamps from datepicker state when calling the Earthdata Pub API.', (t) => {
   const testState = { ...initialState };
   const startDateTime = new Date('2020-01-18T13:05:00.000Z');
   const endDateTime = new Date('2020-02-10T20:55:00.000Z');
@@ -59,7 +59,7 @@ test('listGranules does not inject information if datepicker state has no start 
   t.false('timestamp__to' in dispatchedAction.config.qs);
 });
 
-test('Each of these list action creators will pull data from datepicker state when calling the Earthdatapub API.', (t) => {
+test('Each of these list action creators will pull data from datepicker state when calling the Earthdata Pub API.', (t) => {
   const endpoints = [
     { action: 'COLLECTIONS_INFLIGHT', dispatcher: listCollections },
     { action: 'EXECUTIONS_INFLIGHT', dispatcher: listExecutions },
@@ -92,7 +92,7 @@ test('Each of these list action creators will pull data from datepicker state wh
   });
 });
 
-test('Each of these list action creators will not use data from datepicker state when calling the Earthdatapub API.', (t) => {
+test('Each of these list action creators will not use data from datepicker state when calling the Earthdata Pub API.', (t) => {
   const endpoints = [
     { action: 'WORKFLOWS_INFLIGHT', dispatcher: listWorkflows },
     { action: 'RECONCILIATIONS_INFLIGHT', dispatcher: listReconciliationReports },
