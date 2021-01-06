@@ -61,6 +61,10 @@ export const refreshAccessToken = (token) => {
   };
 };
 
+export const login = (token) => ({
+  type: types.LOGIN,
+  token });
+
 export const setTokenState = (token) => ({ type: types.SET_TOKEN, token });
 
 export const interval = function (action, wait, immediate) {
@@ -915,20 +919,6 @@ export const logout = () => {
       .then(() => dispatch({ type: types.LOGOUT }));
   };
 };
-
-export const login = (token) => ({
-  [CALL_API]: {
-    type: types.LOGIN,
-    id: 'auth',
-    method: 'GET',
-    url: new URL('granules', root).href,
-    qs: { limit: 1, fields: 'granuleId' },
-    skipAuth: true,
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  }
-});
 
 export const deleteToken = () => {
   return (dispatch, getState) => {
