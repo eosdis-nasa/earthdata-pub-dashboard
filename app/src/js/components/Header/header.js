@@ -38,18 +38,15 @@ class Header extends React.Component {
   }
 
   componentDidMount () {
-    const { dispatch, api } = this.props;
-    if (api.authenticated) dispatch(getApiVersion());
+    const { dispatch } = this.props;
+    dispatch(getApiVersion());
     dispatch(getEarthdatapubInstanceMetadata());
   }
 
   logout () {
-    const { dispatch } = this.props;
-    dispatch(logout()).then(() => {
-      if (window.location && window.location.reload) {
-        window.location.reload();
-      }
-    });
+    const { dispatch, history } = this.props;
+    dispatch(logout());
+    history.push('/');
   }
 
   className (path) {
@@ -97,6 +94,7 @@ Header.propTypes = {
   api: PropTypes.object,
   dispatch: PropTypes.func,
   location: PropTypes.object,
+  history: PropTypes.object,
   minimal: PropTypes.bool,
   earthdatapubInstance: PropTypes.object
 };

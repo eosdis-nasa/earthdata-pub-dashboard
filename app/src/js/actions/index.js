@@ -913,26 +913,9 @@ export const getLogs = (options) => {
 
 export const clearLogs = () => ({ type: types.CLEAR_LOGS });
 
-export const logout = () => {
-  return (dispatch) => {
-    return dispatch(deleteToken())
-      .then(() => dispatch({ type: types.LOGOUT }));
-  };
-};
+export const logout = () => ({ type: types.LOGOUT });
 
-export const deleteToken = () => {
-  return (dispatch, getState) => {
-    const token = getProperty(getState(), 'api.tokens.token');
-    if (!token) return Promise.resolve();
-
-    const requestConfig = configureRequest({
-      method: 'DELETE',
-      url: new URL(`tokenDelete/${token}`, root).href
-    });
-    return requestPromise(requestConfig)
-      .finally(() => dispatch({ type: types.DELETE_TOKEN }));
-  };
-};
+export const deleteToken = () => ({ type: types.DELETE_TOKEN });
 
 export const loginError = (error) => {
   return (dispatch) => {
