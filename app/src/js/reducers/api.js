@@ -31,9 +31,11 @@ export default createReducer(initialState, {
     set(state, 'tokens.token', null);
     setToken('');
   },
-  [LOGIN]: (state) => {
+  [LOGIN]: (state, action) => {
     set(state, 'authenticated', true);
     set(state, 'inflight', false);
+    set(state, 'tokens.token', action.token);
+    setToken(action.token);
   },
   [LOGIN_INFLIGHT]: (state) => {
     set(state, 'inflight', true);
