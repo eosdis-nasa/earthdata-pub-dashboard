@@ -13,7 +13,7 @@ import ErrorReport from './Errors/report';
 import Header from './Header/header';
 import Modal from 'react-bootstrap/Modal';
 
-const { updateDelay, apiRoot, oauthMethod } = _config;
+const { updateDelay, apiRoot } = _config;
 
 class OAuth extends React.Component {
   constructor () {
@@ -25,38 +25,24 @@ class OAuth extends React.Component {
   }
 
   componentDidUpdate (prevProps) {
-    // delay-close the modal if it's open
-    if (this.props.api.authenticated &&
-        this.props.api.authenticated !== prevProps.api.authenticated) {
-      prevProps.dispatch(setTokenState(this.state.token));
-      const { pathname } = prevProps.location;
-      if (pathname !== '/auth' && window.location && window.location.reload) {
-        setTimeout(() => window.location.reload(), updateDelay);
-      } else if (pathname === '/auth') {
-        setTimeout(() => this.props.history.push('/'), updateDelay); // react isn't seeing this a function
-      }
+    const { dispatch, api, queryParams } = this.props;
+    const { authenticated, inflight } = api;
+    if (authenticated) {
+      setTimeout(() => this.props.history.push('/'), updateDelay);
     }
   }
 
   componentDidMount () {
-    const { token } = this.props.queryParams;
-    if (token) {
-      const { dispatch } = this.props;
-      this.setState({ token }, () => dispatch(login(token))); // eslint-disable-line react/no-did-mount-set-state
+    const { dispatch, api, queryParams } = this.props;
+    const { authenticated, inflight } = api;
+    const { token } = queryParams;
+    if (!authenticated && !inflight && token) {
+      dispatch(login(token));
     }
   }
 
   render () {
     const { dispatch, api, apiVersion } = this.props;
-    let button;
-    if (!api.authenticated && !api.inflight) {
-      const redirect = buildRedirectUrl(window.location);
-      if (oauthMethod === 'launchpad') {
-        button = <div style={{ textAlign: 'center' }}><a className="button button--oauth" href={new URL(`saml/login?RelayState=${redirect}`, apiRoot).href}>Login with Launchpad</a></div>;
-      } else {
-        button = <div style={{ textAlign: 'center' }}><a className="button button--oauth" href={new URL(`token?state=${redirect}`, apiRoot).href} >Login with Earthdata Login</a></div>;
-      }
-    }
 
     return (
       <div className='app'>
@@ -65,7 +51,7 @@ class OAuth extends React.Component {
           <div className="modal-content">
             <Modal
               dialogClassName="oauth-modal"
-              show= {true}
+              show={true}
               centered
               size="sm"
               aria-labelledby="modal__oauth-modal"
@@ -73,11 +59,17 @@ class OAuth extends React.Component {
               <Modal.Header className="oauth-modal__header"></Modal.Header>
               <Modal.Title id="modal__oauth-modal" className="oauth-modal__title">Welcome To Earthdata Pub Dashboard</Modal.Title>
               <Modal.Body>
-                { api.inflight ? <h2 className='heading--medium'>Authenticating ... </h2> : null }
-                { api.error ? <ErrorReport report={api.error} /> : null }
+                { api.inflight ?
+                  <h2 className='heading--medium'>Authenticating ... </h2>
+                  : null }
+                { api.error ?
+                  <ErrorReport report={api.error} />
+                  : null }
               </Modal.Body>
               <Modal.Footer>
-                { button }
+                { !api.authenticated && !api.inflight ?
+                  <LoginButton redirect={buildRedirectUrl(window.location)} />
+                  : null }
               </Modal.Footer>
             </Modal>
           </div>
@@ -85,6 +77,17 @@ class OAuth extends React.Component {
       </div>
     );
   }
+}
+
+function LoginButton({ redirect }) {
+  const loginUrl = new URL(`token?state=${redirect}`, apiRoot).href;
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <a className="button button--oauth" href={loginUrl} >
+        Login to Earthdata Pub
+      </a>
+    </div>
+  );
 }
 
 OAuth.propTypes = {
