@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { logout, getApiVersion, getEarthdatapubInstanceMetadata } from '../../actions';
 import { graphicsPath, nav } from '../../config';
-import { window } from '../../utils/browser';
 import { strings } from '../locale';
 import { kibanaAllLogsLink } from '../../utils/kibana';
 

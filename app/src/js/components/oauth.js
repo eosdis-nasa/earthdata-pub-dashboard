@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import withQueryParams from 'react-router-query-params';
 import { withRouter } from 'react-router-dom';
-import { login, setTokenState } from '../actions';
+import { login } from '../actions';
 import { window } from '../utils/browser';
 import { buildRedirectUrl } from '../utils/format';
 import _config from '../config';
@@ -70,16 +70,16 @@ class OAuth extends React.Component {
               <Modal.Header className="oauth-modal__header"></Modal.Header>
               <Modal.Title id="modal__oauth-modal" className="oauth-modal__title">Welcome To Earthdata Pub Dashboard</Modal.Title>
               <Modal.Body>
-                { api.inflight ?
-                  <h2 className='heading--medium'>Authenticating ... </h2>
+                { api.inflight
+                  ? <h2 className='heading--medium'>Authenticating ... </h2>
                   : null }
-                { api.error ?
-                  <ErrorReport report={api.error} />
+                { api.error
+                  ? <ErrorReport report={api.error} />
                   : null }
               </Modal.Body>
               <Modal.Footer>
-                { !api.authenticated && !api.inflight ?
-                  <LoginButton redirect={buildRedirectUrl(window.location)} />
+                { !api.authenticated && !api.inflight
+                  ? <LoginButton redirect={buildRedirectUrl(window.location)} />
                   : null }
               </Modal.Footer>
             </Modal>
@@ -90,7 +90,7 @@ class OAuth extends React.Component {
   }
 }
 
-function LoginButton({ redirect }) {
+function LoginButton ({ redirect }) {
   const loginUrl = new URL(authUrl);
   loginUrl.searchParams.set('state', redirect);
   return (
@@ -101,6 +101,10 @@ function LoginButton({ redirect }) {
     </div>
   );
 }
+
+LoginButton.propTypes = {
+  redirect: PropTypes.string
+};
 
 OAuth.propTypes = {
   dispatch: PropTypes.func,

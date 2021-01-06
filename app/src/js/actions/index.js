@@ -63,7 +63,8 @@ export const refreshAccessToken = (token) => {
 
 export const login = (token) => ({
   type: types.LOGIN,
-  token });
+  token
+});
 
 export const setTokenState = (token) => ({ type: types.SET_TOKEN, token });
 
