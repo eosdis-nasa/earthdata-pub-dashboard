@@ -41,8 +41,7 @@ export function sameOrigin (urlOne, urlTwo) {
     const originOne = (new URL(urlOne)).origin;
     const originTwo = (new URL(urlTwo)).origin;
     return originOne === originTwo;
-  }
-  catch (e) {
+  } catch (e) {
     return false;
   }
 }

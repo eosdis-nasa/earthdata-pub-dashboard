@@ -52,12 +52,11 @@ class OAuth extends React.Component {
     }
   }
 
-  getStateUrl() {
+  getStateUrl () {
     console.log(this.props.history);
     if (sameOrigin(formsUrl, document.referrer)) {
       return document.referrer;
-    }
-    else return '';
+    } else return '';
   }
 
   render () {
