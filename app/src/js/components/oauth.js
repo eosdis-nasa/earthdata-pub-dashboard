@@ -6,14 +6,14 @@ import withQueryParams from 'react-router-query-params';
 import { withRouter } from 'react-router-dom';
 import { login } from '../actions';
 import { window } from '../utils/browser';
-import { buildRedirectUrl } from '../utils/format';
+import { sameOrigin } from '../utils/url-helper';
 import _config from '../config';
 import PropTypes from 'prop-types';
 import ErrorReport from './Errors/report';
 import Header from './Header/header';
 import Modal from 'react-bootstrap/Modal';
 
-const { updateDelay, apiRoot } = _config;
+const { updateDelay, apiRoot, formsUrl } = _config;
 
 const authUrl = new URL('token', apiRoot);
 
@@ -52,6 +52,14 @@ class OAuth extends React.Component {
     }
   }
 
+  getStateUrl() {
+    console.log(this.props.history);
+    if (sameOrigin(formsUrl, document.referrer)) {
+      return document.referrer;
+    }
+    else return '';
+  }
+
   render () {
     const { dispatch, api, apiVersion } = this.props;
 
@@ -79,7 +87,7 @@ class OAuth extends React.Component {
               </Modal.Body>
               <Modal.Footer>
                 { !api.authenticated && !api.inflight
-                  ? <LoginButton redirect={buildRedirectUrl(window.location)} />
+                  ? <LoginButton redirect={this.getStateUrl()} />
                   : null }
               </Modal.Footer>
             </Modal>
