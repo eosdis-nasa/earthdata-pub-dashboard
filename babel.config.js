@@ -10,9 +10,9 @@ module.exports = {
     ],
     '@babel/preset-react'
   ],
+  sourceType: 'unambiguous',
   plugins: [
     '@babel/plugin-syntax-jsx',
     '@babel/plugin-transform-runtime'
   ]
 };
-
