@@ -11,7 +11,6 @@ import { configureRequest } from './helpers';
 import _config from '../config';
 import { getCollectionId, collectionNameVersion } from '../utils/format';
 import { fetchCurrentTimeFilters } from '../utils/datepicker';
-import log from '../utils/log';
 import { authHeader } from '../utils/basic-auth';
 import { apiGatewaySearchTemplate } from './action-config/apiGatewaySearch';
 import { apiLambdaSearchTemplate } from './action-config/apiLambdaSearch';
@@ -25,46 +24,58 @@ const {
   showDistributionAPIMetrics,
   showTeaMetrics,
   apiRoot: root,
+  formsUrl,
   defaultPageLimit,
   minCompatibleApiVersion
 } = _config;
 
-export const refreshAccessToken = (token) => {
-  return (dispatch) => {
-    const start = new Date();
-    log('REFRESH_TOKEN_INFLIGHT');
-    dispatch({ type: types.REFRESH_TOKEN_INFLIGHT });
+const redirects = {
+  forms: formsUrl
+};
 
-    const requestConfig = configureRequest({
-      method: 'POST',
-      url: new URL('refresh', root).href,
-      body: { token },
-      // make sure request failures are sent to .catch()
-      simple: true
-    });
-    return requestPromise(requestConfig)
-      .then(({ body }) => {
-        const duration = new Date() - start;
-        log('REFRESH_TOKEN', duration + 'ms');
-        return dispatch({
-          type: types.REFRESH_TOKEN,
-          token: body.token
-        });
-      })
-      .catch(({ error }) => {
-        dispatch({
-          type: types.REFRESH_TOKEN_ERROR,
-          error
-        });
-        throw error;
+export const redirectWithToken = (redirect, token) => {
+  if (redirects[redirect]) {
+    const redirectUrl = new URL(redirects[redirect]);
+    redirectUrl.searchParams.set('token', token);
+    window.location.href = redirectUrl.href;
+  } else {
+    history.push('/');
+  }
+};
+
+export const fetchToken = (code, state) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.FETCH_TOKEN,
+        method: 'GET',
+        id: null,
+        path: 'token',
+        qs: { code, state }
+      }
+    })
+      .then(({ data }) => {
+        redirectWithToken(state, data.token);
       });
   };
 };
 
-export const login = (token) => ({
-  type: types.LOGIN,
-  token
-});
+export const login = (redirect) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.LOGIN,
+        method: 'GET',
+        id: null,
+        path: 'token',
+        qs: { state: redirect }
+      }
+    })
+      .then(({ data }) => {
+        window.location.href = data.redirect;
+      });
+  };
+};
 
 export const setTokenState = (token) => ({ type: types.SET_TOKEN, token });
 
@@ -950,7 +961,7 @@ export const listMetrics = (options) => ({
     type: types.METRICS,
     method: 'GET',
     url: new URL('metrics', root).href,
-    qs: Object.assign({ limit: defaultPageLimit }, options)
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
   }
 });
 export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });

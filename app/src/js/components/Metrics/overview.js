@@ -17,7 +17,7 @@ import ListFilters from '../ListActions/ListFilters';
 const MetricOverview = ({ metrics }) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(listMetrics());
+    dispatch(listMetrics({ count: true }));
   }, [metrics.searchString, dispatch]);
   const count = metrics.list.data.length;
   const { queriedAt } = metrics.list.meta;
@@ -31,7 +31,6 @@ const MetricOverview = ({ metrics }) => {
         <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>All Metrics <span className='num--title'>{count ? ` ${tally(count)}` : 0}</span></h2>
         </div>
-        {/* Someone needs to define the search parameters for workflows, e.g. steps, collections, granules, etc. } */}
         <List
           list={metrics.list}
           dispatch={dispatch}

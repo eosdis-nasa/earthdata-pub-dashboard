@@ -5,20 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import withQueryParams from 'react-router-query-params';
-import {
-  getCount,
-  getEarthdatapubInstanceMetadata,
-  getDistApiGatewayMetrics,
-  getDistApiLambdaMetrics,
-  getTEALambdaMetrics,
-  getDistS3AccessMetrics,
-  getStats,
-  interval,
-  listExecutions,
-  listGranules,
-  listSubmissions,
-  listRules
-} from '../actions';
+import { interval, listSubmissions } from '../actions';
 import {
   // tally,
   // seconds
@@ -68,15 +55,8 @@ class Home extends React.Component {
   }
 
   componentDidMount () {
-    const { dispatch } = this.props;
+    // const { dispatch } = this.props;
     this.cancelInterval = interval(this.query, updateInterval, true);
-    dispatch(getEarthdatapubInstanceMetadata())
-      .then(() => {
-        dispatch(getDistApiGatewayMetrics(this.props.earthdatapubInstance));
-        dispatch(getTEALambdaMetrics(this.props.earthdatapubInstance));
-        dispatch(getDistApiLambdaMetrics(this.props.earthdatapubInstance));
-        dispatch(getDistS3AccessMetrics(this.props.earthdatapubInstance));
-      });
   }
 
   componentWillUnmount () {
@@ -84,17 +64,8 @@ class Home extends React.Component {
   }
 
   query () {
-    const { dispatch } = this.props;
-    dispatch(getStats());
-    dispatch(getCount({ type: 'submissions', field: 'status' }));
-    dispatch(getDistApiGatewayMetrics(this.props.earthdatapubInstance));
-    dispatch(getTEALambdaMetrics(this.props.earthdatapubInstance));
-    dispatch(getDistApiLambdaMetrics(this.props.earthdatapubInstance));
-    dispatch(getDistS3AccessMetrics(this.props.earthdatapubInstance));
-    dispatch(listExecutions({}));
-    dispatch(listGranules(this.generateQuery()));
+    // const { dispatch } = this.props;
     // dispatch(listSubmissions(this.generateQuery()));
-    dispatch(listRules({}));
   }
 
   refreshQuery () {

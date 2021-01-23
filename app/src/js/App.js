@@ -12,7 +12,7 @@ import { faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCi
 // Authorization & Error Handling
 // import ErrorBoundary from './components/Errors/ErrorBoundary';
 import NotFound from './components/404';
-import OAuth from './components/oauth';
+import Auth from './components/Auth';
 
 // Components
 import Home from './components/home';
@@ -93,7 +93,7 @@ class App extends Component {
           <ConnectedRouter history={history}>
             <Switch>
               <Redirect exact from='/login' to='/auth' />
-              <Route path='/auth' render={() => this.isLoggedIn() ? <Redirect to='/' /> : <OAuth />} />
+              <Route path='/auth' component={Auth} />
               <Route path='/' render={() => this.isLoggedIn() ? <MainRoutes /> : <Redirect to='/auth' />} />
             </Switch>
           </ConnectedRouter>

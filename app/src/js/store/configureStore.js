@@ -2,7 +2,6 @@ import { createHashHistory, createBrowserHistory } from 'history';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { routerMiddleware } from 'connected-react-router';
 import { createRootReducer } from '../reducers';
-import { refreshTokenMiddleware } from '../middleware/token';
 import { requestMiddleware } from '../middleware/request';
 import { createLogger } from 'redux-logger';
 import { window } from '../utils/browser';
@@ -33,7 +32,6 @@ const isDevelopment = config.environment === 'development';
 
 const middlewares = [
   routerMiddleware(history), // for dispatching history actions
-  refreshTokenMiddleware,
   requestMiddleware,
   ...getDefaultMiddleware()
 ];

@@ -14,7 +14,7 @@ export const loadToken = function () {
   return auth;
 };
 export const deleteToken = function () {
-  if (window.localStorage && window.localStorage.removeItem === 'function') {
+  if (window.localStorage && typeof window.localStorage.removeItem === 'function') {
     window.localStorage.removeItem('auth-token');
   }
 };

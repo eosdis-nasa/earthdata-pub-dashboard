@@ -5,12 +5,10 @@ import { loadToken, saveToken, deleteToken } from '../utils/auth';
 import {
   DELETE_TOKEN,
   LOGIN,
-  LOGIN_INFLIGHT,
-  LOGIN_ERROR,
   LOGOUT,
-  REFRESH_TOKEN,
-  REFRESH_TOKEN_ERROR,
-  REFRESH_TOKEN_INFLIGHT,
+  FETCH_TOKEN,
+  FETCH_TOKEN_INFLIGHT,
+  FETCH_TOKEN_ERROR,
   SET_TOKEN
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
@@ -31,18 +29,7 @@ export default createReducer(initialState, {
     deleteToken();
   },
   [LOGIN]: (state, action) => {
-    set(state, 'authenticated', true);
     set(state, 'inflight', false);
-    set(state, 'tokens.token', action.token);
-    saveToken(action.token);
-  },
-  [LOGIN_INFLIGHT]: (state) => {
-    set(state, 'inflight', true);
-  },
-  [LOGIN_ERROR]: (state, action) => {
-    set(state, 'error', action.error);
-    set(state, 'inflight', false);
-    set(state, 'authenticated', false);
   },
   [LOGOUT]: (state) => {
     deleteToken();
@@ -50,18 +37,21 @@ export default createReducer(initialState, {
     set(state, 'inflight', false);
     set(state, 'tokens.token', null);
   },
-  [REFRESH_TOKEN]: (state, action) => {
-    set(state, 'tokens.error', null);
+  [FETCH_TOKEN]: (state, action) => {
+    saveToken(action.data.token);
+    set(state, 'authenticated', true);
+    set(state, 'inflight', false);
     set(state, 'tokens.inflight', false);
-    set(state, 'tokens.token', action.token);
-    saveToken(action.token);
+    set(state, 'tokens.token', action.data.token);
   },
-  [REFRESH_TOKEN_ERROR]: (state, action) => {
+  [FETCH_TOKEN_INFLIGHT]: (state) => {
+    set(state, 'inflight', true);
+    set(state, 'tokens.inflight', true);
+  },
+  [FETCH_TOKEN_ERROR]: (state, action) => {
     set(state, 'tokens.error', action.error);
     set(state, 'tokens.inflight', false);
-  },
-  [REFRESH_TOKEN_INFLIGHT]: (state) => {
-    set(state, 'tokens.inflight', true);
+    set(state, 'inflight', false);
   },
   [SET_TOKEN]: (state, action) => {
     set(state, 'tokens.token', action.token);

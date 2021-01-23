@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 export const tableColumns = [
   {
     Header: 'Name',
-    accessor: (row) => <Link to={`/metrics/metric/${row.name}`}>{row.name}</Link>,
-    id: 'name'
+    accessor: (row) => row.event_type,
+    id: 'event_type'
   },
   {
     Header: 'Count',
