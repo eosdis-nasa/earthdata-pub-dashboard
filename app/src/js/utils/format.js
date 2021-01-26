@@ -99,14 +99,13 @@ export const granuleLink = function (granuleId) {
   if (!granuleId) return nullValue;
   return <Link to={`/granules/granule/${granuleId}`}>{granuleId}</Link>;
 };
-
 export const submissionLink = function (submissionId) {
   if (!submissionId) return nullValue;
   return <Link to={`/submissions/submission/${submissionId}`}>{submissionId}</Link>;
 };
-export const questionLink = function (questionId, questionTitle, questionName) {
+export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;
-  return <Link to={`/questions/question/${questionId}`}><h3>{questionTitle}</h3>{questionName}</Link>;
+  return <Link to={`/questions/question/${questionId}`}>{questionName}</Link>;
 };
 export const dataProducerLink = function (formId, name) {
   if (!formId) return nullValue;

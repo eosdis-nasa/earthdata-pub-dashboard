@@ -9,10 +9,10 @@ const deploymentConfig = require('./config');
 const baseConfig = {
   environment: 'development',
   requireEarthdataLogin: false,
-  apiRoot: 'https://wjdkfyb6t6.execute-api.us-east-1.amazonaws.com/dev/',
+  apiRoot: 'http://localhost:8080',
   minCompatibleApiVersion: '1.19.0',
   oauthMethod: 'earthdata',
-  formsUrl: 'https://pub.earthdata.nasa.gov/forms',
+  formsUrl: 'http://localhost:8081/interest/',
   overviewUrl: 'https://pub.earthdata.nasa.gov/',
   graphicsPath: '/src/assets/images/',
 
