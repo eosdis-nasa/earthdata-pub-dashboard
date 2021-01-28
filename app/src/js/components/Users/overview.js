@@ -41,14 +41,9 @@ class UsersOverview extends React.Component {
   }
 
   queryStats () {
-    this.props.dispatch(getCount({
-      type: 'collections',
-      field: 'users'
-    }));
-    this.props.dispatch(getCount({
-      type: 'users',
-      field: 'status'
-    }));
+    /* this.props.dispatch(getCount({
+      type: 'users'
+    })); */
   }
 
   generateQuery () {

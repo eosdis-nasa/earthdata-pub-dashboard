@@ -4,7 +4,10 @@ import { get } from 'object-path';
 import { connect } from 'react-redux';
 import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
-import { getCount, listSubmissions } from '../../actions';
+import {
+  // getCount,
+  listSubmissions
+} from '../../actions';
 import { strings } from '../locale';
 import AllSubmissions from './list';
 import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
@@ -31,9 +34,6 @@ const Submissions = ({
   const [queryOptions, setQueryOptions] = useState({});
 
   function query () {
-    dispatch(getCount({
-      type: 'submissions'
-    }));
     dispatch(listSubmissions(queryOptions));
   }
 
@@ -56,7 +56,7 @@ const Submissions = ({
           <div className='page__content--shortened'>
             <Switch>
               <Route exact path='/submissions' component={SubmissionsOverview} />
-              <Route path='/data/submissions/:submissionId' component={SubmissionOverview} />
+              <Route path='/submissions/:submissionId' component={SubmissionOverview} />
               <Route path='/submissions/metadata/:submissionId' component={EditMetadata} />
               <Route path='/submissions/completed' component={AllSubmissionsWithWrapper} />
               <Route path='/submissions/processing' component={AllSubmissionsWithWrapper} />

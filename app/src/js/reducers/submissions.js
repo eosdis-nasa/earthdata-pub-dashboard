@@ -81,7 +81,8 @@ export default createReducer(initialState, {
 
   [SUBMISSIONS]: (state, action) => {
     const { data } = action;
-    set(state, ['list', 'data'], removeDeleted('submissionId', data.results, state.deleted));
+    console.log(data);
+    set(state, ['list', 'data'], data.results);
     set(state, ['list', 'meta'], assignDate(data.meta));
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], false);
@@ -183,7 +184,7 @@ export default createReducer(initialState, {
     set(state, ['list', 'params', action.paramKey], null);
   },
 
-  [OPTIONS_SUBMISSIONNAME]: (state, action) => {
+  /* [OPTIONS_SUBMISSIONNAME]: (state, action) => {
     // const { id } = action; - here because the below fix may not be the best solution but works for now
     const { id } = action.data[0].id;
     const options = action.data.reduce(
@@ -194,7 +195,8 @@ export default createReducer(initialState, {
       {}
     );
     set(state, ['dropdowns', 'name', 'options'], options);
-  },
+  }, */
+  [OPTIONS_SUBMISSIONNAME]: (state, action) => {},
   [OPTIONS_SUBMISSIONNAME_INFLIGHT]: () => {},
   [OPTIONS_SUBMISSIONNAME_ERROR]: (state, action) => {
     set(state, ['dropdowns', 'name', 'options'], []);

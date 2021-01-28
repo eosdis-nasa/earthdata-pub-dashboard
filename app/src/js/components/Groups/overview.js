@@ -41,10 +41,9 @@ class GroupsOverview extends React.Component {
   }
 
   queryStats () {
-    this.props.dispatch(getCount({
-      type: 'groups',
-      field: 'stage'
-    }));
+    /* this.props.dispatch(getCount({
+      type: 'groups'
+    })); */
   }
 
   generateQuery () {

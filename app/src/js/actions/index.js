@@ -202,19 +202,15 @@ export const getSubmission = (submissionId) => ({
   }
 });
 
-export const listSubmissions = (options) => {
-  return (dispatch, getState) => {
-    return dispatch({
-      [CALL_API]: {
-        type: types.SUBMISSIONS,
-        method: 'GET',
-        id: null,
-        url: new URL('data/submissions', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, options)
-      }
-    });
-  };
-};
+export const listSubmissions = (options) => ({
+  [CALL_API]: {
+    type: types.SUBMISSIONS,
+    method: 'GET',
+    id: null,
+    path: 'data/submissions',
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
+  }
+});
 
 export const updateSubmissionMetadata = (payload) => ({
   [CALL_API]: {

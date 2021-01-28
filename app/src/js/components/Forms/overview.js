@@ -7,7 +7,7 @@ import { get } from 'object-path';
 import cloneDeep from 'lodash.clonedeep';
 import {
   listForms,
-  getCount,
+  // getCount,
   interval,
   filterForms,
   clearFormsFilter
@@ -41,14 +41,9 @@ class FormsOverview extends React.Component {
   }
 
   queryStats () {
-    this.props.dispatch(getCount({
-      type: 'collections',
-      field: 'forms'
-    }));
-    this.props.dispatch(getCount({
-      type: 'forms',
-      field: 'status'
-    }));
+    /* this.props.dispatch(getCount({
+      type: 'forms'
+    })); */
   }
 
   generateQuery () {

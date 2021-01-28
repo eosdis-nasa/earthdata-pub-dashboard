@@ -21,7 +21,6 @@ const WorkflowOverview = ({ workflows }) => {
   }, [workflows.searchString, dispatch]);
   const count = workflows.list.data.length;
   const { queriedAt } = workflows.list.meta;
-
   return (
     <div className='page__component'>
       <section className='page__section page__section__header-wrapper'>
@@ -39,8 +38,8 @@ const WorkflowOverview = ({ workflows }) => {
           tableColumns={tableColumns}
           query={{}}
           bulkActions={[]}
-          rowId='name'
-          sortIdx='name'
+          rowId='id'
+          sortIdx='long_name'
         >
           <ListFilters>
             <Search

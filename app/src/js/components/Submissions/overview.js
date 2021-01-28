@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   interval,
-  getCount,
+  // getCount,
   searchSubmissions,
   clearSubmissionsSearch,
   filterSubmissions,
@@ -65,6 +65,8 @@ class SubmissionsOverview extends React.Component {
 
   componentDidMount () {
     this.cancelInterval = interval(this.queryMeta, updateInterval, true);
+    const { dispatch } = this.props;
+    dispatch(listSubmissions);
   }
 
   componentWillUnmount () {
@@ -72,11 +74,11 @@ class SubmissionsOverview extends React.Component {
   }
 
   queryMeta () {
-    const { dispatch } = this.props;
-    dispatch(listWorkflows());
-    dispatch(getCount({
+    // const { dispatch } = this.props;
+    // dispatch(listWorkflows());
+    /* dispatch(getCount({
       type: 'submissions'
-    }));
+    })); */
   }
 
   generateQuery () {

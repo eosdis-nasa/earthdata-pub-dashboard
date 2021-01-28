@@ -98,7 +98,7 @@ export default createReducer(initialState, {
       obj[user.userName] = user.userName;
       return obj;
     }, { '': '' });
-    set(state, ['dropdowns', 'group', 'options'], options);
+    set(state, ['dropdowns', 'groups', 'options'], options);
   },
   [OPTIONS_USERGROUP_INFLIGHT]: () => { },
   [OPTIONS_USERGROUP_ERROR]: (state, action) => {

@@ -52,6 +52,7 @@ class AllSubmissions extends React.Component {
 
   componentDidMount () {
     this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
+    this.props.dispatch(listSubmissions);
   }
 
   componentWillUnmount () {
@@ -111,8 +112,8 @@ class AllSubmissions extends React.Component {
 
   render () {
     const { submissions, dispatch, logs } = this.props;
-    console.log('SUBMISSIONSSSSSSSSSSSSSSSSS', this.props);
     const { list, dropdowns } = submissions;
+    console.log('SUBMISSIONSSSSSSSSSSSSSSSSSSS', submissions);
     const { count, queriedAt } = list.meta;
     const logsQuery = { submissionId__exists: 'true' };
     const query = this.generateQuery();

@@ -23,19 +23,19 @@ import Dropdown from '../../components/DropDown/simple-dropdown';
 export const tableColumns = [
   {
     Header: 'Status',
-    accessor: row => <Link to={`/submissions/${row.status}`} className={`submission__status submission__status--${row.status}`}>{displayCase(row.status)}</Link>,
-    id: 'status',
+    accessor: row => <Link to={`/submissions/${row.status_message}`} className={`submission__status_message submission__status_message--${row.status_message}`}>{displayCase(row.status_message)}</Link>,
+    id: 'status_message',
     width: 100
   },
   {
-    Header: 'Stage',
-    accessor: row => <Link to={`/submissions/${row.stage}`} className={`submission__stage submission__stage--${row.stage}`}>{displayCase(row.stage)}</Link>,
-    id: 'stage',
+    Header: 'Workflow Name',
+    accessor: row => <Link to={`/submissions/${row.workflow_name}`} className={`submission__workflow_name submission__workflow_name--${row.workflow_name}`}>{displayCase(row.workflow_name)}</Link>,
+    id: 'workflow_name',
     width: 100
   },
   {
     Header: 'Name',
-    accessor: row => submissionLink(row.submissionId),
+    accessor: row => <Link to={`submissions/submission/${row.id}`}>{row.name}</Link>,
     id: 'name',
     width: 225
   },
