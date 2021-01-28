@@ -216,7 +216,7 @@ export const updateSubmissionMetadata = (payload) => ({
   [CALL_API]: {
     type: types.SUBMISSION_UPDATE_METADATA,
     method: 'POST',
-    path: 'submission/save',
+    path: 'submission/metadata',
     body: payload
   }
 });
