@@ -4,7 +4,7 @@ import tally from './tally';
 import { strings } from '../components/locale';
 
 const questionsRoutes = [
-  ['Overview', null]
+  ['', null]
 ];
 
 const singleQuestionRoutes = [

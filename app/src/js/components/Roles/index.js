@@ -4,7 +4,7 @@ import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import PropTypes from 'prop-types';
 import RolesOverview from './overview';
-import Role from './roles';
+import Role from './role';
 
 class Roles extends React.Component {
   render () {

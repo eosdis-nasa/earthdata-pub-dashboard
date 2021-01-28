@@ -23,7 +23,7 @@ const RoleOverview = ({ roles }) => {
   return (
     <div className='page__component'>
       <section className='page__section page__section__header-wrapper'>
-        <h1 className='heading--large heading--shared-content with-description'>Role Overview</h1>
+        <h1 className='heading--large heading--shared-content with-description'>Roles</h1>
       </section>
       <section className='page__section'>
         <div className='heading__wrapper--border'>
