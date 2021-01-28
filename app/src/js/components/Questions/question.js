@@ -14,7 +14,7 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 function Question ({ title, version, text, help, inputs }) {
   return (
     <div>
-      <h1>Title: {title}</h1>
+      <h3>Title: {title}</h3>
       <h3>Version: {version}</h3>
       <h3>Text: {text}</h3>
       <h3>Help: {help}</h3>

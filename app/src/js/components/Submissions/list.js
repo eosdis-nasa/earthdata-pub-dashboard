@@ -111,6 +111,7 @@ class AllSubmissions extends React.Component {
 
   render () {
     const { submissions, dispatch, logs } = this.props;
+    console.log('SUBMISSIONSSSSSSSSSSSSSSSSS', this.props);
     const { list, dropdowns } = submissions;
     const { count, queriedAt } = list.meta;
     const logsQuery = { submissionId__exists: 'true' };

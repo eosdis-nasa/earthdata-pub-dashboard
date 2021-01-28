@@ -75,8 +75,7 @@ class SubmissionsOverview extends React.Component {
     const { dispatch } = this.props;
     dispatch(listWorkflows());
     dispatch(getCount({
-      type: 'submissions',
-      field: 'stage'
+      type: 'submissions'
     }));
   }
 

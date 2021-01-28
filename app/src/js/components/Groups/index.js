@@ -3,8 +3,8 @@ import React from 'react';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import PropTypes from 'prop-types';
-import AddGroup from './add';
-import EditGroup from './edit';
+// import AddGroup from './add'; will add these pieceds back after testing
+// import EditGroup from './edit';
 import GroupsOverview from './overview';
 import GroupOverview from './group';
 
@@ -33,8 +33,8 @@ class Groups extends React.Component {
             <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
               <Switch>
                 <Route exact path='/groups' component={GroupsOverview} />
-                <Route path='/groups/add' component={AddGroup} />
-                <Route path='/groups/edit/:groupId' component={EditGroup} />
+                {/* <Route path='/groups/add' component={AddGroup} />-->
+                <Route path='/groups/edit/:groupId' component={EditGroup} /> */}
                 <Route path='/groups/group/:groupId' component={GroupOverview} />
               </Switch>
             </div>

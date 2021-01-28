@@ -88,8 +88,8 @@ class UsersOverview extends React.Component {
             tableColumns={tableColumns}
             query={this.generateQuery()}
             bulkActions={[]}
-            rowId='userName'
-            sortIdx='timestamp'
+            rowId='name'
+            sortIdx='last_login'
           >
             <ListFilters>
               <Dropdown

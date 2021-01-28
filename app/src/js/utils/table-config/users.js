@@ -6,8 +6,8 @@ import { shortDateNoTimeYearFirst } from '../format';
 export const tableColumns = [
   {
     Header: 'Name',
-    accessor: row => <Link to={`users/user/${row.id}`}>{row.userName}</Link>,
-    id: 'userName'
+    accessor: row => <Link to={`users/user/${row.id}`}>{row.name}</Link>,
+    id: 'name'
   },
   {
     Header: 'Email',
@@ -15,10 +15,16 @@ export const tableColumns = [
     id: 'email'
   },
   {
+    Header: 'Roles',
+    accessor: row => row.roles.join(', '),
+    id: 'roles'
+  },
+  {
     Header: 'Groups',
     accessor: row => row.groups.join(', '),
     id: 'groups'
   },
+  /* ,
   {
     Header: 'Permissions',
     accessor: row => row.permissions.join(', '),
@@ -28,10 +34,10 @@ export const tableColumns = [
     Header: 'Subscriptions',
     accessor: row => row.subscriptions.join(', '),
     id: 'subscriptions'
-  },
+  }, */
   {
-    Header: 'Last Updated',
-    accessor: row => shortDateNoTimeYearFirst(row.timestamp),
-    id: 'timestamp'
+    Header: 'Last Login',
+    accessor: row => shortDateNoTimeYearFirst(row.last_login),
+    id: 'last_login'
   }
 ];

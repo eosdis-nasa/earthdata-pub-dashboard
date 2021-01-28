@@ -111,6 +111,9 @@ class AllUsers extends React.Component {
 
   render () {
     const { users, dispatch, logs } = this.props;
+    console.log('USERSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS', users);
+    // disabled getCount in an attempt to get rid of aggregate blah errors then commented them out in Users/overview
+
     const { list, dropdowns } = users;
     const { count, queriedAt } = list.meta;
     const logsQuery = { userId__exists: 'true' };
@@ -153,7 +156,7 @@ class AllUsers extends React.Component {
             tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
             query={query}
             bulkActions={this.generateBulkActions()}
-            rowId='userId'
+            rowId='id'
             sortIdx={tableSortIdx}
           >
             <ListFilters>

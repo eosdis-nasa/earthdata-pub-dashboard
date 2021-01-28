@@ -8,24 +8,25 @@ export const tableColumns = [
     Header: 'Title',
     accessor: row => questionLink(row.id, row.long_name),
     id: 'question_name',
-    width: 250
+    width: 175
   },
   {
     Header: 'Version',
     accessor: row => row.version,
     id: 'version',
-    width: 60
+    width: 70
   },
   {
     Header: 'Text',
     accessor: row => row.text,
     id: 'text',
-    width: 225
+    width: 200
   },
   {
     Header: 'Help',
     accessor: row => row.help,
-    id: 'help'
+    id: 'help',
+    width: 200
   },
   {
     Header: 'Created At',

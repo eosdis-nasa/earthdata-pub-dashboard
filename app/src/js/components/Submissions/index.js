@@ -32,8 +32,7 @@ const Submissions = ({
 
   function query () {
     dispatch(getCount({
-      type: 'submissions',
-      field: 'stage'
+      type: 'submissions'
     }));
     dispatch(listSubmissions(queryOptions));
   }
@@ -57,7 +56,7 @@ const Submissions = ({
           <div className='page__content--shortened'>
             <Switch>
               <Route exact path='/submissions' component={SubmissionsOverview} />
-              <Route path='/submissions/submission/:submissionId' component={SubmissionOverview} />
+              <Route path='/data/submissions/:submissionId' component={SubmissionOverview} />
               <Route path='/submissions/metadata/:submissionId' component={EditMetadata} />
               <Route path='/submissions/completed' component={AllSubmissionsWithWrapper} />
               <Route path='/submissions/processing' component={AllSubmissionsWithWrapper} />

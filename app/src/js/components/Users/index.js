@@ -3,7 +3,6 @@ import React from 'react';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import PropTypes from 'prop-types';
-import EditUser from './edit';
 import UsersOverview from './overview';
 import UserOverview from './user';
 
@@ -32,7 +31,6 @@ class Users extends React.Component {
             <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
               <Switch>
                 <Route exact path='/users' component={UsersOverview} />
-                <Route path='/users/edit/:userId' component={EditUser} />
                 <Route path='/users/user/:userId' component={UserOverview} />
               </Switch>
             </div>

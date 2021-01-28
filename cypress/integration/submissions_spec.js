@@ -63,17 +63,17 @@ describe('Dashboard Submissions Page', () => {
           // has link to the detailed submission page
           cy.get('@columns').eq(3).children('a')
             .should('have.attr', 'href')
-            .and('be.eq', `/submissions/submission/${submission.submissionId}`);
+            .and('be.eq', `/data/submission/${submission.submissionId}`);
 
           // Data Submission Request column has link to the form page
           cy.get('@columns').eq(4).children('a')
             .should('have.attr', 'href')
-            .and('be.eq', `/forms/form/${submission.dataSubmissionRequest}`);
+            .and('be.eq', `/data/form/${submission.formId}`);
 
           // Data Product Questionaire column has link to the form page
           cy.get('@columns').eq(5).children('a')
             .should('have.attr', 'href')
-            .and('be.eq', `/forms/form/${submission.dataProductQuestionaire}`);
+            .and('be.eq', `/data/form/${submission.formId}`);
 
           // Submission Date column
           cy.get('@columns').eq(6).invoke('text')
@@ -190,7 +190,7 @@ describe('Dashboard Submissions Page', () => {
       cy.get('.button--submit').click();
       cy.get('.modal-content > .modal-title').should('contain.text', 'Complete');
       cy.get('.button__goto').click();
-      cy.url().should('include', `submissions/submission/${submissionId}`);
+      cy.url().should('include', `data/submission/${submissionId}`);
       cy.get('.heading--large').should('have.text', submissionId);
     });
 

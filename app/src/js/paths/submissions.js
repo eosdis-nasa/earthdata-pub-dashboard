@@ -20,7 +20,7 @@ const submissions = {
   base: 'submissions',
   heading: strings.submissions,
   routes: (currentRoute, params, count) => {
-    if (currentRoute.indexOf('submissions/submission') >= 0) {
+    if (currentRoute.indexOf('data/submission') >= 0) {
       return singleSubmissionRoutes.map(d => {
         if (!d[1] || d[1].indexOf(':submissionId') === -1) return d;
         const copy = d.slice();

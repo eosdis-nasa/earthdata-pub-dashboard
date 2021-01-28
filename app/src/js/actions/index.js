@@ -220,7 +220,7 @@ export const updateSubmissionMetadata = (payload) => ({
   [CALL_API]: {
     type: types.SUBMISSION_UPDATE_METADATA,
     method: 'POST',
-    path: 'submission/metadata',
+    path: 'submission/save',
     body: payload
   }
 });
@@ -340,7 +340,7 @@ export const applyWorkflowToSubmission = (submissionId, workflow) => ({
     type: types.SUBMISSION_APPLYWORKFLOW,
     method: 'PUT',
     id: submissionId,
-    path: `submissions/${submissionId}`,
+    path: `data/submission/${submissionId}`,
     body: {
       action: 'applyWorkflow',
       workflow
@@ -427,7 +427,7 @@ export const deleteSubmission = (submissionId) => ({
     type: types.SUBMISSION_DELETE,
     method: 'DELETE',
     id: submissionId,
-    path: `submissions/${submissionId}`
+    path: `data/submission/${submissionId}`
   }
 });
 
@@ -690,7 +690,7 @@ export const listForms = (options = {}) => {
       [CALL_API]: {
         type: types.FORMS,
         method: 'GET',
-        url: new URL('forms', root).href,
+        url: new URL('data/forms', root).href,
         qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
       }
     });
@@ -701,8 +701,8 @@ export const getOptionsFormGroup = () => ({
   [CALL_API]: {
     type: types.OPTIONS_FORMGROUP,
     method: 'GET',
-    url: new URL('forms', root).href,
-    qs: { limit: 100, fields: 'formName' }
+    url: new URL('data/forms', root).href,
+    qs: { limit: 100, fields: 'long_name' }
   }
 });
 
@@ -711,7 +711,7 @@ export const getForm = (formId) => ({
     type: types.FORM,
     id: formId,
     method: 'GET',
-    path: `forms/${formId}`
+    path: `data/form/${formId}`
   }
 });
 
@@ -720,7 +720,7 @@ export const createForm = (formId, payload) => ({
     type: types.NEW_FORM,
     id: formId,
     method: 'POST',
-    path: 'forms',
+    path: 'data/forms',
     body: payload
   }
 });
@@ -730,7 +730,7 @@ export const updateForm = (formId, payload) => ({
     type: types.UPDATE_FORM,
     id: formId,
     method: 'PUT',
-    path: `forms/${formId}`,
+    path: `data/form/${formId}`,
     body: payload
   }
 });
@@ -742,7 +742,7 @@ export const deleteForm = (formId) => ({
     type: types.FORM_DELETE,
     id: formId,
     method: 'DELETE',
-    path: `forms/${formId}`
+    path: `data/form/${formId}`
   }
 });
 
@@ -750,6 +750,7 @@ export const searchForms = (prefix) => ({ type: types.SEARCH_FORMS, prefix: pref
 export const clearFormsSearch = () => ({ type: types.CLEAR_FORMS_SEARCH });
 export const filterForms = (param) => ({ type: types.FILTER_FORMS, param: param });
 export const clearFormsFilter = (paramKey) => ({ type: types.CLEAR_FORMS_FILTER, paramKey: paramKey });
+
 export const listUsers = (options = {}) => {
   const { listAll = false, ...queryOptions } = options;
   return (dispatch, getState) => {
@@ -758,7 +759,7 @@ export const listUsers = (options = {}) => {
       [CALL_API]: {
         type: types.USERS,
         method: 'GET',
-        url: new URL('users', root).href,
+        url: new URL('data/users', root).href,
         qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
       }
     });
@@ -769,8 +770,8 @@ export const getOptionsUserGroup = () => ({
   [CALL_API]: {
     type: types.OPTIONS_USERGROUP,
     method: 'GET',
-    url: new URL('users', root).href,
-    qs: { limit: 100, fields: 'userName' }
+    url: new URL('data/users', root).href,
+    qs: { limit: 100, fields: 'user_name' }
   }
 });
 
@@ -779,38 +780,7 @@ export const getUser = (userId) => ({
     type: types.USER,
     id: userId,
     method: 'GET',
-    path: `users/${userId}`
-  }
-});
-
-export const createUser = (userId, payload) => ({
-  [CALL_API]: {
-    type: types.NEW_USER,
-    id: userId,
-    method: 'POST',
-    path: 'users',
-    body: payload
-  }
-});
-
-export const updateUser = (userId, payload) => ({
-  [CALL_API]: {
-    type: types.UPDATE_USER,
-    id: userId,
-    method: 'PUT',
-    path: `users/${userId}`,
-    body: payload
-  }
-});
-
-export const clearUpdateUser = (userId) => ({ type: types.UPDATE_USER_CLEAR, id: userId });
-
-export const deleteUser = (userId) => ({
-  [CALL_API]: {
-    type: types.USER_DELETE,
-    id: userId,
-    method: 'DELETE',
-    path: `users/${userId}`
+    path: `data/user/${userId}`
   }
 });
 
@@ -827,7 +797,7 @@ export const listGroups = (options = {}) => {
       [CALL_API]: {
         type: types.GROUPS,
         method: 'GET',
-        url: new URL('groups', root).href,
+        url: new URL('data/groups', root).href,
         qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
       }
     });
@@ -838,8 +808,8 @@ export const getOptionsGroupGroup = () => ({
   [CALL_API]: {
     type: types.OPTIONS_GROUPGROUP,
     method: 'GET',
-    url: new URL('groups', root).href,
-    qs: { limit: 100, fields: 'groupName' }
+    url: new URL('data/groups', root).href,
+    qs: { limit: 100, fields: 'long_name' }
   }
 });
 
@@ -848,7 +818,7 @@ export const getGroup = (groupId) => ({
     type: types.GROUP,
     id: groupId,
     method: 'GET',
-    path: `groups/${groupId}`
+    path: `data/group/${groupId}`
   }
 });
 
@@ -857,7 +827,7 @@ export const createGroup = (groupId, payload) => ({
     type: types.NEW_GROUP,
     id: groupId,
     method: 'POST',
-    path: 'groups',
+    path: 'data/groups',
     body: payload
   }
 });
@@ -867,7 +837,7 @@ export const updateGroup = (groupId, payload) => ({
     type: types.UPDATE_GROUP,
     id: groupId,
     method: 'PUT',
-    path: `groups/${groupId}`,
+    path: `data/group/${groupId}`,
     body: payload
   }
 });
@@ -879,7 +849,7 @@ export const deleteGroup = (groupId) => ({
     type: types.GROUP_DELETE,
     id: groupId,
     method: 'DELETE',
-    path: `groups/${groupId}`
+    path: `data/group/${groupId}`
   }
 });
 

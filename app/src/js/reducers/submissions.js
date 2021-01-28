@@ -184,8 +184,9 @@ export default createReducer(initialState, {
   },
 
   [OPTIONS_SUBMISSIONNAME]: (state, action) => {
-    const { id } = action;
-    const options = action.data.results.reduce(
+    // const { id } = action; - here because the below fix may not be the best solution but works for now
+    const { id } = action.data[0].id;
+    const options = action.data.reduce(
       (obj, { name }) =>
         Object.assign(obj, {
           [`${name}`]: id

@@ -81,8 +81,8 @@ class QuestionsOverview extends React.Component {
             action={listQuestions}
             tableColumns={tableColumns}
             query={this.generateQuery}
-            rowId='question_id'
-            sortIdx='question_name'
+            rowId='id'
+            sortIdx='long_name'
           >
           </List>
         </section>
