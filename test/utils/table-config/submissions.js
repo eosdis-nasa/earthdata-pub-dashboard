@@ -34,7 +34,7 @@ test('setOnConfirm navigates to the target submission with a single selected sub
 
   confirmCallback();
 
-  t.true(t.context.history.push.calledWith('/submissions/submission/one-submission'));
+  t.true(t.context.history.push.calledWith('/submissions/id/one-submission'));
 });
 
 test('setOnConfirm navigates to the processing page with multiple selected submissions', (t) => {

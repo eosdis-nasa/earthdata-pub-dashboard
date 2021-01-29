@@ -17,7 +17,7 @@ const questions = {
   base: 'questions',
   heading: strings.questions,
   routes: (currentRoute, params, count) => {
-    if (currentRoute.indexOf('questions/question') >= 0) {
+    if (currentRoute.indexOf('questions/id') >= 0) {
       return singleQuestionRoutes.map(d => {
         if (!d[1] || d[1].indexOf(':questionId') === -1) return d;
         const copy = d.slice();

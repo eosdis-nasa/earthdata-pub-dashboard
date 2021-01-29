@@ -32,9 +32,9 @@ describe('Dashboard Workflows Page', () => {
       cy.visit('/workflows');
       cy.get('.table .tbody .tr').should('have.length', 2);
       cy.contains('.table .tbody .tr a', 'HelloWorldWorkflow')
-        .should('have.attr', 'href', '/workflows/workflow/HelloWorldWorkflow');
+        .should('have.attr', 'href', '/workflows/id/HelloWorldWorkflow');
       cy.contains('.table .tbody .tr a', 'SecondTestWorkflow')
-        .should('have.attr', 'href', '/workflows/workflow/SecondTestWorkflow');
+        .should('have.attr', 'href', '/workflows/id/SecondTestWorkflow');
     });
 
     it('displays a link to individual workflow', () => {
@@ -45,14 +45,14 @@ describe('Dashboard Workflows Page', () => {
       cy.contains('.heading--xlarge', 'Workflows');
 
       cy.contains('.table .tbody .tr a', workflowName)
-        .should('have.attr', 'href', `/workflows/workflow/${workflowName}`)
+        .should('have.attr', 'href', `/workflows/id/${workflowName}`)
         .click();
 
       cy.contains('.heading--large', workflowName);
       cy.getJsonTextareaValue().then((workflowJson) => {
         expect(workflowJson.name).to.equal(workflowName);
         expect(workflowJson.definition.States.StartStatus)
-          .to.deep.equal({Type: 'Task', Resource: '${SfSnsReportLambdaAliasOutput}', Next: 'StopStatus'});
+          .to.deep.equal({ Type: 'Task', Resource: '${SfSnsReportLambdaAliasOutput}', Next: 'StopStatus' });
       });
     });
 

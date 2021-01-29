@@ -7,7 +7,7 @@ describe('Dashboard Users Page', () => {
       shouldBeRedirectedToLogin();
 
       const userId = 'test-user';
-      cy.visit(`/users/user/${userId}`);
+      cy.visit(`/users/id/${userId}`);
       shouldBeRedirectedToLogin();
     });
   });
@@ -67,7 +67,7 @@ describe('Dashboard Users Page', () => {
       cy.get('form div button').contains('Submit').click();
       cy.wait('@postUser');
       cy.wait('@getUser');
-      cy.url().should('include', `users/user/${name}`);
+      cy.url().should('include', `users/id/${name}`);
       cy.contains('.heading--xlarge', 'Users');
       cy.contains('.heading--large', name);
       cy.contains('.heading--medium', 'User Overview');
@@ -86,14 +86,14 @@ describe('Dashboard Users Page', () => {
       cy.contains('a', 'Back to Users').click();
       cy.wait('@getUsers');
       cy.contains('.table .tbody .tr a', name)
-        .should('have.attr', 'href', `/users/user/${name}`);
+        .should('have.attr', 'href', `/users/id/${name}`);
     });
 
     it('should edit a user', () => {
       const name = 'test-user';
       const email = 'blah@example.com';
 
-      cy.visit(`/users/user/${name}`);
+      cy.visit(`/users/id/${name}`);
       cy.contains('.heading--large', name);
       cy.contains('a', 'Edit').as('edituser');
       cy.get('@edituser')
@@ -133,7 +133,7 @@ describe('Dashboard Users Page', () => {
 
     it('should delete a user', () => {
       const name = 'test-user';
-      cy.visit(`/users/user/${name}`);
+      cy.visit(`/users/id/${name}`);
       cy.contains('.heading--large', name);
 
       // delete user
@@ -149,7 +149,7 @@ describe('Dashboard Users Page', () => {
 
     it('should fail to delete a user with an associated rule', () => {
       const name = 'Test User';
-      cy.visit(`/users/user/${name}`);
+      cy.visit(`/users/id/${name}`);
       cy.contains('.heading--large', name);
 
       // delete user

@@ -35,7 +35,7 @@ class Groups extends React.Component {
                 <Route exact path='/groups' component={GroupsOverview} />
                 {/* <Route path='/groups/add' component={AddGroup} />-->
                 <Route path='/groups/edit/:groupId' component={EditGroup} /> */}
-                <Route path='/groups/group/:groupId' component={GroupOverview} />
+                <Route path='/groups/id/:groupId' component={GroupOverview} />
               </Switch>
             </div>
           </div>

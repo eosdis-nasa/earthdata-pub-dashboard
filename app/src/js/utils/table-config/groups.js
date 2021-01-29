@@ -10,7 +10,7 @@ export const tableColumns = [
   },
   {
     Header: 'Name',
-    accessor: row => <Link to={`groups/group/${row.id}`}>{row.long_name}</Link>,
+    accessor: row => <Link to={`groups/id/${row.id}`}>{row.long_name}</Link>,
     id: 'long_name'
   },
   {

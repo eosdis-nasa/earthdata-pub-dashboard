@@ -31,7 +31,7 @@ class Users extends React.Component {
             <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
               <Switch>
                 <Route exact path='/users' component={UsersOverview} />
-                <Route path='/users/user/:userId' component={UserOverview} />
+                <Route path='/users/id/:userId' component={UserOverview} />
               </Switch>
             </div>
           </div>

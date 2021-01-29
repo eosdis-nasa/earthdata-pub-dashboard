@@ -33,7 +33,7 @@ class Forms extends React.Component {
               <Switch>
                 <Route exact path='/forms' component={FormsOverview} />
                 <Route path='/forms/edit/:formId' component={EditGroup} />
-                <Route path='/forms/form/:formId' component={FormOverview} />
+                <Route path='/forms/id/:formId' component={FormOverview} />
               </Switch>
             </div>
           </div>

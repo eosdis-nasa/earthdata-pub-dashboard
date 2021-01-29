@@ -24,7 +24,7 @@ class Roles extends React.Component {
             <div className='page__content--shortened'>
               <Switch>
                 <Route exact path='/roles' component={RolesOverview} />
-                <Route path='/roles/role/:roleName' component={Role} />
+                <Route path='/roles/id/:roleName' component={Role} />
               </Switch>
             </div>
           </div>

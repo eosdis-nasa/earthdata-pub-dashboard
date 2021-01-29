@@ -35,7 +35,7 @@ export const tableColumns = [
   },
   {
     Header: 'Name',
-    accessor: row => <Link to={`submissions/submission/${row.id}`}>{row.name}</Link>,
+    accessor: row => <Link to={`submissions/id/${row.id}`}>{row.name}</Link>,
     id: 'name',
     width: 225
   },

@@ -82,17 +82,17 @@ describe('Dashboard Submissions Page', () => {
           // Primary Data Producer column has link to the form page
           cy.get('@columns').eq(7).children('a')
             .should('have.attr', 'href')
-            .and('be.eq', `/forms/form/${submission.dataSubmissionRequest}`);
+            .and('be.eq', `/forms/id/${submission.dataSubmissionRequest}`);
 
           // Contact column has link to the form page
           cy.get('@columns').eq(8).children('a')
             .should('have.attr', 'href')
-            .and('be.eq', `/forms/form/${submission.dataSubmissionRequest}`);
+            .and('be.eq', `/forms/id/${submission.dataSubmissionRequest}`);
 
           // Workflow column has link to the workflow page
           cy.get('@columns').eq(9).children('a')
             .should('have.attr', 'href')
-            .and('be.eq', `/workflows/workflow/${submission.workflow}`);
+            .and('be.eq', `/workflows/id/${submission.workflow}`);
 
           // Updated column
           cy.get('@columns').eq(10).invoke('text')
