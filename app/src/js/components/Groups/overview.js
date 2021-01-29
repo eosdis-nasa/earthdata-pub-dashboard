@@ -57,6 +57,7 @@ class GroupsOverview extends React.Component {
 
   render () {
     const { list } = this.props.groups;
+    console.log('GROUPSSSSSSSS FROM OVERVIEW', list);
     const { stats } = this.props;
     const { count, queriedAt } = list.meta;
 

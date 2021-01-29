@@ -57,6 +57,7 @@ class FormsOverview extends React.Component {
 
   render () {
     const { list } = this.props.forms;
+    console.log('FORMSSSSSSSS FROM OVERVIEW', list);
     const { stats } = this.props;
     const { count, queriedAt } = list.meta;
 

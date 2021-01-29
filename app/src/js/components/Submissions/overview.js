@@ -126,6 +126,8 @@ class SubmissionsOverview extends React.Component {
   render () {
     const { stats, submissions, dispatch } = this.props;
     const { list, dropdowns } = submissions;
+    // STILL NEED TO CHANGE SCHEMA
+    console.log('SUBMISSIONSSSSSSSSSSSSSSSSSSS FROM OVERVIEW', submissions);
     const { count, queriedAt } = list.meta;
     const statsCount = get(stats, 'count.data.submissions.count', []);
     const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);

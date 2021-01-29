@@ -8,11 +8,11 @@ import {
   fromNow,
   displayCase,
   submissionLink,
-  dataSubmissionRequestLink,
-  dataProductQuestionaireLink,
-  dataProducerLink,
-  pointOfContactLink,
-  workflowLink
+  // dataSubmissionRequestLink,
+  // dataProductQuestionaireLink,
+  // dataProducerLink,
+  // pointOfContactLink,
+  // workflowLink
 } from '../format';
 import {
   deleteSubmission
@@ -28,9 +28,15 @@ export const tableColumns = [
     width: 100
   },
   {
-    Header: 'Workflow Name',
-    accessor: row => <Link to={`/submissions/${row.workflow_name}`} className={`submission__workflow_name submission__workflow_name--${row.workflow_name}`}>{displayCase(row.workflow_name)}</Link>,
+    Header: 'Workflow',
+    accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`submission__workflow submission__workflow--${row.workflow_id}`}>{displayCase(row.workflow_name)}</Link>,
     id: 'workflow_name',
+    width: 100
+  },
+  {
+    Header: 'Step',
+    accessor: row => <Link to={`submissions/id/${row.id}`}>{row.stop_name}</Link>,
+    id: 'step_name',
     width: 100
   },
   {
@@ -40,6 +46,21 @@ export const tableColumns = [
     width: 225
   },
   {
+    Header: 'Created',
+    accessor: row => shortDateNoTimeYearFirst(row.created_at),
+    id: 'created_at'
+  },
+  {
+    Header: 'Latest Edit',
+    accessor: row => shortDateNoTimeYearFirst(row.last_change),
+    id: 'last_change'
+  },
+  {
+    Header: 'Lock',
+    accessor: row => row.lock,
+    id: 'lock'
+  }
+  /* {
     Header: 'Data Submission Request',
     accessor: row => dataSubmissionRequestLink(row.dataSubmissionRequest, 'Data Submission Request'),
     id: 'dataSubmissionRequest',
@@ -66,18 +87,7 @@ export const tableColumns = [
     accessor: row => pointOfContactLink(row.dataProductQuestionaire, row.contact),
     id: 'contact',
     width: 100
-  },
-  {
-    Header: 'Workflow',
-    accessor: row => workflowLink(row.workflow),
-    id: 'workflow',
-    width: 100
-  },
-  {
-    Header: 'Latest Edit',
-    accessor: row => shortDateNoTimeYearFirst(row.timestamp),
-    id: 'timestamp'
-  }
+  }, */
 ];
 
 export const errorTableColumns = [
@@ -97,14 +107,14 @@ export const errorTableColumns = [
   },
   {
     Header: 'Submission',
-    accessor: row => submissionLink(row.submissionId),
-    id: 'submissionId',
+    accessor: row => submissionLink(row.id),
+    id: 'id',
     width: 200
   },
   {
     Header: 'Updated',
-    accessor: row => fromNow(row.timestamp),
-    id: 'timestamp'
+    accessor: row => fromNow(row.last_change),
+    id: 'last_change'
   }
 ];
 

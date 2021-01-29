@@ -56,7 +56,7 @@ const Submissions = ({
           <div className='page__content--shortened'>
             <Switch>
               <Route exact path='/submissions' component={SubmissionsOverview} />
-              <Route path='/submissions/:submissionId' component={SubmissionOverview} />
+              <Route path='/submissions/id/:submissionId' component={SubmissionOverview} />
               <Route path='/submissions/metadata/:submissionId' component={EditMetadata} />
               <Route path='/submissions/completed' component={AllSubmissionsWithWrapper} />
               <Route path='/submissions/processing' component={AllSubmissionsWithWrapper} />

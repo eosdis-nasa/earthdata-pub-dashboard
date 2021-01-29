@@ -14,6 +14,7 @@ export const tableColumns = [
     accessor: row => row.email,
     id: 'email'
   },
+  /* ,
   {
     Header: 'Roles',
     accessor: row => row.roles.join(', '),
@@ -24,7 +25,6 @@ export const tableColumns = [
     accessor: row => row.groups.join(', '),
     id: 'groups'
   },
-  /* ,
   {
     Header: 'Permissions',
     accessor: row => row.permissions.join(', '),
@@ -35,6 +35,11 @@ export const tableColumns = [
     accessor: row => row.subscriptions.join(', '),
     id: 'subscriptions'
   }, */
+  {
+    Header: 'Registered',
+    accessor: row => shortDateNoTimeYearFirst(row.registered),
+    id: 'registered'
+  },
   {
     Header: 'Last Login',
     accessor: row => shortDateNoTimeYearFirst(row.last_login),
