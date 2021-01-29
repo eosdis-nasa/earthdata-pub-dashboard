@@ -16,7 +16,7 @@ const forms = {
   base: 'forms',
   heading: 'Forms',
   routes: (currentRoute, params, count) => {
-    if (currentRoute.indexOf('/forms/id') >= 0) {
+    if (currentRoute.indexOf('forms/id') >= 0) {
       return singleFormRoutes;
     } else if (currentRoute.slice(0, 10) !== '/forms') {
       return empty;

@@ -15,7 +15,7 @@ const groups = {
   base: 'groups',
   heading: 'Groups',
   routes: (currentRoute, params, count) => {
-    if (currentRoute.indexOf('/groups/id') >= 0) {
+    if (currentRoute.indexOf('groups/id') >= 0) {
       return singleGroupRoutes;
     } else if (currentRoute.slice(0, 10) !== '/groups') {
       return empty;
