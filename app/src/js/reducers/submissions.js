@@ -82,7 +82,7 @@ export default createReducer(initialState, {
   [SUBMISSIONS]: (state, action) => {
     const { data } = action;
     console.log(data);
-    set(state, ['list', 'data'], data.results);
+    set(state, ['list', 'data'], data);
     set(state, ['list', 'meta'], assignDate(data.meta));
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], false);
