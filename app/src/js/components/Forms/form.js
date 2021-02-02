@@ -23,7 +23,7 @@ const { updateInterval } = _config;
 const metaAccessors = [
   {
     label: 'User Name',
-    property: 'userName',
+    property: 'long_name',
   },
   {
     label: 'Created',

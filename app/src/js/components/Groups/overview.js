@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { get } from 'object-path';
 import cloneDeep from 'lodash.clonedeep';
 import {
   listGroups,
-  getCount,
+  // getCount,
   interval,
   filterGroups,
   clearGroupsFilter
@@ -91,7 +91,7 @@ class GroupsOverview extends React.Component {
             rowId='name'
             sortIdx='timestamp'
           >
-            <ListFilters>
+            {/* <ListFilters>
               <Dropdown
                 options={pageSizeOptions}
                 action={filterGroups}
@@ -102,7 +102,7 @@ class GroupsOverview extends React.Component {
                   placeholder: 'Results Per Page'
                 }}
               />
-            </ListFilters>
+            </ListFilters> */}
           </List>
         </section>
       </div>

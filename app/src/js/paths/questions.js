@@ -8,7 +8,7 @@ const questionsRoutes = [
 ];
 
 const singleQuestionRoutes = [
-  [strings.back_to_questions, null, 'sidebar__nav--back']
+  ['Back to Questions', '/questions', 'sidebar__nav'],
 ];
 
 const empty = [['', '']];

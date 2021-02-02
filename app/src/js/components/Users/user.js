@@ -8,19 +8,14 @@ import {
   getUser
 } from '../../actions';
 import { get } from 'object-path';
-import {
-  fromNow,
-  lastUpdated
-} from '../../utils/format';
-import Table from '../SortableTable/SortableTable';
+import { lastUpdated, shortDateNoTimeYearFirst } from '../../utils/format';
 import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 import _config from '../../config';
-
 const { updateInterval } = _config;
 
-const groupTableColumns = [
+/* const groupTableColumns = [
   {
     Header: 'Table Name',
     accessor: row => row,
@@ -34,7 +29,7 @@ const roleTableColumns = [
   }
 ];
 
-/* const permissionTableColumns = [
+const permissionTableColumns = [
   {
     Header: 'Table Name',
     accessor: row => row
@@ -59,13 +54,13 @@ const metaAccessors = [
   },
   {
     label: 'Registered',
-    property: 'registered',
-    accessor: fromNow
+    accessor: row => shortDateNoTimeYearFirst(row.registered),
+    id: 'registered'
   },
   {
     label: 'Last Login',
-    property: 'last_login',
-    accessor: fromNow
+    accessor: row => shortDateNoTimeYearFirst(row.last_login),
+    id: 'last_login'
   }
 ];
 
@@ -115,7 +110,6 @@ class UserOverview extends React.Component {
   render () {
     const userId = this.props.match.params.userId;
     const record = this.props.users.map[userId];
-    console.log('USERRRRRRRRRRRRRRRRRRRR RECORDDDDDDDDDDDDDDDD', record);
     if (!record || (record.inflight && !record.data)) {
       return <Loading />;
     } else if (record.error) {
@@ -139,7 +133,7 @@ class UserOverview extends React.Component {
           <Metadata data={user} accessors={metaAccessors} />
         </section>
 
-        <section className='page__section'>
+        {/* <section className='page__section'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Groups</h2>
           </div>
@@ -159,7 +153,7 @@ class UserOverview extends React.Component {
           />
         </section>
 
-        {/* <section className='page__section'>
+        <section className='page__section'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Permissions</h2>
           </div>

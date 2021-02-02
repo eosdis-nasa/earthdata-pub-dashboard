@@ -151,7 +151,7 @@ class GroupOverview extends React.Component {
           <Metadata data={group} accessors={metaAccessors} />
         </section>
 
-        <section className='page__section'>
+        {/* <section className='page__section'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Permissions</h2>
           </div>
@@ -169,7 +169,7 @@ class GroupOverview extends React.Component {
             data={group.subscriptions}
             tableColumns={subscriptionTableColumns}
           />
-        </section>
+        </section> */}
       </div>
     );
   }

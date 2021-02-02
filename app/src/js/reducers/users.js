@@ -61,7 +61,7 @@ export default createReducer(initialState, {
 
   [USERS]: (state, action) => {
     const { data } = action;
-    set(state, ['list', 'data'], data.results);
+    set(state, ['list', 'data'], data);
     set(state, ['list', 'meta'], assignDate(data.meta));
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], false);
@@ -92,10 +92,10 @@ export default createReducer(initialState, {
     const { data } = action;
     // Map the list response to an object with key-value pairs like:
     // displayValue: optionElementValue
-    const options = data.results.reduce((obj, user) => {
+    const options = data.reduce((obj, user) => {
       // Several `results` items can share a `userName`, but
       // these are de-duplciated by the key-value structure
-      obj[user.userName] = user.userName;
+      obj[user.name] = user.name;
       return obj;
     }, { '': '' });
     set(state, ['dropdowns', 'groups', 'options'], options);

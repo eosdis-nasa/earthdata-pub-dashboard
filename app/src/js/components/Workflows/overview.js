@@ -41,7 +41,7 @@ const WorkflowOverview = ({ workflows }) => {
           rowId='id'
           sortIdx='long_name'
         >
-          <ListFilters>
+          {/* <ListFilters>
             <Search
               dispatch={dispatch}
               action={searchWorkflows}
@@ -49,7 +49,7 @@ const WorkflowOverview = ({ workflows }) => {
               label='Search'
               placeholder="Workflow Name"
             />
-          </ListFilters>
+          </ListFilters> */}
         </List>
       </section>
     </div>

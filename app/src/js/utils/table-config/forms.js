@@ -6,8 +6,8 @@ import { shortDateNoTimeYearFirst } from '../format';
 export const tableColumns = [
   {
     Header: 'Name',
-    accessor: row => <Link to={`forms/id/${row.id}`}>{row.name}</Link>,
-    id: 'name'
+    accessor: row => <Link to={`forms/id/${row.id}`}>{row.long_name}</Link>,
+    id: 'long_name'
   },
   {
     Header: 'Version',
@@ -15,18 +15,13 @@ export const tableColumns = [
     id: 'version'
   },
   {
-    Header: 'User Name',
-    accessor: row => <Link to={`users/id/${row.userId}`}>{row.userName}</Link>,
-    id: 'userName'
+    Header: 'Description',
+    accessor: row => row.description,
+    id: 'description'
   },
   {
     Header: 'Created',
-    accessor: row => shortDateNoTimeYearFirst(row.createdAt),
-    id: 'createdAt'
-  },
-  {
-    Header: 'Last Updated',
-    accessor: row => shortDateNoTimeYearFirst(row.timestamp),
-    id: 'timestamp'
+    accessor: row => shortDateNoTimeYearFirst(row.created_at),
+    id: 'created_at'
   }
 ];

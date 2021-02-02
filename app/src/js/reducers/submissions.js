@@ -1,7 +1,6 @@
 'use strict';
 import { set, del } from 'object-path';
 import assignDate from './assign-date';
-import removeDeleted from './remove-deleted';
 
 import {
   SUBMISSION,
@@ -81,7 +80,6 @@ export default createReducer(initialState, {
 
   [SUBMISSIONS]: (state, action) => {
     const { data } = action;
-    console.log(data);
     set(state, ['list', 'data'], data);
     set(state, ['list', 'meta'], assignDate(data.meta));
     set(state, ['list', 'inflight'], false);
@@ -184,7 +182,7 @@ export default createReducer(initialState, {
     set(state, ['list', 'params', action.paramKey], null);
   },
 
-  /* [OPTIONS_SUBMISSIONNAME]: (state, action) => {
+  [OPTIONS_SUBMISSIONNAME]: (state, action) => {
     // const { id } = action; - here because the below fix may not be the best solution but works for now
     const { id } = action.data[0].id;
     const options = action.data.reduce(
@@ -195,8 +193,8 @@ export default createReducer(initialState, {
       {}
     );
     set(state, ['dropdowns', 'name', 'options'], options);
-  }, */
-  [OPTIONS_SUBMISSIONNAME]: (state, action) => {},
+  },
+  // [OPTIONS_SUBMISSIONNAME]: (state, action) => {},
   [OPTIONS_SUBMISSIONNAME_INFLIGHT]: () => {},
   [OPTIONS_SUBMISSIONNAME_ERROR]: (state, action) => {
     set(state, ['dropdowns', 'name', 'options'], []);

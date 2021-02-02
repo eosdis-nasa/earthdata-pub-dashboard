@@ -41,7 +41,7 @@ const MetricOverview = ({ metrics }) => {
           rowId='name'
           sortIdx='name'
         >
-          <ListFilters>
+          {/* <ListFilters>
             <Search
               dispatch={dispatch}
               action={searchMetrics}
@@ -49,7 +49,7 @@ const MetricOverview = ({ metrics }) => {
               label='Search'
               placeholder="Metric Name"
             />
-          </ListFilters>
+          </ListFilters> */}
         </List>
       </section>
     </div>

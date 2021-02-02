@@ -6,11 +6,11 @@ import { connect, useDispatch } from 'react-redux';
 import { tally } from '../../utils/format';
 import {
   listRoles,
-  searchRoles,
-  clearRolesSearch
+  // searchRoles,
+  // clearRolesSearch
 } from '../../actions';
 import List from '../Table/Table';
-import Search from '../Search/search';
+// import Search from '../Search/search';
 import { tableColumns } from '../../utils/table-config/roles';
 
 const RoleOverview = ({ roles }) => {
@@ -30,7 +30,7 @@ const RoleOverview = ({ roles }) => {
           <h2 className='heading--medium heading--shared-content with-description'>All Roles <span className='num--title'>{count ? ` ${tally(count)}` : 0}</span></h2>
         </div>
         {/* Someone needs to define the search parameters for workflows, e.g. steps, collections, granules, etc. } */}
-        <div className='filters'>
+        {/* <div className='filters'>
           <Search
             dispatch={dispatch}
             action={searchRoles}
@@ -38,7 +38,7 @@ const RoleOverview = ({ roles }) => {
             label='Search'
             placeholder="Role Name"
           />
-        </div>
+        </div> */}
 
         <List
           list={roles.list}

@@ -6,13 +6,8 @@ import {
   shortDateNoTimeYearFirst,
   nullValue,
   fromNow,
-  displayCase,
   submissionLink,
-  // dataSubmissionRequestLink,
-  // dataProductQuestionaireLink,
-  // dataProducerLink,
-  // pointOfContactLink,
-  // workflowLink
+  bool
 } from '../format';
 import {
   deleteSubmission
@@ -23,19 +18,19 @@ import Dropdown from '../../components/DropDown/simple-dropdown';
 export const tableColumns = [
   {
     Header: 'Status',
-    accessor: row => <Link to={`/submissions/${row.status_message}`} className={`submission__status_message submission__status_message--${row.status_message}`}>{displayCase(row.status_message)}</Link>,
+    accessor: row => <Link to={`/submissions/id/${row.id}`} className={`submission__status_message submission__status_message--${row.id}`}>{row.status_message}</Link>,
     id: 'status_message',
     width: 100
   },
   {
     Header: 'Workflow',
-    accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`submission__workflow submission__workflow--${row.workflow_id}`}>{displayCase(row.workflow_name)}</Link>,
+    accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`submission__workflow submission__workflow--${row.workflow_id}`}>{row.workflow_name}</Link>,
     id: 'workflow_name',
     width: 100
   },
   {
     Header: 'Step',
-    accessor: row => <Link to={`submissions/id/${row.id}`}>{row.stop_name}</Link>,
+    accessor: row => <Link to={`submissions/id/${row.id}`}>{row.step_name}</Link>,
     id: 'step_name',
     width: 100
   },
@@ -56,8 +51,8 @@ export const tableColumns = [
     id: 'last_change'
   },
   {
-    Header: 'Lock',
-    accessor: row => row.lock,
+    Header: 'Locked',
+    accessor: row => row.lock ? <a href={row.lock} target='_blank'>{bool(row.lock)}</a> : bool(row.lock),
     id: 'lock'
   }
   /* {
@@ -122,7 +117,7 @@ export const simpleDropdownOption = function (config) {
   return (
     <Dropdown
       key={config.label}
-      label={config.label.toUpperCase()}
+      label={config.label}
       value={config.value}
       options={config.options}
       id={config.label}

@@ -11,7 +11,6 @@ import { configureRequest } from './helpers';
 import _config from '../config';
 import { getCollectionId, collectionNameVersion } from '../utils/format';
 import { fetchCurrentTimeFilters } from '../utils/datepicker';
-import log from '../utils/log';
 import { authHeader } from '../utils/basic-auth';
 import { apiGatewaySearchTemplate } from './action-config/apiGatewaySearch';
 import { apiLambdaSearchTemplate } from './action-config/apiLambdaSearch';
@@ -25,46 +24,58 @@ const {
   showDistributionAPIMetrics,
   showTeaMetrics,
   apiRoot: root,
+  formsUrl,
   defaultPageLimit,
   minCompatibleApiVersion
 } = _config;
 
-export const refreshAccessToken = (token) => {
-  return (dispatch) => {
-    const start = new Date();
-    log('REFRESH_TOKEN_INFLIGHT');
-    dispatch({ type: types.REFRESH_TOKEN_INFLIGHT });
+const redirects = {
+  forms: formsUrl
+};
 
-    const requestConfig = configureRequest({
-      method: 'POST',
-      url: new URL('refresh', root).href,
-      body: { token },
-      // make sure request failures are sent to .catch()
-      simple: true
-    });
-    return requestPromise(requestConfig)
-      .then(({ body }) => {
-        const duration = new Date() - start;
-        log('REFRESH_TOKEN', duration + 'ms');
-        return dispatch({
-          type: types.REFRESH_TOKEN,
-          token: body.token
-        });
-      })
-      .catch(({ error }) => {
-        dispatch({
-          type: types.REFRESH_TOKEN_ERROR,
-          error
-        });
-        throw error;
+export const redirectWithToken = (redirect, token) => {
+  if (redirects[redirect]) {
+    const redirectUrl = new URL(redirects[redirect]);
+    redirectUrl.searchParams.set('token', token);
+    window.location.href = redirectUrl.href;
+  } else {
+    history.push('/');
+  }
+};
+
+export const fetchToken = (code, state) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.FETCH_TOKEN,
+        method: 'GET',
+        id: null,
+        path: 'token',
+        qs: { code, state }
+      }
+    })
+      .then(({ data }) => {
+        redirectWithToken(state, data.token);
       });
   };
 };
 
-export const login = (token) => ({
-  type: types.LOGIN,
-  token
-});
+export const login = (redirect) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.LOGIN,
+        method: 'GET',
+        id: null,
+        path: 'token',
+        qs: { state: redirect }
+      }
+    })
+      .then(({ data }) => {
+        window.location.href = data.redirect;
+      });
+  };
+};
 
 export const setTokenState = (token) => ({ type: types.SET_TOKEN, token });
 
@@ -336,7 +347,7 @@ export const applyWorkflowToSubmission = (submissionId, workflow) => ({
     type: types.SUBMISSION_APPLYWORKFLOW,
     method: 'PUT',
     id: submissionId,
-    path: `data/submission/${submissionId}`,
+    path: `submissions/${submissionId}`,
     body: {
       action: 'applyWorkflow',
       workflow
@@ -423,7 +434,7 @@ export const deleteSubmission = (submissionId) => ({
     type: types.SUBMISSION_DELETE,
     method: 'DELETE',
     id: submissionId,
-    path: `data/submission/${submissionId}`
+    path: `submissions/${submissionId}`
   }
 });
 
@@ -678,16 +689,16 @@ export const clearProvidersSearch = () => ({ type: types.CLEAR_PROVIDERS_SEARCH 
 export const filterProviders = (param) => ({ type: types.FILTER_PROVIDERS, param: param });
 export const clearProvidersFilter = (paramKey) => ({ type: types.CLEAR_PROVIDERS_FILTER, paramKey: paramKey });
 
-export const listForms = (options = {}) => {
-  const { listAll = false, ...queryOptions } = options;
+export const listForms = (options) => {
   return (dispatch, getState) => {
-    const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
+    // const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
     return dispatch({
       [CALL_API]: {
         type: types.FORMS,
         method: 'GET',
+        id: null,
         url: new URL('data/forms', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
+        qs: Object.assign({ per_page: defaultPageLimit }, options)
       }
     });
   };
@@ -697,8 +708,8 @@ export const getOptionsFormGroup = () => ({
   [CALL_API]: {
     type: types.OPTIONS_FORMGROUP,
     method: 'GET',
-    url: new URL('data/forms', root).href,
-    qs: { limit: 100, fields: 'long_name' }
+    url: new URL('forms', root).href,
+    qs: { limit: 100, fields: 'formName' }
   }
 });
 
@@ -716,7 +727,7 @@ export const createForm = (formId, payload) => ({
     type: types.NEW_FORM,
     id: formId,
     method: 'POST',
-    path: 'data/forms',
+    path: 'forms',
     body: payload
   }
 });
@@ -726,7 +737,7 @@ export const updateForm = (formId, payload) => ({
     type: types.UPDATE_FORM,
     id: formId,
     method: 'PUT',
-    path: `data/form/${formId}`,
+    path: `forms/${formId}`,
     body: payload
   }
 });
@@ -738,7 +749,7 @@ export const deleteForm = (formId) => ({
     type: types.FORM_DELETE,
     id: formId,
     method: 'DELETE',
-    path: `data/form/${formId}`
+    path: `forms/${formId}`
   }
 });
 
@@ -747,27 +758,22 @@ export const clearFormsSearch = () => ({ type: types.CLEAR_FORMS_SEARCH });
 export const filterForms = (param) => ({ type: types.FILTER_FORMS, param: param });
 export const clearFormsFilter = (paramKey) => ({ type: types.CLEAR_FORMS_FILTER, paramKey: paramKey });
 
-export const listUsers = (options = {}) => {
-  const { listAll = false, ...queryOptions } = options;
-  return (dispatch, getState) => {
-    const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
-    return dispatch({
-      [CALL_API]: {
-        type: types.USERS,
-        method: 'GET',
-        url: new URL('data/users', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
-      }
-    });
-  };
-};
+export const listUsers = (options) => ({
+  [CALL_API]: {
+    type: types.USERS,
+    method: 'GET',
+    id: null,
+    path: 'data/users',
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
+  }
+});
 
 export const getOptionsUserGroup = () => ({
   [CALL_API]: {
     type: types.OPTIONS_USERGROUP,
     method: 'GET',
-    url: new URL('data/users', root).href,
-    qs: { limit: 100, fields: 'user_name' }
+    url: new URL('users', root).href,
+    qs: { limit: 100, fields: 'long_name' }
   }
 });
 
@@ -785,26 +791,21 @@ export const clearUsersSearch = () => ({ type: types.CLEAR_USERS_SEARCH });
 export const filterUsers = (param) => ({ type: types.FILTER_USERS, param: param });
 export const clearUsersFilter = (paramKey) => ({ type: types.CLEAR_USERS_FILTER, paramKey: paramKey });
 
-export const listGroups = (options = {}) => {
-  const { listAll = false, ...queryOptions } = options;
-  return (dispatch, getState) => {
-    const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
-    return dispatch({
-      [CALL_API]: {
-        type: types.GROUPS,
-        method: 'GET',
-        url: new URL('data/groups', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
-      }
-    });
-  };
-};
+export const listGroups = (options) => ({
+  [CALL_API]: {
+    type: types.GROUPS,
+    method: 'GET',
+    id: null,
+    path: 'data/groups',
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
+  }
+});
 
 export const getOptionsGroupGroup = () => ({
   [CALL_API]: {
     type: types.OPTIONS_GROUPGROUP,
     method: 'GET',
-    url: new URL('data/groups', root).href,
+    url: new URL('groups', root).href,
     qs: { limit: 100, fields: 'long_name' }
   }
 });
@@ -823,7 +824,7 @@ export const createGroup = (groupId, payload) => ({
     type: types.NEW_GROUP,
     id: groupId,
     method: 'POST',
-    path: 'data/groups',
+    path: 'groups',
     body: payload
   }
 });
@@ -833,7 +834,7 @@ export const updateGroup = (groupId, payload) => ({
     type: types.UPDATE_GROUP,
     id: groupId,
     method: 'PUT',
-    path: `data/group/${groupId}`,
+    path: `groups/${groupId}`,
     body: payload
   }
 });
@@ -845,7 +846,7 @@ export const deleteGroup = (groupId) => ({
     type: types.GROUP_DELETE,
     id: groupId,
     method: 'DELETE',
-    path: `data/group/${groupId}`
+    path: `groups/${groupId}`
   }
 });
 
@@ -915,7 +916,7 @@ export const listMetrics = (options) => ({
     type: types.METRICS,
     method: 'GET',
     url: new URL('metrics', root).href,
-    qs: Object.assign({ limit: defaultPageLimit }, options)
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
   }
 });
 export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });

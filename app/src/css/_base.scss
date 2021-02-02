@@ -343,7 +343,10 @@ a:active {
     font-weight: 400;
   }
 }
-
+.sidebar .sidebar__nav--back {
+  margin-bottom:unset;
+  padding-bottom: unset;
+}
 .sidebar:before {
   content: "";
   /*position: absolute;*/

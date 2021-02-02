@@ -12,12 +12,10 @@ import {
 } from '../../actions';
 import { get } from 'object-path';
 import {
-  displayCase,
+  // displayCase,
   lastUpdated,
   nullValue,
   bool,
-  dataProducerLink,
-  pointOfContactLink,
   deleteText
 } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
@@ -58,16 +56,6 @@ const tableColumns = [
 ];
 
 const metaAccessors = [
-  {
-    label: 'Primary Data Producer',
-    property: 'dataProducer',
-    accessor: dataProducerLink
-  },
-  {
-    label: 'Primary Contact',
-    property: 'contact',
-    accessor: pointOfContactLink
-  },
   {
     label: 'Submitted',
     property: 'submitted',
@@ -175,6 +163,7 @@ class SubmissionOverview extends React.Component {
   render () {
     const submissionId = this.props.match.params.submissionId;
     const record = this.props.submissions.map[submissionId];
+    console.log('SINGLE SUBMISSION', record);
     if (!record || (record.inflight && !record.data)) {
       return <Loading />;
     } else if (record.error) {
@@ -224,7 +213,7 @@ class SubmissionOverview extends React.Component {
 
           <dl className='status--process'>
             <dt>Status:</dt>
-            <dd className={submission.status.toLowerCase()}>{displayCase(submission.status)}</dd>
+            <dd className={submission.status_message}>{submission.status_message}</dd>
           </dl>
         </section>
 

@@ -51,7 +51,7 @@ const Questions = ({
           <Sidebar
             currentPath={pathname}
             params={params}
-            count={count}
+            count={[count]}
           />
           <div className='page__content--shortened'>
             <Switch>

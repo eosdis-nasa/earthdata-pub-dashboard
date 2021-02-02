@@ -6,18 +6,18 @@ import { connect } from 'react-redux';
 import {
   interval,
   // getCount,
-  searchSubmissions,
-  clearSubmissionsSearch,
-  filterSubmissions,
-  clearSubmissionsFilter,
+  // searchSubmissions,
+  // clearSubmissionsSearch,
+  // filterSubmissions,
+  // clearSubmissionsFilter,
   listSubmissions,
-  filterStages,
-  filterStatuses,
-  clearStagesFilter,
-  clearStatusesFilter,
-  listWorkflows,
+  // filterStages,
+  // filterStatuses,
+  // clearStagesFilter,
+  // clearStatusesFilter,
+  // listWorkflows,
   applyWorkflowToSubmission,
-  getOptionsSubmissionName
+  // getOptionsSubmissionName
 } from '../../actions';
 import { get } from 'object-path';
 import { lastUpdated, tally, displayCase } from '../../utils/format';
@@ -26,18 +26,18 @@ import {
   simpleDropdownOption,
 } from '../../utils/table-config/submissions';
 import List from '../Table/Table';
-import Dropdown from '../DropDown/dropdown';
-import Search from '../Search/search';
+// import Dropdown from '../DropDown/dropdown';
+// import Search from '../Search/search';
 import Overview from '../Overview/overview';
-import statusOptions from '../../utils/status';
-import stageOptions from '../../utils/stage';
+// import statusOptions from '../../utils/status';
+// import stageOptions from '../../utils/stage';
 import _config from '../../config';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 // import { window } from '../../utils/browser';
-import ListFilters from '../ListActions/ListFilters';
+// import ListFilters from '../ListActions/ListFilters';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import pageSizeOptions from '../../utils/page-size';
+// import pageSizeOptions from '../../utils/page-size';
 
 const { updateInterval } = _config;
 
@@ -124,12 +124,11 @@ class SubmissionsOverview extends React.Component {
   }
 
   render () {
-    const { stats, submissions, dispatch } = this.props;
+    const { stats, submissions } = this.props;
     const { list, dropdowns } = submissions;
-    // STILL NEED TO CHANGE SCHEMA
-    console.log('SUBMISSIONSSSSSSSSSSSSSSSSSSS FROM OVERVIEW', submissions);
-    const { count, queriedAt } = list.meta;
+    const { queriedAt } = list.meta;
     const statsCount = get(stats, 'count.data.submissions.count', []);
+    // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
       <div className='page__component'>
@@ -145,17 +144,17 @@ class SubmissionsOverview extends React.Component {
         </section>
         <section className='page__section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{count ? ` ${tally(count)}` : 0}</span></h2>
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{list.data.length}</span></h2>
           </div>
           <List
             list={list}
             action={listSubmissions}
             tableColumns={tableColumns}
             query={this.generateQuery()}
-            rowId='submissionId'
+            rowId='id'
             sortIdx='timestamp'
           >
-            <ListFilters>
+            {/* <ListFilters>
               <Dropdown
                 getOptions={getOptionsSubmissionName}
                 options={get(dropdowns, ['name', 'options'])}
@@ -205,7 +204,8 @@ class SubmissionsOverview extends React.Component {
                   placeholder: 'Results Per Page',
                 }}
               />
-            </ListFilters>
+            </ListFilters> */}
+
           </List>
         </section>
       </div>

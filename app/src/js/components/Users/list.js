@@ -144,7 +144,7 @@ class AllUsers extends React.Component {
           </section>
           <div className='page__section__header page__section__header-wrapper'>
             <h1 className='heading--large heading--shared-content with-description '>
-              {displayCaseView} {strings.users} <span className='num--title'>{ !isNaN(count) ? `${tally(count)}` : 0 }</span>
+              {displayCaseView} {strings.all_users} <span className='num--title'>{ !isNaN(count) ? `${tally(count)}` : 0 }</span>
             </h1>
             {lastUpdated(queriedAt)}
           </div>
@@ -159,7 +159,7 @@ class AllUsers extends React.Component {
             rowId='id'
             sortIdx={tableSortIdx}
           >
-            <ListFilters>
+            {/* <ListFilters>
               <Dropdown
                 getOptions={getOptionsCollectionName}
                 options={get(dropdowns, ['collectionName', 'options'])}
@@ -200,7 +200,7 @@ class AllUsers extends React.Component {
                   placeholder: 'Results Per Page'
                 }}
               />
-            </ListFilters>
+            </ListFilters> */}
           </List>
         </section>
         <LogViewer

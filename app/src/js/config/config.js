@@ -9,7 +9,7 @@ const config = {
     }
   },
   apiRoot: process.env.APIROOT || 'http://localhost:8080',
-  formsUrl: process.env.FORMS_URL || 'http://localhost:3001',
+  formsUrl: process.env.FORMS_URL || 'http://localhost:8081',
   awsRegion: process.env.AWS_REGION || 'us-west-2',
   oauthMethod: process.env.AUTH_METHOD || 'earthdata',
   kibanaRoot: process.env.KIBANAROOT || '',

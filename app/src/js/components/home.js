@@ -11,7 +11,7 @@ import {
   // seconds
   shortDateNoTimeYearFirst,
   nullValue,
-  displayCase,
+  // displayCase,
   submissionLink,
   dataSubmissionRequestLink,
   dataProductQuestionaireLink
@@ -164,13 +164,13 @@ class Home extends React.Component {
     const tableColumns = [
       {
         Header: 'Status',
-        accessor: row => <Link to={`/submissions/${row.status}`} className={`submission__status submission__status--${row.status}`}>{displayCase(row.status)}</Link>,
+        accessor: row => <Link to={`/submissions/${row.status}`} className={`submission__status submission__status--${row.status}`}>{row.status}</Link>,
         id: 'status',
         width: 100
       },
       {
         Header: 'Stage',
-        accessor: row => <Link to={`/submissions/${row.stage}`} className={`submission__stage submission__stage--${row.stage}`}>{displayCase(row.stage)}</Link>,
+        accessor: row => <Link to={`/submissions/${row.stage}`} className={`submission__stage submission__stage--${row.stage}`}>{row.stage}</Link>,
         id: 'stage',
         width: 100
       },

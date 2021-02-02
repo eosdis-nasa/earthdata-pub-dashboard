@@ -152,11 +152,10 @@ class AllGroups extends React.Component {
             action={listGroups}
             tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
             query={query}
-            bulkActions={this.generateBulkActions()}
-            rowId='groupId'
+            rowId='id'
             sortIdx={tableSortIdx}
           >
-            <ListFilters>
+            {/* <ListFilters>
               <Dropdown
                 getOptions={getOptionsCollectionName}
                 options={get(dropdowns, ['collectionName', 'options'])}
@@ -197,7 +196,7 @@ class AllGroups extends React.Component {
                   placeholder: 'Results Per Page',
                 }}
               />
-            </ListFilters>
+            </ListFilters> */}
           </List>
         </section>
         <LogViewer

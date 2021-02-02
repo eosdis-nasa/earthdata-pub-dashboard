@@ -107,27 +107,10 @@ export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;
   return <Link to={`/questions/id/${questionId}`}>{questionName}</Link>;
 };
-export const dataProducerLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/id/${formId}#${name}`}>{name}</Link>;
-};
-export const pointOfContactLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/id/${formId}#${name}`}>{name}</Link>;
-};
-export const dataProductQuestionaireLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/id/${formId}`}>{name}</Link>;
-};
-export const dataSubmissionRequestLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/id/${formId}`}>{name}</Link>;
-};
 export const pdrLink = function (pdrName) {
   if (!pdrName) return nullValue;
   return <Link to={`/pdrs/pdr/${pdrName}`}>{pdrName}</Link>;
 };
-
 export const providerLink = function (provider) {
   if (!provider) return nullValue;
   return <Link to={`/providers/provider/${provider}`}>{provider}</Link>;

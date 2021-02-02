@@ -11,8 +11,9 @@ import { kibanaAllLogsLink } from '../../utils/kibana';
 const paths = [
   // ['', '/pdrs'],
   // ['Providers', '/providers'],
-  // [strings.collections, '/collections'],
-  // [strings.granules, '/granules'],
+  // TODO REMOVE TESTING ONLY
+  ['Forms', '/forms'],
+  [strings.questions, '/questions'],
   [strings.submissions, '/submissions'],
   ['Workflows', '/workflows'],
   // ['Executions', '/executions'],

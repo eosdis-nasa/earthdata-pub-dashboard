@@ -4,17 +4,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  searchSubmissions,
-  clearSubmissionsSearch,
-  filterSubmissions,
-  clearSubmissionsFilter,
+  // searchSubmissions,
+  // clearSubmissionsSearch,
+  // filterSubmissions,
+  // clearSubmissionsFilter,
   listSubmissions,
-  getOptionsSubmissionName,
+  // getOptionsSubmissionName,
   listWorkflows,
   applyWorkflowToSubmission,
   interval
 } from '../../actions';
-import { get } from 'object-path';
+// import { get } from 'object-path';
 import { lastUpdated, tally, displayCase } from '../../utils/format';
 import {
   tableColumns,
@@ -24,15 +24,15 @@ import {
 } from '../../utils/table-config/submissions';
 import List from '../Table/Table';
 import LogViewer from '../Logs/viewer';
-import Dropdown from '../DropDown/dropdown';
-import Search from '../Search/search';
+// import Dropdown from '../DropDown/dropdown';
+// import Search from '../Search/search';
 import statusOptions from '../../utils/status';
 import { strings } from '../locale';
 import _config from '../../config';
 import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import ListFilters from '../ListActions/ListFilters';
-import pageSizeOptions from '../../utils/page-size';
+// import ListFilters from '../ListActions/ListFilters';
+// import pageSizeOptions from '../../utils/page-size';
 
 const { updateInterval } = _config;
 
@@ -56,6 +56,7 @@ class AllSubmissions extends React.Component {
   }
 
   componentWillUnmount () {
+    console.log('COMPONENT WILL MOUNT LIST');
     if (this.cancelInterval) { this.cancelInterval(); }
   }
 
@@ -154,11 +155,10 @@ class AllSubmissions extends React.Component {
             action={listSubmissions}
             tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
             query={query}
-            bulkActions={this.generateBulkActions()}
-            rowId='submissionId'
+            rowId='id'
             sortIdx={tableSortIdx}
           >
-            <ListFilters>
+            {/* <ListFilters>
               <Dropdown
                 getOptions={getOptionsSubmissionName}
                 options={get(dropdowns, ['name', 'options'])}
@@ -201,7 +201,7 @@ class AllSubmissions extends React.Component {
                   placeholder: 'Results Per Page'
                 }}
               />
-            </ListFilters>
+            </ListFilters> */}
           </List>
         </section>
         <LogViewer

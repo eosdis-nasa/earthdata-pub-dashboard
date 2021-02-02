@@ -12,7 +12,7 @@ import {
   listQuestions
 } from '../../actions';
 import { get } from 'object-path';
-import { tally, displayCase } from '../../utils/format';
+import { lastUpdated, tally, displayCase } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/questions';
 import List from '../Table/Table';
 import Overview from '../Overview/overview';
@@ -58,7 +58,7 @@ class QuestionsOverview extends React.Component {
   render () {
     const { stats, questions } = this.props;
     const { list } = questions;
-    const { count } = list.meta;
+    const { queriedAt } = list.meta;
     const statsCount = get(stats, 'count.data.questions.count', []);
     const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
@@ -68,19 +68,20 @@ class QuestionsOverview extends React.Component {
         </section>
         <section className='page__section page__section__header-wrapper'>
           <div className='page__section__header'>
-            <h1 className='heading--large heading--shared-content with-description '>{strings.questions_overview}</h1>
+            <h1 className='heading--large heading--shared-content with-description '>{strings.question_overview}</h1>
+            {lastUpdated(queriedAt)}
             <Overview items={overviewItems} inflight={false} />
           </div>
         </section>
         <section className='page__section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_questions} <span className='num--title'>{count ? ` ${tally(count)}` : 0}</span></h2>
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_questions} <span className='num--title'>{list.data.length}</span></h2>
           </div>
           <List
             list={list}
             action={listQuestions}
             tableColumns={tableColumns}
-            query={this.generateQuery}
+            query={this.generateQuery()}
             rowId='id'
             sortIdx='long_name'
           >

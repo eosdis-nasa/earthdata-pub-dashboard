@@ -4,44 +4,56 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { get } from 'object-path';
-import cloneDeep from 'lodash.clonedeep';
 import {
   listUsers,
-  getCount,
-  interval,
-  filterUsers,
-  clearUsersFilter
+  // getCount,
+  // filterUsers,
+  // clearUsersFilter
 } from '../../actions';
 import { lastUpdated, tally, displayCase } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/users';
 import List from '../Table/Table';
 import PropTypes from 'prop-types';
 import Overview from '../Overview/overview';
-import _config from '../../config';
-import Dropdown from '../DropDown/dropdown';
-import pageSizeOptions from '../../utils/page-size';
-import ListFilters from '../ListActions/ListFilters';
+import { strings } from '../locale';
+// import _config from '../../config';
+// import Dropdown from '../DropDown/dropdown';
+// import pageSizeOptions from '../../utils/page-size';
+// import ListFilters from '../ListActions/ListFilters';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+// import pageSizeOptions from '../../utils/page-size';
 
-const { updateInterval } = _config;
+const breadcrumbConfig = [
+  {
+    label: 'Dashboard Home',
+    href: '/'
+  },
+  {
+    label: 'Users',
+    active: true
+  }
+];
 
 class UsersOverview extends React.Component {
   constructor () {
     super();
-    this.queryStats = this.queryStats.bind(this);
     this.generateQuery = this.generateQuery.bind(this);
     this.renderOverview = this.renderOverview.bind(this);
+    this.queryMeta = this.queryMeta.bind(this);
+    this.state = {};
   }
 
   componentDidMount () {
-    this.cancelInterval = interval(this.queryStats, updateInterval, true);
+    const { dispatch } = this.props;
+    dispatch(listUsers);
   }
 
   componentWillUnmount () {
-    if (this.cancelInterval) { this.cancelInterval(); }
   }
 
-  queryStats () {
-    /* this.props.dispatch(getCount({
+  queryMeta () {
+    // const { dispatch } = this.props;
+    /* dispatch(getCount({
       type: 'users'
     })); */
   }
@@ -56,38 +68,40 @@ class UsersOverview extends React.Component {
   }
 
   render () {
+    const { dispatch } = this.props;
+    dispatch(listUsers);
     const { list } = this.props.users;
-    console.log('USERSSSSSSSSSSS FROM OVERVIEW', list);
+    console.log('USERSSSSSSSSSSS FROM OVERVIEW', this.props);
     const { stats } = this.props;
-    const { count, queriedAt } = list.meta;
-
-    // Incorporate the collection counts into the `list`
-    const mutableList = cloneDeep(list);
-    const collectionCounts = get(stats.count, 'data.collections.count', []);
-
-    mutableList.data.forEach(d => {
-      d.collections = get(collectionCounts.find(c => c.key === d.name), 'count', 0);
-    });
+    const { queriedAt } = list.meta;
+    const statsCount = get(stats, 'count.data.users.count', []);
+    const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
       <div className='page__component'>
-        <section className='page__section'>
-          <section className='page__section page__section__header-wrapper'>
+        <section className='page__section page__section__controls'>
+          <Breadcrumbs config={breadcrumbConfig} />
+        </section>
+        <section className='page__section page__section__header-wrapper'>
+          <div className='page__section__header'>
+            <h1 className='heading--large heading--shared-content with-description '>{strings.user_overview}</h1>
             {lastUpdated(queriedAt)}
-          </section>
+            <Overview items={overviewItems} inflight={false} />
+          </div>
+        </section>
+        <section className='page__section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content'>Users <span className='num--title'>{count ? `${count}` : 0}</span></h2>
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_users} <span className='num--title'>{list.data.length}</span></h2>
           </div>
           <List
-            list={mutableList}
+            list={list}
             dispatch={this.props.dispatch}
             action={listUsers}
             tableColumns={tableColumns}
             query={this.generateQuery()}
-            bulkActions={[]}
-            rowId='name'
+            rowId='long_name'
             sortIdx='last_login'
           >
-            <ListFilters>
+            {/* <ListFilters>
               <Dropdown
                 options={pageSizeOptions}
                 action={filterUsers}
@@ -98,7 +112,7 @@ class UsersOverview extends React.Component {
                   placeholder: 'Results Per Page'
                 }}
               />
-            </ListFilters>
+            </ListFilters> */}
           </List>
         </section>
       </div>

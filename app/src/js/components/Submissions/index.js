@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import {
-  // getCount,
+  getCount,
   listSubmissions
 } from '../../actions';
 import { strings } from '../locale';
@@ -33,16 +33,17 @@ const Submissions = ({
   const AllSubmissionsWithWrapper = withQueryWrapper(AllSubmissions, onQueryChange);
   const [queryOptions, setQueryOptions] = useState({});
 
-  function query () {
-    dispatch(listSubmissions(queryOptions));
-  }
-
   function onQueryChange (newQueryOptions) {
     if (!isEqual(newQueryOptions, queryOptions)) {
       setQueryOptions(newQueryOptions);
     }
   }
-
+  dispatch(listSubmissions());
+  function query () {
+    dispatch(getCount({
+      type: 'submissions'
+    }));
+  }
   return (
     <div className='page__submissions'>
       <DatePickerHeader onChange={query} heading={strings.all_submissions}/>
@@ -51,7 +52,7 @@ const Submissions = ({
           <Sidebar
             currentPath={pathname}
             params={params}
-            count={count}
+            count={[count]}
           />
           <div className='page__content--shortened'>
             <Switch>

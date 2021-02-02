@@ -1,115 +1,93 @@
 'use strict';
-
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { get } from 'object-path';
-import cloneDeep from 'lodash.clonedeep';
+import { connect, useDispatch } from 'react-redux';
 import {
-  listForms,
   // getCount,
-  interval,
-  filterForms,
-  clearFormsFilter
+  // searchForms,
+  // clearFormsSearch,
+  // filterForms,
+  // clearFormsFilter,
+  listForms
 } from '../../actions';
+import { get } from 'object-path';
 import { lastUpdated, tally, displayCase } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/forms';
 import List from '../Table/Table';
-import PropTypes from 'prop-types';
 import Overview from '../Overview/overview';
-import _config from '../../config';
-import Dropdown from '../DropDown/dropdown';
-import pageSizeOptions from '../../utils/page-size';
-import ListFilters from '../ListActions/ListFilters';
+import { strings } from '../locale';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
-const { updateInterval } = _config;
-
-class FormsOverview extends React.Component {
-  constructor () {
-    super();
-    this.queryStats = this.queryStats.bind(this);
-    this.generateQuery = this.generateQuery.bind(this);
-    this.renderOverview = this.renderOverview.bind(this);
+const breadcrumbConfig = [
+  {
+    label: 'Dashboard Home',
+    href: '/'
+  },
+  {
+    label: 'Forms',
+    active: true
   }
+];
 
-  componentDidMount () {
-    this.cancelInterval = interval(this.queryStats, updateInterval, true);
-  }
+const FormsOverview = ({ forms }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(listForms());
+  }, [forms.searchString, dispatch]);
+  console.log('FORMSSSSSSSSSSSSSSSS', forms);
+  // const count = forms.list.data.length;
+  const { queriedAt } = forms.list.meta;
+  // const { stats } = this.props;
+  // const statsCount = get(stats, 'count.data.forms.count', []);
+  // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
+  /* render () {
+    const { list } = forms;
+    const { queriedAt } = list.meta;
 
-  componentWillUnmount () {
-    if (this.cancelInterval) { this.cancelInterval(); }
-  }
-
-  queryStats () {
-    /* this.props.dispatch(getCount({
-      type: 'forms'
-    })); */
-  }
-
-  generateQuery () {
-    return {};
-  }
-
-  renderOverview (count) {
-    const overview = count.map(d => [tally(d.count), displayCase(d.key)]);
-    return <Overview items={overview} inflight={false} />;
-  }
-
-  render () {
-    const { list } = this.props.forms;
-    console.log('FORMSSSSSSSS FROM OVERVIEW', list);
-    const { stats } = this.props;
-    const { count, queriedAt } = list.meta;
-
-    // Incorporate the collection counts into the `list`
-    const mutableList = cloneDeep(list);
-    const collectionCounts = get(stats.count, 'data.collections.count', []);
-
-    mutableList.data.forEach(d => {
-      d.collections = get(collectionCounts.find(c => c.key === d.name), 'count', 0);
-    });
-    return (
-      <div className='page__component'>
-        <section className='page__section page__section__header-wrapper'>
+     */
+  return (
+    <div className='page__component'>
+      <section className='page__section page__section__controls'>
+        <Breadcrumbs config={breadcrumbConfig} />
+      </section>
+      <section className='page__section page__section__header-wrapper'>
+        <div className='page__section__header'>
+          <h1 className='heading--large heading--shared-content with-description '>{strings.form_overview}</h1>
           {lastUpdated(queriedAt)}
-        </section>
-        <section className='page__section'>
-          <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content'>Forms <span className='num--title'>{count ? `${count}` : 0}</span></h2>
-          </div>
-          <List
-            list={mutableList}
-            dispatch={this.props.dispatch}
-            action={listForms}
-            tableColumns={tableColumns}
-            query={this.generateQuery()}
-            bulkActions={[]}
-            rowId='name'
-            sortIdx='timestamp'
-          >
-            <ListFilters>
-              <Dropdown
-                options={pageSizeOptions}
-                action={filterForms}
-                clear={clearFormsFilter}
-                paramKey={'limit'}
-                label={'Limit Results'}
-                inputProps={{
-                  placeholder: 'Results Per Page'
-                }}
-              />
-            </ListFilters>
-          </List>
-        </section>
-      </div>
-    );
-  }
-}
-
-FormsOverview.propTypes = {
-  dispatch: PropTypes.func,
-  forms: PropTypes.object,
-  stats: PropTypes.object
+          {/* <Overview items={overviewItems} inflight={false} />  */}
+        </div>
+      </section>
+      <section className='page__section'>
+        <div className='heading__wrapper--border'>
+          <h2 className='heading--medium heading--shared-content with-description'>{strings.all_forms} <span className='num--title'>{forms.list.data.length}</span></h2>
+        </div>
+        <List
+          list={forms.list}
+          dispatch={dispatch}
+          action={listForms}
+          tableColumns={tableColumns}
+          query={{}}
+          rowId='id'
+          sortIdx='long_name'
+        >
+        </List>
+      </section>
+    </div>
+  );
 };
 
-export default withRouter(connect(state => state)(FormsOverview));
+FormsOverview.propTypes = {
+  forms: PropTypes.object,
+  stats: PropTypes.object,
+  dispatch: PropTypes.func,
+  config: PropTypes.object
+};
+
+export { FormsOverview };
+
+export default withRouter(connect(state => ({
+  stats: state.stats,
+  forms: state.forms,
+  config: state.config
+}))(FormsOverview));
