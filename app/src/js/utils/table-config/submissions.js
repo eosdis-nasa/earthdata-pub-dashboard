@@ -30,13 +30,13 @@ export const tableColumns = [
   },
   {
     Header: 'Step',
-    accessor: row => <Link to={`submissions/id/${row.id}`}>{row.step_name}</Link>,
+    accessor: row => row.step_name,
     id: 'step_name',
     width: 100
   },
   {
     Header: 'Name',
-    accessor: row => <Link to={`submissions/id/${row.id}`}>{row.name}</Link>,
+    accessor: row => row.name || '(no name)',
     id: 'name',
     width: 225
   },
@@ -52,7 +52,7 @@ export const tableColumns = [
   },
   {
     Header: 'Locked',
-    accessor: row => row.lock ? <a href={row.lock} target='_blank'>{bool(row.lock)}</a> : bool(row.lock),
+    accessor: row => bool(row.lock),
     id: 'lock'
   }
   /* {
