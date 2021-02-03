@@ -34,7 +34,7 @@ class EditMetadata extends React.Component {
       return (<Loading />);
     }
     const metadata = get(this.props, ['submissions', 'map', submissionId, 'data', 'metadata']);
-    console.log('EDIT METADATA', metadata);
+    // console.log('EDIT METADATA', metadata);
     const model = get(this.props, ['model', 'data']);
     const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: submissionId, metadata: formData }); };
     return (

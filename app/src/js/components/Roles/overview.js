@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
-import { tally } from '../../utils/format';
+import { lastUpdated } from '../../utils/format';
 import {
   listRoles,
   // searchRoles,
@@ -12,22 +12,40 @@ import {
 import List from '../Table/Table';
 // import Search from '../Search/search';
 import { tableColumns } from '../../utils/table-config/roles';
+import { strings } from '../locale';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+
+const breadcrumbConfig = [
+  {
+    label: 'Dashboard Home',
+    href: '/'
+  },
+  {
+    label: 'Roles',
+    active: true
+  }
+];
 
 const RoleOverview = ({ roles }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(listRoles());
   }, [roles.searchString, dispatch]);
-  const count = roles.list.data.length;
-
+  const { queriedAt } = roles.list.meta;
   return (
     <div className='page__component'>
+      <section className='page__section page__section__controls'>
+        <Breadcrumbs config={breadcrumbConfig} />
+      </section>
       <section className='page__section page__section__header-wrapper'>
-        <h1 className='heading--large heading--shared-content with-description'>Roles</h1>
+        <div className='page__section__header'>
+          <h1 className='heading--large heading--shared-content with-description '>{strings.role_overview}</h1>
+          {lastUpdated(queriedAt)}
+        </div>
       </section>
       <section className='page__section'>
         <div className='heading__wrapper--border'>
-          <h2 className='heading--medium heading--shared-content with-description'>All Roles <span className='num--title'>{count ? ` ${tally(count)}` : 0}</span></h2>
+          <h2 className='heading--medium heading--shared-content with-description'>{strings.all_roles} <span className='num--title'>{roles.list.data.length}</span></h2>
         </div>
         {/* Someone needs to define the search parameters for workflows, e.g. steps, collections, granules, etc. } */}
         {/* <div className='filters'>

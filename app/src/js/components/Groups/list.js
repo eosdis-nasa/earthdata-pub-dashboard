@@ -4,17 +4,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  searchGroups,
-  clearGroupsSearch,
-  filterGroups,
-  clearGroupsFilter,
+  // searchGroups,
+  // clearGroupsSearch,
+  // filterGroups,
+  // clearGroupsFilter,
   listGroups,
-  getOptionsCollectionName,
+  // getOptionsCollectionName,
   listWorkflows,
   applyWorkflowToGroup,
   interval
 } from '../../actions';
-import { get } from 'object-path';
 import { lastUpdated, tally, displayCase } from '../../utils/format';
 import {
   tableColumns,
@@ -24,15 +23,15 @@ import {
 } from '../../utils/table-config/groups';
 import List from '../Table/Table';
 import LogViewer from '../Logs/viewer';
-import Dropdown from '../DropDown/dropdown';
-import Search from '../Search/search';
+// import Dropdown from '../DropDown/dropdown';
+// import Search from '../Search/search';
 import statusOptions from '../../utils/status';
 import { strings } from '../locale';
 import _config from '../../config';
 import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import ListFilters from '../ListActions/ListFilters';
-import pageSizeOptions from '../../utils/page-size';
+// import ListFilters from '../ListActions/ListFilters';
+// import pageSizeOptions from '../../utils/page-size';
 
 const { updateInterval } = _config;
 

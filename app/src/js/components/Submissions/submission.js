@@ -163,7 +163,7 @@ class SubmissionOverview extends React.Component {
   render () {
     const submissionId = this.props.match.params.submissionId;
     const record = this.props.submissions.map[submissionId];
-    console.log('SINGLE SUBMISSION', record);
+    // console.log('SINGLE SUBMISSION', record);
     if (!record || (record.inflight && !record.data)) {
       return <Loading />;
     } else if (record.error) {

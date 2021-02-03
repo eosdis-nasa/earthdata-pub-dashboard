@@ -35,7 +35,6 @@ const FormsOverview = ({ forms }) => {
   useEffect(() => {
     dispatch(listForms());
   }, [forms.searchString, dispatch]);
-  console.log('FORMSSSSSSSSSSSSSSSS', forms);
   // const count = forms.list.data.length;
   const { queriedAt } = forms.list.meta;
   // const { stats } = this.props;

@@ -19,8 +19,12 @@ import {
   applyWorkflowToSubmission,
   // getOptionsSubmissionName
 } from '../../actions';
-import { get } from 'object-path';
-import { lastUpdated, tally, displayCase } from '../../utils/format';
+// import { get } from 'object-path';
+import {
+  lastUpdated,
+  // tally,
+  // displayCase
+} from '../../utils/format';
 import {
   tableColumns,
   simpleDropdownOption,
@@ -28,7 +32,7 @@ import {
 import List from '../Table/Table';
 // import Dropdown from '../DropDown/dropdown';
 // import Search from '../Search/search';
-import Overview from '../Overview/overview';
+// import Overview from '../Overview/overview';
 // import statusOptions from '../../utils/status';
 // import stageOptions from '../../utils/stage';
 import _config from '../../config';
@@ -124,12 +128,17 @@ class SubmissionsOverview extends React.Component {
   }
 
   render () {
-    const { stats, submissions } = this.props;
-    const { list, dropdowns } = submissions;
+    const {
+      // stats,
+      submissions
+    } = this.props;
+    const {
+      list,
+      // dropdowns
+    } = submissions;
     const { queriedAt } = list.meta;
-    const statsCount = get(stats, 'count.data.submissions.count', []);
+    // const statsCount = get(stats, 'count.data.submissions.count', []);
     // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
-    const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
@@ -139,10 +148,10 @@ class SubmissionsOverview extends React.Component {
           <div className='page__section__header'>
             <h1 className='heading--large heading--shared-content with-description '>{strings.submission_overview}</h1>
             {lastUpdated(queriedAt)}
-            <Overview items={overviewItems} inflight={false} />
+            {/* <Overview items={overviewItems} inflight={false} /> */}
           </div>
         </section>
-        <section className='page__section'>
+        <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{list.data.length}</span></h2>
           </div>

@@ -16,7 +16,6 @@ export const initialState = {
 
 export default createReducer(initialState, {
   [MODEL]: (state, action) => {
-    console.log(action);
     const { id, data } = action;
     set(state, ['name'], id);
     set(state, ['data'], assignDate(data));

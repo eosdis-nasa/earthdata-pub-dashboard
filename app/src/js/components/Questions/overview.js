@@ -11,11 +11,9 @@ import {
   // clearQuestionsFilter,
   listQuestions
 } from '../../actions';
-import { get } from 'object-path';
-import { lastUpdated, tally, displayCase } from '../../utils/format';
+import { lastUpdated } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/questions';
 import List from '../Table/Table';
-import Overview from '../Overview/overview';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
@@ -56,11 +54,9 @@ class QuestionsOverview extends React.Component {
   }
 
   render () {
-    const { stats, questions } = this.props;
+    const { questions } = this.props;
     const { list } = questions;
     const { queriedAt } = list.meta;
-    const statsCount = get(stats, 'count.data.questions.count', []);
-    const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
@@ -70,12 +66,11 @@ class QuestionsOverview extends React.Component {
           <div className='page__section__header'>
             <h1 className='heading--large heading--shared-content with-description '>{strings.question_overview}</h1>
             {lastUpdated(queriedAt)}
-            <Overview items={overviewItems} inflight={false} />
           </div>
         </section>
-        <section className='page__section'>
+        <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_questions} <span className='num--title'>{list.data.length}</span></h2>
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_questions} <span className='num--title'>{questions.list.data.length}</span></h2>
           </div>
           <List
             list={list}

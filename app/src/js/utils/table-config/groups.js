@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 export const tableColumns = [
   {
     Header: 'Short Name',
-    accessor: row => row.short_name,
+    accessor: row => <Link to={`groups/id/${row.id}`}>{row.short_name}</Link>,
     id: 'short_name'
   },
   {
     Header: 'Name',
-    accessor: row => <Link to={`groups/id/${row.id}`}>{row.long_name}</Link>,
+    accessor: row => row.long_name,
     id: 'long_name'
   },
   {

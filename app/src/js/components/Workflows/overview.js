@@ -3,32 +3,52 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
-import { lastUpdated, tally } from '../../utils/format';
 import {
-  listWorkflows,
-  searchWorkflows,
-  clearWorkflowsSearch
+  // getCount,
+  // searchWorkflows,
+  // clearWorkflowsSearch,
+  // filterWorkflows,
+  // clearWorkflowsFilter,
+  listWorkflows
 } from '../../actions';
-import List from '../Table/Table';
-import Search from '../Search/search';
+import { get } from 'object-path';
+import Overview from '../Overview/overview';
+import { lastUpdated, tally, displayCase } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/workflows';
-import ListFilters from '../ListActions/ListFilters';
+import List from '../Table/Table';
+import { strings } from '../locale';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+const breadcrumbConfig = [
+  {
+    label: 'Dashboard Home',
+    href: '/'
+  },
+  {
+    label: 'Workflows',
+    active: true
+  }
+];
 
 const WorkflowOverview = ({ workflows }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(listWorkflows());
   }, [workflows.searchString, dispatch]);
-  const count = workflows.list.data.length;
   const { queriedAt } = workflows.list.meta;
   return (
     <div className='page__component'>
-      <section className='page__section page__section__header-wrapper'>
-        {lastUpdated(queriedAt)}
+      <section className='page__section page__section__controls'>
+        <Breadcrumbs config={breadcrumbConfig} />
       </section>
-      <section className='page__section'>
+      <section className='page__section page__section__header-wrapper'>
+        <div className='page__section__header'>
+          <h1 className='heading--large heading--shared-content with-description '>{strings.workflow_overview}</h1>
+          {lastUpdated(queriedAt)}
+        </div>
+      </section>
+      <section className='page__section page__section__controls'>
         <div className='heading__wrapper--border'>
-          <h2 className='heading--medium heading--shared-content with-description'>All Workflows <span className='num--title'>{count ? ` ${tally(count)}` : 0}</span></h2>
+          <h2 className='heading--medium heading--shared-content with-description'>{strings.all_workflows} <span className='num--title'>{workflows.list.data.length}</span></h2>
         </div>
         {/* Someone needs to define the search parameters for workflows, e.g. steps, collections, granules, etc. } */}
         <List
