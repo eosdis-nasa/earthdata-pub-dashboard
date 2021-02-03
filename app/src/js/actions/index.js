@@ -824,7 +824,7 @@ export const createGroup = (groupId, payload) => ({
     type: types.NEW_GROUP,
     id: groupId,
     method: 'POST',
-    path: 'groups',
+    path: 'data/groups',
     body: payload
   }
 });
@@ -834,7 +834,7 @@ export const updateGroup = (groupId, payload) => ({
     type: types.UPDATE_GROUP,
     id: groupId,
     method: 'PUT',
-    path: `groups/${groupId}`,
+    path: `data/groups/${groupId}`,
     body: payload
   }
 });
@@ -846,7 +846,7 @@ export const deleteGroup = (groupId) => ({
     type: types.GROUP_DELETE,
     id: groupId,
     method: 'DELETE',
-    path: `groups/${groupId}`
+    path: `data/groups/${groupId}`
   }
 });
 
@@ -906,6 +906,14 @@ export const listWorkflows = (options) => ({
     method: 'GET',
     url: new URL('data/workflows', root).href,
     qs: Object.assign({ per_page: defaultPageLimit }, options)
+  }
+});
+export const getWorkflow = (workflowId) => ({
+  [CALL_API]: {
+    type: types.WORKFLOW,
+    id: workflowId,
+    method: 'GET',
+    path: `data/workflow/${workflowId}`
   }
 });
 export const searchWorkflows = (searchString) => ({ type: types.SEARCH_WORKFLOWS, searchString });

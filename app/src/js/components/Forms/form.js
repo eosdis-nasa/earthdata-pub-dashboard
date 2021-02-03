@@ -10,7 +10,7 @@ import {
 } from '../../actions';
 import { get } from 'object-path';
 import {
-  fromNow,
+  shortDateNoTimeYearFirst,
   lastUpdated
 } from '../../utils/format';
 import Loading from '../LoadingIndicator/loading-indicator';
@@ -27,13 +27,11 @@ const metaAccessors = [
   },
   {
     label: 'Created',
-    property: 'createdAt',
-    accessor: fromNow
+    property: 'created_at'
   },
   {
     label: 'Updated',
-    property: 'updatedAt',
-    accessor: fromNow
+    property: 'updated_at'
   }
 ];
 

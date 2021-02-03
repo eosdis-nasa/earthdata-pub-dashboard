@@ -11,13 +11,13 @@ import {
   // clearWorkflowsFilter,
   listWorkflows
 } from '../../actions';
-import { get } from 'object-path';
-import Overview from '../Overview/overview';
-import { lastUpdated, tally, displayCase } from '../../utils/format';
+import { lastUpdated } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/workflows';
 import List from '../Table/Table';
+// import Overview from '../Overview/overview';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+
 const breadcrumbConfig = [
   {
     label: 'Dashboard Home',
@@ -29,7 +29,7 @@ const breadcrumbConfig = [
   }
 ];
 
-const WorkflowOverview = ({ workflows }) => {
+const WorkflowsOverview = ({ workflows }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(listWorkflows());
@@ -46,7 +46,7 @@ const WorkflowOverview = ({ workflows }) => {
           {lastUpdated(queriedAt)}
         </div>
       </section>
-      <section className='page__section page__section__controls'>
+      <section className='page__section'>
         <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_workflows} <span className='num--title'>{workflows.list.data.length}</span></h2>
         </div>
@@ -76,11 +76,17 @@ const WorkflowOverview = ({ workflows }) => {
   );
 };
 
-WorkflowOverview.propTypes = {
+WorkflowsOverview.propTypes = {
+  workflows: PropTypes.object,
+  stats: PropTypes.object,
   dispatch: PropTypes.func,
-  workflows: PropTypes.object
+  config: PropTypes.object
 };
 
-export default withRouter(connect(
-  (state) => ({ workflows: state.workflows })
-)(WorkflowOverview));
+export { WorkflowsOverview };
+
+export default withRouter(connect(state => ({
+  stats: state.stats,
+  workflows: state.workflows,
+  config: state.config
+}))(WorkflowsOverview));

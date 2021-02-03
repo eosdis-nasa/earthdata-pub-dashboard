@@ -14,16 +14,16 @@ import { get } from 'object-path';
 import {
   // displayCase,
   lastUpdated,
-  nullValue,
+  shortDateNoTimeYearFirst,
   bool,
-  deleteText
+  // deleteText
 } from '../../utils/format';
-import Table from '../SortableTable/SortableTable';
+// import Table from '../SortableTable/SortableTable';
 import Loading from '../LoadingIndicator/loading-indicator';
-import LogViewer from '../Logs/viewer';
+// import LogViewer from '../Logs/viewer';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
-import AsyncCommands from '../DropDown/dropdown-async-command';
+// import AsyncCommands from '../DropDown/dropdown-async-command';
 import _config from '../../config';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
@@ -32,39 +32,37 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 const { updateInterval } = _config;
 
-const link = 'Link';
+/* const tableColumns = [
 
-const makeLink = (bucket, key) => {
-  return `https://${bucket}.s3.amazonaws.com/${key}`;
-};
-
-const tableColumns = [
-  {
-    Header: 'Submission',
-    accessor: row => row.fileName || '(No name)',
-    id: 'Submission'
-  },
-  {
-    Header: 'Link',
-    accessor: row => (row.bucket && row.key) ? (<a href={makeLink(row.bucket, row.key)}>{row.fileName ? link : nullValue}</a>) : null,
-    id: 'link'
-  },
-  {
-    Header: 'Bucket',
-    accessor: 'bucket'
-  }
-];
+]; */
 
 const metaAccessors = [
   {
-    label: 'Submitted',
-    property: 'submitted',
-    accessor: bool
+    label: 'Workflow',
+    property: 'workflow_name'
   },
   {
-    label: 'Duplicate',
-    property: 'hasDuplicate',
-    accessor: bool
+    label: 'Step',
+    property: 'step_name'
+  },
+  {
+    label: 'Created',
+    accessor: d => {
+      return (shortDateNoTimeYearFirst(d));
+    },
+    property: 'created_at'
+  },
+  {
+    label: 'Latest Edit',
+    accessor: d => {
+      return (shortDateNoTimeYearFirst(d));
+    },
+    property: 'last_change'
+  },
+  {
+    label: 'Locked',
+    accessor: row => bool(row.lock),
+    property: 'lock'
   }
 ];
 
@@ -163,7 +161,6 @@ class SubmissionOverview extends React.Component {
   render () {
     const submissionId = this.props.match.params.submissionId;
     const record = this.props.submissions.map[submissionId];
-    // console.log('SINGLE SUBMISSION', record);
     if (!record || (record.inflight && !record.data)) {
       return <Loading />;
     } else if (record.error) {
@@ -171,11 +168,8 @@ class SubmissionOverview extends React.Component {
     }
 
     const submission = record.data;
-    const files = [];
-    if (submission.files) {
-      for (const key in get(submission, 'files', {})) { files.push(submission.files[key]); }
-    }
-    const dropdownConfig = [{
+
+    /* const dropdownConfig = [{
       text: 'Delete',
       action: this.delete,
       disabled: !!submission.submitted,
@@ -183,7 +177,7 @@ class SubmissionOverview extends React.Component {
       success: this.navigateBack,
       confirmAction: true,
       confirmText: deleteText(submissionId)
-    }];
+    }]; */
     const errors = this.errors();
 
     const breadcrumbConfig = [
@@ -208,12 +202,12 @@ class SubmissionOverview extends React.Component {
         </section>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{submissionId}</h1>
-          <AsyncCommands config={dropdownConfig} />
-          {lastUpdated(submission.updatedAt, 'Updated')}
+          {/* <AsyncCommands config={dropdownConfig} /> */}
+          {lastUpdated(submission.last_change, 'Updated')}
 
           <dl className='status--process'>
             <dt>Status:</dt>
-            <dd className={submission.status_message}>{submission.status_message}</dd>
+            <dd className={submission.status}>{submission.status}</dd>
           </dl>
         </section>
 
@@ -225,12 +219,12 @@ class SubmissionOverview extends React.Component {
           <Metadata data={submission} accessors={metaAccessors} />
         </section>
 
-        <section className='page__section'>
+        {/* <section className='page__section'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Files</h2>
           </div>
           <Table
-            data={files}
+            data={[]}
             tableColumns={tableColumns}
           />
         </section>
@@ -242,7 +236,7 @@ class SubmissionOverview extends React.Component {
             logs={this.props.logs}
             notFound={`No recent logs for ${submissionId}`}
           />
-        </section>
+        </section> */}
       </div>
     );
   }
