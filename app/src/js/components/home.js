@@ -12,9 +12,7 @@ import {
   shortDateNoTimeYearFirst,
   nullValue,
   // displayCase,
-  submissionLink,
-  dataSubmissionRequestLink,
-  dataProductQuestionaireLink
+  bool
 } from '../utils/format';
 import List from './Table/Table';
 // import SubmissionsProgress from './Submissions/progress';
@@ -64,8 +62,8 @@ class Home extends React.Component {
   }
 
   query () {
-    // const { dispatch } = this.props;
-    // dispatch(listSubmissions(this.generateQuery()));
+    const { dispatch } = this.props;
+    dispatch(listSubmissions(this.generateQuery()));
   }
 
   refreshQuery () {
@@ -164,43 +162,42 @@ class Home extends React.Component {
     const tableColumns = [
       {
         Header: 'Status',
-        accessor: row => <Link to={`/submissions/${row.status}`} className={`submission__status submission__status--${row.status}`}>{row.status}</Link>,
-        id: 'status',
+        accessor: row => <Link to={`/submissions/id/${row.id}`} className={`submission__status_message submission__status_message--${row.id}`}>{row.status_message}</Link>,
+        id: 'status_message',
         width: 100
       },
       {
-        Header: 'Stage',
-        accessor: row => <Link to={`/submissions/${row.stage}`} className={`submission__stage submission__stage--${row.stage}`}>{row.stage}</Link>,
-        id: 'stage',
+        Header: 'Workflow',
+        accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`submission__workflow submission__workflow--${row.workflow_id}`}>{row.workflow_name}</Link>,
+        id: 'workflow_name',
+        width: 100
+      },
+      {
+        Header: 'Step',
+        accessor: row => row.step_name,
+        id: 'step_name',
         width: 100
       },
       {
         Header: 'Name',
-        accessor: row => submissionLink(row.submissionId),
+        accessor: row => row.name || '(no name)',
         id: 'name',
         width: 225
       },
       {
-        Header: 'Data Submission Request',
-        accessor: row => dataSubmissionRequestLink(row.dataSubmissionRequest, 'Data Submission Request'),
-        id: 'dataSubmissionRequest',
-        width: 225
-      },
-      {
-        Header: 'Data Product Questionionnaire',
-        accessor: row => dataProductQuestionaireLink(row.dataProductQuestionaire, 'Product Questionaire (Draft)'),
-        id: 'dataProductQuestionaire',
-        width: 225
-      },
-      {
-        Header: 'Submission Date',
-        accessor: row => shortDateNoTimeYearFirst(row.submitted),
-        id: 'submitted'
+        Header: 'Created',
+        accessor: row => shortDateNoTimeYearFirst(row.created_at),
+        id: 'created_at'
       },
       {
         Header: 'Latest Edit',
-        accessor: row => shortDateNoTimeYearFirst(row.timestamp),
-        id: 'timestamp'
+        accessor: row => shortDateNoTimeYearFirst(row.last_change),
+        id: 'last_change'
+      },
+      {
+        Header: 'Locked',
+        accessor: row => bool(row.lock),
+        id: 'lock'
       }
     ];
     // const { stats, count } = this.props.stats;
@@ -243,7 +240,7 @@ class Home extends React.Component {
           </div>
         </div>
 
-        <div className='page__content page__content__nosidebar'>
+        <div className='page__content page__content__nosidebar home_submissions_table'>
           {this.renderOverview()}
           {/*
           <section className='page__section datetime'>
