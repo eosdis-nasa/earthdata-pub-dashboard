@@ -45,7 +45,7 @@ const Requests = ({
     }));
   }
   return (
-    <div className='page__submissions'>
+    <div className='page__requests'>
       <DatePickerHeader onChange={query} heading={strings.all_submissions}/>
       <div className='page__content'>
         <div className='wrapper__sidebar'>

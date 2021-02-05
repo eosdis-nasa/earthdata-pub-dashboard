@@ -101,7 +101,7 @@ export const granuleLink = function (granuleId) {
 };
 export const submissionLink = function (submissionId) {
   if (!submissionId) return nullValue;
-  return <Link to={`/submissions/id/${submissionId}`}>{submissionId}</Link>;
+  return <Link to={`/requests/id/${submissionId}`}>{submissionId}</Link>;
 };
 export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;

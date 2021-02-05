@@ -52,7 +52,7 @@ and creates a new one with the updated query parameters.
 
 ### Props
 
-- **list**: Parent data structure, ie `state.submissions.list`. Expected to contain
+- **list**: Parent data structure, ie `state.requests.list`. Expected to contain
 `{ data, inflight, error, meta }` properties corresponding to all `list` state objects.
 - **dispatch**: Redux dispatch function.
 - **action**: Redux-style action to send, ie `listSubmissions`.

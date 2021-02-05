@@ -19,7 +19,7 @@ import Home from './components/home';
 import Main from '../js/main';
 import Collections from './components/Collections';
 import Granules from './components/Granules';
-import Submissions from './components/Submissions';
+import Requests from './components/Requests';
 import Pdrs from './components/Pdr';
 import Providers from './components/Providers';
 import Users from './components/Users';
@@ -51,7 +51,7 @@ const MainRoutes = () => {
         <Route path='/404' component={NotFound} />
         <Route path='/collections' component={Collections} />
         <Route path='/granules' component={Granules} />
-        <Route path='/submissions' component={Submissions} />
+        <Route path='/requests' component={Requests} />
         <Route path='/pdrs' component={Pdrs} />
         <Route path='/providers' component={Providers} />
         <Route path='/forms' component={Forms} />

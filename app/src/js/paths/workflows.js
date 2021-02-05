@@ -5,7 +5,7 @@ const routes = [
 
 const singleRoutes = [
   ['Back to Workflows', null, 'sidebar__nav--back'],
-  ['View Submissions List', '/submissions', 'sidebar__nav']
+  ['View Requests List', '/requests', 'sidebar__nav']
 ];
 
 const empty = [['', '']];

@@ -19,7 +19,7 @@
 			  "Blah"
       ],
       "permissions": [
-        "Submissions",
+        "Requests",
         "Workflows",
         "Forms",
         "Users",
@@ -41,14 +41,14 @@
 			  "Blah"
       ],
       "permissions": [
-        "Submissions",
+        "Requests",
         "Workflows",
         "Forms",
         "Users",
         "Groups"
       ],
       "subscriptions": [
-        "Submissions",
+        "Requests",
         "Workflows",
         "Forms",
         "Users",
@@ -66,12 +66,12 @@
 			  "Admin"
       ],
       "permissions": [
-        "Submissions",
+        "Requests",
         "Workflows",
         "Forms"
       ],
       "subscriptions": [
-        "Submissions",
+        "Requests",
         "Users",
         "Groups"
       ],
@@ -87,14 +87,14 @@
 	  	  "User"
       ],
       "permissions": [
-	  	  "Submissions",
+	  	  "Requests",
         "Workflows",
         "Forms",
         "Users",
         "Groups"
       ],
       "subscriptions": [
-        "Submissions",
+        "Requests",
         "Workflows",
         "Forms",
         "Users",

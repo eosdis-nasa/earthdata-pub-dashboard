@@ -6,7 +6,7 @@ const { localUserName } = require('earthdata-pub-api/api/bin/local-test-defaults
 const collections = require('../fixtures/seeds/collectionsFixture.json');
 const executions = require('../fixtures/seeds/executionsFixture.json');
 const granules = require('../fixtures/seeds/granulesFixture.json');
-const submissions = require('../fixtures/seeds/submissionsFixture.json');
+const requests = require('../fixtures/seeds/submissionsFixture.json');
 const providers = require('../fixtures/seeds/providersFixture.json');
 const forms = require('../fixtures/seeds/formsFixture.json');
 const users = require('../fixtures/seeds/usersFixture.json');
@@ -45,7 +45,7 @@ function seedGranules () {
 }
 
 function seedSubmissions () {
-  return serveUtils.addSubmissions(submissions.results);
+  return serveUtils.addSubmissions(requests.results);
 }
 
 function seedExecutions () {

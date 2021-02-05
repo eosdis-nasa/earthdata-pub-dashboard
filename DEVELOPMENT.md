@@ -7,10 +7,10 @@
 Components can be an entire page, or a portion of a page. Component files go in
 `app/src/js/components`. If the component has many child components (a page with
 charts, tables, etc) then consider making a separate directory. In the case of the
-submissions component:
+requests component:
 
-- `app/src/js/components/submissions/index.js` is the parent or main page.
-- A search component could live in `app/src/js/components/submissions/search.js`.
+- `app/src/js/components/requests/index.js` is the parent or main page.
+- A search component could live in `app/src/js/components/requests/search.js`.
 - A bar chart component that is shared with other pages could live in `app/src/js/components/charts/bar.js`.
 
 If a component is very simple, it may not need a unique directory, and can be simply
@@ -24,10 +24,10 @@ at minimum `path` and `component` properties. Path defines the url path, and com
 is the name of the component.
 
 When one route is nested within another route, the urls stack. In the following
-example, the list component's path is `/submissions/list`.
+example, the list component's path is `/requests/list`.
 
 ```html
-<Route path='/submissions' component={Submissions}>
+<Route path='/requests' component={Requests}>
    <Route path='/list' component={List} />
 </Route>
 ```
@@ -36,8 +36,8 @@ The routes are all defined in `app/src/js/App.js`. Make sure to `import` the nec
 component at the top of the file.
 
 ```javascript
-import Submissions from './components/submissions'
-import List from './components/submissions/list'
+import Requests from './components/requests'
+import List from './components/requests/list'
 ```
 
 More on imports: if the name of the file is `index.js`, you don't need to spell it
@@ -70,19 +70,19 @@ data before assigning it a namespaced location.
 
 **A high-level example**:
 
-1. User navigates to the `submissions` page, which starts a request to list all
-active submissions.
-2. The API responds, and we assign the data to `store.api.submissions` as an array
+1. User navigates to the `requests` page, which starts a request to list all
+active requests.
+2. The API responds, and we assign the data to `store.api.requests` as an array
 with format `[{ id: 1 }, { id: 2 }, { id: 3 }, ...]`.
-3. The active submissions page displays a table by accessing `this.props.submissions`.
-The user clicks on a single submission to go to `submissions/1`.
-4. The single submission component decides whether the submission `{ id: 1 }` exists
+3. The active requests page displays a table by accessing `this.props.requests`.
+The user clicks on a single request to go to `requests/1`.
+4. The single request component decides whether the request `{ id: 1 }` exists
 in `this.props`; if it does, it renders using that data. Otherwise, it initiates
 a new GET request.
 
 ### Writing actions
 
-We might want to write an action to query a single submission by id. To do this,
+We might want to write an action to query a single request by id. To do this,
 we create a function in `src/js/actions/index.js`.
 
 ```javascript
@@ -108,7 +108,7 @@ function setSubmission (id, submissionData) {
 }
 ```
 
-This sends the submission data to the store. We need to specify the primary key
+This sends the request data to the store. We need to specify the primary key
 so we can identify this action in a reducer function, and place it appropriately.
 In `actions.js`:
 
@@ -139,7 +139,7 @@ is passed as a `prop`:
 // import the action so we can call it
 import { getSubmission } from '../actions';
 
-const Submission = React.createClass({
+const Request = React.createClass({
 
   componentWillMount: function () {
     // params are passed as props to each component,
@@ -150,11 +150,11 @@ const Submission = React.createClass({
 
   render: function () {
     const submissionId = this.props.params.id;
-    const submission = this.props.submissions[submissionId]; // should use object-path#get for this
-    if (!submission) {
+    const request = this.props.requests[submissionId]; // should use object-path#get for this
+    if (!request) {
       return <div></div>; // return empty since we have no data yet
     }
-    return <div className='submission'>{submission.submissionId}</div>;
+    return <div className='request'>{request.submissionId}</div>;
   }
 });
 ```
