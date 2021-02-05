@@ -51,12 +51,12 @@ const Questions = ({
           <Sidebar
             currentPath={pathname}
             params={params}
-            count={count}
+            count={[count]}
           />
           <div className='page__content--shortened'>
             <Switch>
               <Route exact path='/questions' component={QuestionsOverview} />
-              <Route path='/questions/question/:questionId' component={QuestionOverview} />
+              <Route path='/questions/id/:questionId' component={QuestionOverview} />
             </Switch>
           </div>
         </div>

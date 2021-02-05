@@ -6,7 +6,7 @@ describe('Dashboard Forms Page', () => {
       cy.visit('/forms');
       shouldBeRedirectedToLogin();
       const formId = '';
-      cy.visit(`/forms/form/${formId}`);
+      cy.visit(`/forms/id/${formId}`);
       shouldBeRedirectedToLogin();
     });
   });

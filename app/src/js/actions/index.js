@@ -213,19 +213,15 @@ export const getSubmission = (submissionId) => ({
   }
 });
 
-export const listSubmissions = (options) => {
-  return (dispatch, getState) => {
-    return dispatch({
-      [CALL_API]: {
-        type: types.SUBMISSIONS,
-        method: 'GET',
-        id: null,
-        url: new URL('data/submissions', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, options)
-      }
-    });
-  };
-};
+export const listSubmissions = (options) => ({
+  [CALL_API]: {
+    type: types.SUBMISSIONS,
+    method: 'GET',
+    id: null,
+    path: 'data/submissions',
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
+  }
+});
 
 export const updateSubmissionMetadata = (payload) => ({
   [CALL_API]: {
@@ -693,16 +689,16 @@ export const clearProvidersSearch = () => ({ type: types.CLEAR_PROVIDERS_SEARCH 
 export const filterProviders = (param) => ({ type: types.FILTER_PROVIDERS, param: param });
 export const clearProvidersFilter = (paramKey) => ({ type: types.CLEAR_PROVIDERS_FILTER, paramKey: paramKey });
 
-export const listForms = (options = {}) => {
-  const { listAll = false, ...queryOptions } = options;
+export const listForms = (options) => {
   return (dispatch, getState) => {
-    const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
+    // const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
     return dispatch({
       [CALL_API]: {
         type: types.FORMS,
         method: 'GET',
-        url: new URL('forms', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
+        id: null,
+        url: new URL('data/forms', root).href,
+        qs: Object.assign({ per_page: defaultPageLimit }, options)
       }
     });
   };
@@ -722,7 +718,7 @@ export const getForm = (formId) => ({
     type: types.FORM,
     id: formId,
     method: 'GET',
-    path: `forms/${formId}`
+    path: `data/form/${formId}`
   }
 });
 
@@ -762,27 +758,22 @@ export const clearFormsSearch = () => ({ type: types.CLEAR_FORMS_SEARCH });
 export const filterForms = (param) => ({ type: types.FILTER_FORMS, param: param });
 export const clearFormsFilter = (paramKey) => ({ type: types.CLEAR_FORMS_FILTER, paramKey: paramKey });
 
-export const listUsers = (options = {}) => {
-  const { listAll = false, ...queryOptions } = options;
-  return (dispatch, getState) => {
-    const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
-    return dispatch({
-      [CALL_API]: {
-        type: types.USERS,
-        method: 'GET',
-        url: new URL('users', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
-      }
-    });
-  };
-};
+export const listUsers = (options) => ({
+  [CALL_API]: {
+    type: types.USERS,
+    method: 'GET',
+    id: null,
+    path: 'data/users',
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
+  }
+});
 
 export const getOptionsUserGroup = () => ({
   [CALL_API]: {
     type: types.OPTIONS_USERGROUP,
     method: 'GET',
     url: new URL('users', root).href,
-    qs: { limit: 100, fields: 'userName' }
+    qs: { limit: 100, fields: 'long_name' }
   }
 });
 
@@ -791,38 +782,7 @@ export const getUser = (userId) => ({
     type: types.USER,
     id: userId,
     method: 'GET',
-    path: `users/${userId}`
-  }
-});
-
-export const createUser = (userId, payload) => ({
-  [CALL_API]: {
-    type: types.NEW_USER,
-    id: userId,
-    method: 'POST',
-    path: 'users',
-    body: payload
-  }
-});
-
-export const updateUser = (userId, payload) => ({
-  [CALL_API]: {
-    type: types.UPDATE_USER,
-    id: userId,
-    method: 'PUT',
-    path: `users/${userId}`,
-    body: payload
-  }
-});
-
-export const clearUpdateUser = (userId) => ({ type: types.UPDATE_USER_CLEAR, id: userId });
-
-export const deleteUser = (userId) => ({
-  [CALL_API]: {
-    type: types.USER_DELETE,
-    id: userId,
-    method: 'DELETE',
-    path: `users/${userId}`
+    path: `data/user/${userId}`
   }
 });
 
@@ -831,27 +791,22 @@ export const clearUsersSearch = () => ({ type: types.CLEAR_USERS_SEARCH });
 export const filterUsers = (param) => ({ type: types.FILTER_USERS, param: param });
 export const clearUsersFilter = (paramKey) => ({ type: types.CLEAR_USERS_FILTER, paramKey: paramKey });
 
-export const listGroups = (options = {}) => {
-  const { listAll = false, ...queryOptions } = options;
-  return (dispatch, getState) => {
-    const timeFilters = listAll ? {} : fetchCurrentTimeFilters(getState().datepicker);
-    return dispatch({
-      [CALL_API]: {
-        type: types.GROUPS,
-        method: 'GET',
-        url: new URL('groups', root).href,
-        qs: Object.assign({ limit: defaultPageLimit }, queryOptions, timeFilters)
-      }
-    });
-  };
-};
+export const listGroups = (options) => ({
+  [CALL_API]: {
+    type: types.GROUPS,
+    method: 'GET',
+    id: null,
+    path: 'data/groups',
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
+  }
+});
 
 export const getOptionsGroupGroup = () => ({
   [CALL_API]: {
     type: types.OPTIONS_GROUPGROUP,
     method: 'GET',
     url: new URL('groups', root).href,
-    qs: { limit: 100, fields: 'groupName' }
+    qs: { limit: 100, fields: 'long_name' }
   }
 });
 
@@ -860,7 +815,7 @@ export const getGroup = (groupId) => ({
     type: types.GROUP,
     id: groupId,
     method: 'GET',
-    path: `groups/${groupId}`
+    path: `data/group/${groupId}`
   }
 });
 
@@ -869,7 +824,7 @@ export const createGroup = (groupId, payload) => ({
     type: types.NEW_GROUP,
     id: groupId,
     method: 'POST',
-    path: 'groups',
+    path: 'data/groups',
     body: payload
   }
 });
@@ -879,7 +834,7 @@ export const updateGroup = (groupId, payload) => ({
     type: types.UPDATE_GROUP,
     id: groupId,
     method: 'PUT',
-    path: `groups/${groupId}`,
+    path: `data/groups/${groupId}`,
     body: payload
   }
 });
@@ -891,7 +846,7 @@ export const deleteGroup = (groupId) => ({
     type: types.GROUP_DELETE,
     id: groupId,
     method: 'DELETE',
-    path: `groups/${groupId}`
+    path: `data/groups/${groupId}`
   }
 });
 
@@ -951,6 +906,14 @@ export const listWorkflows = (options) => ({
     method: 'GET',
     url: new URL('data/workflows', root).href,
     qs: Object.assign({ per_page: defaultPageLimit }, options)
+  }
+});
+export const getWorkflow = (workflowId) => ({
+  [CALL_API]: {
+    type: types.WORKFLOW,
+    id: workflowId,
+    method: 'GET',
+    path: `data/workflow/${workflowId}`
   }
 });
 export const searchWorkflows = (searchString) => ({ type: types.SEARCH_WORKFLOWS, searchString });

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.1.2 - 2021-02-05
+
+- [reapplied submission where it was mass replaced by request](c2cd2ac2df2597de531f70e4d3df48b6e3b66b3c)
+- [replaced submission with request but for the API calls](fc7f8d84d2b)
+- [updated submissions on home page](2193559829e)
+- [updated nav to not have questions and forms](a036814d40f)
+- [fixed form data to display](c534fc5a387)
+- [added no name to table config for submissions list](df2937bb0aa)
+- [updated submission; still need form report or submission report](6caf4329140)
+- [altered list forms for consistent look and feel; users list and groups list displays real data](271256f2ad0)
+- [submissions w real data; forms w real data; some side pane links; made look consistant; fixed counts](48af8f77567)
+- [finished schemas](a3628680889)
+- [removed results from data in SUBMISSIONS](0f576e32f95)
+- [altered path files routes to match the others](728d7aea7aa)
+- [altered component paths to /<component>/id/:<component_id>](18aa2759b3e)
+
 ## 0.1.1 - 2020-11-25
 
 - [Update humans.txt with EDPUB dev team members](764f316d78b6dd556551184d1a57c04eef53e053)

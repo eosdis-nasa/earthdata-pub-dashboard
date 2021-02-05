@@ -1,6 +1,6 @@
 'use strict';
 const routes = [
-  ['Overview', null]
+  ['', null]
 ];
 
 const singleRoutes = [
@@ -13,7 +13,7 @@ const handler = {
   base: 'roles',
   heading: 'Roles',
   routes: (currentRoute, params) => {
-    if (currentRoute.indexOf('roles/role') >= 0) {
+    if (currentRoute.indexOf('roles/id') >= 0) {
       return singleRoutes;
     } else if (currentRoute.slice(0, 8) !== '/roles') {
       return empty;

@@ -15,7 +15,7 @@ const users = {
   base: 'users',
   heading: 'Users',
   routes: (currentRoute, params, count) => {
-    if (currentRoute.indexOf('/users/user') >= 0) {
+    if (currentRoute.indexOf('users/id') >= 0) {
       return singleUserRoutes;
     } else if (currentRoute.slice(0, 10) !== '/users') {
       return empty;

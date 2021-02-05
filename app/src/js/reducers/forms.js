@@ -95,7 +95,7 @@ export default createReducer(initialState, {
   [FORM_COLLECTIONS]: (state, action) => {
     const { data, id } = action;
     set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'data'], data.results.map(c => c.collectionName));
+    set(state, ['collections', id, 'data'], data.map(c => c.collectionName));
   },
   [FORM_COLLECTIONS_INFLIGHT]: (state, action) => {
     const { id } = action;
@@ -128,7 +128,7 @@ export default createReducer(initialState, {
 
   [FORMS]: (state, action) => {
     const { data } = action;
-    set(state, ['list', 'data'], data.results);
+    set(state, ['list', 'data'], data);
     set(state, ['list', 'meta'], assignDate(data.meta));
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], false);
@@ -174,10 +174,10 @@ export default createReducer(initialState, {
     const { data } = action;
     // Map the list response to an object with key-value pairs like:
     // displayValue: optionElementValue
-    const options = data.results.reduce((obj, form) => {
+    const options = data.reduce((obj, form) => {
       // Several `results` items can share a `formName`, but
       // these are de-duplciated by the key-value structure
-      obj[form.formName] = form.formName;
+      obj[form.long_name] = form.long_name;
       return obj;
     }, { '': '' });
     set(state, ['dropdowns', 'group', 'options'], options);

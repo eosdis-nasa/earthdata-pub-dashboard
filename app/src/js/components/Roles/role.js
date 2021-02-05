@@ -54,14 +54,15 @@ class Roles extends React.Component {
 
   render () {
     const { roles, match: { params: { roleName } } } = this.props;
-    const data = roles.map[roleName];
+    // const data = roles.map[roleName];
+    const data = roles.map[undefined];
     if (!data) {
       return <Loading />;
     }
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{roleName}</h1>
+          <h1 className='heading--large heading--shared-content with-description'>{data.long_name}</h1>
         </section>
         <section className='page__section'>
           <div className='tab--wrapper'>

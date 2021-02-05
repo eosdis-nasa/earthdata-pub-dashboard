@@ -115,7 +115,7 @@ describe('Dashboard Collections Page', () => {
         .then((json) => {
           cy.editJsonTextarea({ data: json });
           // Capture the test collection so we can confirm below that it was
-          // properly persisted after form submission.
+          // properly persisted after form request.
           collection = json;
         });
       cy.contains('form button', 'Submit').click();

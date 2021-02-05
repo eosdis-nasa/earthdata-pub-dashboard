@@ -18,13 +18,13 @@ import Dropdown from '../../components/DropDown/simple-dropdown';
 export const tableColumns = [
   {
     Header: 'Status',
-    accessor: row => <Link to={`/requests/id/${row.id}`} className={`submission__status_message submission__status_message--${row.id}`}>{row.status_message}</Link>,
+    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status_message}</Link>,
     id: 'status_message',
     width: 100
   },
   {
     Header: 'Workflow',
-    accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`submission__workflow submission__workflow--${row.workflow_id}`}>{row.workflow_name}</Link>,
+    accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`request__workflow request__workflow--${row.workflow_id}`}>{row.workflow_name}</Link>,
     id: 'workflow_name',
     width: 100
   },

@@ -21,7 +21,7 @@ class AddGroup extends React.Component {
         primaryProperty={'id'}
         title={'Create a group'}
         state={this.props.groups}
-        baseRoute={'/groups/group'}
+        baseRoute={'/groups/id'}
         createRecord={createGroup}
       />
     );

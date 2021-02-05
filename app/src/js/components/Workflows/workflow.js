@@ -4,7 +4,7 @@ import Ace from 'react-ace';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { listWorkflows } from '../../actions';
+import { listWorkflows, getWorkflow } from '../../actions';
 import config from '../../config';
 import { setWindowEditorRef } from '../../utils/browser';
 import Loading from '../LoadingIndicator/loading-indicator';
@@ -21,16 +21,20 @@ class Workflow extends React.Component {
   componentDidUpdate (prevProps) {
     const { workflowName } = this.props.match.params;
     if (workflowName !== prevProps.match.params.workflowName) {
-      this.get();
+      this.get(workflowName);
     }
   }
 
   componentDidMount () {
-    this.get();
+    const { workflowName } = this.props.match.params;
+    this.get(workflowName);
   }
 
   get (workflowName) {
     this.props.dispatch(listWorkflows());
+    if (typeof workflowName !== 'undefined') {
+      this.props.dispatch(getWorkflow(workflowName));
+    }
   }
 
   renderReadOnlyJson (name, data) {
@@ -53,15 +57,16 @@ class Workflow extends React.Component {
   }
 
   render () {
-    const { workflows, match: { params: { workflowName } } } = this.props;
-    const data = workflows.map[workflowName];
+    const { workflows } = this.props;
+    const { workflowName } = this.props.match.params;
+    const data = workflows.map[undefined];
     if (!data) {
       return <Loading />;
     }
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{workflowName}</h1>
+          <h1 className='heading--large heading--shared-content with-description'>{data.long_name}</h1>
         </section>
         <section className='page__section'>
           <div className='tab--wrapper'>

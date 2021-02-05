@@ -10,7 +10,7 @@ import {
 } from '../../actions';
 import { get } from 'object-path';
 import {
-  fromNow,
+  shortDateNoTimeYearFirst,
   lastUpdated
 } from '../../utils/format';
 import Loading from '../LoadingIndicator/loading-indicator';
@@ -22,18 +22,27 @@ const { updateInterval } = _config;
 
 const metaAccessors = [
   {
-    label: 'User Name',
-    property: 'userName',
+    label: 'Short Name',
+    property: 'short_name'
+  },
+  {
+    label: 'Name',
+    property: 'long_name'
+  },
+  {
+    label: 'Description',
+    property: 'description'
+  },
+  {
+    label: 'Version',
+    property: 'version'
   },
   {
     label: 'Created',
-    property: 'createdAt',
-    accessor: fromNow
-  },
-  {
-    label: 'Updated',
-    property: 'updatedAt',
-    accessor: fromNow
+    accessor: d => {
+      return (shortDateNoTimeYearFirst(d));
+    },
+    property: 'created_at'
   }
 ];
 
@@ -93,48 +102,53 @@ class FormOverview extends React.Component {
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
     const form = record.data;
-    return (form.form_data[id]);
+    if (typeof form.form_data !== 'undefined') {
+      return (form.form_data[id]);
+    } else {
+      return 'no answer';
+    }
   }
 
   renderQuestions (sections, whatSection) {
-    for (const ea in sections) {
-      let section = '';
-      const sectionQuestions = [];
-      for (const i in sections[ea]) {
-        if (typeof sections[ea][i] === 'string') {
-          section = sections[ea][i];
-          if (whatSection !== section) {
-            continue;
-          }
-          sectionQuestions.push(<li key={this.getRandom()}><strong>{section}</strong></li>);
-        } else if (typeof sections[ea][i] === 'object') {
-          for (const q in sections[ea][i]) {
-            try {
-              const question = sections[ea][i][q];
-              sectionQuestions.push(<li key={this.getRandom()}>{question.title}</li>);
-              sectionQuestions.push(<li key={this.getRandom()}>{question.text}</li>);
-              if (question.inputs) {
-                for (const a in question.inputs) {
+    let section = '';
+    const sectionQuestions = [];
+    for (const i in sections) {
+      if (JSON.stringify(sections[i]) === '[]') { continue; }
+      section = sections[i].heading;
+      if (whatSection !== section) {
+        continue;
+      }
+      sectionQuestions.push(<li key={this.getRandom()}><strong key={this.getRandom()}>{section}</strong></li>);
+      for (const q in sections[i]) {
+        if (JSON.stringify(sections[i][q]) === '[]') { continue; }
+        try {
+          const question = sections[i][q];
+          if (Array.isArray(question)) {
+            for (const b in question) {
+              sectionQuestions.push(<li key={this.getRandom()}><br /></li>);
+              sectionQuestions.push(<li style={{ textDecoration: 'underline' }} key={this.getRandom()}>{question[b].long_name}</li>);
+              sectionQuestions.push(<li key={this.getRandom()}>{question[b].text}</li>);
+              if (question[b].inputs) {
+                for (const a in question[b].inputs) {
                   sectionQuestions.push(
                     <li key={ this.getRandom() } style={{ marginTop: '3px', marginBottom: '3px' }}>
-                      <div style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>{question.inputs[a].label}:</div>
-                      <div>{this.getAnswer(question.inputs[a].id)}</div>
+                      <div key={this.getRandom()} style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>{question[b].inputs[a].label}:</div>
+                      <div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
                     </li>
                   );
                 }
               }
-            } catch (err) {
-              console.log(err);
             }
           }
+        } catch (err) {
+          console.log(err);
         }
-        if (section !== '') {
-          sectionQuestions.unshift(sectionQuestions.pop());
-          sectionQuestions.push(<li><br key={this.getRandom()} /></li>);
-          sectionQuestions.push(<li><hr key={this.getRandom()} /></li>);
-          sectionQuestions.push(<li><br key={this.getRandom()} /></li>);
-          return (sectionQuestions);
-        }
+      }
+      if (section !== '') {
+        sectionQuestions.push(<li key={this.getRandom()}><br /></li>);
+        sectionQuestions.push(<li key={this.getRandom()}><hr /></li>);
+        sectionQuestions.push(<li key={this.getRandom()}><br /></li>);
+        return (sectionQuestions);
       }
     }
   }
@@ -155,15 +169,17 @@ class FormOverview extends React.Component {
 
     for (const ea in sections) {
       for (const i in sections[ea]) {
-        newSections.push(this.renderQuestions(sections, sections[ea][i]));
+        if (JSON.stringify(sections[ea][i]) !== '[]' && typeof sections[ea][i] === 'string') {
+          newSections.push(this.renderQuestions(sections, sections[ea][i]));
+        }
       }
     }
 
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{form.name} (Verson {form.version})</h1>
-          {lastUpdated(form.updatedAt)}
+          <h1 className='heading--large heading--shared-content with-description'>{form.long_name} (Verson {form.version})</h1>
+          {lastUpdated(form.created_at)}
           <a className='button button--small button--green button--edit form-group__element--right' href={_config.formsUrl}>Edit</a>
         </section>
 

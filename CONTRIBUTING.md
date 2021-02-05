@@ -35,7 +35,7 @@ in the PR description, i.e. "Fixes Issue #10"
     config value.
 * Upon submission of a pull request, the Earthdata Pub development team will
 review the code
-* The request will then either be merged, declined, or an adjustment to the code
+* The submission will then either be merged, declined, or an adjustment to the code
 will be requested
 
 ## Guidelines

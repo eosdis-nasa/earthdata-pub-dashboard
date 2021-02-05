@@ -7,7 +7,7 @@ import config from './config';
 import dist from './dist';
 import datepicker from './datepicker';
 import granules from './granules';
-import submissions from './submissions';
+import requests from './requests';
 import granuleCSV from './granule-csv';
 import stats from './stats';
 import pdrs from './pdrs';
@@ -44,7 +44,7 @@ export const reducers = {
   mmtLinks,
   earthdatapubInstance,
   granules,
-  submissions,
+  requests,
   granuleCSV,
   stats,
   pdrs,

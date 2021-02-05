@@ -99,67 +99,49 @@ export const granuleLink = function (granuleId) {
   if (!granuleId) return nullValue;
   return <Link to={`/granules/granule/${granuleId}`}>{granuleId}</Link>;
 };
-
 export const submissionLink = function (submissionId) {
   if (!submissionId) return nullValue;
-  return <Link to={`/submissions/submission/${submissionId}`}>{submissionId}</Link>;
+  return <Link to={`/requests/id/${submissionId}`}>{submissionId}</Link>;
 };
-export const questionLink = function (questionId, questionTitle, questionName) {
+export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;
-  return <Link to={`/questions/question/${questionId}`}><h3>{questionTitle}</h3>{questionName}</Link>;
-};
-export const dataProducerLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}#${name}`}>{name}</Link>;
-};
-export const pointOfContactLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}#${name}`}>{name}</Link>;
-};
-export const dataProductQuestionaireLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{name}</Link>;
-};
-export const dataSubmissionRequestLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{name}</Link>;
+  return <Link to={`/questions/id/${questionId}`}>{questionName}</Link>;
 };
 export const pdrLink = function (pdrName) {
   if (!pdrName) return nullValue;
   return <Link to={`/pdrs/pdr/${pdrName}`}>{pdrName}</Link>;
 };
-
 export const providerLink = function (provider) {
   if (!provider) return nullValue;
   return <Link to={`/providers/provider/${provider}`}>{provider}</Link>;
 };
 export const groupLink = function (groupId) {
   if (!groupId) return nullValue;
-  return <Link to={`/groups/group/${groupId}`}>{groupId}</Link>;
+  return <Link to={`/groups/id/${groupId}`}>{groupId}</Link>;
 };
 export const userLink = function (userId) {
   if (!userId) return nullValue;
-  return <Link to={`/users/user/${userId}`}>{userId}</Link>;
+  return <Link to={`/users/id/${userId}`}>{userId}</Link>;
 };
 export const formLink = function (formId) {
   if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{formId}</Link>;
+  return <Link to={`/forms/id/${formId}`}>{formId}</Link>;
 };
 export const workflowLink = function (name) {
   if (!name) return nullValue;
-  return <Link to={`/workflows/workflow/${name}`}>{name}</Link>;
+  return <Link to={`/workflows/id/${name}`}>{name}</Link>;
 };
 export const metricLink = function (metricId) {
   if (metricId) return nullValue;
-  return <Link to={`/metrics/metric/${metricId}`}>{metricId}</Link>;
+  return <Link to={`/metrics/id/${metricId}`}>{metricId}</Link>;
 };
 export const roleLink = function (roleId) {
   if (roleId) return nullValue;
-  return <Link to={`/roles/role/${roleId}`}>{roleId}</Link>;
+  return <Link to={`/roles/id/${roleId}`}>{roleId}</Link>;
 };
 export const messageLink = function (message) {
   if (!message) return nullValue;
-  return <Link to={`/messages/message/${message}`}>{message}</Link>;
+  return <Link to={`/messages/id/${message}`}>{message}</Link>;
 };
 export const bool = function (bool) {
   return bool ? 'Yes' : 'No';

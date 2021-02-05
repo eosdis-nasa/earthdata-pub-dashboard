@@ -11,14 +11,12 @@ import {
   // seconds
   shortDateNoTimeYearFirst,
   nullValue,
-  displayCase,
-  submissionLink,
-  dataSubmissionRequestLink,
-  dataProductQuestionaireLink
+  // displayCase,
+  bool
 } from '../utils/format';
 import List from './Table/Table';
-// import SubmissionsProgress from './Submissions/progress';
-import { errorTableColumns } from '../utils/table-config/submissions';
+// import SubmissionsProgress from './Requests/progress';
+import { errorTableColumns } from '../utils/table-config/requests';
 import { updateInterval, overviewUrl } from '../config';
 /* import {
   kibanaS3AccessErrorsLink,
@@ -48,9 +46,9 @@ class Home extends React.Component {
 
   getView () {
     const { pathname } = this.props.location;
-    if (pathname === '/submissions/completed') return 'completed';
-    else if (pathname === '/submissions/processing') return 'running';
-    else if (pathname === '/submissions/failed') return 'failed';
+    if (pathname === '/requests/completed') return 'completed';
+    else if (pathname === '/requests/processing') return 'running';
+    else if (pathname === '/requests/failed') return 'failed';
     else return 'all';
   }
 
@@ -64,8 +62,8 @@ class Home extends React.Component {
   }
 
   query () {
-    // const { dispatch } = this.props;
-    // dispatch(listSubmissions(this.generateQuery()));
+    const { dispatch } = this.props;
+    dispatch(listSubmissions(this.generateQuery()));
   }
 
   refreshQuery () {
@@ -157,50 +155,49 @@ class Home extends React.Component {
   }
 
   render () {
-    const { submissions } = this.props;
-    const { list } = submissions;
+    const { requests } = this.props;
+    const { list } = requests;
     const view = this.getView();
     const query = this.generateQuery();
     const tableColumns = [
       {
         Header: 'Status',
-        accessor: row => <Link to={`/submissions/${row.status}`} className={`submission__status submission__status--${row.status}`}>{displayCase(row.status)}</Link>,
-        id: 'status',
+        accessor: row => <Link to={`/requests/id/${row.id}`} className={`submission__status_message submission__status_message--${row.id}`}>{row.status_message}</Link>,
+        id: 'status_message',
         width: 100
       },
       {
-        Header: 'Stage',
-        accessor: row => <Link to={`/submissions/${row.stage}`} className={`submission__stage submission__stage--${row.stage}`}>{displayCase(row.stage)}</Link>,
-        id: 'stage',
+        Header: 'Workflow',
+        accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`submission__workflow submission__workflow--${row.workflow_id}`}>{row.workflow_name}</Link>,
+        id: 'workflow_name',
+        width: 100
+      },
+      {
+        Header: 'Step',
+        accessor: row => row.step_name,
+        id: 'step_name',
         width: 100
       },
       {
         Header: 'Name',
-        accessor: row => submissionLink(row.submissionId),
+        accessor: row => row.name || '(no name)',
         id: 'name',
         width: 225
       },
       {
-        Header: 'Data Submission Request',
-        accessor: row => dataSubmissionRequestLink(row.dataSubmissionRequest, 'Data Submission Request'),
-        id: 'dataSubmissionRequest',
-        width: 225
-      },
-      {
-        Header: 'Data Product Questionionnaire',
-        accessor: row => dataProductQuestionaireLink(row.dataProductQuestionaire, 'Product Questionaire (Draft)'),
-        id: 'dataProductQuestionaire',
-        width: 225
-      },
-      {
-        Header: 'Submission Date',
-        accessor: row => shortDateNoTimeYearFirst(row.submitted),
-        id: 'submitted'
+        Header: 'Created',
+        accessor: row => shortDateNoTimeYearFirst(row.created_at),
+        id: 'created_at'
       },
       {
         Header: 'Latest Edit',
-        accessor: row => shortDateNoTimeYearFirst(row.timestamp),
-        id: 'timestamp'
+        accessor: row => shortDateNoTimeYearFirst(row.last_change),
+        id: 'last_change'
+      },
+      {
+        Header: 'Locked',
+        accessor: row => bool(row.lock),
+        id: 'lock'
       }
     ];
     // const { stats, count } = this.props.stats;
@@ -209,7 +206,7 @@ class Home extends React.Component {
       [tally(get(stats.data, 'errors.value')), 'Errors', kibanaAllLogsLink(this.props.earthdatapubInstance)],
       [tally(get(stats.data, 'collections.value')), strings.collections, '/collections'],
       [tally(get(stats.data, 'granules.value')), strings.granules, '/granules'],
-      [tally(get(stats.data, 'submissions.value')), strings.submissions, '/submissions'],
+      [tally(get(stats.data, 'requests.value')), strings.requests, '/requests'],
       [tally(get(this.props.executions, 'list.meta.count')), 'Executions', '/executions'],
       [tally(get(this.props.rules, 'list.meta.count')), 'Ingest Rules', '/rules'],
       [seconds(get(stats.data, 'processingTime.value', nullValue)), 'Average processing Time', '/']
@@ -231,9 +228,9 @@ class Home extends React.Component {
       [tally(get(dist, 'apiGateway.access.errors')), 'Gateway Access Errors', kibanaGatewayAccessErrorsLink(this.props.earthdatapubInstance, this.props.datepicker)]
     ]; */
 
-    // const submissionCount = get(count.data, 'submissions.meta.count');
+    // const submissionCount = get(count.data, 'requests.meta.count');
     // const numSubmissions = !isNaN(submissionCount) ? `${tally(submissionCount)}` : 0;
-    // const submissionStatus = get(count.data, 'submissions.count', []);
+    // const submissionStatus = get(count.data, 'requests.count', []);
 
     return (
       <div className='page__home'>
@@ -243,7 +240,7 @@ class Home extends React.Component {
           </div>
         </div>
 
-        <div className='page__content page__content__nosidebar'>
+        <div className='page__content page__content__nosidebar home_submissions_table'>
           {this.renderOverview()}
           {/*
           <section className='page__section datetime'>
@@ -269,20 +266,20 @@ class Home extends React.Component {
           {this.renderButtonListSection(distErrorStats, 'Distribution Errors', 'distributionErrors')}
           {this.renderButtonListSection(distSuccessStats, 'Distribution Successes', 'distributionSuccesses')}
 
-          <section className='page__section update--submissions'>
+          <section className='page__section update--requests'>
             <div className='row'>
               <div className='heading__wrapper--border'>
-                <h2 className='heading--large heading--shared-content--right'>Submissions Updates</h2>
-                <Link className='link--secondary link--learn-more' to='/submissions' aria-label="Learn more about submissions">{strings.view_submissions_overview}</Link>
+                <h2 className='heading--large heading--shared-content--right'>Requests Updates</h2>
+                <Link className='link--secondary link--learn-more' to='/requests' aria-label="Learn more about requests">{strings.view_submissions_overview}</Link>
               </div>
               <div className="heading__wrapper">
                 <h2 className='heading--medium heading--shared-content--right'>{strings.submissions_updated}<span className='num--title'>{numSubmissions}</span></h2>
               </div>
 
-              <SubmissionsProgress submissions={submissionStatus} />
+              <SubmissionsProgress requests={submissionStatus} />
             </div>
           </section> */}
-          <section className='page__section list--submissions'>
+          <section className='page__section list--requests'>
             <div className='row'>
               <div className='heading__wrapper--border'>
                 <h2 className='heading--medium heading--shared-content--right'>{strings.submissions_inprogress}</h2>
@@ -311,7 +308,7 @@ Home.propTypes = {
   dist: PropTypes.object,
   executions: PropTypes.object,
   granules: PropTypes.object,
-  submissions: PropTypes.object,
+  requests: PropTypes.object,
   pdrs: PropTypes.object,
   rules: PropTypes.object,
   stats: PropTypes.object,
@@ -329,7 +326,7 @@ export default withRouter(withQueryParams()(connect((state) => ({
   dist: state.dist,
   executions: state.executions,
   granules: state.granules,
-  submissions: state.submissions,
+  requests: state.requests,
   pdrs: state.pdrs,
   rules: state.rules,
   stats: state.stats

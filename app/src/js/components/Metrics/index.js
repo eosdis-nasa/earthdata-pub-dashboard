@@ -24,7 +24,7 @@ class Metrics extends React.Component {
             <div className='page__content--shortened'>
               <Switch>
                 <Route exact path='/metrics' component={MetricsOverview} />
-                <Route path='/metrics/metric/:metricName' component={Metric} />
+                <Route path='/metrics/:metricName' component={Metric} />
               </Switch>
             </div>
           </div>

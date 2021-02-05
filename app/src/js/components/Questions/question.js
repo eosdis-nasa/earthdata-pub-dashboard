@@ -14,7 +14,7 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 function Question ({ title, version, text, help, inputs }) {
   return (
     <div>
-      <h1>Title: {title}</h1>
+      <h3>Title: {title}</h3>
       <h3>Version: {version}</h3>
       <h3>Text: {text}</h3>
       <h3>Help: {help}</h3>
@@ -22,8 +22,8 @@ function Question ({ title, version, text, help, inputs }) {
       <div className='model-builder-array'>
         { inputs.map(input => (
           <Input
-            key={input.id}
-            id={input.id}
+            key={input.control_id}
+            id={input.control_id}
             label={input.label}
             type={input.type} />
         ))}
@@ -73,7 +73,6 @@ class QuestionOverview extends React.Component {
     }
 
     const question = record.data;
-
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -95,7 +94,9 @@ class QuestionOverview extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
         <section className='page__section page__section__header-wrapper'>
-          <Question title={question.title}
+          <Question
+            id={question.id}
+            title={question.long_name}
             version={question.version}
             text={question.text}
             help={question.help}

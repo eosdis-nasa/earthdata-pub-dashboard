@@ -23,7 +23,7 @@ class EditGroup extends React.Component {
         getRecord={getGroup}
         updateRecord={updateGroup}
         clearRecordUpdate={clearUpdateGroup}
-        backRoute={`/groups/group/${groupId}`}
+        backRoute={`/groups/id/${groupId}`}
       />
     );
   }
