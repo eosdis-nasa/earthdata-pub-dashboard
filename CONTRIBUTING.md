@@ -33,9 +33,9 @@ in the PR description, i.e. "Fixes Issue #10"
     Pub Core PR
     * Set `'change-me-next-api-release'` as the value for the `minCompatibleApiVersion`
     config value.
-* Upon request of a pull request, the Earthdata Pub development team will
+* Upon submission of a pull request, the Earthdata Pub development team will
 review the code
-* The request will then either be merged, declined, or an adjustment to the code
+* The submission will then either be merged, declined, or an adjustment to the code
 will be requested
 
 ## Guidelines
@@ -44,7 +44,7 @@ We ask that you follow these guidelines with your contributions:
 
 ### Tests
 
-All of the automated tests for this project need to pass before your request
+All of the automated tests for this project need to pass before your submission
 will be accepted. See the README for instructions on how to run tests and verify
 that the tests pass. If you add new functionality, please consider adding tests
 for that functionality as well.
