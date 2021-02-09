@@ -17,9 +17,7 @@ import {
 export const initialState = {
   stats: {
     data: { // overview statistics from `/stats`
-      collections: {},
       errors: {},
-      granules: {},
       processingTime: {},
     },
     inflight: false,

@@ -2,14 +2,14 @@ const config = {
   target: process.env.DAAC_NAME || 'local',
   environment: process.env.STAGE || 'development',
   nav: {
-    order: ['collections'],
+    order: ['requests'],
     exclude: {
-      PDRs: process.env.HIDE_PDR || true,
       Logs: !process.env.KIBANAROOT
     }
   },
   apiRoot: process.env.APIROOT || 'http://localhost:8080',
   formsUrl: process.env.FORMS_URL || 'http://localhost:8081',
+  overviewUrl: process.env.OVERVIEW_URL || 'https://pub.earthdata.nasa.gov/',
   awsRegion: process.env.AWS_REGION || 'us-west-2',
   oauthMethod: process.env.AUTH_METHOD || 'earthdata',
   kibanaRoot: process.env.KIBANAROOT || '',

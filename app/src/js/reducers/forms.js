@@ -11,10 +11,6 @@ import {
   NEW_FORM_INFLIGHT,
   NEW_FORM_ERROR,
 
-  FORM_COLLECTIONS,
-  FORM_COLLECTIONS_INFLIGHT,
-  FORM_COLLECTIONS_ERROR,
-
   UPDATE_FORM,
   UPDATE_FORM_INFLIGHT,
   UPDATE_FORM_ERROR,
@@ -49,7 +45,6 @@ export const initialState = {
   dropdowns: {},
   map: {},
   search: {},
-  collections: {},
   created: {},
   updated: {},
   deleted: {},
@@ -90,21 +85,6 @@ export default createReducer(initialState, {
     const { id } = action;
     set(state, ['created', id, 'status'], 'error');
     set(state, ['created', id, 'error'], action.error);
-  },
-
-  [FORM_COLLECTIONS]: (state, action) => {
-    const { data, id } = action;
-    set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'data'], data.map(c => c.collectionName));
-  },
-  [FORM_COLLECTIONS_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['collections', id, 'inflight'], true);
-  },
-  [FORM_COLLECTIONS_ERROR]: (state, action) => {
-    const { id } = action;
-    set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'error'], action.error);
   },
 
   [UPDATE_FORM]: (state, action) => {

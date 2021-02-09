@@ -67,11 +67,6 @@ class GroupOverview extends React.Component {
     const { groupId } = this.props.match.params;
     const immediate = !this.props.groups.map[groupId];
     this.reload(immediate);
-    /* this.props.dispatch(listCollections({
-      limit: 100,
-      fields: 'collectionName',
-      groups: groupId
-    })); */
   }
 
   componentWillUnmount () {

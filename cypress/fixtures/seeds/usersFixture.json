@@ -2,105 +2,18 @@
   "meta": {
     "name": "earthdata-pub-api",
     "stack": "test-src-integration",
-    "table": "user",
+    "table": "edpuser",
     "limit": 10,
     "page": 1,
     "count": 2
   },
   "results": [
     {
-      "id":"user1",
-      "createdAt": 1524686535230,
-      "userName": "User One",
-      "email": "user1@example.com",
-      "groups": [
-        "ORNL DAAC",
-			  "Admin",
-			  "Blah"
-      ],
-      "permissions": [
-        "Requests",
-        "Workflows",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "subscriptions": [
-        "Forms"
-      ],
-      "updatedAt": 1525982459499
-    },
-    {
-      "id": "user2",
-      "createdAt": 1524686535230,
-      "userName": "User Two",
-      "email": "user2@example.com",
-      "groups": [
-        "ORNL DAAC",
-			  "Admin",
-			  "Blah"
-      ],
-      "permissions": [
-        "Requests",
-        "Workflows",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "subscriptions": [
-        "Requests",
-        "Workflows",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "updatedAt": 1525982459499
-    },
-    {
-      "id": "user3",
-      "createdAt": 1524686535230,
-      "userName": "User Three",
-      "email": "user3@example.com",
-      "groups": [
-        "ORNL DAAC",
-			  "Admin"
-      ],
-      "permissions": [
-        "Requests",
-        "Workflows",
-        "Forms"
-      ],
-      "subscriptions": [
-        "Requests",
-        "Users",
-        "Groups"
-      ],
-      "updatedAt": 1525982459499
-    },
-    {
-      "id": "test-user",
-      "createdAt": 1524686535230,
-      "userName": "Test User",
-      "email": "testuser@example.com",
-      "groups": [
-	  		"Admin",
-	  	  "User"
-      ],
-      "permissions": [
-	  	  "Requests",
-        "Workflows",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "subscriptions": [
-        "Requests",
-        "Workflows",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "updatedAt": 1525982459499
+      "id": "1b10a09d-d342-4eee-a9eb-c99acd2dde17",
+      "name": "Earthdata Pub System",
+      "email": "no_email",
+      "registered": "2021-02-05T20:39:54.835Z",
+      "last_login": "2021-02-05T20:39:54.835Z"
     }
   ]
 }

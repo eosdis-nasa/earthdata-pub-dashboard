@@ -157,10 +157,10 @@ class AllGroups extends React.Component {
             {/* <ListFilters>
               <Dropdown
                 getOptions={getOptionsCollectionName}
-                options={get(dropdowns, ['collectionName', 'options'])}
+                options={get(dropdowns, ['name', 'options'])}
                 action={filterGroups}
                 clear={clearGroupsFilter}
-                paramKey='collectionId'
+                paramKey='id'
                 label='Collection'
                 inputProps={{
                   placeholder: 'All'

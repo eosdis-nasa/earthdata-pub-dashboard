@@ -1,4 +1,5 @@
 'use strict';
+import { strings } from '../components/locale';
 import tally from './tally';
 
 const userRoutes = [
@@ -6,7 +7,7 @@ const userRoutes = [
 ];
 
 const singleUserRoutes = [
-  ['Back to Users', null, 'sidebar__nav--back']
+  [strings.back_to_users, null, 'sidebar__nav--back']
 ];
 
 const empty = [['', '']];

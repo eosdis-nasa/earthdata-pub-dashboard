@@ -38,7 +38,7 @@ class Metric extends React.Component {
       <Ace
         mode='json'
         theme={config.editorTheme}
-        name={`collection-read-only-${name}`}
+        name={`read-only-${name}`}
         readOnly={true}
         value={JSON.stringify(data, null, '\t')}
         width='auto'

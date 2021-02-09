@@ -32,7 +32,6 @@ export const initialState = {
   dropdowns: {},
   map: {},
   search: {},
-  collections: {},
   created: {},
   restarted: {},
   stopped: {}

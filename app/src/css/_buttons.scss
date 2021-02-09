@@ -497,35 +497,6 @@
       } 
     }
 
-     &__addcollections {
-      float: right;
-      margin-top: 1em;
-    }
-
-    &__deletecollections {
-      background-color: $light-green;
-      position: relative;
-    
-      &:before{
-        color: $white;
-        position: absolute;
-        font-family: 'FontAwesome';
-        content: '\f187';
-        font-weight: 900;
-        left: 10px;
-        
-      } 
-    }
-
-    &__deletecollections:hover:before{
-      color: $white;
-      position: absolute;
-      font-family: 'FontAwesome';
-      content: '\f187';
-      font-weight: 900;
-      visibility: hidden;
-    }
-
     &__goto {
       background-color: $light-green;
       position: relative;
