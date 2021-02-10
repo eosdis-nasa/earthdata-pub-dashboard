@@ -30,9 +30,6 @@ const Questions = ({
   const [queryOptions] = useState({});
 
   function query () {
-    dispatch(getCount({
-      type: 'questions'
-    }));
     dispatch(listQuestions(queryOptions));
   }
 

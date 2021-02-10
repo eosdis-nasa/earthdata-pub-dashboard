@@ -10,6 +10,7 @@ import {
   getSubmission,
   updateSubmissionMetadata
 } from '../../actions';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { get } from 'object-path';
 
 class EditMetadata extends React.Component {
@@ -27,19 +28,40 @@ class EditMetadata extends React.Component {
 
   render () {
     const submissionId = this.props.match.params.submissionId;
+    const breadcrumbConfig = [
+      {
+        label: 'Dashboard Home',
+        href: '/'
+      },
+      {
+        label: 'Requests',
+        href: '/requests'
+      },
+      {
+        label: `Edit Metadata: ${submissionId}`,
+        active: true
+      }
+    ];
     const submissionInflight = get(this.props, ['requests', 'map', submissionId, 'inflight'], true);
     const modelInflight = get(this.props, ['model', 'inflight'], true);
-    const loading = modelInflight || submissionInflight;
-    if (loading) {
-      return (<Loading />);
-    }
     const metadata = get(this.props, ['requests', 'map', submissionId, 'data', 'metadata']);
     // console.log('EDIT METADATA', metadata);
     const model = get(this.props, ['model', 'data']);
     const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: submissionId, metadata: formData }); };
     return (
-      <div>
-        <ModelBuilder model={model} formData={metadata} onSubmit={onSubmit}/>
+      <div className='page__component'>
+        <section className='page__section page__section__controls'>
+          <Breadcrumbs config={breadcrumbConfig} />
+        </section>
+        <section className='page__section page__section__header-wrapper'>
+          <h1 className='heading--large heading--shared-content with-description width--three-quarters'>
+            {submissionId}
+          </h1>
+        </section>
+        <section className='page__section'>
+            { loading && <Loading /> }
+            { !loading && <ModelBuilder model={model} formData={metadata} onSubmit={onSubmit}/> }
+        </section>
       </div>
     );
   }

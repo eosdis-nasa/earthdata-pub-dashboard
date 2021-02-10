@@ -7,12 +7,7 @@ import { createLogger } from 'redux-logger';
 import { window } from '../utils/browser';
 import config from '../config';
 
-export let history;
-if (config.servedByEarthdatapubAPI) {
-  history = createHashHistory({});
-} else {
-  history = createBrowserHistory({});
-}
+export const history = createBrowserHistory({ basename: config.basepath });
 
 // redirect to login when not auth'd
 export const requireAuth = (store) => (nextState, replace) => {

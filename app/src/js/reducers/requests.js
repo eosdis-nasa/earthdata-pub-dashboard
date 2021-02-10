@@ -50,7 +50,7 @@ export const initialState = {
     params: {}
   },
   dropdowns: {},
-  map: {},
+  detail: {},
   meta: {},
   reprocessed: {},
   removed: {},
@@ -63,19 +63,18 @@ export const initialState = {
 
 export default createReducer(initialState, {
   [SUBMISSION]: (state, action) => {
-    const { id, data } = action;
-    set(state, ['map', id, 'inflight'], false);
-    set(state, ['map', id, 'data'], assignDate(data));
-    del(state, ['deleted', id]);
+    const { data } = action;
+    set(state, ['detail', 'inflight'], false);
+    set(state, ['detail', 'data'], assignDate(data));
   },
   [SUBMISSION_INFLIGHT]: (state, action) => {
     const { id } = action;
-    set(state, ['map', id, 'inflight'], true);
+    set(state, ['detail', 'inflight'], true);
   },
   [SUBMISSION_ERROR]: (state, action) => {
     const { id } = action;
-    set(state, ['map', id, 'inflight'], false);
-    set(state, ['map', id, 'error'], action.error);
+    set(state, ['detail', 'inflight'], false);
+    set(state, ['detail', 'error'], action.error);
   },
 
   [SUBMISSIONS]: (state, action) => {

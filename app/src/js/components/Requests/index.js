@@ -38,11 +38,11 @@ const Requests = ({
       setQueryOptions(newQueryOptions);
     }
   }
-  dispatch(listSubmissions());
+
   function query () {
-    dispatch(getCount({
-      type: 'requests'
-    }));
+    // dispatch(getCount({
+    //   type: 'requests'
+    // }));
   }
   return (
     <div className='page__requests'>
@@ -52,13 +52,12 @@ const Requests = ({
           <Sidebar
             currentPath={pathname}
             params={params}
-            count={[count]}
           />
           <div className='page__content--shortened'>
             <Switch>
               <Route exact path='/requests' component={SubmissionsOverview} />
-              <Route path='/requests/id/:submissionId' component={SubmissionOverview} />
-              <Route path='/requests/metadata/:submissionId' component={EditMetadata} />
+              <Route exact path='/requests/id/:submissionId' component={SubmissionOverview} />
+              <Route path='/requests/id/:submissionId/edit-metadata' component={EditMetadata} />
               <Route path='/requests/completed' component={AllSubmissionsWithWrapper} />
               <Route path='/requests/processing' component={AllSubmissionsWithWrapper} />
               <Route path='/requests/failed' component={AllSubmissionsWithWrapper} />

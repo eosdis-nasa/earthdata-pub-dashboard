@@ -32,7 +32,6 @@ class QuestionsOverview extends React.Component {
   constructor (props) {
     super(props);
     this.generateQuery = this.generateQuery.bind(this);
-    this.queryMeta = this.queryMeta.bind(this);
     this.state = {};
   }
 
@@ -40,13 +39,6 @@ class QuestionsOverview extends React.Component {
   }
 
   componentWillUnmount () {
-  }
-
-  queryMeta () {
-    const { dispatch } = this.props;
-    dispatch(getCount({
-      type: 'questions'
-    }));
   }
 
   generateQuery () {

@@ -23,7 +23,7 @@ export const initialState = {
 function createMap (data) {
   const map = {};
   data.forEach(d => {
-    map[d.name] = d;
+    map[d.id] = d;
   });
   return map;
 }

@@ -19,7 +19,7 @@ const CommonConfig = {
     filename: 'bundle.js',
     chunkFilename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/'
+   publicPath: config.basepath
   },
   node: {
     console: true,
@@ -98,8 +98,7 @@ const CommonConfig = {
           loader: 'file-loader',
           options: {
             name: '[path][name].[hash].[ext]',
-            outputPath: 'fonts/',
-            publicPath: '../'
+            outputPath: 'fonts/'
           }
         }
       },
@@ -109,8 +108,7 @@ const CommonConfig = {
           loader: 'file-loader',
           options: {
             name: '[path][name].[hash].[ext]',
-            outputPath: 'images/',
-            publicPath: '../'
+            outputPath: 'images/'
           }
         }
       },
@@ -163,7 +161,8 @@ const CommonConfig = {
         SERVED_BY_EDPUB_API: config.servedByEarthdatapubAPI,
         APP_ID: config.APP_ID,
         FORMS_URL: config.formsUrl,
-        OVERVIEW_URL: config.overviewUrl
+        OVERVIEW_URL: config.overviewUrl,
+        BASEPATH: config.basepath
       }
     )
   ]
