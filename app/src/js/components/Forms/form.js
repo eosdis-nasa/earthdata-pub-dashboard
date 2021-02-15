@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   interval,
-  getForm,
-  deleteForm
+  getForm
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -51,7 +50,6 @@ class FormOverview extends React.Component {
     super();
     this.reload = this.reload.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
-    this.delete = this.delete.bind(this);
     this.errors = this.errors.bind(this);
   }
 
@@ -78,19 +76,10 @@ class FormOverview extends React.Component {
     history.push('/forms');
   }
 
-  delete () {
-    const { formId } = this.props.match.params;
-    const form = this.props.forms.map[formId].data;
-    if (!form.published) {
-      this.props.dispatch(deleteForm(formId));
-    }
-  }
-
   errors () {
     const formId = this.props.match.params.formId;
     return [
       get(this.props.forms.map, [formId, 'error']),
-      get(this.props.forms.deleted, [formId, 'error'])
     ].filter(Boolean);
   }
 

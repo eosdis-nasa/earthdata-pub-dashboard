@@ -4,22 +4,14 @@ import c from 'classnames';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { logout, getApiVersion, getEarthdatapubInstanceMetadata } from '../../actions';
-import { graphicsPath, nav } from '../../config';
+import { graphicsPath, nav, overviewUrl } from '../../config';
 import { strings } from '../locale';
 import { kibanaAllLogsLink } from '../../utils/kibana';
 
 const paths = [
-  // ['', '/pdrs'],
-  // ['Providers', '/providers'],
-  [strings.requests, '/requests'],
+  ['Requests', '/requests'],
   ['Workflows', '/workflows'],
-  // ['Executions', '/executions'],
-  // ['Operations', '/operations'],
-  // ['Rules', '/rules'],
-  // ['Logs', '/logs'],
   ['Metrics', '/metrics'],
-  // ['Reconciliation Reports', '/reconciliation-reports']
-  // ['Forms', '/forms'],
   ['Users', '/users'],
   ['Groups', '/groups'],
   ['Roles', '/roles'],
@@ -43,6 +35,8 @@ class Header extends React.Component {
   logout () {
     const { dispatch, history } = this.props;
     dispatch(logout());
+    localStorage.removeItem('auth-token');
+    window.location.href = overviewUrl;
     history.push('/');
   }
 

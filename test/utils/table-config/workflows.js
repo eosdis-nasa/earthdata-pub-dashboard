@@ -1,5 +1,5 @@
 'use strict';
-import React from 'react';
+/* import React from 'react';
 import test from 'ava';
 import cloneDeep from 'lodash.clonedeep';
 import { buildLink, makeSteps } from '../../../app/src/js/utils/table-config/workflows';
@@ -86,4 +86,4 @@ test('buildLink returns null if no ARN and no description', (t) => {
   const expected = null;
   const actual = buildLink(testRow);
   t.is(expected, actual);
-});
+}); */

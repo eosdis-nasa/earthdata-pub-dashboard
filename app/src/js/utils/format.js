@@ -77,28 +77,6 @@ export const lastUpdated = function (datestring, text) {
   );
 };
 
-export const collectionSearchResult = function (collection) {
-  const { name, version } = collection;
-  return (
-    <li key={name}>
-      <Link to={`collections/collection/${name}/${version}`}>{name} / {version}</Link>
-    </li>
-  );
-};
-
-export const granuleSearchResult = function (granule) {
-  const { granuleId, status } = granule;
-  return (
-    <li key={granuleId}>
-      <Link to={`granules/granules/${granuleId}/${status}`}>{granuleId} / {status}</Link>
-    </li>
-  );
-};
-
-export const granuleLink = function (granuleId) {
-  if (!granuleId) return nullValue;
-  return <Link to={`/granules/granule/${granuleId}`}>{granuleId}</Link>;
-};
 export const submissionLink = function (submissionId) {
   if (!submissionId) return nullValue;
   return <Link to={`/requests/id/${submissionId}`}>{submissionId}</Link>;
@@ -106,14 +84,6 @@ export const submissionLink = function (submissionId) {
 export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;
   return <Link to={`/questions/id/${questionId}`}>{questionName}</Link>;
-};
-export const pdrLink = function (pdrName) {
-  if (!pdrName) return nullValue;
-  return <Link to={`/pdrs/pdr/${pdrName}`}>{pdrName}</Link>;
-};
-export const providerLink = function (provider) {
-  if (!provider) return nullValue;
-  return <Link to={`/providers/provider/${provider}`}>{provider}</Link>;
 };
 export const groupLink = function (groupId) {
   if (!groupId) return nullValue;
@@ -171,56 +141,6 @@ export const truncate = function (string, to) {
   to = to || 100;
   if (string.length <= to) return string;
   else return string.slice(0, to) + '... Show More';
-};
-
-export const getCollectionId = function (collection) {
-  if (collection && collection.name && collection.version) {
-    return `${collection.name}___${collection.version}`;
-  }
-  return 'unknown';
-};
-
-// "MYD13A1___006" => "MYD13A1 / 006"
-export const collectionName = function (collectionId) {
-  if (!collectionId) return nullValue;
-  return collectionId.split('___').join(' / ');
-};
-
-export const collectionNameVersion = function (collectionId) {
-  if (!collectionId) return nullValue;
-  const [name, version] = collectionId.split('___');
-  return { name, version };
-};
-
-export const constructCollectionNameVersion = function (name, version) {
-  return `${name}___${version}`;
-};
-
-/**
- * Returns the name and version of a collection based on
- * the collectionId used in elasticsearch indexing
- *
- * @param {string} collectionId - collectionId used in elasticsearch index
- * @returns {Object} name and version as object
- */
-export const deconstructCollectionId = function (collectionId) {
-  const [name, version] = collectionId.split('___');
-  return {
-    name,
-    version
-  };
-};
-
-export const collectionLink = function (collectionId) {
-  if (!collectionId) return nullValue;
-  const { name, version } = collectionNameVersion(collectionId);
-  return <Link to={`/collections/collection/${name}/${version}`}>{collectionName(collectionId)}</Link>;
-};
-
-export const collectionHref = function (collectionId) {
-  if (!collectionId) return nullValue;
-  const { name, version } = collectionNameVersion(collectionId);
-  return `/collections/collection/${name}/${version}`;
 };
 
 export const enableText = function (name) {

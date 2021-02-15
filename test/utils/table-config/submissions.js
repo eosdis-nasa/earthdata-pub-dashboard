@@ -1,6 +1,6 @@
 'use strict';
 
-import test from 'ava';
+/* import test from 'ava';
 import rewire from 'rewire';
 import sinon from 'sinon';
 import cloneDeep from 'lodash.clonedeep';
@@ -98,4 +98,4 @@ test('setOnConfirm navigates to the correct processing page irrespective of the 
     confirmCallback();
     t.true(t.context.history.push.calledWith(o.expected));
   });
-});
+}); */

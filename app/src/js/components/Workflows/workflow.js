@@ -42,7 +42,7 @@ class Workflow extends React.Component {
       <Ace
         mode='json'
         theme={config.editorTheme}
-        name={`collection-read-only-${name}`}
+        name={`read-only-${name}`}
         readOnly={false}
         value={JSON.stringify(data, null, '\t')}
         width='auto'

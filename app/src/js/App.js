@@ -17,11 +17,7 @@ import Auth from './components/Auth';
 // Components
 import Home from './components/home';
 import Main from '../js/main';
-import Collections from './components/Collections';
-import Granules from './components/Granules';
 import Requests from './components/Requests';
-import Pdrs from './components/Pdr';
-import Providers from './components/Providers';
 import Users from './components/Users';
 import Groups from './components/Groups';
 import Forms from './components/Forms';
@@ -29,10 +25,7 @@ import Questions from './components/Questions';
 import Workflows from './components/Workflows';
 import Metrics from './components/Metrics';
 import Roles from './components/Roles';
-import Executions from './components/Executions';
-import Operations from './components/Operations';
 import Rules from './components/Rules';
-import ReconciliationReports from './components/ReconciliationReports';
 import TestApi from './components/testApi';
 
 import config from './config';
@@ -49,11 +42,7 @@ const MainRoutes = () => {
       <Switch>
         <Route exact path='/' component={Home} />
         <Route path='/404' component={NotFound} />
-        <Route path='/collections' component={Collections} />
-        <Route path='/granules' component={Granules} />
         <Route path='/requests' component={Requests} />
-        <Route path='/pdrs' component={Pdrs} />
-        <Route path='/providers' component={Providers} />
         <Route path='/forms' component={Forms} />
         <Route path='/questions' component={Questions} />
         <Route path='/users' component={Users} />
@@ -61,10 +50,7 @@ const MainRoutes = () => {
         <Route path='/workflows' component={Workflows} />
         <Route path='/metrics' component={Metrics} />
         <Route path='/roles' component={Roles} />
-        <Route path='/executions' component={Executions} />
-        <Route path='/operations' component={Operations} />
         <Route path='/rules' component={Rules} />
-        <Route path='/reconciliation-reports' component={ReconciliationReports} />
         <Route path='/test-api' component={TestApi} />
       </Switch>
     </Main>

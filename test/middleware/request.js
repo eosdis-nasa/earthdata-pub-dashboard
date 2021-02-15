@@ -15,7 +15,7 @@ test.beforeEach((t) => {
       }
     }
   });
-  t.context.nextHandler = requestMiddleware({dispatch: doDispatch, getState: doGetState});
+  t.context.nextHandler = requestMiddleware({ dispatch: doDispatch, getState: doGetState });
 
   t.context.defaultConfig = {
     json: true,
@@ -57,7 +57,7 @@ test('should throw error if no method is set on API request action', (t) => {
 test.cb('should add correct authorization headers to API request action', (t) => {
   nock(`http://localhost:${port}`, {
     reqheaders: {
-      'Authorization': 'Bearer fake-token'
+      Authorization: 'Bearer fake-token'
     }
   })
     .get('/test-path')
@@ -83,7 +83,7 @@ test.cb('should add correct authorization headers to API request action', (t) =>
 test.cb('should be able to use provided authorization headers', (t) => {
   nock(`http://localhost:${port}`, {
     reqheaders: {
-      'Authorization': 'Bearer another-token'
+      Authorization: 'Bearer another-token'
     }
   })
     .get('/test-path')

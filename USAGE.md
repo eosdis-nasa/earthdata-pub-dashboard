@@ -12,8 +12,8 @@ to restart automatic updates.
 
 ## Searching and filtering
 
-Many tables provide dropdowns to filter the data based on attributes like stage
-or status. Often, you will find search fields where you can enter arbitrary search
+Many tables provide dropdowns to filter the data based on attributes like status. 
+Often, you will find search fields where you can enter arbitrary search
 strings. As you type, the Earthdata Pub Dashboard and API will attempt to find
 records containing attributes with **prefixes** that match your search string.
 

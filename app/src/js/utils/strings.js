@@ -5,7 +5,7 @@ const strings = {
     integerRequired: 'This field must be an integer',
     generic: 'Input not valid',
     json: 'Must be valid JSON',
-    collectionName: 'Please enter a name for this collection'
+    name: 'Please enter a name'
   }
 };
 export default strings;

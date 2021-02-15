@@ -1,13 +1,13 @@
 'use strict';
 import tally from './tally';
-
+import { strings } from '../components/locale';
 const formRoutes = [
   ['', null]
 ];
 
 const singleFormRoutes = [
-  ['Back to Requests', '/requests', 'sidebar__nav'],
-  ['View List of Forms', null, 'sidebar__nav']
+  [strings.back_to_submissions, '/requests', 'sidebar__nav'],
+  [strings.view_forms_list, null, 'sidebar__nav']
 ];
 
 const empty = [['', '']];
