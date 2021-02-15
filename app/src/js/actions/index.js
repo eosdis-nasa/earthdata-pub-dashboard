@@ -930,11 +930,20 @@ export const listMetrics = (options) => ({
 export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });
 export const clearMetricsSearch = () => ({ type: types.CLEAR_METRICS_SEARCH });
 
+export const getRole = (roleId) => ({
+  [CALL_API]: {
+    type: types.ROLE,
+    method: 'GET',
+    id: roleId,
+    path: `data/role/${roleId}`
+  }
+});
+
 export const listRoles = (options) => ({
   [CALL_API]: {
     type: types.ROLES,
     method: 'GET',
-    url: new URL('data/roles', root).href,
+    path: 'data/roles',
     qs: Object.assign({ limit: defaultPageLimit }, options)
   }
 });

@@ -1,4 +1,4 @@
-import { createHashHistory, createBrowserHistory } from 'history';
+import { createBrowserHistory } from 'history';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { routerMiddleware } from 'connected-react-router';
 import { createRootReducer } from '../reducers';

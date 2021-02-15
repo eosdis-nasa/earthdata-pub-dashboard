@@ -4,33 +4,24 @@ import Ace from 'react-ace';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { listRoles } from '../../actions';
+import { getRole } from '../../actions';
 import config from '../../config';
 import { setWindowEditorRef } from '../../utils/browser';
 import Loading from '../LoadingIndicator/loading-indicator';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 class Roles extends React.Component {
   constructor () {
     super();
     this.state = { view: 'json' };
-    this.get = this.get.bind(this);
     this.renderReadOnlyJson = this.renderReadOnlyJson.bind(this);
     this.renderJson = this.renderJson.bind(this);
   }
 
-  componentDidUpdate (prevProps) {
-    const { roleName } = this.props.match.params;
-    if (roleName !== prevProps.match.params.roleName) {
-      this.get();
-    }
-  }
-
   componentDidMount () {
-    this.get();
-  }
-
-  get (roleName) {
-    this.props.dispatch(listRoles());
+    const { dispatch } = this.props;
+    const { roleId } = this.props.match.params;
+    dispatch(getRole(roleId));
   }
 
   renderReadOnlyJson (name, data) {
@@ -53,25 +44,45 @@ class Roles extends React.Component {
   }
 
   render () {
-    const { roles, match: { params: { roleName } } } = this.props;
-    // const data = roles.map[roleName];
-    const data = roles.map[undefined];
-    if (!data) {
-      return <Loading />;
-    }
+    const { roleId } = this.props.match.params;
+    const record = this.props.roles.detail;
+    const breadcrumbConfig = [
+      {
+        label: 'Dashboard Home',
+        href: '/'
+      },
+      {
+        label: 'Roles',
+        href: '/roles'
+      },
+      {
+        label: roleId,
+        active: true
+      }
+    ];
+
     return (
       <div className='page__component'>
-        <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{data.long_name}</h1>
+        <section className='page__section page__section__controls'>
+          <Breadcrumbs config={breadcrumbConfig} />
         </section>
+        <h1 className='heading--large heading--shared-content with-description'>
+          {record.data ? record.data.long_name  : `...`}
+        </h1>
         <section className='page__section'>
-          <div className='tab--wrapper'>
-            <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
-              onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
-          </div>
-          <div>
-            {this.state.view === 'list' ? this.renderList(data) : this.renderJson(data)}
-          </div>
+          { record.inflight ? <Loading /> :
+            record.error ? <ErrorReport report={record.error} />
+            : record.data ?
+              <div>
+              <div className='tab--wrapper'>
+                <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
+                  onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
+              </div>
+              <div>
+                {this.state.view === 'list' ? this.renderList(record.data) : this.renderJson(record.data)}
+              </div>
+            </div> : null
+          }
         </section>
       </div>
     );

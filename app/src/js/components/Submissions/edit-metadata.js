@@ -59,8 +59,8 @@ class EditMetadata extends React.Component {
           </h1>
         </section>
         <section className='page__section'>
-            { loading && <Loading /> }
-            { !loading && <ModelBuilder model={model} formData={metadata} onSubmit={onSubmit}/> }
+          { loading && <Loading /> }
+          { !loading && <ModelBuilder model={model} formData={metadata} onSubmit={onSubmit}/> }
         </section>
       </div>
     );

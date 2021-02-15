@@ -159,11 +159,12 @@ export const METRICS_ERROR = 'METRICS_ERROR';
 export const SEARCH_METRICS = 'SEARCH_METRICS';
 export const CLEAR_METRICS_SEARCH = 'CLEAR_METRICS_SEARCH';
 // Roles
+export const ROLE = 'ROLE';
+export const ROLE_INFLIGHT = 'ROLE_INFLIGHT';
+export const ROLE_ERROR = 'ROLE_ERROR';
 export const ROLES = 'ROLES';
 export const ROLES_INFLIGHT = 'ROLES_INFLIGHT';
 export const ROLES_ERROR = 'ROLES_ERROR';
-export const SEARCH_ROLES = 'SEARCH_ROLES';
-export const CLEAR_ROLES_SEARCH = 'CLEAR_ROLES_SEARCH';
 // Logs
 export const LOGS = 'LOGS';
 export const LOGS_INFLIGHT = 'LOGS_INFLIGHT';

@@ -1,5 +1,5 @@
 'use strict';
-import { set, del } from 'object-path';
+import { set } from 'object-path';
 import assignDate from './assign-date';
 
 import {
@@ -68,11 +68,9 @@ export default createReducer(initialState, {
     set(state, ['detail', 'data'], assignDate(data));
   },
   [SUBMISSION_INFLIGHT]: (state, action) => {
-    const { id } = action;
     set(state, ['detail', 'inflight'], true);
   },
   [SUBMISSION_ERROR]: (state, action) => {
-    const { id } = action;
     set(state, ['detail', 'inflight'], false);
     set(state, ['detail', 'error'], action.error);
   },

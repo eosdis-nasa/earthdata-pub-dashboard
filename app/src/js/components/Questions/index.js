@@ -4,7 +4,7 @@ import { get } from 'object-path';
 import { connect } from 'react-redux';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
-import { getCount, listQuestions } from '../../actions';
+import { listQuestions } from '../../actions';
 import { strings } from '../locale';
 // import AllQuestions from './list';
 import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';

@@ -3,14 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {
-  getCount,
-  // searchQuestions,
-  // clearQuestionsSearch,
-  // filterQuestions,
-  // clearQuestionsFilter,
-  listQuestions
-} from '../../actions';
+import { listQuestions } from '../../actions';
 import { lastUpdated } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/questions';
 import List from '../Table/Table';

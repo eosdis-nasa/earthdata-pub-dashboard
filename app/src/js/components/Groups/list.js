@@ -25,7 +25,6 @@ import List from '../Table/Table';
 import LogViewer from '../Logs/viewer';
 // import Dropdown from '../DropDown/dropdown';
 // import Search from '../Search/search';
-import statusOptions from '../../utils/status';
 import { strings } from '../locale';
 import _config from '../../config';
 import { workflowOptionNames } from '../../selectors';
@@ -110,13 +109,12 @@ class AllGroups extends React.Component {
 
   render () {
     const { groups, dispatch, logs } = this.props;
-    const { list, dropdowns } = groups;
+    const { list } = groups;
     const { count, queriedAt } = list.meta;
     const logsQuery = { groupId__exists: 'true' };
     const query = this.generateQuery();
     const view = this.getView();
     const displayCaseView = displayCase(view);
-    const statusOpts = (view === 'all') ? statusOptions : null;
     const tableSortIdx = view === 'failed' ? 'groupId' : 'timestamp';
     const breadcrumbConfig = [
       {

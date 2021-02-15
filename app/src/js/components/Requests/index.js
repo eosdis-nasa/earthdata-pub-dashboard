@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { get } from 'object-path';
 import { connect } from 'react-redux';
 import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
-import {
-  getCount,
-  listSubmissions
-} from '../../actions';
 import { strings } from '../locale';
 import AllSubmissions from './list';
 import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
@@ -29,7 +24,6 @@ const Requests = ({
   stats
 }) => {
   const { pathname } = location;
-  const count = get(stats, 'count.data.requests.count');
   const AllSubmissionsWithWrapper = withQueryWrapper(AllSubmissions, onQueryChange);
   const [queryOptions, setQueryOptions] = useState({});
 

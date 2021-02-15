@@ -13,11 +13,9 @@ import {
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 class EditMetadata extends React.Component {
-  componentWillMount () {
+  componentDidMount () {
     const { dispatch } = this.props;
     const { submissionId } = this.props.match.params;
-    const record = this.props.requests.detail;
-    const { model } = this.props;
     dispatch(getSubmission(submissionId));
     dispatch(getModel('UMMC'));
   }
@@ -69,9 +67,9 @@ class EditMetadata extends React.Component {
           </h1>
         </section>
         <section className='page__section'>
-            { loading ?
-              <Loading /> :
-              <ModelBuilder model={model.data} formData={submission.metadata} onSubmit={onSubmit}/> }
+          { loading
+            ? <Loading />
+            : <ModelBuilder model={model.data} formData={submission.metadata} onSubmit={onSubmit}/> }
         </section>
       </div>);
   }
@@ -79,6 +77,7 @@ class EditMetadata extends React.Component {
 
 EditMetadata.propTypes = {
   dispatch: PropTypes.func,
+  history: PropTypes.object,
   requests: PropTypes.object,
   model: PropTypes.object,
   match: PropTypes.object

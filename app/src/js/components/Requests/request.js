@@ -4,13 +4,11 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  interval,
   getSubmission,
   deleteSubmission,
   applyWorkflowToSubmission,
   listWorkflows
 } from '../../actions';
-import { get } from 'object-path';
 import {
   // displayCase,
   lastUpdated,
@@ -24,13 +22,10 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 // import AsyncCommands from '../DropDown/dropdown-async-command';
-import _config from '../../config';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import { simpleDropdownOption } from '../../utils/table-config/requests';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-
-const { updateInterval } = _config;
 
 /* const tableColumns = [
 
@@ -83,17 +78,13 @@ class SubmissionOverview extends React.Component {
     this.state = {};
   }
 
-  componentWillMount () {
+  componentDidMount () {
     const { submissionId } = this.props.match.params;
     const { dispatch } = this.props;
-    //This causes a repeating query for workflows cluttering up the logs.
-    //Commenting out until we add applyWorkflow capability
-    //this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
+    // This causes a repeating query for workflows cluttering up the logs.
+    // Commenting out until we add applyWorkflow capability
+    // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
     dispatch(getSubmission(submissionId));
-  }
-
-  componentWillUnmount () {
-    //if (this.cancelInterval) { this.cancelInterval(); }
   }
 
   reload (immediate, timeout) {
@@ -160,7 +151,6 @@ class SubmissionOverview extends React.Component {
   }
 
   render () {
-    const { dispatch } = this.props;
     const { submissionId } = this.props.match.params;
     const record = this.props.requests.detail;
     const request = record.data || false;
@@ -211,14 +201,14 @@ class SubmissionOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium with-description'>{strings.submission_overview}</h2>
           </div>
-          { record.inflight ? <Loading /> :
-            record.error ? <ErrorReport report={record.error} /> :
-            request ? <Metadata data={request} accessors={metaAccessors} /> :
-            null
+          { record.inflight ? <Loading />
+            : record.error ? <ErrorReport report={record.error} />
+              : request ? <Metadata data={request} accessors={metaAccessors} />
+                : null
           }
         </section>
 
-        { /*<section className='page__section'>
+        { /* <section className='page__section'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Files</h2>
           </div>
