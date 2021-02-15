@@ -4,13 +4,11 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  interval,
   getSubmission,
   deleteSubmission,
   applyWorkflowToSubmission,
   listWorkflows
 } from '../../actions';
-import { get } from 'object-path';
 import {
   // displayCase,
   lastUpdated,
@@ -24,13 +22,10 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 // import AsyncCommands from '../DropDown/dropdown-async-command';
-import _config from '../../config';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import { simpleDropdownOption } from '../../utils/table-config/requests';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-
-const { updateInterval } = _config;
 
 /* const tableColumns = [
 
@@ -77,7 +72,6 @@ class SubmissionOverview extends React.Component {
     this.applyWorkflow = this.applyWorkflow.bind(this);
     //  this.remove = this.remove.bind(this);
     this.delete = this.delete.bind(this);
-    this.errors = this.errors.bind(this);
     this.selectWorkflow = this.selectWorkflow.bind(this);
     this.getExecuteOptions = this.getExecuteOptions.bind(this);
     this.displayName = strings.request;
@@ -86,29 +80,24 @@ class SubmissionOverview extends React.Component {
 
   componentDidMount () {
     const { submissionId } = this.props.match.params;
-    this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
-
-    if (this.props.skipReloadOnMount) return;
-
-    const immediate = !this.props.requests.map[submissionId];
-    this.reload(immediate);
-  }
-
-  componentWillUnmount () {
-    if (this.cancelInterval) { this.cancelInterval(); }
+    const { dispatch } = this.props;
+    // This causes a repeating query for workflows cluttering up the logs.
+    // Commenting out until we add applyWorkflow capability
+    // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
+    dispatch(getSubmission(submissionId));
   }
 
   reload (immediate, timeout) {
-    timeout = timeout || updateInterval;
-    const submissionId = this.props.match.params.submissionId;
-    const { dispatch } = this.props;
-    if (this.cancelInterval) { this.cancelInterval(); }
-    this.cancelInterval = interval(() => dispatch(getSubmission(submissionId)), timeout, immediate);
+    // timeout = timeout || updateInterval;
+    // const submissionId = this.props.match.params.submissionId;
+    // const { dispatch } = this.props;
+    // if (this.cancelInterval) { this.cancelInterval(); }
+    // this.cancelInterval = interval(() => dispatch(getSubmission(submissionId)), timeout, immediate);
   }
 
   fastReload () {
     // decrease timeout to better see updates
-    this.reload(true, updateInterval / 2);
+    // this.reload(true, updateInterval / 2);
   }
 
   navigateBack () {
@@ -131,17 +120,20 @@ class SubmissionOverview extends React.Component {
     this.props.dispatch(deleteSubmission(submissionId));
   }
 
-  errors () {
-    const submissionId = this.props.match.params.submissionId;
-    return [
-      get(this.props.requests.map, [submissionId, 'error']),
-      get(this.props.requests.reprocessed, [submissionId, 'error']),
-      get(this.props.requests.reingested, [submissionId, 'error']),
-      get(this.props.requests.executed, [submissionId, 'error']),
-      get(this.props.requests.removed, [submissionId, 'error']),
-      get(this.props.requests.deleted, [submissionId, 'error'])
-    ].filter(Boolean);
-  }
+  // This method is unnecessary now, it checks for any errors on any of the submissions queried so far,
+  // since this is a detailed view of a single submission we are only concerned with an error for that one
+  // so no need to relegate the error check to a separate function
+  // errors () {
+  //   const submissionId = this.props.match.params.submissionId;
+  //   return [
+  //     get(this.props.requests.map, [submissionId, 'error']),
+  //     get(this.props.requests.reprocessed, [submissionId, 'error']),
+  //     get(this.props.requests.reingested, [submissionId, 'error']),
+  //     get(this.props.requests.executed, [submissionId, 'error']),
+  //     get(this.props.requests.removed, [submissionId, 'error']),
+  //     get(this.props.requests.deleted, [submissionId, 'error'])
+  //   ].filter(Boolean);
+  // }
 
   selectWorkflow (selector, workflow) {
     this.setState({ workflow });
@@ -159,15 +151,9 @@ class SubmissionOverview extends React.Component {
   }
 
   render () {
-    const submissionId = this.props.match.params.submissionId;
-    const record = this.props.requests.map[submissionId];
-    if (!record || (record.inflight && !record.data)) {
-      return <Loading />;
-    } else if (record.error) {
-      return <ErrorReport report={record.error} />;
-    }
-
-    const request = record.data;
+    const { submissionId } = this.props.match.params;
+    const record = this.props.requests.detail;
+    const request = record.data || false;
 
     /* const dropdownConfig = [{
       text: 'Delete',
@@ -178,7 +164,6 @@ class SubmissionOverview extends React.Component {
       confirmAction: true,
       confirmText: deleteText(submissionId)
     }]; */
-    const errors = this.errors();
 
     const breadcrumbConfig = [
       {
@@ -200,10 +185,11 @@ class SubmissionOverview extends React.Component {
         <section className='page__section page__section__controls'>
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
+
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{submissionId}</h1>
           {/* <AsyncCommands config={dropdownConfig} /> */}
-          {lastUpdated(request.last_change, 'Updated')}
+          { request && lastUpdated(request.last_change, 'Updated') }
 
           <dl className='status--process'>
             <dt>Status:</dt>
@@ -212,14 +198,17 @@ class SubmissionOverview extends React.Component {
         </section>
 
         <section className='page__section'>
-          {errors.length ? <ErrorReport report={errors} /> : null}
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium with-description'>{strings.submission_overview}</h2>
           </div>
-          <Metadata data={request} accessors={metaAccessors} />
+          { record.inflight ? <Loading />
+            : record.error ? <ErrorReport report={record.error} />
+              : request ? <Metadata data={request} accessors={metaAccessors} />
+                : null
+          }
         </section>
 
-        {/* <section className='page__section'>
+        { /* <section className='page__section'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Files</h2>
           </div>

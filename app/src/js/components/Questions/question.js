@@ -55,9 +55,6 @@ class QuestionOverview extends React.Component {
     dispatch(getQuestion(questionId));
   }
 
-  componentWillUnmount () {
-  }
-
   navigateBack () {
     const { history } = this.props;
     history.push('/questions');
@@ -65,14 +62,7 @@ class QuestionOverview extends React.Component {
 
   render () {
     const { questionId } = this.props.match.params;
-    const record = this.props.questions.map[questionId];
-    if (!record || (record.inflight && !record.data)) {
-      return <Loading />;
-    } else if (record.error) {
-      return <ErrorReport report={record.error} />;
-    }
-
-    const question = record.data;
+    const record = this.props.questions.detail;
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -94,13 +84,17 @@ class QuestionOverview extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
         <section className='page__section page__section__header-wrapper'>
-          <Question
-            id={question.id}
-            title={question.long_name}
-            version={question.version}
-            text={question.text}
-            help={question.help}
-            inputs={question.inputs} />
+          { record.inflight && <Loading /> }
+          { record.error ? <ErrorReport report={record.error} />
+            : record.data
+              ? <Question
+                id={record.data.id}
+                title={record.data.long_name}
+                version={record.data.version}
+                text={record.data.text}
+                help={record.data.help}
+                inputs={record.data.inputs} /> : null
+          }
         </section>
       </div>
     );

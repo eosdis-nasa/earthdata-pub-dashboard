@@ -16,7 +16,6 @@ const DevConfig = merge.smartStrategy(
     hot: false,
     historyApiFallback: true,
     // host: '0.0.0.0', // Required for Docker -- someone will need to link this somehow
-    publicPath: '/',
     watchContentBase: true,
     compress: true,
     port: process.env.PORT || 3000,

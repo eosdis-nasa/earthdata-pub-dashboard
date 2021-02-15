@@ -11,11 +11,9 @@ import {
   // clearFormsFilter,
   listForms
 } from '../../actions';
-import { get } from 'object-path';
-import { lastUpdated, tally, displayCase } from '../../utils/format';
+import { lastUpdated } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/forms';
 import List from '../Table/Table';
-import Overview from '../Overview/overview';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 

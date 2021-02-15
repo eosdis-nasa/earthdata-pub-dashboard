@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { get } from 'object-path';
 import { connect } from 'react-redux';
 import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
-import {
-  getCount,
-  listSubmissions
-} from '../../actions';
 import { strings } from '../locale';
 import AllSubmissions from './list';
 import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
@@ -29,7 +24,6 @@ const Requests = ({
   stats
 }) => {
   const { pathname } = location;
-  const count = get(stats, 'count.data.requests.count');
   const AllSubmissionsWithWrapper = withQueryWrapper(AllSubmissions, onQueryChange);
   const [queryOptions, setQueryOptions] = useState({});
 
@@ -38,11 +32,11 @@ const Requests = ({
       setQueryOptions(newQueryOptions);
     }
   }
-  dispatch(listSubmissions());
+
   function query () {
-    dispatch(getCount({
-      type: 'requests'
-    }));
+    // dispatch(getCount({
+    //   type: 'requests'
+    // }));
   }
   return (
     <div className='page__requests'>
@@ -52,13 +46,12 @@ const Requests = ({
           <Sidebar
             currentPath={pathname}
             params={params}
-            count={[count]}
           />
           <div className='page__content--shortened'>
             <Switch>
               <Route exact path='/requests' component={SubmissionsOverview} />
-              <Route path='/requests/id/:submissionId' component={SubmissionOverview} />
-              <Route path='/requests/metadata/:submissionId' component={EditMetadata} />
+              <Route exact path='/requests/id/:submissionId' component={SubmissionOverview} />
+              <Route path='/requests/id/:submissionId/edit-metadata' component={EditMetadata} />
               <Route path='/requests/completed' component={AllSubmissionsWithWrapper} />
               <Route path='/requests/processing' component={AllSubmissionsWithWrapper} />
               <Route path='/requests/failed' component={AllSubmissionsWithWrapper} />

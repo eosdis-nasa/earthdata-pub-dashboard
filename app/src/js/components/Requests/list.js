@@ -26,7 +26,6 @@ import List from '../Table/Table';
 import LogViewer from '../Logs/viewer';
 // import Dropdown from '../DropDown/dropdown';
 // import Search from '../Search/search';
-import statusOptions from '../../utils/status';
 import { strings } from '../locale';
 import _config from '../../config';
 import { workflowOptionNames } from '../../selectors';
@@ -112,13 +111,12 @@ class AllSubmissions extends React.Component {
 
   render () {
     const { requests, dispatch, logs } = this.props;
-    const { list, dropdowns } = requests;
+    const { list } = requests;
     const { count, queriedAt } = list.meta;
     const logsQuery = { submissionId__exists: 'true' };
     const query = this.generateQuery();
     const view = this.getView();
     const displayCaseView = displayCase(view);
-    const statusOpts = (view === 'all') ? statusOptions : null;
     const tableSortIdx = view === 'failed' ? 'submissionId' : 'timestamp';
     const breadcrumbConfig = [
       {

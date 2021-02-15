@@ -3,14 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {
-  getCount,
-  // searchQuestions,
-  // clearQuestionsSearch,
-  // filterQuestions,
-  // clearQuestionsFilter,
-  listQuestions
-} from '../../actions';
+import { listQuestions } from '../../actions';
 import { lastUpdated } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/questions';
 import List from '../Table/Table';
@@ -32,7 +25,6 @@ class QuestionsOverview extends React.Component {
   constructor (props) {
     super(props);
     this.generateQuery = this.generateQuery.bind(this);
-    this.queryMeta = this.queryMeta.bind(this);
     this.state = {};
   }
 
@@ -40,13 +32,6 @@ class QuestionsOverview extends React.Component {
   }
 
   componentWillUnmount () {
-  }
-
-  queryMeta () {
-    const { dispatch } = this.props;
-    dispatch(getCount({
-      type: 'questions'
-    }));
   }
 
   generateQuery () {

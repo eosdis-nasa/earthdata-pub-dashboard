@@ -70,7 +70,7 @@ class SubmissionsOverview extends React.Component {
   componentDidMount () {
     this.cancelInterval = interval(this.queryMeta, updateInterval, true);
     const { dispatch } = this.props;
-    dispatch(listSubmissions);
+    dispatch(listSubmissions());
   }
 
   componentWillUnmount () {

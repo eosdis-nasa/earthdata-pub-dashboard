@@ -11,6 +11,9 @@ const baseConfig = {
   requireEarthdataLogin: false,
   minCompatibleApiVersion: '1.19.0',
   oauthMethod: 'earthdata',
+  formsUrl: 'http://localhost:8081/interest/',
+  overviewUrl: 'https://pub.earthdata.nasa.gov/',
+  basepath: '/',
   graphicsPath: '/src/assets/images/',
 
   // settings for Ace editor

@@ -10,7 +10,7 @@ import {
   getSubmission,
   updateSubmissionMetadata
 } from '../../actions';
-import { get } from 'object-path';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 class EditMetadata extends React.Component {
   componentDidMount () {
@@ -20,33 +20,65 @@ class EditMetadata extends React.Component {
     dispatch(getModel('UMMC'));
   }
 
+  navigateBack () {
+    const { history } = this.props;
+    const { submissionId } = this.props.match.params;
+    history.push(`/requests/id/${submissionId}`);
+  }
+
   updateMetadata (payload) {
     const { dispatch } = this.props;
     dispatch(updateSubmissionMetadata(payload));
   }
 
   render () {
-    const submissionId = this.props.match.params.submissionId;
-    const submissionInflight = get(this.props, ['requests', 'map', submissionId, 'inflight'], true);
-    const modelInflight = get(this.props, ['model', 'inflight'], true);
-    const loading = modelInflight || submissionInflight;
-    if (loading) {
-      return (<Loading />);
-    }
-    const metadata = get(this.props, ['requests', 'map', submissionId, 'data', 'metadata']);
-    // console.log('EDIT METADATA', metadata);
-    const model = get(this.props, ['model', 'data']);
+    const { submissionId } = this.props.match.params;
+    const record = this.props.requests.detail;
+    const { model } = this.props;
+    const loading = model.inflight || record.inflight;
+    const submission = record.data || false;
     const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: submissionId, metadata: formData }); };
+    const breadcrumbConfig = [
+      {
+        label: 'Dashboard Home',
+        href: '/'
+      },
+      {
+        label: 'Requests',
+        href: '/requests'
+      },
+      {
+        label: submissionId,
+        herf: `/requests/${submissionId}`
+      },
+      {
+        label: 'Edit Metdata',
+        active: true
+      }
+    ];
     return (
-      <div>
-        <ModelBuilder model={model} formData={metadata} onSubmit={onSubmit}/>
-      </div>
-    );
+      <div className='page__component'>
+        <section className='page__section page__section__controls'>
+          <Breadcrumbs config={breadcrumbConfig} />
+        </section>
+        <section className='page__section page__section__header-wrapper'>
+          <h1 className='heading--large heading--shared-content with-description width--three-quarters'>
+            {submissionId}
+          </h1>
+        </section>
+        <section className='page__section'>
+          { loading
+            ? <Loading />
+            : <ModelBuilder model={model.data} formData={submission.metadata} onSubmit={onSubmit}/> }
+        </section>
+      </div>);
   }
 }
 
 EditMetadata.propTypes = {
   dispatch: PropTypes.func,
+  history: PropTypes.object,
+  requests: PropTypes.object,
   model: PropTypes.object,
   match: PropTypes.object
 };

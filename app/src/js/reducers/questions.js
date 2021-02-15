@@ -22,6 +22,7 @@ export const initialState = {
     meta: {},
     params: {}
   },
+  detail: {},
   dropdowns: {},
   map: {},
   meta: {},
@@ -30,13 +31,12 @@ export const initialState = {
 
 export default createReducer(initialState, {
   [QUESTION]: (state, action) => {
-    const { id, data } = action;
-    set(state, ['map', id, 'inflight'], false);
-    set(state, ['map', id, 'data'], assignDate(data));
+    const { data } = action;
+    set(state, ['detail', 'inflight'], false);
+    set(state, ['detail', 'data'], assignDate(data));
   },
   [QUESTION_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['map', id, 'inflight'], true);
+    set(state, ['detail', 'inflight'], true);
   },
   [QUESTIONS]: (state, action) => {
     const { data } = action;

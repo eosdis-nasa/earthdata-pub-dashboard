@@ -39,11 +39,7 @@ const Requests = ({
     }
   }
   dispatch(listSubmissions());
-  function query () {
-    dispatch(getCount({
-      type: 'requests'
-    }));
-  }
+  function query () {}
   return (
     <div className='page__submissions'>
       <DatePickerHeader onChange={query} heading={strings.all_submissions}/>
