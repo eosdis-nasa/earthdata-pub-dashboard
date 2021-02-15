@@ -2,9 +2,8 @@ const config = {
   target: process.env.DAAC_NAME || 'local',
   environment: process.env.STAGE || 'development',
   nav: {
-    order: ['collections'],
+    order: ['requests'],
     exclude: {
-      PDRs: process.env.HIDE_PDR || true,
       Logs: !process.env.KIBANAROOT
     }
   },

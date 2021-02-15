@@ -38,11 +38,3 @@ export const roleOptions = ({ roles }) => {
 export const roleOptionNames = ({ roles }) => {
   return get(roles, 'list.data', []).map(role => role.name);
 };
-
-export const collectionOptions = ({ collections }) => {
-  const options = { '': '' };
-  get(collections, 'list.data', []).forEach(d => {
-    options[d.name] = d.name;
-  });
-  return options;
-};

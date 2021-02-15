@@ -49,7 +49,6 @@ export const initialState = {
   dropdowns: {},
   map: {},
   search: {},
-  collections: {},
   created: {},
   updated: {},
   deleted: {},
@@ -90,21 +89,6 @@ export default createReducer(initialState, {
     const { id } = action;
     set(state, ['created', id, 'status'], 'error');
     set(state, ['created', id, 'error'], action.error);
-  },
-
-  [GROUP_COLLECTIONS]: (state, action) => {
-    const { data, id } = action;
-    set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'data'], data.map(c => c.collectionName));
-  },
-  [GROUP_COLLECTIONS_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['collections', id, 'inflight'], true);
-  },
-  [GROUP_COLLECTIONS_ERROR]: (state, action) => {
-    const { id } = action;
-    set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'error'], action.error);
   },
 
   [UPDATE_GROUP]: (state, action) => {

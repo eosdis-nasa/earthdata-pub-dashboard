@@ -9,7 +9,6 @@ const deploymentConfig = require('./config');
 const baseConfig = {
   environment: 'development',
   requireEarthdataLogin: false,
-  apiRoot: 'http://localhost:8080',
   minCompatibleApiVersion: '1.19.0',
   oauthMethod: 'earthdata',
   formsUrl: 'http://localhost:8081/interest/',

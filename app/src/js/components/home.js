@@ -204,8 +204,6 @@ class Home extends React.Component {
     // const { dist } = this.props;
     /* const overview = [
       [tally(get(stats.data, 'errors.value')), 'Errors', kibanaAllLogsLink(this.props.earthdatapubInstance)],
-      [tally(get(stats.data, 'collections.value')), strings.collections, '/collections'],
-      [tally(get(stats.data, 'granules.value')), strings.granules, '/granules'],
       [tally(get(stats.data, 'requests.value')), strings.requests, '/requests'],
       [tally(get(this.props.executions, 'list.meta.count')), 'Executions', '/executions'],
       [tally(get(this.props.rules, 'list.meta.count')), 'Ingest Rules', '/rules'],

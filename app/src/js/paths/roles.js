@@ -1,10 +1,12 @@
 'use strict';
+import { strings } from '../components/locale';
+
 const routes = [
   ['', null]
 ];
 
 const singleRoutes = [
-  ['Back to Roles', null, 'sidebar__nav--back']
+  [strings.back_to_roles, null, 'sidebar__nav--back']
 ];
 
 const empty = [['', '']];

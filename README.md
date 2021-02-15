@@ -32,7 +32,6 @@ To locate environment variables, see webpack.common.js:
 | LABELS | gitc or daac localization. | *daac* |
 | APIROOT | the API URL. This must be set by the user. | *example.com* |
 | AUTH_METHOD | The type of authorization method protecting the Earthdata Pub API. [launchpad or earthdata] | *earthdata*  |
-| ENABLE\_RECOVERY | If true, adds recovery options to the granule and collection pages. | *false* |
 | KIBANAROOT | \<optional\> Should point to a Kibana endpoint. Must be set to examine distribution metrics details. | |
 | SHOW\_TEA\_METRICS | \<optional\> display metrics from Thin Egress Application (TEA). | *true* |
 | SHOW\_DISTRIBUTION\_API\_METRICS | \<optional\> Display metrics from Earthdata Pub Distribution API.| *false* |

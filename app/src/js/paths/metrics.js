@@ -1,10 +1,11 @@
 'use strict';
+import { strings } from '../components/locale';
 const routes = [
   ['', null]
 ];
 
 const singleRoutes = [
-  ['Back to Metrics', null, 'sidebar__nav--back']
+  [strings.back_to_metrics, null, 'sidebar__nav--back']
 ];
 
 const empty = [['', '']];

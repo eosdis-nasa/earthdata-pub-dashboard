@@ -2,86 +2,89 @@
   "meta": {
     "name": "earthdata-pub-api",
     "stack": "test-src-integration",
-    "table": "group",
+    "table": "edpgroup",
     "limit": 10,
     "page": 1,
     "count": 2
   },
   "results": [
     {
-      "id": "1",
-      "createdAt": 1524686535230,
-      "name": "ORNL DAAC",
-      "permissions": [
-        "Requests",
-        "Workflows",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "subscriptions": [
-        "Requests",
-        "Workflows",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "updatedAt": 1525982459499
+      "id": "4daa6b22-f015-4ce2-8dac-8b3510004fca",
+      "short_name": "root_group",
+      "long_name": "Root Group",
+      "description": "Full system access for administrators."
     },
     {
-      "id": "2",
-      "createdAt": 1524686535230,
-      "name": "Admin",
-      "permissions": [
-        "Requests",
-        "Workflows",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "subscriptions": [
-        "Requests",
-        "Workflows",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "updatedAt": 1525982459499
+      "id": "bf07c445-8217-4f97-827a-82838cce36fb",
+      "short_name": "asdc",
+      "long_name": "ASDC",
+      "description": "Top level group for ASDC"
     },
     {
-      "id": "3",
-      "createdAt": 1524686535230,
-      "name": "Blah",
-      "permissions": [
-        "Requests",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "subscriptions": [
-        "Requests",
-        "Workflows",
-        "Forms",
-        "Users",
-        "Groups"
-      ],
-      "updatedAt": 1525982459499
+      "id": "b9e586c8-f602-4eae-98e1-5b406cd15ad2",
+      "short_name": "asf_daac",
+      "long_name": "ASF DAAC",
+      "description": "Top level group for ASF DAAC"
     },
     {
-      "id": "4",
-      "createdAt": 1524686535230,
-      "name": "User",
-      "permissions": [
-        "Requests",
-        "Workflows",
-        "Forms"
-      ],
-      "subscriptions": [
-        "Requests",
-        "Workflows",
-        "Forms"
-      ],
-      "updatedAt": 1525982459499
+      "id": "fbc74dbc-4704-4b3e-b06a-43a78d6e7685",
+      "short_name": "cddis",
+      "long_name": "CDDIS",
+      "description": "Top level group for CDDIS"
+    },
+    {
+      "id": "2385734f-f834-41dc-946c-11e23af6f3d6",
+      "short_name": "ges_disc",
+      "long_name": "GES DISC",
+      "description": "Top level group for GES DISC"
+    },
+    {
+      "id": "e31d5a49-261a-4678-88e1-548ffb82df68",
+      "short_name": "ghrc_daac",
+      "long_name": "GHRC DAAC",
+      "description": "Top level group for GHRC DAAC"
+    },
+    {
+      "id": "a0cda6f0-cc7d-4317-a3bb-115d51e713cc",
+      "short_name": "laads_daac",
+      "long_name": "LAADS DAAC",
+      "description": "Top level group for LAADS DAAC"
+    },
+    {
+      "id": "d148c374-1b07-46a1-b06b-bee67c7c6447",
+      "short_name": "lp_daac",
+      "long_name": "LP DAAC",
+      "description": "Top level group for LP DAAC"
+    },
+    {
+      "id": "7004aeee-34ea-4f68-a27b-eb34efc993f3",
+      "short_name": "nsidc",
+      "long_name": "NSIDC",
+      "description": "Top level group for NSIDC"
+    },
+    {
+      "id": "65ba2a19-b296-4f2b-bf0c-4c1e8f226298",
+      "short_name": "ob_daac",
+      "long_name": "OB.DAAC",
+      "description": "Top level group for OB.DAAC"
+    },
+    {
+      "id": "89816689-5375-4c81-a30c-bf6ed12d30fb",
+      "short_name": "ornl_daac",
+      "long_name": "ORNL DAAC",
+      "description": "Top level group for ORNL DAAC"
+    },
+    {
+      "id": "e847900e-90e2-47f8-85c6-94e06bcbcca0",
+      "short_name": "po_daac",
+      "long_name": "PO.DAAC",
+      "description": "Top level group for PO.DAAC"
+    },
+    {
+      "id": "f0a89bc6-707f-4a34-8041-1593934c2e42",
+      "short_name": "sedac",
+      "long_name": "SEDAC",
+      "description": "Top level group for SEDAC"
     }
   ]
 }
