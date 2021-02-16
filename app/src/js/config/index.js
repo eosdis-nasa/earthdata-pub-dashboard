@@ -9,7 +9,7 @@ const deploymentConfig = require('./config');
 const baseConfig = {
   environment: 'development',
   requireEarthdataLogin: false,
-  minCompatibleApiVersion: '1.19.0',
+  minCompatibleApiVersion: '1.0.0',
   oauthMethod: 'earthdata',
   formsUrl: 'http://localhost:8081/interest/',
   overviewUrl: 'https://pub.earthdata.nasa.gov/',
