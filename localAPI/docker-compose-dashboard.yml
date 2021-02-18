@@ -10,7 +10,7 @@ services:
     volumes:
       - ../:/dashboard:cached
     environment:
-      - APIROOT=http://localhost:8080
+      - APIROOT=http://localhost:8080/api
       - FORMS_URL=http://localhost:8081
       - OVERVIEW_URL=/
       - HIDE_PDR=true
