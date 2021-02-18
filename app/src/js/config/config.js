@@ -7,7 +7,7 @@ const config = {
       Logs: !process.env.KIBANAROOT
     }
   },
-  apiRoot: process.env.APIROOT || 'http://localhost:8080',
+  apiRoot: process.env.APIROOT || 'http://localhost:8080/api',
   formsUrl: process.env.FORMS_URL || 'http://localhost:8081',
   basepath: process.env.BASEPATH || '/',
   awsRegion: process.env.AWS_REGION || 'us-west-2',

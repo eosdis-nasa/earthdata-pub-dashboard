@@ -560,5 +560,5 @@ export const listRoles = (options) => ({
     qs: Object.assign({ limit: defaultPageLimit }, options)
   }
 });
-export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
-export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
+// export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
+// export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
