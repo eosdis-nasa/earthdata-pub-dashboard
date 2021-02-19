@@ -68,31 +68,12 @@ _(For an example of good validation instructions, check out [Bryan's Bouncy Ball
 
 ---
 
-## Browser Testing
-
-_(delete if irrelevant to this issue)_
-
-_(Check behavior & design in these browsers. It should closely match. A user should able to access all content and functionality including usability of required assistive devices, such as keyboard and screenreader.)_
-
-**macOS**
-* [ ] Safari 10+ (latest subversion)
-* [ ] Chrome (latest version)
-* [ ] Firefox (latest version)
-
-**Windows**
-* [ ] IE 11+
-* [ ] Chrome (latest version)
-* [ ] Firefox (latest version)
-* [ ] Edge 16
-
----
-
 ## Change Log
 
 _(copy/paste-able change log notes. check the box when the change is also in CHANGELOG.md)_
 
-* [ ] [Add _____](link to commitid)
-* [ ] [Fix _____](link to commitid)
+* [Add _____](link to commitid)
+* [Fix _____](link to commitid)
 ```
 
 ## Guidelines

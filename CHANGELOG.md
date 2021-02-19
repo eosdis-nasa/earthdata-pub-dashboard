@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+- [add pull request template to CONTRIBUTING.md](416a1b2b4fda50e6faa1ef6503723ea8c18bc726)
+
 ## 0.1.2 - 2021-02-05
 
 - [reapplied submission where it was mass replaced by request](c2cd2ac2df2597de531f70e4d3df48b6e3b66b3c)
