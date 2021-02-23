@@ -41,6 +41,14 @@ const metaAccessors = [
     property: 'step_name'
   },
   {
+    label: 'Data Publication Request',
+    property: 'data_publication_request'
+  },
+  {
+    label: 'Data Production Information',
+    property: 'data_production_information'
+  },
+  {
     label: 'Created',
     accessor: d => {
       return (shortDateNoTimeYearFirst(d));

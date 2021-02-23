@@ -162,6 +162,8 @@ const CommonConfig = {
         APP_ID: config.APP_ID,
         FORMS_URL: config.formsUrl,
         OVERVIEW_URL: config.overviewUrl,
+        NEW_PUBLICATION_REQUEST_URL: config.newPublicationRequestUrl,
+        NEW_PRODUCT_INFORMATION_URL: config.newProductInformationUrl,
         BASEPATH: config.basepath
       }
     )

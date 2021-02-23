@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  interval,
-  getForm
+  getForm,
+  getSubmission,
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -16,8 +16,6 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 import _config from '../../config';
-
-const { updateInterval } = _config;
 
 const metaAccessors = [
   {
@@ -48,27 +46,26 @@ const metaAccessors = [
 class FormOverview extends React.Component {
   constructor () {
     super();
-    this.reload = this.reload.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
     this.errors = this.errors.bind(this);
   }
 
+  componentDidUpdate (prevProps) {
+    if (prevProps !== this.props) {
+      console.log('COMPONENT DID PREVPROPS', prevProps);
+      console.log('COMPONENT DID UPDATED PROPS', this.props);
+    }
+  }
+
   componentDidMount () {
-    const { formId } = this.props.match.params;
-    const immediate = !this.props.forms.map[formId];
-    this.reload(immediate);
-  }
-
-  componentWillUnmount () {
-    if (this.cancelInterval) { this.cancelInterval(); }
-  }
-
-  reload (immediate, timeout) {
-    timeout = timeout || updateInterval;
-    const formId = this.props.match.params.formId;
+    const submissionId = this.props.location.search.split('=')[1];
     const { dispatch } = this.props;
-    if (this.cancelInterval) { this.cancelInterval(); }
-    this.cancelInterval = interval(() => dispatch(getForm(formId)), timeout, immediate);
+    const formId = this.props.match.params.formId;
+    dispatch(getForm(formId));
+    if (typeof submissionId !== 'undefined') {
+      console.log('DISPATCHING SUBMISSION!!!!!!!!!!!!!');
+      dispatch(getSubmission(submissionId));
+    }
   }
 
   navigateBack () {
@@ -152,6 +149,12 @@ class FormOverview extends React.Component {
       return <ErrorReport report={record.error} truncate={true} />;
     }
     const form = record.data;
+    const submissionId = this.props.location.search.split('=')[1];
+    let thisFormUrl = `${_config.formsUrl}?formId=${formId}`;
+    if (submissionId !== '') {
+      thisFormUrl += `&${submissionId}`;
+    }
+    // http://localhost:3000/forms/id/6c544723-241c-4896-a38c-adbc0a364293?submissionId=377b11b3-210a-43d2-99f8-5057fc3d955f
     const errors = this.errors();
     const sections = form.sections;
     const newSections = [];
@@ -169,7 +172,7 @@ class FormOverview extends React.Component {
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>{form.long_name} (Verson {form.version})</h1>
           {lastUpdated(form.created_at)}
-          <a className='button button--small button--green button--edit form-group__element--right' href={_config.formsUrl}>Edit</a>
+          <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl}>Edit</a>
         </section>
 
         <section className='page__section'>
@@ -201,7 +204,9 @@ FormOverview.propTypes = {
   dispatch: PropTypes.func,
   forms: PropTypes.object,
   logs: PropTypes.object,
-  history: PropTypes.object
+  history: PropTypes.object,
+  location: PropTypes.object,
+  params: PropTypes.object
 };
 
 FormOverview.displayName = 'FormElem';

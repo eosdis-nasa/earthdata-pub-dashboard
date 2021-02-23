@@ -15,6 +15,22 @@ import {
 import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 
+export const dataPublicationLookup = (row) => {
+  if (row.data_publication_request !== '') {
+    return <Link to={`/forms/id/${row.data_publication_request}?submissionId=${row.id}`}>Data Publication Request</Link>;
+  } else {
+    return '';
+  }
+};
+
+export const dataProductInformationLookup = (row) => {
+  if (row.data_product_information !== '') {
+    return <Link to={`/forms/id/${row.data_product_information}?submissionId=${row.id}`}>Data Product Information</Link>;
+  } else {
+    return '';
+  }
+};
+
 export const tableColumns = [
   {
     Header: 'Status',
@@ -26,7 +42,7 @@ export const tableColumns = [
     Header: 'Workflow',
     accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`request__workflow request__workflow--${row.workflow_id}`}>{row.workflow_name}</Link>,
     id: 'workflow_name',
-    width: 100
+    width: 110
   },
   {
     Header: 'Step',
@@ -38,7 +54,19 @@ export const tableColumns = [
     Header: 'Name',
     accessor: row => row.name || '(no name)',
     id: 'name',
-    width: 225
+    width: 100
+  },
+  {
+    Header: 'Data Publication Request',
+    accessor: row => dataPublicationLookup(row),
+    id: 'data_publication_request',
+    width: 200
+  },
+  {
+    Header: 'Data Product Information',
+    accessor: row => dataProductInformationLookup(row),
+    id: 'data_product_information',
+    width: 200
   },
   {
     Header: 'Created',

@@ -137,6 +137,8 @@ class SubmissionsOverview extends React.Component {
       // dropdowns
     } = requests;
     const { queriedAt } = list.meta;
+    const newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
+    const newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
     // const statsCount = get(stats, 'count.data.requests.count', []);
     // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
@@ -154,6 +156,8 @@ class SubmissionsOverview extends React.Component {
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{list.data.length}</span></h2>
+            <a className='button button--small button--green button--add form-group__element--right' href={newDataProductInformation}>New Data Product Information</a>
+            <a className='button button--small button--green button--add form-group__element--right' href={newDataPublicationRequest}>New Data Publication Request</a>
           </div>
           <List
             list={list}

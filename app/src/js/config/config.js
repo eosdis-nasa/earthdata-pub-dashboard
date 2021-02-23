@@ -9,6 +9,8 @@ const config = {
   },
   apiRoot: process.env.APIROOT || 'http://localhost:8080/api',
   formsUrl: process.env.FORMS_URL || 'http://localhost:8081',
+  newPublicationRequestUrl: process.env.NEW_PUBLICATION_REQUEST_URL || '/interest/daacs/selection',
+  newProductInformationUrl: process.env.NEW_PRODUCT_INFORMATION_URL || '/questionnaire/questions',
   basepath: process.env.BASEPATH || '/',
   awsRegion: process.env.AWS_REGION || 'us-west-2',
   oauthMethod: process.env.AUTH_METHOD || 'earthdata',
