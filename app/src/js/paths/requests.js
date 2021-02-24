@@ -12,8 +12,8 @@ import { strings } from '../components/locale';
 
 const singleSubmissionRoutes = [
   [strings.back_to_submissions, null, 'sidebar__nav--back'],
-  ['View Request', 'id/:submissionId', 'sidebar__nav'],
-  ['Edit Metadata', 'id/:submissionId/edit-metadata', 'sidebar__nav']
+  ['View Request', 'id/:requestId', 'sidebar__nav'],
+  ['Edit Metadata', 'id/:requestId/edit-metadata', 'sidebar__nav']
 ];
 
 const empty = [['', '']];
@@ -23,11 +23,11 @@ const requests = {
   heading: strings.requests,
   routes: (currentRoute, params, count) => {
     if (currentRoute.indexOf('requests/id') >= 0) {
-      const submissionId = currentRoute.split('/')[3] || '';
+      const requestId = currentRoute.split('/')[3] || '';
       return singleSubmissionRoutes.map(d => {
-        if (!d[1] || d[1].indexOf(':submissionId') === -1) return d;
+        if (!d[1] || d[1].indexOf(':requestId') === -1) return d;
         const copy = d.slice();
-        copy[1] = encode(copy[1].replace(':submissionId', submissionId));
+        copy[1] = encode(copy[1].replace(':requestId', requestId));
         return copy;
       });
     } else if (currentRoute.slice(0, 9) === '/requests') {

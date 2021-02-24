@@ -127,12 +127,12 @@ export const getEarthdatapubInstanceMetadata = () => ({
   }
 });
 
-export const getSubmission = (submissionId) => ({
+export const getSubmission = (requestId) => ({
   [CALL_API]: {
     type: types.SUBMISSION,
     method: 'GET',
-    id: submissionId,
-    path: `data/submission/${submissionId}`
+    id: requestId,
+    path: `data/submission/${requestId}`
   }
 });
 
@@ -188,12 +188,12 @@ export const getModel = (model) => ({
   }
 });
 
-export const applyWorkflowToSubmission = (submissionId, workflow) => ({
+export const applyWorkflowToSubmission = (requestId, workflow) => ({
   [CALL_API]: {
     type: types.SUBMISSION_APPLYWORKFLOW,
     method: 'PUT',
-    id: submissionId,
-    path: `submissions/${submissionId}`,
+    id: requestId,
+    path: `submissions/${requestId}`,
     body: {
       action: 'applyWorkflow',
       workflow
@@ -201,12 +201,12 @@ export const applyWorkflowToSubmission = (submissionId, workflow) => ({
   }
 });
 
-export const deleteSubmission = (submissionId) => ({
+export const deleteSubmission = (requestId) => ({
   [CALL_API]: {
     type: types.SUBMISSION_DELETE,
     method: 'DELETE',
-    id: submissionId,
-    path: `submissions/${submissionId}`
+    id: requestId,
+    path: `submissions/${requestId}`
   }
 });
 
@@ -361,7 +361,7 @@ export const getOptionsFormGroup = () => ({
   [CALL_API]: {
     type: types.OPTIONS_FORMGROUP,
     method: 'GET',
-    url: new URL('forms', root).href,
+    url: new URL('data/forms', root).href,
     qs: { limit: 100, fields: 'long_name' }
   }
 });
@@ -456,7 +456,7 @@ export const updateGroup = (groupId, payload) => ({
     type: types.UPDATE_GROUP,
     id: groupId,
     method: 'PUT',
-    path: `data/groups/${groupId}`,
+    path: `data/group/${groupId}`,
     body: payload
   }
 });
@@ -468,7 +468,7 @@ export const deleteGroup = (groupId) => ({
     type: types.GROUP_DELETE,
     id: groupId,
     method: 'DELETE',
-    path: `data/groups/${groupId}`
+    path: `data/group/${groupId}`
   }
 });
 

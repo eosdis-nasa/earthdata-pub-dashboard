@@ -290,7 +290,7 @@ class Home extends React.Component {
                 tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
                 query={query}
                 sortIdx='timestamp'
-                rowId='submissionId'
+                rowId='requestId'
               />
             </div>
           </section>

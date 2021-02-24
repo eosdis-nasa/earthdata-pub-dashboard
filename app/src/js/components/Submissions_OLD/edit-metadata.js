@@ -16,8 +16,8 @@ import { get } from 'object-path';
 class EditMetadata extends React.Component {
   componentDidMount () {
     const { dispatch } = this.props;
-    const { submissionId } = this.props.match.params;
-    dispatch(getSubmission(submissionId));
+    const { requestId } = this.props.match.params;
+    dispatch(getSubmission(requestId));
     dispatch(getModel('UMMC'));
   }
 
@@ -27,7 +27,7 @@ class EditMetadata extends React.Component {
   }
 
   render () {
-    const submissionId = this.props.match.params.submissionId;
+    const requestId = this.props.match.params.requestId;
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -38,16 +38,16 @@ class EditMetadata extends React.Component {
         href: '/requests'
       },
       {
-        label: `Edit Metadata: ${submissionId}`,
+        label: `Edit Metadata: ${requestId}`,
         active: true
       }
     ];
-    const submissionInflight = get(this.props, ['requests', 'map', submissionId, 'inflight'], true);
+    const submissionInflight = get(this.props, ['requests', 'map', requestId, 'inflight'], true);
     const modelInflight = get(this.props, ['model', 'inflight'], true);
-    const metadata = get(this.props, ['requests', 'map', submissionId, 'data', 'metadata']);
+    const metadata = get(this.props, ['requests', 'map', requestId, 'data', 'metadata']);
     // console.log('EDIT METADATA', metadata);
     const model = get(this.props, ['model', 'data']);
-    const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: submissionId, metadata: formData }); };
+    const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: requestId, metadata: formData }); };
     return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
@@ -55,7 +55,7 @@ class EditMetadata extends React.Component {
         </section>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>
-            {submissionId}
+            {requestId}
           </h1>
         </section>
         <section className='page__section'>

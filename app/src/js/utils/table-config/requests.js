@@ -14,20 +14,30 @@ import {
 } from '../../actions';
 import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
+import _config from '../../config';
+
+let newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
+let newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
 
 export const dataPublicationLookup = (row) => {
   if (row.data_publication_request !== '') {
-    return <Link to={`/forms/id/${row.data_publication_request}?submissionId=${row.id}`}>Data Publication Request</Link>;
+    return <Link to={`/forms/id/${row.data_publication_request}?requestId=${row.id}`}>Data Publication Request</Link>;
   } else {
-    return '';
+    if (!newDataPublicationRequest.match(/formId/g) && !newDataPublicationRequest.match(/requestId/g)) {
+      newDataPublicationRequest += `?formId=6c544723-241c-4896-a38c-adbc0a364293&requestId=${row.id}`;
+    }
+    return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
   }
 };
 
 export const dataProductInformationLookup = (row) => {
   if (row.data_product_information !== '') {
-    return <Link to={`/forms/id/${row.data_product_information}?submissionId=${row.id}`}>Data Product Information</Link>;
+    return <Link to={`/forms/id/${row.data_product_information}?requestId=${row.id}`}>Data Product Information</Link>;
   } else {
-    return '';
+    if (!newDataProductInformation.match(/formId/g) && !newDataProductInformation.match(/requestId/g)) {
+      newDataProductInformation += `?formId=19025579-99ca-4344-8610-704dae626343&requestId=${row.id}`;
+    }
+    return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
   }
 };
 

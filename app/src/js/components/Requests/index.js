@@ -50,8 +50,8 @@ const Requests = ({
           <div className='page__content--shortened'>
             <Switch>
               <Route exact path='/requests' component={SubmissionsOverview} />
-              <Route exact path='/requests/id/:submissionId' component={SubmissionOverview} />
-              <Route path='/requests/id/:submissionId/edit-metadata' component={EditMetadata} />
+              <Route exact path='/requests/id/:requestId' component={SubmissionOverview} />
+              <Route path='/requests/id/:requestId/edit-metadata' component={EditMetadata} />
               <Route path='/requests/completed' component={AllSubmissionsWithWrapper} />
               <Route path='/requests/processing' component={AllSubmissionsWithWrapper} />
               <Route path='/requests/failed' component={AllSubmissionsWithWrapper} />

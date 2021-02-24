@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
+  interval,
   getForm,
-  getSubmission,
+  getSubmission
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -16,6 +17,8 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 import _config from '../../config';
+
+const { updateInterval } = _config;
 
 const metaAccessors = [
   {
@@ -46,26 +49,27 @@ const metaAccessors = [
 class FormOverview extends React.Component {
   constructor () {
     super();
+    this.reload = this.reload.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
     this.errors = this.errors.bind(this);
   }
 
-  componentDidUpdate (prevProps) {
-    if (prevProps !== this.props) {
-      console.log('COMPONENT DID PREVPROPS', prevProps);
-      console.log('COMPONENT DID UPDATED PROPS', this.props);
-    }
+  componentDidMount () {
+    const { formId } = this.props.match.params;
+    const immediate = !this.props.forms.map[formId];
+    this.reload(immediate);
   }
 
-  componentDidMount () {
-    const submissionId = this.props.location.search.split('=')[1];
-    const { dispatch } = this.props;
+  componentWillUnmount () {
+    if (this.cancelInterval) { this.cancelInterval(); }
+  }
+
+  reload (immediate, timeout) {
+    timeout = timeout || updateInterval;
     const formId = this.props.match.params.formId;
-    dispatch(getForm(formId));
-    if (typeof submissionId !== 'undefined') {
-      console.log('DISPATCHING SUBMISSION!!!!!!!!!!!!!');
-      dispatch(getSubmission(submissionId));
-    }
+    const { dispatch } = this.props;
+    if (this.cancelInterval) { this.cancelInterval(); }
+    this.cancelInterval = interval(() => dispatch(getForm(formId)), timeout, immediate);
   }
 
   navigateBack () {
@@ -137,24 +141,30 @@ class FormOverview extends React.Component {
         return (sectionQuestions);
       }
     }
+    const requestId = this.props.location.search.split('=')[1];
+    console.log('REQUEST ID IS ' + requestId)
   }
 
   render () {
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
-
+    const requestId = this.props.location.search.split('=')[1];
+    let thisFormUrl = `${_config.formsUrl}?formId=${formId}`;
+    if (requestId !== '') {
+      thisFormUrl += `&requestId=${requestId}`;
+    }
+    // TODO daac id will need to be added to form_data
+    // Interest - Data Publication Request
+    // http://localhost:8081?formId=6c544723-241c-4896-a38c-adbc0a364293&requestId=04eb9641-75ee-4df0-a054-21882a7edc0a&group=15df4fda-ed0d-417f-9124-558fb5e5b561
+    // Questionnaire - Data Product Information
+    // http://localhost:8081?formId=19025579-99ca-4344-8610-704dae626343&requestId=04eb9641-75ee-4df0-a054-21882a7edc0a&showDaacs=false
+    console.log('FORM URL IS ' + thisFormUrl);
     if (!record || (record.inflight && !record.data)) {
       return <Loading />;
     } else if (record.error) {
       return <ErrorReport report={record.error} truncate={true} />;
     }
     const form = record.data;
-    const submissionId = this.props.location.search.split('=')[1];
-    let thisFormUrl = `${_config.formsUrl}?formId=${formId}`;
-    if (submissionId !== '') {
-      thisFormUrl += `&${submissionId}`;
-    }
-    // http://localhost:3000/forms/id/6c544723-241c-4896-a38c-adbc0a364293?submissionId=377b11b3-210a-43d2-99f8-5057fc3d955f
     const errors = this.errors();
     const sections = form.sections;
     const newSections = [];
@@ -171,7 +181,6 @@ class FormOverview extends React.Component {
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>{form.long_name} (Verson {form.version})</h1>
-          {lastUpdated(form.created_at)}
           <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl}>Edit</a>
         </section>
 

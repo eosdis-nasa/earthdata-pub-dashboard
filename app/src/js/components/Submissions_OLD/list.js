@@ -87,8 +87,8 @@ class AllSubmissions extends React.Component {
     this.setState({ workflow });
   }
 
-  applyWorkflow (submissionId) {
-    return applyWorkflowToSubmission(submissionId, this.state.workflow);
+  applyWorkflow (requestId) {
+    return applyWorkflowToSubmission(requestId, this.state.workflow);
   }
 
   getExecuteOptions () {
@@ -119,7 +119,7 @@ class AllSubmissions extends React.Component {
     const view = this.getView();
     const displayCaseView = displayCase(view);
     const statusOpts = (view === 'all') ? statusOptions : null;
-    const tableSortIdx = view === 'failed' ? 'submissionId' : 'timestamp';
+    const tableSortIdx = view === 'failed' ? 'requestId' : 'timestamp';
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',

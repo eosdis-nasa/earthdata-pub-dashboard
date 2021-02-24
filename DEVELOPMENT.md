@@ -86,12 +86,12 @@ We might want to write an action to query a single request by id. To do this,
 we create a function in `src/js/actions/index.js`.
 
 ```javascript
-export const getSubmission = function (submissionId) {
+export const getSubmission = function (requestId) {
   return function (dispatch) {
     // do ajax query
-    request.get(submissionId, function (err, resp) {
+    request.get(requestId, function (err, resp) {
       if (err) { console.log(err); }
-      dispatch(setSubmission(submissionId, resp[0]));
+      dispatch(setSubmission(requestId, resp[0]));
     })
   };
 }
@@ -144,17 +144,17 @@ const Request = React.createClass({
   componentWillMount: function () {
     // params are passed as props to each component,
     // and id is the namespace for the route in `src/js/main.js`.
-    const submissionId = this.props.params.id;
-    getSubmission(submissionId);
+    const requestId = this.props.params.id;
+    getSubmission(requestId);
   },
 
   render: function () {
-    const submissionId = this.props.params.id;
-    const request = this.props.requests[submissionId]; // should use object-path#get for this
+    const requestId = this.props.params.id;
+    const request = this.props.requests[requestId]; // should use object-path#get for this
     if (!request) {
       return <div></div>; // return empty since we have no data yet
     }
-    return <div className='request'>{request.submissionId}</div>;
+    return <div className='request'>{request.requestId}</div>;
   }
 });
 ```

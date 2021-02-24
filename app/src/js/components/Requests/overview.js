@@ -71,6 +71,7 @@ class SubmissionsOverview extends React.Component {
     this.cancelInterval = interval(this.queryMeta, updateInterval, true);
     const { dispatch } = this.props;
     dispatch(listSubmissions());
+    // console.log('OVERVIEW', tableColumns);
   }
 
   componentWillUnmount () {
@@ -112,8 +113,8 @@ class SubmissionsOverview extends React.Component {
     this.setState({ workflow });
   }
 
-  applyWorkflow (submissionId) {
-    return applyWorkflowToSubmission(submissionId, this.state.workflow);
+  applyWorkflow (requestId) {
+    return applyWorkflowToSubmission(requestId, this.state.workflow);
   }
 
   getExecuteOptions () {
@@ -173,7 +174,7 @@ class SubmissionsOverview extends React.Component {
                 options={get(dropdowns, ['name', 'options'])}
                 action={filterSubmissions}
                 clear={clearSubmissionsFilter}
-                paramKey='submissionId'
+                paramKey='requestId'
                 label={strings.request}
                 inputProps={{
                   placeholder: 'All',

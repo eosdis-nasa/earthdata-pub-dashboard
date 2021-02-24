@@ -15,15 +15,15 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 class EditMetadata extends React.Component {
   componentDidMount () {
     const { dispatch } = this.props;
-    const { submissionId } = this.props.match.params;
-    dispatch(getSubmission(submissionId));
+    const { requestId } = this.props.match.params;
+    dispatch(getSubmission(requestId));
     dispatch(getModel('UMMC'));
   }
 
   navigateBack () {
     const { history } = this.props;
-    const { submissionId } = this.props.match.params;
-    history.push(`/requests/id/${submissionId}`);
+    const { requestId } = this.props.match.params;
+    history.push(`/requests/id/${requestId}`);
   }
 
   updateMetadata (payload) {
@@ -32,12 +32,12 @@ class EditMetadata extends React.Component {
   }
 
   render () {
-    const { submissionId } = this.props.match.params;
+    const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
     const { model } = this.props;
     const loading = model.inflight || record.inflight;
-    const submission = record.data || false;
-    const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: submissionId, metadata: formData }); };
+    const request = record.data || false;
+    const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: requestId, metadata: formData }); };
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -48,8 +48,8 @@ class EditMetadata extends React.Component {
         href: '/requests'
       },
       {
-        label: submissionId,
-        herf: `/requests/${submissionId}`
+        label: requestId,
+        herf: `/requests/${requestId}`
       },
       {
         label: 'Edit Metdata',
@@ -63,13 +63,13 @@ class EditMetadata extends React.Component {
         </section>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>
-            {submissionId}
+            {requestId}
           </h1>
         </section>
         <section className='page__section'>
           { loading
             ? <Loading />
-            : <ModelBuilder model={model.data} formData={submission.metadata} onSubmit={onSubmit}/> }
+            : <ModelBuilder model={model.data} formData={request.metadata} onSubmit={onSubmit}/> }
         </section>
       </div>);
   }
