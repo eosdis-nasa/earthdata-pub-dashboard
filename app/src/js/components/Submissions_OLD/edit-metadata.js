@@ -45,7 +45,6 @@ class EditMetadata extends React.Component {
     const submissionInflight = get(this.props, ['requests', 'map', requestId, 'inflight'], true);
     const modelInflight = get(this.props, ['model', 'inflight'], true);
     const metadata = get(this.props, ['requests', 'map', requestId, 'data', 'metadata']);
-    // console.log('EDIT METADATA', metadata);
     const model = get(this.props, ['model', 'data']);
     const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: requestId, metadata: formData }); };
     return (

@@ -71,7 +71,6 @@ class SubmissionsOverview extends React.Component {
     this.cancelInterval = interval(this.queryMeta, updateInterval, true);
     const { dispatch } = this.props;
     dispatch(listSubmissions());
-    // console.log('OVERVIEW', tableColumns);
   }
 
   componentWillUnmount () {
