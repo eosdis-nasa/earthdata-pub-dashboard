@@ -12,7 +12,7 @@
       "id": "804b335c-f191-4d26-9b98-1ec1cb62b97d",
       "short_name": "dp",
       "long_name": "Data Producer",
-      "description": "The person who is primarily responsible for the data themselves. Often the PI of the project that generated the data. This role will be able to create a Submission and edit their created or assigned Submissions."
+      "description": "The person who is primarily responsible for the data themselves. Often the PI of the project that generated the data. This role will be able to create a Submission and edit their created or assigned Requests."
     },
     {
       "id": "29ccab4b-65e2-4764-83ec-77375d29af39",
@@ -30,7 +30,7 @@
       "id": "2aa89c57-85f1-4611-812d-b6760bb6295c",
       "short_name": "coordinator",
       "long_name": "DAAC Data Coordinator",
-      "description": "The DAAC staff member who coordinates all DAAC Submissions. Coordinators assign a Submission to Managers. There may be multiple DAAC Data Coordinators per DAAC. Some DAACs may choose to combine the Coordinator and Manager roles by assigning staff to both."
+      "description": "The DAAC staff member who coordinates all DAAC Requests. Coordinators assign a Submission to Managers. There may be multiple DAAC Data Coordinators per DAAC. Some DAACs may choose to combine the Coordinator and Manager roles by assigning staff to both."
     },
     {
       "id": "4be6ca4d-6362-478b-8478-487a668314b1",

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import withQueryParams from 'react-router-query-params';
-import { interval, listSubmissions } from '../actions';
+import { interval, listRequests } from '../actions';
 import {
   // tally,
   // seconds
@@ -63,7 +63,7 @@ class Home extends React.Component {
 
   query () {
     const { dispatch } = this.props;
-    dispatch(listSubmissions(this.generateQuery()));
+    dispatch(listRequests(this.generateQuery()));
   }
 
   refreshQuery () {
@@ -286,7 +286,7 @@ class Home extends React.Component {
               <List
                 list={list}
                 dispatch={this.props.dispatch}
-                action={listSubmissions}
+                action={listRequests}
                 tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
                 query={query}
                 sortIdx='timestamp'

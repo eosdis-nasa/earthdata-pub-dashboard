@@ -8,7 +8,7 @@ import {
   // clearSubmissionsSearch,
   // filterSubmissions,
   // clearSubmissionsFilter,
-  listSubmissions,
+  listRequests,
   // getOptionsSubmissionName,
   listWorkflows,
   applyWorkflowToSubmission,
@@ -51,7 +51,7 @@ class AllSubmissions extends React.Component {
 
   componentDidMount () {
     this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
-    this.props.dispatch(listSubmissions);
+    this.props.dispatch(listRequests);
   }
 
   componentWillUnmount () {
@@ -148,7 +148,7 @@ class AllSubmissions extends React.Component {
         <section className='page__section'>
           <List
             list={list}
-            action={listSubmissions}
+            action={listRequests}
             tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
             query={query}
             rowId='id'
@@ -220,7 +220,7 @@ AllSubmissions.propTypes = {
   onQueryChange: PropTypes.func
 };
 
-export { listSubmissions };
+export { listRequests };
 
 export default withRouter(connect(state => ({
   logs: state.logs,

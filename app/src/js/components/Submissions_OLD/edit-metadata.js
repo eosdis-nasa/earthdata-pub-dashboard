@@ -7,7 +7,7 @@ import ModelBuilder from '../ModelBuilder';
 import Loading from '../LoadingIndicator/loading-indicator';
 import {
   getModel,
-  getSubmission,
+  getRequest,
   updateSubmissionMetadata
 } from '../../actions';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
@@ -17,7 +17,7 @@ class EditMetadata extends React.Component {
   componentDidMount () {
     const { dispatch } = this.props;
     const { requestId } = this.props.match.params;
-    dispatch(getSubmission(requestId));
+    dispatch(getRequest(requestId));
     dispatch(getModel('UMMC'));
   }
 

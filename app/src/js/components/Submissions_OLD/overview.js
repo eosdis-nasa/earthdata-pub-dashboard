@@ -10,7 +10,7 @@ import {
   // clearSubmissionsSearch,
   // filterSubmissions,
   // clearSubmissionsFilter,
-  listSubmissions,
+  listRequests,
   // filterStages,
   // filterStatuses,
   // clearStagesFilter,
@@ -70,7 +70,7 @@ class SubmissionsOverview extends React.Component {
   componentDidMount () {
     this.cancelInterval = interval(this.queryMeta, updateInterval, true);
     const { dispatch } = this.props;
-    dispatch(listSubmissions);
+    dispatch(listRequests);
   }
 
   componentWillUnmount () {
@@ -157,7 +157,7 @@ class SubmissionsOverview extends React.Component {
           </div>
           <List
             list={list}
-            action={listSubmissions}
+            action={listRequests}
             tableColumns={tableColumns}
             query={this.generateQuery()}
             rowId='id'

@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import {
   interval,
   getForm,
-  getSubmission
+  getRequest
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -67,9 +67,13 @@ class FormOverview extends React.Component {
   reload (immediate, timeout) {
     timeout = timeout || updateInterval;
     const formId = this.props.match.params.formId;
+    const requestId = this.props.location.search.split('=')[1];
     const { dispatch } = this.props;
     if (this.cancelInterval) { this.cancelInterval(); }
-    this.cancelInterval = interval(() => dispatch(getForm(formId)), timeout, immediate);
+    this.cancelInterval = interval(() => {
+      dispatch(getRequest(requestId));
+      dispatch(getForm(formId));
+    }, timeout, immediate);
   }
 
   navigateBack () {
@@ -89,11 +93,8 @@ class FormOverview extends React.Component {
   }
 
   getAnswer (id) {
-    const formId = this.props.match.params.formId;
-    const record = this.props.forms.map[formId];
-    const form = record.data;
-    if (typeof form.form_data !== 'undefined') {
-      return (form.form_data[id]);
+    if (typeof this.props.requests.detail.data.form_data[id] !== 'undefined') {
+      return (this.props.requests.detail.data.form_data[id]);
     } else {
       return 'no answer';
     }
@@ -154,7 +155,7 @@ class FormOverview extends React.Component {
 
     // TODO daac id will need to be added to form_data
     // Interest - Data Publication Request
-    // http://localhost:8081?formId=6c544723-241c-4896-a38c-adbc0a364293&requestId=04eb9641-75ee-4df0-a054-21882a7edc0a&group=15df4fda-ed0d-417f-9124-558fb5e5b561
+    // http://localhost:8081?formId=6c544723-241c-4896-a38c-adbc0a364293&requestId=&group=
     // Questionnaire - Data Product Information
     // http://localhost:8081?formId=19025579-99ca-4344-8610-704dae626343&requestId=04eb9641-75ee-4df0-a054-21882a7edc0a&showDaacs=false
     // console.log('FORM URL IS ' + thisFormUrl);
@@ -212,6 +213,7 @@ FormOverview.propTypes = {
   match: PropTypes.object,
   dispatch: PropTypes.func,
   forms: PropTypes.object,
+  requests: PropTypes.object,
   logs: PropTypes.object,
   history: PropTypes.object,
   location: PropTypes.object,
@@ -222,5 +224,6 @@ FormOverview.displayName = 'FormElem';
 
 export default withRouter(connect(state => ({
   forms: state.forms,
+  requests: state.requests,
   logs: state.logs
 }))(FormOverview));

@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [altered list forms for consistent look and feel; users list and groups list displays real data](271256f2ad0)
 - [submissions w real data; forms w real data; some side pane links; made look consistant; fixed counts](48af8f77567)
 - [finished schemas](a3628680889)
-- [removed results from data in SUBMISSIONS](0f576e32f95)
+- [removed results from data in REQUESTS](0f576e32f95)
 - [altered path files routes to match the others](728d7aea7aa)
 - [altered component paths to /<component>/id/:<component_id>](18aa2759b3e)
 

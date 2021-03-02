@@ -127,18 +127,28 @@ export const getEarthdatapubInstanceMetadata = () => ({
   }
 });
 
-export const getSubmission = (requestId) => ({
+export const getRequest = (requestId) => ({
   [CALL_API]: {
-    type: types.SUBMISSION,
+    type: types.REQUEST,
     method: 'GET',
     id: requestId,
     path: `data/submission/${requestId}`
   }
 });
 
-export const listSubmissions = (options) => ({
+export const listRequests = (options) => ({
   [CALL_API]: {
-    type: types.SUBMISSIONS,
+    type: types.REQUESTS,
+    method: 'GET',
+    id: null,
+    path: 'data/submissions',
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
+  }
+});
+
+export const listRequests = (options) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
     method: 'GET',
     id: null,
     path: 'data/submissions',

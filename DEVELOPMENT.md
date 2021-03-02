@@ -86,7 +86,7 @@ We might want to write an action to query a single request by id. To do this,
 we create a function in `src/js/actions/index.js`.
 
 ```javascript
-export const getSubmission = function (requestId) {
+export const getRequest = function (requestId) {
   return function (dispatch) {
     // do ajax query
     request.get(requestId, function (err, resp) {
@@ -137,7 +137,7 @@ is passed as a `prop`:
 
 ```javascript
 // import the action so we can call it
-import { getSubmission } from '../actions';
+import { getRequest } from '../actions';
 
 const Request = React.createClass({
 
@@ -145,7 +145,7 @@ const Request = React.createClass({
     // params are passed as props to each component,
     // and id is the namespace for the route in `src/js/main.js`.
     const requestId = this.props.params.id;
-    getSubmission(requestId);
+    getRequest(requestId);
   },
 
   render: function () {

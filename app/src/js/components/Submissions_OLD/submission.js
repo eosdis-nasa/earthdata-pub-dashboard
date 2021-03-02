@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   interval,
-  getSubmission,
+  getRequest,
   deleteSubmission,
   applyWorkflowToSubmission,
   listWorkflows
@@ -103,7 +103,7 @@ class SubmissionOverview extends React.Component {
     const requestId = this.props.match.params.requestId;
     const { dispatch } = this.props;
     if (this.cancelInterval) { this.cancelInterval(); }
-    this.cancelInterval = interval(() => dispatch(getSubmission(requestId)), timeout, immediate);
+    this.cancelInterval = interval(() => dispatch(getRequest(requestId)), timeout, immediate);
   }
 
   fastReload () {

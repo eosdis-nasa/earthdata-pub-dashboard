@@ -3,11 +3,11 @@ import { set } from 'object-path';
 import assignDate from './assign-date';
 
 import {
-  SUBMISSION,
+  REQUEST,
   SUBMISSION_INFLIGHT,
   SUBMISSION_ERROR,
 
-  SUBMISSIONS,
+  REQUESTS,
   SUBMISSIONS_INFLIGHT,
   SUBMISSIONS_ERROR,
 
@@ -62,7 +62,7 @@ export const initialState = {
 };
 
 export default createReducer(initialState, {
-  [SUBMISSION]: (state, action) => {
+  [REQUEST]: (state, action) => {
     const { data } = action;
     set(state, ['detail', 'inflight'], false);
     set(state, ['detail', 'data'], assignDate(data));
@@ -75,7 +75,7 @@ export default createReducer(initialState, {
     set(state, ['detail', 'error'], action.error);
   },
 
-  [SUBMISSIONS]: (state, action) => {
+  [REQUESTS]: (state, action) => {
     const { data } = action;
     set(state, ['list', 'data'], data);
     set(state, ['list', 'meta'], assignDate(data.meta));

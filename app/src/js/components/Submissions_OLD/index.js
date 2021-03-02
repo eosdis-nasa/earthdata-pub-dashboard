@@ -6,7 +6,7 @@ import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import {
   getCount,
-  listSubmissions
+  listRequests
 } from '../../actions';
 import { strings } from '../locale';
 import AllSubmissions from './list';
@@ -38,7 +38,7 @@ const Requests = ({
       setQueryOptions(newQueryOptions);
     }
   }
-  dispatch(listSubmissions());
+  dispatch(listRequests());
   function query () {}
   return (
     <div className='page__submissions'>

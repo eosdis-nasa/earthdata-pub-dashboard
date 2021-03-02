@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  getSubmission,
-  deleteSubmission,
-  applyWorkflowToSubmission,
+  getRequest,
+  deleteRequest,
+  applyWorkflowToRequest,
   listWorkflows
 } from '../../actions';
 import {
@@ -69,7 +69,7 @@ const metaAccessors = [
   }
 ];
 
-class SubmissionOverview extends React.Component {
+class RequestOverview extends React.Component {
   constructor () {
     super();
     this.reload = this.reload.bind(this);
@@ -92,7 +92,7 @@ class SubmissionOverview extends React.Component {
     // This causes a repeating query for workflows cluttering up the logs.
     // Commenting out until we add applyWorkflow capability
     // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
-    dispatch(getSubmission(requestId));
+    dispatch(getRequest(requestId));
   }
 
   reload (immediate, timeout) {
@@ -100,7 +100,7 @@ class SubmissionOverview extends React.Component {
     // const requestId = this.props.match.params.requestId;
     // const { dispatch } = this.props;
     // if (this.cancelInterval) { this.cancelInterval(); }
-    // this.cancelInterval = interval(() => dispatch(getSubmission(requestId)), timeout, immediate);
+    // this.cancelInterval = interval(() => dispatch(getRequest(requestId)), timeout, immediate);
   }
 
   fastReload () {
@@ -120,15 +120,15 @@ class SubmissionOverview extends React.Component {
   applyWorkflow () {
     const { requestId } = this.props.match.params;
     const { workflow } = this.state;
-    this.props.dispatch(applyWorkflowToSubmission(requestId, workflow));
+    this.props.dispatch(applyWorkflowToRequest(requestId, workflow));
   }
 
   delete () {
     const { requestId } = this.props.match.params;
-    this.props.dispatch(deleteSubmission(requestId));
+    this.props.dispatch(deleteRequest(requestId));
   }
 
-  // This method is unnecessary now, it checks for any errors on any of the submissions queried so far,
+  // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
   // since this is a detailed view of a single request we are only concerned with an error for that one
   // so no need to relegate the error check to a separate function
   // errors () {
@@ -207,7 +207,7 @@ class SubmissionOverview extends React.Component {
 
         <section className='page__section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium with-description'>{strings.submission_overview}</h2>
+            <h2 className='heading--medium with-description'>{strings.request_overview}</h2>
           </div>
           { record.inflight ? <Loading />
             : record.error ? <ErrorReport report={record.error} />
@@ -239,7 +239,7 @@ class SubmissionOverview extends React.Component {
   }
 }
 
-SubmissionOverview.propTypes = {
+RequestOverview.propTypes = {
   match: PropTypes.object,
   dispatch: PropTypes.func,
   requests: PropTypes.object,
@@ -249,14 +249,14 @@ SubmissionOverview.propTypes = {
   workflowOptions: PropTypes.array
 };
 
-SubmissionOverview.defaultProps = {
+RequestOverview.defaultProps = {
   skipReloadOnMount: false
 };
 
-export { SubmissionOverview };
+export { RequestOverview };
 
 export default withRouter(connect(state => ({
   requests: state.requests,
   workflowOptions: workflowOptionNames(state),
   logs: state.logs
-}))(SubmissionOverview));
+}))(RequestOverview));

@@ -55,7 +55,7 @@ and creates a new one with the updated query parameters.
 - **list**: Parent data structure, ie `state.submissions.list`. Expected to contain
 `{ data, inflight, error, meta }` properties corresponding to all `list` state objects.
 - **dispatch**: Redux dispatch function.
-- **action**: Redux-style action to send, ie `listSubmissions`.
+- **action**: Redux-style action to send, ie `listRequests`.
 - **sortIdx**: Corresponds to `sortableTable#sortIdx`.
 - **query**: Array of configuration objects passed to `batch-async-command`.
 - **rowId** Corresponds to `sortableTable#rowId`.
