@@ -146,16 +146,6 @@ export const listRequests = (options) => ({
   }
 });
 
-export const listRequests = (options) => ({
-  [CALL_API]: {
-    type: types.REQUESTS,
-    method: 'GET',
-    id: null,
-    path: 'data/submissions',
-    qs: Object.assign({ per_page: defaultPageLimit }, options)
-  }
-});
-
 export const updateSubmissionMetadata = (payload) => ({
   [CALL_API]: {
     type: types.SUBMISSION_UPDATE_METADATA,
