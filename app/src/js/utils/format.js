@@ -109,6 +109,10 @@ export const roleLink = function (roleId) {
   if (roleId) return nullValue;
   return <Link to={`/roles/id/${roleId}`}>{roleId}</Link>;
 };
+export const conversationLink = function (conversationId) {
+  if (conversationId) return nullValue;
+  return <Link to={`/notes/id/${conversationId}`}>{conversationId}</Link>;
+};
 export const messageLink = function (message) {
   if (!message) return nullValue;
   return <Link to={`/messages/id/${message}`}>{message}</Link>;

@@ -25,6 +25,7 @@ import Questions from './components/Questions';
 import Workflows from './components/Workflows';
 import Metrics from './components/Metrics';
 import Roles from './components/Roles';
+import Conversations from './components/Conversations';
 import Rules from './components/Rules';
 import TestApi from './components/testApi';
 
@@ -50,6 +51,7 @@ const MainRoutes = () => {
         <Route path='/workflows' component={Workflows} />
         <Route path='/metrics' component={Metrics} />
         <Route path='/roles' component={Roles} />
+        <Route path='/conversations/' component={Conversations} />
         <Route path='/rules' component={Rules} />
         <Route path='/test-api' component={TestApi} />
       </Switch>
