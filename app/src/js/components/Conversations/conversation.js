@@ -81,13 +81,13 @@ class ConversationOverview extends React.Component {
     history.push('/conversations');
   }
 
-  delete () {
-    const { conversationId } = this.props.match.params;
-    const conversation = this.props.conversations.map[conversationId].data;
-    if (!conversation.published) {
-      this.props.dispatch(deleteConversation(conversationId));
-    }
-  }
+  // delete () {
+  //   const { conversationId } = this.props.match.params;
+  //   const conversation = this.props.conversations.map[conversationId].data;
+  //   if (!conversation.published) {
+  //     this.props.dispatch(deleteConversation(conversationId));
+  //   }
+  // }
 
   errors () {
     const conversationId = this.props.match.params.conversationId;
@@ -122,26 +122,26 @@ class ConversationOverview extends React.Component {
     }]; */
 
     return (
-        <div className='page__component'>
-          <section className='page__section page__section__header-wrapper'>
-            <h1 className='heading--large heading--shared-content with-description'>{conversationId}</h1>
-            {/* <AsyncCommands config={dropdownConfig} />
+      <div className='page__component'>
+        <section className='page__section page__section__header-wrapper'>
+          <h1 className='heading--large heading--shared-content with-description'>{conversationId}</h1>
+          {/* <AsyncCommands config={dropdownConfig} />
           <Link
             className='button button--small button--green button--edit form-conversation__element--right'
             to={'/conversations/edit/' + conversationId}>Edit</Link> */}
-          </section>
+        </section>
 
-          <section className='page__section'>
-            {errors.length ? <ErrorReport report={errors} truncate={true} /> : null}
-            <div className='heading__wrapper--border' style={{borderBottom: 'none'}}>
-              <h2 className='heading--medium with-description'>Conversation Overview</h2>
-            </div>
-            { conversation.notes ? conversation.notes.map( (note, i) =>
-              <Email data={note} accessors={metaAccessors} key={i}/>
-              ): <div>Conversation Empty</div>}
-          </section>
+        <section className='page__section'>
+          {errors.length ? <ErrorReport report={errors} truncate={true} /> : null}
+          <div className='heading__wrapper--border' style={{ borderBottom: 'none' }}>
+            <h2 className='heading--medium with-description'>Conversation Overview</h2>
+          </div>
+          { conversation.notes ? conversation.notes.map((note, i) =>
+            <Email data={note} accessors={metaAccessors} key={i}/>
+          ) : <div>Conversation Empty</div>}
+        </section>
 
-          {/* <section className='page__section'>
+        {/* <section className='page__section'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Permissions</h2>
           </div>
@@ -160,7 +160,7 @@ class ConversationOverview extends React.Component {
             tableColumns={subscriptionTableColumns}
           />
         </section> */}
-        </div>
+      </div>
     );
   }
 }

@@ -9,6 +9,7 @@ import config from '../../config';
 import { setWindowEditorRef } from '../../utils/browser';
 import Loading from '../LoadingIndicator/loading-indicator';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import ErrorReport from '../Errors/report';
 
 class Roles extends React.Component {
   constructor () {
@@ -67,21 +68,21 @@ class Roles extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
         <h1 className='heading--large heading--shared-content with-description'>
-          {record.data ? record.data.long_name  : `...`}
+          {record.data ? record.data.long_name : '...'}
         </h1>
         <section className='page__section'>
-          { record.inflight ? <Loading /> :
-            record.error ? <ErrorReport report={record.error} />
-            : record.data ?
-              <div>
-              <div className='tab--wrapper'>
-                <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
-                  onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
-              </div>
-              <div>
-                {this.state.view === 'list' ? this.renderList(record.data) : this.renderJson(record.data)}
-              </div>
-            </div> : null
+          { record.inflight ? <Loading />
+            : record.error ? <ErrorReport report={record.error} />
+              : record.data
+                ? <div>
+                  <div className='tab--wrapper'>
+                    <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
+                      onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
+                  </div>
+                  <div>
+                    {this.state.view === 'list' ? this.renderList(record.data) : this.renderJson(record.data)}
+                  </div>
+                </div> : null
           }
         </section>
       </div>

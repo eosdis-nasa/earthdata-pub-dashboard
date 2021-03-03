@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Link, withRouter} from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   getSubmission,
@@ -61,7 +61,7 @@ const metaAccessors = [
   },
   {
     label: 'Communication',
-    accessor: conversation_id => <Link to={`/conversations/id/${conversation_id}`}>{conversation_id ? 'Email Conversation' : null}</Link>,
+    accessor: conversationId => <Link to={`/conversations/id/${conversationId}`}>{conversationId ? 'Email Conversation' : null}</Link>,
     property: 'conversation_id'
   }
 ];
