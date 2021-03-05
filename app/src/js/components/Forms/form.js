@@ -148,18 +148,17 @@ class FormOverview extends React.Component {
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
     const requestId = this.props.location.search.split('=')[1];
+    let daacId = '';
+    if (typeof this.props.requests.detail.data !== 'undefined') {
+      daacId = this.props.requests.detail.data.daac_id;
+    }
     let thisFormUrl = `${_config.formsUrl}?formId=${formId}`;
     if (requestId !== '') {
       thisFormUrl += `&requestId=${requestId}`;
     }
-
-    // TODO daac id will need to be added to pass from the Data Publication Request Interest form
-    // Interest - Data Publication Request
-    // http://localhost:8081?formId=6c544723-241c-4896-a38c-adbc0a364293&requestId=&group=
-    // Questionnaire - Data Product Information
-    // http://localhost:8081?formId=19025579-99ca-4344-8610-704dae626343&requestId=04eb9641-75ee-4df0-a054-21882a7edc0a
-    console.log('FORM URL IS ' + thisFormUrl);
-
+    if (daacId !== '') {
+      thisFormUrl += `&group=${daacId}`;
+    }
     if (!record || (record.inflight && !record.data)) {
       return <Loading />;
     } else if (record.error) {
