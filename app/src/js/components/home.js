@@ -9,14 +9,15 @@ import { interval, listRequests } from '../actions';
 import {
   // tally,
   // seconds
-  shortDateNoTimeYearFirst,
   nullValue,
-  // displayCase,
-  bool
+  // displayCase
 } from '../utils/format';
 import List from './Table/Table';
 // import SubmissionsProgress from './Requests/progress';
-import { errorTableColumns } from '../utils/table-config/requests';
+import {
+  tableColumns,
+  errorTableColumns
+} from '../utils/table-config/requests';
 import { updateInterval, overviewUrl } from '../config';
 /* import {
   kibanaS3AccessErrorsLink,
@@ -159,47 +160,6 @@ class Home extends React.Component {
     const { list } = requests;
     const view = this.getView();
     const query = this.generateQuery();
-    const tableColumns = [
-      {
-        Header: 'Status',
-        accessor: row => <Link to={`/requests/id/${row.id}`} className={`submission__status_message submission__status_message--${row.id}`}>{row.status_message}</Link>,
-        id: 'status_message',
-        width: 100
-      },
-      {
-        Header: 'Workflow',
-        accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`submission__workflow submission__workflow--${row.workflow_id}`}>{row.workflow_name}</Link>,
-        id: 'workflow_name',
-        width: 100
-      },
-      {
-        Header: 'Step',
-        accessor: row => row.step_name,
-        id: 'step_name',
-        width: 100
-      },
-      {
-        Header: 'Name',
-        accessor: row => row.name || '(no name)',
-        id: 'name',
-        width: 225
-      },
-      {
-        Header: 'Created',
-        accessor: row => shortDateNoTimeYearFirst(row.created_at),
-        id: 'created_at'
-      },
-      {
-        Header: 'Latest Edit',
-        accessor: row => shortDateNoTimeYearFirst(row.last_change),
-        id: 'last_change'
-      },
-      {
-        Header: 'Locked',
-        accessor: row => bool(row.lock),
-        id: 'lock'
-      }
-    ];
     // const { stats, count } = this.props.stats;
     // const { dist } = this.props;
     /* const overview = [
