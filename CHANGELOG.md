@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.1.3 - 2021-03-05
+
+- [updated home page to updated request display](1db428f4e41b2f3e34f95d0af26fc6247b428e62)
+- [changed more submission types to request types;](6983bf9321f7e894d25776170f67a7792f3e7855)
+- [added new buttons and parameters to utils/table-config/requests.js methods;](dc8deccfa3ab86a2343cccdb45b9e94c9471d5be)
+- [renamed old folder so will error now;](6983bf9321f7e894d25776170f67a7792f3e7855)
+- [added request form_data to form.js to display answers](6983bf9321f7e894d25776170f67a7792f3e7855)
+- [changed submissionId to requestId for path params;](dc8deccfa3ab86a2343cccdb45b9e94c9471d5be)
+- [corrected some bad api call paths for groups;](dc8deccfa3ab86a2343cccdb45b9e94c9471d5be)
+- [removed some left over cumulus vars](dc8deccfa3ab86a2343cccdb45b9e94c9471d5be)
+- [adding forms to requests and altering data flow](9494d9d889b868db1755d75db72f27f7b264903a)
+
 ## 0.1.2 - 2021-02-05
 
 - [reapplied submission where it was mass replaced by request](c2cd2ac2df2597de531f70e4d3df48b6e3b66b3c)
