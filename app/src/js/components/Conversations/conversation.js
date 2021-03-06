@@ -81,13 +81,13 @@ class ConversationOverview extends React.Component {
     history.push('/conversations');
   }
 
-  // delete () {
-  //   const { conversationId } = this.props.match.params;
-  //   const conversation = this.props.conversations.map[conversationId].data;
-  //   if (!conversation.published) {
-  //     this.props.dispatch(deleteConversation(conversationId));
-  //   }
-  // }
+  delete () {
+    // const { conversationId } = this.props.match.params;
+    // const conversation = this.props.conversations.map[conversationId].data;
+    // if (!conversation.published) {
+    //   this.props.dispatch(deleteConversation(conversationId));
+    // }
+  }
 
   errors () {
     const conversationId = this.props.match.params.conversationId;
