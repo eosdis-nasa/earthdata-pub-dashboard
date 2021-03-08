@@ -100,6 +100,31 @@ class FormOverview extends React.Component {
     }
   }
 
+  getBbox (id) {
+    let out = '';
+    const n = `${id}_north`;
+    const s = `${id}_south`;
+    const e = `${id}_east`;
+    const w = `${id}_west`;
+    if (typeof this.props.requests.detail.data.form_data[n] !== 'undefined' && this.props.requests.detail.data.form_data[n] !== '') {
+      out += `N:  ${this.props.requests.detail.data.form_data[n]} `;
+    }
+    if (typeof this.props.requests.detail.data.form_data[e] !== 'undefined' && this.props.requests.detail.data.form_data[e] !== '') {
+      out += `E:  ${this.props.requests.detail.data.form_data[e]} `;
+    }
+    if (typeof this.props.requests.detail.data.form_data[s] !== 'undefined' && this.props.requests.detail.data.form_data[s] !== '') {
+      out += `S:  ${this.props.requests.detail.data.form_data[s]} `;
+    }
+    if (typeof this.props.requests.detail.data.form_data[w] !== 'undefined' && this.props.requests.detail.data.form_data[w] !== '') {
+      out += `W:  ${this.props.requests.detail.data.form_data[w]}`;
+    }
+    if (out !== '') {
+      return out;
+    } else {
+      return 'no answer';
+    }
+  }
+
   renderQuestions (sections, whatSection) {
     let section = '';
     const sectionQuestions = [];
@@ -121,22 +146,19 @@ class FormOverview extends React.Component {
               sectionQuestions.push(<li key={this.getRandom()}>{question[b].text}</li>);
               if (question[b].inputs) {
                 for (const a in question[b].inputs) {
-                  sectionQuestions.push(
-                    <li key={ this.getRandom() } style={{ marginTop: '3px', marginBottom: '3px' }}>
-                      <div key={this.getRandom()} style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>{question[b].inputs[a].label}:</div>
-                      <div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
-                    </li>
-                  );
-                  if (this.getAnswer(question[b].inputs[a].control_id) === '') {
+                  if (question[b].inputs[a].type === 'bbox') {
                     sectionQuestions.push(
-                      <li key={this.getRandom()}>HEREEEEEEEEEEEEEEEEEEEEEEEE { question[b].inputs[a].control_id } { this.getAnswer(question[b].inputs[a].control_id) };</li>
+                      <li key={ this.getRandom() } style={{ marginTop: '3px', marginBottom: '3px' }}>
+                        <div key={this.getRandom()}>{this.getBbox(question[b].inputs[a].control_id)}</div>
+                      </li>
                     );
-                    /* sectionQuestions.push(
+                  } else {
+                    sectionQuestions.push(
                       <li key={ this.getRandom() } style={{ marginTop: '3px', marginBottom: '3px' }}>
                         <div key={this.getRandom()} style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>{question[b].inputs[a].label}:</div>
                         <div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
                       </li>
-                    ); */
+                    );
                   }
                 }
               }
