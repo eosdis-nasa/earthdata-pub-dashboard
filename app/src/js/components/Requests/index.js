@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import { strings } from '../locale';
-import AllSubmissions from './list';
+import AllRequests from './list';
 import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
-import SubmissionOverview from './request';
-import SubmissionsOverview from './overview';
+import RequestOverview from './request';
+import RequestsOverview from './overview';
 import EditMetadata from './edit-metadata';
 import isEqual from 'lodash.isequal';
 
@@ -24,7 +24,7 @@ const Requests = ({
   stats
 }) => {
   const { pathname } = location;
-  const AllSubmissionsWithWrapper = withQueryWrapper(AllSubmissions, onQueryChange);
+  const AllSubmissionsWithWrapper = withQueryWrapper(AllRequests, onQueryChange);
   const [queryOptions, setQueryOptions] = useState({});
 
   function onQueryChange (newQueryOptions) {
@@ -49,8 +49,8 @@ const Requests = ({
           />
           <div className='page__content--shortened'>
             <Switch>
-              <Route exact path='/requests' component={SubmissionsOverview} />
-              <Route exact path='/requests/id/:requestId' component={SubmissionOverview} />
+              <Route exact path='/requests' component={RequestsOverview} />
+              <Route exact path='/requests/id/:requestId' component={RequestOverview} />
               <Route path='/requests/id/:requestId/edit-metadata' component={EditMetadata} />
               <Route path='/requests/completed' component={AllSubmissionsWithWrapper} />
               <Route path='/requests/processing' component={AllSubmissionsWithWrapper} />

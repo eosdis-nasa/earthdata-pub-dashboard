@@ -139,7 +139,7 @@ export const errorTableColumns = [
     width: 100
   },
   {
-    Header: 'Request',
+    Header: 'Requests',
     accessor: row => submissionLink(row.id),
     id: 'id',
     width: 200
