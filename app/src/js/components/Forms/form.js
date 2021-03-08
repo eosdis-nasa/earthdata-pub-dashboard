@@ -93,7 +93,7 @@ class FormOverview extends React.Component {
   }
 
   getAnswer (id) {
-    if (typeof this.props.requests.detail.data.form_data[id] !== 'undefined') {
+    if (typeof this.props.requests.detail.data.form_data[id] !== 'undefined' && this.props.requests.detail.data.form_data[id] !== '') {
       return (this.props.requests.detail.data.form_data[id]);
     } else {
       return 'no answer';
@@ -127,6 +127,17 @@ class FormOverview extends React.Component {
                       <div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
                     </li>
                   );
+                  if (this.getAnswer(question[b].inputs[a].control_id) === '') {
+                    sectionQuestions.push(
+                      <li key={this.getRandom()}>HEREEEEEEEEEEEEEEEEEEEEEEEE { question[b].inputs[a].control_id } { this.getAnswer(question[b].inputs[a].control_id) };</li>
+                    );
+                    /* sectionQuestions.push(
+                      <li key={ this.getRandom() } style={{ marginTop: '3px', marginBottom: '3px' }}>
+                        <div key={this.getRandom()} style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>{question[b].inputs[a].label}:</div>
+                        <div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
+                      </li>
+                    ); */
+                  }
                 }
               }
             }
