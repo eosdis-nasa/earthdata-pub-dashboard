@@ -116,6 +116,10 @@ class RequestsOverview extends React.Component {
     return applyWorkflowToSubmission(requestId, this.state.workflow);
   }
 
+  onlyUnique (value, index, self) {
+    return self.indexOf(value) === index;
+  }
+
   getExecuteOptions () {
     return [
       simpleDropdownOption({
@@ -136,6 +140,7 @@ class RequestsOverview extends React.Component {
       list,
       // dropdowns
     } = requests;
+    const unique = [...new Set(list.data.map(item => item.id))];
     const { queriedAt } = list.meta;
     const newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
     const newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
@@ -155,7 +160,7 @@ class RequestsOverview extends React.Component {
         </section>
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{list.data.length / 2}</span></h2>
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
             <a className='button button--small button--green button--add form-group__element--right' href={newDataProductInformation}>New Data Product Information</a>
             <a className='button button--small button--green button--add form-group__element--right' href={newDataPublicationRequest}>New Data Publication Request</a>
           </div>
@@ -166,7 +171,7 @@ class RequestsOverview extends React.Component {
             tableColumns={tableColumns}
             query={this.generateQuery()}
             rowId='id'
-            sortIdx='timestamp'
+            sortIdx='created_at'
           >
             {/* <ListFilters>
               <Dropdown
