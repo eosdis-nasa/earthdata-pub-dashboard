@@ -1,3 +1,4 @@
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -8,6 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 - [add pull request template to CONTRIBUTING.md](416a1b2b4fda50e6faa1ef6503723ea8c18bc726)
+
+## 0.1.3 - 2021-03-03
+- [Fix linting errors except Submissions.](566d9a69f05)
+- [Add conversations to dashboard.](7b65c199843)
+- [Update roles view description column to Description to match other views.](624fd363485)
 
 ## 0.1.2 - 2021-02-05
 

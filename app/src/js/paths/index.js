@@ -6,6 +6,7 @@ import users from './users';
 import groups from './groups';
 import roles from './roles';
 import workflows from './workflows';
+import conversations from './conversations';
 
-const paths = [requests, forms, questions, users, groups, workflows, roles];
+const paths = [requests, forms, questions, users, groups, workflows, roles, conversations];
 export default paths;

@@ -13,7 +13,7 @@ export const tableColumns = [
     id: 'long_name'
   },
   {
-    Header: 'description',
+    Header: 'Description',
     accessor: (row) => row.description,
     id: 'description'
   }
