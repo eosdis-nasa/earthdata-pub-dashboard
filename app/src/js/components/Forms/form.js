@@ -189,7 +189,7 @@ class FormOverview extends React.Component {
     if (requestId !== '') {
       thisFormUrl += `&requestId=${requestId}`;
     }
-    if (daacId !== '') {
+    if (daacId !== '' && record.form_id == '19025579-99ca-4344-8610-704dae626343') {
       thisFormUrl += `&group=${daacId}`;
     }
     if (!record || (record.inflight && !record.data)) {
