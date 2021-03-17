@@ -3,16 +3,16 @@ import React from 'react';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import PropTypes from 'prop-types';
-import WorkflowsOverview from './overview';
-import Workflow from './workflow';
+import ConversationsOverview from './overview';
+import Conversation from './conversation';
 
-class Workflows extends React.Component {
+class Conversations extends React.Component {
   render () {
     return (
-      <div className='page__workflows'>
+      <div className='page__conversations'>
         <div className='content__header'>
           <div className='row'>
-            <h1 className='heading--xlarge'>Workflows</h1>
+            <h1 className='heading--xlarge'>Conversations</h1>
           </div>
         </div>
         <div className='page__content'>
@@ -23,8 +23,8 @@ class Workflows extends React.Component {
             />
             <div className='page__content--shortened'>
               <Switch>
-                <Route exact path='/workflows' component={WorkflowsOverview} />
-                <Route path='/workflows/id/:workflowId' component={Workflow} />
+                <Route exact path='/conversations' component={ConversationsOverview} />
+                <Route path='/conversations/id/:conversationId' component={Conversation} />
               </Switch>
             </div>
           </div>
@@ -34,10 +34,10 @@ class Workflows extends React.Component {
   }
 }
 
-Workflows.propTypes = {
+Conversations.propTypes = {
   children: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object
 };
 
-export default withRouter(Workflows);
+export default withRouter(Conversations);

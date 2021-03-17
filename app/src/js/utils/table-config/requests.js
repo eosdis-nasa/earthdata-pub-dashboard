@@ -44,7 +44,7 @@ export const dataProductInformationLookup = (row) => {
 export const tableColumns = [
   {
     Header: 'Status',
-    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status_message}</Link>,
+    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status}</Link>,
     id: 'status_message',
     width: 100
   },
@@ -92,6 +92,11 @@ export const tableColumns = [
     Header: 'Locked',
     accessor: row => bool(row.lock),
     id: 'lock'
+  },
+  {
+    Header: 'Communication',
+    accessor: row => <Link to={`/conversations/id/${row.conversation_id}`}>{row.conversation_id ? 'Email conversation' : null}</Link>,
+    id: 'email_conversation'
   }
   /* {
     Header: 'Data Request Request',

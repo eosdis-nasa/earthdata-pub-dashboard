@@ -17,6 +17,7 @@ import schema from './schema';
 import workflows from './workflows';
 import metrics from './metrics';
 import roles from './roles';
+import conversations from './conversations';
 import earthdatapubInstance from './earthdatapub-instance';
 
 const def = (state = {}, action) => state;
@@ -40,7 +41,8 @@ export const reducers = {
   schema,
   workflows,
   metrics,
-  roles
+  roles,
+  conversations
 };
 
 export const createRootReducer = (history) => combineReducers({

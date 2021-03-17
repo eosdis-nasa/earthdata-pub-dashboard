@@ -20,6 +20,37 @@
   }
 }
 
+.email__details {
+  font-size: .86em;
+  border-bottom: 1px solid $lightest-grey;
+  padding-bottom: .3em;
+  margin-bottom: 1em;
+  margin-top: 2em;
+
+  h2, h3, h4 {
+    margin-bottom: .5em;
+  }
+  @extend .clearfix;
+  dt {
+    vertical-align: top;
+    font-weight: $base-font-semibold;
+    width: 22%;
+    padding-right: 8px;
+  }
+  dd {
+    vertical-align: middle;
+    width: 100%;
+    color: $dark-grey;
+    &:nth-of-type(odd) {
+      margin-right: 10%;
+    }
+  }
+  dd {
+    display: inline-block;
+    margin: .75em 0;
+  }
+}
+
 .logs__item {
   margin-bottom: .5em;
 }
