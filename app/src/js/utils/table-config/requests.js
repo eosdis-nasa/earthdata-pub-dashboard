@@ -18,13 +18,15 @@ import _config from '../../config';
 
 let newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
 let newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
+const publicationRequestFormId = `${_config.formsUrl}${_config.publicationRequestFormId}`;
+const productInformationFormId = `${_config.formsUrl}${_config.productInformationFormId}`;
 
 export const dataPublicationLookup = (row) => {
   if (row.data_publication_request !== '') {
     return <Link to={`/forms/id/${row.data_publication_request}?requestId=${row.id}`}>Data Publication Request</Link>;
   } else {
     if (!newDataPublicationRequest.match(/formId/g) && !newDataPublicationRequest.match(/requestId/g)) {
-      newDataPublicationRequest += `?formId=6c544723-241c-4896-a38c-adbc0a364293&requestId=${row.id}`;
+      newDataPublicationRequest += `?formId=${publicationRequestFormId}&requestId=${row.id}`;
     }
     return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
   }
@@ -35,7 +37,7 @@ export const dataProductInformationLookup = (row) => {
     return <Link to={`/forms/id/${row.data_product_information}?requestId=${row.id}`}>Data Product Information</Link>;
   } else {
     if (!newDataProductInformation.match(/formId/g) && !newDataProductInformation.match(/requestId/g)) {
-      newDataProductInformation += `?formId=19025579-99ca-4344-8610-704dae626343&requestId=${row.id}`;
+      newDataProductInformation += `?formId=${productInformationFormId}&requestId=${row.id}`;
     }
     return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
   }
