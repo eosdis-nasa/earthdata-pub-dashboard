@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.1.4 - 2021-03-23
+
+- [Corrected status so it displays in the requests table](ffa0f9c6be1f89a6726541c7385a2b8bd770c822)
+
 ## 0.1.3 - 2021-03-05
 
 - [Added daac_id to edit button in form report so it can flow to forms](1cadbe86ce51c1b2180fd4eb5f12117812c4a1fc)
