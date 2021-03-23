@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://localhost:3000",
   "env": {
-    "APIROOT": "http://localhost:8080"
+    "APIROOT": "http://localhost:8080/api"
   },
   "nodeVersion": "system",
   "viewportWidth": 1300,

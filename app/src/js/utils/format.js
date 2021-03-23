@@ -77,9 +77,9 @@ export const lastUpdated = function (datestring, text) {
   );
 };
 
-export const submissionLink = function (submissionId) {
-  if (!submissionId) return nullValue;
-  return <Link to={`/requests/id/${submissionId}`}>{submissionId}</Link>;
+export const submissionLink = function (requestId) {
+  if (!requestId) return nullValue;
+  return <Link to={`/requests/id/${requestId}`}>{requestId}</Link>;
 };
 export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;

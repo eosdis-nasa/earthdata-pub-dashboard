@@ -14,6 +14,34 @@ import {
 } from '../../actions';
 import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
+import _config from '../../config';
+
+let newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
+let newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
+const publicationRequestFormId = `${_config.formsUrl}${_config.publicationRequestFormId}`;
+const productInformationFormId = `${_config.formsUrl}${_config.productInformationFormId}`;
+
+export const dataPublicationLookup = (row) => {
+  if (row.data_publication_request !== '') {
+    return <Link to={`/forms/id/${row.data_publication_request}?requestId=${row.id}`}>Data Publication Request</Link>;
+  } else {
+    if (!newDataPublicationRequest.match(/formId/g) && !newDataPublicationRequest.match(/requestId/g)) {
+      newDataPublicationRequest += `?formId=${publicationRequestFormId}&requestId=${row.id}`;
+    }
+    return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
+  }
+};
+
+export const dataProductInformationLookup = (row) => {
+  if (row.data_product_information !== '') {
+    return <Link to={`/forms/id/${row.data_product_information}?requestId=${row.id}`}>Data Product Information</Link>;
+  } else {
+    if (!newDataProductInformation.match(/formId/g) && !newDataProductInformation.match(/requestId/g)) {
+      newDataProductInformation += `?formId=${productInformationFormId}&requestId=${row.id}`;
+    }
+    return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
+  }
+};
 
 export const tableColumns = [
   {
@@ -26,7 +54,7 @@ export const tableColumns = [
     Header: 'Workflow',
     accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`request__workflow request__workflow--${row.workflow_id}`}>{row.workflow_name}</Link>,
     id: 'workflow_name',
-    width: 100
+    width: 110
   },
   {
     Header: 'Step',
@@ -38,7 +66,19 @@ export const tableColumns = [
     Header: 'Name',
     accessor: row => row.name || '(no name)',
     id: 'name',
-    width: 225
+    width: 100
+  },
+  {
+    Header: 'Data Publication Request',
+    accessor: row => dataPublicationLookup(row),
+    id: 'data_publication_request',
+    width: 200
+  },
+  {
+    Header: 'Data Product Information',
+    accessor: row => dataProductInformationLookup(row),
+    id: 'data_product_information',
+    width: 200
   },
   {
     Header: 'Created',
@@ -106,7 +146,7 @@ export const errorTableColumns = [
     width: 100
   },
   {
-    Header: 'Request',
+    Header: 'Requests',
     accessor: row => submissionLink(row.id),
     id: 'id',
     width: 200

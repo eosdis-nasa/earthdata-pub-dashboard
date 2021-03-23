@@ -6,7 +6,7 @@ import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import {
   getCount,
-  listSubmissions
+  listRequests
 } from '../../actions';
 import { strings } from '../locale';
 import AllSubmissions from './list';
@@ -38,7 +38,7 @@ const Requests = ({
       setQueryOptions(newQueryOptions);
     }
   }
-  dispatch(listSubmissions());
+  dispatch(listRequests());
   function query () {}
   return (
     <div className='page__submissions'>
@@ -53,8 +53,8 @@ const Requests = ({
           <div className='page__content--shortened'>
             <Switch>
               <Route exact path='/requests' component={SubmissionsOverview} />
-              <Route path='/requests/id/:submissionId' component={SubmissionOverview} />
-              <Route path='/requests/metadata/:submissionId' component={EditMetadata} />
+              <Route path='/requests/id/:requestId' component={SubmissionOverview} />
+              <Route path='/requests/metadata/:requestId' component={EditMetadata} />
               <Route path='/requests/completed' component={AllSubmissionsWithWrapper} />
               <Route path='/requests/processing' component={AllSubmissionsWithWrapper} />
               <Route path='/requests/failed' component={AllSubmissionsWithWrapper} />

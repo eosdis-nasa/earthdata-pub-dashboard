@@ -168,7 +168,7 @@ describe('Dashboard Requests Page', () => {
     });
 
     it('Should reingest a request and redirect to the requests detail page.', () => {
-      const submissionId = 'MOD09GQ.A0142558.ee5lpE.006.5112577830916';
+      const requestId = 'MOD09GQ.A0142558.ee5lpE.006.5112577830916';
       cy.server();
       cy.route({
         method: 'PUT',
@@ -177,13 +177,13 @@ describe('Dashboard Requests Page', () => {
         response: { message: 'ingested' }
       });
       cy.visit('/requests');
-      cy.get(`[data-value="${submissionId}"] > .td >input[type="checkbox"]`).click();
+      cy.get(`[data-value="${requestId}"] > .td >input[type="checkbox"]`).click();
       cy.get('.list-actions').contains('Reingest').click();
       cy.get('.button--submit').click();
       cy.get('.modal-content > .modal-title').should('contain.text', 'Complete');
       cy.get('.button__goto').click();
-      cy.url().should('include', `data/request/${submissionId}`);
-      cy.get('.heading--large').should('have.text', submissionId);
+      cy.url().should('include', `data/request/${requestId}`);
+      cy.get('.heading--large').should('have.text', requestId);
     });
 
     it('Should reingest multiple requests and redirect to the running page.', () => {

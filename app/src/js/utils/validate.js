@@ -22,7 +22,7 @@ export const arrayWithLength = function (length) {
 };
 
 export const submissionModel = function (obj) {
-  return isText(obj.submissionId);
+  return isText(obj.requestId);
 };
 
 export const isUndefined = function (test) {

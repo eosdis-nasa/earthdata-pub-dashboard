@@ -8,7 +8,7 @@ import {
   // clearSubmissionsSearch,
   // filterSubmissions,
   // clearSubmissionsFilter,
-  listSubmissions,
+  listRequests,
   // getOptionsSubmissionName,
   listWorkflows,
   applyWorkflowToSubmission,
@@ -51,7 +51,7 @@ class AllSubmissions extends React.Component {
 
   componentDidMount () {
     this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
-    this.props.dispatch(listSubmissions);
+    this.props.dispatch(listRequests);
   }
 
   componentWillUnmount () {
@@ -86,8 +86,8 @@ class AllSubmissions extends React.Component {
     this.setState({ workflow });
   }
 
-  applyWorkflow (submissionId) {
-    return applyWorkflowToSubmission(submissionId, this.state.workflow);
+  applyWorkflow (requestId) {
+    return applyWorkflowToSubmission(requestId, this.state.workflow);
   }
 
   getExecuteOptions () {
@@ -117,7 +117,7 @@ class AllSubmissions extends React.Component {
     const query = this.generateQuery();
     const view = this.getView();
     const displayCaseView = displayCase(view);
-    const tableSortIdx = view === 'failed' ? 'submissionId' : 'timestamp';
+    const tableSortIdx = view === 'failed' ? 'requestId' : 'timestamp';
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -148,7 +148,7 @@ class AllSubmissions extends React.Component {
         <section className='page__section'>
           <List
             list={list}
-            action={listSubmissions}
+            action={listRequests}
             tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
             query={query}
             rowId='id'
@@ -220,7 +220,7 @@ AllSubmissions.propTypes = {
   onQueryChange: PropTypes.func
 };
 
-export { listSubmissions };
+export { listRequests };
 
 export default withRouter(connect(state => ({
   logs: state.logs,

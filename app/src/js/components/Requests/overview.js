@@ -10,7 +10,7 @@ import {
   // clearSubmissionsSearch,
   // filterSubmissions,
   // clearSubmissionsFilter,
-  listSubmissions,
+  listRequests,
   // filterStages,
   // filterStatuses,
   // clearStagesFilter,
@@ -56,7 +56,7 @@ const breadcrumbConfig = [
   }
 ];
 
-class SubmissionsOverview extends React.Component {
+class RequestsOverview extends React.Component {
   constructor () {
     super();
     this.generateQuery = this.generateQuery.bind(this);
@@ -70,7 +70,7 @@ class SubmissionsOverview extends React.Component {
   componentDidMount () {
     this.cancelInterval = interval(this.queryMeta, updateInterval, true);
     const { dispatch } = this.props;
-    dispatch(listSubmissions());
+    dispatch(listRequests());
   }
 
   componentWillUnmount () {
@@ -112,8 +112,12 @@ class SubmissionsOverview extends React.Component {
     this.setState({ workflow });
   }
 
-  applyWorkflow (submissionId) {
-    return applyWorkflowToSubmission(submissionId, this.state.workflow);
+  applyWorkflow (requestId) {
+    return applyWorkflowToSubmission(requestId, this.state.workflow);
+  }
+
+  onlyUnique (value, index, self) {
+    return self.indexOf(value) === index;
   }
 
   getExecuteOptions () {
@@ -136,7 +140,10 @@ class SubmissionsOverview extends React.Component {
       list,
       // dropdowns
     } = requests;
+    const unique = [...new Set(list.data.map(item => item.id))];
     const { queriedAt } = list.meta;
+    const newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
+    const newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
     // const statsCount = get(stats, 'count.data.requests.count', []);
     // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
@@ -153,15 +160,18 @@ class SubmissionsOverview extends React.Component {
         </section>
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{list.data.length}</span></h2>
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
+            <a className='button button--small button--green button--add form-group__element--right' href={newDataProductInformation}>New Data Product Information</a>
+            <a className='button button--small button--green button--add form-group__element--right' href={newDataPublicationRequest}>New Data Publication Request</a>
           </div>
+          {listRequests}
           <List
             list={list}
-            action={listSubmissions}
+            action={listRequests}
             tableColumns={tableColumns}
             query={this.generateQuery()}
             rowId='id'
-            sortIdx='timestamp'
+            sortIdx='created_at'
           >
             {/* <ListFilters>
               <Dropdown
@@ -169,7 +179,7 @@ class SubmissionsOverview extends React.Component {
                 options={get(dropdowns, ['name', 'options'])}
                 action={filterSubmissions}
                 clear={clearSubmissionsFilter}
-                paramKey='submissionId'
+                paramKey='requestId'
                 label={strings.request}
                 inputProps={{
                   placeholder: 'All',
@@ -222,7 +232,7 @@ class SubmissionsOverview extends React.Component {
   }
 }
 
-SubmissionsOverview.propTypes = {
+RequestsOverview.propTypes = {
   requests: PropTypes.object,
   stats: PropTypes.object,
   dispatch: PropTypes.func,
@@ -232,7 +242,7 @@ SubmissionsOverview.propTypes = {
   submissionCSV: PropTypes.object
 };
 
-export { SubmissionsOverview };
+export { RequestsOverview };
 
 export default withRouter(connect(state => ({
   stats: state.stats,
@@ -240,4 +250,4 @@ export default withRouter(connect(state => ({
   requests: state.requests,
   config: state.config,
   submissionCSV: state.submissionCSV
-}))(SubmissionsOverview));
+}))(RequestsOverview));

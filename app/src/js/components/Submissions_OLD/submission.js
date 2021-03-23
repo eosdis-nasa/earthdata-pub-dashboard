@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   interval,
-  getSubmission,
+  getRequest,
   deleteSubmission,
   applyWorkflowToSubmission,
   listWorkflows
@@ -85,12 +85,12 @@ class SubmissionOverview extends React.Component {
   }
 
   componentDidMount () {
-    const { submissionId } = this.props.match.params;
+    const { requestId } = this.props.match.params;
     this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
 
     if (this.props.skipReloadOnMount) return;
 
-    const immediate = !this.props.requests.map[submissionId];
+    const immediate = !this.props.requests.map[requestId];
     this.reload(immediate);
   }
 
@@ -100,10 +100,10 @@ class SubmissionOverview extends React.Component {
 
   reload (immediate, timeout) {
     timeout = timeout || updateInterval;
-    const submissionId = this.props.match.params.submissionId;
+    const requestId = this.props.match.params.requestId;
     const { dispatch } = this.props;
     if (this.cancelInterval) { this.cancelInterval(); }
-    this.cancelInterval = interval(() => dispatch(getSubmission(submissionId)), timeout, immediate);
+    this.cancelInterval = interval(() => dispatch(getRequest(requestId)), timeout, immediate);
   }
 
   fastReload () {
@@ -121,25 +121,25 @@ class SubmissionOverview extends React.Component {
   }
 
   applyWorkflow () {
-    const { submissionId } = this.props.match.params;
+    const { requestId } = this.props.match.params;
     const { workflow } = this.state;
-    this.props.dispatch(applyWorkflowToSubmission(submissionId, workflow));
+    this.props.dispatch(applyWorkflowToSubmission(requestId, workflow));
   }
 
   delete () {
-    const { submissionId } = this.props.match.params;
-    this.props.dispatch(deleteSubmission(submissionId));
+    const { requestId } = this.props.match.params;
+    this.props.dispatch(deleteSubmission(requestId));
   }
 
   errors () {
-    const submissionId = this.props.match.params.submissionId;
+    const requestId = this.props.match.params.requestId;
     return [
-      get(this.props.requests.map, [submissionId, 'error']),
-      get(this.props.requests.reprocessed, [submissionId, 'error']),
-      get(this.props.requests.reingested, [submissionId, 'error']),
-      get(this.props.requests.executed, [submissionId, 'error']),
-      get(this.props.requests.removed, [submissionId, 'error']),
-      get(this.props.requests.deleted, [submissionId, 'error'])
+      get(this.props.requests.map, [requestId, 'error']),
+      get(this.props.requests.reprocessed, [requestId, 'error']),
+      get(this.props.requests.reingested, [requestId, 'error']),
+      get(this.props.requests.executed, [requestId, 'error']),
+      get(this.props.requests.removed, [requestId, 'error']),
+      get(this.props.requests.deleted, [requestId, 'error'])
     ].filter(Boolean);
   }
 
@@ -159,8 +159,8 @@ class SubmissionOverview extends React.Component {
   }
 
   render () {
-    const submissionId = this.props.match.params.submissionId;
-    const record = this.props.requests.map[submissionId];
+    const requestId = this.props.match.params.requestId;
+    const record = this.props.requests.map[requestId];
     if (!record || (record.inflight && !record.data)) {
       return <Loading />;
     } else if (record.error) {
@@ -173,10 +173,10 @@ class SubmissionOverview extends React.Component {
       text: 'Delete',
       action: this.delete,
       disabled: !!request.submitted,
-      status: get(this.props.requests.deleted, [submissionId, 'status']),
+      status: get(this.props.requests.deleted, [requestId, 'status']),
       success: this.navigateBack,
       confirmAction: true,
-      confirmText: deleteText(submissionId)
+      confirmText: deleteText(requestId)
     }]; */
     const errors = this.errors();
 
@@ -190,7 +190,7 @@ class SubmissionOverview extends React.Component {
         href: '/requests'
       },
       {
-        label: submissionId,
+        label: requestId,
         active: true
       }
     ];
@@ -201,7 +201,7 @@ class SubmissionOverview extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{submissionId}</h1>
+          <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
           {/* <AsyncCommands config={dropdownConfig} /> */}
           {lastUpdated(request.last_change, 'Updated')}
 
@@ -231,10 +231,10 @@ class SubmissionOverview extends React.Component {
 
         <section className='page__section'>
           <LogViewer
-            query={{ q: submissionId }}
+            query={{ q: requestId }}
             dispatch={this.props.dispatch}
             logs={this.props.logs}
-            notFound={`No recent logs for ${submissionId}`}
+            notFound={`No recent logs for ${requestId}`}
           />
         </section> */}
       </div>

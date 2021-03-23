@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.1.3 - 2021-03-05
+
+- [Added daac_id to edit button in form report so it can flow to forms](1cadbe86ce51c1b2180fd4eb5f12117812c4a1fc)
+- [replaced latin on home page to paragraph from google doc - see commit comment](48067fccac196b8c8beaea1dfe6232cc4ee3dc77)
+- [updated home page to updated request display](1db428f4e41b2f3e34f95d0af26fc6247b428e62)
+- [changed more submission types to request types;](6983bf9321f7e894d25776170f67a7792f3e7855)
+- [added new buttons and parameters to utils/table-config/requests.js methods;](dc8deccfa3ab86a2343cccdb45b9e94c9471d5be)
+- [renamed old folder so will error now;](6983bf9321f7e894d25776170f67a7792f3e7855)
+- [added request form_data to form.js to display answers](6983bf9321f7e894d25776170f67a7792f3e7855)
+- [changed submissionId to requestId for path params;](dc8deccfa3ab86a2343cccdb45b9e94c9471d5be)
+- [corrected some bad api call paths for groups;](dc8deccfa3ab86a2343cccdb45b9e94c9471d5be)
+- [removed some left over cumulus vars](dc8deccfa3ab86a2343cccdb45b9e94c9471d5be)
+- [adding forms to requests and altering data flow](9494d9d889b868db1755d75db72f27f7b264903a)
 - [add pull request template to CONTRIBUTING.md](416a1b2b4fda50e6faa1ef6503723ea8c18bc726)
 
 ## 0.1.3 - 2021-03-03
@@ -27,7 +40,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [altered list forms for consistent look and feel; users list and groups list displays real data](271256f2ad0)
 - [submissions w real data; forms w real data; some side pane links; made look consistant; fixed counts](48af8f77567)
 - [finished schemas](a3628680889)
-- [removed results from data in SUBMISSIONS](0f576e32f95)
+- [removed results from data in REQUESTS](0f576e32f95)
 - [altered path files routes to match the others](728d7aea7aa)
 - [altered component paths to /<component>/id/:<component_id>](18aa2759b3e)
 
