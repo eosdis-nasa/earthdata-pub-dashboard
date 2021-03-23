@@ -18,8 +18,8 @@ import _config from '../../config';
 
 let newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
 let newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
-const publicationRequestFormId = `${_config.formsUrl}${_config.publicationRequestFormId}`;
-const productInformationFormId = `${_config.formsUrl}${_config.productInformationFormId}`;
+const publicationRequestFormId = _config.publicationRequestFormId;
+const productInformationFormId = _config.productInformationFormId;
 
 export const dataPublicationLookup = (row) => {
   if (row.data_publication_request !== '') {
