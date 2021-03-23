@@ -46,7 +46,7 @@ export const dataProductInformationLookup = (row) => {
 export const tableColumns = [
   {
     Header: 'Status',
-    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status}</Link>,
+    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status_message}</Link>,
     id: 'status_message',
     width: 100
   },
