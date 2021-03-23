@@ -12,7 +12,7 @@ const config = {
   newPublicationRequestUrl: process.env.NEW_PUBLICATION_REQUEST_URL || '/interest/daacs/selection',
   newProductInformationUrl: process.env.NEW_PRODUCT_INFORMATION_URL || '/questionnaire/questions',
   publicationRequestFormId: process.env.PUBLICATION_REQUEST_FORM_ID || '6c544723-241c-4896-a38c-adbc0a364293',
-  productionInformationFormId: process.env.PRODUCTION_INFORMATION_FORM_ID || '19025579-99ca-4344-8610-704dae626343',
+  productInformationFormId: process.env.PRODUCTION_INFORMATION_FORM_ID || '19025579-99ca-4344-8610-704dae626343',
   basepath: process.env.BASEPATH || '/',
   awsRegion: process.env.AWS_REGION || 'us-west-2',
   oauthMethod: process.env.AUTH_METHOD || 'earthdata',

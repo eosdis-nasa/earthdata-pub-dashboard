@@ -18,8 +18,8 @@ import _config from '../../config';
 
 let newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
 let newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
-const publicationRequestFormId = `${_config.formsUrl}${_config.publicationRequestFormId}`;
-const productInformationFormId = `${_config.formsUrl}${_config.productInformationFormId}`;
+const publicationRequestFormId = _config.publicationRequestFormId;
+const productInformationFormId = _config.productInformationFormId;
 
 export const dataPublicationLookup = (row) => {
   if (row.data_publication_request !== '') {
@@ -46,7 +46,7 @@ export const dataProductInformationLookup = (row) => {
 export const tableColumns = [
   {
     Header: 'Status',
-    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status}</Link>,
+    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status_message}</Link>,
     id: 'status_message',
     width: 100
   },
