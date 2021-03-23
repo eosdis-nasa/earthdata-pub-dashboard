@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 0.1.4 - 2021-03-23
 
+- [Corrected links spelling and variables to forms](495b0e1d8ffdea1832b7f04e6b6d836af9b4cead)
 - [Corrected status so it displays in the requests table](ffa0f9c6be1f89a6726541c7385a2b8bd770c822)
 
 ## 0.1.3 - 2021-03-05
