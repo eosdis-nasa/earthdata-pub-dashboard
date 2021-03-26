@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
-import { strings } from '../locale';
+// import { strings } from '../locale';
 import AllRequests from './list';
-import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
+// import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
 import RequestOverview from './request';
 import RequestsOverview from './overview';
 import EditMetadata from './edit-metadata';
@@ -33,14 +33,19 @@ const Requests = ({
     }
   }
 
-  function query () {
-    // dispatch(getCount({
-    //   type: 'requests'
-    // }));
-  }
+  // function query () {
+  // dispatch(getCount({
+  //   type: 'requests'
+  // }));
+  // }
   return (
     <div className='page__requests'>
-      <DatePickerHeader onChange={query} heading={strings.all_submissions}/>
+      {/*  <DatePickerHeader onChange={query} heading={strings.all_submissions}/> */}
+      <div className='content__header'>
+        <div className='row'>
+          <h1 className='heading--xlarge heading--shared-content'>Groups</h1>
+        </div>
+      </div>
       <div className='page__content'>
         <div className='wrapper__sidebar'>
           <Sidebar
