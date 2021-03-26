@@ -43,7 +43,7 @@ const Requests = ({
       {/*  <DatePickerHeader onChange={query} heading={strings.all_submissions}/> */}
       <div className='content__header'>
         <div className='row'>
-          <h1 className='heading--xlarge heading--shared-content'>Groups</h1>
+          <h1 className='heading--xlarge heading--shared-content'>Requests</h1>
         </div>
       </div>
       <div className='page__content'>
