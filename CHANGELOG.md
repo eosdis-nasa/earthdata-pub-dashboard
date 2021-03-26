@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 0.1.5 - 2021-03-26
 
-- [Moved logo to assets to see if on sit it sees the logo](495b0e1d8ffdea1832b7f04e6b6d836af9b4cead)
+- [Moved logo to assets to see if on sit it sees the logo](4fba9c52d00111cb6db548d77624fe7f9df36388)
 
 ## 0.1.4 - 2021-03-23
 
