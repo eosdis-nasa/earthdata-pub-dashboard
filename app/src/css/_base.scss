@@ -173,17 +173,20 @@ a:active {
     text-align: center;
     max-height: 15px;
     img {
-      padding-top: 7px;
+      // padding-top: 7px;  Adjusted for hiding DatePickerHeader
+      padding-top: 20px;
       height: 30px;
       width: 60px;
     }
   }
   nav{
-    height: 4.688em;
+    // height: 4.688em; adjusted for hiding DatePickerHeader
+    height: 5.688em;
   }
   nav ul {
     display: flex;
-    height: 47px;
+    height: 47px; 
+    margin-top: 1rem; // adjusted for hiding DatePickerHeader
   }
   nav li {
     padding: 1.5em 0 1.2em;
@@ -257,7 +260,7 @@ a:active {
   padding-top: 2em;
   padding-bottom: 2em;
   box-shadow: $shadow__header;
-  min-height:110px;
+  // min-height:110px; Removed so it does not look weird with other page headers with hidden DatePickerHeader
   h1 {
     margin-bottom: .3em;
   }

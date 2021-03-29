@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import { listQuestions } from '../../actions';
-import { strings } from '../locale';
+// import { strings } from '../locale';
 // import AllQuestions from './list';
-import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
+// import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
 import QuestionOverview from './question';
 import QuestionsOverview from './overview';
 
@@ -27,11 +27,11 @@ const Questions = ({
   const { pathname } = location;
   const count = get(stats, 'count.data.questions.count');
   dispatch(listQuestions());
-  const [queryOptions] = useState({});
+  // const [queryOptions] = useState({});
 
-  function query () {
-    dispatch(listQuestions(queryOptions));
-  }
+  // function query () {
+  //   dispatch(listQuestions(queryOptions));
+  // }
 
   // function onQueryChange (newQueryOptions) {
   //   if (!isEqual(newQueryOptions, queryOptions)) {
@@ -42,7 +42,12 @@ const Questions = ({
 
   return (
     <div className='page__questions'>
-      <DatePickerHeader onChange={query} heading={strings.all_questions}/>
+      {/* <DatePickerHeader onChange={query} heading={strings.all_questions}/> */}
+      <div className='content__header'>
+        <div className='row'>
+          <h1 className='heading--xlarge heading--shared-content'>Questions</h1>
+        </div>
+      </div>
       <div className='page__content'>
         <div className='wrapper__sidebar'>
           <Sidebar
