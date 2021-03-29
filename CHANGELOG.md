@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.1.5 - 2021-03-26
 
 - [Moved logo to assets to see if on sit it sees the logo](4fba9c52d00111cb6db548d77624fe7f9df36388)
+- [hid unworking DatePickerHeader for Testing](a9dfdc43d4846f4f59995fe88c6f26c1daedb634)
 
 ## 0.1.4 - 2021-03-23
 
