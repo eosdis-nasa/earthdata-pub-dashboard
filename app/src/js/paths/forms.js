@@ -7,7 +7,7 @@ const formRoutes = [
 
 const singleFormRoutes = [
   [strings.back_to_submissions, '/requests', 'sidebar__nav'],
-  [strings.view_forms_list, null, 'sidebar__nav']
+  // [strings.view_forms_list, null, 'sidebar__nav']
 ];
 
 const empty = [['', '']];
