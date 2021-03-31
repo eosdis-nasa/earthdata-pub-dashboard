@@ -28,12 +28,12 @@ export const dataPublicationLookup = (row) => {
     if (!newDataPublicationRequest.match(/formId/g)) {
       newDataPublicationRequest += `?formId=${publicationRequestFormId}`;
     } else {
-      console.log(`ERROR in dataPublicationLookup, config formsUrl is ${_config.formsUrl}, config newPublicationRequestUrl is ${_config.newPublicationRequestUrl}, formId is ${publicationRequestFormId}`);
+      console.log(`?formId=${publicationRequestFormId} was not added, newDataPublicationRequest is ${newDataPublicationRequest}`);
     }
     if (!newDataPublicationRequest.match(/requestId/g)) {
       newDataPublicationRequest += `&requestId=${row.id}`;
     } else {
-      console.log(`ERROR in dataPublicationLookup, config formsUrl is ${_config.formsUrl}, config newPublicationRequestUrl is ${_config.newPublicationRequestUrl}, requestId is ${row.id}`);
+      console.log(`?requestId=${row.id} was not added, newDataPublicationRequest is ${newDataPublicationRequest}`);
     }
     return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
   }
@@ -46,12 +46,12 @@ export const dataProductInformationLookup = (row) => {
     if (!newDataProductInformation.match(/formId/g)) {
       newDataProductInformation += `?formId=${productInformationFormId}`;
     } else {
-      console.log(`ERROR in dataProductInformationLookup, config formsUrl is ${_config.formsUrl}, config newProductInformation Url is ${_config.newProductInformationUrl}, formId is ${productInformationFormId}`);
+      console.log(`?formId=${productInformationFormId} was not added, newDataProductInformation is ${newDataProductInformation}`);
     }
     if (!newDataProductInformation.match(/requestId/g)) {
       newDataProductInformation += `&requestId=${row.id}`;
     } else {
-      console.log(`ERROR in dataProductInformationLookup, config formsUrl is ${_config.formsUrl}, config newProductInformation Url is ${_config.newProductInformationUrl}, requestId is ${row.id}`);
+      console.log(`?requestId=${row.id} was not added, newDataProductInformation is ${newDataProductInformation}`);
     }
     return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
   }
