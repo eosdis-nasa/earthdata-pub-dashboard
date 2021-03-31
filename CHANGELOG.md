@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.1.7 - 2021-03-31
+
+- [Imported logo as image asset](2dae94bd88bae5d2fc2fee892481ac157d8d9ea7)
+
 ## 0.1.6 - 2021-03-30
 
 - [Hid unworking forms list for testing](29f961935c1126e8a42ee8d7fe865dadfc1b2706)
