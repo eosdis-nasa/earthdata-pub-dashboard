@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.1.6 - 2021-03-30
+
+- [Hid unworking forms list for testing](29f961935c1126e8a42ee8d7fe865dadfc1b2706)
+
 ## 0.1.5 - 2021-03-26
 
 - [Moved logo to assets to see if on sit it sees the logo](4fba9c52d00111cb6db548d77624fe7f9df36388)
