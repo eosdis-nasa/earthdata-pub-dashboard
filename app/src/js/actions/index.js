@@ -139,10 +139,9 @@ export const getRequest = (requestId) => ({
 export const listRequests = (options) => ({
   [CALL_API]: {
     type: types.REQUESTS,
-    method: 'GET',
+    method: 'POST',
     id: null,
-    path: 'data/submissions',
-    qs: Object.assign({ per_page: defaultPageLimit }, options)
+    path: 'submission/active'
   }
 });
 
