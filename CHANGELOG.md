@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.1.7 - 2021-03-31
+
+- [added_logging_for_help_detecting_errors_in_urls](63dba13260d66d1855d5f63a8c179b974f7990bd)
+
 ## 0.1.6 - 2021-03-30
 
 - [Hid unworking forms list for testing](29f961935c1126e8a42ee8d7fe865dadfc1b2706)
