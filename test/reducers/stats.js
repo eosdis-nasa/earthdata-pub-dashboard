@@ -74,7 +74,7 @@ test('COUNT updates count for a requested type: granules replaces granules exist
   var id = null;
   var type = COUNT;
   var requestAction = {
-    url: 'http://localhost:5001/stats/aggregate',
+    url: 'http://localhost:8080/stats/aggregate',
     qs: {
       type: 'granules',
       field: 'status'
@@ -122,78 +122,6 @@ test('COUNT updates count for a requested type: granules replaces granules exist
             { key: 'completed', count: 6 },
             { key: 'failed', count: 2 },
             { key: 'running', count: 2 }
-          ]
-        }
-      },
-      inflight: false,
-      error: null
-    }
-  };
-
-  var actual = reducer(testState, action);
-
-  t.deepEqual(expected, actual);
-});
-
-test('COUNT adds a requested type: collections added to counts  ', (t) => {
-  var id = null;
-  var type = COUNT;
-  var requestAction = {
-    url: 'http://localhost:5001/stats/aggregate',
-    qs: {
-      type: 'collections',
-      field: 'status'
-    }
-  };
-  var body = {
-    count: [
-      { key: 'completed', count: 60 },
-      { key: 'failed', count: 12 },
-      { key: 'running', count: 20 }
-    ]
-  };
-  var action = { id, type, data: body, config: requestAction };
-  var testState = {
-    stats: {
-      data: {},
-      inflight: false,
-      error: null
-    },
-    count: {
-      data: {
-        granules: {
-          count: [
-            { key: 'completed', count: 6034 },
-            { key: 'failed', count: 93 },
-            { key: 'running', count: 41 }
-          ]
-        }
-      },
-      inflight: true,
-      error: null
-    }
-  };
-
-  const expected = {
-    stats: {
-      data: {},
-      inflight: false,
-      error: null
-    },
-    count: {
-      data: {
-        granules: {
-          count: [
-            { key: 'completed', count: 6034 },
-            { key: 'failed', count: 93 },
-            { key: 'running', count: 41 }
-          ]
-        },
-        collections: {
-          count: [
-            { key: 'completed', count: 60 },
-            { key: 'failed', count: 12 },
-            { key: 'running', count: 20 }
           ]
         }
       },
@@ -261,7 +189,7 @@ test('COUNT_ERROR sets the error to the action error.', (t) => {
   var id = null;
   const type = COUNT_ERROR;
   const theError = 'An Error Occurred';
-  var action = {id, type, error: theError};
+  var action = { id, type, error: theError };
   var testState = {
     stats: {
       data: {},

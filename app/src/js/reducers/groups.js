@@ -11,10 +11,6 @@ import {
   NEW_GROUP_INFLIGHT,
   NEW_GROUP_ERROR,
 
-  GROUP_COLLECTIONS,
-  GROUP_COLLECTIONS_INFLIGHT,
-  GROUP_COLLECTIONS_ERROR,
-
   UPDATE_GROUP,
   UPDATE_GROUP_INFLIGHT,
   UPDATE_GROUP_ERROR,
@@ -49,7 +45,6 @@ export const initialState = {
   dropdowns: {},
   map: {},
   search: {},
-  collections: {},
   created: {},
   updated: {},
   deleted: {},
@@ -92,21 +87,6 @@ export default createReducer(initialState, {
     set(state, ['created', id, 'error'], action.error);
   },
 
-  [GROUP_COLLECTIONS]: (state, action) => {
-    const { data, id } = action;
-    set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'data'], data.results.map(c => c.collectionName));
-  },
-  [GROUP_COLLECTIONS_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['collections', id, 'inflight'], true);
-  },
-  [GROUP_COLLECTIONS_ERROR]: (state, action) => {
-    const { id } = action;
-    set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'error'], action.error);
-  },
-
   [UPDATE_GROUP]: (state, action) => {
     const { data, id } = action;
     set(state, ['map', id, 'data'], data);
@@ -128,7 +108,7 @@ export default createReducer(initialState, {
 
   [GROUPS]: (state, action) => {
     const { data } = action;
-    set(state, ['list', 'data'], data.results);
+    set(state, ['list', 'data'], data);
     set(state, ['list', 'meta'], assignDate(data.meta));
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], false);
@@ -174,10 +154,10 @@ export default createReducer(initialState, {
     const { data } = action;
     // Map the list response to an object with key-value pairs like:
     // displayValue: optionElementValue
-    const options = data.results.reduce((obj, group) => {
+    const options = data.reduce((obj, group) => {
       // Several `results` items can share a `groupName`, but
       // these are de-duplciated by the key-value structure
-      obj[group.groupName] = group.groupName;
+      obj[group.long_name] = group.long_name;
       return obj;
     }, { '': '' });
     set(state, ['dropdowns', 'group', 'options'], options);

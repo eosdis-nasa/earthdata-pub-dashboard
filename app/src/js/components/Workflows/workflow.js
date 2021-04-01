@@ -4,33 +4,25 @@ import Ace from 'react-ace';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { listWorkflows } from '../../actions';
+import { getWorkflow } from '../../actions';
 import config from '../../config';
 import { setWindowEditorRef } from '../../utils/browser';
 import Loading from '../LoadingIndicator/loading-indicator';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import ErrorReport from '../Errors/report';
 
-class Workflow extends React.Component {
+class Workflows extends React.Component {
   constructor () {
     super();
     this.state = { view: 'json' };
-    this.get = this.get.bind(this);
     this.renderReadOnlyJson = this.renderReadOnlyJson.bind(this);
     this.renderJson = this.renderJson.bind(this);
   }
 
-  componentDidUpdate (prevProps) {
-    const { workflowName } = this.props.match.params;
-    if (workflowName !== prevProps.match.params.workflowName) {
-      this.get();
-    }
-  }
-
   componentDidMount () {
-    this.get();
-  }
-
-  get (workflowName) {
-    this.props.dispatch(listWorkflows());
+    const { dispatch } = this.props;
+    const { workflowId } = this.props.match.params;
+    dispatch(getWorkflow(workflowId));
   }
 
   renderReadOnlyJson (name, data) {
@@ -38,8 +30,8 @@ class Workflow extends React.Component {
       <Ace
         mode='json'
         theme={config.editorTheme}
-        name={`collection-read-only-${name}`}
-        readOnly={false}
+        name={`read-only-${name}`}
+        readOnly={true}
         value={JSON.stringify(data, null, '\t')}
         width='auto'
         tabSize={config.tabSize}
@@ -53,24 +45,45 @@ class Workflow extends React.Component {
   }
 
   render () {
-    const { workflows, match: { params: { workflowName } } } = this.props;
-    const data = workflows.map[workflowName];
-    if (!data) {
-      return <Loading />;
-    }
+    const { workflowId } = this.props.match.params;
+    const record = this.props.workflows.detail;
+    const breadcrumbConfig = [
+      {
+        label: 'Dashboard Home',
+        href: '/'
+      },
+      {
+        label: 'Workflows',
+        href: '/workflows'
+      },
+      {
+        label: workflowId,
+        active: true
+      }
+    ];
+
     return (
       <div className='page__component'>
-        <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{workflowName}</h1>
+        <section className='page__section page__section__controls'>
+          <Breadcrumbs config={breadcrumbConfig} />
         </section>
+        <h1 className='heading--large heading--shared-content with-description'>
+          {record.data ? record.data.long_name : '...'}
+        </h1>
         <section className='page__section'>
-          <div className='tab--wrapper'>
-            <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
-              onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
-          </div>
-          <div>
-            {this.state.view === 'list' ? this.renderList(data) : this.renderJson(data)}
-          </div>
+          { record.inflight ? <Loading />
+            : record.error ? <ErrorReport report={record.error} />
+              : record.data
+                ? <div>
+                  <div className='tab--wrapper'>
+                    <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
+                      onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
+                  </div>
+                  <div>
+                    {this.state.view === 'list' ? this.renderList(record.data) : this.renderJson(record.data)}
+                  </div>
+                </div> : null
+          }
         </section>
       </div>
     );
@@ -80,16 +93,15 @@ class Workflow extends React.Component {
     return (
       <ul>
         <li>
-          <label>{data.name}
-            {this.renderReadOnlyJson('recipe', data)}
-          </label>
+          <label>{data.name}</label>
+          {this.renderReadOnlyJson('recipe', data)}
         </li>
       </ul>
     );
   }
 }
 
-Workflow.propTypes = {
+Workflows.propTypes = {
   match: PropTypes.object,
   workflows: PropTypes.object,
   dispatch: PropTypes.func
@@ -97,4 +109,4 @@ Workflow.propTypes = {
 
 export default withRouter(connect(state => ({
   workflows: state.workflows
-}))(Workflow));
+}))(Workflows));

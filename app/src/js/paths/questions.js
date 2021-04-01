@@ -4,11 +4,11 @@ import tally from './tally';
 import { strings } from '../components/locale';
 
 const questionsRoutes = [
-  ['Overview', null]
+  ['', null]
 ];
 
 const singleQuestionRoutes = [
-  [strings.back_to_questions, null, 'sidebar__nav--back']
+  [strings.back_to_questions, '/questions', 'sidebar__nav'],
 ];
 
 const empty = [['', '']];
@@ -17,7 +17,7 @@ const questions = {
   base: 'questions',
   heading: strings.questions,
   routes: (currentRoute, params, count) => {
-    if (currentRoute.indexOf('questions/question') >= 0) {
+    if (currentRoute.indexOf('questions/id') >= 0) {
       return singleQuestionRoutes.map(d => {
         if (!d[1] || d[1].indexOf(':questionId') === -1) return d;
         const copy = d.slice();

@@ -5,10 +5,3 @@ const status = {
   Failed: 'failed'
 };
 export default status;
-
-export const pdrStatus = {
-  Discovered: 'discovered',
-  Parsed: 'parsed',
-  Completed: 'completed',
-  Failed: 'failed'
-};

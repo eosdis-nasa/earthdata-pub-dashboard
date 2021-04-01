@@ -1,32 +1,33 @@
 'use strict';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { fromNow } from '../format';
+import { shortDateNoTimeYearFirst } from '../format';
 
 export const tableColumns = [
   {
+    Header: 'Short Name',
+    accessor: row => <Link to={`forms/id/${row.id}`}>{row.short_name}</Link>,
+    id: 'short_name'
+  },
+  {
     Header: 'Name',
-    accessor: row => <Link to={`forms/form/${row.id}`}>{row.name}</Link>,
-    id: 'name'
+    accessor: row => row.long_name,
+    id: 'long_name'
+  },
+  {
+    Header: 'Description',
+    accessor: row => row.description,
+    id: 'description'
   },
   {
     Header: 'Version',
     accessor: row => row.version,
-    id: 'version'
-  },
-  {
-    Header: 'User Name',
-    accessor: row => <Link to={`users/user/${row.userId}`}>{row.userName}</Link>,
-    id: 'userName'
+    id: 'version',
+    width: '100px'
   },
   {
     Header: 'Created',
-    accessor: row => fromNow(row.createdAt),
-    id: 'createdAt'
-  },
-  {
-    Header: 'Last Updated',
-    accessor: row => fromNow(row.timestamp),
-    id: 'timestamp'
+    accessor: row => shortDateNoTimeYearFirst(row.created_at),
+    id: 'created_at'
   }
 ];

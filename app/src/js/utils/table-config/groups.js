@@ -1,15 +1,24 @@
 'use strict';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { fromNow } from '../format';
 
 export const tableColumns = [
   {
-    Header: 'Name',
-    accessor: row => <Link to={`groups/group/${row.id}`}>{row.name}</Link>,
-    id: 'name'
+    Header: 'Short Name',
+    accessor: row => <Link to={`groups/id/${row.id}`}>{row.short_name}</Link>,
+    id: 'short_name'
   },
   {
+    Header: 'Name',
+    accessor: row => row.long_name,
+    id: 'long_name'
+  },
+  {
+    Header: 'Description',
+    accessor: row => row.description,
+    id: 'description'
+  },
+  /* {
     Header: 'Permissions',
     accessor: row => row.permissions.join(', '),
     id: 'permissions'
@@ -18,15 +27,5 @@ export const tableColumns = [
     Header: 'Subscriptions',
     accessor: row => row.subscriptions.join(', '),
     id: 'subscriptions'
-  },
-  {
-    Header: 'Created',
-    accessor: row => fromNow(row.createdAt),
-    id: 'createdAt'
-  },
-  {
-    Header: 'Last Updated',
-    accessor: row => fromNow(row.updatedAt),
-    id: 'updatedAt'
-  }
+  }, */
 ];

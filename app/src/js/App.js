@@ -12,26 +12,21 @@ import { faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCi
 // Authorization & Error Handling
 // import ErrorBoundary from './components/Errors/ErrorBoundary';
 import NotFound from './components/404';
-import OAuth from './components/oauth';
+import Auth from './components/Auth';
 
 // Components
 import Home from './components/home';
 import Main from '../js/main';
-import Collections from './components/Collections';
-import Granules from './components/Granules';
-import Submissions from './components/Submissions';
-import Pdrs from './components/Pdr';
-import Providers from './components/Providers';
+import Requests from './components/Requests';
 import Users from './components/Users';
 import Groups from './components/Groups';
 import Forms from './components/Forms';
 import Questions from './components/Questions';
 import Workflows from './components/Workflows';
 import Metrics from './components/Metrics';
-import Executions from './components/Executions';
-import Operations from './components/Operations';
+import Roles from './components/Roles';
+import Conversations from './components/Conversations';
 import Rules from './components/Rules';
-import ReconciliationReports from './components/ReconciliationReports';
 import TestApi from './components/testApi';
 
 import config from './config';
@@ -48,21 +43,16 @@ const MainRoutes = () => {
       <Switch>
         <Route exact path='/' component={Home} />
         <Route path='/404' component={NotFound} />
-        <Route path='/collections' component={Collections} />
-        <Route path='/granules' component={Granules} />
-        <Route path='/submissions' component={Submissions} />
-        <Route path='/pdrs' component={Pdrs} />
-        <Route path='/providers' component={Providers} />
+        <Route path='/requests' component={Requests} />
         <Route path='/forms' component={Forms} />
         <Route path='/questions' component={Questions} />
         <Route path='/users' component={Users} />
         <Route path='/groups' component={Groups} />
         <Route path='/workflows' component={Workflows} />
         <Route path='/metrics' component={Metrics} />
-        <Route path='/executions' component={Executions} />
-        <Route path='/operations' component={Operations} />
+        <Route path='/roles' component={Roles} />
+        <Route path='/conversations/' component={Conversations} />
         <Route path='/rules' component={Rules} />
-        <Route path='/reconciliation-reports' component={ReconciliationReports} />
         <Route path='/test-api' component={TestApi} />
       </Switch>
     </Main>
@@ -91,7 +81,7 @@ class App extends Component {
           <ConnectedRouter history={history}>
             <Switch>
               <Redirect exact from='/login' to='/auth' />
-              <Route path='/auth' render={() => this.isLoggedIn() ? <Redirect to='/' /> : <OAuth />} />
+              <Route path='/auth' component={Auth} />
               <Route path='/' render={() => this.isLoggedIn() ? <MainRoutes /> : <Redirect to='/auth' />} />
             </Switch>
           </ConnectedRouter>

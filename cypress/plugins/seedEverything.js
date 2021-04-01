@@ -3,15 +3,14 @@ const serveUtils = require('earthdata-pub-api/api/bin/serveUtils');
 const { eraseDataStack } = require('earthdata-pub-api/api/bin/serve');
 const { localUserName } = require('earthdata-pub-api/api/bin/local-test-defaults');
 
-const collections = require('../fixtures/seeds/collectionsFixture.json');
-const executions = require('../fixtures/seeds/executionsFixture.json');
-const granules = require('../fixtures/seeds/granulesFixture.json');
-const submissions = require('../fixtures/seeds/submissionsFixture.json');
-const providers = require('../fixtures/seeds/providersFixture.json');
 const forms = require('../fixtures/seeds/formsFixture.json');
-const users = require('../fixtures/seeds/usersFixture.json');
 const groups = require('../fixtures/seeds/groupsFixture.json');
-const rules = require('../fixtures/seeds/rulesFixture.json');
+const metrics = require('../fixtures/seeds/metricsFixture.json');
+const questions = require('../fixtures/seeds/questionsFixture.json');
+const requests = require('../fixtures/seeds/requestsFixture.json');
+const roles = require('../fixtures/seeds/rolesFixture.json');
+const users = require('../fixtures/seeds/usersFixture.json');
+const workflows = require('../fixtures/seeds/workflowsFixture.json');
 
 function resetIt () {
   return Promise.all([
@@ -20,53 +19,48 @@ function resetIt () {
   ]);
 }
 
-function seedProviders () {
-  return serveUtils.addProviders(providers.results);
-}
-
 function seedForms () {
   return serveUtils.addForms(forms.results);
-}
-
-function seedUsers () {
-  return serveUtils.addUsers(users.results);
 }
 
 function seedGroups () {
   return serveUtils.addGroups(groups.results);
 }
 
-function seedCollections () {
-  return serveUtils.addCollections(collections.results);
+function seedMetrics () {
+  return serveUtils.addMetrics(metrics.results);
 }
 
-function seedGranules () {
-  return serveUtils.addGranules(granules.results);
+function seedQuestions () {
+  return serveUtils.addQuestions(questions.results);
 }
 
-function seedSubmissions () {
-  return serveUtils.addSubmissions(submissions.results);
+function seedRequests () {
+  return serveUtils.addRequests(requests.results);
 }
 
-function seedExecutions () {
-  return serveUtils.addExecutions(executions.results);
+function seedRoles () {
+  return serveUtils.addRoles(roles.results);
 }
 
-function seedRules () {
-  return serveUtils.addRules(rules.results);
+function seedUsers () {
+  return serveUtils.addUsers(users.results);
+}
+
+function seedWorkflows () {
+  return serveUtils.addWorkflows(workflows.results);
 }
 
 function seedEverything () {
   return resetIt()
-    .then(seedRules)
-    .then(seedCollections)
-    .then(seedGranules)
-    .then(seedSubmissions)
-    .then(seedExecutions)
-    .then(seedProviders)
-    .then(seedUsers)
+    .then(seedForms)
     .then(seedGroups)
-    .then(seedForms);
+    .then(seedMetrics)
+    .then(seedQuestions)
+    .then(seedRequests)
+    .then(seedRoles)
+    .then(seedUsers)
+    .then(seedWorkflows);
 }
 
 module.exports = {

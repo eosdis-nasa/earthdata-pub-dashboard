@@ -1,13 +1,13 @@
 'use strict';
 import tally from './tally';
-
+import { strings } from '../components/locale';
 const formRoutes = [
-  ['Overview', null]
+  ['', null]
 ];
 
 const singleFormRoutes = [
-  ['Back to Submissions', '/submissions', 'sidebar__nav'],
-  ['View List of Forms', null, 'sidebar__nav']
+  [strings.back_to_submissions, '/requests', 'sidebar__nav'],
+  // [strings.view_forms_list, null, 'sidebar__nav']
 ];
 
 const empty = [['', '']];
@@ -16,7 +16,7 @@ const forms = {
   base: 'forms',
   heading: 'Forms',
   routes: (currentRoute, params, count) => {
-    if (currentRoute.indexOf('/forms/form') >= 0) {
+    if (currentRoute.indexOf('forms/id') >= 0) {
       return singleFormRoutes;
     } else if (currentRoute.slice(0, 10) !== '/forms') {
       return empty;

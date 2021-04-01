@@ -85,7 +85,7 @@ class AddRecord extends React.Component {
             <Schema
               data={data}
               schema={schema}
-              pk={'new-collection'}
+              pk={'new'}
               onSubmit={this.post}
               onCancel={this.navigateBack}
               status={record.status}
@@ -123,8 +123,8 @@ AddRecord.propTypes = {
 
   // Specifies schema properties to include on the form.  Each element in this
   // array may be either a string that specifies the full path of the property
-  // within the schema (e.g., "collection.name" and "collection.version") or a
-  // regular expression (e.g., /^collection/).
+  // within the schema (e.g., "name" and "version") or a
+  // regular expression (e.g., /^name/).
   include: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(RegExp)])
   ),

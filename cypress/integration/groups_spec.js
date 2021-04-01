@@ -6,7 +6,7 @@ describe('Dashboard Groups Page', () => {
       cy.visit('/groups');
       shouldBeRedirectedToLogin();
       const name = 'User';
-      cy.visit(`/groups/group/${name}`);
+      cy.visit(`/groups/id/${name}`);
       shouldBeRedirectedToLogin();
     });
   });
@@ -61,7 +61,7 @@ describe('Dashboard Groups Page', () => {
       cy.get('group div button').contains('Submit').click();
       cy.wait('@postGroup');
       cy.wait('@getGroup');
-      cy.url().should('include', `groups/group/${name}`);
+      cy.url().should('include', `groups/id/${name}`);
       cy.contains('.heading--xlarge', 'Groups');
       cy.contains('.heading--large', name);
       cy.contains('.heading--medium', 'Group Overview');
@@ -80,13 +80,13 @@ describe('Dashboard Groups Page', () => {
       cy.contains('a', 'Back to Groups').click();
       cy.wait('@getGroups');
       cy.contains('.table .tbody .tr a', name)
-        .should('have.attr', 'href', `/groups/group/${name}`);
+        .should('have.attr', 'href', `/groups/id/${name}`);
     });
 
     it('should edit a group', () => {
       const name = 'Test Group';
 
-      cy.visit(`/groups/group/${name}`);
+      cy.visit(`/groups/id/${name}`);
       cy.contains('.heading--large', name);
       cy.contains('a', 'Edit').as('editgroup');
       cy.get('@editgroup')
@@ -120,7 +120,7 @@ describe('Dashboard Groups Page', () => {
 
     it('should delete a group', () => {
       const name = 'Test Group';
-      cy.visit(`/groups/group/${name}`);
+      cy.visit(`/groups/id/${name}`);
       cy.contains('.heading--large', name);
 
       // delete group
@@ -136,7 +136,7 @@ describe('Dashboard Groups Page', () => {
 
     it('should fail to delete a group with an associated rule', () => {
       const name = 'Test Group';
-      cy.visit(`/groups/group/${name}`);
+      cy.visit(`/groups/id/${name}`);
       cy.contains('.heading--large', name);
 
       // delete group

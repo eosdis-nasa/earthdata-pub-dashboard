@@ -33,7 +33,7 @@ test('version error', (t) => {
   const expected = {
     ...testInitialState,
     apiVersion: actionErrorMessage,
-    warning: 'Failed to acquire Earthdatapub API Version'
+    warning: 'Failed to acquire Earthdata Pub API Version'
   };
 
   const action = {

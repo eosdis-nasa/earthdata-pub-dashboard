@@ -1,11 +1,13 @@
 'use strict';
 import { set } from 'object-path';
+import assignDate from './assign-date';
 import {
+  WORKFLOW,
+  WORKFLOW_INFLIGHT,
+  WORKFLOW_ERROR,
   WORKFLOWS,
   WORKFLOWS_INFLIGHT,
-  WORKFLOWS_ERROR,
-  SEARCH_WORKFLOWS,
-  CLEAR_WORKFLOWS_SEARCH
+  WORKFLOWS_ERROR
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 
@@ -16,37 +18,25 @@ export const initialState = {
     inflight: false,
     error: false,
   },
-  map: {},
+  detail: {},
   searchString: null,
 };
 
-function createMap (data) {
-  const map = {};
-  data.forEach(d => {
-    map[d.name] = d;
-  });
-  return map;
-}
-
-/**
- * Filters intput data by filterstring on the data'a object's name.
-*
- * @param {Array} rawData - An array of objects with a name parameter.
- * @param {string} filterString - a string to check if name includes.
- * @returns {Array} Filtered Array of rawData's objects who's names include filterString.
- */
-export const filterData = (rawData, filterString) => {
-  if (filterString !== null) {
-    return rawData.filter(d => d.name && d.name.toLowerCase().includes(filterString.toLowerCase()));
-  }
-  return rawData;
-};
-
 export default createReducer(initialState, {
+  [WORKFLOW]: (state, action) => {
+    const { data } = action;
+    set(state, ['detail', 'inflight'], false);
+    set(state, ['detail', 'data'], assignDate(data));
+  },
+  [WORKFLOW_INFLIGHT]: (state, action) => {
+    set(state, ['detail', 'inflight'], true);
+  },
+  [WORKFLOW_ERROR]: (state, action) => {
+    set(state, ['detail', 'inflight'], false);
+    set(state, ['detail', 'error'], action.error);
+  },
   [WORKFLOWS]: (state, action) => {
-    const { data: rawData } = action;
-    const data = filterData(rawData, state.searchString);
-    set(state, 'map', createMap(data));
+    const { data } = action;
     set(state, ['list', 'data'], data);
     set(state, ['list', 'meta'], { queriedAt: Date.now() });
     set(state, ['list', 'inflight'], false);
@@ -58,11 +48,5 @@ export default createReducer(initialState, {
   [WORKFLOWS_ERROR]: (state, action) => {
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], action.error);
-  },
-  [SEARCH_WORKFLOWS]: (state, action) => {
-    set(state, ['searchString'], action.searchString);
-  },
-  [CLEAR_WORKFLOWS_SEARCH]: (state) => {
-    set(state, ['searchString'], null);
-  },
+  }
 });

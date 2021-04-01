@@ -11,10 +11,6 @@ import {
   NEW_FORM_INFLIGHT,
   NEW_FORM_ERROR,
 
-  FORM_COLLECTIONS,
-  FORM_COLLECTIONS_INFLIGHT,
-  FORM_COLLECTIONS_ERROR,
-
   UPDATE_FORM,
   UPDATE_FORM_INFLIGHT,
   UPDATE_FORM_ERROR,
@@ -49,7 +45,6 @@ export const initialState = {
   dropdowns: {},
   map: {},
   search: {},
-  collections: {},
   created: {},
   updated: {},
   deleted: {},
@@ -92,21 +87,6 @@ export default createReducer(initialState, {
     set(state, ['created', id, 'error'], action.error);
   },
 
-  [FORM_COLLECTIONS]: (state, action) => {
-    const { data, id } = action;
-    set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'data'], data.results.map(c => c.collectionName));
-  },
-  [FORM_COLLECTIONS_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['collections', id, 'inflight'], true);
-  },
-  [FORM_COLLECTIONS_ERROR]: (state, action) => {
-    const { id } = action;
-    set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'error'], action.error);
-  },
-
   [UPDATE_FORM]: (state, action) => {
     const { data, id } = action;
     set(state, ['map', id, 'data'], data);
@@ -128,7 +108,7 @@ export default createReducer(initialState, {
 
   [FORMS]: (state, action) => {
     const { data } = action;
-    set(state, ['list', 'data'], data.results);
+    set(state, ['list', 'data'], data);
     set(state, ['list', 'meta'], assignDate(data.meta));
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], false);
@@ -174,10 +154,10 @@ export default createReducer(initialState, {
     const { data } = action;
     // Map the list response to an object with key-value pairs like:
     // displayValue: optionElementValue
-    const options = data.results.reduce((obj, form) => {
+    const options = data.reduce((obj, form) => {
       // Several `results` items can share a `formName`, but
       // these are de-duplciated by the key-value structure
-      obj[form.formName] = form.formName;
+      obj[form.long_name] = form.long_name;
       return obj;
     }, { '': '' });
     set(state, ['dropdowns', 'group', 'options'], options);

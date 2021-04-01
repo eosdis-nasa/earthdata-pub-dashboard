@@ -27,10 +27,26 @@ export const metricOptionNames = ({ metrics }) => {
   return get(metrics, 'list.data', []).map(metric => metric.name);
 };
 
-export const collectionOptions = ({ collections }) => {
+export const roleOptions = ({ roles }) => {
   const options = { '': '' };
-  get(collections, 'list.data', []).forEach(d => {
+  get(roles, 'list.data', []).forEach(d => {
     options[d.name] = d.name;
   });
   return options;
+};
+
+export const roleOptionNames = ({ roles }) => {
+  return get(roles, 'list.data', []).map(role => role.name);
+};
+
+export const conversationOptions = ({ conversations }) => {
+  const options = { '': '' };
+  get(conversations, 'list.data', []).forEach(d => {
+    options[d.name] = d.name;
+  });
+  return options;
+};
+
+export const conversationOptionNames = ({ conversations }) => {
+  return get(conversations, 'list.data', []).map(conversation => conversation.name);
 };

@@ -4,17 +4,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  searchGroups,
-  clearGroupsSearch,
-  filterGroups,
-  clearGroupsFilter,
+  // searchGroups,
+  // clearGroupsSearch,
+  // filterGroups,
+  // clearGroupsFilter,
   listGroups,
-  getOptionsCollectionName,
+  // getOptionsCollectionName,
   listWorkflows,
   applyWorkflowToGroup,
   interval
 } from '../../actions';
-import { get } from 'object-path';
 import { lastUpdated, tally, displayCase } from '../../utils/format';
 import {
   tableColumns,
@@ -24,15 +23,14 @@ import {
 } from '../../utils/table-config/groups';
 import List from '../Table/Table';
 import LogViewer from '../Logs/viewer';
-import Dropdown from '../DropDown/dropdown';
-import Search from '../Search/search';
-import statusOptions from '../../utils/status';
+// import Dropdown from '../DropDown/dropdown';
+// import Search from '../Search/search';
 import { strings } from '../locale';
 import _config from '../../config';
 import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import ListFilters from '../ListActions/ListFilters';
-import pageSizeOptions from '../../utils/page-size';
+// import ListFilters from '../ListActions/ListFilters';
+// import pageSizeOptions from '../../utils/page-size';
 
 const { updateInterval } = _config;
 
@@ -111,13 +109,12 @@ class AllGroups extends React.Component {
 
   render () {
     const { groups, dispatch, logs } = this.props;
-    const { list, dropdowns } = groups;
+    const { list } = groups;
     const { count, queriedAt } = list.meta;
     const logsQuery = { groupId__exists: 'true' };
     const query = this.generateQuery();
     const view = this.getView();
     const displayCaseView = displayCase(view);
-    const statusOpts = (view === 'all') ? statusOptions : null;
     const tableSortIdx = view === 'failed' ? 'groupId' : 'timestamp';
     const breadcrumbConfig = [
       {
@@ -152,17 +149,16 @@ class AllGroups extends React.Component {
             action={listGroups}
             tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
             query={query}
-            bulkActions={this.generateBulkActions()}
-            rowId='groupId'
+            rowId='id'
             sortIdx={tableSortIdx}
           >
-            <ListFilters>
+            {/* <ListFilters>
               <Dropdown
                 getOptions={getOptionsCollectionName}
-                options={get(dropdowns, ['collectionName', 'options'])}
+                options={get(dropdowns, ['name', 'options'])}
                 action={filterGroups}
                 clear={clearGroupsFilter}
-                paramKey='collectionId'
+                paramKey='id'
                 label='Collection'
                 inputProps={{
                   placeholder: 'All'
@@ -197,7 +193,7 @@ class AllGroups extends React.Component {
                   placeholder: 'Results Per Page',
                 }}
               />
-            </ListFilters>
+            </ListFilters> */}
           </List>
         </section>
         <LogViewer

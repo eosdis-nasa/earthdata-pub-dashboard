@@ -5,12 +5,12 @@ import test from 'ava';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
+import { Group } from 'react-redux';
 import { mount, configure } from 'enzyme';
 import {
-  getProvider,
-  updateProvider,
-  clearUpdateProvider
+  getGroup,
+  updateGroup,
+  clearUpdateGroup
 } from '../../../app/src/js/actions';
 import { EditRecord } from '../../../app/src/js/components/Edit/edit.js';
 
@@ -23,27 +23,27 @@ test('EditRecord sends full object when merge property is true', (t) => {
     // so we're extracting the single value (simpleAction) for the reducer.
     (next) => (action) => next(Object.values(action)[0]);
   const mockStore = configureMockStore([monkeyInTheMiddle]);
-  const provider = { id: 123, foo: 'bar' };
-  const providersState = { map: { [provider.id]: { data: provider } } };
-  const schemaKey = 'provider';
+  const group = { id: 'bf07c445-8217-4f97-827a-82838cce36fb', name: 'ASDC' };
+  const groupsState = { map: { [group.id]: { data: group } } };
+  const schemaKey = 'group';
   const schema = { [schemaKey]: {} };
   const store = mockStore({});
 
   const editRecordWrapper = mount(
-    <Provider store={store}>
+    <Group store={store}>
       <EditRecord
         schema={schema}
         dispatch={store.dispatch}
         merge={true}
-        pk={`${provider.id}`}
+        pk={`${group.id}`}
         schemaKey={schemaKey}
-        state={providersState}
-        getRecord={getProvider}
-        updateRecord={updateProvider}
-        clearRecordUpdate={clearUpdateProvider}
-        backRoute={`providers/provider/${provider.id}`}
+        state={groupsState}
+        getRecord={getGroup}
+        updateRecord={updateGroup}
+        clearRecordUpdate={clearUpdateGroup}
+        backRoute={`groups/group/${group.id}`}
       />
-    </Provider>
+    </Group>
   );
 
   const submitButton = editRecordWrapper.find('.button--submit');
@@ -52,5 +52,5 @@ test('EditRecord sends full object when merge property is true', (t) => {
   submitButton.simulate('click');
 
   t.is(store.getActions().length, 1);
-  t.deepEqual(store.getActions()[0].body, provider);
+  t.deepEqual(store.getActions()[0].body, group);
 });

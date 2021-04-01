@@ -7,19 +7,6 @@ import {
   USER_INFLIGHT,
   USER_ERROR,
 
-  NEW_USER,
-  NEW_USER_INFLIGHT,
-  NEW_USER_ERROR,
-
-  USER_COLLECTIONS,
-  USER_COLLECTIONS_INFLIGHT,
-  USER_COLLECTIONS_ERROR,
-
-  UPDATE_USER,
-  UPDATE_USER_INFLIGHT,
-  UPDATE_USER_ERROR,
-  UPDATE_USER_CLEAR,
-
   USERS,
   USERS_INFLIGHT,
   USERS_ERROR,
@@ -29,10 +16,6 @@ import {
 
   FILTER_USERS,
   CLEAR_USERS_FILTER,
-
-  USER_DELETE,
-  USER_DELETE_INFLIGHT,
-  USER_DELETE_ERROR,
 
   OPTIONS_USERGROUP,
   OPTIONS_USERGROUP_INFLIGHT,
@@ -49,10 +32,7 @@ export const initialState = {
   dropdowns: {},
   map: {},
   search: {},
-  collections: {},
   created: {},
-  updated: {},
-  deleted: {},
   restarted: {},
   stopped: {}
 };
@@ -78,57 +58,9 @@ export default createReducer(initialState, {
     set(state, ['map', id, 'error'], action.error);
   },
 
-  [NEW_USER]: (state, action) => {
-    const { id } = action;
-    set(state, ['created', id, 'status'], 'success');
-  },
-  [NEW_USER_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['created', id, 'status'], 'inflight');
-  },
-  [NEW_USER_ERROR]: (state, action) => {
-    const { id } = action;
-    set(state, ['created', id, 'status'], 'error');
-    set(state, ['created', id, 'error'], action.error);
-  },
-
-  [USER_COLLECTIONS]: (state, action) => {
-    const { data, id } = action;
-    set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'data'], data.results.map(c => c.collectionName));
-  },
-  [USER_COLLECTIONS_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['collections', id, 'inflight'], true);
-  },
-  [USER_COLLECTIONS_ERROR]: (state, action) => {
-    const { id } = action;
-    set(state, ['collections', id, 'inflight'], false);
-    set(state, ['collections', id, 'error'], action.error);
-  },
-
-  [UPDATE_USER]: (state, action) => {
-    const { data, id } = action;
-    set(state, ['map', id, 'data'], data);
-    set(state, ['updated', id, 'status'], 'success');
-  },
-  [UPDATE_USER_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['updated', id, 'status'], 'inflight');
-  },
-  [UPDATE_USER_ERROR]: (state, action) => {
-    const { id } = action;
-    set(state, ['updated', id, 'status'], 'error');
-    set(state, ['updated', id, 'error'], action.error);
-  },
-  [UPDATE_USER_CLEAR]: (state, action) => {
-    const { id } = action;
-    del(state, ['updated', id]);
-  },
-
   [USERS]: (state, action) => {
     const { data } = action;
-    set(state, ['list', 'data'], data.results);
+    set(state, ['list', 'data'], data);
     set(state, ['list', 'meta'], assignDate(data.meta));
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], false);
@@ -155,32 +87,17 @@ export default createReducer(initialState, {
     set(state, ['list', 'params', action.paramKey], null);
   },
 
-  [USER_DELETE]: (state, action) => {
-    const { id } = action;
-    set(state, ['deleted', id, 'status'], 'success');
-    set(state, ['deleted', id, 'error'], null);
-  },
-  [USER_DELETE_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['deleted', id, 'status'], 'inflight');
-  },
-  [USER_DELETE_ERROR]: (state, action) => {
-    const { id } = action;
-    set(state, ['deleted', id, 'status'], 'error');
-    set(state, ['deleted', id, 'error'], action.error);
-  },
-
   [OPTIONS_USERGROUP]: (state, action) => {
     const { data } = action;
     // Map the list response to an object with key-value pairs like:
     // displayValue: optionElementValue
-    const options = data.results.reduce((obj, user) => {
+    const options = data.reduce((obj, user) => {
       // Several `results` items can share a `userName`, but
       // these are de-duplciated by the key-value structure
-      obj[user.userName] = user.userName;
+      obj[user.name] = user.name;
       return obj;
     }, { '': '' });
-    set(state, ['dropdowns', 'group', 'options'], options);
+    set(state, ['dropdowns', 'groups', 'options'], options);
   },
   [OPTIONS_USERGROUP_INFLIGHT]: () => { },
   [OPTIONS_USERGROUP_ERROR]: (state, action) => {

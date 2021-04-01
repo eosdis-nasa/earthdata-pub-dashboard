@@ -2,7 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import {
+  withRouter,
+  // Link
+} from 'react-router-dom';
 import {
   interval,
   getGroup,
@@ -10,20 +13,19 @@ import {
 } from '../../actions';
 import { get } from 'object-path';
 import {
-  fromNow,
-  lastUpdated,
-  deleteText
+// fromNow,
+// lastUpdated,
+// deleteText
 } from '../../utils/format';
-import Table from '../SortableTable/SortableTable';
 import Loading from '../LoadingIndicator/loading-indicator';
-import AsyncCommands from '../DropDown/dropdown-async-command';
+// import AsyncCommands from '../DropDown/dropdown-async-command';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 import _config from '../../config';
 
 const { updateInterval } = _config;
 
-const permissionTableColumns = [
+/* const permissionTableColumns = [
   {
     Header: 'Table Name',
     accessor: row => row
@@ -36,21 +38,19 @@ const subscriptionTableColumns = [
     accessor: row => row,
   }
 ];
-
+*/
 const metaAccessors = [
   {
-    label: 'Group Name',
-    property: 'name'
+    label: 'Short Name',
+    property: 'short_name'
   },
   {
-    label: 'Created',
-    property: 'createdAt',
-    accessor: fromNow
+    label: 'Name',
+    property: 'long_name'
   },
   {
-    label: 'Updated',
-    property: 'updatedAt',
-    accessor: fromNow
+    label: 'Description',
+    property: 'description'
   }
 ];
 
@@ -67,11 +67,6 @@ class GroupOverview extends React.Component {
     const { groupId } = this.props.match.params;
     const immediate = !this.props.groups.map[groupId];
     this.reload(immediate);
-    /* this.props.dispatch(listCollections({
-      limit: 100,
-      fields: 'collectionName',
-      groups: groupId
-    })); */
   }
 
   componentWillUnmount () {
@@ -120,8 +115,8 @@ class GroupOverview extends React.Component {
 
     const errors = this.errors();
 
-    const deleteStatus = get(this.props.groups.deleted, [groupId, 'status']);
-    const dropdownConfig = [{
+    // const deleteStatus = get(this.props.groups.deleted, [groupId, 'status']);
+    /* const dropdownConfig = [{
       text: 'Delete',
       action: this.delete,
       disabled: group.published,
@@ -129,18 +124,16 @@ class GroupOverview extends React.Component {
       success: this.navigateBack,
       confirmAction: true,
       confirmText: deleteText(groupId)
-    }];
+    }]; */
 
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>{groupId}</h1>
-          <AsyncCommands config={dropdownConfig} />
+          {/* <AsyncCommands config={dropdownConfig} />
           <Link
             className='button button--small button--green button--edit form-group__element--right'
-            to={'/groups/edit/' + groupId}>Edit</Link>
-
-          {lastUpdated(group.updatedAt)}
+            to={'/groups/edit/' + groupId}>Edit</Link> */}
         </section>
 
         <section className='page__section'>
@@ -151,7 +144,7 @@ class GroupOverview extends React.Component {
           <Metadata data={group} accessors={metaAccessors} />
         </section>
 
-        <section className='page__section'>
+        {/* <section className='page__section'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Permissions</h2>
           </div>
@@ -169,7 +162,7 @@ class GroupOverview extends React.Component {
             data={group.subscriptions}
             tableColumns={subscriptionTableColumns}
           />
-        </section>
+        </section> */}
       </div>
     );
   }

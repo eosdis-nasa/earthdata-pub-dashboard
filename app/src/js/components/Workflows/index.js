@@ -24,7 +24,7 @@ class Workflows extends React.Component {
             <div className='page__content--shortened'>
               <Switch>
                 <Route exact path='/workflows' component={WorkflowsOverview} />
-                <Route path='/workflows/workflow/:workflowName' component={Workflow} />
+                <Route path='/workflows/id/:workflowId' component={Workflow} />
               </Switch>
             </div>
           </div>

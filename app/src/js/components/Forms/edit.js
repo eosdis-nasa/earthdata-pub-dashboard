@@ -23,7 +23,7 @@ class EditForm extends React.Component {
         getRecord={getForm}
         updateRecord={updateForm}
         clearRecordUpdate={clearUpdateForm}
-        backRoute={`/forms/form/${formId}`}
+        backRoute={`/forms/id/${formId}`}
       />
     );
   }

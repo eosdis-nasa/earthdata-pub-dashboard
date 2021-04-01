@@ -168,18 +168,25 @@ a:active {
   h1 {
     float: left;
     margin-right: 2.5em;
-    padding-top: 1.3em;
+    color:white;
+    font-weight: 1000;
+    text-align: center;
+    max-height: 15px;
     img {
-      height: 26px;
-      width: 165px;
+      // padding-top: 7px;  Adjusted for hiding DatePickerHeader
+      padding-top: 20px;
+      height: 30px;
+      width: 60px;
     }
   }
   nav{
-    height: 4.688em;
+    // height: 4.688em; adjusted for hiding DatePickerHeader
+    height: 5.688em;
   }
   nav ul {
     display: flex;
-    height: 47px;
+    height: 47px; 
+    margin-top: 1rem; // adjusted for hiding DatePickerHeader
   }
   nav li {
     padding: 1.5em 0 1.2em;
@@ -253,7 +260,7 @@ a:active {
   padding-top: 2em;
   padding-bottom: 2em;
   box-shadow: $shadow__header;
-
+  // min-height:110px; Removed so it does not look weird with other page headers with hidden DatePickerHeader
   h1 {
     margin-bottom: .3em;
   }
@@ -339,7 +346,10 @@ a:active {
     font-weight: 400;
   }
 }
-
+.sidebar .sidebar__nav--back {
+  margin-bottom:unset;
+  padding-bottom: unset;
+}
 .sidebar:before {
   content: "";
   /*position: absolute;*/
@@ -407,18 +417,12 @@ a:active {
 .page_section.metrics--overview .heading__wrapper--border {
   margin-top: 0em;
 }
+.wrapper--border {
+  border-bottom: 1px solid #e2dfdf;
+}
 
 .page__section.datetime{
-  margin-bottom: 7.5em;
-}
-
-.collection__options--top ul{
-  display: flex;
-  align-items: center;
-}
-
-.collection__options--top li:nth-child(2){
-  margin-left: auto;
+  margin-bottom: 9em;
 }
 
 .page__section__controls{
@@ -433,6 +437,9 @@ a:active {
   padding: 25px 0 25px 0;
   background-color: #1E6B9D;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+}
+.home_submissions_table {
+  margin-bottom:3em;
 }
 
 .top{

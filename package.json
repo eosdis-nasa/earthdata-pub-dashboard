@@ -1,13 +1,13 @@
 {
   "name": "earthdata-pub-dashboard",
-  "version": "0.1.0",
-  "description": "A dashboard for Earthdatapub API",
+  "version": "0.2.0",
+  "description": "A dashboard for Earthdata Pub API",
   "repository": {
     "type": "git",
     "url": "https://git.earthdata.nasa.gov/scm/EDPUB/dashboard.git"
   },
   "author": {
-    "name": "Earthdatapub Dev Team"
+    "name": "Earthdata Pub Dev Team"
   },
   "license": "Apache-2.0",
   "bugs": {
@@ -19,6 +19,7 @@
     "node": ">=12.18.0"
   },
   "scripts": {
+    "clean-modules": "rm -rf package-lock.json node_modules/",
     "audit-ci": "audit-ci --high -p npm",
     "serve": "NODE_ENV=development webpack serve --config webpack.dev.js",
     "serve-hot": "NODE_ENV=development webpack serve --hot --config webpack.dev.js",

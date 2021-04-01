@@ -12,14 +12,14 @@ to restart automatic updates.
 
 ## Searching and filtering
 
-Many tables provide dropdowns to filter the data based on attributes like stage
-or status. Often, you will find search fields where you can enter arbitrary search
+Many tables provide dropdowns to filter the data based on attributes like status. 
+Often, you will find search fields where you can enter arbitrary search
 strings. As you type, the Earthdata Pub Dashboard and API will attempt to find
 records containing attributes with **prefixes** that match your search string.
 
-For example, say a submission has the stage `In-progress`. In the submissions
-section under "All Submissions," searching for that stage will return a selection
-containing submissions that relate. However, searching submissions with the stage
+For example, say a request has the stage `In-progress`. In the requests
+section under "All Requests," searching for that stage will return a selection
+containing requests that relate. However, searching requests with the stage
 'Review' are not shown.
 
 ## Sorting

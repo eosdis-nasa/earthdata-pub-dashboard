@@ -1,123 +1,81 @@
 'use strict';
-
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
-import { get } from 'object-path';
-import cloneDeep from 'lodash.clonedeep';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import { connect, useDispatch } from 'react-redux';
 import {
-  listUsers,
-  getCount,
-  interval,
-  filterUsers,
-  clearUsersFilter
+  // getCount,
+  // searchUsers,
+  // clearUsersSearch,
+  // filterUsers,
+  // clearUsersFilter,
+  listUsers
 } from '../../actions';
-import { lastUpdated, tally, displayCase } from '../../utils/format';
+import { lastUpdated } from '../../utils/format';
 import { tableColumns } from '../../utils/table-config/users';
 import List from '../Table/Table';
-import PropTypes from 'prop-types';
-import Overview from '../Overview/overview';
-import _config from '../../config';
-import Dropdown from '../DropDown/dropdown';
-import pageSizeOptions from '../../utils/page-size';
-import ListFilters from '../ListActions/ListFilters';
+// import Overview from '../Overview/overview';
+import { strings } from '../locale';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
-const { updateInterval } = _config;
-
-class UsersOverview extends React.Component {
-  constructor () {
-    super();
-    this.queryStats = this.queryStats.bind(this);
-    this.generateQuery = this.generateQuery.bind(this);
-    this.renderOverview = this.renderOverview.bind(this);
+const breadcrumbConfig = [
+  {
+    label: 'Dashboard Home',
+    href: '/'
+  },
+  {
+    label: 'Users',
+    active: true
   }
+];
 
-  componentDidMount () {
-    this.cancelInterval = interval(this.queryStats, updateInterval, true);
-  }
-
-  componentWillUnmount () {
-    if (this.cancelInterval) { this.cancelInterval(); }
-  }
-
-  queryStats () {
-    this.props.dispatch(getCount({
-      type: 'collections',
-      field: 'users'
-    }));
-    this.props.dispatch(getCount({
-      type: 'users',
-      field: 'status'
-    }));
-  }
-
-  generateQuery () {
-    return {};
-  }
-
-  renderOverview (count) {
-    const overview = count.map(d => [tally(d.count), displayCase(d.key)]);
-    return <Overview items={overview} inflight={false} />;
-  }
-
-  render () {
-    const { list } = this.props.users;
-    const { stats } = this.props;
-    const { count, queriedAt } = list.meta;
-
-    // Incorporate the collection counts into the `list`
-    const mutableList = cloneDeep(list);
-    const collectionCounts = get(stats.count, 'data.collections.count', []);
-
-    mutableList.data.forEach(d => {
-      d.collections = get(collectionCounts.find(c => c.key === d.name), 'count', 0);
-    });
-    return (
-      <div className='page__component'>
-        <section className='page__section'>
-          <section className='page__section page__section__header-wrapper'>
-            <h1 className='heading--large heading--shared-content with-description'>User Overview</h1>
-            {lastUpdated(queriedAt)}
-          </section>
-          <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content'>Users <span className='num--title'>{count ? `${count}` : 0}</span></h2>
-          </div>
-          <div className='filter__button--add'>
-            <Link className='button button--green button--add button--small form-group__element' to='/users/add'>Add User</Link>
-          </div>
-          <List
-            list={mutableList}
-            dispatch={this.props.dispatch}
-            action={listUsers}
-            tableColumns={tableColumns}
-            query={this.generateQuery()}
-            bulkActions={[]}
-            rowId='userName'
-            sortIdx='timestamp'
-          >
-            <ListFilters>
-              <Dropdown
-                options={pageSizeOptions}
-                action={filterUsers}
-                clear={clearUsersFilter}
-                paramKey={'limit'}
-                label={'Limit Results'}
-                inputProps={{
-                  placeholder: 'Results Per Page'
-                }}
-              />
-            </ListFilters>
-          </List>
-        </section>
-      </div>
-    );
-  }
-}
-
-UsersOverview.propTypes = {
-  dispatch: PropTypes.func,
-  users: PropTypes.object,
-  stats: PropTypes.object
+const UsersOverview = ({ users }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(listUsers());
+  }, [users.searchString, dispatch]);
+  const { queriedAt } = users.list.meta;
+  return (
+    <div className='page__component'>
+      <section className='page__section page__section__controls'>
+        <Breadcrumbs config={breadcrumbConfig} />
+      </section>
+      <section className='page__section page__section__header-wrapper'>
+        <div className='page__section__header'>
+          <h1 className='heading--large heading--shared-content with-description '>{strings.user_overview}</h1>
+          {lastUpdated(queriedAt)}
+        </div>
+      </section>
+      <section className='page__section'>
+        <div className='heading__wrapper--border'>
+          <h2 className='heading--medium heading--shared-content with-description'>{strings.all_users} <span className='num--title'>{users.list.data.length}</span></h2>
+        </div>
+        <List
+          list={users.list}
+          dispatch={dispatch}
+          action={listUsers}
+          tableColumns={tableColumns}
+          query={{}}
+          rowId='id'
+          sortIdx='long_name'
+        >
+        </List>
+      </section>
+    </div>
+  );
 };
 
-export default withRouter(connect(state => state)(UsersOverview));
+UsersOverview.propTypes = {
+  users: PropTypes.object,
+  stats: PropTypes.object,
+  dispatch: PropTypes.func,
+  config: PropTypes.object
+};
+
+export { UsersOverview };
+
+export default withRouter(connect(state => ({
+  stats: state.stats,
+  users: state.users,
+  config: state.config
+}))(UsersOverview));

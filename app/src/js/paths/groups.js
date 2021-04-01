@@ -1,12 +1,12 @@
 'use strict';
 import tally from './tally';
-
+import { strings } from '../components/locale';
 const groupRoutes = [
-  ['Overview', null]
+  ['', null]
 ];
 
 const singleGroupRoutes = [
-  ['Back to Groups', null, 'sidebar__nav--back']
+  [strings.back_to_groups, null, 'sidebar__nav--back']
 ];
 
 const empty = [['', '']];
@@ -15,7 +15,7 @@ const groups = {
   base: 'groups',
   heading: 'Groups',
   routes: (currentRoute, params, count) => {
-    if (currentRoute.indexOf('/groups/group') >= 0) {
+    if (currentRoute.indexOf('groups/id') >= 0) {
       return singleGroupRoutes;
     } else if (currentRoute.slice(0, 10) !== '/groups') {
       return empty;

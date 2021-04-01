@@ -137,12 +137,6 @@ select option{
   display: flex;
 }
 
-.dropdown__collection .form__dropdown label {
-  display: inline-block;
-  text-align: left;
-  padding-right: .75em;
-}
-
 .search__wrapper {
   position: relative;
   .form__dropdown label {
@@ -277,9 +271,9 @@ select option{
 }
 
 .form-group__element--left {
-  margin-right: 1em;
-  margin-top: 2em;
-  margin-left: 1em;
+  float:left;
+  margin: auto;
+  display: table;
 }
 
 .form__item {

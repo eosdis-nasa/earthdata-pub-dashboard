@@ -4,27 +4,18 @@ import c from 'classnames';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { logout, getApiVersion, getEarthdatapubInstanceMetadata } from '../../actions';
-import { graphicsPath, nav } from '../../config';
-import { window } from '../../utils/browser';
+import { graphicsPath, nav, overviewUrl } from '../../config';
 import { strings } from '../locale';
 import { kibanaAllLogsLink } from '../../utils/kibana';
+import mainLogo from '../../../assets/images/edpub-logo-white-30-x-60.png';
 
 const paths = [
-  // ['', '/pdrs'],
-  // ['Providers', '/providers'],
-  // [strings.collections, '/collections'],
-  // [strings.granules, '/granules'],
-  [strings.submissions, '/submissions'],
+  ['Requests', '/requests'],
   ['Workflows', '/workflows'],
-  // ['Executions', '/executions'],
-  // ['Operations', '/operations'],
-  // ['Rules', '/rules'],
-  // ['Logs', '/logs'],
   ['Metrics', '/metrics'],
-  // ['Reconciliation Reports', '/reconciliation-reports']
-  // ['Forms', '/forms'],
   ['Users', '/users'],
   ['Groups', '/groups'],
+  ['Roles', '/roles'],
 ];
 
 class Header extends React.Component {
@@ -37,18 +28,17 @@ class Header extends React.Component {
   }
 
   componentDidMount () {
-    const { dispatch, api } = this.props;
-    if (api.authenticated) dispatch(getApiVersion());
+    const { dispatch } = this.props;
+    dispatch(getApiVersion());
     dispatch(getEarthdatapubInstanceMetadata());
   }
 
   logout () {
-    const { dispatch } = this.props;
-    dispatch(logout()).then(() => {
-      if (window.location && window.location.reload) {
-        window.location.reload();
-      }
-    });
+    const { dispatch, history } = this.props;
+    dispatch(logout());
+    localStorage.removeItem('auth-token');
+    window.location.href = overviewUrl;
+    history.push('/');
   }
 
   className (path) {
@@ -73,11 +63,10 @@ class Header extends React.Component {
   render () {
     const { authenticated } = this.props.api;
     const activePaths = paths.filter(path => nav.exclude[path[0]] !== true);
-    const logoPath = graphicsPath.substr(-1) === '/' ? `${graphicsPath}${strings.logo}` : `${graphicsPath}/${strings.logo}`;
     return (
       <div className='header' role="navigation" aria-label="Header">
         <div className='row'>
-          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={logoPath} /></Link></h1>
+          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={mainLogo} /></Link><div id="logo_words">EDPUB</div></h1>
           <nav>
             { !this.props.minimal ? <ul>
               {activePaths.map(path => <li
@@ -96,6 +85,7 @@ Header.propTypes = {
   api: PropTypes.object,
   dispatch: PropTypes.func,
   location: PropTypes.object,
+  history: PropTypes.object,
   minimal: PropTypes.bool,
   earthdatapubInstance: PropTypes.object
 };

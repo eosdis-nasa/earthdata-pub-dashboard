@@ -13,6 +13,16 @@ export const fullDate = function (datestring) {
   return moment(datestring).format('kk:mm:ss MM/DD/YY');
 };
 
+export const shortDateNoTime = function (datestring) {
+  if (!datestring) { return nullValue; }
+  return moment(datestring).format('MM/DD/YYYY');
+};
+
+export const shortDateNoTimeYearFirst = function (datestring) {
+  if (!datestring) { return nullValue; }
+  return moment(datestring).format('YYYY-MM-DD');
+};
+
 export const parseJson = function (jsonString) {
   const parsed = JSON.parse(jsonString);
   return JSON.stringify(parsed, null, 2);
@@ -67,85 +77,45 @@ export const lastUpdated = function (datestring, text) {
   );
 };
 
-export const collectionSearchResult = function (collection) {
-  const { name, version } = collection;
-  return (
-    <li key={name}>
-      <Link to={`collections/collection/${name}/${version}`}>{name} / {version}</Link>
-    </li>
-  );
+export const submissionLink = function (requestId) {
+  if (!requestId) return nullValue;
+  return <Link to={`/requests/id/${requestId}`}>{requestId}</Link>;
 };
-
-export const granuleSearchResult = function (granule) {
-  const { granuleId, status } = granule;
-  return (
-    <li key={granuleId}>
-      <Link to={`granules/granules/${granuleId}/${status}`}>{granuleId} / {status}</Link>
-    </li>
-  );
-};
-
-export const granuleLink = function (granuleId) {
-  if (!granuleId) return nullValue;
-  return <Link to={`/granules/granule/${granuleId}`}>{granuleId}</Link>;
-};
-
-export const submissionLink = function (submissionId) {
-  if (!submissionId) return nullValue;
-  return <Link to={`/submissions/submission/${submissionId}`}>{submissionId}</Link>;
-};
-export const questionLink = function (questionId, questionTitle, questionName) {
+export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;
-  return <Link to={`/questions/question/${questionId}`}><h3>{questionTitle}</h3>{questionName}</Link>;
-};
-export const dataProducerLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}#${name}`}>{name}</Link>;
-};
-export const pointOfContactLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}#${name}`}>{name}</Link>;
-};
-export const dataProductQuestionaireLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{name}</Link>;
-};
-export const dataSubmissionRequestLink = function (formId, name) {
-  if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{name}</Link>;
-};
-export const pdrLink = function (pdrName) {
-  if (!pdrName) return nullValue;
-  return <Link to={`/pdrs/pdr/${pdrName}`}>{pdrName}</Link>;
-};
-
-export const providerLink = function (provider) {
-  if (!provider) return nullValue;
-  return <Link to={`/providers/provider/${provider}`}>{provider}</Link>;
+  return <Link to={`/questions/id/${questionId}`}>{questionName}</Link>;
 };
 export const groupLink = function (groupId) {
   if (!groupId) return nullValue;
-  return <Link to={`/groups/group/${groupId}`}>{groupId}</Link>;
+  return <Link to={`/groups/id/${groupId}`}>{groupId}</Link>;
 };
 export const userLink = function (userId) {
   if (!userId) return nullValue;
-  return <Link to={`/users/user/${userId}`}>{userId}</Link>;
+  return <Link to={`/users/id/${userId}`}>{userId}</Link>;
 };
 export const formLink = function (formId) {
   if (!formId) return nullValue;
-  return <Link to={`/forms/form/${formId}`}>{formId}</Link>;
+  return <Link to={`/forms/id/${formId}`}>{formId}</Link>;
 };
 export const workflowLink = function (name) {
   if (!name) return nullValue;
-  return <Link to={`/workflows/workflow/${name}`}>{name}</Link>;
+  return <Link to={`/workflows/id/${name}`}>{name}</Link>;
 };
 export const metricLink = function (metricId) {
   if (metricId) return nullValue;
-  return <Link to={`/metrics/metric/${metricId}`}>{metricId}</Link>;
+  return <Link to={`/metrics/id/${metricId}`}>{metricId}</Link>;
+};
+export const roleLink = function (roleId) {
+  if (roleId) return nullValue;
+  return <Link to={`/roles/id/${roleId}`}>{roleId}</Link>;
+};
+export const conversationLink = function (conversationId) {
+  if (conversationId) return nullValue;
+  return <Link to={`/notes/id/${conversationId}`}>{conversationId}</Link>;
 };
 export const messageLink = function (message) {
   if (!message) return nullValue;
-  return <Link to={`/messages/message/${message}`}>{message}</Link>;
+  return <Link to={`/messages/id/${message}`}>{message}</Link>;
 };
 export const bool = function (bool) {
   return bool ? 'Yes' : 'No';
@@ -175,56 +145,6 @@ export const truncate = function (string, to) {
   to = to || 100;
   if (string.length <= to) return string;
   else return string.slice(0, to) + '... Show More';
-};
-
-export const getCollectionId = function (collection) {
-  if (collection && collection.name && collection.version) {
-    return `${collection.name}___${collection.version}`;
-  }
-  return 'unknown';
-};
-
-// "MYD13A1___006" => "MYD13A1 / 006"
-export const collectionName = function (collectionId) {
-  if (!collectionId) return nullValue;
-  return collectionId.split('___').join(' / ');
-};
-
-export const collectionNameVersion = function (collectionId) {
-  if (!collectionId) return nullValue;
-  const [name, version] = collectionId.split('___');
-  return { name, version };
-};
-
-export const constructCollectionNameVersion = function (name, version) {
-  return `${name}___${version}`;
-};
-
-/**
- * Returns the name and version of a collection based on
- * the collectionId used in elasticsearch indexing
- *
- * @param {string} collectionId - collectionId used in elasticsearch index
- * @returns {Object} name and version as object
- */
-export const deconstructCollectionId = function (collectionId) {
-  const [name, version] = collectionId.split('___');
-  return {
-    name,
-    version
-  };
-};
-
-export const collectionLink = function (collectionId) {
-  if (!collectionId) return nullValue;
-  const { name, version } = collectionNameVersion(collectionId);
-  return <Link to={`/collections/collection/${name}/${version}`}>{collectionName(collectionId)}</Link>;
-};
-
-export const collectionHref = function (collectionId) {
-  if (!collectionId) return nullValue;
-  const { name, version } = collectionNameVersion(collectionId);
-  return `/collections/collection/${name}/${version}`;
 };
 
 export const enableText = function (name) {

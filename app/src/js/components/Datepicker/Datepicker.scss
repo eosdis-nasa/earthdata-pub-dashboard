@@ -1,6 +1,7 @@
 .datetime{
   &__info{
     font-weight: $base-font-regular;
+    margin-top: 1rem;
   }
   &__header{
     display: flex;
@@ -31,7 +32,7 @@
     clear: right;
     position: absolute;
     z-index: 0;
-    top: 268px;
+    top: 510px;
   }
   &__wrapper h3{
     font-size: 1.3em;

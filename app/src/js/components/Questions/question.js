@@ -14,7 +14,7 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 function Question ({ title, version, text, help, inputs }) {
   return (
     <div>
-      <h1>Title: {title}</h1>
+      <h3>Title: {title}</h3>
       <h3>Version: {version}</h3>
       <h3>Text: {text}</h3>
       <h3>Help: {help}</h3>
@@ -22,8 +22,8 @@ function Question ({ title, version, text, help, inputs }) {
       <div className='model-builder-array'>
         { inputs.map(input => (
           <Input
-            key={input.id}
-            id={input.id}
+            key={input.control_id}
+            id={input.control_id}
             label={input.label}
             type={input.type} />
         ))}
@@ -55,9 +55,6 @@ class QuestionOverview extends React.Component {
     dispatch(getQuestion(questionId));
   }
 
-  componentWillUnmount () {
-  }
-
   navigateBack () {
     const { history } = this.props;
     history.push('/questions');
@@ -65,15 +62,7 @@ class QuestionOverview extends React.Component {
 
   render () {
     const { questionId } = this.props.match.params;
-    const record = this.props.questions.map[questionId];
-    if (!record || (record.inflight && !record.data)) {
-      return <Loading />;
-    } else if (record.error) {
-      return <ErrorReport report={record.error} />;
-    }
-
-    const question = record.data;
-
+    const record = this.props.questions.detail;
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -95,11 +84,17 @@ class QuestionOverview extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
         <section className='page__section page__section__header-wrapper'>
-          <Question title={question.title}
-            version={question.version}
-            text={question.text}
-            help={question.help}
-            inputs={question.inputs} />
+          { record.inflight && <Loading /> }
+          { record.error ? <ErrorReport report={record.error} />
+            : record.data
+              ? <Question
+                id={record.data.id}
+                title={record.data.long_name}
+                version={record.data.version}
+                text={record.data.text}
+                help={record.data.help}
+                inputs={record.data.inputs} /> : null
+          }
         </section>
       </div>
     );
