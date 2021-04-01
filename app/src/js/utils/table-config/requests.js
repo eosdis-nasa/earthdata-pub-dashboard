@@ -43,15 +43,15 @@ export const formLookup = (row, request, formId, formName) => {
   if (row.forms == null) {
     return newFormLink(row, request, formId);
   } else if (row.forms.length === 1) {
-    if (row.forms[0].id === publicationRequestFormId) {
+    if (row.forms[0].id === formId) {
       return existingFormLink(row, formId, formName);
     } else {
       return newFormLink(row, request, formId);
     }
   } else if (row.forms.length === 2) {
-    if (row.forms[0].id === publicationRequestFormId) {
+    if (row.forms[0].id === formId) {
       return existingFormLink(row, formId, formName);
-    } else if (row.forms[1].id === publicationRequestFormId) {
+    } else if (row.forms[1].id === formId) {
       return existingFormLink(row, formId, formName);
     } else {
       return newFormLink(row, request, formId);
