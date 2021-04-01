@@ -163,10 +163,11 @@ class FormOverview extends React.Component {
   render () {
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
-    const requestId = this.props.location.search.split('=')[1];
+    let requestId = '';
     let daacId = '';
     if (typeof this.props.requests.detail.data !== 'undefined') {
       daacId = this.props.requests.detail.data.daac_id;
+      requestId = this.props.requests.detail.data.id;
     }
     let thisFormUrl = `${_config.formsUrl}?formId=${formId}`;
     if (requestId !== '') {
