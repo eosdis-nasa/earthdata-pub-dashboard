@@ -8,10 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-## 0.1.7 - 2021-03-31
-
-- [Fixed slow load of form detail data](be6daa2fb0fa96bce694040fc0939b11ed29c228)
-
 ## 0.1.6 - 2021-03-30
 
 - [Hid unworking forms list for testing](29f961935c1126e8a42ee8d7fe865dadfc1b2706)
