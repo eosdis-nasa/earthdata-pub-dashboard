@@ -16,51 +16,55 @@ import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 
-let newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
-let newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
+const newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
+const newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
 const publicationRequestFormId = _config.publicationRequestFormId;
 const productInformationFormId = _config.productInformationFormId;
 
-export const dataPublicationLookup = (row) => {
-  if (row.data_publication_request !== '') {
-    return <Link to={`/forms/id/${row.data_publication_request}?requestId=${row.id}`}>Data Publication Request</Link>;
+export const newFormLink = (row, request, formId) => {
+  if (!request.match(/formId/g)) {
+    request += `?formId=${formId}`;
   } else {
-    if (!newDataPublicationRequest.match(/formId/g)) {
-      newDataPublicationRequest += `?formId=${publicationRequestFormId}`;
-    } else {
-      console.log(`?formId=${publicationRequestFormId} was not added, newDataPublicationRequest is ${newDataPublicationRequest}`);
-    }
-    if (!newDataPublicationRequest.match(/requestId/g)) {
-      newDataPublicationRequest += `&requestId=${row.id}`;
-    } else {
-      console.log(`?requestId=${row.id} was not added, newDataPublicationRequest is ${newDataPublicationRequest}`);
-    }
-    return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
+    console.log(`?formId=${formId} was not added, request is ${request}`);
   }
+  if (!request.match(/requestId/g)) {
+    request += `&requestId=${row.id}`;
+  } else {
+    console.log(`?requestId=${row.id} was not added, request is ${request}`);
+  }
+  return <a href={request} className='button button--small button--green button--add form-group__element--left'>New</a>;
 };
 
-export const dataProductInformationLookup = (row) => {
-  if (row.data_product_information !== '') {
-    return <Link to={`/forms/id/${row.data_product_information}?requestId=${row.id}`}>Data Product Information</Link>;
+export const existingFormLink = (row, formId, formName) => {
+  return <Link to={`/forms/id/${formId}?requestId=${row.id}`}>{formName}</Link>;
+};
+
+export const formLookup = (row, request, formId, formName) => {
+  if (row.forms == null) {
+    return newFormLink(row, request, formId);
+  } else if (row.forms.length === 1) {
+    if (row.forms[0].id === formId) {
+      return existingFormLink(row, formId, formName);
+    } else {
+      return newFormLink(row, request, formId);
+    }
+  } else if (row.forms.length === 2) {
+    if (row.forms[0].id === formId) {
+      return existingFormLink(row, formId, formName);
+    } else if (row.forms[1].id === formId) {
+      return existingFormLink(row, formId, formName);
+    } else {
+      return newFormLink(row, request, formId);
+    }
   } else {
-    if (!newDataProductInformation.match(/formId/g)) {
-      newDataProductInformation += `?formId=${productInformationFormId}`;
-    } else {
-      console.log(`?formId=${productInformationFormId} was not added, newDataProductInformation is ${newDataProductInformation}`);
-    }
-    if (!newDataProductInformation.match(/requestId/g)) {
-      newDataProductInformation += `&requestId=${row.id}`;
-    } else {
-      console.log(`?requestId=${row.id} was not added, newDataProductInformation is ${newDataProductInformation}`);
-    }
-    return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
+    return newFormLink(row, request, formId);
   }
 };
 
 export const tableColumns = [
   {
     Header: 'Status',
-    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status_message}</Link>,
+    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status}</Link>,
     id: 'status_message',
     width: 100
   },
@@ -77,20 +81,20 @@ export const tableColumns = [
     width: 100
   },
   {
-    Header: 'Name',
-    accessor: row => row.name || '(no name)',
+    Header: 'Data Product Name',
+    accessor: row => row.form_data.data_product_name_value || '(no name)',
     id: 'name',
     width: 100
   },
   {
     Header: 'Data Publication Request',
-    accessor: row => dataPublicationLookup(row),
+    accessor: row => formLookup(row, newDataPublicationRequest, publicationRequestFormId, 'Data Publication Request'),
     id: 'data_publication_request',
     width: 200
   },
   {
     Header: 'Data Product Information',
-    accessor: row => dataProductInformationLookup(row),
+    accessor: row => formLookup(row, newDataProductInformation, productInformationFormId, 'Data Product Information'),
     id: 'data_product_information',
     width: 200
   },

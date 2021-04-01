@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 0.1.7 - 2021-03-31
 
-- [added_logging_for_help_detecting_errors_in_urls](63dba13260d66d1855d5f63a8c179b974f7990bd)
+- [Use submission/active endpoint for user submissions](e82f83d6cc136e52b56545186212237c2ec0ca41)
+- [Added logging for help detecting errors in urls](63dba13260d66d1855d5f63a8c179b974f7990bd)
 - [Imported logo as image asset](2dae94bd88bae5d2fc2fee892481ac157d8d9ea7)
 - [Fixed slow load of form detail data](be6daa2fb0fa96bce694040fc0939b11ed29c228)
 
