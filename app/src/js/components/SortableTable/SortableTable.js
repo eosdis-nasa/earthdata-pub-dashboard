@@ -156,7 +156,10 @@ const SortableTable = ({
                   {headerGroup.headers.map(column => {
                     return (
                       <div {...column.getHeaderProps()} className='th'>
-                        <div {...column.getSortByToggleProps()} className={`${column.canSort ? 'table__sort' : ''}`}>
+                        {/* <div {...column.getSortByToggleProps()} className={`${column.canSort ? 'table__sort' : ''}`}> Temporarily commenting out for testing because sorting is not working
+                          {column.render('Header')}
+                        </div> */}
+                        <div>
                           {column.render('Header')}
                         </div>
                         <div
