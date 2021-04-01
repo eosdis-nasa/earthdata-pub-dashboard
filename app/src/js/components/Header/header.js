@@ -7,6 +7,7 @@ import { logout, getApiVersion, getEarthdatapubInstanceMetadata } from '../../ac
 import { graphicsPath, nav, overviewUrl } from '../../config';
 import { strings } from '../locale';
 import { kibanaAllLogsLink } from '../../utils/kibana';
+import mainLogo from '../../../assets/images/edpub-logo-white-30-x-60.png';
 
 const paths = [
   ['Requests', '/requests'],
@@ -62,11 +63,10 @@ class Header extends React.Component {
   render () {
     const { authenticated } = this.props.api;
     const activePaths = paths.filter(path => nav.exclude[path[0]] !== true);
-    const logoPath = graphicsPath.substr(-1) === '/' ? `${graphicsPath}${strings.logo}` : `${graphicsPath}/${strings.logo}`;
     return (
       <div className='header' role="navigation" aria-label="Header">
         <div className='row'>
-          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={logoPath} /></Link><div id="logo_words">EDPUB</div></h1>
+          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={mainLogo} /></Link><div id="logo_words">EDPUB</div></h1>
           <nav>
             { !this.props.minimal ? <ul>
               {activePaths.map(path => <li
