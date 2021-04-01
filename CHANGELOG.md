@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.1.8 - 2021-04-01
+
+- [hide sorting on table headers for testing](c84547a55c6bf0880079ae114c67561eef5ebc29)
+
 ## 0.1.7 - 2021-03-31
 
 - [added_logging_for_help_detecting_errors_in_urls](63dba13260d66d1855d5f63a8c179b974f7990bd)
