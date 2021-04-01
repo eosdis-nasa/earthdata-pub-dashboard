@@ -4,21 +4,18 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  interval,
   getForm,
   getRequest
 } from '../../actions';
 import { get } from 'object-path';
 import {
-  shortDateNoTimeYearFirst,
-  lastUpdated
+  shortDateNoTimeYearFirst
 } from '../../utils/format';
+import { strings } from '../locale';
 import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 import _config from '../../config';
-
-const { updateInterval } = _config;
 
 const metaAccessors = [
   {
@@ -49,36 +46,22 @@ const metaAccessors = [
 class FormOverview extends React.Component {
   constructor () {
     super();
-    this.reload = this.reload.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
-    this.errors = this.errors.bind(this);
+    this.displayName = strings.form;
+    this.state = {};
   }
 
   componentDidMount () {
-    const { formId } = this.props.match.params;
-    const immediate = !this.props.forms.map[formId];
-    this.reload(immediate);
-  }
-
-  componentWillUnmount () {
-    if (this.cancelInterval) { this.cancelInterval(); }
-  }
-
-  reload (immediate, timeout) {
-    timeout = timeout || updateInterval;
-    const formId = this.props.match.params.formId;
-    const requestId = this.props.location.search.split('=')[1];
     const { dispatch } = this.props;
-    if (this.cancelInterval) { this.cancelInterval(); }
-    this.cancelInterval = interval(() => {
-      dispatch(getRequest(requestId));
-      dispatch(getForm(formId));
-    }, timeout, immediate);
+    const { formId } = this.props.match.params;
+    const requestId = this.props.location.search.split('=')[1];
+    dispatch(getRequest(requestId));
+    dispatch(getForm(formId));
   }
 
   navigateBack () {
     const { history } = this.props;
-    history.push('/forms');
+    history.push('/requests');
   }
 
   errors () {
@@ -180,10 +163,11 @@ class FormOverview extends React.Component {
   render () {
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
-    const requestId = this.props.location.search.split('=')[1];
+    let requestId = '';
     let daacId = '';
     if (typeof this.props.requests.detail.data !== 'undefined') {
       daacId = this.props.requests.detail.data.daac_id;
+      requestId = this.props.requests.detail.data.id;
     }
     let thisFormUrl = `${_config.formsUrl}?formId=${formId}`;
     if (requestId !== '') {

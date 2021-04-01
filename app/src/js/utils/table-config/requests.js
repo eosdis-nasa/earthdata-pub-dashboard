@@ -48,8 +48,15 @@ export const dataPublicationLookup = (row) => {
       return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
     }
   } else {
-    if (!newDataPublicationRequest.match(/formId/g) && !newDataPublicationRequest.match(/requestId/g)) {
-      newDataPublicationRequest += `?formId=${publicationRequestFormId}&requestId=${row.id}`;
+    if (!newDataPublicationRequest.match(/formId/g)) {
+      newDataPublicationRequest += `?formId=${publicationRequestFormId}`;
+    } else {
+      console.log(`?formId=${publicationRequestFormId} was not added, newDataPublicationRequest is ${newDataPublicationRequest}`);
+    }
+    if (!newDataPublicationRequest.match(/requestId/g)) {
+      newDataPublicationRequest += `&requestId=${row.id}`;
+    } else {
+      console.log(`?requestId=${row.id} was not added, newDataPublicationRequest is ${newDataPublicationRequest}`);
     }
     return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
   }
@@ -82,8 +89,15 @@ export const dataProductInformationLookup = (row) => {
       return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
     }
   } else {
-    if (!newDataProductInformation.match(/formId/g) && !newDataProductInformation.match(/requestId/g)) {
-      newDataProductInformation += `?formId=${productInformationFormId}&requestId=${row.id}`;
+    if (!newDataProductInformation.match(/formId/g)) {
+      newDataProductInformation += `?formId=${productInformationFormId}`;
+    } else {
+      console.log(`?formId=${productInformationFormId} was not added, newDataProductInformation is ${newDataProductInformation}`);
+    }
+    if (!newDataProductInformation.match(/requestId/g)) {
+      newDataProductInformation += `&requestId=${row.id}`;
+    } else {
+      console.log(`?requestId=${row.id} was not added, newDataProductInformation is ${newDataProductInformation}`);
     }
     return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
   }

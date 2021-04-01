@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.1.7 - 2021-03-31
+
+- [added_logging_for_help_detecting_errors_in_urls](63dba13260d66d1855d5f63a8c179b974f7990bd)
+- [Imported logo as image asset](2dae94bd88bae5d2fc2fee892481ac157d8d9ea7)
+- [Fixed slow load of form detail data](be6daa2fb0fa96bce694040fc0939b11ed29c228)
+
+## 0.1.6 - 2021-03-30
+
+- [Hid unworking forms list for testing](29f961935c1126e8a42ee8d7fe865dadfc1b2706)
+
 ## 0.1.5 - 2021-03-26
 
 - [Moved logo to assets to see if on sit it sees the logo](4fba9c52d00111cb6db548d77624fe7f9df36388)
@@ -34,6 +44,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [add pull request template to CONTRIBUTING.md](416a1b2b4fda50e6faa1ef6503723ea8c18bc726)
 
 ## 0.1.3 - 2021-03-03
+
 - [Fix linting errors except Submissions.](566d9a69f05)
 - [Add conversations to dashboard.](7b65c199843)
 - [Update roles view description column to Description to match other views.](624fd363485)
