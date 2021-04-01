@@ -21,20 +21,42 @@ let newDataProductInformation = `${_config.formsUrl}${_config.newProductInformat
 const publicationRequestFormId = _config.publicationRequestFormId;
 const productInformationFormId = _config.productInformationFormId;
 
+export const newDataPublicationLink = (row) => {
+  if (!newDataPublicationRequest.match(/formId/g)) {
+    newDataPublicationRequest += `?formId=${publicationRequestFormId}`;
+  } else {
+    console.log(`?formId=${publicationRequestFormId} was not added, newDataPublicationRequest is ${newDataPublicationRequest}`);
+  }
+  if (!newDataPublicationRequest.match(/requestId/g)) {
+    newDataPublicationRequest += `&requestId=${row.id}`;
+  } else {
+    console.log(`?requestId=${row.id} was not added, newDataPublicationRequest is ${newDataPublicationRequest}`);
+  }
+  return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
+};
+
+export const newDataProductionLink = (row) => {
+  if (!newDataProductInformation.match(/formId/g)) {
+    newDataProductInformation += `?formId=${productInformationFormId}`;
+  } else {
+    console.log(`?formId=${productInformationFormId} was not added, newDataProductInformation is ${newDataProductInformation}`);
+  }
+  if (!newDataProductInformation.match(/requestId/g)) {
+    newDataProductInformation += `&requestId=${row.id}`;
+  } else {
+    console.log(`?requestId=${row.id} was not added, newDataProductInformation is ${newDataProductInformation}`);
+  }
+  return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
+};
+
 export const dataPublicationLookup = (row) => {
   if (row.forms == null) {
-    if (!newDataPublicationRequest.match(/formId/g) && !newDataPublicationRequest.match(/requestId/g)) {
-      newDataPublicationRequest += `?formId=${publicationRequestFormId}&requestId=${row.id}`;
-    }
-    return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
+    return newDataPublicationLink(row);
   } else if (row.forms.length === 1) {
     if (row.forms[0].id === publicationRequestFormId) {
       return <Link to={`/forms/id/${publicationRequestFormId}?requestId=${row.id}`}>Data Publication Request</Link>;
     } else {
-      if (!newDataPublicationRequest.match(/formId/g) && !newDataPublicationRequest.match(/requestId/g)) {
-        newDataPublicationRequest += `?formId=${publicationRequestFormId}&requestId=${row.id}`;
-      }
-      return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
+      return newDataPublicationLink(row);
     }
   } else if (row.forms.length === 2) {
     if (row.forms[0].id === publicationRequestFormId) {
@@ -42,40 +64,21 @@ export const dataPublicationLookup = (row) => {
     } else if (row.forms[1].id === publicationRequestFormId) {
       return <Link to={`/forms/id/${publicationRequestFormId}?requestId=${row.id}`}>Data Publication Request</Link>;
     } else {
-      if (!newDataPublicationRequest.match(/formId/g) && !newDataPublicationRequest.match(/requestId/g)) {
-        newDataPublicationRequest += `?formId=${publicationRequestFormId}&requestId=${row.id}`;
-      }
-      return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
+      return newDataPublicationLink(row);
     }
   } else {
-    if (!newDataPublicationRequest.match(/formId/g)) {
-      newDataPublicationRequest += `?formId=${publicationRequestFormId}`;
-    } else {
-      console.log(`?formId=${publicationRequestFormId} was not added, newDataPublicationRequest is ${newDataPublicationRequest}`);
-    }
-    if (!newDataPublicationRequest.match(/requestId/g)) {
-      newDataPublicationRequest += `&requestId=${row.id}`;
-    } else {
-      console.log(`?requestId=${row.id} was not added, newDataPublicationRequest is ${newDataPublicationRequest}`);
-    }
-    return <a href={newDataPublicationRequest} className='button button--small button--green button--add form-group__element--left'>New</a>;
+    return newDataPublicationLink(row);
   }
 };
 
 export const dataProductInformationLookup = (row) => {
   if (row.forms == null) {
-    if (!newDataProductInformation.match(/formId/g) && !newDataProductInformation.match(/requestId/g)) {
-      newDataProductInformation += `?formId=${productInformationFormId}&requestId=${row.id}`;
-    }
-    return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
+    return newDataProductionLink(row);
   } else if (row.forms.length === 1) {
     if (row.forms[0].id === productInformationFormId) {
       return <Link to={`/forms/id/${productInformationFormId}?requestId=${row.id}`}>Data Product Information</Link>;
     } else {
-      if (!newDataProductInformation.match(/formId/g) && !newDataProductInformation.match(/requestId/g)) {
-        newDataProductInformation += `?formId=${publicationRequestFormId}&requestId=${row.id}`;
-      }
-      return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
+      return newDataProductionLink(row);
     }
   } else if (row.forms.length === 2) {
     if (row.forms[0].id === productInformationFormId) {
@@ -83,23 +86,10 @@ export const dataProductInformationLookup = (row) => {
     } else if (row.forms[1].id === productInformationFormId) {
       return <Link to={`/forms/id/${productInformationFormId}?requestId=${row.id}`}>Data Product Information</Link>;
     } else {
-      if (!newDataProductInformation.match(/formId/g) && !newDataProductInformation.match(/requestId/g)) {
-        newDataProductInformation += `?formId=${productInformationFormId}&requestId=${row.id}`;
-      }
-      return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
+      return newDataProductionLink(row);
     }
   } else {
-    if (!newDataProductInformation.match(/formId/g)) {
-      newDataProductInformation += `?formId=${productInformationFormId}`;
-    } else {
-      console.log(`?formId=${productInformationFormId} was not added, newDataProductInformation is ${newDataProductInformation}`);
-    }
-    if (!newDataProductInformation.match(/requestId/g)) {
-      newDataProductInformation += `&requestId=${row.id}`;
-    } else {
-      console.log(`?requestId=${row.id} was not added, newDataProductInformation is ${newDataProductInformation}`);
-    }
-    return <a href={newDataProductInformation} className='button button--small button--green button--add form-group__element--left'>New</a>;
+    return newDataProductionLink(row);
   }
 };
 
