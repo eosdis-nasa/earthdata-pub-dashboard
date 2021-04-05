@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.2.1 - 2021-04-05
+
+- [Added overviewUrl to config so home page displays intro paragraph](4da69c8c79bf695c8d68a97417a5e0e99dd2ba8f)
+
 ## 0.2.0 - 2021-04-01
 
 - [Release version 0.2 for testing in SIT](af788831be352e445d21df8e438fc8a677e1d49d)
