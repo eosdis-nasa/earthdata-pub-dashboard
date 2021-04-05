@@ -207,7 +207,7 @@ a:active {
       }
     }
     &.rightalign {
-      margin-left: auto;
+      margin-right: 2.5em;
       margin-right: 0;
     }
   }
@@ -238,22 +238,29 @@ a:active {
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
 }
-
+.right-ul{
+  margin-top:0rem!important;
+}
+.logOut{
+  margin-right: 0em!important;
+}
 .rightalign.nav__order-8{
   position: relative;
+  margin-left: auto;
+  height: 47px;
 }
-.rightalign.nav__order-8 .log-icon{
+.log-icon{
+  margin-left: 2rem;
   &:before {
     position: absolute;
     color: $white;
     font-family: 'FontAwesome';
     content: '\f2f5';
     font-weight: 900;
-    right: 3.9em;
+    right: 4em;
     top: 1.54em;
   }
 }
-
 .content__header {
   background-color: $ocean-blue;
   color: $white;
