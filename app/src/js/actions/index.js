@@ -55,6 +55,20 @@ export const fetchToken = (code, state) => {
   };
 };
 
+export const refreshToken = () => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.FETCH_TOKEN,
+        method: 'GET',
+        id: null,
+        path: 'token/refresh',
+        qs: { refresh: true }
+      }
+    });
+  };
+};
+
 export const login = (redirect) => {
   return (dispatch) => {
     dispatch({
@@ -79,6 +93,11 @@ export const interval = function (action, wait, immediate) {
   const intervalId = setInterval(action, wait);
   return () => clearInterval(intervalId);
 };
+
+export const timeout = function (action, wait) {
+  const timeoutId = setTimeout(action, wait);
+  return () => clearTimeout(timeoutId);
+}
 
 export const getApiVersion = () => {
   return (dispatch) => {
@@ -492,7 +511,12 @@ export const getLogs = (options) => {
 
 export const clearLogs = () => ({ type: types.CLEAR_LOGS });
 
-export const logout = () => ({ type: types.LOGOUT });
+export const logout = () => {
+  return (dispatch) => {
+    dispatch({ type: types.LOGOUT });
+    history.push('/auth');
+  }
+}
 
 export const deleteToken = () => ({ type: types.DELETE_TOKEN });
 
