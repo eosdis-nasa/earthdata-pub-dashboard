@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.2.1 - 2021-04-21
 
 - [Add dockerfile for bamboo ci/cd](7a386b490f5cff3a79147e8afddb3d071b55605a)
+- [Added a session timeout warning](61ffffdcb051ac2c8718c8110ededdcc161e3f3b)
 
 ## 0.2.0 - 2021-04-01
 
