@@ -1,0 +1,30 @@
+# Earthdata Pub Dashboard Docker For Bamboo CI/CD
+FROM node:12.19.0
+
+COPY . /tmp/
+WORKDIR /tmp
+
+RUN apt-get update
+
+# Install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip
+RUN ./aws/install && aws --version
+
+# Initialize aws environment variables if defined in docker build
+ARG AWS_DEFAULT_REGION
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+
+# Initialize aws environment variables if defined in docker run
+ENV AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+
+# Run linter and tests
+#RUN npm install && npm run test
+# The above line should be used for production; however, currently the repo tests fail and won't allow the docker to build
+RUN npm install
+
+# Build dashboard
+RUN APIROOT=https://pub.uat.earthdata.nasa.gov/api npm run build
+

@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.2.1 - 2021-04-21
+
+- [Add dockerfile for bamboo ci/cd](7a386b490f5cff3a79147e8afddb3d071b55605a)
+
 ## 0.2.0 - 2021-04-01
 
 - [Release version 0.2 for testing in SIT](af788831be352e445d21df8e438fc8a677e1d49d)
