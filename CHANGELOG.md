@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.2.1 - 2021-06-24
+
+- [Fixed css table on scroll breakage](9cd1b0ce1b4ea20e00301fe40d21897595215158)
+
 ## 0.2.1 - 2021-04-21
 
 - [Add dockerfile for bamboo ci/cd](7a386b490f5cff3a79147e8afddb3d071b55605a)
