@@ -4,7 +4,9 @@
   /*border: 1px solid #ECEAEA;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.08);*/
 }
-
+div.th {
+  background-color: $ocean-blue
+}
 .pre-style {
   white-space: pre-wrap;       /* Since CSS 2.1 */
   white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */

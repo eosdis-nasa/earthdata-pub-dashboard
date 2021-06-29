@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 1.0.0 - 2021-06-29
+
+- [Open source release version 1.0.0](3c72ab0f8f8)
+
+## 0.2.2 - 2021-06-24
+
+- [Fixed css table on scroll breakage](9cd1b0ce1b4ea20e00301fe40d21897595215158)
+
+## 0.2.1 - 2021-04-21
+
+- [Add dockerfile for bamboo ci/cd](7a386b490f5cff3a79147e8afddb3d071b55605a)
+- [Added a session timeout warning](61ffffdcb051ac2c8718c8110ededdcc161e3f3b)
+
 ## 0.2.0 - 2021-04-01
 
 - [Release version 0.2 for testing in SIT](af788831be352e445d21df8e438fc8a677e1d49d)

@@ -7,6 +7,8 @@ import { displayCase } from './utils/format';
 import Header from './components/Header/header';
 import Footer from './components/Footer/footer';
 import TopButton from './components/TopButton/TopButton';
+import TimeoutWarning from './components/TimeoutWarning';
+import { setupTokenTimeout } from './actions';
 
 const { target, environment } = _config;
 
@@ -19,6 +21,7 @@ class Main extends Component {
   render () {
     return (
       <div className='app'>
+        <TimeoutWarning />
         {target !== 'earthdata-pub' ? (
           <div className='app__target--container' role="banner">
             <h4 className='app__target'>{displayCase(target)} ({displayCase(environment)})</h4>
