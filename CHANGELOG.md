@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 1.0.0 - 2021-06-29
+
+- [Open source release version 1.0.0]()
+
 ## 0.2.1 - 2021-06-24
 
 - [Fixed css table on scroll breakage](9cd1b0ce1b4ea20e00301fe40d21897595215158)
