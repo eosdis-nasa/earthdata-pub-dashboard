@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 0.2.2 - 2021-06-29
+
+- [Added cloud metrics actions, types and image to index.js, types.js and metrics/overview.js and some general cleanup.](d4d04938eeb95baf28c1b2d8dd9ef5004aa15095)
+
 ## 0.2.1 - 2021-04-21
 
 - [Add dockerfile for bamboo ci/cd](7a386b490f5cff3a79147e8afddb3d071b55605a)
