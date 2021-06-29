@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { lastUpdated } from '../../utils/format';
+
 import {
   listMetrics,
+  getCloudMetric
   // searchMetrics,
   // clearMetricsSearch
 } from '../../actions';
@@ -33,6 +35,26 @@ const MetricOverview = ({ metrics }) => {
     dispatch(listMetrics({ count: true }));
   }, [metrics.searchString, dispatch]);
   const { queriedAt } = metrics.list.meta;
+  dispatch(getCloudMetric('2021-06-20')).then(
+    function (image) {
+      // console.log(image);
+      const byteCharacters = atob(image.data);
+      const byteArrays = [];
+      for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+        const slice = byteCharacters.slice(offset, offset + 1024);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+      }
+      const blob = new Blob(byteArrays, {
+        type: 'image/jpeg'
+      });
+      document.getElementById('testimage').src = URL.createObjectURL(blob);
+    }
+  );
   return (
     <div className='page__component'>
       <section className='page__section page__section__controls'>
@@ -68,6 +90,9 @@ const MetricOverview = ({ metrics }) => {
             />
           </ListFilters> */}
         </List>
+        <div>
+          <img id="testimage" />
+        </div>
       </section>
     </div>
   );

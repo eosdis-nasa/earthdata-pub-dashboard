@@ -30,7 +30,7 @@ class Header extends React.Component {
   componentDidMount () {
     const { dispatch } = this.props;
     dispatch(getApiVersion());
-    dispatch(getEarthdatapubInstanceMetadata());
+    // dispatch(getEarthdatapubInstanceMetadata());
   }
 
   logout () {

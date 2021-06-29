@@ -16,7 +16,7 @@ import {
   // clearStagesFilter,
   // clearStatusesFilter,
   // listWorkflows,
-  applyWorkflowToSubmission,
+  applyWorkflowToRequest,
   // getOptionsSubmissionName
 } from '../../actions';
 // import { get } from 'object-path';
@@ -113,7 +113,7 @@ class RequestsOverview extends React.Component {
   }
 
   applyWorkflow (requestId) {
-    return applyWorkflowToSubmission(requestId, this.state.workflow);
+    return applyWorkflowToRequest(requestId, this.state.workflow);
   }
 
   onlyUnique (value, index, self) {
