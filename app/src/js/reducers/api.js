@@ -24,7 +24,8 @@ function getExpiration(token) {
 export const initialState = (() => {
   const token = loadToken();
   const expiration = token ? getExpiration(token) : 0;
-  const expired = expiration < Date.now();
+  const currentTime = Math.floor(Date.now() / 1000);
+  const expired = expiration < currentTime;
   return {
     authenticated: !expired && token,
     inflight: false,
