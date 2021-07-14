@@ -19,6 +19,7 @@ export const initialState = (() => {
     },
     list: {
       data: [],
+      mapped: {},
       inflight: false,
       error: null
     }
@@ -38,7 +39,12 @@ export default createReducer(initialState, {
     set(state, 'module.inflight', false);
   },
   [LIST_MODULES]: (state, action) => {
+    const mapped = action.data.reduce((ac, mod) => {
+      Object.assign(ac, { [mod.short_name]: mod });
+      return ac;
+    }, {});
     set(state, 'list.data', action.data);
+    set(state, 'list.mapped', mapped);
     set(state, 'list.inflight', false);
   },
   [LIST_MODULES_INFLIGHT]: (state) => {

@@ -2,8 +2,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
-import { listModules } from '../../actions';
+import { connect } from 'react-redux';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 const breadcrumbConfig = [
@@ -18,9 +17,6 @@ const breadcrumbConfig = [
 ];
 
 const ModulesMenu = ({ dispatch, modules }) => {
-  useEffect(() => {
-    dispatch(listModules());
-  }, []);
   return (
     <div className='page__content--shortened'>
       <div className='page__component'>
