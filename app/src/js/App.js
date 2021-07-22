@@ -27,6 +27,7 @@ import Metrics from './components/Metrics';
 import Roles from './components/Roles';
 import Conversations from './components/Conversations';
 import Rules from './components/Rules';
+import Modules from './components/Modules';
 import TestApi from './components/testApi';
 
 import config from './config';
@@ -53,6 +54,7 @@ const MainRoutes = () => {
         <Route path='/roles' component={Roles} />
         <Route path='/conversations/' component={Conversations} />
         <Route path='/rules' component={Rules} />
+        <Route path='/modules' component={Modules} />
         <Route path='/test-api' component={TestApi} />
       </Switch>
     </Main>

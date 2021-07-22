@@ -206,6 +206,24 @@ export const getModel = (model) => ({
   }
 });
 
+export const getModuleUi = (moduleName) => ({
+  [CALL_API]: {
+    type: types.GET_MODULE_UI,
+    method: 'GET',
+    id: null,
+    path: `module/${moduleName}`
+  }
+});
+
+export const listModules = () => ({
+  [CALL_API]: {
+    type: types.LIST_MODULES,
+    method: 'GET',
+    id: null,
+    path: `module`
+  }
+});
+
 export const applyWorkflowToSubmission = (requestId, workflow) => ({
   [CALL_API]: {
     type: types.SUBMISSION_APPLYWORKFLOW,

@@ -7,6 +7,7 @@ import dist from './dist';
 import datepicker from './datepicker';
 import requests from './requests';
 import stats from './stats';
+import modules from './modules.js';
 import model from './model';
 import forms from './forms';
 import questions from './questions';
@@ -33,6 +34,7 @@ export const reducers = {
   requests,
   stats,
   model,
+  modules,
   forms,
   questions,
   users,
