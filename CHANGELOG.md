@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.2.1 - 2021-04-05
 
 - [Updated header to include overview link](137d68957dd774d9cc2ddc5bfebe003d00eda6d4)
+- [Added overviewUrl to config so home page displays intro paragraph](4da69c8c79bf695c8d68a97417a5e0e99dd2ba8f)
 
 ## 0.2.0 - 2021-04-01
 

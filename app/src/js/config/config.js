@@ -9,6 +9,7 @@ const config = {
   },
   apiRoot: process.env.APIROOT || 'http://localhost:8080/api',
   formsUrl: process.env.FORMS_URL || 'http://localhost:8081',
+  overviewUrl: process.env.OVERVIEW_URL || '/',
   newPublicationRequestUrl: process.env.NEW_PUBLICATION_REQUEST_URL || '/interest/daacs/selection',
   newProductInformationUrl: process.env.NEW_PRODUCT_INFORMATION_URL || '/questionnaire/questions',
   publicationRequestFormId: process.env.PUBLICATION_REQUEST_FORM_ID || '6c544723-241c-4896-a38c-adbc0a364293',
