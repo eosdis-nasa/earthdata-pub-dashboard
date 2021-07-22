@@ -76,8 +76,9 @@ class FormOverview extends React.Component {
   }
 
   getAnswer (id) {
-    if (typeof this.props.requests.detail.data.form_data[id] !== 'undefined' && this.props.requests.detail.data.form_data[id] !== '') {
-      return (this.props.requests.detail.data.form_data[id]);
+    const data = this.props.requests.detail.data.form_data;
+    if (typeof data[id] !== 'undefined' && data[id] !== '') {
+      return (data[id]);
     } else {
       return 'no answer';
     }
@@ -89,17 +90,18 @@ class FormOverview extends React.Component {
     const s = `${id}_south`;
     const e = `${id}_east`;
     const w = `${id}_west`;
-    if (typeof this.props.requests.detail.data.form_data[n] !== 'undefined' && this.props.requests.detail.data.form_data[n] !== '') {
-      out += `N:  ${this.props.requests.detail.data.form_data[n]} `;
+    const data = this.props.requests.detail.data.form_data;
+    if (typeof data[n] !== 'undefined' && data[n] !== '') {
+      out += `N:  ${data[n]} `;
     }
-    if (typeof this.props.requests.detail.data.form_data[e] !== 'undefined' && this.props.requests.detail.data.form_data[e] !== '') {
-      out += `E:  ${this.props.requests.detail.data.form_data[e]} `;
+    if (typeof data[e] !== 'undefined' && data[e] !== '') {
+      out += `E:  ${data[e]} `;
     }
-    if (typeof this.props.requests.detail.data.form_data[s] !== 'undefined' && this.props.requests.detail.data.form_data[s] !== '') {
-      out += `S:  ${this.props.requests.detail.data.form_data[s]} `;
+    if (typeof data[s] !== 'undefined' && data[s] !== '') {
+      out += `S:  ${data[s]} `;
     }
-    if (typeof this.props.requests.detail.data.form_data[w] !== 'undefined' && this.props.requests.detail.data.form_data[w] !== '') {
-      out += `W:  ${this.props.requests.detail.data.form_data[w]}`;
+    if (typeof data[w] !== 'undefined' && data[w] !== '') {
+      out += `W:  ${data[w]}`;
     }
     if (out !== '') {
       return out;
@@ -108,7 +110,7 @@ class FormOverview extends React.Component {
     }
   }
 
-  renderQuestions (sections, whatSection) {
+  renderQuestions(sections, whatSection) {
     let section = '';
     const sectionQuestions = [];
     for (const i in sections) {
@@ -131,13 +133,39 @@ class FormOverview extends React.Component {
                 for (const a in question[b].inputs) {
                   if (question[b].inputs[a].type === 'bbox') {
                     sectionQuestions.push(
-                      <li key={ this.getRandom() } style={{ marginTop: '3px', marginBottom: '3px' }}>
+                      <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
                         <div key={this.getRandom()}>{this.getBbox(question[b].inputs[a].control_id)}</div>
+                      </li>
+                    );
+                  } else if (question[b].inputs[a].type === 'table') {
+                    const keys = question[b].inputs[a].enums.map(e => e.key);
+                    const data = this.props.requests.detail.data.form_data;
+                    sectionQuestions.push(<li key={this.getRandom()}><br /></li>);
+                    sectionQuestions.push(
+                      <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+                        <table style={{ minWidth: '100%' }}>
+                          <thead>
+                            <tr key={this.getRandom()}>
+                              {keys.map((k) => (
+                                <th key={this.getRandom()}><u>{question[b].inputs[a].enums.find(e => e.key === k).label}</u></th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {data[question[b].inputs[a].control_id].map((item) => (
+                              <tr key={ this.getRandom() }>
+                                {keys.map((k) => (
+                                  <td key={ this.getRandom() }>{item[k]}</td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </li>
                     );
                   } else {
                     sectionQuestions.push(
-                      <li key={ this.getRandom() } style={{ marginTop: '3px', marginBottom: '3px' }}>
+                      <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
                         <div key={this.getRandom()} style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>{question[b].inputs[a].label}:</div>
                         <div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
                       </li>
@@ -160,7 +188,7 @@ class FormOverview extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
     let requestId = '';
