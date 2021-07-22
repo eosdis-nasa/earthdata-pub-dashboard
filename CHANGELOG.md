@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+- [Added modules page](b14c1391838)
+
 ## 1.0.0 - 2021-06-29
 
 - [Open source release version 1.0.0]()
