@@ -10,7 +10,7 @@ class TimeoutWarning extends React.Component {
     super(props);
     this.state = {
       show: false,
-      remaining: 30
+      remaining: 0
     }
     this.startCountdown = this.startCountdown.bind(this);
     this.updateRemaining = this.updateRemaining.bind(this);
@@ -21,31 +21,35 @@ class TimeoutWarning extends React.Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval);
-    clearTimeout(this.timeout)
+    this.clearTimers();
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.api.tokens.expiration !== prevProps.api.tokens.expiration) {
-      if (this.timeout) {
-        clearTimeout(this.timeout);
-      }
+    if (this.props.api.tokens.token !== prevProps.api.tokens.token) {
+      this.clearTimers();
       this.setWarningTimeout();
     }
   }
 
   setWarningTimeout() {
-    const sessionLength = this.props.api.tokens.expiration - Date.now() - 30000;
-    this.timeout = setTimeout(this.startCountdown.bind(this), sessionLength);
+    const tokens = this.props.api.tokens;
+    if (tokens.token && !tokens.inflight) {
+      const currentTime = Math.floor(Date.now() / 1000);
+      const sessionLength = tokens.expiration - currentTime;
+      const warningTime = (sessionLength - 30) * 1000;
+      this.timeout = setTimeout(this.startCountdown.bind(this), warningTime);
+    }
   }
 
   startCountdown() {
-    this.setState({ show: true });
+    this.updateRemaining();
     this.interval = setInterval(this.updateRemaining.bind(this), 1000);
+    this.setState({ show: true });
   }
 
   updateRemaining() {
-    const remaining = parseInt((this.props.api.tokens.expiration - Date.now()) / 1000);
+    const currentTime = Math.floor(Date.now() / 1000);
+    const remaining = parseInt(this.props.api.tokens.expiration - currentTime);
     if (remaining < 0) {
       this.logoutNow();
     }
@@ -54,39 +58,51 @@ class TimeoutWarning extends React.Component {
     }
   }
 
+  clearTimers() {
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
+    }
+  }
+
   extendSession() {
-    clearInterval(this.interval);
-    clearTimeout(this.timeout);
-    this.timeout = null;
-    this.interval = null;
     this.setState({ show: false });
+    this.clearTimers();
     this.props.dispatch(refreshToken());
   }
 
   logoutNow() {
-    clearInterval(this.interval);
-    clearTimeout(this.timeout);
-    this.timeout = null;
-    this.interval = null;
+    this.setState({ show: false });
+    this.clearTimers();
     this.props.dispatch(logout());
   }
 
   render() {
+    const tokens = this.props.api.tokens;
     return (
         <Modal show={this.state.show} backdrop="static" keyboard={false} centered={true}>
           <Modal.Header closeButton>
             <Modal.Title>Session Expiring</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Your session will expire in {this.state.remaining} seconds.
+            {tokens.inflight ?
+              <div>Refreshing...</div> :
+              <div>Your session will expire in {this.state.remaining} seconds.</div>
+            }
           </Modal.Body>
           <Modal.Footer>
             <button
               className={`button button__animation--md`}
-              onClick={this.extendSession.bind(this)}>Extend Session</button>
+              onClick={this.extendSession.bind(this)}
+              disabled={tokens.inflight}>Extend Session</button>
             <button
               className={`button button__animation--md button--secondary button__cancel`}
-              onClick={() => this.props.dispatch(logout())}>Logout Now</button>
+              onClick={() => this.props.dispatch(logout())}
+              disabled={tokens.inflight}>Logout Now</button>
           </Modal.Footer>
         </Modal>
     );

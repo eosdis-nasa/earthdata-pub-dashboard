@@ -1,6 +1,6 @@
 {
   "name": "earthdata-pub-dashboard",
-  "version": "0.2.0",
+  "version": "1.0.1",
   "description": "A dashboard for Earthdata Pub API",
   "repository": {
     "type": "git",
@@ -207,6 +207,7 @@
     "redux-thunk": "^2.2.0",
     "shortid": "^2.2.6",
     "slugify": "^1.4.5",
+    "snyk": "^1.650.0",
     "stubborn-queue": "^2.0.0"
   }
 }
