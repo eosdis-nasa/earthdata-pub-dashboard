@@ -13,7 +13,6 @@ const baseConfig = {
   oauthMethod: 'earthdata',
   basepath: '/',
   graphicsPath: '/src/assets/images/',
-  overviewUrl: '/overview',
 
   // settings for Ace editor
   editorTheme: 'github',
