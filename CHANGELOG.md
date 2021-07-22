@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 1.0.1 - 2021-07-22
+
+- [Updated form.js for custom table type input](4042a66138f1b79cb69a2d968751a077aaa6bcce)
+
 ## 1.0.0 - 2021-06-29
 
 - [Open source release version 1.0.0]()
