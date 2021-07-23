@@ -2,6 +2,7 @@
 import * as jwt from 'jsonwebtoken';
 import { set } from 'object-path';
 import { loadToken, saveToken, deleteToken } from '../utils/auth';
+
 import {
   DELETE_TOKEN,
   LOGIN,
