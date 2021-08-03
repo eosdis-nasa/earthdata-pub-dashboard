@@ -1,78 +1,57 @@
 'use strict';
 
 import { get, set, del } from 'object-path';
-import assignDate from './assign-date';
 import {
   CONVERSATION,
   CONVERSATION_INFLIGHT,
   CONVERSATION_ERROR,
-
   CONVERSATIONS,
   CONVERSATIONS_INFLIGHT,
-  CONVERSATIONS_ERROR,
-
-  SEARCH_CONVERSATIONS,
-  CLEAR_CONVERSATIONS_SEARCH,
-
+  CONVERSATIONS_ERROR
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
+import assignDate from './assign-date';
 
 export const initialState = {
+  conversation: {
+    data: {},
+    meta: {},
+    inflight: false,
+    error: null
+  },
   list: {
     data: [],
     meta: {},
-    params: {}
-  },
-  dropdowns: {},
-  map: {},
-  search: {},
-  created: {},
-  updated: {},
-  deleted: {},
-  restarted: {},
-  stopped: {}
+    inflight: false,
+    error: null
+  }
 };
 
 export default createReducer(initialState, {
-
   [CONVERSATION]: (state, action) => {
-    const { data, id } = action;
-    set(state, ['map', id, 'inflight'], false);
-    set(state, ['map', id, 'data'], data);
-    set(state, ['map', id, 'error'], null);
-    if (get(state, ['deleted', id, 'status']) !== 'error') {
-      del(state, ['deleted', id]);
-    }
+    set(state, 'conversation.data', action.data);
+    set(state, 'conversation.meta', assignDate(action.data.meta));
+    set(state, 'conversation.inflight', false);
+    set(state, 'conversation.error', null);
   },
   [CONVERSATION_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['map', id, 'inflight'], true);
+    set(state, 'conversation.inflight', true);
   },
   [CONVERSATION_ERROR]: (state, action) => {
-    const { id } = action;
-    set(state, ['map', id, 'inflight'], false);
-    set(state, ['map', id, 'error'], action.error);
+    set(state, 'conversation.inflight', false);
+    set(state, 'conversation.error', action.error);
   },
-
   [CONVERSATIONS]: (state, action) => {
-    const { data } = action;
-    set(state, ['list', 'data'], data);
-    set(state, ['list', 'meta'], assignDate(data.meta));
-    set(state, ['list', 'inflight'], false);
-    set(state, ['list', 'error'], false);
+    set(state, 'list.data', action.data);
+    set(state, 'list.meta', assignDate(action.data.meta))
+    set(state, 'list.inflight', false);
+    set(state, 'list.error', null);
   },
   [CONVERSATIONS_INFLIGHT]: (state, action) => {
-    set(state, ['list', 'inflight'], true);
+    set(state, 'list.inflight', true);
   },
   [CONVERSATIONS_ERROR]: (state, action) => {
-    set(state, ['list', 'inflight'], false);
-    set(state, ['list', 'error'], action.error);
-  },
-
-  [SEARCH_CONVERSATIONS]: (state, action) => {
-    set(state, ['list', 'params', 'prefix'], action.prefix);
-  },
-  [CLEAR_CONVERSATIONS_SEARCH]: (state, action) => {
-    set(state, ['list', 'params', 'prefix'], null);
+    set(state, 'list.inflight', false);
+    set(state, 'list.error', action.error);
   }
 });
