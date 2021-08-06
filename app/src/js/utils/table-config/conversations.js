@@ -5,10 +5,17 @@ export const tableColumns = [
   {
     Header: 'Subject',
     accessor: (row) => (
-      <Link to={`/conversations/id/${row.id}`}>
-        {row.subject}
-        {row.unread && <span className='text__green'>*new messages*</span>}
-      </Link>),
+      <div className='flex__column'>
+        <div>
+          <Link to={`/conversations/id/${row.id}`}>
+            {row.subject}
+            </Link>
+        </div>
+        <span className='text__green'>
+          {row.unread ? '*new messages*' : ' '}
+        </span>
+      </div>
+    ),
     id: 'conversation_subject'
   },
   {
