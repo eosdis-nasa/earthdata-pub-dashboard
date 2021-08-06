@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-## 1.0.1 - 2021-06-29
+## 1.0.1 - 2021-07-22
 
+- [Updated form.js for custom table type input](4042a66138f1b79cb69a2d968751a077aaa6bcce)
 - [Added cloud metrics actions, types and image to index.js, types.js and metrics/overview.js and some general cleanup.](d4d04938eeb95baf28c1b2d8dd9ef5004aa15095)
 - [Added modules page](b14c1391838)
 - [Updated header to include overview link](137d68957dd774d9cc2ddc5bfebe003d00eda6d4)
