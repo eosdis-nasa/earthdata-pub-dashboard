@@ -8,9 +8,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-## 0.2.2 - 2021-06-29
+## 1.0.1 - 2021-06-29
 
 - [Added cloud metrics actions, types and image to index.js, types.js and metrics/overview.js and some general cleanup.](d4d04938eeb95baf28c1b2d8dd9ef5004aa15095)
+- [Added modules page](b14c1391838)
+- [Updated header to include overview link](137d68957dd774d9cc2ddc5bfebe003d00eda6d4)
+- [Added overviewUrl to config so home page displays intro paragraph](4da69c8c79bf695c8d68a97417a5e0e99dd2ba8f)
+
+## 1.0.0 - 2021-06-29
+
+- [Open source release version 1.0.0](3c72ab0f8f8)
+
+## 0.2.2 - 2021-06-24
+
+- [Fixed css table on scroll breakage](9cd1b0ce1b4ea20e00301fe40d21897595215158)
 
 ## 0.2.1 - 2021-04-21
 

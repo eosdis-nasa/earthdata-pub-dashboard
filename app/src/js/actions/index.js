@@ -206,6 +206,24 @@ export const getModel = (model) => ({
   }
 });
 
+export const getModuleUi = (moduleName) => ({
+  [CALL_API]: {
+    type: types.GET_MODULE_UI,
+    method: 'GET',
+    id: null,
+    path: `module/${moduleName}`
+  }
+});
+
+export const listModules = () => ({
+  [CALL_API]: {
+    type: types.LIST_MODULES,
+    method: 'GET',
+    id: null,
+    path: `module`
+  }
+});
+
 export const applyWorkflowToRequest = (requestId, workflow) => ({
   [CALL_API]: {
     type: types.SUBMISSION_APPLYWORKFLOW,
@@ -601,6 +619,17 @@ export const listRoles = (options) => ({
     method: 'GET',
     path: 'data/roles',
     qs: Object.assign({ limit: defaultPageLimit }, options)
+  }
+});
+export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
+export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
+
+export const getConversation = (conversationId) => ({
+  [CALL_API]: {
+    type: types.CONVERSATION,
+    method: 'GET',
+    id: conversationId,
+    path: `notification/conversation/${conversationId}`
   }
 });
 export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
