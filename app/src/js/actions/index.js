@@ -97,7 +97,7 @@ export const interval = function (action, wait, immediate) {
 export const timeout = function (action, wait) {
   const timeoutId = setTimeout(action, wait);
   return () => clearTimeout(timeoutId);
-}
+};
 
 export const getApiVersion = () => {
   return (dispatch) => {
@@ -138,13 +138,13 @@ export const checkApiVersion = () => {
   };
 };
 
-export const getEarthdatapubInstanceMetadata = () => ({
+/* export const getEarthdatapubInstanceMetadata = () => ({
   [CALL_API]: {
     type: types.ADD_INSTANCE_META,
     method: 'GET',
     path: 'instanceMeta'
   }
-});
+}); */
 
 export const getRequest = (requestId) => ({
   [CALL_API]: {
@@ -224,7 +224,7 @@ export const listModules = () => ({
   }
 });
 
-export const applyWorkflowToSubmission = (requestId, workflow) => ({
+export const applyWorkflowToRequest = (requestId, workflow) => ({
   [CALL_API]: {
     type: types.SUBMISSION_APPLYWORKFLOW,
     method: 'PUT',
@@ -533,8 +533,8 @@ export const logout = () => {
   return (dispatch) => {
     dispatch({ type: types.LOGOUT });
     history.push('/auth');
-  }
-}
+  };
+};
 
 export const deleteToken = () => ({ type: types.DELETE_TOKEN });
 
@@ -583,6 +583,26 @@ export const listMetrics = (options) => ({
 });
 export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });
 export const clearMetricsSearch = () => ({ type: types.CLEAR_METRICS_SEARCH });
+
+export const getCloudMetric = (cloudMetricId) => ({
+  [CALL_API]: {
+    type: types.CLOUD_METRIC,
+    method: 'GET',
+    id: cloudMetricId,
+    path: `metrics/report/${cloudMetricId}`
+  }
+});
+
+export const listCloudMetrics = (options) => ({
+  [CALL_API]: {
+    type: types.CLOUD_METRICS,
+    method: 'GET',
+    path: 'metrics/reports',
+    qs: Object.assign({ limit: defaultPageLimit }, options)
+  }
+});
+export const searchCloudMetrics = (searchString) => ({ type: types.SEARCH_CLOUD_METRICS, searchString });
+export const clearCloudMetricsSearch = () => ({ type: types.CLEAR_CLOUD_METRICS_SEARCH });
 
 export const getRole = (roleId) => ({
   [CALL_API]: {

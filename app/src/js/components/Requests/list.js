@@ -11,7 +11,7 @@ import {
   listRequests,
   // getOptionsSubmissionName,
   listWorkflows,
-  applyWorkflowToSubmission,
+  applyWorkflowToRequest,
   interval
 } from '../../actions';
 // import { get } from 'object-path';
@@ -87,7 +87,7 @@ class AllSubmissions extends React.Component {
   }
 
   applyWorkflow (requestId) {
-    return applyWorkflowToSubmission(requestId, this.state.workflow);
+    return applyWorkflowToRequest(requestId, this.state.workflow);
   }
 
   getExecuteOptions () {
