@@ -30,7 +30,7 @@ class Header extends React.Component {
   componentDidMount () {
     const { dispatch } = this.props;
     dispatch(getApiVersion());
-    dispatch(getEarthdatapubInstanceMetadata());
+    // dispatch(getEarthdatapubInstanceMetadata());
   }
 
   logout () {
@@ -72,7 +72,10 @@ class Header extends React.Component {
               {activePaths.map(path => <li
                 key={path[0]}
                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
-              <li className='rightalign nav__order-8'>{ authenticated ? <a onClick={this.logout}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link> }</li>
+              <div className='rightalign nav__order-8'>
+                <ul className='right-ul'>
+                  <li className='overviewLink'>{ overviewUrl ? <Link className='overviewLink' to={overviewUrl}>Overview</Link> : '' }</li>
+                  <li className='logOut'>{ authenticated ? <a onClick={this.logout}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link> }</li></ul></div>
             </ul> : <li>&nbsp;</li> }
           </nav>
         </div>
