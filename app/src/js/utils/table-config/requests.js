@@ -114,9 +114,9 @@ export const tableColumns = [
     id: 'lock'
   },
   {
-    Header: 'Communication',
-    accessor: row => <Link to={`/conversations/id/${row.conversation_id}`}>{row.conversation_id ? 'Email conversation' : null}</Link>,
-    id: 'email_conversation'
+    Header: 'Conversation',
+    accessor: row => row.conversation_id ? (<Link to={`/conversations/id/${row.conversation_id}`}>View</Link>) : null,
+    id: 'conversation_id'
   }
   /* {
     Header: 'Data Request Request',

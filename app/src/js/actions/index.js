@@ -632,17 +632,6 @@ export const getConversation = (conversationId) => ({
     path: `notification/conversation/${conversationId}`
   }
 });
-export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
-export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
-
-export const getConversation = (conversationId) => ({
-  [CALL_API]: {
-    type: types.CONVERSATION,
-    method: 'GET',
-    id: conversationId,
-    path: `notification/conversation/${conversationId}`
-  }
-});
 
 export const listConversations = (options) => ({
   [CALL_API]: {
@@ -652,5 +641,48 @@ export const listConversations = (options) => ({
     qs: Object.assign({ limit: defaultPageLimit }, options)
   }
 });
-export const searchConversations = (searchString) => ({ type: types.SEARCH_CONVERSATIONS, searchString });
-export const clearConversationsSearch = () => ({ type: types.CLEAR_CONVERSATIONS_SEARCH });
+
+export const createConversation = (payload) => ({
+  [CALL_API]: {
+    type: types.CONVERSATION_CREATE,
+    method: 'POST',
+    path: `notification/send`,
+    body: payload
+  }
+});
+
+export const replyConversation = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.CONVERSATION_REPLY,
+        method: 'POST',
+        path: `notification/reply`,
+        body: payload
+      }
+    })
+    .then(() => {
+      setTimeout(() => {
+        dispatch(getConversation(payload.conversation_id))
+      }, 1000);
+    });
+  }
+};
+
+export const addUsersToConversation = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.CONVERSATION_ADD_USERS,
+        method: 'POST',
+        path: `notification/add_users`,
+        body: payload
+      }
+    })
+    .then(() => {
+      setTimeout(() => {
+        dispatch(getConversation(payload.conversation_id))
+      }, 1000);
+    });
+  }
+};

@@ -4,7 +4,18 @@ import { Link } from 'react-router-dom';
 export const tableColumns = [
   {
     Header: 'Subject',
-    accessor: (row) => <Link to={`/conversations/id/${row.id}`}>{row.subject}</Link>,
+    accessor: (row) => (
+      <div className='flex__column'>
+        <div>
+          <Link to={`/conversations/id/${row.id}`}>
+            {row.subject}
+            </Link>
+        </div>
+        <span className='text__green'>
+          {row.unread ? '*new messages*' : ' '}
+        </span>
+      </div>
+    ),
     id: 'conversation_subject'
   },
   {
@@ -16,11 +27,5 @@ export const tableColumns = [
     Header: 'Created At',
     accessor: (row) => row.created_at,
     id: 'creation_date'
-  },
-  // {
-  //   Header: 'ID',
-  //   accessor: (row) => row.id,
-  //   id: 'conversation_id'
-  // }
-
+  }
 ];
