@@ -141,28 +141,52 @@ class FormOverview extends React.Component {
                     const keys = question[b].inputs[a].enums.map(e => e.key);
                     const data = this.props.requests.detail.data.form_data;
                     sectionQuestions.push(<li key={this.getRandom()}><br /></li>);
-                    sectionQuestions.push(
-                      <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
-                        <table style={{ minWidth: '100%' }}>
-                          <thead>
-                            <tr key={this.getRandom()}>
-                              {keys.map((k) => (
-                                <th key={this.getRandom()}><u>{question[b].inputs[a].enums.find(e => e.key === k).label}</u></th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {data[question[b].inputs[a].control_id].map((item) => (
-                              <tr key={ this.getRandom() }>
+                    if (typeof data[question[b].inputs[a].control_id] !== 'undefined' && data[question[b].inputs[a].control_id].length !== 0) {
+                      const length = parseInt(100 / question[b].inputs[a].enums.length);
+                      sectionQuestions.push(
+                        <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+                          <table style={{ minWidth: '100%' }}>
+                            <thead>
+                              <tr key={this.getRandom()}>
                                 {keys.map((k) => (
-                                  <td key={ this.getRandom() }>{item[k]}</td>
+                                  <th key={this.getRandom()}><u>{question[b].inputs[a].enums.find(e => e.key === k).label}</u></th>
                                 ))}
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </li>
-                    );
+                            </thead>
+                            <tbody>
+                              {data[question[b].inputs[a].control_id].map((item) => (
+                                <tr key={ this.getRandom() }>
+                                  {keys.map((k) => (
+                                    <td key={ this.getRandom() } style={{ width: `${length}%` }}>{item[k]}</td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </li>
+                      );
+                    } else {
+                      sectionQuestions.push(
+                        <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+                          <table style={{ minWidth: '100%' }}>
+                            <thead>
+                              <tr key={this.getRandom()}>
+                                {keys.map((k) => (
+                                  <th key={this.getRandom()}><u>{question[b].inputs[a].enums.find(e => e.key === k).label}</u></th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr key={ this.getRandom() }>
+                                {keys.map((k) => (
+                                  <td key={ this.getRandom() } style={{ width: `${length}%` }}>no answer</td>
+                                ))}
+                              </tr>
+                            </tbody>
+                          </table>
+                        </li>
+                      );
+                    }
                   } else {
                     sectionQuestions.push(
                       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
