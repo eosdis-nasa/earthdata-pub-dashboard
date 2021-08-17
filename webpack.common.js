@@ -93,7 +93,7 @@ const CommonConfig = {
         ]
       },
       {
-        test: /\.(woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/, // fonts
+        test: /\.(woff|woff2|eot|ttf)(\?[a-z0-9=.]+)?$/, // fonts
         use: {
           loader: 'file-loader',
           options: {

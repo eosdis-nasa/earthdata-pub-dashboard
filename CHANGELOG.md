@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.0.3 - 2021-08-16
 
-- [Update logo and favicon to nasa meatball logo](dd324eaf6f33bc2d74538a7c9179c747f3767378)
+- [Update logo and favicon to nasa meatball logo](121f956b61e25fcf95b1d04d0bf46ab43f13fd33)
 
 ## 1.0.2 - 2021-08-11
 

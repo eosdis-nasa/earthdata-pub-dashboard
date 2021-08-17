@@ -160,9 +160,6 @@ a:active {
 /**************************************************
   Header & Navigation (Includes Sidebar)
 **************************************************/
-#logo_words {
-  margin-top:-10px;
-}
 .header {
   background-color: $ocean-blue;
   border-bottom: 1px solid rgba(255, 255, 255, .06);
@@ -175,7 +172,13 @@ a:active {
     text-align: center;
     img {
       // padding-top: 7px;  Adjusted for hiding DatePickerHeader
-      padding-top: 15px;
+      padding-top: 16.2px;
+      height: 60px;
+    }
+    div {
+      margin-top: 35px;
+      float: right;
+      color: white;
     }
   }
   nav{
