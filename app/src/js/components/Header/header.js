@@ -77,7 +77,7 @@ class Header extends React.Component {
               <div className='rightalign nav__order-8'>
                 <ul className='right-ul'>
                   <li className='overviewLink'>{ overviewUrl ? <a href={overviewUrl}>Overview</a> : '' }</li>
-                  <li className='overviewLink'>{ overviewUrl ? <Link className='overviewLink' to={feedbackUrl}>Feedback</Link> : '' }</li>
+                  <li className='overviewLink'>{ overviewUrl ? <a href={feedbackUrl}>Feedback</a> : '' }</li>
                   <li className='logOut'>{ authenticated ? <a onClick={this.logout}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link> }</li></ul></div>
             </ul> : <li>&nbsp;</li> }
           </nav>
