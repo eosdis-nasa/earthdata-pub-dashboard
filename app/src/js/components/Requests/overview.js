@@ -161,8 +161,8 @@ class RequestsOverview extends React.Component {
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
-            <a className='button button--small button--green button--add form-group__element--right' href={newDataProductInformation}>New Data Product Information</a>
-            <a className='button button--small button--green button--add form-group__element--right' href={newDataPublicationRequest}>New Data Publication Request</a>
+            <a className='button button--small button--green button--add form-group__element--right' href={newDataProductInformation}>New Data Publication Request</a>
+            <a className='button button--small button--green button--add form-group__element--right' href={newDataPublicationRequest}>New Data Accession Request</a>
           </div>
           {listRequests}
           <List

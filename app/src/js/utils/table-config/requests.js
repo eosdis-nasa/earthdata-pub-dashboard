@@ -87,14 +87,14 @@ export const tableColumns = [
     width: 100
   },
   {
-    Header: 'Data Publication Request',
-    accessor: row => formLookup(row, newDataPublicationRequest, publicationRequestFormId, 'Data Publication Request'),
+    Header: 'Data Accession Request',
+    accessor: row => formLookup(row, newDataPublicationRequest, publicationRequestFormId, 'Data Accession Request'),
     id: 'data_publication_request',
     width: 200
   },
   {
-    Header: 'Data Product Information',
-    accessor: row => formLookup(row, newDataProductInformation, productInformationFormId, 'Data Product Information'),
+    Header: 'Data Publication Request',
+    accessor: row => formLookup(row, newDataProductInformation, productInformationFormId, 'Data Publication Request'),
     id: 'data_product_information',
     width: 200
   },
