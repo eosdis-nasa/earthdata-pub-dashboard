@@ -77,7 +77,7 @@ class Header extends React.Component {
               <div className='rightalign nav__order-8'>
                 <ul className='right-ul'>
                   <li className='overviewLink'>{ overviewUrl ? <a href={overviewUrl}>Overview</a> : '' }</li>
-                  <li className='overviewLink'>{ overviewUrl ? <a href={feedbackUrl}>Feedback</a> : '' }</li>
+                  <li className='overviewLink'>{ overviewUrl ? <a href="https://app.smartsheet.com/b/form/4978cb9677ad4198a96afd40102e9f2d" target="_blank">Feedback</a> : '' }</li>
                   <li className='logOut'>{ authenticated ? <a onClick={this.logout}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link> }</li></ul></div>
             </ul> : <li>&nbsp;</li> }
           </nav>
