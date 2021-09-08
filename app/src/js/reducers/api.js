@@ -22,8 +22,22 @@ function getExpiration(token) {
   return 0;
 }
 
+function reducePrivileges(user) {
+  const privileges = user.user_privileges.reduce((acc, privilege) => {
+    const [entity, action] = privilege.split('_');
+    if (!acc[entity]) {
+      acc[entity] = [action || '-'];
+    }
+    else {
+      acc[entity].push(action);
+    }
+    return acc;
+  }, {});
+  return privileges;
+}
+
 export const initialState = (() => {
-  const token = loadToken();
+  const { token, user } = loadToken();
   const expiration = token ? getExpiration(token) : 0;
   const currentTime = Math.floor(Date.now() / 1000);
   const expired = expiration < currentTime;
@@ -35,7 +49,11 @@ export const initialState = (() => {
       error: null,
       inflight: false,
       token: token,
-      expiration: expiration
+      expiration: expiration,
+      userName: !expired ? user.name : '',
+      roles: !expired ? user.user_roles : [],
+      groups: !expired ? user.user_groups : [],
+      privileges: !expired ? reducePrivileges(user) : {}
     }
   };
 })();
@@ -54,12 +72,17 @@ export default createReducer(initialState, {
     set(state, 'tokens.token', null);
   },
   [FETCH_TOKEN]: (state, action) => {
-    saveToken(action.data.token);
+    const { token, user } = action.data;
+    saveToken({ token, user });
     set(state, 'authenticated', true);
     set(state, 'inflight', false);
-    set(state, 'tokens.inflight', false);
     set(state, 'tokens.token', action.data.token);
+    set(state, 'tokens.userName', user.name);
+    set(state, 'tokens.roles', user.user_roles);
+    set(state, 'tokens.groups', user.user_groups);
+    set(state, 'tokens.privileges', reducePrivileges(user));
     set(state, 'tokens.expiration', getExpiration(action.data.token));
+    set(state, 'tokens.inflight', false);
   },
   [FETCH_TOKEN_INFLIGHT]: (state) => {
     set(state, 'inflight', true);

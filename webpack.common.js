@@ -148,7 +148,6 @@ const CommonConfig = {
         AWS_REGION: config.awsRegion,
         DAAC_NAME: config.target,
         STAGE: config.environment,
-        HIDE_PDR: config.nav.exclude.PDRs,
         AUTH_METHOD: config.oauthMethod,
         KIBANAROOT: config.kibanaRoot,
         ESROOT: config.esRoot,
