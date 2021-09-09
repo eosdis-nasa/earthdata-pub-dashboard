@@ -89,6 +89,10 @@
   margin-bottom: 2em;
 }
 
+.oauth-modal .modal-body{
+  text-align: center;
+}
+
 .modal_subtitle {
   font-weight: $base-font-semibold;
 }
@@ -119,8 +123,8 @@
   &.bulk_granules {
     &.modal-dialog {
       overflow-y: initial !important;
-      max-height:85%;  
-      margin-top: 50px; 
+      max-height:85%;
+      margin-top: 50px;
       margin-bottom:50px;
       max-width: 750px;
     }

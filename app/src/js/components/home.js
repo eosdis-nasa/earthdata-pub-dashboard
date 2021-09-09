@@ -121,6 +121,32 @@ class Home extends React.Component {
     );
   }
 
+  renderUserInfo () {
+    const { groups, roles } = this.props;
+    return (
+      <section className='page__section instructions'>
+        <div className='row'>
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium heading--shared-content--right'>User Info</h2>
+          </div>
+          <div className='flex__row'>
+            <div className='flex__item--spacing flex__column--sm-border'>
+              <div className='heading--small heading--shared-content--right'>Groups</div>
+              { groups.map((group, key) => <div key={key} className='flex__item--spacing'>{ group.long_name }</div>)}
+            </div>
+            <div className='flex__item--spacing flex__column--sm-border'>
+              <div className='heading--small heading--shared-content--right'>Roles</div>
+              { roles.map((role, key) => <div key={key} className='flex__item--spacing'>{ role.long_name }</div>)}
+            </div>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='heading__wrapper--border'></div>
+        </div>
+      </section>
+    );
+  }
+
   renderButtonListSection (items, header, listId) {
     const data = items.filter(d => d[0] !== nullValue);
     if (!data.length) return null;
@@ -200,6 +226,7 @@ class Home extends React.Component {
 
         <div className='page__content page__content__nosidebar home_submissions_table'>
           {this.renderOverview()}
+          {this.renderUserInfo()}
           {/*
           <section className='page__section datetime'>
             <div className='row'>
@@ -273,6 +300,8 @@ Home.propTypes = {
   queryParams: PropTypes.object,
   setQueryParams: PropTypes.func,
   dispatch: PropTypes.func,
+  roles: PropTypes.array,
+  groups: PropTypes.array,
   location: PropTypes.object
 };
 
@@ -287,5 +316,7 @@ export default withRouter(withQueryParams()(connect((state) => ({
   requests: state.requests,
   pdrs: state.pdrs,
   rules: state.rules,
-  stats: state.stats
+  stats: state.stats,
+  roles: state.api.tokens.roles,
+  groups: state.api.tokens.groups
 }))(Home)));

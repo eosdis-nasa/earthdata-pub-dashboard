@@ -7,7 +7,9 @@ import {
   CONVERSATION_ERROR,
   CONVERSATIONS,
   CONVERSATIONS_INFLIGHT,
-  CONVERSATIONS_ERROR
+  CONVERSATIONS_ERROR,
+  CONVERSATION_REPLY_INFLIGHT,
+  CONVERSATION_ADD_USER_INFLIGHT
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 import assignDate from './assign-date';
@@ -53,5 +55,11 @@ export default createReducer(initialState, {
   [CONVERSATIONS_ERROR]: (state, action) => {
     set(state, 'list.inflight', false);
     set(state, 'list.error', action.error);
+  },
+  [CONVERSATION_REPLY_INFLIGHT]: (state, action) => {
+    set(state, 'conversation.inflight', true);
+  },
+  [CONVERSATION_ADD_USER_INFLIGHT]: (state, action) => {
+    set(state, 'conversation.inflight', true);
   }
 });

@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   getForm,
-  getRequest
+  getRequest,
+  reviewRequest
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -15,6 +16,7 @@ import { strings } from '../locale';
 import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
+import { requestPrivileges } from '../../utils/privileges';
 import _config from '../../config';
 
 const metaAccessors = [
@@ -213,8 +215,15 @@ class FormOverview extends React.Component {
   }
 
   render() {
+    const dispatch = this.props.dispatch;
+    const { canReview } = requestPrivileges(this.props.privileges);
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
+    const request = this.props.requests.detail.data;
+    const reviewReady = request &&
+      request.step_data.type === 'review' &&
+      request.step_data.data.type === 'form' &&
+      request.step_data.data.form_id === formId;
     let requestId = '';
     let daacId = '';
     if (typeof this.props.requests.detail.data !== 'undefined') {
@@ -237,7 +246,6 @@ class FormOverview extends React.Component {
     const errors = this.errors();
     const sections = form.sections;
     const newSections = [];
-
     for (const ea in sections) {
       for (const i in sections[ea]) {
         if (JSON.stringify(sections[ea][i]) !== '[]' && typeof sections[ea][i] === 'string') {
@@ -272,6 +280,24 @@ class FormOverview extends React.Component {
             </ul>
           </div>
         </section>
+        <section className='page_section'>
+        { canReview && reviewReady && (
+          <div className='flex__row'>
+            <div className='flex__item--spacing'>
+              <button onClick={() => dispatch(reviewRequest(request.id, false))}
+                className='button button--no-icon button--medium button--green'>
+                Reject
+              </button>
+            </div>
+            <div className='flex__item--spacing'>
+              <button onClick={() => dispatch(reviewRequest(request.id, true))}
+                className='button button--no-icon button--medium button--green'>
+                Approve
+              </button>
+            </div>
+          </div>
+        )}
+        </section>
       </div>
     );
   }
@@ -285,6 +311,7 @@ FormOverview.propTypes = {
   logs: PropTypes.object,
   history: PropTypes.object,
   location: PropTypes.object,
+  privileges: PropTypes.object,
   params: PropTypes.object
 };
 
@@ -293,5 +320,6 @@ FormOverview.displayName = 'FormElem';
 export default withRouter(connect(state => ({
   forms: state.forms,
   requests: state.requests,
+  privileges: state.api.tokens.privileges,
   logs: state.logs
 }))(FormOverview));

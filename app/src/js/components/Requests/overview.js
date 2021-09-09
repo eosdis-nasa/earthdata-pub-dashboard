@@ -164,7 +164,6 @@ class RequestsOverview extends React.Component {
             <a className='button button--small button--green button--add form-group__element--right' href={newDataProductInformation}>New Data Publication Request</a>
             <a className='button button--small button--green button--add form-group__element--right' href={newDataPublicationRequest}>New Data Accession Request</a>
           </div>
-          {listRequests}
           <List
             list={list}
             action={listRequests}

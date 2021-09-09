@@ -1,5 +1,5 @@
 'use strict';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
@@ -7,12 +7,13 @@ import {
   getConversation,
   replyConversation,
   addUsersToConversation } from '../../actions';
+import { notePrivileges } from '../../utils/privileges';
 import { lastUpdated } from '../../utils/format';
+import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import Loading from '../LoadingIndicator/loading-indicator';
+import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 
 const textRef = React.createRef();
-const usersRef = React.createRef();
 
 const reply = (dispatch, id) => {
   const payload = { conversation_id: id, text: textRef.current.value };
@@ -20,24 +21,30 @@ const reply = (dispatch, id) => {
   textRef.current.value = '';
 }
 
-const addUsers = (dispatch, id) => {
-  const payload = {
-    conversation_id: id,
-    user_list: usersRef.current.value.split(',')
-  };
-  dispatch(addUsersToConversation(payload));
-  usersRef.current.value = '';
-}
-
-const Conversation = ({ dispatch, conversation, match }) => {
+const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const { conversationId } = match.params;
+  const [showSearch, setShowSearch] = useState(false);
   useEffect(() => {
     dispatch(getConversation(conversationId));
   }, []);
   const { data, inflight, meta } = conversation;
   const { subject, notes, participants } = data;
   const { queriedAt } = meta;
-  const loading = inflight || !notes;
+  const { canReply, canAddUser, canAddGroup } = notePrivileges(privileges);
+  const cancelCallback = () => setShowSearch(false);
+  const submitCallback = (id) => {
+    const params = {
+      conversation_id: conversationId,
+      user_id: id
+    };
+    dispatch(addUsersToConversation(params));
+    setShowSearch(false);
+  };
+  const searchOptions = {
+    entity: 'user',
+    submit: submitCallback,
+    cancel: cancelCallback
+  };
   const breadcrumbConfig = [
     {
       label: 'Dashboard Home',
@@ -66,7 +73,9 @@ const Conversation = ({ dispatch, conversation, match }) => {
             {lastUpdated(queriedAt)}
           </div>
         </section>
-        { notes ?
+        { showSearch && <SearchModal { ...searchOptions }/> }
+        { inflight && <LoadingOverlay /> }
+        { notes &&
           <section className='page__section flex__row'>
             <section className='page__section flex__item--grow-1'>
               <div className='heading__wrapper--border'>
@@ -77,18 +86,22 @@ const Conversation = ({ dispatch, conversation, match }) => {
               <div className='flex__column--reverse'>
                 <div className='flex__row--border'>
                   <div className='flex__item--w-15'>
-                    { inflight && <Loading /> }
+
                   </div>
-                  <form className='flex__column flex__item--grow-1'
-                        onSubmit={(e) => { e.preventDefault(); reply(dispatch, conversationId); }}>
-                    <input type='text' ref={textRef}></input>
-                    <div>
-                      <button type='submit'
-                        className='button button--small button--green form-group__element--right'>
-                        Send Reply
-                      </button>
-                    </div>
-                  </form>
+                  {canReply &&
+                    <form className='flex__column flex__item--grow-1'
+                          onSubmit={(e) => { e.preventDefault(); reply(dispatch, conversationId); }}>
+                      <textarea placeholder='Type your reply'
+                        className='no-resize'
+                        ref={textRef}></textarea>
+                      <div>
+                        <button type='submit'
+                          className='button button--small button--reply form-group__element--right'>
+                          Send Reply
+                        </button>
+                      </div>
+                    </form>
+                  }
                 </div>
                 {
                   notes.map((note, key) => {
@@ -97,7 +110,7 @@ const Conversation = ({ dispatch, conversation, match }) => {
                 }
               </div>
             </section>
-            <section className='page__section flex__item--w-25 flex__item-end'>
+            <section className='page__section flex__item--w-17 flex__item-end'>
               <div className='heading__wrapper--border'>
                 <h2 className='heading--medium heading--shared-content with-description'>
                   Participants <span className='num--title'>{participants.length}</span>
@@ -106,18 +119,20 @@ const Conversation = ({ dispatch, conversation, match }) => {
               <div className='flex__column'>
                 {
                   participants.map((user, key) => {
-                    return <div key={key}>{user.name}</div>
+                    return <div className='sm-border' key={key}>{user.name}</div>
                   })
                 }
-                <textarea ref={usersRef} rows="1"></textarea>
-                <button className='button button--small button--green form-group__element--right'
-                        onClick={() => addUsers(dispatch, conversationId)}>
-                Add Users
-                </button>
+                {canAddUser &&
+                  <div className='flex__item--spacing'>
+                    <button className='button button--small button--add'
+                          onClick={() => setShowSearch(true)}>
+                      Add Users
+                    </button>
+                  </div>
+                }
               </div>
             </section>
-          </section> :
-          <Loading />
+          </section>
         }
       </div>
     </div>
@@ -127,6 +142,7 @@ const Conversation = ({ dispatch, conversation, match }) => {
 Conversation.propTypes = {
   dispatch: PropTypes.func,
   conversations: PropTypes.object,
+  privileges: PropTypes.object,
   match: PropTypes.object
 };
 
@@ -137,7 +153,7 @@ const Note = ({ note }) => {
         <h3>{ note.from.name }</h3>
         {lastUpdated(note.sent, 'Sent')}
       </div>
-      <div className='flex__item--grow-1'>{ note.text }</div>
+      <div className='flex__item--grow-1-wrap'>{ note.text }</div>
     </div>
   );
 };
@@ -146,22 +162,7 @@ Note.propTypes = {
   note: PropTypes.object
 }
 
-export default withRouter(connect(
-  (state) => ({ conversation: state.conversations.conversation })
-)(Conversation));
-
-const test = {
-  "id": "d86b83f6-97c6-4743-b424-c5593511a0ba",
-  "subject": "Moor Test",
-  "notes": [
-    {
-      "text": "Just testing more of this stuff",
-      "sent": "2021-07-27T22:45:40.803236",
-      "from": {
-        "id": "1b10a09d-d342-4eee-a9eb-c99acd2dde17",
-        "name": "Earthdata Pub System",
-        "email": "no_email"
-      }
-    }
-  ]
-}
+export default withRouter(connect(state => ({
+  conversation: state.conversations.conversation,
+  privileges: state.api.tokens.privileges
+}))(Conversation));

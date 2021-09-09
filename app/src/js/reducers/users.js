@@ -11,6 +11,11 @@ import {
   USERS_INFLIGHT,
   USERS_ERROR,
 
+  USER_ADDROLE_INFLIGHT,
+  USER_REMOVEROLE_INFLIGHT,
+  USER_ADDGROUP_INFLIGHT,
+  USER_REMOVEGROUP_INFLIGHT,
+
   SEARCH_USERS,
   CLEAR_USERS_SEARCH,
 
@@ -29,35 +34,38 @@ export const initialState = {
     meta: {},
     params: {}
   },
-  dropdowns: {},
+  detail: {
+    inflight: false,
+    error: false,
+    data: {}
+  },
   map: {},
-  search: {},
-  created: {},
-  restarted: {},
-  stopped: {}
+  search: {}
 };
 
 export default createReducer(initialState, {
 
   [USER]: (state, action) => {
     const { data, id } = action;
+    set(state, ['detail', 'data'], data);
+    set(state, ['detail', 'inflight'], false);
+    set(state, ['detail', 'meta'], assignDate(data.meta));
     set(state, ['map', id, 'inflight'], false);
     set(state, ['map', id, 'data'], data);
     set(state, ['map', id, 'error'], null);
-    if (get(state, ['deleted', id, 'status']) !== 'error') {
-      del(state, ['deleted', id]);
-    }
   },
   [USER_INFLIGHT]: (state, action) => {
     const { id } = action;
+    set(state, ['detail', 'inflight'], true);
     set(state, ['map', id, 'inflight'], true);
   },
   [USER_ERROR]: (state, action) => {
-    const { id } = action;
+    const { id, error } = action;
+    set(state, ['detail', 'inflight'], false);
+    set(state, ['detail', 'error'], error)
     set(state, ['map', id, 'inflight'], false);
-    set(state, ['map', id, 'error'], action.error);
+    set(state, ['map', id, 'error'], error);
   },
-
   [USERS]: (state, action) => {
     const { data } = action;
     set(state, ['list', 'data'], data);
@@ -71,6 +79,19 @@ export default createReducer(initialState, {
   [USERS_ERROR]: (state, action) => {
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], action.error);
+  },
+
+  [USER_ADDROLE_INFLIGHT]: (state, action) => {
+    set(state, ['detail', 'inflight'], true);
+  },
+  [USER_REMOVEROLE_INFLIGHT]: (state, action) => {
+    set(state, ['detail', 'inflight'], true);
+  },
+  [USER_ADDGROUP_INFLIGHT]: (state, action) => {
+    set(state, ['detail', 'inflight'], true);
+  },
+  [USER_REMOVEGROUP_INFLIGHT]: (state, action) => {
+    set(state, ['detail', 'inflight'], true);
   },
 
   [SEARCH_USERS]: (state, action) => {
