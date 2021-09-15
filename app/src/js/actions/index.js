@@ -97,7 +97,7 @@ export const interval = function (action, wait, immediate) {
 export const timeout = function (action, wait) {
   const timeoutId = setTimeout(action, wait);
   return () => clearTimeout(timeoutId);
-}
+};
 
 export const getApiVersion = () => {
   return (dispatch) => {
@@ -515,8 +515,8 @@ export const logout = () => {
   return (dispatch) => {
     dispatch({ type: types.LOGOUT });
     history.push('/auth');
-  }
-}
+  };
+};
 
 export const deleteToken = () => ({ type: types.DELETE_TOKEN });
 
@@ -581,17 +581,6 @@ export const listRoles = (options) => ({
     method: 'GET',
     path: 'data/roles',
     qs: Object.assign({ limit: defaultPageLimit }, options)
-  }
-});
-export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
-export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
-
-export const getConversation = (conversationId) => ({
-  [CALL_API]: {
-    type: types.CONVERSATION,
-    method: 'GET',
-    id: conversationId,
-    path: `notification/conversation/${conversationId}`
   }
 });
 export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });

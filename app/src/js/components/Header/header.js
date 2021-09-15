@@ -4,8 +4,7 @@ import c from 'classnames';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { logout, getApiVersion, getEarthdatapubInstanceMetadata } from '../../actions';
-import { graphicsPath, nav, overviewUrl } from '../../config';
-import { strings } from '../locale';
+import { nav, overviewUrl } from '../../config';
 import { kibanaAllLogsLink } from '../../utils/kibana';
 import mainLogo from '../../../assets/images/edpub-logo-white-30-x-60.png';
 

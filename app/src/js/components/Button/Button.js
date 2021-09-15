@@ -168,6 +168,7 @@ Button.propTypes = {
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   overlayClass: PropTypes.string,
+  spinner: PropTypes.bool,
   style: PropTypes.shape({}),
   target: PropTypes.string,
   title: PropTypes.string,
