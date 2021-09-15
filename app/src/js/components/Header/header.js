@@ -5,9 +5,7 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout, getApiVersion } from '../../actions';
-import { graphicsPath, nav, overviewUrl } from '../../config';
-import { strings } from '../locale';
-import { kibanaAllLogsLink } from '../../utils/kibana';
+import { nav, overviewUrl } from '../../config';
 import mainLogo from '../../../assets/images/nasa-logo.svg';
 
 const paths = [
