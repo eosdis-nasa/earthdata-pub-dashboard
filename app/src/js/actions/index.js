@@ -164,6 +164,21 @@ export const listRequests = (options) => ({
   }
 });
 
+export const reviewRequest = (id, approve) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.REQUEST_REVIEW,
+        method: 'POST',
+        path: 'submission/review',
+        body: { id, approve }
+      }
+    })
+    .then(() => {
+      dispatch(getRequest(id));
+    });
+}};
+
 export const updateSubmissionMetadata = (payload) => ({
   [CALL_API]: {
     type: types.SUBMISSION_UPDATE_METADATA,
@@ -224,15 +239,14 @@ export const listModules = () => ({
   }
 });
 
-export const applyWorkflowToRequest = (requestId, workflow) => ({
+export const applyWorkflowToRequest = (requestId, workflowId) => ({
   [CALL_API]: {
     type: types.SUBMISSION_APPLYWORKFLOW,
-    method: 'PUT',
-    id: requestId,
-    path: `submissions/${requestId}`,
+    method: 'POST',
+    path: `submission/apply`,
     body: {
-      action: 'applyWorkflow',
-      workflow
+      id: requestId,
+      workflow_id: workflowId
     }
   }
 });
@@ -421,7 +435,7 @@ export const listUsers = (options) => ({
     type: types.USERS,
     method: 'GET',
     id: null,
-    path: 'data/users',
+    path: 'user/find',
     qs: Object.assign({ per_page: defaultPageLimit }, options)
   }
 });
@@ -440,9 +454,74 @@ export const getUser = (userId) => ({
     type: types.USER,
     id: userId,
     method: 'GET',
-    path: `data/user/${userId}`
+    path: `user/find`,
+    qs: { id: userId }
   }
 });
+
+export const addUserRole = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.USER_ADDROLE,
+        method: 'POST',
+        path: `user/add_role`,
+        body: payload
+      }
+    })
+    .then(() => {
+      dispatch(getUser(payload.id));
+    });
+  }
+};
+
+export const removeUserRole = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.USER_REMOVEROLE,
+        method: 'POST',
+        path: `user/remove_role`,
+        body: payload
+      }
+    })
+    .then(() => {
+      dispatch(getUser(payload.id));
+    });
+  }
+};
+
+export const addUserGroup = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.USER_ADDGROUP,
+        method: 'POST',
+        path: `user/add_group`,
+        body: payload
+      }
+    })
+    .then(() => {
+      dispatch(getUser(payload.id));
+    });
+  }
+};
+
+export const removeUserGroup = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.USER_REMOVEGROUP,
+        method: 'POST',
+        path: `user/remove_group`,
+        body: payload
+      }
+    })
+    .then(() => {
+      dispatch(getUser(payload.id));
+    });
+  }
+};
 
 export const searchUsers = (prefix) => ({ type: types.SEARCH_USERS, prefix: prefix });
 export const clearUsersSearch = () => ({ type: types.CLEAR_USERS_SEARCH });
@@ -673,9 +752,9 @@ export const addUsersToConversation = (payload) => {
   return (dispatch) => {
     dispatch({
       [CALL_API]: {
-        type: types.CONVERSATION_ADD_USERS,
+        type: types.CONVERSATION_ADD_USER,
         method: 'POST',
-        path: `notification/add_users`,
+        path: `notification/add_user`,
         body: payload
       }
     })
@@ -686,3 +765,12 @@ export const addUsersToConversation = (payload) => {
     });
   }
 };
+
+export const updateSearchModal = (path, query) => ({
+  [CALL_API]: {
+    type: types.SEARCH_MODAL,
+    method: 'GET',
+    path,
+    qs: Object.assign({ per_page: 10, page: 0 }, query)
+  }
+})

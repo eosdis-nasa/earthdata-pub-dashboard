@@ -18,7 +18,11 @@ export const initialState = {
     inflight: false,
     error: false,
   },
-  detail: {},
+  detail: {
+    inflight: false,
+    error: false,
+    data: {}
+  },
   searchString: null,
 };
 
