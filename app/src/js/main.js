@@ -8,7 +8,6 @@ import Header from './components/Header/header';
 import Footer from './components/Footer/footer';
 import TopButton from './components/TopButton/TopButton';
 import TimeoutWarning from './components/TimeoutWarning';
-import { setupTokenTimeout } from './actions';
 
 const { target, environment } = _config;
 

@@ -14,7 +14,7 @@ import {
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 
-function getExpiration(token) {
+function getExpiration (token) {
   const decoded = jwt.decode(token);
   if (decoded && decoded.exp) {
     return decoded.exp;
