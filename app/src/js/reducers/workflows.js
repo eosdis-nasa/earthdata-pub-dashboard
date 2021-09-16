@@ -6,8 +6,6 @@ import {
   WORKFLOW_INFLIGHT,
   WORKFLOW_ERROR,
   WORKFLOWS,
-  WORKFLOWS_INFLIGHT,
-  WORKFLOWS_ERROR
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 
@@ -41,12 +39,5 @@ export default createReducer(initialState, {
     set(state, ['list', 'meta'], { queriedAt: Date.now() });
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], false);
-  },
-  [WORKFLOWS_INFLIGHT]: (state) => {
-    set(state, ['list', 'inflight'], true);
-  },
-  [WORKFLOWS_ERROR]: (state, action) => {
-    set(state, ['list', 'inflight'], false);
-    set(state, ['list', 'error'], action.error);
   }
 });

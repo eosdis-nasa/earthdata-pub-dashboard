@@ -41,7 +41,7 @@ const metaAccessors = [
     property: 'step_name'
   },
   {
-    label: 'Data Publication Request',
+    label: 'Data Accession Request',
     property: 'data_publication_request'
   },
   {

@@ -93,7 +93,7 @@ const CommonConfig = {
         ]
       },
       {
-        test: /\.(woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/, // fonts
+        test: /\.(woff|woff2|eot|ttf)(\?[a-z0-9=.]+)?$/, // fonts
         use: {
           loader: 'file-loader',
           options: {
@@ -148,7 +148,6 @@ const CommonConfig = {
         AWS_REGION: config.awsRegion,
         DAAC_NAME: config.target,
         STAGE: config.environment,
-        HIDE_PDR: config.nav.exclude.PDRs,
         AUTH_METHOD: config.oauthMethod,
         KIBANAROOT: config.kibanaRoot,
         ESROOT: config.esRoot,

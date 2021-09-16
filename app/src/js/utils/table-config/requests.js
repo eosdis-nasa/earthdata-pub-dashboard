@@ -87,14 +87,14 @@ export const tableColumns = [
     width: 100
   },
   {
-    Header: 'Data Publication Request',
-    accessor: row => formLookup(row, newDataPublicationRequest, publicationRequestFormId, 'Data Publication Request'),
+    Header: 'Data Accession Request',
+    accessor: row => formLookup(row, newDataPublicationRequest, publicationRequestFormId, 'Data Accession Request'),
     id: 'data_publication_request',
     width: 200
   },
   {
-    Header: 'Data Product Information',
-    accessor: row => formLookup(row, newDataProductInformation, productInformationFormId, 'Data Product Information'),
+    Header: 'Data Publication Request',
+    accessor: row => formLookup(row, newDataProductInformation, productInformationFormId, 'Data Publication Request'),
     id: 'data_product_information',
     width: 200
   },
@@ -114,9 +114,9 @@ export const tableColumns = [
     id: 'lock'
   },
   {
-    Header: 'Communication',
-    accessor: row => <Link to={`/conversations/id/${row.conversation_id}`}>{row.conversation_id ? 'Email conversation' : null}</Link>,
-    id: 'email_conversation'
+    Header: 'Conversation',
+    accessor: row => row.conversation_id ? (<Link to={`/conversations/id/${row.conversation_id}`}>View</Link>) : null,
+    id: 'conversation_id'
   }
   /* {
     Header: 'Data Request Request',

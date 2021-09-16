@@ -3,19 +3,18 @@ import React from 'react';
 import c from 'classnames';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
-import { logout, getApiVersion, getEarthdatapubInstanceMetadata } from '../../actions';
-import { graphicsPath, nav, overviewUrl } from '../../config';
-import { strings } from '../locale';
-import { kibanaAllLogsLink } from '../../utils/kibana';
-import mainLogo from '../../../assets/images/edpub-logo-white-30-x-60.png';
+import { connect } from 'react-redux';
+import { logout, getApiVersion } from '../../actions';
+import { nav, overviewUrl } from '../../config';
+import mainLogo from '../../../assets/images/nasa-logo.svg';
 
 const paths = [
-  ['Requests', '/requests'],
-  ['Workflows', '/workflows'],
-  ['Metrics', '/metrics'],
-  ['Users', '/users'],
-  ['Groups', '/groups'],
-  ['Roles', '/roles'],
+  ['Requests', '/requests', 'REQUEST'],
+  ['Workflows', '/workflows', 'WORKFLOW'],
+  ['Metrics', '/metrics', 'METRICS'],
+  ['Users', '/users', 'USER'],
+  ['Groups', '/groups', 'GROUP'],
+  ['Roles', '/roles', 'ROLE']
 ];
 
 class Header extends React.Component {
@@ -30,14 +29,13 @@ class Header extends React.Component {
   componentDidMount () {
     const { dispatch } = this.props;
     dispatch(getApiVersion());
-    dispatch(getEarthdatapubInstanceMetadata());
   }
 
   logout () {
     const { dispatch, history } = this.props;
     dispatch(logout());
     localStorage.removeItem('auth-token');
-    window.location.href = overviewUrl;
+    //window.location.href = overviewUrl;
     history.push('/');
   }
 
@@ -52,27 +50,36 @@ class Header extends React.Component {
   }
 
   linkTo (path) {
-    if (path[0] === 'Logs') {
-      const kibanaLink = kibanaAllLogsLink(this.props.earthdatapubInstance);
-      return <a href={kibanaLink} target="_blank">{path[0]}</a>;
-    } else {
-      return <Link to={{ pathname: path[1], search: this.props.location.search }}>{path[0]}</Link>;
-    }
+    return <Link to={{
+      pathname: path[1],
+      search: this.props.location.search
+    }}>{path[0]}</Link>;
   }
 
   render () {
     const { authenticated } = this.props.api;
-    const activePaths = paths.filter(path => nav.exclude[path[0]] !== true);
+    const { privileges, user } = this.props;
+    const activePaths = paths.filter(path => {
+      return !!privileges[path[2]] || privileges['ADMIN']
+    });
+    const feedbackUrl = overviewUrl + '/feedback';
     return (
       <div className='header' role="navigation" aria-label="Header">
         <div className='row'>
-          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={mainLogo} /></Link><div id="logo_words">EDPUB</div></h1>
+          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={mainLogo} /><div>EDPub</div></Link></h1>
           <nav>
             { !this.props.minimal ? <ul>
               {activePaths.map(path => <li
                 key={path[0]}
                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
-              <li className='rightalign nav__order-8'>{ authenticated ? <a onClick={this.logout}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link> }</li>
+              <div className='rightalign nav__order-8'>
+                <ul className='right-ul'>
+                  <li className='overviewLink'>{ overviewUrl ? <a href={overviewUrl}>Overview</a> : '' }</li>
+                  <li className='overviewLink'>{ overviewUrl ? <a href="https://app.smartsheet.com/b/form/4978cb9677ad4198a96afd40102e9f2d" target="_blank">Feedback</a> : '' }</li>
+                  {authenticated &&
+                    <li><Link to={'/conversations'}>Hi, {user}</Link></li>
+                  }
+                  <li className='logOut'>{ authenticated ? <a onClick={this.logout}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link> }</li></ul></div>
             </ul> : <li>&nbsp;</li> }
           </nav>
         </div>
@@ -87,7 +94,12 @@ Header.propTypes = {
   location: PropTypes.object,
   history: PropTypes.object,
   minimal: PropTypes.bool,
+  privileges: PropTypes.object,
+  user: PropTypes.string,
   earthdatapubInstance: PropTypes.object
 };
 
-export default withRouter(Header);
+export default withRouter(connect(state => ({
+  privileges: state.api.tokens.privileges,
+  user: state.api.tokens.userName
+}))(Header));

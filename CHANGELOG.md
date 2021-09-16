@@ -8,6 +8,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 1.0.4 - 2021-08-23
+
+- [Update form names](e32953e6bb7096f64842e71ff45da5f0a8d79443)
+- [Use simple href link in header to allow overview and feedback urls to work](e01623db4d3b27a37ca5f54d85b3875b5f2f8e5c)
+- [Add temporary feedback link. Meant to be remove after testing](583a563ed7f4ed7819a7793581d508cba1c58741)
+
+## 1.0.3 - 2021-08-16
+
+- [Update logo and favicon to nasa meatball logo](121f956b61e25fcf95b1d04d0bf46ab43f13fd33)
+
+## 1.0.2 - 2021-08-11
+
+- [Added handling of no answer for table format detail](f45cba40db2799a7d00e6038117125c61bdd6e48)
+
+## 1.0.1 - 2021-07-22
+
+- [Updated form.js for custom table type input](4042a66138f1b79cb69a2d968751a077aaa6bcce)
+- [Added cloud metrics actions, types and image to index.js, types.js and metrics/overview.js and some general cleanup.](d4d04938eeb95baf28c1b2d8dd9ef5004aa15095)
+- [Added modules page](b14c1391838)
+- [Updated header to include overview link](137d68957dd774d9cc2ddc5bfebe003d00eda6d4)
+- [Added overviewUrl to config so home page displays intro paragraph](4da69c8c79bf695c8d68a97417a5e0e99dd2ba8f)
+
 ## 1.0.0 - 2021-06-29
 
 - [Open source release version 1.0.0](3c72ab0f8f8)

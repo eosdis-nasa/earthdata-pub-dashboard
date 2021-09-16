@@ -51,7 +51,7 @@
       padding: .4em 1.5em;
     }
   }
-  
+
   &--medium{
     font-size: .93em;
     padding: .4em 1.5em .4em 2.5em;
@@ -74,7 +74,7 @@
   &--white, &--white:visited {
     color: $midnight-blue;
     background-color: $white;
-  
+
     &:hover{
       color: $white;
       background-color: $midnight-blue;
@@ -83,7 +83,7 @@
 
   &--green, &--green:visited {
     background-color: $light-green;
-  
+
     &:hover {
       background-color: $light-green;
       color: #fff;
@@ -98,7 +98,7 @@
       border: 0;
     }
   }
-  
+
   &--secondary, &--secondary:visited{
     background-color: $dolphin-grey;
     &:hover {
@@ -116,7 +116,7 @@
     justify-content: center;
     align-content: center;
     position: relative;
-  
+
     &:before{
       color: $white;
       position: absolute;
@@ -124,8 +124,8 @@
       content: '\f0aa';
       font-weight: 900;
       left: 13px;
-      
-    } 
+
+    }
 
     &:hover{
       &:hover {
@@ -143,7 +143,7 @@
     justify-content: center;
     align-content: center;
     position: relative;
-  
+
     &:hover{
       &:hover {
         background-color: darken($light-green, 5%);
@@ -153,12 +153,12 @@
   &--close{
     padding: .65em 1.2em .65em 1.2em;
   }
-  
+
   /*******ButtonGroup & Group CTA******/
     &--add {
       background-color: $light-green;
       position: relative;
-      
+
       &:before {
         color: $white;
         position: absolute;
@@ -167,13 +167,108 @@
         font-weight: 900;
         top: 4px;
         left: 10px;
-      } 
+      }
     }
-  
+
+    &--subtract {
+      background-color: $error-red;
+      position: relative;
+
+      &:before {
+        color: $white;
+        position: absolute;
+        font-family: 'FontAwesome';
+        content: '\f068';
+        font-weight: 900;
+        top: 4px;
+        left: 10px;
+      }
+      &:hover {
+        background-color: darken($error-red, 10%);
+        border: 0;
+      }
+    }
+
+    &--previous {
+      background-color: $light-green;
+      position: relative;
+
+      &:before {
+        color: $white;
+        position: absolute;
+        font-family: 'FontAwesome';
+        content: '\f060';
+        font-weight: 900;
+        top: 4px;
+        left: 10px;
+      }
+      &:hover {
+        background-color: darken($light-green, 5%);
+        border: 0;
+      }
+    }
+
+    &--next {
+      background-color: $light-green;
+      position: relative;
+
+      &:before {
+        color: $white;
+        position: absolute;
+        font-family: 'FontAwesome';
+        content: '\f061';
+        font-weight: 900;
+        top: 4px;
+        left: 10px;
+      }
+      &:hover {
+        background-color: darken($light-green, 5%);
+        border: 0;
+      }
+    }
+
+    &--reply {
+      background-color: $light-green;
+      position: relative;
+
+      &:before {
+        color: $white;
+        position: absolute;
+        font-family: 'FontAwesome';
+        content: '\f112';
+        font-weight: 900;
+        top: 4px;
+        left: 10px;
+      }
+      &:hover {
+        background-color: darken($light-green, 5%);
+        border: 0;
+      }
+    }
+
+    &--check {
+      background-color: $light-green;
+      position: relative;
+
+      &:before {
+        color: $white;
+        position: absolute;
+        font-family: 'FontAwesome';
+        content: '\f058';
+        font-weight: 900;
+        top: 4px;
+        left: 10px;
+      }
+      &:hover {
+        background-color: darken($light-green, 5%);
+        border: 0;
+      }
+    }
+
     &--cancel {
       background-color: $dolphin-grey;
       position: relative;
-      
+
       &:before{
         color: $white;
         position: absolute;
@@ -181,8 +276,8 @@
         content: '\f057';
         font-weight: 900;
         left: 10px;
-        
-      } 
+
+      }
     }
 
     &--cancel:hover:before{
@@ -193,11 +288,11 @@
       font-weight: 900;
       visibility: hidden;
   }
-  
+
     &--edit {
       background-color: $light-green;
       position: relative;
-    
+
       &:before{
         color: $white;
         position: absolute;
@@ -205,14 +300,14 @@
         content: '\f044';
         font-weight: 900;
         left: 10px;
-        
-      } 
+
+      }
     }
-  
+
     &--delete {
       background-color: $error-red;
       position: relative;
-    
+
       &:before{
         color: $white;
         position: absolute;
@@ -220,18 +315,18 @@
         content: '\f187';
         font-weight: 900;
         left: 10px;
-      } 
+      }
       &:hover {
         background-color: darken($error-red, 10%);
         color: #fff;
         border: 0;
       }
     }
-  
+
     &--remove {
       background-color: $light-green;
       position: relative;
-      
+
       &:before{
         color: $white;
         position: absolute;
@@ -239,14 +334,14 @@
         content: '\f0a0';
         font-weight: 900;
         left: 10px;
-        
-      } 
+
+      }
     }
-  
+
     &--execute{
       background-color: $light-green;
       position: relative;
-      
+
       &:before{
         color: $white;
         position: absolute;
@@ -254,14 +349,14 @@
         content: '\f5fc';
         font-weight: 900;
         left: 10px;
-        
-      } 
+
+      }
     }
-  
+
     &--reingest{
       background-color: $light-green;
       position: relative;
-      
+
       &:before{
         color: $white;
         position: absolute;
@@ -269,8 +364,8 @@
         content: '\f233';
         font-weight: 900;
         left: 10px;
-        
-      } 
+
+      }
     }
 
     &--remove, &--execute, &--reingest {
@@ -280,11 +375,11 @@
         border: 0;
       }
     }
-  
+
     &--download{
       background-color: $light-green;
       position: relative;
-    
+
       &:before{
         color: $white;
         position: absolute;
@@ -298,11 +393,11 @@
         visibility: hidden;
       }
     }
-  
+
     &--copy{
       background-color: $light-green;
       position: relative;
-    
+
       &:before{
         color: $white;
         position: absolute;
@@ -310,14 +405,14 @@
         content: '\f0c5';
         font-weight: 900;
         left: 10px;
-        
-      } 
+
+      }
     }
-  
+
     &--confirm, &--submit{
       background-color: $light-green;
       position: relative;
-    
+
       &:before{
         color: $white;
         position: absolute;
@@ -325,8 +420,8 @@
         content: '\f0c7';
         font-weight: 900;
         left: 10px;
-        
-      } 
+
+      }
     }
 
     &--confirm:hover:before, &--submit:hover:before{
@@ -341,7 +436,7 @@
     &--enable {
       background-color: $light-green;
       position: relative;
-      
+
       &:before {
         color: $white;
         position: absolute;
@@ -350,13 +445,13 @@
         font-weight: 900;
         top: 4px;
         left: 10px;
-      } 
+      }
     }
 
     &--disable {
       background-color: $light-green;
       position: relative;
-      
+
       &:before {
         color: $white;
         position: absolute;
@@ -365,10 +460,10 @@
         font-weight: 900;
         top: 4px;
         left: 10px;
-      } 
+      }
     }
-  
-  
+
+
      /*******Button Animations & Transitions ******/
     &--loading {
       position: relative;
@@ -381,7 +476,7 @@
       }
       color: $light-green;
     }
-    
+
     &__animation {
       position: relative;
       display: inline-block;
@@ -421,24 +516,24 @@
         font-size: 1.1em;
       }
     }
-    
+
     &__arrow:after {
       left: 130%;
       top: .75em;
     }
-    
+
     &__arrow:hover:after {
       left: 85%;
     }
-    
+
     &__animation--md:hover {
       padding: .65em 3em .65em 1em;
     }
-    
+
     &__arrow--md:hover:after {
       left: 75%;
     }
-    
+
     &__arrow--white {
       &:after {
         position: absolute;
@@ -453,7 +548,7 @@
      &__bulkgranules {
       background-color: $light-green;
       position: relative;
-    
+
       &:before{
         color: $white;
         position: absolute;
@@ -461,7 +556,7 @@
         content: '\f51e';
         font-weight: 900;
         left: 10px;
-        
+
       }
 
       &.form-group__element:hover:before {
@@ -486,21 +581,21 @@
       background-color: $light-green;
       position: relative;
       margin-top: 1em;
-          
+
       &:before{
       color: $white;
       position: absolute;
       font-family: 'FontAwesome';
       content: '\f360';
       font-weight: 900;
-      left: 10px;  
-      } 
+      left: 10px;
+      }
     }
 
     &__goto {
       background-color: $light-green;
       position: relative;
-    
+
       &:before{
         color: $white;
         position: absolute;
@@ -508,7 +603,7 @@
         content: '\f0a9';
         font-weight: 900;
         left: 10px;
-      } 
+      }
 
       &.form-group__element--right {
         &:hover:before {
@@ -516,7 +611,7 @@
         }
       }
     }
-    
+
       &__goto:hover:before {
         color: $white;
         position: absolute;
@@ -525,7 +620,7 @@
         font-weight: 900;
         visibility: hidden;
       }
-    
+
     &--tab {
       border: none;
       background: none;
@@ -544,7 +639,7 @@
     &__group {
       background-color: $ocean-blue;
       position: relative;
-    
+
       &:before{
         color: $white;
         position: absolute;
@@ -552,7 +647,7 @@
         content: '\f111';
         font-weight: 900;
         left: 10px;
-        
-      } 
+
+      }
     }
 }

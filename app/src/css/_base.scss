@@ -1,5 +1,5 @@
 /**********************************************************************
-  This stylesheet is the core and general styles for the application. 
+  This stylesheet is the core and general styles for the application.
 **********************************************************************/
 
 /******** If Browser IE < 10 - Don't delete. *****/
@@ -160,7 +160,6 @@ a:active {
 /**************************************************
   Header & Navigation (Includes Sidebar)
 **************************************************/
-
 .header {
   background-color: $ocean-blue;
   border-bottom: 1px solid rgba(255, 255, 255, .06);
@@ -171,12 +170,15 @@ a:active {
     color:white;
     font-weight: 1000;
     text-align: center;
-    max-height: 15px;
     img {
       // padding-top: 7px;  Adjusted for hiding DatePickerHeader
-      padding-top: 20px;
-      height: 30px;
-      width: 60px;
+      padding-top: 16.2px;
+      height: 60px;
+    }
+    div {
+      margin-top: 35px;
+      float: right;
+      color: white;
     }
   }
   nav{
@@ -185,7 +187,7 @@ a:active {
   }
   nav ul {
     display: flex;
-    height: 47px; 
+    height: 47px;
     margin-top: 1rem; // adjusted for hiding DatePickerHeader
   }
   nav li {
@@ -207,7 +209,7 @@ a:active {
       }
     }
     &.rightalign {
-      margin-left: auto;
+      margin-right: 2.5em;
       margin-right: 0;
     }
   }
@@ -238,22 +240,32 @@ a:active {
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
 }
-
+.right-ul{
+  margin-top:0rem!important;
+}
+.logOut{
+  margin-right: 0em!important;
+}
+.userName{
+  color: $white;
+}
 .rightalign.nav__order-8{
   position: relative;
+  margin-left: auto;
+  height: 47px;
 }
-.rightalign.nav__order-8 .log-icon{
+.log-icon{
+  margin-left: 2rem;
   &:before {
     position: absolute;
     color: $white;
     font-family: 'FontAwesome';
     content: '\f2f5';
     font-weight: 900;
-    right: 3.9em;
+    right: 4em;
     top: 1.54em;
   }
 }
-
 .content__header {
   background-color: $ocean-blue;
   color: $white;
@@ -402,7 +414,7 @@ a:active {
 .page__section {
   @extend .clearfix;
   /*&:last-of-type {
-  margin-bottom: 3em; 
+  margin-bottom: 3em;
   }*/
 }
 
@@ -468,6 +480,85 @@ a:active {
     padding-left: 1em;
     border-left: 1px solid lighten($lighter-grey, 20%);
   }
+}
+
+.flex__column {
+  display: flex;
+  flex-direction: column;
+}
+.flex__column--sm-border {
+  border-left: 1px solid $lightest-grey;
+}
+.flex__column--reverse {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.flex__row {
+  display: flex;
+  flex-direction: row;
+}
+.flex__row--border {
+  padding-bottom: 2em;
+  padding-top: 2em;
+  border-bottom: 1px solid $lightest-grey;
+  display: flex;
+  flex-direction: row;
+}
+.flex__row--reverse {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.flex__row--center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.flex__item--spacing {
+  padding: .25em .5em .25em .5em;
+}
+.flex__item--w-15 {
+  flex-shrink: 0;
+  width: 15em;
+}
+.flex__item--w-17 {
+  flex-shrink: 0;
+  width: 17em;
+}
+.flex__item--w-25 {
+  flex-shrink: 0;
+  width: 25em;
+}
+.flex__item--w-35 {
+  flex-shrink: 0;
+  width: 35em;
+}
+.flex__item--start {
+  align-self: flex-start;
+}
+.flex__item--center {
+  align-self: center;
+}
+.flex__item--end {
+  align-self: flex-end;
+}
+.flex__item--grow-1 {
+  flex-grow: 1;
+}
+.flex__item--grow-1-wrap {
+  flex-grow: 1;
+  overflow-wrap: anywhere;
+}
+.sm-border {
+  padding: .25em .5em .25em .5em;
+  border-bottom: 1px solid $lightest-grey;
+}
+.text__green {
+  color: $light-green;
+  height: 1em;
+}
+.no-resize {
+  resize: none;
+  margin-bottom: 1em;
 }
 
 /**************************************************
@@ -753,7 +844,7 @@ a:active {
 
 .api__warning .warning-icon{
     position: relative;
-    
+
   &:before {
     position: absolute;
     /*color: $error-red;*/
@@ -764,4 +855,97 @@ a:active {
     left: -1.5em;
     top: 0em;
   }
+}
+
+.search-modal__background {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.12);
+  z-index: 1;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-modal {
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+  width: 50vw;
+  background-color: $white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+}
+.search-modal__title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 4em;
+  color: $white;
+  background-color: $ocean-blue;
+  &>h1 {
+    color: $white;
+  }
+}
+.search-modal__body {
+  flex-grow: 1;
+  padding: 2em;
+}
+.search-modal__list {
+}
+.search-modal__list-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding: 0.5em;
+  font-weight: bold;
+  background-color: $ocean-blue;
+  &>div {
+    width: 100%;
+    text-align: left;
+  }
+}
+.search-modal__list-header-text {
+  color: $white;
+}
+.search-modal__item {
+  display: flex;
+  flex-direction: row;
+  height: 2em;
+  justify-content: space-evenly;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid $lightest-grey;
+  background-color: $white;
+  &:hover {
+    background-color: $lightest-grey;
+  }
+  &>div {
+    width:100%;
+    padding-left: 0.25em;
+    text-align: left;
+  }
+  &--selected {
+    @extend .search-modal__item;
+    color: $white;
+    background-color: $light-green;
+    &:hover {
+      background-color: darken($light-green, 5%);
+    }
+  }
+  &--hidden {
+    @extend .search-modal__item;
+    visibility: hidden;
+  }
+}
+.search-modal__controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1em;
+  padding: 1em;
 }

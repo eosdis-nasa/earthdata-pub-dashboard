@@ -111,3 +111,15 @@
     transform: scale(1.0);
   }
 }
+
+.loading-overlay {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

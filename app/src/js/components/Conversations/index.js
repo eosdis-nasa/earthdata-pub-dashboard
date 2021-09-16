@@ -6,32 +6,28 @@ import PropTypes from 'prop-types';
 import ConversationsOverview from './overview';
 import Conversation from './conversation';
 
-class Conversations extends React.Component {
-  render () {
-    return (
-      <div className='page__conversations'>
-        <div className='content__header'>
-          <div className='row'>
-            <h1 className='heading--xlarge'>Conversations</h1>
-          </div>
-        </div>
-        <div className='page__content'>
-          <div className='wrapper__sidebar'>
-            <Sidebar
-              currentPath={this.props.location.pathname}
-              params={this.props.params}
-            />
-            <div className='page__content--shortened'>
-              <Switch>
-                <Route exact path='/conversations' component={ConversationsOverview} />
-                <Route path='/conversations/id/:conversationId' component={Conversation} />
-              </Switch>
-            </div>
-          </div>
+const Conversations = ({ location, params }) => {
+  return (
+    <div className='page__conversations'>
+      <div className='content__header'>
+        <div className='row'>
+          <h1 className='heading--xlarge'>Conversations</h1>
         </div>
       </div>
-    );
-  }
+      <div className='page__content'>
+        <div className='wrapper__sidebar'>
+          <Sidebar
+            currentPath={location.pathname}
+            params={params}
+          />
+          <Switch>
+            <Route exact path='/conversations' component={ConversationsOverview} />
+            <Route path='/conversations/id/:conversationId' component={Conversation} />
+          </Switch>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 Conversations.propTypes = {

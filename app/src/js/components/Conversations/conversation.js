@@ -1,181 +1,168 @@
 'use strict';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { connect, useDispatch } from 'react-redux';
 import {
-  withRouter
-} from 'react-router-dom';
-import {
-  interval,
-  getConversation
-} from '../../actions';
-import { get } from 'object-path';
-import {
-} from '../../utils/format';
-import Loading from '../LoadingIndicator/loading-indicator';
-import ErrorReport from '../Errors/report';
-// import Metadata from '../Table/Metadata';
-import Email from '../Table/Email';
-import _config from '../../config';
+  getConversation,
+  replyConversation,
+  addUsersToConversation } from '../../actions';
+import { notePrivileges } from '../../utils/privileges';
+import { lastUpdated } from '../../utils/format';
+import SearchModal from '../SearchModal';
+import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 
-const { updateInterval } = _config;
+const textRef = React.createRef();
 
-/* const permissionTableColumns = [
-  {
-    Header: 'Table Name',
-    accessor: row => row
-  }
-];
-
-const subscriptionTableColumns = [
-  {
-    Header: 'Table Name',
-    accessor: row => row,
-  }
-];
-*/
-const metaAccessors = [
-  {
-    label: 'Sender Email',
-    property: 'from.email'
-  },
-  {
-    label: 'Sent',
-    property: 'sent'
-  },
-  {
-    label: 'Text',
-    property: 'text'
-  }
-];
-
-class ConversationOverview extends React.Component {
-  constructor () {
-    super();
-    this.reload = this.reload.bind(this);
-    this.navigateBack = this.navigateBack.bind(this);
-    this.delete = this.delete.bind(this);
-    this.errors = this.errors.bind(this);
-  }
-
-  componentDidMount () {
-    const { conversationId } = this.props.match.params;
-    const immediate = !this.props.conversations.map[conversationId];
-    this.reload(immediate);
-  }
-
-  componentWillUnmount () {
-    if (this.cancelInterval) { this.cancelInterval(); }
-  }
-
-  reload (immediate, timeout) {
-    timeout = timeout || updateInterval;
-    const conversationId = this.props.match.params.conversationId;
-    const { dispatch } = this.props;
-    if (this.cancelInterval) { this.cancelInterval(); }
-    this.cancelInterval = interval(() => dispatch(getConversation(conversationId)), timeout, immediate);
-  }
-
-  navigateBack () {
-    const { history } = this.props;
-    history.push('/conversations');
-  }
-
-  delete () {
-    // const { conversationId } = this.props.match.params;
-    // const conversation = this.props.conversations.map[conversationId].data;
-    // if (!conversation.published) {
-    //   this.props.dispatch(deleteConversation(conversationId));
-    // }
-  }
-
-  errors () {
-    const conversationId = this.props.match.params.conversationId;
-    return [
-      get(this.props.conversations.map, [conversationId, 'error']),
-      get(this.props.conversations.deleted, [conversationId, 'error'])
-    ].filter(Boolean);
-  }
-
-  render () {
-    const conversationId = this.props.match.params.conversationId;
-    const record = this.props.conversations.map[conversationId];
-
-    if (!record || (record.inflight && !record.data)) {
-      return <Loading />;
-    } else if (record.error) {
-      return <ErrorReport report={record.error} truncate={true} />;
-    }
-    const conversation = record.data;
-
-    const errors = this.errors();
-
-    // const deleteStatus = get(this.props.conversations.deleted, [conversationId, 'status']);
-    /* const dropdownConfig = [{
-      text: 'Delete',
-      action: this.delete,
-      disabled: conversation.published,
-      status: deleteStatus,
-      success: this.navigateBack,
-      confirmAction: true,
-      confirmText: deleteText(conversationId)
-    }]; */
-
-    return (
-      <div className='page__component'>
-        <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{conversationId}</h1>
-          {/* <AsyncCommands config={dropdownConfig} />
-          <Link
-            className='button button--small button--green button--edit form-conversation__element--right'
-            to={'/conversations/edit/' + conversationId}>Edit</Link> */}
-        </section>
-
-        <section className='page__section'>
-          {errors.length ? <ErrorReport report={errors} truncate={true} /> : null}
-          <div className='heading__wrapper--border' style={{ borderBottom: 'none' }}>
-            <h2 className='heading--medium with-description'>Conversation Overview</h2>
-          </div>
-          { conversation.notes ? conversation.notes.map((note, i) =>
-            <Email data={note} accessors={metaAccessors} key={i}/>
-          ) : <div>Conversation Empty</div>}
-        </section>
-
-        {/* <section className='page__section'>
-          <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>Permissions</h2>
-          </div>
-          <Table
-            data={conversation.permissions}
-            tableColumns={permissionTableColumns}
-          />
-        </section>
-
-        <section className='page__section'>
-          <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>Subscriptions</h2>
-          </div>
-          <Table
-            data={conversation.subscriptions}
-            tableColumns={subscriptionTableColumns}
-          />
-        </section> */}
-      </div>
-    );
-  }
+const reply = (dispatch, id) => {
+  const payload = { conversation_id: id, text: textRef.current.value };
+  dispatch(replyConversation(payload));
+  textRef.current.value = '';
 }
 
-ConversationOverview.propTypes = {
-  match: PropTypes.object,
-  dispatch: PropTypes.func,
-  conversations: PropTypes.object,
-  logs: PropTypes.object,
-  history: PropTypes.object
+const Conversation = ({ dispatch, conversation, privileges, match }) => {
+  const { conversationId } = match.params;
+  const [showSearch, setShowSearch] = useState(false);
+  useEffect(() => {
+    dispatch(getConversation(conversationId));
+  }, []);
+  const { data, inflight, meta } = conversation;
+  const { subject, notes, participants } = data;
+  const { queriedAt } = meta;
+  const { canReply, canAddUser, canAddGroup } = notePrivileges(privileges);
+  const cancelCallback = () => setShowSearch(false);
+  const submitCallback = (id) => {
+    const params = {
+      conversation_id: conversationId,
+      user_id: id
+    };
+    dispatch(addUsersToConversation(params));
+    setShowSearch(false);
+  };
+  const searchOptions = {
+    entity: 'user',
+    submit: submitCallback,
+    cancel: cancelCallback
+  };
+  const breadcrumbConfig = [
+    {
+      label: 'Dashboard Home',
+      href: '/'
+    },
+    {
+      label: 'Conversations',
+      href: '/conversations'
+    },
+    {
+      label: data.id || "",
+      active: true
+    }
+  ];
+  return (
+    <div className='page__content--shortened'>
+      <div className='page__component'>
+        <section className='page__section page__section__controls'>
+          <Breadcrumbs config={breadcrumbConfig} />
+        </section>
+        <section className='page__section page__section__header-wrapper'>
+          <div className='page__section__header'>
+            <h1 className='heading--large heading--shared-content with-description '>
+              Conversation: {subject}
+            </h1>
+            {lastUpdated(queriedAt)}
+          </div>
+        </section>
+        { showSearch && <SearchModal { ...searchOptions }/> }
+        { inflight && <LoadingOverlay /> }
+        { notes &&
+          <section className='page__section flex__row'>
+            <section className='page__section flex__item--grow-1'>
+              <div className='heading__wrapper--border'>
+                <h2 className='heading--medium heading--shared-content with-description'>
+                  Notes <span className='num--title'>{notes.length}</span>
+                </h2>
+              </div>
+              <div className='flex__column--reverse'>
+                <div className='flex__row--border'>
+                  <div className='flex__item--w-15'>
+
+                  </div>
+                  {canReply &&
+                    <form className='flex__column flex__item--grow-1'
+                          onSubmit={(e) => { e.preventDefault(); reply(dispatch, conversationId); }}>
+                      <textarea placeholder='Type your reply'
+                        className='no-resize'
+                        ref={textRef}></textarea>
+                      <div>
+                        <button type='submit'
+                          className='button button--small button--reply form-group__element--right'>
+                          Send Reply
+                        </button>
+                      </div>
+                    </form>
+                  }
+                </div>
+                {
+                  notes.map((note, key) => {
+                    return (<Note note={note} key={key} />)
+                  })
+                }
+              </div>
+            </section>
+            <section className='page__section flex__item--w-17 flex__item-end'>
+              <div className='heading__wrapper--border'>
+                <h2 className='heading--medium heading--shared-content with-description'>
+                  Participants <span className='num--title'>{participants.length}</span>
+                </h2>
+              </div>
+              <div className='flex__column'>
+                {
+                  participants.map((user, key) => {
+                    return <div className='sm-border' key={key}>{user.name}</div>
+                  })
+                }
+                {canAddUser &&
+                  <div className='flex__item--spacing'>
+                    <button className='button button--small button--add'
+                          onClick={() => setShowSearch(true)}>
+                      Add Users
+                    </button>
+                  </div>
+                }
+              </div>
+            </section>
+          </section>
+        }
+      </div>
+    </div>
+  );
 };
 
-ConversationOverview.displayName = 'ConversationElem';
+Conversation.propTypes = {
+  dispatch: PropTypes.func,
+  conversations: PropTypes.object,
+  privileges: PropTypes.object,
+  match: PropTypes.object
+};
+
+const Note = ({ note }) => {
+  return (
+    <div className='flex__row--border'>
+      <div className='flex__item--w-15'>
+        <h3>{ note.from.name }</h3>
+        {lastUpdated(note.sent, 'Sent')}
+      </div>
+      <div className='flex__item--grow-1-wrap'>{ note.text }</div>
+    </div>
+  );
+};
+
+Note.propTypes = {
+  note: PropTypes.object
+}
 
 export default withRouter(connect(state => ({
-  conversations: state.conversations,
-  logs: state.logs
-}))(ConversationOverview));
+  conversation: state.conversations.conversation,
+  privileges: state.api.tokens.privileges
+}))(Conversation));

@@ -97,7 +97,7 @@ export const interval = function (action, wait, immediate) {
 export const timeout = function (action, wait) {
   const timeoutId = setTimeout(action, wait);
   return () => clearTimeout(timeoutId);
-}
+};
 
 export const getApiVersion = () => {
   return (dispatch) => {
@@ -138,13 +138,13 @@ export const checkApiVersion = () => {
   };
 };
 
-export const getEarthdatapubInstanceMetadata = () => ({
+/* export const getEarthdatapubInstanceMetadata = () => ({
   [CALL_API]: {
     type: types.ADD_INSTANCE_META,
     method: 'GET',
     path: 'instanceMeta'
   }
-});
+}); */
 
 export const getRequest = (requestId) => ({
   [CALL_API]: {
@@ -163,6 +163,21 @@ export const listRequests = (options) => ({
     path: 'submission/active'
   }
 });
+
+export const reviewRequest = (id, approve) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.REQUEST_REVIEW,
+        method: 'POST',
+        path: 'submission/review',
+        body: { id, approve }
+      }
+    })
+    .then(() => {
+      dispatch(getRequest(id));
+    });
+}};
 
 export const updateSubmissionMetadata = (payload) => ({
   [CALL_API]: {
@@ -206,15 +221,32 @@ export const getModel = (model) => ({
   }
 });
 
-export const applyWorkflowToSubmission = (requestId, workflow) => ({
+export const getModuleUi = (moduleName) => ({
+  [CALL_API]: {
+    type: types.GET_MODULE_UI,
+    method: 'GET',
+    id: null,
+    path: `module/${moduleName}`
+  }
+});
+
+export const listModules = () => ({
+  [CALL_API]: {
+    type: types.LIST_MODULES,
+    method: 'GET',
+    id: null,
+    path: `module`
+  }
+});
+
+export const applyWorkflowToRequest = (requestId, workflowId) => ({
   [CALL_API]: {
     type: types.SUBMISSION_APPLYWORKFLOW,
-    method: 'PUT',
-    id: requestId,
-    path: `submissions/${requestId}`,
+    method: 'POST',
+    path: `submission/apply`,
     body: {
-      action: 'applyWorkflow',
-      workflow
+      id: requestId,
+      workflow_id: workflowId
     }
   }
 });
@@ -403,7 +435,7 @@ export const listUsers = (options) => ({
     type: types.USERS,
     method: 'GET',
     id: null,
-    path: 'data/users',
+    path: 'user/find',
     qs: Object.assign({ per_page: defaultPageLimit }, options)
   }
 });
@@ -422,9 +454,74 @@ export const getUser = (userId) => ({
     type: types.USER,
     id: userId,
     method: 'GET',
-    path: `data/user/${userId}`
+    path: `user/find`,
+    qs: { id: userId }
   }
 });
+
+export const addUserRole = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.USER_ADDROLE,
+        method: 'POST',
+        path: `user/add_role`,
+        body: payload
+      }
+    })
+    .then(() => {
+      dispatch(getUser(payload.id));
+    });
+  }
+};
+
+export const removeUserRole = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.USER_REMOVEROLE,
+        method: 'POST',
+        path: `user/remove_role`,
+        body: payload
+      }
+    })
+    .then(() => {
+      dispatch(getUser(payload.id));
+    });
+  }
+};
+
+export const addUserGroup = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.USER_ADDGROUP,
+        method: 'POST',
+        path: `user/add_group`,
+        body: payload
+      }
+    })
+    .then(() => {
+      dispatch(getUser(payload.id));
+    });
+  }
+};
+
+export const removeUserGroup = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.USER_REMOVEGROUP,
+        method: 'POST',
+        path: `user/remove_group`,
+        body: payload
+      }
+    })
+    .then(() => {
+      dispatch(getUser(payload.id));
+    });
+  }
+};
 
 export const searchUsers = (prefix) => ({ type: types.SEARCH_USERS, prefix: prefix });
 export const clearUsersSearch = () => ({ type: types.CLEAR_USERS_SEARCH });
@@ -515,8 +612,8 @@ export const logout = () => {
   return (dispatch) => {
     dispatch({ type: types.LOGOUT });
     history.push('/auth');
-  }
-}
+  };
+};
 
 export const deleteToken = () => ({ type: types.DELETE_TOKEN });
 
@@ -566,6 +663,26 @@ export const listMetrics = (options) => ({
 export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });
 export const clearMetricsSearch = () => ({ type: types.CLEAR_METRICS_SEARCH });
 
+export const getCloudMetric = (cloudMetricId) => ({
+  [CALL_API]: {
+    type: types.CLOUD_METRIC,
+    method: 'GET',
+    id: cloudMetricId,
+    path: `metrics/report/${cloudMetricId}`
+  }
+});
+
+export const listCloudMetrics = (options) => ({
+  [CALL_API]: {
+    type: types.CLOUD_METRICS,
+    method: 'GET',
+    path: 'metrics/reports',
+    qs: Object.assign({ limit: defaultPageLimit }, options)
+  }
+});
+export const searchCloudMetrics = (searchString) => ({ type: types.SEARCH_CLOUD_METRICS, searchString });
+export const clearCloudMetricsSearch = () => ({ type: types.CLEAR_CLOUD_METRICS_SEARCH });
+
 export const getRole = (roleId) => ({
   [CALL_API]: {
     type: types.ROLE,
@@ -594,17 +711,6 @@ export const getConversation = (conversationId) => ({
     path: `notification/conversation/${conversationId}`
   }
 });
-export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
-export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
-
-export const getConversation = (conversationId) => ({
-  [CALL_API]: {
-    type: types.CONVERSATION,
-    method: 'GET',
-    id: conversationId,
-    path: `notification/conversation/${conversationId}`
-  }
-});
 
 export const listConversations = (options) => ({
   [CALL_API]: {
@@ -614,5 +720,57 @@ export const listConversations = (options) => ({
     qs: Object.assign({ limit: defaultPageLimit }, options)
   }
 });
-export const searchConversations = (searchString) => ({ type: types.SEARCH_CONVERSATIONS, searchString });
-export const clearConversationsSearch = () => ({ type: types.CLEAR_CONVERSATIONS_SEARCH });
+
+export const createConversation = (payload) => ({
+  [CALL_API]: {
+    type: types.CONVERSATION_CREATE,
+    method: 'POST',
+    path: `notification/send`,
+    body: payload
+  }
+});
+
+export const replyConversation = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.CONVERSATION_REPLY,
+        method: 'POST',
+        path: `notification/reply`,
+        body: payload
+      }
+    })
+    .then(() => {
+      setTimeout(() => {
+        dispatch(getConversation(payload.conversation_id))
+      }, 1000);
+    });
+  }
+};
+
+export const addUsersToConversation = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.CONVERSATION_ADD_USER,
+        method: 'POST',
+        path: `notification/add_user`,
+        body: payload
+      }
+    })
+    .then(() => {
+      setTimeout(() => {
+        dispatch(getConversation(payload.conversation_id))
+      }, 1000);
+    });
+  }
+};
+
+export const updateSearchModal = (path, query) => ({
+  [CALL_API]: {
+    type: types.SEARCH_MODAL,
+    method: 'GET',
+    path,
+    qs: Object.assign({ per_page: 10, page: 0 }, query)
+  }
+})

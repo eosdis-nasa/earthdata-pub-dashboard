@@ -4,7 +4,7 @@ import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import PropTypes from 'prop-types';
 import UsersOverview from './overview';
-import UserOverview from './user';
+import User from './user';
 import { strings } from '../locale';
 
 class Users extends React.Component {
@@ -32,7 +32,7 @@ class Users extends React.Component {
             <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
               <Switch>
                 <Route exact path='/users' component={UsersOverview} />
-                <Route path='/users/id/:userId' component={UserOverview} />
+                <Route path='/users/id/:userId' component={User} />
               </Switch>
             </div>
           </div>
