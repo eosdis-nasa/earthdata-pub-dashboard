@@ -20,4 +20,3 @@ yarn.lock
 v8-compile-cache-0
 rebuild_and_restart.sh
 .snyk
-package-lock.json
