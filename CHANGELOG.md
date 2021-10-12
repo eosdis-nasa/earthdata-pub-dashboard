@@ -8,9 +8,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-## 1.0.5 - 2021-10-12
+<!-- Unreleased changes can be added here. -->
+
+### Added
 
 - Add NASA Apache 2.0 license
+
+### Updated
+
+- Updated CONTRIBUTING.md
 
 ## 1.0.4 - 2021-08-23
 
