@@ -2,14 +2,23 @@
 
 Code to generate and deploy the dashboard for the Earthdata Pub API.
 
-## Documentation
+## Table of Contents
 
-- [Usage](https://git.earthdata.nasa.gov/projects/EDPUB/repos/dashboard/browse/USAGE.md)
-- [Development Guide](https://git.earthdata.nasa.gov/projects/EDPUB/repos/dashboard/browse/DEVELOPMENT.md)
-- [Technical documentation on tables](https://git.earthdata.nasa.gov/projects/EDPUB/repos/dashboard/browse/TABLES.md)
+- [Contributing](#contributing)
+- [Configuration](#configuration)
+- [Installing](#installing)
+- [Building](#building)
+- [Running](#running)
+- [Deploying](#deploying)
+- [Testing](#testing)
+- [Branching](#branching)
+- [Releasing](#releasing)
+- [Documentation](#documentation)
 
-The EDPUB Dashboard codebase was originally based on the Cumulus Dashboard:
-[https://github.com/nasa/cumulus-dashboard](https://github.com/nasa/cumulus-dashboard)
+## Contributing
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for instruction for contributing to
+the EDPub project. Be sure to read that before submitting pull requests.
 
 ## Configuration
 
@@ -43,21 +52,24 @@ To locate environment variables, see webpack.common.js:
 | ES\_USER | \<optional\> Elasticsearch username, needed when protected by basic authorization | |
 | ES\_PASSWORD | \<optional\> Elasticsearch password,needed when protected by basic authorization | |
 
-## Building and Quickstarts
+## Installing
 
 The dashboard uses node v12.18.0. To build/run the dashboard on your local
 machine, install nvm following the [nvm Install & Update Script](https://github.com/nvm-sh/nvm#install--update-script)
 instructions.
 
-We use npm for local package management, to install the requirements:
+We use npm for local package management to install the requirements, but the first
+step is to clone the repo!
 
 ```bash
+git clone https://git.earthdata.nasa.gov/scm/edpub/dashboard.git
+cd api
 nvm install v12.18.0
 nvm use
 npm install
 ```
 
-## Building the dashboard
+## Building
 
 ### Building in Docker
 
@@ -97,7 +109,7 @@ git checkout ${tagNumber}
 
 Then follow the steps noted above to build the dashboard locally or using Docker.
 
-## Running the dashboard
+## Running
 
 ### Running locally
 
@@ -106,11 +118,17 @@ npm install
 npm run start
 ```
 
-The Dashboard will available at <http://localhost:3000/>
+### Dashboard and API
 
-The API Swagger will available at <http://localhost:8080/docs/>
+The Dashboard application is dependent on the EDPub [API](https://git.earthdata.nasa.gov/projects/EDPUB/repos/api).
+Follow instructions in each repo or the [EDPub core](https://git.earthdata.nasa.gov/projects/EDPUB/repos/earthdata-pub)
+repo.
 
-#### Troubleshooting local deployement
+The Dashboard will available at <http://localhost:8081/>
+
+The API Swagger documentation will available at <http://localhost:8080/docs/>
+
+### Troubleshooting local deployement
 
 If you have previously built using docker, you may need to remove docker orphans.
 In `localAPI/`:
@@ -127,17 +145,12 @@ npm run start-api
 
 You may have to 'log out' then 'log in' for data to appear.
 
-#### local API server
+### local API server
 
 For **development** and **testing** purposes, you can run a Earthdata Pub API locally.
 This requires `docker-compose` in order to stand up the docker containers that serve
 Earthdata Pub API. There are a number of commands that will stand up different portions
 of the stack.
-
-<!-- See the [Docker Service Diagram](#dockerdiagram)
-and examine the `docker-compose*.yml` file in the `/localAPI/` directory to see all
-of the possible combinations. Described below are each of the provided commands for
-running the dashboard and Earthdata Pub API locally. -->
 
 *NOTE: These `docker-compose` commands do not build distributable containers, but
 are a provided as testing conveniences. The docker-compose[-\*].yml files show
@@ -182,7 +195,7 @@ This runs everything, the local Earthdata Pub API and dashboard.
 Edits to your code will be reflected in the running dashboard. You can run
 cypress tests still with `npm run cypress`.
 
-##### Troubleshooting docker containers
+#### Troubleshooting docker containers
 
 If something is not running correctly, or you're just interested, you can view
 the logs with a helper script, this will print out logs from each of the running
@@ -204,7 +217,7 @@ ERROR: for localapi_shim_1  Cannot start service shim: driver failed programming
 ERROR: for shim  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
 ```
 
-##### Troubleshooting npm errors
+#### Troubleshooting npm errors
 
 A permission denied error in an npm run script usually means permissions are
 incorrect in `node_modules`. A quick fix is to delete the directory and
@@ -228,10 +241,6 @@ Likewise the validation tests can be run with this command:
 npm run validation-tests
 ```
 
-<!-- #### Docker Container Service Diagram
-
-![Docker Service Diagram](ancillary/DashboardDockerServices.png) -->
-
 ### Running locally in Docker
 
 There is a script called `bin/build_docker_image.sh` which will build a Docker image
@@ -251,7 +260,10 @@ docker run -e PORT=8181 -p 8181:8181 earthdata pub-dashboard:production-1
 
 In this example, the dashboard would be available at <http://localhost:8181/>.
 
-## Deployment Using S3
+## Deploying
+
+Deployment is done through Bamboo. The following deprecated instructions are included
+in case Bamboo becomes unavailable.
 
 First build the site
 
@@ -266,7 +278,7 @@ Then deploy the `dist` folder
 aws s3 sync dist s3://my-bucket-to-be-used --acl public-read
 ```
 
-## Testing and Linting
+## Testing
 
 ### Unit Tests
 
@@ -320,90 +332,32 @@ When the cypress editor opens, click on `run all specs`.
 
 [ESLint](https://github.com/eslint/eslint) is used for linting. It adheres to the
 [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) with a few
-minor exceptions. The configuration can be viewed in `eslint.config.json`.
-
-TODO: Verify Linting is formatted for Bamboo
+exceptions. The configuration can be viewed in `eslint.config.json`.
 
 Output from these commands in formatted for [Bamboo](https://www.atlassian.com/software/bamboo)
-for use in the CICD pipeline.
+for use in the CI/CD pipeline.
 
 [Markdownlint](https://github.com/DavidAnson/markdownlint) is used for linting
-Markdown. No markdownlint output is used in the CICD pipeline.
+Markdown. No markdownlint output is used in the CI/CD pipeline.
 
-## develop vs. master branches
+## Branching
 
 The `master` branch is the branch where the source code of HEAD always reflects
-the latest product release. The `develop` branch is the branch where the source
-code of HEAD always reflects the latest merged development changes for the next
-release. The `develop` branch is the branch where we should branch off.
+the latest product release. The `test` branch is the branch where the source code
+of HEAD always reflects the latest UAT release. The `develop` branch is the branch
+where the source code of HEAD always reflects the latest merged development changes
+for the next release. The `develop` branch is the branch where we should branch off.
 
 When the source code in the develop branch reaches a stable point and is ready to
-be released, all of the changes should be merged back into master and then tagged
-with a release number.
+be released, all of the changes should be merged back into test and then master and
+then tagged with a release number.
 
-## How to release
+## Releasing
 
-### 1. Checkout `develop` branch
+See [RELEASE.md](./RELEASE.md).
 
-We will make changes in the `develop` branch.
+## Documentation
 
-### 2. Create a new branch for the release
-
-Create a new branch off of the `develop` branch for the release named
-`release-X.X.X` (e.g. `release-1.3.0`).
-
-### 3. Update the version number
-
-When changes are ready to be released, the version number must be updated in `package.json`.
-
-### 4. Update the minimum version of Earthdata Pub API if necessary
-
-See the `minCompatibleApiVersion` value in `app/src/js/config/index.js`.
-
-### 5. Update CHANGELOG.md
-
-Update the CHANGELOG.md. Put a header under the 'Unreleased' section with the
-new version number and the date.
-
-Add a link reference for the Bitbucket "compare" view at the bottom of the
-CHANGELOG.md, following the existing pattern. This link reference should create
-a link in the CHANGELOG's release header to changes in the corresponding release.
-
-### 6. Update the version of the Earthdata Pub API
-
-If this release corresponds to a Earthdata Pub API package release, update the
-version of `@earthdata-pub-api/api` to the latest package version so that the
-integration tests will run against that version.
-
-### 7. Manual testing
-
-Run the full cypress test suite in [Integration & Validation Tests](integration-validation-tests).
-
-### 8. Create a pull request against the develop branch
-
-Create a PR for the `release-X.X.X` branch against the `develop` branch. Verify
-that the Bamboo build for the PR succeeds and then merge to `develop`.
-
-### 9. Create a pull request against the master branch
-
-Create a PR for the `develop` branch against the `master` branch. Verify that
-the Bamboo build for the PR succeeds and then merge to `master`.
-
-### 10. Create a git tag for the release
-
-Push a new release tag to Bitbucket. The tag should be in the format `1.2.3`,
-where `1.2.3` is the new version.
-
-Create and push a new git tag:
-
-```bash
-git checkout master
-git tag -a 1.x.x -m "Release 1.x.x"
-git push origin 1.x.x
-```
-
-### 11. Add the release to Bitbucket
-
-Follow the [Bitbucket Support for Repository tags](https://support.atlassian.com/bitbucket-cloud/docs/repository-tags/)
-for the Dashboard using the tag that you just pushed. Make sure to use the content
-from the CHANGELOG for this release as the description of the release on Bitbucket.
+- [Usage](./USAGE.md)
+- [Development Guide](./DEVELOPMENT.md)
+- [Technical documentation on tables](./TABLES.md)
