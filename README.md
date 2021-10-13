@@ -7,8 +7,8 @@ Code to generate and deploy the dashboard for the Earthdata Pub API.
 - [Contributing](#contributing)
 - [Configuration](#configuration)
 - [Installing](#installing)
-- [Building](#building)
 - [Running](#running)
+- [Building](#building)
 - [Deploying](#deploying)
 - [Testing](#testing)
 - [Branching](#branching)
@@ -69,6 +69,62 @@ nvm use
 npm install
 ```
 
+## Running
+
+### Running locally
+
+```bash
+npm install
+npm run start
+```
+
+### Dashboard and API
+
+The Dashboard application is dependent on the EDPub [API](https://git.earthdata.nasa.gov/projects/EDPUB/repos/api)
+and [Forms](https://git.earthdata.nasa.gov/projects/EDPUB/repos/forms).
+Follow instructions in each repo or the [EDPub core](https://git.earthdata.nasa.gov/projects/EDPUB/repos/earthdata-pub)
+repo.
+
+The API Swagger documentation will available at <http://localhost:8080/docs/>
+
+The Forms will available at <http://localhost:8081/>
+
+#### Troubleshooting local deployement
+
+If you have previously built using docker, you may need to remove docker orphans.
+
+```bash
+docker-compose down --remove-orphans
+```
+
+#### Troubleshooting docker containers
+
+If something is not running correctly, or you're just interested, you can view
+the logs with a helper script, this will print out logs from each of the running
+docker containers.
+
+```bash
+npm run view-logs
+```
+
+This can be helpful in debugging problems with the docker application.
+
+A common error is running the dashboard containers when other containers are
+running on your machine. Just stop that stack and restart the dashboard stack
+to resolve.
+
+```sh
+ERROR: for localapi_shim_1  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
+
+ERROR: for shim  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
+```
+
+#### Troubleshooting npm errors
+
+A permission denied error in an npm run script usually means permissions are
+incorrect in `node_modules`. A quick fix is to delete the directory and
+reinstall with `npm install`.
+
 ## Building
 
 ### Building in Docker
@@ -109,157 +165,6 @@ git checkout ${tagNumber}
 
 Then follow the steps noted above to build the dashboard locally or using Docker.
 
-## Running
-
-### Running locally
-
-```bash
-npm install
-npm run start
-```
-
-### Dashboard and API
-
-The Dashboard application is dependent on the EDPub [API](https://git.earthdata.nasa.gov/projects/EDPUB/repos/api).
-Follow instructions in each repo or the [EDPub core](https://git.earthdata.nasa.gov/projects/EDPUB/repos/earthdata-pub)
-repo.
-
-The Dashboard will available at <http://localhost:8081/>
-
-The API Swagger documentation will available at <http://localhost:8080/docs/>
-
-### Troubleshooting local deployement
-
-If you have previously built using docker, you may need to remove docker orphans.
-In `localAPI/`:
-
-```bash
-docker-compose down --remove-orphans
-```
-
-To start just the API:
-
-```bash
-npm run start-api
-```
-
-You may have to 'log out' then 'log in' for data to appear.
-
-### local API server
-
-For **development** and **testing** purposes, you can run a Earthdata Pub API locally.
-This requires `docker-compose` in order to stand up the docker containers that serve
-Earthdata Pub API. There are a number of commands that will stand up different portions
-of the stack.
-
-*NOTE: These `docker-compose` commands do not build distributable containers, but
-are a provided as testing conveniences. The docker-compose[-\*].yml files show
-that they work by linking your local directories into the container.*
-
-In order to run the Earthdata Pub API locally you must first ensure
-`earthdata-pub/api/` is cloned to an adjacent directory to
-`earthdatapub/dashboard/`. _(TODO: install `earthdata-pub/api/` from package.json
-to avoid manual installation)_
-
-```bash
-git clone https://git.earthdata.nasa.gov/scm/edpub/api.git
-```
-
-If you prefer to stand up more of the stack in docker containers, you can include
-the earthdata pub api in the docker-compose stack. To run the Earthdata Pub API
-in a docker container, (which still leaves running the dashboard and cypress up
-to you), just run the `earthdata pub api` service.
-
-The earthdata pub api docker stack is started and stopped:
-
-```bash
-npm run start-api
-npm run stop-api
-```
-
-Then you can run the dashboard locally (without docker)
-`[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:8080] npm run serve`
-and open cypress tests `npm run cypress`.
-
-The docker compose stack also includes a command to let a developer start all
-development containers with a single command.
-
-Bring up and down the entire stack (the localAPI and the dashboard) with:
-
-```bash
-npm run start
-npm run stop
-```
-
-This runs everything, the local Earthdata Pub API and dashboard.
-Edits to your code will be reflected in the running dashboard. You can run
-cypress tests still with `npm run cypress`.
-
-#### Troubleshooting docker containers
-
-If something is not running correctly, or you're just interested, you can view
-the logs with a helper script, this will print out logs from each of the running
-docker containers.
-
-```bash
-npm run view-logs
-```
-
-This can be helpful in debugging problems with the docker application.
-
-A common error is running the dashboard containers when other containers are
-running on your machine. Just stop that stack and restart the dashboard stack
-to resolve.
-
-```sh
-ERROR: for localapi_shim_1  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
-
-ERROR: for shim  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
-```
-
-#### Troubleshooting npm errors
-
-A permission denied error in an npm run script usually means permissions are
-incorrect in `node_modules`. A quick fix is to delete the directory and
-reinstall with `npm install`.
-
-#### Fully contained cypress testing
-
-You can run all of the cypress tests locally that circleCI runs with a single command:
-
-```bash
-npm run e2e-tests
-```
-
-This will stands up the entire stack as well as begin the e2e service that will
-run all cypress commands and report an exit code for their success or failure.
-This is primarily used for CircleCI, but can be useful to developers.
-
-Likewise the validation tests can be run with this command:
-
-```bash
-npm run validation-tests
-```
-
-### Running locally in Docker
-
-There is a script called `bin/build_docker_image.sh` which will build a Docker image
-that runs the Earthdata Pub dashboard. It expects that the dashboard has already
-been built and can be found in the `dist` directory.
-
-The script takes one optional parameter, the tag that you would like to apply to
-the generated image.
-
-Example of building and running the project in Docker:
-
-```bash
-./bin/build_docker_image.sh earthdata pub-dashboard:production-1
-  ...
-docker run -e PORT=8181 -p 8181:8181 earthdata pub-dashboard:production-1
-```
-
-In this example, the dashboard would be available at <http://localhost:8181/>.
-
 ## Deploying
 
 Deployment is done through Bamboo. The following deprecated instructions are included
@@ -298,12 +203,6 @@ Run background localstack application.
 npm run start-localstack
 ```
 
-Serve the earthdata pub API (separate terminal)
-
-```bash
-npm run serve-api
-```
-
 Serve the dashboard web application (another terminal)
 
 ```bash
@@ -327,6 +226,24 @@ npm run cypress
 ```
 
 When the cypress editor opens, click on `run all specs`.
+
+### Fully contained cypress testing
+
+You can run all of the cypress tests locally that circleCI runs with a single command:
+
+```bash
+npm run e2e-tests
+```
+
+This will stands up the entire stack as well as begin the e2e service that will
+run all cypress commands and report an exit code for their success or failure.
+This is primarily used for CircleCI, but can be useful to developers.
+
+Likewise the validation tests can be run with this command:
+
+```bash
+npm run validation-tests
+```
 
 ### Linting
 

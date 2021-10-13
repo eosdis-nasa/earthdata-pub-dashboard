@@ -1,14 +1,14 @@
-version: "3"
+version: "3.1"
 services:
-  validate:
+  e2e:
     # must be run in conjunction with the docker-compose stack.
-    image: node:12.18.0
+    image: cypress/included:4.0.2
     network_mode: "service:shim"
-    entrypoint: [ "./localAPI/wait-for-dashboard.sh", "npm", "run", "validate"]
+    entrypoint: [ "./localAPI/wait-for-dashboard.sh", "npm", "run", "cypress-ci"]
     working_dir:
       /dashboard
     volumes:
-      - ../:/dashboard:cached
+      - ./:/dashboard:cached
     environment:
       - CYPRESS_TESTING=true
       - NODE_ENV=test
