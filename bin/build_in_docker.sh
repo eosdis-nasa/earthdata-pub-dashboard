@@ -36,7 +36,6 @@ rsync -av \
   APIROOT=$APIROOT \
     DAAC_NAME=$DAAC_NAME \
     STAGE=$STAGE \
-    HIDE_PDR=$HIDE_PDR \
     LABELS=$LABELS \
     SERVED_BY_EDPUB_API=$SERVED_BY_EDPUB_API \
     AUTH_METHOD=$AUTH_METHOD npm run build
@@ -55,7 +54,6 @@ docker run \
   --env APIROOT=$APIROOT \
   --env DAAC_NAME=$DAAC_NAME \
   --env STAGE=$STAGE \
-  --env HIDE_PDR=$HIDE_PDR \
   --env LABELS=$LABELS \
   --env SERVED_BY_EDPUB_API=${SERVED_BY_EDPUB_API:-false} \
   --env AUTH_METHOD=$AUTH_METHOD \

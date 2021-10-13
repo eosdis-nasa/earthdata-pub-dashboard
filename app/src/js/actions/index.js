@@ -17,7 +17,6 @@ const CALL_API = types.CALL_API;
 const {
   esRoot,
   showDistributionAPIMetrics,
-  showTeaMetrics,
   apiRoot: root,
   formsUrl,
   defaultPageLimit,
@@ -337,7 +336,6 @@ export const getDistApiLambdaMetrics = (earthdatapubInstanceMeta) => {
 
 export const getTEALambdaMetrics = (earthdatapubInstanceMeta) => {
   if (!esRoot) return { type: types.NOOP };
-  if (!showTeaMetrics) return { type: types.NOOP };
   return (dispatch, getState) => {
     const stackName = earthdatapubInstanceMeta.stackName;
     const timeFilters = fetchCurrentTimeFilters(getState().datepicker);

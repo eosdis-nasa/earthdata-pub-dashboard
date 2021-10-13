@@ -32,25 +32,23 @@ To locate environment variables, see webpack.common.js:
 
 | Env Name | Description | Default |
 | -------- | ----------- | -------- |
+| APIROOT | the API URL. This must be set by the user. | *<https://pub.earthdata.nasa.gov/api>* |
 | OVERVIEW_URL | URL of the instructional overview of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/>* |
 | FORMS_URL | URL of the questions and answer forms that are outside of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/forms>* |
 | NEW_PUBLICATION_REQUEST_URL | URL of the publication request questions and answer forms new record | */interest/daacs/selection* |
 | NEW_PRODUCT_INFORMATION_URL | URL of the data product questions and answer forms new record | */questionnaire/questions* |
 | PUBLICATION_REQUEST_FORM_ID | Hash of the main publication request form | *6c544723-241c-4896-a38c-adbc0a364293* |
 | PRODUCTION_INFORMATION_FORM_ID | Hash of the main publication request form | *19025579-99ca-4344-8610-704dae626343* |
-| HIDE\_PDR | Whether to hide the PDR menu. | *true* |
-| AWS\_REGION | Region in which Earthdata Pub API is running. | *us-west-2*  |
-| DAAC\_NAME    | e.g. LPDAAC, | *Local* |
+| AWS_REGION | Region in which Earthdata Pub API is running. | *us-west-2*  |
+| DAAC_NAME    | e.g. LPDAAC, | *Local* |
 | STAGE | e.g. PROD, UAT, | *development* |
 | LABELS | gitc or daac localization. | *daac* |
-| APIROOT | the API URL. This must be set by the user. | *example.com* |
 | AUTH_METHOD | The type of authorization method protecting the Earthdata Pub API. [launchpad or earthdata] | *earthdata*  |
 | KIBANAROOT | \<optional\> Should point to a Kibana endpoint. Must be set to examine distribution metrics details. | |
-| SHOW\_TEA\_METRICS | \<optional\> display metrics from Thin Egress Application (TEA). | *true* |
-| SHOW\_DISTRIBUTION\_API\_METRICS | \<optional\> Display metrics from Earthdata Pub Distribution API.| *false* |
+| SHOW_DISTRIBUTION_API_METRICS | \<optional\> Display metrics from Earthdata Pub Distribution API.| *false* |
 | ESROOT | \<optional\> Should point to an Elasticsearch endpoint. Must be set for distribution metrics to be displayed. | |
-| ES\_USER | \<optional\> Elasticsearch username, needed when protected by basic authorization | |
-| ES\_PASSWORD | \<optional\> Elasticsearch password,needed when protected by basic authorization | |
+| ES_USER | \<optional\> Elasticsearch username, needed when protected by basic authorization | |
+| ES_PASSWORD | \<optional\> Elasticsearch password,needed when protected by basic authorization | |
 
 ## Installing
 
@@ -133,7 +131,7 @@ The Earthdata Pub Dashboard can be built inside of a Docker container, without
 needing to install any local dependencies.
 
 ```bash
-DAAC_NAME=LPDAAC STAGE=production HIDE_PDR=false LABELS=daac APIROOT=https://myapi.com ./bin/build_in_docker.sh
+DAAC_NAME=LPDAAC STAGE=production LABELS=daac APIROOT=https://myapi.com ./bin/build_in_docker.sh
 ```
 
 **NOTE**: Only the `APIROOT` environment variable is required.
@@ -146,7 +144,7 @@ To build the dashboard:
 
 ```bash
 nvm use
-[SERVED_BY_EDPUB_API=true] [DAAC_NAME=LPDAAC] [STAGE=production] [HIDE_PDR=false] [LABELS=daac] APIROOT=https://myapi.com npm run build
+[SERVED_BY_EDPUB_API=true] [DAAC_NAME=LPDAAC] [STAGE=production] [LABELS=daac] APIROOT=https://myapi.com npm run build
 ```
 
 **NOTE**: Only the `APIROOT` environment variable is required.
