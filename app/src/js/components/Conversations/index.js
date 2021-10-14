@@ -28,7 +28,7 @@ const Conversations = ({ location, params }) => {
       </div>
     </div>
   );
-}
+};
 
 Conversations.propTypes = {
   children: PropTypes.object,

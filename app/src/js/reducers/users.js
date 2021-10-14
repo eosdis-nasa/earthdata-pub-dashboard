@@ -62,7 +62,7 @@ export default createReducer(initialState, {
   [USER_ERROR]: (state, action) => {
     const { id, error } = action;
     set(state, ['detail', 'inflight'], false);
-    set(state, ['detail', 'error'], error)
+    set(state, ['detail', 'error'], error);
     set(state, ['map', id, 'inflight'], false);
     set(state, ['map', id, 'error'], error);
   },

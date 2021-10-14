@@ -112,7 +112,7 @@ class FormOverview extends React.Component {
     }
   }
 
-  renderQuestions(sections, whatSection) {
+  renderQuestions (sections, whatSection) {
     let section = '';
     const sectionQuestions = [];
     for (const i in sections) {
@@ -214,7 +214,7 @@ class FormOverview extends React.Component {
     }
   }
 
-  render() {
+  render () {
     const dispatch = this.props.dispatch;
     const { canReview } = requestPrivileges(this.props.privileges);
     const formId = this.props.match.params.formId;
@@ -281,22 +281,22 @@ class FormOverview extends React.Component {
           </div>
         </section>
         <section className='page_section'>
-        { canReview && reviewReady && (
-          <div className='flex__row'>
-            <div className='flex__item--spacing'>
-              <button onClick={() => dispatch(reviewRequest(request.id, false))}
-                className='button button--no-icon button--medium button--green'>
+          { canReview && reviewReady && (
+            <div className='flex__row'>
+              <div className='flex__item--spacing'>
+                <button onClick={() => dispatch(reviewRequest(request.id, false))}
+                  className='button button--no-icon button--medium button--green'>
                 Reject
-              </button>
-            </div>
-            <div className='flex__item--spacing'>
-              <button onClick={() => dispatch(reviewRequest(request.id, true))}
-                className='button button--no-icon button--medium button--green'>
+                </button>
+              </div>
+              <div className='flex__item--spacing'>
+                <button onClick={() => dispatch(reviewRequest(request.id, true))}
+                  className='button button--no-icon button--medium button--green'>
                 Approve
-              </button>
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
         </section>
       </div>
     );

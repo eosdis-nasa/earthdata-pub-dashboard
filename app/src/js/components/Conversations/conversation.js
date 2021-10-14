@@ -6,7 +6,8 @@ import { connect, useDispatch } from 'react-redux';
 import {
   getConversation,
   replyConversation,
-  addUsersToConversation } from '../../actions';
+  addUsersToConversation
+} from '../../actions';
 import { notePrivileges } from '../../utils/privileges';
 import { lastUpdated } from '../../utils/format';
 import SearchModal from '../SearchModal';
@@ -19,7 +20,7 @@ const reply = (dispatch, id) => {
   const payload = { conversation_id: id, text: textRef.current.value };
   dispatch(replyConversation(payload));
   textRef.current.value = '';
-}
+};
 
 const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const { conversationId } = match.params;
@@ -55,7 +56,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       href: '/conversations'
     },
     {
-      label: data.id || "",
+      label: data.id || '',
       active: true
     }
   ];
@@ -90,7 +91,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                   </div>
                   {canReply &&
                     <form className='flex__column flex__item--grow-1'
-                          onSubmit={(e) => { e.preventDefault(); reply(dispatch, conversationId); }}>
+                      onSubmit={(e) => { e.preventDefault(); reply(dispatch, conversationId); }}>
                       <textarea placeholder='Type your reply'
                         className='no-resize'
                         ref={textRef}></textarea>
@@ -105,7 +106,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                 </div>
                 {
                   notes.map((note, key) => {
-                    return (<Note note={note} key={key} />)
+                    return (<Note note={note} key={key} />);
                   })
                 }
               </div>
@@ -119,13 +120,13 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
               <div className='flex__column'>
                 {
                   participants.map((user, key) => {
-                    return <div className='sm-border' key={key}>{user.name}</div>
+                    return <div className='sm-border' key={key}>{user.name}</div>;
                   })
                 }
                 {canAddUser &&
                   <div className='flex__item--spacing'>
                     <button className='button button--small button--add'
-                          onClick={() => setShowSearch(true)}>
+                      onClick={() => setShowSearch(true)}>
                       Add Users
                     </button>
                   </div>
@@ -160,7 +161,7 @@ const Note = ({ note }) => {
 
 Note.propTypes = {
   note: PropTypes.object
-}
+};
 
 export default withRouter(connect(state => ({
   conversation: state.conversations.conversation,

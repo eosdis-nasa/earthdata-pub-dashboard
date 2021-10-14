@@ -35,7 +35,7 @@ class Header extends React.Component {
     const { dispatch, history } = this.props;
     dispatch(logout());
     localStorage.removeItem('auth-token');
-    //window.location.href = overviewUrl;
+    // window.location.href = overviewUrl;
     history.push('/');
   }
 
@@ -60,7 +60,7 @@ class Header extends React.Component {
     const { authenticated } = this.props.api;
     const { privileges, user } = this.props;
     const activePaths = paths.filter(path => {
-      return !!privileges[path[2]] || privileges['ADMIN']
+      return !!privileges[path[2]] || privileges.ADMIN;
     });
     const feedbackUrl = overviewUrl + '/feedback';
     return (
