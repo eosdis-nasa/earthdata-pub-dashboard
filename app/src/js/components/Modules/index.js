@@ -33,7 +33,7 @@ const Modules = ({ dispatch, location, params }) => {
       </div>
     </div>
   );
-}
+};
 
 Modules.propTypes = {
   dispatch: PropTypes.func,

@@ -45,7 +45,7 @@ export default createReducer(initialState, {
   },
   [CONVERSATIONS]: (state, action) => {
     set(state, 'list.data', action.data);
-    set(state, 'list.meta', assignDate(action.data.meta))
+    set(state, 'list.meta', assignDate(action.data.meta));
     set(state, 'list.inflight', false);
     set(state, 'list.error', null);
   },

@@ -8,7 +8,8 @@ import {
   addUserRole,
   removeUserRole,
   addUserGroup,
-  removeUserGroup } from '../../actions';
+  removeUserGroup
+} from '../../actions';
 import { userPrivileges } from '../../utils/privileges';
 import { lastUpdated, fullDate } from '../../utils/format';
 import SearchModal from '../SearchModal';
@@ -20,7 +21,7 @@ const addRole = (dispatch, id, roleId) => {
   const payload = {
     id,
     role_id: roleId
-  }
+  };
   dispatch(addUserRole(payload));
 };
 
@@ -28,7 +29,7 @@ const removeRole = (dispatch, id, roleId) => {
   const payload = {
     id,
     role_id: roleId
-  }
+  };
   dispatch(removeUserRole(payload));
 };
 
@@ -36,7 +37,7 @@ const addGroup = (dispatch, id, groupId) => {
   const payload = {
     id,
     group_id: groupId
-  }
+  };
   dispatch(addUserGroup(payload));
 };
 
@@ -44,7 +45,7 @@ const removeGroup = (dispatch, id, groupId) => {
   const payload = {
     id,
     group_id: groupId
-  }
+  };
   dispatch(removeUserGroup(payload));
 };
 
@@ -70,14 +71,16 @@ const User = ({ dispatch, user, privileges, match }) => {
     setSearchOptions({
       entity: 'group',
       cancel: searchCancel,
-      submit: addGroupSubmit });
+      submit: addGroupSubmit
+    });
     setShowSearch(true);
   };
   const handleAddRole = () => {
     setSearchOptions({
       entity: 'role',
       cancel: searchCancel,
-      submit: addRoleSubmit });
+      submit: addRoleSubmit
+    });
     setShowSearch(true);
   };
   const breadcrumbConfig = [
@@ -90,7 +93,7 @@ const User = ({ dispatch, user, privileges, match }) => {
       href: '/users'
     },
     {
-      label: data.id || "",
+      label: data.id || '',
       active: true
     }
   ];
@@ -110,8 +113,8 @@ const User = ({ dispatch, user, privileges, match }) => {
         </section>
         { showSearch && <SearchModal { ...searchOptions }/> }
         { inflight && <LoadingOverlay /> }
-        { data.id ?
-          <div className='page__content'>
+        { data.id
+          ? <div className='page__content'>
             <section className='page__section'>
               <div className='page__section__header'>
                 <h1 className='heading--small heading--shared-content with-description '>

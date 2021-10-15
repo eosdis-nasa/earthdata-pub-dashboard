@@ -32,16 +32,13 @@
     "cypress-ci": "LOCALSTACK_HOST=localhost LOCAL_ES_HOST=localhost CYPRESS_TESTING=true NODE_ENV=test cypress run --spec 'cypress/integration/*' --config video=true",
     "validate": "ava cypress/validation-tests/*.js",
     "test": "NODE_ENV=test npm run lint && ava",
-    "e2e-tests": "npm run start-api; docker-compose -f ./localAPI/docker-compose-dashboard.yml -f ./localAPI/docker-compose-cypress.yml up --exit-code-from=e2e --abort-on-container-exit",
-    "validation-tests": "npm run start-api; docker-compose -f ./localAPI/docker-compose-dashboard.yml -f ./localAPI/docker-compose-validate.yml up --exit-code-from=validate --abort-on-container-exit",
-    "link-api": "npm link ../api",
-    "start-api": "npm run link-api; docker-compose -f ./node_modules/earthdata-pub-modules/docker-compose.yml up -d; ",
-    "stop-api": "docker-compose -f ./node_modules/earthdata-pub-modules/docker-compose.yml down",
-    "start-dashboard": "docker-compose -f ./localAPI/docker-compose-dashboard.yml up -d",
-    "stop-dashboard": "docker-compose -f ./localAPI/docker-compose-dashboard.yml down",
-    "start": "npm run start-api; npm run start-dashboard",
-    "stop": "npm run stop-api; npm run stop-dashboard",
-    "view-logs": "npm run start-api; docker-compose -f ./localAPI/docker-compose-dashboard.yml up"
+    "e2e-tests": "docker-compose -f ./docker-compose.yml -f ./docker-compose-cypress.yml up --exit-code-from=e2e --abort-on-container-exit",
+    "validation-tests": "docker-compose -f ./docker-compose.yml -f ./docker-compose-validate.yml up --exit-code-from=validate --abort-on-container-exit",
+    "start-dashboard": "npm run start",
+    "stop-dashboard": "npm run stop",
+    "start": "docker-compose -f ./docker-compose.yml up -d",
+    "stop": "docker-compose -f ./docker-compose.yml down",
+    "view-logs": "docker-compose -f ./docker-compose.yml up"
   },
   "ava": {
     "babel": {

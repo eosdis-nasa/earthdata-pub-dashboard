@@ -9,7 +9,7 @@ export const tableColumns = [
         <div>
           <Link to={`/conversations/id/${row.id}`}>
             {row.subject}
-            </Link>
+          </Link>
         </div>
         <span className='text__green'>
           {row.unread ? '*new messages*' : ' '}

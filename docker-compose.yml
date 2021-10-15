@@ -8,16 +8,14 @@ services:
     working_dir:
       /dashboard
     volumes:
-      - ../:/dashboard:cached
+      - ./:/dashboard:cached
     environment:
       - APIROOT=http://localhost:8080/api
       - FORMS_URL=http://localhost:8081
       - OVERVIEW_URL=/
-      - HIDE_PDR=true
       - DAAC_NAME=local
       - STAGE=LOCALHOST-Development
       - SHOW_DISTRIBUTION_API_METRICS=false
-      - SHOW_TEA_METRICS=false
       - AUTH_METHOD=earthdata
   shim:   # empty container to open ports
     network_mode: "host"
@@ -27,6 +25,6 @@ services:
     working_dir:
       /dashboard
     volumes:
-      - ../:/dashboard:cached
+      - ./:/dashboard:cached
     ports:
       - "3000:3000"
