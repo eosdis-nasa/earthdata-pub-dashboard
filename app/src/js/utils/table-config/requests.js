@@ -17,11 +17,9 @@ import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 
 const newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
-const newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
 const publicationRequestFormId = _config.publicationRequestFormId;
-const productInformationFormId = _config.productInformationFormId;
 
-export const newFormLink = (row, request, formId) => {
+export const newFormLink = (row, request, formId, instruction) => {
   if (!request.match(/formId/g)) {
     request += `?formId=${formId}`;
   } else {
@@ -32,91 +30,102 @@ export const newFormLink = (row, request, formId) => {
   } else {
     console.log(`?requestId=${row.id} was not added, request is ${request}`);
   }
-  return <a href={request} className='button button--small button--green button--add form-group__element--left'>New</a>;
+  return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{instruction}</a>;
 };
 
-export const existingFormLink = (row, formId, formName) => {
-  return <Link to={`/forms/id/${formId}?requestId=${row.id}`}>{formName}</Link>;
+export const existingFormLink = (row, request, formId, formName, instruction) => {
+  return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{instruction}</Link>;
 };
 
 export const formLookup = (row, request, formId, formName) => {
-  if (row.forms == null) {
-    return newFormLink(row, request, formId);
-  } else if (row.forms.length === 1) {
-    if (row.forms[0].id === formId) {
-      return existingFormLink(row, formId, formName);
-    } else {
-      return newFormLink(row, request, formId);
+  // console.log('formLookup', row, request, formId, formName);
+  const stepName = row.step_name;
+  let stepID = '';
+  let stepType = '';
+  let stepIDKey = '';
+  for (const i in row.step_data) {
+    if (typeof row.step_data[i] !== 'undefined') {
+      const regex = new RegExp(stepName, 'g');
+      if (i.match('name') && row.step_data[i].match(regex)) {
+        stepType = row.step_data.type;
+        stepIDKey = `${stepType}_id`;
+        stepID = row.step_data[stepIDKey];
+        break;
+      }
     }
-  } else if (row.forms.length === 2) {
-    if (row.forms[0].id === formId) {
-      return existingFormLink(row, formId, formName);
-    } else if (row.forms[1].id === formId) {
-      return existingFormLink(row, formId, formName);
+  }
+  // TODO: Untested and probably not fully working - Needs to be more dynamic
+  if (stepType === 'form') {
+    if (Object.keys(row.form_data).length === 0) {
+      return newFormLink(row, request, stepID, 'Fill Form');
+    } else if (row.forms.length === 1) {
+      if (row.forms[0].id === stepID) {
+        return existingFormLink(row, request, stepID, formName, 'View Form');
+      } else {
+        return newFormLink(row, request, stepID, 'Fill Form');
+      }
+    } else if (row.forms.length === 2) {
+      if (row.forms[0].id === stepID) {
+        return existingFormLink(row, request, stepID, formName, 'View Form');
+      } else if (row.forms[1].id === stepID) {
+        return existingFormLink(row, request, stepID, formName, 'View Form');
+      } else {
+        return newFormLink(row, request, stepID, 'Fill Form');
+      }
     } else {
-      return newFormLink(row, request, formId);
+      return newFormLink(row, request, stepID, 'Fill Form');
     }
-  } else {
-    return newFormLink(row, request, formId);
   }
 };
 
 export const tableColumns = [
   {
-    Header: 'Status',
-    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status}</Link>,
-    id: 'status_message',
-    width: 100
-  },
-  {
-    Header: 'Workflow',
-    accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`request__workflow request__workflow--${row.workflow_id}`}>{row.workflow_name}</Link>,
-    id: 'workflow_name',
-    width: 110
-  },
-  {
-    Header: 'Step',
-    accessor: row => row.step_name,
-    id: 'step_name',
-    width: 100
-  },
-  {
     Header: 'Data Product Name',
     accessor: row => row.form_data.data_product_name_value || '(no name)',
     id: 'name',
-    width: 100
+    width: 170
   },
   {
-    Header: 'Data Accession Request',
-    accessor: row => formLookup(row, newDataPublicationRequest, publicationRequestFormId, 'Data Accession Request'),
-    id: 'data_publication_request',
-    width: 200
+    Header: 'Status',
+    accessor: row => <Link to={`/requests/id/${row.id}`}>{row.status}</Link>,
+    id: 'status_message',
+    width: 170
   },
   {
-    Header: 'Data Publication Request',
-    accessor: row => formLookup(row, newDataProductInformation, productInformationFormId, 'Data Publication Request'),
-    id: 'data_product_information',
-    width: 200
+    Header: 'Workflow',
+    accessor: row => <Link to={`/workflows/id/${row.workflow_id}`}>{row.workflow_name}</Link>,
+    id: 'workflow_name',
+    width: 170
   },
   {
     Header: 'Created',
     accessor: row => shortDateNoTimeYearFirst(row.created_at),
-    id: 'created_at'
+    id: 'created_at',
+    width: 110
   },
   {
     Header: 'Latest Edit',
     accessor: row => shortDateNoTimeYearFirst(row.last_change),
-    id: 'last_change'
+    id: 'last_change',
+    width: 110
   },
   {
     Header: 'Locked',
     accessor: row => bool(row.lock),
-    id: 'lock'
+    id: 'lock',
+    width: 100
   },
   {
     Header: 'Conversation',
     accessor: row => row.conversation_id ? (<Link to={`/conversations/id/${row.conversation_id}`}>View</Link>) : null,
-    id: 'conversation_id'
+    id: 'conversation_id',
+    width: 120
+  },
+  {
+    Header: 'Next Action',
+    accessor: row => formLookup(row, newDataPublicationRequest, publicationRequestFormId, 'Data Accession Request'),
+    id: 'data_publication_request',
+    width: 170
   }
   /* {
     Header: 'Data Request Request',
