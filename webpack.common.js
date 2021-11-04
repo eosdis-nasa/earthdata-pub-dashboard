@@ -135,9 +135,13 @@ const CommonConfig = {
       title: 'Earthdata Pub Dashboard'
     }),
     new webpack.HashedModuleIdsPlugin(),
-    new CopyWebpackPlugin([
-      { from: './app/src/public', to: './' }
-    ]),
+    new CopyWebpackPlugin(
+      {
+        patterns: [
+          { from: './app/src/public', to: './' }
+        ]
+      }
+    ),
     new webpack.ProvidePlugin({
       jQuery: 'jquery', // can use jquery anywhere in the app without having to require it
       $: 'jquery'
