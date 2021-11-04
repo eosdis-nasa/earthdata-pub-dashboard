@@ -15,24 +15,28 @@ const CommonConfig = {
     'regenerator-runtime/runtime',
     './app/src/index.js',
   ],
+  optimization: {
+    moduleIds: 'hashed',
+  },
   output: {
     filename: 'bundle.js',
     chunkFilename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-   publicPath: config.basepath
+    publicPath: config.basepath
   },
-  node: {
-    console: true,
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty'
-  },
+  // node: { Automatic Node.js Polyfills Removed - see resolve.fallback options
   resolve: {
     extensions: ['.js', '.jsx', '.scss'],
     alias: {
       Fonts: path.join(__dirname, 'app/src/assets/fonts'),
       Images: path.join(__dirname, 'app/src/assets/images')
     },
+    fallback: {
+      // console: true,
+      fs: false,
+      net: false,
+      tls: false
+    }
   },
   module: {
     rules: [
@@ -81,7 +85,9 @@ const CommonConfig = {
           {
             loader: 'postcss-loader',
             options: {
-              sourceMap: true
+              postcssOptions: {
+                sourceMap: true
+              }
             }
           },
           {
@@ -134,7 +140,7 @@ const CommonConfig = {
       filename: 'index.html',
       title: 'Earthdata Pub Dashboard'
     }),
-    new webpack.HashedModuleIdsPlugin(),
+    // new webpack.HashedModuleIdsPlugin(), - see optimization.moduleIds: 'hashed'
     new CopyWebpackPlugin(
       {
         patterns: [
