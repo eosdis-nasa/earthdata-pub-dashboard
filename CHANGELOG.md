@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated CONTRIBUTING.md
 
+## 1.0.6 - 2021-11-11
+
+- Decoupled form names and ids and updated request.js to get next workflow action
+
 ## 1.0.5 - 2021-10-29
 
 - Decoupled daac selection form
