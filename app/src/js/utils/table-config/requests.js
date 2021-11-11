@@ -16,33 +16,34 @@ import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 
-const newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
-const publicationRequestFormId = _config.publicationRequestFormId;
-
-export const newFormLink = (row, request, formId, instruction) => {
-  if (!request.match(/formId/g)) {
-    request += `?formId=${formId}`;
-  } else {
-    console.log(`?formId=${formId} was not added, request is ${request}`);
-  }
-  if (!request.match(/requestId/g)) {
-    request += `&requestId=${row.id}`;
-  } else {
-    console.log(`?requestId=${row.id} was not added, request is ${request}`);
-  }
-  return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{instruction}</a>;
+export const newFormLink = (request, formalName) => {
+  return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</a>;
 };
 
-export const existingFormLink = (row, request, formId, formName, instruction) => {
-  return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{instruction}</Link>;
+export const existingFormLink = (row, formId, formalName) => {
+  return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
 };
 
-export const formLookup = (row, request, formId, formName) => {
-  // console.log('formLookup', row, request, formId, formName);
+export const getFormalName = (str) => {
+  const count = (str.match(/_/g) || []).length;
+  if (count > 0) {
+    str = str.replace(/_/g, ' ');
+  }
+  const words = str.split(' ');
+  for (let i = 0; i < words.length; i++) {
+    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+  }
+  return words.join(' ');
+};
+
+export const stepLookup = (row) => {
   const stepName = row.step_name;
+  let request = '';
   let stepID = '';
   let stepType = '';
   let stepIDKey = '';
+  let tmpType = '';
+  const formalName = getFormalName(stepName);
   for (const i in row.step_data) {
     if (typeof row.step_data[i] !== 'undefined') {
       const regex = new RegExp(stepName, 'g');
@@ -50,31 +51,27 @@ export const formLookup = (row, request, formId, formName) => {
         stepType = row.step_data.type;
         stepIDKey = `${stepType}_id`;
         stepID = row.step_data[stepIDKey];
+        if (typeof stepID === 'undefined' && typeof row.step_data.data !== 'undefined') {
+          tmpType = row.step_data.data.type;
+          const tmpIDKey = `${tmpType}_id`;
+          stepID = row.step_data.data[tmpIDKey];
+          // Build url to forms app - after submitted
+          if (tmpType.match(/form/g)) {
+            request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+          }
+        }
+        // Build url to forms app
+        if (stepType.match(/form/g)) {
+          request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+        }
         break;
       }
     }
   }
-  // TODO: Untested and probably not fully working - Needs to be more dynamic
-  if (stepType === 'form') {
-    if (Object.keys(row.form_data).length === 0) {
-      return newFormLink(row, request, stepID, 'Fill Form');
-    } else if (row.forms.length === 1) {
-      if (row.forms[0].id === stepID) {
-        return existingFormLink(row, request, stepID, formName, 'View Form');
-      } else {
-        return newFormLink(row, request, stepID, 'Fill Form');
-      }
-    } else if (row.forms.length === 2) {
-      if (row.forms[0].id === stepID) {
-        return existingFormLink(row, request, stepID, formName, 'View Form');
-      } else if (row.forms[1].id === stepID) {
-        return existingFormLink(row, request, stepID, formName, 'View Form');
-      } else {
-        return newFormLink(row, request, stepID, 'Fill Form');
-      }
-    } else {
-      return newFormLink(row, request, stepID, 'Fill Form');
-    }
+  if (stepType.match(/review/g)) {
+    return existingFormLink(row, stepID, formalName);
+  } else {
+    return newFormLink(request, formalName);
   }
 };
 
@@ -123,8 +120,8 @@ export const tableColumns = [
   },
   {
     Header: 'Next Action',
-    accessor: row => formLookup(row, newDataPublicationRequest, publicationRequestFormId, 'Data Accession Request'),
-    id: 'data_publication_request',
+    accessor: row => stepLookup(row),
+    id: 'next_action',
     width: 170
   }
   /* {

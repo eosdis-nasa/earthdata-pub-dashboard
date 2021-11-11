@@ -142,10 +142,7 @@ class RequestsOverview extends React.Component {
     } = requests;
     const unique = [...new Set(list.data.map(item => item.id))];
     const { queriedAt } = list.meta;
-    // newPublicationRequestUrl: process.env.NEW_PUBLICATION_REQUEST_URL || '/interest/daacs',
-    // newProductInformationUrl: process.env.NEW_PRODUCT_INFORMATION_URL || '/questionnaire/questions',
-    const newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
-    const newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
+    const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
     // const statsCount = get(stats, 'count.data.requests.count', []);
     // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
@@ -163,7 +160,7 @@ class RequestsOverview extends React.Component {
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
-            <a className='button button--small button--green button--add form-group__element--right' href={newDataPublicationRequest}>New Request</a>
+            <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac}>New Request</a>
           </div>
           <List
             list={list}
