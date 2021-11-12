@@ -16,7 +16,7 @@ const CommonConfig = {
     './app/src/index.js',
   ],
   optimization: {
-    moduleIds: 'hashed',
+    chunkIds: 'deterministic',
   },
   output: {
     filename: 'bundle.js',
@@ -29,13 +29,18 @@ const CommonConfig = {
     extensions: ['.js', '.jsx', '.scss'],
     alias: {
       Fonts: path.join(__dirname, 'app/src/assets/fonts'),
-      Images: path.join(__dirname, 'app/src/assets/images')
+      Images: path.join(__dirname, 'app/src/assets/images'),
+      zlib: 'browserify-zlib'
     },
     fallback: {
       // console: true,
       fs: false,
       net: false,
-      tls: false
+      tls: false,
+      crypto: require.resolve('crypto-browserify'),
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      buffer: require.resolve('buffer')
     }
   },
   module: {
@@ -140,6 +145,9 @@ const CommonConfig = {
       filename: 'index.html',
       title: 'Earthdata Pub Dashboard'
     }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development')
+    }),
     // new webpack.HashedModuleIdsPlugin(), - see optimization.moduleIds: 'hashed'
     new CopyWebpackPlugin(
       {
@@ -149,8 +157,10 @@ const CommonConfig = {
       }
     ),
     new webpack.ProvidePlugin({
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer'],
       jQuery: 'jquery', // can use jquery anywhere in the app without having to require it
-      $: 'jquery'
+      $: 'jquery,'
     }),
     new webpack.EnvironmentPlugin(
       {
