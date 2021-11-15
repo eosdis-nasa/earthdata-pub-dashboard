@@ -145,9 +145,6 @@ const CommonConfig = {
       filename: 'index.html',
       title: 'Earthdata Pub Dashboard'
     }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development')
-    }),
     // new webpack.HashedModuleIdsPlugin(), - see optimization.moduleIds: 'hashed'
     new CopyWebpackPlugin(
       {
