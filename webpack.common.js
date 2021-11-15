@@ -15,24 +15,33 @@ const CommonConfig = {
     'regenerator-runtime/runtime',
     './app/src/index.js',
   ],
+  optimization: {
+    chunkIds: 'deterministic',
+  },
   output: {
     filename: 'bundle.js',
     chunkFilename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-   publicPath: config.basepath
+    publicPath: config.basepath
   },
-  node: {
-    console: true,
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty'
-  },
+  // node: { Automatic Node.js Polyfills Removed - see resolve.fallback options
   resolve: {
     extensions: ['.js', '.jsx', '.scss'],
     alias: {
       Fonts: path.join(__dirname, 'app/src/assets/fonts'),
-      Images: path.join(__dirname, 'app/src/assets/images')
+      Images: path.join(__dirname, 'app/src/assets/images'),
+      zlib: 'browserify-zlib'
     },
+    fallback: {
+      // console: true,
+      fs: false,
+      net: false,
+      tls: false,
+      crypto: require.resolve('crypto-browserify'),
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      buffer: require.resolve('buffer')
+    }
   },
   module: {
     rules: [
@@ -81,7 +90,9 @@ const CommonConfig = {
           {
             loader: 'postcss-loader',
             options: {
-              sourceMap: true
+              postcssOptions: {
+                sourceMap: true
+              }
             }
           },
           {
@@ -134,13 +145,22 @@ const CommonConfig = {
       filename: 'index.html',
       title: 'Earthdata Pub Dashboard'
     }),
-    new webpack.HashedModuleIdsPlugin(),
-    new CopyWebpackPlugin([
-      { from: './app/src/public', to: './' }
-    ]),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development')
+    }),
+    // new webpack.HashedModuleIdsPlugin(), - see optimization.moduleIds: 'hashed'
+    new CopyWebpackPlugin(
+      {
+        patterns: [
+          { from: './app/src/public', to: './' }
+        ]
+      }
+    ),
     new webpack.ProvidePlugin({
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer'],
       jQuery: 'jquery', // can use jquery anywhere in the app without having to require it
-      $: 'jquery'
+      $: 'jquery,'
     }),
     new webpack.EnvironmentPlugin(
       {
