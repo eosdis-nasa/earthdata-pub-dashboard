@@ -24,6 +24,7 @@ const MainConfig = merge.smartStrategy({
   optimization: {
     nodeEnv: 'production',
     concatenateModules: true,
+    chunkIds: 'deterministic',
     minimizer: [
       new TerserJsPlugin({
         cache: true,
@@ -82,7 +83,7 @@ const MainConfig = merge.smartStrategy({
     ]
   },
   plugins: [
-    new webpack.HashedModuleIdsPlugin(),
+    // new webpack.HashedModuleIdsPlugin(),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash:8]-' + pkg.version + '.css',
