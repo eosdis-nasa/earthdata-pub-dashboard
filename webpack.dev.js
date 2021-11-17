@@ -16,10 +16,10 @@ const DevConfig = merge.smartStrategy(
     hot: false,
     historyApiFallback: true,
     // host: '0.0.0.0', // Required for Docker -- someone will need to link this somehow
-    watchContentBase: true,
+    // watchContentBase: true, // no longer valid with webpack-dev-server@4.4.0
     compress: true,
     port: process.env.PORT || 3000,
-    contentBase: 'dist',
+    // contentBase: 'dist', // no longer valid with webpack-dev-server@4.4.0
   },
   module: {
     rules: [
