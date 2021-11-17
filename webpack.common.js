@@ -177,8 +177,11 @@ const CommonConfig = {
         APP_ID: config.APP_ID,
         FORMS_URL: config.formsUrl,
         OVERVIEW_URL: config.overviewUrl,
-        NEW_PUBLICATION_REQUEST_URL: config.newPublicationRequestUrl,
-        NEW_PRODUCT_INFORMATION_URL: config.newProductInformationUrl,
+        INITIATE_REQUEST_SELECT_DAAC_URL: config.initiateRequestSelectDaac,
+        // PUBLICATION_REQUEST_URL: config.publicationRequestUrl,
+        // PRODUCT_INFORMATION_URL: config.productInformationUrl,
+        // PUBLICATION_REQUEST_SHORT_NAME: config.publicationRequestShortName,
+        // PRODUCT_INFORMATION_SHORT_NAME: config.productInformationShortName,
         BASEPATH: config.basepath
       }
     )

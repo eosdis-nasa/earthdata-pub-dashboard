@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.0.6 - 2021-11-04
 
+- Decoupled form names and ids and updated request.js to get next workflow action
 - Reduced vulnerabilities
 
 ## 1.0.5 - 2021-10-29
