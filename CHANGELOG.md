@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated CONTRIBUTING.md
 
+## 1.0.8 - 2021-12-01
+
+- Cleaned up dependencies by removing libraries unused and upgrading libraries that do not result in breaking the dashboard or the build
+
 ## 1.0.7 - 2021-11-12
 
 - Eliminated breaking changes from webpack4 upgrade to webpack5
