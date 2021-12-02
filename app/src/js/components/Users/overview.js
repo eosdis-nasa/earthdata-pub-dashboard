@@ -58,6 +58,8 @@ const UsersOverview = ({ users }) => {
           query={{}}
           rowId='id'
           sortIdx='long_name'
+          filterIdx='name'
+          filterPlaceholder='Search Users'
         >
         </List>
       </section>

@@ -60,6 +60,8 @@ const WorkflowsOverview = ({ workflows }) => {
           bulkActions={[]}
           rowId='id'
           sortIdx='long_name'
+          filterIdx='long_name'
+          filterPlaceholder='Search Workflows'
         >
           {/* <ListFilters>
             <Search

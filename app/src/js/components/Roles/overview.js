@@ -57,7 +57,6 @@ const RoleOverview = ({ roles }) => {
             placeholder="Role Name"
           />
         </div> */}
-
         <List
           list={roles.list}
           dispatch={dispatch}
@@ -66,6 +65,8 @@ const RoleOverview = ({ roles }) => {
           query={{}}
           sortIdx='name'
           rowId='name'
+          filterIdx='short_name'
+          filterPlaceholder='Search Role'
         />
       </section>
     </div>

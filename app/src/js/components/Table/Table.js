@@ -26,11 +26,15 @@ class List extends React.Component {
 
     const initialPage = 0;
     const initialSortIdx = props.sortIdx || 0;
+    const initialFilterIdx = props.filterIdx || '';
+    const initialFilterPlaceholder = props.filterPlaceholder || 'Search';
     const initialOrder = 'desc';
 
     this.state = {
       page: initialPage,
       sortIdx: initialSortIdx,
+      filterIdx: initialFilterIdx,
+      filterPlaceholder: initialFilterPlaceholder,
       order: initialOrder,
       selected: [],
       clearSelected: false,
@@ -141,6 +145,8 @@ class List extends React.Component {
     const {
       page,
       sortIdx,
+      filterIdx,
+      filterPlaceholder,
       order,
       selected,
       clearSelected,
@@ -183,7 +189,8 @@ class List extends React.Component {
               rowId={rowId}
               onSelect={this.updateSelection}
               // sortIdx={sortIdx}
-              initialSortBy={sortIdx}
+              filterIdx={filterIdx}
+              filterPlaceholder={filterPlaceholder}
               changeSortProps={this.queryNewSort}
               order={order}
               clearSelected={clearSelected}
@@ -208,6 +215,8 @@ List.propTypes = {
   action: PropTypes.func,
   children: PropTypes.node,
   sortIdx: PropTypes.string,
+  filterIdx: PropTypes.string,
+  filterPlaceholder: PropTypes.string,
   query: PropTypes.object,
   bulkActions: PropTypes.array,
   rowId: PropTypes.any,

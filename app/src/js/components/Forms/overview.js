@@ -67,6 +67,8 @@ const FormsOverview = ({ forms }) => {
           query={{}}
           rowId='id'
           sortIdx='long_name'
+          filterIdx='short_name'
+          filterPlaceholder='Search Forms'
         >
         </List>
       </section>

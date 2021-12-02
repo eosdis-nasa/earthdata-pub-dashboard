@@ -64,6 +64,8 @@ class QuestionsOverview extends React.Component {
             query={this.generateQuery()}
             rowId='id'
             sortIdx='long_name'
+            filterIdx='question_name'
+            filterPlaceholder='Search Questions'
           >
           </List>
         </section>

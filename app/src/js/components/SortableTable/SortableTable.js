@@ -3,10 +3,11 @@ import React, {
   useMemo,
   useEffect,
   forwardRef,
-  useRef
+  useRef,
+  useState
 } from 'react';
 import PropTypes from 'prop-types';
-import { useTable, useResizeColumns, useFlexLayout, useSortBy, useRowSelect } from 'react-table';
+import { useTable, useResizeColumns, useFlexLayout, useSortBy, useRowSelect, useFilters } from 'react-table';
 
 /**
  * IndeterminateCheckbox
@@ -58,7 +59,9 @@ const SortableTable = ({
   tableColumns = [],
   data = [],
   onSelect,
-  clearSelected
+  clearSelected,
+  filterIdx,
+  filterPlaceholder
 }) => {
   const defaultColumn = useMemo(
     () => ({
@@ -81,6 +84,7 @@ const SortableTable = ({
       selectedRowIds,
       sortBy
     },
+    setFilter,
     toggleAllRowsSelected
   } = useTable(
     {
@@ -94,6 +98,7 @@ const SortableTable = ({
     },
     useFlexLayout, // this allows table to have dynamic layouts outside of standard table markup
     useResizeColumns, // this allows for resizing columns
+    useFilters,
     useSortBy, // this allows for sorting
     useRowSelect, // this allows for checkbox in table
     hooks => {
@@ -145,9 +150,23 @@ const SortableTable = ({
     }
   }, [changeSortProps, sortBy, sortIdx, order]);
 
+  const [filterInput, setFilterInput] = useState('');
+
+  const handleFilterChange = e => {
+    const value = e.target.value || undefined;
+    setFilter(filterIdx, value); // Update the show.name filter. Now our table will filter and show only the rows which have a matching value
+    setFilterInput(value);
+  };
+
   return (
     <div className='table--wrapper'>
       <form>
+        {filterIdx ? <input
+          value={filterInput || ''}
+          onChange={handleFilterChange}
+          placeholder={filterPlaceholder}
+          className={'search'}
+        /> : ''}
         <div className='table' {...getTableProps()}>
           <div className='thead'>
             <div className='tr'>
@@ -219,6 +238,8 @@ SortableTable.propTypes = {
   header: PropTypes.array,
   order: PropTypes.string,
   sortIdx: PropTypes.string,
+  filterIdx: PropTypes.string,
+  filterPlaceholder: PropTypes.string,
   changeSortProps: PropTypes.func,
   onSelect: PropTypes.func,
   canSelect: PropTypes.bool,
