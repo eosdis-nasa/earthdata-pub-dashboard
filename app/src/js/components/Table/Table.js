@@ -75,7 +75,6 @@ class List extends React.Component {
   }
 
   queryNewSort (sortProps) {
-    console.log(sortProps);
     this.setState({
       ...sortProps,
       queryConfig: this.getQueryConfig({
