@@ -6,7 +6,8 @@ import { shortDateNoTimeYearFirst } from '../format';
 export const tableColumns = [
   {
     Header: 'Short Name',
-    accessor: row => <Link to={`forms/id/${row.id}`}>{row.short_name}</Link>,
+    accessor: (row) => row.short_name,
+    Cell: row => <Link to={{ pathname: `forms/id/${row.row.original.id}` }}>{row.row.original.short_name}</Link>,
     id: 'short_name'
   },
   {

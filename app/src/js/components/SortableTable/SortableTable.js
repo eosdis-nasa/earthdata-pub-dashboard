@@ -154,12 +154,23 @@ const SortableTable = ({
               {headerGroups.map(headerGroup => (
                 <div {...headerGroup.getHeaderGroupProps()} className="tr">
                   {headerGroup.headers.map(column => {
+                    let columnClassName = '';
+                    if (column.canSort) {
+                      let columnClassNameSuffix;
+
+                      if (column.isSortedDesc === true) {
+                        columnClassNameSuffix = '--desc';
+                      } else if (column.isSortedDesc === false) {
+                        columnClassNameSuffix = '--asc';
+                      } else {
+                        columnClassNameSuffix = '';
+                      }
+
+                      columnClassName = `table__sort${columnClassNameSuffix}`;
+                    }
                     return (
                       <div {...column.getHeaderProps()} className='th'>
-                        {/* <div {...column.getSortByToggleProps()} className={`${column.canSort ? 'table__sort' : ''}`}> Temporarily commenting out for testing because sorting is not working
-                          {column.render('Header')}
-                        </div> */}
-                        <div>
+                        <div {...column.getSortByToggleProps()} className={`${column.canSort ? columnClassName : ''}`}>
                           {column.render('Header')}
                         </div>
                         <div

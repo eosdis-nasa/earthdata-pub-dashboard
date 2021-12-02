@@ -75,6 +75,7 @@ class List extends React.Component {
   }
 
   queryNewSort (sortProps) {
+    console.log(sortProps);
     this.setState({
       ...sortProps,
       queryConfig: this.getQueryConfig({
@@ -182,7 +183,8 @@ class List extends React.Component {
               canSelect={hasActions}
               rowId={rowId}
               onSelect={this.updateSelection}
-              sortIdx={sortIdx}
+              // sortIdx={sortIdx}
+              initialSortBy={sortIdx}
               changeSortProps={this.queryNewSort}
               order={order}
               clearSelected={clearSelected}

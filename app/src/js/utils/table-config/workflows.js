@@ -22,7 +22,8 @@ export const makeSteps = (row) => {
 export const tableColumns = [
   {
     Header: 'Name',
-    accessor: (row) => <Link to={`/workflows/id/${row.id}`}>{row.long_name}</Link>,
+    accessor: (row) => row.long_name,
+    Cell: row => <Link to={{ pathname: `/workflows/id/${row.row.original.id}` }}>{row.row.original.long_name}</Link>,
     id: 'long_name'
   },
   {
