@@ -7,7 +7,7 @@ import React, {
   useState
 } from 'react';
 import PropTypes from 'prop-types';
-import { useTable, useResizeColumns, useFlexLayout, useSortBy, useRowSelect, useFilters } from 'react-table';
+import { useTable, useResizeColumns, useFlexLayout, useSortBy, useRowSelect, useFilters, usePagination } from 'react-table';
 
 /**
  * IndeterminateCheckbox
@@ -77,12 +77,22 @@ const SortableTable = ({
 
   const {
     getTableProps,
-    rows,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
     prepareRow,
     headerGroups,
     state: {
       selectedRowIds,
-      sortBy
+      sortBy,
+      pageIndex,
+      pageSize
     },
     setFilter,
     toggleAllRowsSelected
@@ -94,12 +104,16 @@ const SortableTable = ({
       getRowId: (row, relativeIndex) => typeof rowId === 'function' ? rowId(row) : row[rowId] || relativeIndex,
       autoResetSelectedRows: false,
       autoResetSortBy: false,
-      manualSortBy: shouldManualSort
+      manualSortBy: shouldManualSort,
+      pageIndex: 0,
+      pageSize: 10,
+      autoResetPage: false,
     },
     useFlexLayout, // this allows table to have dynamic layouts outside of standard table markup
     useResizeColumns, // this allows for resizing columns
     useFilters,
     useSortBy, // this allows for sorting
+    usePagination,
     useRowSelect, // this allows for checkbox in table
     hooks => {
       if (canSelect) {
@@ -154,7 +168,7 @@ const SortableTable = ({
 
   const handleFilterChange = e => {
     const value = e.target.value || undefined;
-    setFilter(filterIdx, value); // Update the show.name filter. Now our table will filter and show only the rows which have a matching value
+    setFilter(filterIdx, value);
     setFilterInput(value);
   };
 
@@ -204,7 +218,7 @@ const SortableTable = ({
             </div>
           </div>
           <div className='tbody'>
-            {rows.map((row, i) => {
+            {page.map((row, i) => {
               prepareRow(row);
               return (
                 <div className='tr' data-value={row.id} {...row.getRowProps()} key={i}>
@@ -227,6 +241,58 @@ const SortableTable = ({
             })}
           </div>
         </div>
+        <ul className="pagination">
+          <li className="page-item" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+            <a className="page-link">First</a>
+          </li>
+          <li className="page-item" onClick={() => previousPage()} disabled={!canPreviousPage}>
+            <a className="page-link">{'<'}</a>
+          </li>
+          <li className="page-item" onClick={() => nextPage()} disabled={!canNextPage}>
+            <a className="page-link">{'>'}</a>
+          </li>
+          <li className="page-item" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+            <a className="page-link">Last</a>
+          </li>
+          <li>
+            <a className="page-link">
+              Page{' '}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>{' '}
+            </a>
+          </li>
+          <li>
+            <a className="page-link">
+              <input
+                className="form-control"
+                type="number"
+                defaultValue={pageIndex + 1}
+                onChange={e => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  gotoPage(page);
+                }}
+                style={{ width: '100px', height: '20px' }}
+                min={1}
+                max={pageOptions.length}
+              />
+            </a>
+          </li>{' '}
+          <select
+            className="form-control"
+            value={pageSize}
+            onChange={e => {
+              setPageSize(Number(e.target.value));
+            }}
+            style={{ width: '120px', height: '38px' }}
+          >
+            {[5, 10, 20, 30, 40, 50].map(pageSize => (
+              <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </ul>
       </form>
     </div>
   );
