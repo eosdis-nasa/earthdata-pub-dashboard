@@ -15,7 +15,7 @@ const PaginationTableHeader = ({
 }) => {
   return (
     <ul className="pagination" style={{ display: 'flex' }}>
-      <li className="total-records" style={{ textAlign: 'left', flex: 1 }}>Page {pageIndex + 1} of {pageOptions.length}</li>
+      <li className="total-records" style={{ textAlign: 'left', flex: 1 }}>Page {pageOptions.length ? pageIndex + 1 : 0} of {pageOptions.length}</li>
       <div style={{ textAlign: 'center', flex: 1 }}>
         <li className="page-item" onClick={() => previousPage()} disabled={!canPreviousPage}>
           <a className="page-link">{'<'} Previous</a>
