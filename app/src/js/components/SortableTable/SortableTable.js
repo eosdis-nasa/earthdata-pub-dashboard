@@ -8,6 +8,8 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import { useTable, useResizeColumns, useFlexLayout, useSortBy, useRowSelect, useFilters, usePagination } from 'react-table';
+import PaginationTableFooter from '../Pagination/pagination-table-footer';
+import PaginationTableHeader from '../Pagination/pagination-table-header'
 
 /**
  * IndeterminateCheckbox
@@ -181,6 +183,18 @@ const SortableTable = ({
           placeholder={filterPlaceholder}
           className={'search'}
         /> : ''}
+        <PaginationTableHeader
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          pageOptions={pageOptions}
+          pageCount={pageCount}
+          gotoPage={gotoPage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          setPageSize={setPageSize}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+        />
         <div className='table' {...getTableProps()}>
           <div className='thead'>
             <div className='tr'>
@@ -241,58 +255,16 @@ const SortableTable = ({
             })}
           </div>
         </div>
-        <ul className="pagination">
-          <li className="page-item" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-            <a className="page-link">First</a>
-          </li>
-          <li className="page-item" onClick={() => previousPage()} disabled={!canPreviousPage}>
-            <a className="page-link">{'<'}</a>
-          </li>
-          <li className="page-item" onClick={() => nextPage()} disabled={!canNextPage}>
-            <a className="page-link">{'>'}</a>
-          </li>
-          <li className="page-item" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-            <a className="page-link">Last</a>
-          </li>
-          <li>
-            <a className="page-link">
-              Page{' '}
-              <strong>
-                {pageIndex + 1} of {pageOptions.length}
-              </strong>{' '}
-            </a>
-          </li>
-          <li>
-            <a className="page-link">
-              <input
-                className="form-control"
-                type="number"
-                defaultValue={pageIndex + 1}
-                onChange={e => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                  gotoPage(page);
-                }}
-                style={{ width: '100px', height: '20px' }}
-                min={1}
-                max={pageOptions.length}
-              />
-            </a>
-          </li>{' '}
-          <select
-            className="form-control"
-            value={pageSize}
-            onChange={e => {
-              setPageSize(Number(e.target.value));
-            }}
-            style={{ width: '120px', height: '38px' }}
-          >
-            {[5, 10, 20, 30, 40, 50].map(pageSize => (
-              <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-              </option>
-            ))}
-          </select>
-        </ul>
+        <PaginationTableFooter
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          pageOptions={pageOptions}
+          pageCount={pageCount}
+          gotoPage={gotoPage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          pageIndex={pageIndex}
+        />
       </form>
     </div>
   );
