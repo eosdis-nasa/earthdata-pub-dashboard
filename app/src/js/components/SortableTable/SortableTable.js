@@ -9,7 +9,7 @@ import React, {
 import PropTypes from 'prop-types';
 import { useTable, useResizeColumns, useFlexLayout, useSortBy, useRowSelect, useFilters, usePagination } from 'react-table';
 import PaginationTableFooter from '../Pagination/pagination-table-footer';
-import PaginationTableHeader from '../Pagination/pagination-table-header'
+import PaginationTableHeader from '../Pagination/pagination-table-header';
 
 /**
  * IndeterminateCheckbox
@@ -63,7 +63,8 @@ const SortableTable = ({
   onSelect,
   clearSelected,
   filterIdx,
-  filterPlaceholder
+  filterPlaceholder,
+  filterInputPassed
 }) => {
   const defaultColumn = useMemo(
     () => ({
@@ -166,23 +167,13 @@ const SortableTable = ({
     }
   }, [changeSortProps, sortBy, sortIdx, order]);
 
-  const [filterInput, setFilterInput] = useState('');
-
-  const handleFilterChange = e => {
-    const value = e.target.value || undefined;
-    setFilter(filterIdx, value);
-    setFilterInput(value);
-  };
+  useEffect(() => {
+    setFilter(filterIdx, filterInputPassed);
+  }, [filterInputPassed]);
 
   return (
     <div className='table--wrapper'>
       <form>
-        {filterIdx ? <input
-          value={filterInput || ''}
-          onChange={handleFilterChange}
-          placeholder={filterPlaceholder}
-          className={'search'}
-        /> : ''}
         <PaginationTableHeader
           canPreviousPage={canPreviousPage}
           canNextPage={canNextPage}
@@ -278,6 +269,7 @@ SortableTable.propTypes = {
   sortIdx: PropTypes.string,
   filterIdx: PropTypes.string,
   filterPlaceholder: PropTypes.string,
+  filterInputPassed: PropTypes.string,
   changeSortProps: PropTypes.func,
   onSelect: PropTypes.func,
   canSelect: PropTypes.bool,

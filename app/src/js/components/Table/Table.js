@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ErrorReport from '../Errors/report';
@@ -47,7 +47,8 @@ class List extends React.Component {
       },
       params: {},
       completedBulkActions: 0,
-      bulkActionError: null
+      bulkActionError: null,
+      filterInput: ''
     };
   }
 
@@ -159,6 +160,14 @@ class List extends React.Component {
 
     return (
       <>
+        {filterIdx ? <input
+          value={this.state.filterInput}
+          onChange={(e) => {
+            this.setState({ filterInput: e.target.value });
+          }}
+          placeholder={filterPlaceholder}
+          className={'search'}
+        /> : ''}
         <ListActions
           dispatch={dispatch}
           action={action}
@@ -191,6 +200,7 @@ class List extends React.Component {
               // sortIdx={sortIdx}
               filterIdx={filterIdx}
               filterPlaceholder={filterPlaceholder}
+              filterInputPassed={this.state.filterInput}
               changeSortProps={this.queryNewSort}
               order={order}
               clearSelected={clearSelected}
