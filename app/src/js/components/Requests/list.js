@@ -117,7 +117,6 @@ class AllSubmissions extends React.Component {
     const query = this.generateQuery();
     const view = this.getView();
     const displayCaseView = displayCase(view);
-    const tableSortIdx = view === 'failed' ? 'requestId' : 'timestamp';
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -152,7 +151,6 @@ class AllSubmissions extends React.Component {
             tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
             query={query}
             rowId='id'
-            sortIdx={tableSortIdx}
           >
             {/* <ListFilters>
               <Dropdown

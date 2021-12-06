@@ -57,7 +57,6 @@ const UsersOverview = ({ users }) => {
           tableColumns={tableColumns}
           query={{}}
           rowId='id'
-          sortIdx='long_name'
           filterIdx='name'
           filterPlaceholder='Search Users'
         >

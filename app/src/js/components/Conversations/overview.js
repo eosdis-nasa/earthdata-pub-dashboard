@@ -47,7 +47,6 @@ const ConversationOverview = ({ dispatch, conversations }) => {
           <List
             list={conversations.list}
             tableColumns={tableColumns}
-            sortIdx='name'
             rowId='name'
           />
         </section>

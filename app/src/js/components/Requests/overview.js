@@ -168,7 +168,6 @@ class RequestsOverview extends React.Component {
             tableColumns={tableColumns}
             query={this.generateQuery()}
             rowId='id'
-            sortIdx='created_at'
             filterIdx='name'
             filterPlaceholder='Search Requests'
           >

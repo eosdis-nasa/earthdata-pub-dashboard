@@ -115,7 +115,6 @@ class AllGroups extends React.Component {
     const query = this.generateQuery();
     const view = this.getView();
     const displayCaseView = displayCase(view);
-    const tableSortIdx = view === 'failed' ? 'groupId' : 'timestamp';
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -150,7 +149,6 @@ class AllGroups extends React.Component {
             tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
             query={query}
             rowId='id'
-            sortIdx={tableSortIdx}
           >
             {/* <ListFilters>
               <Dropdown

@@ -63,7 +63,6 @@ const RoleOverview = ({ roles }) => {
           action={listRoles}
           tableColumns={tableColumns}
           query={{}}
-          sortIdx='name'
           rowId='name'
           filterIdx='short_name'
           filterPlaceholder='Search Role'

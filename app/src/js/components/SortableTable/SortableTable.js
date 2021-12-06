@@ -76,8 +76,6 @@ const SortableTable = ({
     []
   );
 
-  const shouldManualSort = !!sortIdx;
-
   const {
     getTableProps,
     page,
@@ -107,7 +105,7 @@ const SortableTable = ({
       getRowId: (row, relativeIndex) => typeof rowId === 'function' ? rowId(row) : row[rowId] || relativeIndex,
       autoResetSelectedRows: false,
       autoResetSortBy: false,
-      manualSortBy: shouldManualSort,
+      manualSortBy: false,
       pageIndex: 0,
       pageSize: 10,
       autoResetPage: false,
