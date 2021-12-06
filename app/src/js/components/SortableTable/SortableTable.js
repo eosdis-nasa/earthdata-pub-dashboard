@@ -4,7 +4,6 @@ import React, {
   useEffect,
   forwardRef,
   useRef,
-  useState
 } from 'react';
 import PropTypes from 'prop-types';
 import { useTable, useResizeColumns, useFlexLayout, useSortBy, useRowSelect, useFilters, usePagination } from 'react-table';
@@ -166,7 +165,10 @@ const SortableTable = ({
   }, [changeSortProps, sortBy, sortIdx, order]);
 
   useEffect(() => {
-    filterIdx ? setFilter(filterIdx, filterInputPassed) : '';
+    if (filterIdx) {
+      setFilter(filterIdx, filterInputPassed);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterInputPassed]);
 
   return (
