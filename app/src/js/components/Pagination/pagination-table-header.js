@@ -59,7 +59,7 @@ const PaginationTableHeader = ({
 PaginationTableHeader.propTypes = {
   canPreviousPage: PropTypes.bool,
   canNextPage: PropTypes.bool,
-  pageOptions: PropTypes.object,
+  pageOptions: PropTypes.array,
   pageCount: PropTypes.number,
   gotoPage: PropTypes.func,
   nextPage: PropTypes.func,
