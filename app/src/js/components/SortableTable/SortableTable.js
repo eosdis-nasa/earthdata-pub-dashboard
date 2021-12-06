@@ -168,7 +168,7 @@ const SortableTable = ({
   }, [changeSortProps, sortBy, sortIdx, order]);
 
   useEffect(() => {
-    setFilter(filterIdx, filterInputPassed);
+    filterIdx ? setFilter(filterIdx, filterInputPassed) : '';
   }, [filterInputPassed]);
 
   return (
