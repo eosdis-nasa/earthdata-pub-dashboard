@@ -24,10 +24,10 @@ const MainConfig = merge.smartStrategy({
     concatenateModules: true,
     chunkIds: 'deterministic',
     minimizer: [
-      new TerserJsPlugin({
-        cache: true,
+      new TerserJsPlugin({ // These properties are valid: object { test?, include?, exclude?, terserOptions?, extractComments?, parallel?, minify? }
+        // cache: true,
         parallel: true,
-        sourceMap: true,
+        // sourceMap: true,
         include: /\.js$/
       }),
     ],
