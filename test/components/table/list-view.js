@@ -26,7 +26,6 @@ configure({ adapter: new Adapter() });
       dispatch={dispatch}
       action={listGranules}
       tableColumns={errorTableColumns}
-      sortIdx='timestamp'
       query={query}
     />,
     {

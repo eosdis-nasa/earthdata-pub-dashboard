@@ -27,7 +27,6 @@ to `useTable()`
   or in the documation for a specific plugin hook
 
 - **data**: Array of data items. Items can be any format.
-- **sortIdx**: The id of the column to sort on.
 - **changeSortProps**: Callback when a new sort order is defined, passed an object
 with the properties `{ sortIdx, order }`.
 - **onSelect**: Callback when a row is selected (or unselected), passed an array
@@ -36,8 +35,12 @@ containing the ids of all selected rows.
 render check marks.
 - **rowId**: String or function that defines a particular row's id. Passed to
 `useTable` options via `getRowId`.
+- **filterIdx**: String describing which column of the table should be used for the filter/search
+functionaility. If left blank, no filter/search functionality will be available for the given table.
+- **filterPlaceholder**: String which is a placeholder text for the filter/search input. If left blank,
+this value will default to 'Search'
 
-Note, `sortIdx` and `changeSortProps` only apply to components that implement smart
+Note, `changeSortProps` only applies to components that implement smart
 searching, such as `list-view`. This base component does internal prop checking to
 determine whether it uses smart or dumb sorting, based on whether the above props
 are defined.
@@ -56,7 +59,8 @@ and creates a new one with the updated query parameters.
 `{ data, inflight, error, meta }` properties corresponding to all `list` state objects.
 - **dispatch**: Redux dispatch function.
 - **action**: Redux-style action to send, ie `listRequests`.
-- **sortIdx**: Corresponds to `sortableTable#sortIdx`.
+- **filterIdx**: Corresponds to `sortableTable#filterIdx`.
+- **filterPlaceholder**: Corresponds to `sortableTable#filterPlaceholder`.
 - **query**: Array of configuration objects passed to `batch-async-command`.
 - **rowId** Corresponds to `sortableTable#rowId`.
 

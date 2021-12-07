@@ -6,7 +6,8 @@ import Dropdown from '../../components/DropDown/simple-dropdown';
 export const tableColumns = [
   {
     Header: 'Title',
-    accessor: row => questionLink(row.id, row.long_name),
+    accessor: (row) => row.long_name,
+    Cell: row => questionLink(row.row.original.id, row.row.original.long_name),
     id: 'question_name',
     width: 175
   },

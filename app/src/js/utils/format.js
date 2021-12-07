@@ -79,11 +79,11 @@ export const lastUpdated = function (datestring, text) {
 
 export const submissionLink = function (requestId) {
   if (!requestId) return nullValue;
-  return <Link to={`/requests/id/${requestId}`}>{requestId}</Link>;
+  return <Link to={{ pathname: `/requests/id/${requestId}` }}>{requestId}</Link>;
 };
 export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;
-  return <Link to={`/questions/id/${questionId}`}>{questionName}</Link>;
+  return <Link to={{ pathname: `/questions/id/${questionId}` }}>{questionName}</Link>;
 };
 export const groupLink = function (groupId) {
   if (!groupId) return nullValue;

@@ -56,7 +56,8 @@ const GroupsOverview = ({ groups }) => {
           tableColumns={tableColumns}
           query={{}}
           rowId='id'
-          sortIdx='long_name'
+          filterIdx='short_name'
+          filterPlaceholder='Search Group'
         >
         </List>
       </section>

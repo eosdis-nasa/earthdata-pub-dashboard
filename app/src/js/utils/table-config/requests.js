@@ -84,13 +84,15 @@ export const tableColumns = [
   },
   {
     Header: 'Status',
-    accessor: row => <Link to={`/requests/id/${row.id}`}>{row.status}</Link>,
+    accessor: (row) => row.status,
+    Cell: row => <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.status}</Link>,
     id: 'status_message',
     width: 170
   },
   {
     Header: 'Workflow',
-    accessor: row => <Link to={`/workflows/id/${row.workflow_id}`}>{row.workflow_name}</Link>,
+    accessor: (row) => row.workflow_name,
+    Cell: row => <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }}>{row.row.original.workflow_name}</Link>,
     id: 'workflow_name',
     width: 170
   },
@@ -114,7 +116,8 @@ export const tableColumns = [
   },
   {
     Header: 'Conversation',
-    accessor: row => row.conversation_id ? (<Link to={`/conversations/id/${row.conversation_id}`}>View</Link>) : null,
+    accessor: (row) => row.conversation_id ? 'View' : null,
+    Cell: row => row.conversation_id ? (<Link to={{ pathname: `/conversations/id/${row.row.original.conversation_id}` }}>View</Link>) : null,
     id: 'conversation_id',
     width: 120
   },
@@ -171,7 +174,8 @@ export const errorTableColumns = [
   },
   {
     Header: 'Requests',
-    accessor: row => submissionLink(row.id),
+    accessor: (row) => row.id,
+    Cell: row => submissionLink(row.row.original.id),
     id: 'id',
     width: 200
   },

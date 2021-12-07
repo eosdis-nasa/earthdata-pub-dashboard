@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated CONTRIBUTING.md
 
+## 1.0.9 - 2021-12-06
+
+- Updated sort/filter/pagination functionality for dashboard tables.
+
 ## 1.0.8 - 2021-12-01
 
 - Cleaned up dependencies by removing libraries unused and upgrading libraries that do not result in breaking the dashboard or the build
