@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   dashboard:
-    image: node:12.18.0
+    image: node:12.19.0
     network_mode: "service:shim"
     command:
       bash -c "npm rebuild node-sass && npm run serve"
@@ -18,7 +18,7 @@ services:
       - SHOW_DISTRIBUTION_API_METRICS=false
       - AUTH_METHOD=earthdata
   shim:   # empty container to open ports
-    image: node:12.18.0
+    image: node:12.19.0
     command:
       bash -c "tail -f /dev/null"
     working_dir:

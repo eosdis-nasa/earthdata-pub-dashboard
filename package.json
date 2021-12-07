@@ -1,6 +1,6 @@
 {
   "name": "earthdata-pub-dashboard",
-  "version": "1.0.1",
+  "version": "1.0.9",
   "description": "A dashboard for Earthdata Pub API",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   "homepage": "https://git.earthdata.nasa.gov/projects/EDPUB/repos/dashboard/browse",
   "private": true,
   "engines": {
-    "node": ">=12.18.0"
+    "node": ">=12.19.0"
   },
   "scripts": {
     "clean-modules": "rm -rf package-lock.json node_modules/",
