@@ -10,6 +10,7 @@ import { listQuestions } from '../../actions';
 // import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
 import QuestionOverview from './question';
 import QuestionsOverview from './overview';
+import EditQuestion from './edit';
 
 // const withQueryWrapper = (Component, onQueryChange) => (props) => {
 //   return (
@@ -59,6 +60,8 @@ const Questions = ({
             <Switch>
               <Route exact path='/questions' component={QuestionsOverview} />
               <Route path='/questions/id/:questionId' component={QuestionOverview} />
+              <Route path='/questions/edit/:questionId' component={EditQuestion} />
+              <Route path='/questions/add' component={EditQuestion} />
             </Switch>
           </div>
         </div>
