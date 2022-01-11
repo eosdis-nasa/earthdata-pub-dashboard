@@ -212,6 +212,17 @@ export const listQuestions = (options) => {
   };
 };
 
+export const updateQuestion = (payload) => ({
+  [CALL_API]: {
+    type: types.QUESTIONS,
+    method: 'POST',
+    path: 'data/questions',
+    json: payload
+  }
+});
+
+export const clearUpdateQuestion = (questionId) => ({ type: types.UPDATE_QUESTIONS_CLEAR, id: questionId });
+
 export const getModel = (model) => ({
   [CALL_API]: {
     type: types.MODEL,
@@ -628,7 +639,7 @@ export const getSchema = (type) => ({
   [CALL_API]: {
     type: types.SCHEMA,
     method: 'GET',
-    path: `schemas/${type}`
+    path: `model/${type}`
   }
 });
 

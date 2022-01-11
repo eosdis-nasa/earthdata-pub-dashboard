@@ -2,6 +2,7 @@
 import React from 'react';
 import { questionLink } from '../format';
 import Dropdown from '../../components/DropDown/simple-dropdown';
+import {Link} from "react-router-dom";
 
 export const tableColumns = [
   {
@@ -33,6 +34,12 @@ export const tableColumns = [
     Header: 'Created At',
     accessor: row => row.created_at,
     id: 'created_at'
+  },
+  {
+    Header: 'Options',
+    accessor: '',
+    Cell: row => <Link className='button button--small button--edit' to={{ pathname: `/questions/edit/${row.row.original.id}` }}>Edit</Link>,
+    id: 'required'
   }
 ];
 

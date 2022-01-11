@@ -9,6 +9,7 @@ import { tableColumns } from '../../utils/table-config/questions';
 import List from '../Table/Table';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import {Link} from "react-router-dom";
 
 const breadcrumbConfig = [
   {
@@ -56,6 +57,13 @@ class QuestionsOverview extends React.Component {
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_questions} <span className='num--title'>{questions.list.data.length}</span></h2>
+          </div>
+          <div style={{padding: '1em'}}>
+            <Link
+                className='button button--green' style={{float: 'right', padding: '.65em'}}
+                to={{ pathname: `/questions/add` }}
+            >Add Question
+            </Link>
           </div>
           <List
             list={list}
