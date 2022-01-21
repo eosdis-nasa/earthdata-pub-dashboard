@@ -16,107 +16,116 @@ import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 
-const newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
-const newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
-const publicationRequestFormId = _config.publicationRequestFormId;
-const productInformationFormId = _config.productInformationFormId;
-
-export const newFormLink = (row, request, formId) => {
-  if (!request.match(/formId/g)) {
-    request += `?formId=${formId}`;
-  } else {
-    console.log(`?formId=${formId} was not added, request is ${request}`);
-  }
-  if (!request.match(/requestId/g)) {
-    request += `&requestId=${row.id}`;
-  } else {
-    console.log(`?requestId=${row.id} was not added, request is ${request}`);
-  }
-  return <a href={request} className='button button--small button--green button--add form-group__element--left'>New</a>;
+export const newFormLink = (request, formalName) => {
+  return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</a>;
 };
 
-export const existingFormLink = (row, formId, formName) => {
-  return <Link to={`/forms/id/${formId}?requestId=${row.id}`}>{formName}</Link>;
+export const existingFormLink = (row, formId, formalName) => {
+  return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
 };
 
-export const formLookup = (row, request, formId, formName) => {
-  if (row.forms == null) {
-    return newFormLink(row, request, formId);
-  } else if (row.forms.length === 1) {
-    if (row.forms[0].id === formId) {
-      return existingFormLink(row, formId, formName);
-    } else {
-      return newFormLink(row, request, formId);
+export const getFormalName = (str) => {
+  const count = (str.match(/_/g) || []).length;
+  if (count > 0) {
+    str = str.replace(/_/g, ' ');
+  }
+  const words = str.split(' ');
+  for (let i = 0; i < words.length; i++) {
+    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+  }
+  return words.join(' ');
+};
+
+export const stepLookup = (row) => {
+  const stepName = row.step_name;
+  let request = '';
+  let stepID = '';
+  let stepType = '';
+  let stepIDKey = '';
+  let tmpType = '';
+  const formalName = getFormalName(stepName);
+  for (const i in row.step_data) {
+    if (typeof row.step_data[i] !== 'undefined') {
+      const regex = new RegExp(stepName, 'g');
+      if (i.match('name') && row.step_data[i].match(regex)) {
+        stepType = row.step_data.type;
+        stepIDKey = `${stepType}_id`;
+        stepID = row.step_data[stepIDKey];
+        if (typeof stepID === 'undefined' && typeof row.step_data.data !== 'undefined') {
+          tmpType = row.step_data.data.type;
+          const tmpIDKey = `${tmpType}_id`;
+          stepID = row.step_data.data[tmpIDKey];
+          // Build url to forms app - after submitted
+          if (tmpType.match(/form/g)) {
+            request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+          }
+        }
+        // Build url to forms app
+        if (stepType.match(/form/g)) {
+          request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+        }
+        break;
+      }
     }
-  } else if (row.forms.length === 2) {
-    if (row.forms[0].id === formId) {
-      return existingFormLink(row, formId, formName);
-    } else if (row.forms[1].id === formId) {
-      return existingFormLink(row, formId, formName);
-    } else {
-      return newFormLink(row, request, formId);
-    }
+  }
+  if (stepType.match(/review/g)) {
+    return existingFormLink(row, stepID, formalName);
   } else {
-    return newFormLink(row, request, formId);
+    return newFormLink(request, formalName);
   }
 };
 
 export const tableColumns = [
   {
-    Header: 'Status',
-    accessor: row => <Link to={`/requests/id/${row.id}`} className={`request__status_message request__status_message--${row.id}`}>{row.status}</Link>,
-    id: 'status_message',
-    width: 100
-  },
-  {
-    Header: 'Workflow',
-    accessor: row => <Link to={`/workflows/id/${row.workflow_id}`} className={`request__workflow request__workflow--${row.workflow_id}`}>{row.workflow_name}</Link>,
-    id: 'workflow_name',
-    width: 110
-  },
-  {
-    Header: 'Step',
-    accessor: row => row.step_name,
-    id: 'step_name',
-    width: 100
-  },
-  {
     Header: 'Data Product Name',
     accessor: row => row.form_data.data_product_name_value || '(no name)',
     id: 'name',
-    width: 100
+    width: 170
   },
   {
-    Header: 'Data Accession Request',
-    accessor: row => formLookup(row, newDataPublicationRequest, publicationRequestFormId, 'Data Accession Request'),
-    id: 'data_publication_request',
-    width: 200
+    Header: 'Status',
+    accessor: (row) => row.status,
+    Cell: row => <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.status}</Link>,
+    id: 'status_message',
+    width: 170
   },
   {
-    Header: 'Data Publication Request',
-    accessor: row => formLookup(row, newDataProductInformation, productInformationFormId, 'Data Publication Request'),
-    id: 'data_product_information',
-    width: 200
+    Header: 'Workflow',
+    accessor: (row) => row.workflow_name,
+    Cell: row => <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }}>{row.row.original.workflow_name}</Link>,
+    id: 'workflow_name',
+    width: 170
   },
   {
     Header: 'Created',
     accessor: row => shortDateNoTimeYearFirst(row.created_at),
-    id: 'created_at'
+    id: 'created_at',
+    width: 110
   },
   {
     Header: 'Latest Edit',
     accessor: row => shortDateNoTimeYearFirst(row.last_change),
-    id: 'last_change'
+    id: 'last_change',
+    width: 110
   },
   {
     Header: 'Locked',
     accessor: row => bool(row.lock),
-    id: 'lock'
+    id: 'lock',
+    width: 100
   },
   {
     Header: 'Conversation',
-    accessor: row => row.conversation_id ? (<Link to={`/conversations/id/${row.conversation_id}`}>View</Link>) : null,
-    id: 'conversation_id'
+    accessor: (row) => row.conversation_id ? 'View' : null,
+    Cell: row => row.conversation_id ? (<Link to={{ pathname: `/conversations/id/${row.row.original.conversation_id}` }}>View</Link>) : null,
+    id: 'conversation_id',
+    width: 120
+  },
+  {
+    Header: 'Next Action',
+    accessor: row => stepLookup(row),
+    id: 'next_action',
+    width: 170
   }
   /* {
     Header: 'Data Request Request',
@@ -165,7 +174,8 @@ export const errorTableColumns = [
   },
   {
     Header: 'Requests',
-    accessor: row => submissionLink(row.id),
+    accessor: (row) => row.id,
+    Cell: row => submissionLink(row.row.original.id),
     id: 'id',
     width: 200
   },

@@ -22,14 +22,14 @@ const Module = ({ dispatch, modules, match }) => {
       href: '/modules'
     },
     {
-      label: current.long_name || "",
+      label: current.long_name || '',
       active: true
     }
   ];
   useEffect(() => {
     dispatch(getModuleUi(moduleName));
     iframeRef.current.height = pageRef.current.offsetHeight;
-    iframeRef.current.width = "100%";
+    iframeRef.current.width = '100%';
   }, []);
   return (
     <div ref={pageRef} className='page__content--shortened'>
@@ -42,7 +42,7 @@ const Module = ({ dispatch, modules, match }) => {
             ref={iframeRef}
             srcDoc={modules.module.src}
             sandbox="allow-scripts allow-same-origin"
-            >
+          >
 
           </iframe>
         </section>

@@ -276,7 +276,6 @@ class Home extends React.Component {
                 action={listRequests}
                 tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
                 query={query}
-                sortIdx='timestamp'
                 rowId='id'
               />
             </div>

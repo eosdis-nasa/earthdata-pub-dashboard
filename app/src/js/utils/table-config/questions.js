@@ -2,11 +2,13 @@
 import React from 'react';
 import { questionLink } from '../format';
 import Dropdown from '../../components/DropDown/simple-dropdown';
+import {Link} from "react-router-dom";
 
 export const tableColumns = [
   {
     Header: 'Title',
-    accessor: row => questionLink(row.id, row.long_name),
+    accessor: (row) => row.long_name,
+    Cell: row => questionLink(row.row.original.id, row.row.original.long_name),
     id: 'question_name',
     width: 175
   },
@@ -32,6 +34,12 @@ export const tableColumns = [
     Header: 'Created At',
     accessor: row => row.created_at,
     id: 'created_at'
+  },
+  {
+    Header: 'Options',
+    accessor: '',
+    Cell: row => <Link className='button button--small button--edit' to={{ pathname: `/questions/edit/${row.row.original.id}` }}>Edit</Link>,
+    id: 'required'
   }
 ];
 

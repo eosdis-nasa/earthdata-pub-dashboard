@@ -1,27 +1,26 @@
 export const notePrivileges = (privileges) => {
-  if (privileges['ADMIN']) {
+  if (privileges.ADMIN) {
     return {
       canReply: true,
       canAddUser: true,
       canAddGroup: true
-    }
-  }
-  else if (privileges['NOTE']) {
+    };
+  } else if (privileges.NOTE) {
     return {
-      canReply: privileges['NOTE'].includes('REPLY'),
-      canAddUser: privileges['NOTE'].includes('ADDUSER'),
-      canAddGroup: privileges['NOTE'].includes('ADDGROUP')
-    }
+      canReply: privileges.NOTE.includes('REPLY'),
+      canAddUser: privileges.NOTE.includes('ADDUSER'),
+      canAddGroup: privileges.NOTE.includes('ADDGROUP')
+    };
   }
   return {
     canReply: false,
     canAddUser: false,
     canAddGroup: false
-  }
-}
+  };
+};
 
 export const userPrivileges = (privileges) => {
-  if (privileges['ADMIN']) {
+  if (privileges.ADMIN) {
     return {
       canRead: true,
       canAddRole: true,
@@ -29,28 +28,27 @@ export const userPrivileges = (privileges) => {
       canAddGroup: true,
       canRemoveGroup: true,
       canAddPermission: true
-    }
-  }
-  else if (privileges['USER']) {
+    };
+  } else if (privileges.USER) {
     return {
-      canRead: privileges['USER'].includes('READ'),
-      canAddRole: privileges['USER'].includes('ADDROLE'),
-      canRemoveRole: privileges['USER'].includes('REMOVEROLE'),
-      canAddGroup: privileges['USER'].includes('ADDGROUP'),
-      canRemoveGroup: privileges['USER'].includes('REMOVEGROUP'),
-      canAddPermission: privileges['USER'].includes('ADDPERMISSION')
-    }
+      canRead: privileges.USER.includes('READ'),
+      canAddRole: privileges.USER.includes('ADDROLE'),
+      canRemoveRole: privileges.USER.includes('REMOVEROLE'),
+      canAddGroup: privileges.USER.includes('ADDGROUP'),
+      canRemoveGroup: privileges.USER.includes('REMOVEGROUP'),
+      canAddPermission: privileges.USER.includes('ADDPERMISSION')
+    };
   }
   return {
     canRead: false,
     canAddRole: false,
     canAddGroup: false,
     canAddPermission: false
-  }
-}
+  };
+};
 
 export const requestPrivileges = (privileges) => {
-  if (privileges['ADMIN']) {
+  if (privileges.ADMIN) {
     return {
       canRead: true,
       canInitialize: true,
@@ -61,21 +59,20 @@ export const requestPrivileges = (privileges) => {
       canReassign: true,
       canLock: true,
       canUnlock: true
-    }
-  }
-  else if (privileges['REQUEST']) {
+    };
+  } else if (privileges.REQUEST) {
     return {
-      canRead: !!privileges['REQUEST'].find(a =>
+      canRead: !!privileges.REQUEST.find(a =>
         a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD'),
-      canInitialize: privileges['REQUEST'].includes('INITIALIZE'),
-      canResume: privileges['REQUEST'].includes('RESUME'),
-      canSubmit: privileges['REQUEST'].includes('SUBMIT'),
-      canApply: privileges['REQUEST'].includes('APPLY'),
-      canReview: privileges['REQUEST'].includes('REVIEW'),
-      canReassign: privileges['REQUEST'].includes('REASSIGN'),
-      canLock: privileges['REQUEST'].includes('LOCK'),
-      canUnlock: privileges['REQUEST'].includes('UNLOCK')
-    }
+      canInitialize: privileges.REQUEST.includes('INITIALIZE'),
+      canResume: privileges.REQUEST.includes('RESUME'),
+      canSubmit: privileges.REQUEST.includes('SUBMIT'),
+      canApply: privileges.REQUEST.includes('APPLY'),
+      canReview: privileges.REQUEST.includes('REVIEW'),
+      canReassign: privileges.REQUEST.includes('REASSIGN'),
+      canLock: privileges.REQUEST.includes('LOCK'),
+      canUnlock: privileges.REQUEST.includes('UNLOCK')
+    };
   }
   return {
     canRead: false,
@@ -87,5 +84,5 @@ export const requestPrivileges = (privileges) => {
     canReassign: false,
     canLock: false,
     canUnlock: false
-  }
-}
+  };
+};

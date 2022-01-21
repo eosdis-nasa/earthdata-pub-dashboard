@@ -3,9 +3,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserJsPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CSSNano = require('cssnano');
 const pkg = require('./package.json');
 
 const CommonConfig = require('./webpack.common');
@@ -24,27 +22,14 @@ const MainConfig = merge.smartStrategy({
   optimization: {
     nodeEnv: 'production',
     concatenateModules: true,
+    chunkIds: 'deterministic',
     minimizer: [
-      new TerserJsPlugin({
-        cache: true,
+      new TerserJsPlugin({ // These properties are valid: object { test?, include?, exclude?, terserOptions?, extractComments?, parallel?, minify? }
+        // cache: true,
         parallel: true,
-        sourceMap: true,
+        // sourceMap: true,
         include: /\.js$/
       }),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessor: CSSNano,
-        cssProcessorPluginOptions: {
-          preset: [
-            'default',
-            {
-              discardComments:
-              {
-                removeAll: true
-              }
-            }
-          ]
-        }
-      })
     ],
     splitChunks: {
       cacheGroups: {
@@ -68,21 +53,12 @@ const MainConfig = merge.smartStrategy({
     rules: [
       {
         test: /\.(css|scss)$/,
-        use: [
-          {
-            // Creates `style` nodes from JS strings
-            loader: 'style-loader',
-          },
-          {
-            // Minifies CSS files
-            loader: MiniCssExtractPlugin.loader
-          }
-        ]
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       }
     ]
   },
   plugins: [
-    new webpack.HashedModuleIdsPlugin(),
+    // new webpack.HashedModuleIdsPlugin(),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash:8]-' + pkg.version + '.css',

@@ -29,13 +29,13 @@ const ModulesMenu = ({ dispatch, modules }) => {
           </div>
           <div>
             <ul>
-            { modules.list.data.map(module => (
-              <li key={module.id}>
-                <Link to={`/modules/${module.short_name}`}>
-                  {module.long_name}
-                </Link>
-              </li>
-            )) }
+              { modules.list.data.map(module => (
+                <li key={module.id}>
+                  <Link to={`/modules/${module.short_name}`}>
+                    {module.long_name}
+                  </Link>
+                </li>
+              )) }
             </ul>
           </div>
         </section>
