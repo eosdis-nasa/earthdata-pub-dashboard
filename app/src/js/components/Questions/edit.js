@@ -16,8 +16,9 @@ import ErrorReport from '../Errors/report';
 class Questions extends React.Component {
     constructor () {
         super();
-        this.state = { view: 'json', data: '' } ;
+        this.state = { view: 'json', data: '' , section_data: ''} ;
         this.refName = React.createRef();
+        this.sectionRefName = React.createRef();
         this.renderQuestionJson = this.renderQuestionJson.bind(this);
         this.renderJson = this.renderJson.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,10 +28,10 @@ class Questions extends React.Component {
     componentDidMount () {
         const { dispatch } = this.props;
         const { questionId } = this.props.match.params;
-        dispatch(getQuestion(questionId))
+        questionId ? dispatch(getQuestion(questionId)) : null
     }
 
-    renderQuestionJson (name, data) {
+    renderQuestionJson (name, data, refName) {
         return (
             <Ace
                 mode='json'
@@ -43,17 +44,19 @@ class Questions extends React.Component {
                 minLines={2}
                 maxLines={35}
                 wrapEnabled={true}
-                ref={this.refName}
+                ref={refName}
             />
         );
     }
 
     handleSubmit() {
         const { dispatch } = this.props;
-        let aceEditorData = JSON.parse(this.refName.current.editor.getValue())
-        this.setState({ data: aceEditorData } );
-        dispatch(updateQuestion(aceEditorData));
-        window.location.href=`/questions/id/${aceEditorData.id}`;
+        let question_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
+        let section_question_aceEditorData = this.sectionRefName.current ? JSON.parse(this.sectionRefName.current.editor.getValue()) : {};
+        this.setState({ data: question_aceEditorData, section_data: section_question_aceEditorData } );
+        question_aceEditorData.section_question = section_question_aceEditorData;
+        dispatch(updateQuestion(question_aceEditorData));
+        window.location.href=`/questions/id/${question_aceEditorData.id}`;
     }
 
     handleCancel() {
@@ -93,12 +96,25 @@ class Questions extends React.Component {
                                 ? <div>
                                     <div className='tab--wrapper'>
                                         <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
-                                                onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
+                                                onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>Question JSON</button>
                                     </div>
                                     <div>
-                                        {this.renderJson(this.state.data ? this.state.data: record.data)}
+                                        {this.renderJson((this.state.data ? this.state.data: record.data), this.refName)}
                                     </div>
                                 </div> : null
+                    }
+                    { questionId ? null : (record.inflight ? <Loading />
+                        : record.error ? <ErrorReport report={record.error} />
+                            : record.data
+                                ? <div>
+                                    <div className='tab--wrapper'>
+                                        <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
+                                                onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>Section-Question JSON</button>
+                                    </div>
+                                    <div>
+                                        {this.renderJson((this.state.section_data ? this.state.section_data : record.data), this.sectionRefName)}
+                                    </div>
+                                </div> : null)
                     }
                     <button
                         className={`button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right`}
@@ -113,12 +129,12 @@ class Questions extends React.Component {
         );
     }
 
-    renderJson (data) {
+    renderJson (data, refName) {
         return (
             <ul>
                 <li>
                     <label>{data.name}</label>
-                    {this.renderQuestionJson('recipe', data)}
+                    {this.renderQuestionJson('recipe', data, refName)}
                 </li>
             </ul>
         );
