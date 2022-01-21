@@ -25,12 +25,14 @@ class List extends React.Component {
     this.getQueryConfig = this.getQueryConfig.bind(this);
 
     const initialPage = 0;
-    const initialSortIdx = props.sortIdx || 0;
+    const initialFilterIdx = props.filterIdx || '';
+    const initialFilterPlaceholder = props.filterPlaceholder || 'Search';
     const initialOrder = 'desc';
 
     this.state = {
       page: initialPage,
-      sortIdx: initialSortIdx,
+      filterIdx: initialFilterIdx,
+      filterPlaceholder: initialFilterPlaceholder,
       order: initialOrder,
       selected: [],
       clearSelected: false,
@@ -38,12 +40,12 @@ class List extends React.Component {
       queryConfig: {
         page: initialPage,
         order: initialOrder,
-        sort: initialSortIdx,
         ...(props.query || {})
       },
       params: {},
       completedBulkActions: 0,
-      bulkActionError: null
+      bulkActionError: null,
+      filterInput: ''
     };
   }
 
@@ -140,7 +142,8 @@ class List extends React.Component {
     const tableData = data || listData;
     const {
       page,
-      sortIdx,
+      filterIdx,
+      filterPlaceholder,
       order,
       selected,
       clearSelected,
@@ -153,6 +156,14 @@ class List extends React.Component {
 
     return (
       <>
+        {filterIdx ? <input
+          value={this.state.filterInput}
+          onChange={(e) => {
+            this.setState({ filterInput: e.target.value });
+          }}
+          placeholder={filterPlaceholder}
+          className={'search'}
+        /> : ''}
         <ListActions
           dispatch={dispatch}
           action={action}
@@ -182,7 +193,9 @@ class List extends React.Component {
               canSelect={hasActions}
               rowId={rowId}
               onSelect={this.updateSelection}
-              sortIdx={sortIdx}
+              filterIdx={filterIdx}
+              filterPlaceholder={filterPlaceholder}
+              filterInputPassed={this.state.filterInput}
               changeSortProps={this.queryNewSort}
               order={order}
               clearSelected={clearSelected}
@@ -206,7 +219,8 @@ List.propTypes = {
   dispatch: PropTypes.func,
   action: PropTypes.func,
   children: PropTypes.node,
-  sortIdx: PropTypes.string,
+  filterIdx: PropTypes.string,
+  filterPlaceholder: PropTypes.string,
   query: PropTypes.object,
   bulkActions: PropTypes.array,
   rowId: PropTypes.any,

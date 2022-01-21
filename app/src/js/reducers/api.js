@@ -22,13 +22,12 @@ function getExpiration (token) {
   return 0;
 }
 
-function reducePrivileges(user) {
+function reducePrivileges (user) {
   const privileges = user.user_privileges.reduce((acc, privilege) => {
     const [entity, action] = privilege.split('_');
     if (!acc[entity]) {
       acc[entity] = [action || '-'];
-    }
-    else {
+    } else {
       acc[entity].push(action);
     }
     return acc;

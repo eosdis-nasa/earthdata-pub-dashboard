@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 export const tableColumns = [
   {
     Header: 'Short Name',
-    accessor: (row) => <Link to={`/roles/id/${row.id}`}>{row.short_name}</Link>,
+    accessor: (row) => row.short_name,
+    Cell: row => <Link to={{ pathname: `/roles/id/${row.row.original.id}` }}>{row.row.original.short_name}</Link>,
     id: 'short_name'
   },
   {

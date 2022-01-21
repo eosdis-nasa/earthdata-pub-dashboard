@@ -13,7 +13,7 @@ import { createReducer } from '@reduxjs/toolkit';
 export const initialState = (() => {
   return {
     module: {
-      src: "",
+      src: '',
       inflight: false,
       error: null
     },

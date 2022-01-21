@@ -78,7 +78,6 @@ const MetricOverview = ({ metrics }) => {
           query={{}}
           bulkActions={[]}
           rowId='name'
-          sortIdx='name'
         >
           {/* <ListFilters>
             <Search

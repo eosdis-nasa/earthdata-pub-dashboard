@@ -142,8 +142,7 @@ class RequestsOverview extends React.Component {
     } = requests;
     const unique = [...new Set(list.data.map(item => item.id))];
     const { queriedAt } = list.meta;
-    const newDataPublicationRequest = `${_config.formsUrl}${_config.newPublicationRequestUrl}`;
-    const newDataProductInformation = `${_config.formsUrl}${_config.newProductInformationUrl}`;
+    const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
     // const statsCount = get(stats, 'count.data.requests.count', []);
     // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
@@ -161,8 +160,7 @@ class RequestsOverview extends React.Component {
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
-            <a className='button button--small button--green button--add form-group__element--right' href={newDataProductInformation}>New Data Publication Request</a>
-            <a className='button button--small button--green button--add form-group__element--right' href={newDataPublicationRequest}>New Data Accession Request</a>
+            <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac}>New Request</a>
           </div>
           <List
             list={list}
@@ -170,7 +168,8 @@ class RequestsOverview extends React.Component {
             tableColumns={tableColumns}
             query={this.generateQuery()}
             rowId='id'
-            sortIdx='created_at'
+            filterIdx='name'
+            filterPlaceholder='Search Requests'
           >
             {/* <ListFilters>
               <Dropdown

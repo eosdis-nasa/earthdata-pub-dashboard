@@ -17,7 +17,6 @@ const CALL_API = types.CALL_API;
 const {
   esRoot,
   showDistributionAPIMetrics,
-  showTeaMetrics,
   apiRoot: root,
   formsUrl,
   defaultPageLimit,
@@ -174,10 +173,11 @@ export const reviewRequest = (id, approve) => {
         body: { id, approve }
       }
     })
-    .then(() => {
-      dispatch(getRequest(id));
-    });
-}};
+      .then(() => {
+        dispatch(getRequest(id));
+      });
+  };
+};
 
 export const updateSubmissionMetadata = (payload) => ({
   [CALL_API]: {
@@ -212,6 +212,17 @@ export const listQuestions = (options) => {
   };
 };
 
+export const updateQuestion = (payload) => ({
+  [CALL_API]: {
+    type: types.QUESTIONS,
+    method: 'POST',
+    path: 'data/questions',
+    json: payload
+  }
+});
+
+export const clearUpdateQuestion = (questionId) => ({ type: types.UPDATE_QUESTIONS_CLEAR, id: questionId });
+
 export const getModel = (model) => ({
   [CALL_API]: {
     type: types.MODEL,
@@ -235,7 +246,7 @@ export const listModules = () => ({
     type: types.LIST_MODULES,
     method: 'GET',
     id: null,
-    path: `module`
+    path: 'module'
   }
 });
 
@@ -243,7 +254,7 @@ export const applyWorkflowToRequest = (requestId, workflowId) => ({
   [CALL_API]: {
     type: types.SUBMISSION_APPLYWORKFLOW,
     method: 'POST',
-    path: `submission/apply`,
+    path: 'submission/apply',
     body: {
       id: requestId,
       workflow_id: workflowId
@@ -337,7 +348,6 @@ export const getDistApiLambdaMetrics = (earthdatapubInstanceMeta) => {
 
 export const getTEALambdaMetrics = (earthdatapubInstanceMeta) => {
   if (!esRoot) return { type: types.NOOP };
-  if (!showTeaMetrics) return { type: types.NOOP };
   return (dispatch, getState) => {
     const stackName = earthdatapubInstanceMeta.stackName;
     const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
@@ -454,7 +464,7 @@ export const getUser = (userId) => ({
     type: types.USER,
     id: userId,
     method: 'GET',
-    path: `user/find`,
+    path: 'user/find',
     qs: { id: userId }
   }
 });
@@ -465,14 +475,14 @@ export const addUserRole = (payload) => {
       [CALL_API]: {
         type: types.USER_ADDROLE,
         method: 'POST',
-        path: `user/add_role`,
+        path: 'user/add_role',
         body: payload
       }
     })
-    .then(() => {
-      dispatch(getUser(payload.id));
-    });
-  }
+      .then(() => {
+        dispatch(getUser(payload.id));
+      });
+  };
 };
 
 export const removeUserRole = (payload) => {
@@ -481,14 +491,14 @@ export const removeUserRole = (payload) => {
       [CALL_API]: {
         type: types.USER_REMOVEROLE,
         method: 'POST',
-        path: `user/remove_role`,
+        path: 'user/remove_role',
         body: payload
       }
     })
-    .then(() => {
-      dispatch(getUser(payload.id));
-    });
-  }
+      .then(() => {
+        dispatch(getUser(payload.id));
+      });
+  };
 };
 
 export const addUserGroup = (payload) => {
@@ -497,14 +507,14 @@ export const addUserGroup = (payload) => {
       [CALL_API]: {
         type: types.USER_ADDGROUP,
         method: 'POST',
-        path: `user/add_group`,
+        path: 'user/add_group',
         body: payload
       }
     })
-    .then(() => {
-      dispatch(getUser(payload.id));
-    });
-  }
+      .then(() => {
+        dispatch(getUser(payload.id));
+      });
+  };
 };
 
 export const removeUserGroup = (payload) => {
@@ -513,14 +523,14 @@ export const removeUserGroup = (payload) => {
       [CALL_API]: {
         type: types.USER_REMOVEGROUP,
         method: 'POST',
-        path: `user/remove_group`,
+        path: 'user/remove_group',
         body: payload
       }
     })
-    .then(() => {
-      dispatch(getUser(payload.id));
-    });
-  }
+      .then(() => {
+        dispatch(getUser(payload.id));
+      });
+  };
 };
 
 export const searchUsers = (prefix) => ({ type: types.SEARCH_USERS, prefix: prefix });
@@ -629,7 +639,7 @@ export const getSchema = (type) => ({
   [CALL_API]: {
     type: types.SCHEMA,
     method: 'GET',
-    path: `schemas/${type}`
+    path: `model/${type}`
   }
 });
 
@@ -725,7 +735,7 @@ export const createConversation = (payload) => ({
   [CALL_API]: {
     type: types.CONVERSATION_CREATE,
     method: 'POST',
-    path: `notification/send`,
+    path: 'notification/send',
     body: payload
   }
 });
@@ -736,16 +746,16 @@ export const replyConversation = (payload) => {
       [CALL_API]: {
         type: types.CONVERSATION_REPLY,
         method: 'POST',
-        path: `notification/reply`,
+        path: 'notification/reply',
         body: payload
       }
     })
-    .then(() => {
-      setTimeout(() => {
-        dispatch(getConversation(payload.conversation_id))
-      }, 1000);
-    });
-  }
+      .then(() => {
+        setTimeout(() => {
+          dispatch(getConversation(payload.conversation_id));
+        }, 1000);
+      });
+  };
 };
 
 export const addUsersToConversation = (payload) => {
@@ -754,16 +764,16 @@ export const addUsersToConversation = (payload) => {
       [CALL_API]: {
         type: types.CONVERSATION_ADD_USER,
         method: 'POST',
-        path: `notification/add_user`,
+        path: 'notification/add_user',
         body: payload
       }
     })
-    .then(() => {
-      setTimeout(() => {
-        dispatch(getConversation(payload.conversation_id))
-      }, 1000);
-    });
-  }
+      .then(() => {
+        setTimeout(() => {
+          dispatch(getConversation(payload.conversation_id));
+        }, 1000);
+      });
+  };
 };
 
 export const updateSearchModal = (path, query) => ({
@@ -773,4 +783,4 @@ export const updateSearchModal = (path, query) => ({
     path,
     qs: Object.assign({ per_page: 10, page: 0 }, query)
   }
-})
+});
