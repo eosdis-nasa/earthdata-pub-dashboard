@@ -22,6 +22,7 @@ export const strings = new LocalizedStrings({
     back_to_questions: 'Back to Questions',
     back_to_users: 'Back to Users',
     back_to_workflows: 'Back to Workflows',
+    back_to_forms: 'Back to Forms',
     dashboard: 'Earthdata Pub Dashboard',
     request: 'Request',
     requests: 'Requests',

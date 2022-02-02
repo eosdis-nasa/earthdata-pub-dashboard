@@ -1,18 +1,14 @@
 'use strict';
 import { encode } from '../utils/browser';
-// import tally from './tally';
+import tally from './tally';
 import { strings } from '../components/locale';
 
-/* const submissionRoutes = [
+const submissionRoutes = [
   ['', null],
-  ['Completed', 'completed', (d) => d.key === 'completed'],
-  ['Running', 'processing', (d) => d.key === 'running'],
-  ['Failed', 'failed', (d) => d.key === 'failed']
-]; */
+];
 
 const singleSubmissionRoutes = [
   [strings.back_to_submissions, null, 'sidebar__nav--back'],
-  ['View Request', 'id/:requestId', 'sidebar__nav'],
   ['Edit Metadata', 'id/:requestId/edit-metadata', 'sidebar__nav']
 ];
 
@@ -32,8 +28,7 @@ const requests = {
       });
     } else if (currentRoute.slice(0, 9) === '/requests') {
       count = count || [];
-      return empty;
-      // return submissionRoutes.map(d => tally(d, count));
+      return submissionRoutes.map(d => tally(d, count));
     } else {
       return empty;
     }
