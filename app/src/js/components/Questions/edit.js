@@ -49,13 +49,13 @@ class Questions extends React.Component {
         );
     }
 
-    handleSubmit() {
+    async handleSubmit() {
         const { dispatch } = this.props;
         let question_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
         let section_question_aceEditorData = this.sectionRefName.current ? JSON.parse(this.sectionRefName.current.editor.getValue()) : {};
         this.setState({ data: question_aceEditorData, section_data: section_question_aceEditorData } );
-        question_aceEditorData.section_question = section_question_aceEditorData;
-        dispatch(updateQuestion(question_aceEditorData));
+        await dispatch(updateQuestion(Object.assign({}, question_aceEditorData,
+            {section_question: section_question_aceEditorData})))
         window.location.href=`/questions/id/${question_aceEditorData.id}`;
     }
 
