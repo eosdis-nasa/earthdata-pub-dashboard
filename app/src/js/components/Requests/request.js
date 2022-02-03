@@ -189,7 +189,8 @@ class RequestOverview extends React.Component {
     const { canReassign } = requestPrivileges(this.props.privileges);
     const requestForms = request.forms;
     let showTable = false;
-    if (typeof requestForms !== 'undefined') {
+    if (requestForms !== null &&
+      typeof requestForms !== 'undefined') {
       if (requestForms.length > 1) {
         showTable = true;
       }
