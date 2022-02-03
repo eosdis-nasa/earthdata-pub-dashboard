@@ -17,6 +17,7 @@ services:
       - STAGE=LOCALHOST-Development
       - SHOW_DISTRIBUTION_API_METRICS=false
       - AUTH_METHOD=earthdata
+      - REQUEST_HIDE_BUTTON_VERBAGE=Withdraw
   shim:   # empty container to open ports
     image: node:12.19.0
     command:
