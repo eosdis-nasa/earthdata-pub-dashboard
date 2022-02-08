@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated CONTRIBUTING.md
 
+## 1.0.12 - 2022-02-03
+
+- Added and adjusted cumulus delete functionality to request detail page
+
 ## 1.0.11 - 2022-02-02
 
 - Updated request detail page; updated form.js for multiple paths; added and applied some privileges

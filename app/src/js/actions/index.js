@@ -262,7 +262,16 @@ export const applyWorkflowToRequest = (requestId, workflowId) => ({
   }
 });
 
-export const deleteSubmission = (requestId) => ({
+export const withdrawRequest = (requestId) => ({
+  [CALL_API]: {
+    type: types.SUBMISSION_WITHDRAW,
+    method: 'POST',
+    path: 'submission/withdraw',
+    body: { id: requestId }
+  }
+});
+
+export const deleteRequest = (requestId) => ({
   [CALL_API]: {
     type: types.SUBMISSION_DELETE,
     method: 'DELETE',

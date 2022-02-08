@@ -5,24 +5,25 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   getRequest,
-  // deleteRequest,
+  withdrawRequest,
   applyWorkflowToRequest,
   listWorkflows
 } from '../../actions';
+import { get } from 'object-path';
 import {
   // displayCase,
   lastUpdated,
   shortDateNoTimeYearFirst,
   shortDateShortTimeYearFirst,
   bool,
-  // deleteText
+  deleteTextWithType
 } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
 import Loading from '../LoadingIndicator/loading-indicator';
 // import LogViewer from '../Logs/viewer';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
-// import AsyncCommands from '../DropDown/dropdown-async-command';
+import AsyncCommands from '../DropDown/dropdown-async-command';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import { simpleDropdownOption } from '../../utils/table-config/requests';
@@ -85,8 +86,8 @@ class RequestOverview extends React.Component {
   }
 
   delete () {
-    // const { requestId } = this.props.match.params;
-    // this.props.dispatch(deleteRequest(requestId));
+    const { requestId } = this.props.match.params;
+    this.props.dispatch(withdrawRequest(requestId));
   }
 
   // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
@@ -186,7 +187,7 @@ class RequestOverview extends React.Component {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
     const request = record.data || false;
-    const { canReassign } = requestPrivileges(this.props.privileges);
+    const { canReassign, canHide } = requestPrivileges(this.props.privileges);
     const requestForms = request.forms;
     let showTable = false;
     if (requestForms !== null &&
@@ -195,6 +196,16 @@ class RequestOverview extends React.Component {
         showTable = true;
       }
     }
+    const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
+    const dropdownConfig = [{
+      text: `${_config.requestHideButtonVerbage}`,
+      action: this.delete,
+      status: deleteStatus,
+      success: this.navigateBack,
+      confirmAction: true,
+      confirmText: deleteTextWithType(requestId, 'request')
+    }];
+
     const tableColumns = [
       {
         Header: 'Name',
@@ -247,16 +258,6 @@ class RequestOverview extends React.Component {
       }
     ];
 
-    /* const dropdownConfig = [{
-      text: 'Delete',
-      action: this.delete,
-      disabled: !!request.submitted,
-      status: get(this.props.requests.deleted, [requestId, 'status']),
-      success: this.navigateBack,
-      confirmAction: true,
-      confirmText: deleteText(requestId)
-    }]; */
-
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -280,6 +281,7 @@ class RequestOverview extends React.Component {
 
         <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
+          { canHide ? <AsyncCommands config={dropdownConfig} /> : null }
           { request && lastUpdated(request.last_change, 'Updated') }
           <dl className='status--process'>
             <dt>Status:</dt>

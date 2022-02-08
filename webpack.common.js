@@ -178,11 +178,8 @@ const CommonConfig = {
         FORMS_URL: config.formsUrl,
         OVERVIEW_URL: config.overviewUrl,
         INITIATE_REQUEST_SELECT_DAAC_URL: config.initiateRequestSelectDaac,
-        // PUBLICATION_REQUEST_URL: config.publicationRequestUrl,
-        // PRODUCT_INFORMATION_URL: config.productInformationUrl,
-        // PUBLICATION_REQUEST_SHORT_NAME: config.publicationRequestShortName,
-        // PRODUCT_INFORMATION_SHORT_NAME: config.productInformationShortName,
-        BASEPATH: config.basepath
+        BASEPATH: config.basepath,
+        REQUEST_HIDE_BUTTON_VERBAGE: config.requestHideButtonVerbage
       }
     )
   ]
