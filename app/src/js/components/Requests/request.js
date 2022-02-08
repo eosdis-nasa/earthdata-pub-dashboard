@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   getRequest,
-  deleteRequest,
+  withdrawRequest,
   applyWorkflowToRequest,
   listWorkflows
 } from '../../actions';
@@ -87,7 +87,7 @@ class RequestOverview extends React.Component {
 
   delete () {
     const { requestId } = this.props.match.params;
-    this.props.dispatch(deleteRequest(requestId));
+    this.props.dispatch(withdrawRequest(requestId));
   }
 
   // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
