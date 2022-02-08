@@ -13,10 +13,11 @@ import {
   // displayCase,
   lastUpdated,
   shortDateNoTimeYearFirst,
+  shortDateShortTimeYearFirst,
   bool,
   // deleteText
 } from '../../utils/format';
-// import Table from '../SortableTable/SortableTable';
+import Table from '../SortableTable/SortableTable';
 import Loading from '../LoadingIndicator/loading-indicator';
 // import LogViewer from '../Logs/viewer';
 import ErrorReport from '../Errors/report';
@@ -26,53 +27,8 @@ import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import { simpleDropdownOption } from '../../utils/table-config/requests';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-
-/* const tableColumns = [
-
-]; */
-
-const metaAccessors = [
-  {
-    label: 'Workflow',
-    property: 'workflow_name'
-  },
-  {
-    label: 'Step',
-    property: 'step_name'
-  },
-  {
-    label: 'Data Accession Request',
-    property: 'data_publication_request'
-  },
-  {
-    label: 'Data Production Information',
-    property: 'data_production_information'
-  },
-  {
-    label: 'Created',
-    accessor: d => {
-      return (shortDateNoTimeYearFirst(d));
-    },
-    property: 'created_at'
-  },
-  {
-    label: 'Latest Edit',
-    accessor: d => {
-      return (shortDateNoTimeYearFirst(d));
-    },
-    property: 'last_change'
-  },
-  {
-    label: 'Locked',
-    accessor: row => bool(row.lock),
-    property: 'lock'
-  },
-  {
-    label: 'Communication',
-    accessor: conversationId => <Link to={`/conversations/id/${conversationId}`}>{conversationId ? 'Email Conversation' : null}</Link>,
-    property: 'conversation_id'
-  }
-];
+import { requestPrivileges } from '../../utils/privileges';
+import _config from '../../config';
 
 class RequestOverview extends React.Component {
   constructor () {
@@ -163,10 +119,133 @@ class RequestOverview extends React.Component {
     ];
   }
 
+  newFormLink (request, formalName) {
+    return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</a>;
+  }
+
+  existingFormLink (row, formId, formalName) {
+    return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+  }
+
+  getFormalName (str) {
+    if (typeof str === 'undefined') {
+      return ' ';
+    } else {
+      const count = (str.match(/_/g) || []).length;
+      if (count > 0) {
+        str = str.replace(/_/g, ' ');
+      }
+      const words = str.split(' ');
+      for (let i = 0; i < words.length; i++) {
+        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+      }
+      return words.join(' ');
+    }
+  }
+
+  stepLookup (row) {
+    const stepName = row.step_name;
+    let request = '';
+    let stepID = '';
+    let stepType = '';
+    let stepIDKey = '';
+    let tmpType = '';
+    const formalName = this.getFormalName(stepName);
+    for (const i in row.step_data) {
+      if (typeof row.step_data[i] !== 'undefined') {
+        const regex = new RegExp(stepName, 'g');
+        if (i.match('name') && row.step_data[i].match(regex)) {
+          stepType = row.step_data.type;
+          stepIDKey = `${stepType}_id`;
+          stepID = row.step_data[stepIDKey];
+          if (typeof stepID === 'undefined' && typeof row.step_data.data !== 'undefined') {
+            tmpType = row.step_data.data.type;
+            const tmpIDKey = `${tmpType}_id`;
+            stepID = row.step_data.data[tmpIDKey];
+            // Build url to forms app - after submitted
+            if (tmpType.match(/form/g)) {
+              request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+            }
+          }
+          // Build url to forms app
+          if (stepType.match(/form/g)) {
+            request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+          }
+          break;
+        }
+      }
+    }
+    if (stepType.match(/review/g)) {
+      return this.existingFormLink(row, stepID, formalName);
+    } else {
+      return this.newFormLink(request, formalName);
+    }
+  }
+
   render () {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
     const request = record.data || false;
+    const { canReassign } = requestPrivileges(this.props.privileges);
+    const requestForms = request.forms;
+    let showTable = false;
+    if (requestForms !== null &&
+      typeof requestForms !== 'undefined') {
+      if (requestForms.length > 1) {
+        showTable = true;
+      }
+    }
+    const tableColumns = [
+      {
+        Header: 'Name',
+        accessor: row => <Link to={`/forms/id/${row.id}?requestId=${request.id}`}>{row.long_name}</Link>,
+        id: 'long_name'
+      },
+      {
+        Header: 'Submitted at',
+        accessor: row => shortDateShortTimeYearFirst(row.submitted_at),
+        id: 'submitted_at'
+      }
+    ];
+
+    const metaAccessors = [
+      {
+        label: 'Data Product Name',
+        accessor: row => row.form_data && row.form_data.data_product_name_value ? row.form_data.data_product_name_value : '(no name)'
+      },
+      {
+        label: 'Workflow',
+        accessor: row => canReassign ? <Link to={{ pathname: `/workflows/id/${row.workflow_id}` }}>{row.workflow_name}</Link> : row.workflow_name
+      },
+      {
+        label: 'Created',
+        accessor: d => {
+          return (shortDateNoTimeYearFirst(d));
+        },
+        property: 'created_at'
+      },
+      {
+        label: 'Latest Edit',
+        accessor: d => {
+          return (shortDateNoTimeYearFirst(d));
+        },
+        property: 'last_change'
+      },
+      {
+        label: 'Locked',
+        accessor: row => row && row.lock ? bool(row.lock) : null,
+        property: 'lock'
+      },
+      {
+        label: 'Communication',
+        accessor: conversationId => <Link to={`/conversations/id/${conversationId}`}>{conversationId ? 'Email Conversation' : null}</Link>,
+        property: 'conversation_id'
+      },
+      {
+        label: 'Next Action',
+        accessor: row => this.stepLookup(row)
+      }
+    ];
 
     /* const dropdownConfig = [{
       text: 'Delete',
@@ -199,11 +278,9 @@ class RequestOverview extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
 
-        <section className='page__section page__section__header-wrapper'>
+        <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
-          {/* <AsyncCommands config={dropdownConfig} /> */}
           { request && lastUpdated(request.last_change, 'Updated') }
-
           <dl className='status--process'>
             <dt>Status:</dt>
             <dd className={request.status}>{request.status}</dd>
@@ -214,31 +291,22 @@ class RequestOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium with-description'>{strings.request_overview}</h2>
           </div>
-          { record.inflight ? <Loading />
-            : record.error ? <ErrorReport report={record.error} />
-              : request ? <Metadata data={request} accessors={metaAccessors} />
-                : null
+          { record.inflight ? <Loading /> : record.error ? <ErrorReport report={record.error} /> : request ? <Metadata data={request} accessors={metaAccessors} /> : null
           }
         </section>
 
-        { /* <section className='page__section'>
-          <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>Files</h2>
-          </div>
-          <Table
-            data={[]}
-            tableColumns={tableColumns}
-          />
-        </section>
-
-        <section className='page__section'>
-          <LogViewer
-            query={{ q: requestId }}
-            dispatch={this.props.dispatch}
-            logs={this.props.logs}
-            notFound={`No recent logs for ${requestId}`}
-          />
-        </section> */}
+        { showTable
+          ? <section className='page__section'>
+            <div className='heading__wrapper--border'>
+              <h2 className='heading--medium heading--shared-content with-description'>Request Forms</h2>
+            </div>
+            <Table
+              data={requestForms}
+              dispatch={this.props.dispatch}
+              tableColumns={tableColumns}
+            />
+          </section>
+          : null }
       </div>
     );
   }
@@ -251,7 +319,8 @@ RequestOverview.propTypes = {
   logs: PropTypes.object,
   history: PropTypes.object,
   skipReloadOnMount: PropTypes.bool,
-  workflowOptions: PropTypes.array
+  workflowOptions: PropTypes.array,
+  privileges: PropTypes.object,
 };
 
 RequestOverview.defaultProps = {
@@ -263,5 +332,6 @@ export { RequestOverview };
 export default withRouter(connect(state => ({
   requests: state.requests,
   workflowOptions: workflowOptionNames(state),
-  logs: state.logs
+  logs: state.logs,
+  privileges: state.api.tokens.privileges
 }))(RequestOverview));

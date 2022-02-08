@@ -16,7 +16,7 @@ import { strings } from '../locale';
 import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
-import { requestPrivileges } from '../../utils/privileges';
+import { formPrivileges, requestPrivileges } from '../../utils/privileges';
 import _config from '../../config';
 
 const metaAccessors = [
@@ -54,11 +54,11 @@ class FormOverview extends React.Component {
   }
 
   componentDidMount () {
-    const { dispatch } = this.props;
-    const { formId } = this.props.match.params;
     const requestId = this.props.location.search.split('=')[1];
-    dispatch(getRequest(requestId));
+    const { formId } = this.props.match.params;
+    const { dispatch } = this.props;
     dispatch(getForm(formId));
+    dispatch(getRequest(requestId));
   }
 
   navigateBack () {
@@ -78,12 +78,92 @@ class FormOverview extends React.Component {
   }
 
   getAnswer (id) {
-    const data = this.props.requests.detail.data.form_data;
-    if (typeof data[id] !== 'undefined' && data[id] !== '') {
-      return (data[id]);
+    if (this.hasSavedAnswers()) {
+      const data = this.props.requests.detail.data.form_data;
+      if (typeof data[id] !== 'undefined' && data[id] !== '') {
+        return (data[id]);
+      } else {
+        return 'no answer';
+      }
     } else {
-      return 'no answer';
+      return (
+        '__________________________________________'
+      );
     }
+  }
+
+  hasStepData () {
+    if (typeof this.props.requests !== 'undefined' &&
+    typeof this.props.requests.detail.data !== 'undefined' &&
+    typeof this.props.requests.detail.data.step_data !== 'undefined') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  hasSavedAnswers () {
+    if (typeof this.props.requests !== 'undefined' &&
+    typeof this.props.requests.detail.data !== 'undefined' &&
+    typeof this.props.requests.detail.data.form_data !== 'undefined') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  getQuestionEnums (keys, enums, id) {
+    const length = parseInt(100 / enums.length);
+    return (
+      <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+        <table style={{ minWidth: '100%' }}>
+          <thead>
+            <tr key={this.getRandom()}>
+              {keys.map((k) => (
+                <th key={this.getRandom()}><u>{enums.find(e => e.key === k).label}</u></th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {id.map((item) => (
+              <tr key={ this.getRandom() }>
+                {keys.map((k) => (
+                  <td key={ this.getRandom() } style={{ width: `${length}%` }}>{!this.hasSavedAnswers() ? <br /> : null}{item[k]}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </li>
+    );
+  }
+
+  getTableEnums (keys, enums) {
+    const length = parseInt(100 / enums.length);
+    let def = '__________________________________________'
+    if (this.hasSavedAnswers()) {
+      def = 'no answer';
+    }
+    return (
+      <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+        <table style={{ minWidth: '100%' }}>
+          <thead>
+            <tr key={this.getRandom()}>
+              {keys.map((k) => (
+                <th key={this.getRandom()}><u>{enums.find(e => e.key === k).label}</u></th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr key={ this.getRandom() }>
+              {keys.map((k) => (
+                <td key={ this.getRandom() } style={{ width: `${length}%` }}>{!this.hasSavedAnswers() ? <br /> : null}{def}</td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    );
   }
 
   getBbox (id) {
@@ -92,18 +172,25 @@ class FormOverview extends React.Component {
     const s = `${id}_south`;
     const e = `${id}_east`;
     const w = `${id}_west`;
-    const data = this.props.requests.detail.data.form_data;
-    if (typeof data[n] !== 'undefined' && data[n] !== '') {
-      out += `N:  ${data[n]} `;
-    }
-    if (typeof data[e] !== 'undefined' && data[e] !== '') {
-      out += `E:  ${data[e]} `;
-    }
-    if (typeof data[s] !== 'undefined' && data[s] !== '') {
-      out += `S:  ${data[s]} `;
-    }
-    if (typeof data[w] !== 'undefined' && data[w] !== '') {
-      out += `W:  ${data[w]}`;
+    if (this.hasSavedAnswers()) {
+      const data = this.props.requests.detail.data.form_data;
+      if (typeof data[n] !== 'undefined' && data[n] !== '') {
+        out += `N:  ${data[n]} `;
+      }
+      if (typeof data[e] !== 'undefined' && data[e] !== '') {
+        out += `E:  ${data[e]} `;
+      }
+      if (typeof data[s] !== 'undefined' && data[s] !== '') {
+        out += `S:  ${data[s]} `;
+      }
+      if (typeof data[w] !== 'undefined' && data[w] !== '') {
+        out += `W:  ${data[w]}`;
+      }
+    } else {
+      out += 'N:  _______  ';
+      out += 'E:  _______  ';
+      out += 'S:  _______  ';
+      out += 'W:  _______  ';
     }
     if (out !== '') {
       return out;
@@ -136,62 +223,30 @@ class FormOverview extends React.Component {
                   if (question[b].inputs[a].type === 'bbox') {
                     sectionQuestions.push(
                       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+                        {!this.hasSavedAnswers() ? <br /> : null}
                         <div key={this.getRandom()}>{this.getBbox(question[b].inputs[a].control_id)}</div>
                       </li>
                     );
                   } else if (question[b].inputs[a].type === 'table') {
                     const keys = question[b].inputs[a].enums.map(e => e.key);
-                    const data = this.props.requests.detail.data.form_data;
+                    let data = [];
+                    if (this.hasSavedAnswers()) {
+                      data = this.props.requests.detail.data.form_data;
+                    }
                     sectionQuestions.push(<li key={this.getRandom()}><br /></li>);
                     if (typeof data[question[b].inputs[a].control_id] !== 'undefined' && data[question[b].inputs[a].control_id].length !== 0) {
-                      const length = parseInt(100 / question[b].inputs[a].enums.length);
                       sectionQuestions.push(
-                        <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
-                          <table style={{ minWidth: '100%' }}>
-                            <thead>
-                              <tr key={this.getRandom()}>
-                                {keys.map((k) => (
-                                  <th key={this.getRandom()}><u>{question[b].inputs[a].enums.find(e => e.key === k).label}</u></th>
-                                ))}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {data[question[b].inputs[a].control_id].map((item) => (
-                                <tr key={ this.getRandom() }>
-                                  {keys.map((k) => (
-                                    <td key={ this.getRandom() } style={{ width: `${length}%` }}>{item[k]}</td>
-                                  ))}
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </li>
+                        this.getQuestionEnums(keys, question[b].inputs[a].enums, data[question[b].inputs[a].control_id])
                       );
                     } else {
                       sectionQuestions.push(
-                        <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
-                          <table style={{ minWidth: '100%' }}>
-                            <thead>
-                              <tr key={this.getRandom()}>
-                                {keys.map((k) => (
-                                  <th key={this.getRandom()}><u>{question[b].inputs[a].enums.find(e => e.key === k).label}</u></th>
-                                ))}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr key={ this.getRandom() }>
-                                {keys.map((k) => (
-                                  <td key={ this.getRandom() } style={{ width: `${length}%` }}>no answer</td>
-                                ))}
-                              </tr>
-                            </tbody>
-                          </table>
-                        </li>
+                        this.getTableEnums(keys, question[b].inputs[a].enums)
                       );
                     }
                   } else {
                     sectionQuestions.push(
                       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+                        {!this.hasSavedAnswers() ? <br /> : null}
                         <div key={this.getRandom()} style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>{question[b].inputs[a].label}:</div>
                         <div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
                       </li>
@@ -217,18 +272,22 @@ class FormOverview extends React.Component {
   render () {
     const dispatch = this.props.dispatch;
     const { canReview } = requestPrivileges(this.props.privileges);
+    const { canEdit } = formPrivileges(this.props.privileges);
+    let requestId = this.props.location.search.split('=')[1];
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
-    const request = this.props.requests.detail.data;
-    const reviewReady = request &&
-      request.step_data.type === 'review' &&
-      request.step_data.data.type === 'form' &&
-      request.step_data.data.form_id === formId;
-    let requestId = '';
     let daacId = '';
-    if (typeof this.props.requests.detail.data !== 'undefined') {
-      daacId = this.props.requests.detail.data.daac_id;
-      requestId = this.props.requests.detail.data.id;
+    let reviewReady = false;
+    if (this.hasStepData()) {
+      const request = this.props.requests.detail.data;
+      reviewReady = request &&
+        request.step_data.type === 'review' &&
+        request.step_data.data.type === 'form' &&
+        request.step_data.data.form_id === formId;
+      if (typeof this.props.requests.detail.data !== 'undefined') {
+        daacId = this.props.requests.detail.data.daac_id;
+        requestId = this.props.requests.detail.data.id;
+      }
     }
     let thisFormUrl = `${_config.formsUrl}?formId=${formId}`;
     if (requestId !== '') {
@@ -253,12 +312,11 @@ class FormOverview extends React.Component {
         }
       }
     }
-
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>{form.long_name} (Verson {form.version})</h1>
-          <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl}>Edit</a>
+          {requestId !== '' && canEdit && this.hasSavedAnswers() ? <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl}>Edit</a> : null}
         </section>
 
         <section className='page__section'>

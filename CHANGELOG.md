@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated CONTRIBUTING.md
 
+## 1.0.11 - 2022-02-02
+
+- Updated request detail page; updated form.js for multiple paths; added and applied some privileges
+
 ## 1.0.10 - 2021-12-10
 
 - Created add/edit question capability to dashboard.

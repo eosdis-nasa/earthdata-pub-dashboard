@@ -23,6 +23,21 @@ export const shortDateNoTimeYearFirst = function (datestring) {
   return moment(datestring).format('YYYY-MM-DD');
 };
 
+export const shortDateShortTimeYearFirst = function (datestring) {
+  if (!datestring) { return nullValue; }
+  let day, time;
+  if (datestring) {
+    const date = moment(datestring);
+    day = date.format('MMM. D, YYYY');
+    time = date.format('h:mm a');
+  }
+  return (
+    <dl>
+      <dd>{day} { time || null }</dd>
+    </dl>
+  );
+};
+
 export const parseJson = function (jsonString) {
   const parsed = JSON.parse(jsonString);
   return JSON.stringify(parsed, null, 2);
