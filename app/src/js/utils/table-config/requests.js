@@ -79,6 +79,7 @@ export const tableColumns = [
   {
     Header: 'Data Product Name',
     accessor: row => row.form_data.data_product_name_value || '(no name)',
+    Cell: row => <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.form_data.data_product_name_value || '(no name)'}</Link>,
     id: 'name',
     width: 170
   },
@@ -92,7 +93,7 @@ export const tableColumns = [
   {
     Header: 'Workflow',
     accessor: (row) => row.workflow_name,
-    Cell: row => <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }}>{row.row.original.workflow_name}</Link>,
+    Cell: row => row.row.original.workflow_name,
     id: 'workflow_name',
     width: 170
   },
@@ -116,8 +117,7 @@ export const tableColumns = [
   },
   {
     Header: 'Conversation',
-    accessor: (row) => row.conversation_id ? 'View' : null,
-    Cell: row => row.conversation_id ? (<Link to={{ pathname: `/conversations/id/${row.row.original.conversation_id}` }}>View</Link>) : null,
+    accessor: (row) => row.conversation_id ? <Link to={{ pathname: `/conversations/id/${row.conversation_id}` }}>View</Link> : null,
     id: 'conversation_id',
     width: 120
   },
@@ -127,34 +127,6 @@ export const tableColumns = [
     id: 'next_action',
     width: 170
   }
-  /* {
-    Header: 'Data Request Request',
-    accessor: row => dataSubmissionRequestLink(row.dataSubmissionRequest, 'Data Request Request'),
-    id: 'dataSubmissionRequest',
-    width: 225
-  },
-  {
-    Header: 'Data Product Questionionnaire',
-    accessor: row => dataProductQuestionaireLink(row.dataProductQuestionaire, 'Product Questionaire (Draft)'),
-    id: 'dataProductQuestionaire',
-    width: 225
-  },
-  {
-    Header: 'Request Date',
-    accessor: row => shortDateNoTimeYearFirst(row.submitted),
-    id: 'submitted'
-  },
-  {
-    Header: 'Primary Data Producer',
-    accessor: row => dataProducerLink(row.dataSubmissionRequest, row.dataProducer),
-    id: 'dataProducer'
-  },
-  {
-    Header: 'Point of Contact',
-    accessor: row => pointOfContactLink(row.dataProductQuestionaire, row.contact),
-    id: 'contact',
-    width: 100
-  }, */
 ];
 
 export const errorTableColumns = [

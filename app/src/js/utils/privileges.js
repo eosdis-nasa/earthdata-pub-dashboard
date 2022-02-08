@@ -86,3 +86,25 @@ export const requestPrivileges = (privileges) => {
     canUnlock: false
   };
 };
+
+export const formPrivileges = (privileges) => {
+  if (privileges.ADMIN) {
+    return {
+      canEdit: true,
+      canRead: true,
+      canDelete: true
+    };
+  } else if (privileges.FORM) {
+    return {
+      canRead: !!privileges.FORM.find(a =>
+        a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD'),
+      canEdit: privileges.FORM.includes('RESUME'),
+      canDelete: privileges.FORM.includes('SUBMIT')
+    };
+  }
+  return {
+    canEdit: false,
+    canRead: false,
+    canDelete: false
+  };
+};

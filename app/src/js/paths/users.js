@@ -7,6 +7,7 @@ const userRoutes = [
 ];
 
 const singleUserRoutes = [
+  [strings.back_to_submissions, '/requests', 'sidebar__nav--back'],
   [strings.back_to_users, null, 'sidebar__nav--back']
 ];
 

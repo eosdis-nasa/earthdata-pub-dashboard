@@ -42,6 +42,7 @@ import { workflowOptionNames } from '../../selectors';
 // import ListFilters from '../ListActions/ListFilters';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 // import pageSizeOptions from '../../utils/page-size';
+import { requestPrivileges } from '../../utils/privileges';
 
 const { updateInterval } = _config;
 
@@ -143,6 +144,7 @@ class RequestsOverview extends React.Component {
     const unique = [...new Set(list.data.map(item => item.id))];
     const { queriedAt } = list.meta;
     const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
+    const { canInitialize } = requestPrivileges(this.props.privileges);
     // const statsCount = get(stats, 'count.data.requests.count', []);
     // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
@@ -160,7 +162,7 @@ class RequestsOverview extends React.Component {
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
-            <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac}>New Request</a>
+            { canInitialize ? <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac}>New Request</a> : null }
           </div>
           <List
             list={list}
@@ -237,7 +239,8 @@ RequestsOverview.propTypes = {
   workflowOptions: PropTypes.array,
   location: PropTypes.object,
   config: PropTypes.object,
-  submissionCSV: PropTypes.object
+  submissionCSV: PropTypes.object,
+  privileges: PropTypes.object,
 };
 
 export { RequestsOverview };
@@ -247,5 +250,6 @@ export default withRouter(connect(state => ({
   workflowOptions: workflowOptionNames(state),
   requests: state.requests,
   config: state.config,
-  submissionCSV: state.submissionCSV
+  submissionCSV: state.submissionCSV,
+  privileges: state.api.tokens.privileges
 }))(RequestsOverview));
