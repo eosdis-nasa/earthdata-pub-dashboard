@@ -44,6 +44,7 @@ To locate environment variables, see webpack.common.js:
 | STAGE | e.g. PROD, UAT, | *development* |
 | LABELS | gitc or daac localization. | *daac* |
 | AUTH_METHOD | The type of authorization method protecting the Earthdata Pub API. [launchpad or earthdata] | *earthdata*  |
+| REQUEST_HIDE_BUTTON_VERBAGE | The hide button verbage displayed on the request detail page. | Withdraw |
 | KIBANAROOT | \<optional\> Should point to a Kibana endpoint. Must be set to examine distribution metrics details. | |
 | SHOW_DISTRIBUTION_API_METRICS | \<optional\> Display metrics from Earthdata Pub Distribution API.| *false* |
 | ESROOT | \<optional\> Should point to an Elasticsearch endpoint. Must be set for distribution metrics to be displayed. | |

@@ -10,7 +10,7 @@ import {
   bool
 } from '../format';
 import {
-  deleteSubmission
+  deleteRequest
 } from '../../actions';
 import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
@@ -203,7 +203,7 @@ export const bulkActions = function (requests, config) {
   return [
     {
       text: 'Delete',
-      action: deleteSubmission,
+      action: deleteRequest,
       state: requests.deleted,
       confirm: confirmDelete,
       className: 'button--delete'

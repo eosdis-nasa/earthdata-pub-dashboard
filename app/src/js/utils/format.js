@@ -3,6 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import numeral from 'numeral';
 import { Link } from 'react-router-dom';
+import { requestHideButtonVerbage } from '../config';
 
 export const nullValue = '--';
 
@@ -180,6 +181,10 @@ export const disableConfirm = function (name) {
 
 export const deleteText = function (name) {
   return `Are you sure you want to permanently delete ${name}?`;
+};
+
+export const deleteTextWithType = function (name, type) {
+  return `Are you sure you want to permanently ${requestHideButtonVerbage.toLowerCase()} ${type} ${name}?`;
 };
 
 export const rerunText = function (name) {
