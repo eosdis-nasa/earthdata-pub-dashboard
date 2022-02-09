@@ -171,6 +171,10 @@ class RequestOverview extends React.Component {
           // Build url to forms app
           if (stepType.match(/form/g)) {
             request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+          } else if (stepType.match(/action/g) && row.step_data[i].match(/assign_a_workflow/g)) {
+            // console.log('ASSIGN', stepID, stepType, stepIDKey, tmpType, request, i, row.step_data[i]);
+            request = `/workflows?requestId=${row.id}`;
+            console.log('workflows', request)
           }
           break;
         }
