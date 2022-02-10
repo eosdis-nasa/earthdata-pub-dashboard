@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated CONTRIBUTING.md
 
+## 1.0.13 - 2022-02-10
+
+- Added in for assignment / reassignment of workflows
+
 ## 1.0.12 - 2022-02-03
 
 - Added and adjusted cumulus delete functionality to request detail page
