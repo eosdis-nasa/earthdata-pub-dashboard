@@ -187,6 +187,10 @@ export const deleteTextWithType = function (name, type) {
   return `Are you sure you want to permanently ${requestHideButtonVerbage.toLowerCase()} ${type} ${name}?`;
 };
 
+export const confirmActionType = function (action, type) {
+  return `Are you sure you want to ${action} ${type}?`;
+};
+
 export const rerunText = function (name) {
   return `Are you sure you want to rerun ${name}?`;
 };
