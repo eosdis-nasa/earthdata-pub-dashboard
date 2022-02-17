@@ -59,7 +59,7 @@ export const requestPrivileges = (privileges) => {
       canReassign: true,
       canLock: true,
       canUnlock: true,
-      canHide: true
+      canWithdraw: true
     };
   } else if (privileges.REQUEST) {
     return {
@@ -73,7 +73,7 @@ export const requestPrivileges = (privileges) => {
       canReassign: privileges.REQUEST.includes('REASSIGN'),
       canLock: privileges.REQUEST.includes('LOCK'),
       canUnlock: privileges.REQUEST.includes('UNLOCK'),
-      canHide: privileges.REQUEST.includes('HIDE')
+      canWithdraw: privileges.REQUEST.includes('HIDE')
     };
   }
   return {
@@ -86,7 +86,7 @@ export const requestPrivileges = (privileges) => {
     canReassign: false,
     canLock: false,
     canUnlock: false,
-    canHide: false
+    canWithdraw: false
   };
 };
 

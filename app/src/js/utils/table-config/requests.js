@@ -16,11 +16,15 @@ import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 
-export const newFormLink = (request, formalName) => {
+export const newLink = (request, formalName) => {
   return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</a>;
 };
 
-export const existingFormLink = (row, formId, formalName) => {
+export const assignWorkflow = (request, formalName) => {
+  return <a href={request} name="assignButton" className='button button--small button--green form-group__element--left button--no-icon button--disabled'>{formalName}</a>;
+};
+
+export const existingLink = (row, formId, formalName) => {
   return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
 };
 
@@ -51,6 +55,9 @@ export const stepLookup = (row) => {
         stepType = row.step_data.type;
         stepIDKey = `${stepType}_id`;
         stepID = row.step_data[stepIDKey];
+        if (row.step_data.type.match(/close/g)) {
+          /// 'close action -> this should do something but there\'s no current api call to change status to complete'
+        }
         if (typeof stepID === 'undefined' && typeof row.step_data.data !== 'undefined') {
           tmpType = row.step_data.data.type;
           const tmpIDKey = `${tmpType}_id`;
@@ -63,15 +70,20 @@ export const stepLookup = (row) => {
         // Build url to forms app
         if (stepType.match(/form/g)) {
           request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+        // assign a workflow
+        } else if (stepType.match(/action/g)) {
+          request = `/workflows?requestId=${row.id}`;
         }
         break;
       }
     }
   }
   if (stepType.match(/review/g)) {
-    return existingFormLink(row, stepID, formalName);
+    return existingLink(row, stepID, formalName);
+  } else if (stepType.match(/action/g)) {
+    return assignWorkflow(request, formalName);
   } else {
-    return newFormLink(request, formalName);
+    return newLink(request, formalName);
   }
 };
 
