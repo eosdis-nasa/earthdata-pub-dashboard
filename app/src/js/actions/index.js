@@ -271,6 +271,15 @@ export const withdrawRequest = (requestId) => ({
   }
 });
 
+export const restoreRequest = (requestId) => ({
+  [CALL_API]: {
+    type: types.SUBMISSION_RESTORE,
+    method: 'POST',
+    path: 'submission/restore',
+    body: { id: requestId }
+  }
+});
+
 export const deleteRequest = (requestId) => ({
   [CALL_API]: {
     type: types.SUBMISSION_DELETE,

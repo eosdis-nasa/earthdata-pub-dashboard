@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   getRequest,
   withdrawRequest,
+  restoreRequest,
   listWorkflows
 } from '../../actions';
 import { get } from 'object-path';
@@ -84,13 +85,24 @@ class RequestOverview extends React.Component {
     location.href = `/workflows?requestId=${requestId}`;
   }
 
+  restoreRequest () {
+    const { requestId } = this.props.match.params;
+    location.href = `/requests/id/${requestId}`;
+  }
+
   async delete () {
     const { history } = this.props;
     const { requestId } = this.props.match.params;
-    this.props.dispatch(withdrawRequest(requestId));
-    await history.goBack();
+    await this.props.dispatch(withdrawRequest(requestId));
+    history.goBack();
   }
 
+  async restore () {
+    const { history } = this.props;
+    const { requestId } = this.props.match.params;
+    await this.props.dispatch(restoreRequest(requestId));
+    history.goBack();
+  }
   // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
   // since this is a detailed view of a single request we are only concerned with an error for that one
   // so no need to relegate the error check to a separate function
@@ -114,7 +126,7 @@ class RequestOverview extends React.Component {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
     const request = record.data || false;
-    let { canReassign, canWithdraw } = requestPrivileges(this.props.privileges);
+    let { canReassign, canWithdraw, canRestore } = requestPrivileges(this.props.privileges);
     if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
       canReassign = false;
     }
@@ -160,6 +172,17 @@ class RequestOverview extends React.Component {
         confirmAction: false
       });
     }
+
+    if (canRestore) {
+      dropdownConfig.push({
+        text: 'Restore Request',
+        action: this.restoreRequest,
+        status: openStatus,
+        success: this.navigateBack,
+        confirmAction: false
+      });
+    }
+
     const tableColumns = [
       {
         Header: 'Name',
@@ -235,7 +258,7 @@ class RequestOverview extends React.Component {
 
         <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
-          { canWithdraw ? <AsyncCommands config={dropdownConfig} /> : null }
+          { canWithdraw || canRestore ? <AsyncCommands config={dropdownConfig} /> : null }
           { request && lastUpdated(request.last_change, 'Updated') }
           <dl className='status--process'>
             <dt>Status:</dt>
