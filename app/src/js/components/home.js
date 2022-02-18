@@ -184,6 +184,18 @@ class Home extends React.Component {
   render () {
     const { requests } = this.props;
     const { list } = requests;
+    const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
+    const isAdmin = this.props.privileges.ADMIN;
+    if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
+      const el = document.getElementsByName('assignButton');
+      setTimeout(() => {
+        for (const i in el) {
+          if (typeof el[i].classList !== 'undefined') {
+            el[i].classList.remove('button--disabled');
+          }
+        }
+      }, 1);
+    }
     const view = this.getView();
     const query = this.generateQuery();
     // const { stats, count } = this.props.stats;
@@ -299,6 +311,7 @@ Home.propTypes = {
   queryParams: PropTypes.object,
   setQueryParams: PropTypes.func,
   dispatch: PropTypes.func,
+  privileges: PropTypes.object,
   roles: PropTypes.array,
   groups: PropTypes.array,
   location: PropTypes.object
@@ -316,6 +329,7 @@ export default withRouter(withQueryParams()(connect((state) => ({
   pdrs: state.pdrs,
   rules: state.rules,
   stats: state.stats,
+  privileges: state.api.tokens.privileges,
   roles: state.api.tokens.roles,
   groups: state.api.tokens.groups
 }))(Home)));

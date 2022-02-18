@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import {
   getRequest,
   withdrawRequest,
-  applyWorkflowToRequest,
   listWorkflows
 } from '../../actions';
 import { get } from 'object-path';
@@ -19,6 +18,9 @@ import {
   deleteTextWithType
 } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
+import {
+  stepLookup
+} from '../../utils/table-config/requests';
 import Loading from '../LoadingIndicator/loading-indicator';
 // import LogViewer from '../Logs/viewer';
 import ErrorReport from '../Errors/report';
@@ -26,7 +28,6 @@ import Metadata from '../Table/Metadata';
 import AsyncCommands from '../DropDown/dropdown-async-command';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
-import { simpleDropdownOption } from '../../utils/table-config/requests';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { requestPrivileges } from '../../utils/privileges';
 import _config from '../../config';
@@ -43,7 +44,6 @@ class RequestOverview extends React.Component {
     //  this.remove = this.remove.bind(this);
     this.delete = this.delete.bind(this);
     this.selectWorkflow = this.selectWorkflow.bind(this);
-    this.getExecuteOptions = this.getExecuteOptions.bind(this);
     this.displayName = strings.request;
     this.state = {};
   }
@@ -81,13 +81,14 @@ class RequestOverview extends React.Component {
 
   applyWorkflow () {
     const { requestId } = this.props.match.params;
-    const { workflow } = this.state;
-    this.props.dispatch(applyWorkflowToRequest(requestId, workflow));
+    location.href = `/workflows?requestId=${requestId}`;
   }
 
-  delete () {
+  async delete () {
+    const { history } = this.props;
     const { requestId } = this.props.match.params;
     this.props.dispatch(withdrawRequest(requestId));
+    await history.goBack();
   }
 
   // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
@@ -109,85 +110,14 @@ class RequestOverview extends React.Component {
     this.setState({ workflow });
   }
 
-  getExecuteOptions () {
-    return [
-      simpleDropdownOption({
-        handler: this.selectWorkflow,
-        label: 'workflow',
-        value: this.state.workflow,
-        options: this.props.workflowOptions
-      })
-    ];
-  }
-
-  newFormLink (request, formalName) {
-    return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</a>;
-  }
-
-  existingFormLink (row, formId, formalName) {
-    return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
-  }
-
-  getFormalName (str) {
-    if (typeof str === 'undefined') {
-      return ' ';
-    } else {
-      const count = (str.match(/_/g) || []).length;
-      if (count > 0) {
-        str = str.replace(/_/g, ' ');
-      }
-      const words = str.split(' ');
-      for (let i = 0; i < words.length; i++) {
-        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-      }
-      return words.join(' ');
-    }
-  }
-
-  stepLookup (row) {
-    const stepName = row.step_name;
-    let request = '';
-    let stepID = '';
-    let stepType = '';
-    let stepIDKey = '';
-    let tmpType = '';
-    const formalName = this.getFormalName(stepName);
-    for (const i in row.step_data) {
-      if (typeof row.step_data[i] !== 'undefined') {
-        const regex = new RegExp(stepName, 'g');
-        if (i.match('name') && row.step_data[i].match(regex)) {
-          stepType = row.step_data.type;
-          stepIDKey = `${stepType}_id`;
-          stepID = row.step_data[stepIDKey];
-          if (typeof stepID === 'undefined' && typeof row.step_data.data !== 'undefined') {
-            tmpType = row.step_data.data.type;
-            const tmpIDKey = `${tmpType}_id`;
-            stepID = row.step_data.data[tmpIDKey];
-            // Build url to forms app - after submitted
-            if (tmpType.match(/form/g)) {
-              request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
-            }
-          }
-          // Build url to forms app
-          if (stepType.match(/form/g)) {
-            request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
-          }
-          break;
-        }
-      }
-    }
-    if (stepType.match(/review/g)) {
-      return this.existingFormLink(row, stepID, formalName);
-    } else {
-      return this.newFormLink(request, formalName);
-    }
-  }
-
   render () {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
     const request = record.data || false;
-    const { canReassign, canHide } = requestPrivileges(this.props.privileges);
+    let { canReassign, canWithdraw } = requestPrivileges(this.props.privileges);
+    if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
+      canReassign = false;
+    }
     const requestForms = request.forms;
     let showTable = false;
     if (requestForms !== null &&
@@ -196,16 +126,40 @@ class RequestOverview extends React.Component {
         showTable = true;
       }
     }
+    const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
+    const isAdmin = this.props.privileges.ADMIN;
+    if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
+      const el = document.getElementsByName('assignButton');
+      setTimeout(() => {
+        for (const i in el) {
+          if (typeof el[i].classList !== 'undefined') {
+            el[i].classList.remove('button--disabled');
+          }
+        }
+      }, 1);
+    }
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
-    const dropdownConfig = [{
-      text: `${_config.requestHideButtonVerbage}`,
-      action: this.delete,
-      status: deleteStatus,
-      success: this.navigateBack,
-      confirmAction: true,
-      confirmText: deleteTextWithType(requestId, 'request')
-    }];
+    const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
+    const dropdownConfig = [
+      {
+        text: `${_config.requestHideButtonVerbage}`,
+        action: this.delete,
+        status: deleteStatus,
+        success: this.navigateBack,
+        confirmAction: true,
+        confirmText: deleteTextWithType(requestId, 'request')
+      }
+    ];
 
+    if (canReassign) {
+      dropdownConfig.push({
+        text: 'Reassign Workflow',
+        action: this.applyWorkflow,
+        status: openStatus,
+        success: this.navigateBack,
+        confirmAction: false
+      });
+    }
     const tableColumns = [
       {
         Header: 'Name',
@@ -254,7 +208,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Next Action',
-        accessor: row => this.stepLookup(row)
+        accessor: row => stepLookup(row)
       }
     ];
 
@@ -281,7 +235,7 @@ class RequestOverview extends React.Component {
 
         <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
-          { canHide ? <AsyncCommands config={dropdownConfig} /> : null }
+          { canWithdraw ? <AsyncCommands config={dropdownConfig} /> : null }
           { request && lastUpdated(request.last_change, 'Updated') }
           <dl className='status--process'>
             <dt>Status:</dt>
@@ -323,6 +277,7 @@ RequestOverview.propTypes = {
   skipReloadOnMount: PropTypes.bool,
   workflowOptions: PropTypes.array,
   privileges: PropTypes.object,
+  roles: PropTypes.array
 };
 
 RequestOverview.defaultProps = {
@@ -335,5 +290,6 @@ export default withRouter(connect(state => ({
   requests: state.requests,
   workflowOptions: workflowOptionNames(state),
   logs: state.logs,
-  privileges: state.api.tokens.privileges
+  privileges: state.api.tokens.privileges,
+  roles: state.api.tokens.roles,
 }))(RequestOverview));
