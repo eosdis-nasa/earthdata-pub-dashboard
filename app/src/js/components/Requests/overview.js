@@ -66,7 +66,6 @@ class RequestsOverview extends React.Component {
 
   componentDidMount () {
     const { dispatch } = this.props;
-    console.log('this props', this.props);
     dispatch(listRequests());
   }
 
