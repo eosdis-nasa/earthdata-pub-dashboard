@@ -8,6 +8,7 @@ import AllRequests from './list';
 // import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
 import RequestOverview from './request';
 import RequestsOverview from './overview';
+import InactiveRequestsOverview from './withdrawn';
 import EditMetadata from './edit-metadata';
 import isEqual from 'lodash.isequal';
 
@@ -24,14 +25,14 @@ const Requests = ({
   stats
 }) => {
   const { pathname } = location;
-  const AllSubmissionsWithWrapper = withQueryWrapper(AllRequests, onQueryChange);
-  const [queryOptions, setQueryOptions] = useState({});
+  // const AllSubmissionsWithWrapper = withQueryWrapper(AllRequests, onQueryChange);
+  // const [queryOptions, setQueryOptions] = useState({});
 
-  function onQueryChange (newQueryOptions) {
+  /* function onQueryChange (newQueryOptions) {
     if (!isEqual(newQueryOptions, queryOptions)) {
       setQueryOptions(newQueryOptions);
     }
-  }
+  } */
 
   // function query () {
   // dispatch(getCount({
@@ -54,13 +55,10 @@ const Requests = ({
           />
           <div className='page__content--shortened'>
             <Switch>
-              <Route exact path='/requests' component={RequestsOverview} />
               <Route exact path='/requests/id/:requestId' component={RequestOverview} />
+              <Route exact path='/requests' component={RequestsOverview} />
+              <Route path='/requests/withdrawn' component={InactiveRequestsOverview} />
               <Route path='/requests/id/:requestId/edit-metadata' component={EditMetadata} />
-              <Route path='/requests/completed' component={AllSubmissionsWithWrapper} />
-              <Route path='/requests/processing' component={AllSubmissionsWithWrapper} />
-              <Route path='/requests/failed' component={AllSubmissionsWithWrapper} />
-              <Redirect exact from='/requests/running' to='/requests/processing' />
             </Switch>
           </div>
         </div>

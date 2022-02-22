@@ -1,44 +1,20 @@
 'use strict';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  // getCount,
-  // searchSubmissions,
-  // clearSubmissionsSearch,
-  // filterSubmissions,
-  // clearSubmissionsFilter,
-  listRequests
-  // filterStages,
-  // filterStatuses,
-  // clearStagesFilter,
-  // clearStatusesFilter,
-  // listWorkflows,
-  // getOptionsSubmissionName
+  listInactiveRequests
 } from '../../actions';
-// import { get } from 'object-path';
 import {
   lastUpdated,
-  // tally,
-  // displayCase
+  shortDateNoTimeYearFirst,
+  bool
 } from '../../utils/format';
-import {
-  tableColumns
-} from '../../utils/table-config/requests';
 import List from '../Table/Table';
-// import Dropdown from '../DropDown/dropdown';
-// import Search from '../Search/search';
-// import Overview from '../Overview/overview';
-// import statusOptions from '../../utils/status';
-// import stageOptions from '../../utils/stage';
-import _config from '../../config';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
-// import { window } from '../../utils/browser';
-// import ListFilters from '../ListActions/ListFilters';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-// import pageSizeOptions from '../../utils/page-size';
 import { requestPrivileges } from '../../utils/privileges';
 
 const breadcrumbConfig = [
@@ -51,13 +27,61 @@ const breadcrumbConfig = [
     href: '/requests'
   },
   {
-    label: strings.submissions_inprogress2,
-    href: '/requests',
+    label: strings.submissions_withdrawn2,
+    href: '/requests/withdrawn',
     active: true
   }
 ];
 
-class RequestsOverview extends React.Component {
+export const tableColumns = [
+  {
+    Header: 'Data Product Name',
+    accessor: row => row.form_data ? row.form_data.data_product_name_value || '(no name)' : '(no name)',
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || '(no name)' : '(no name)'}</Link> : '(no name)',
+    id: 'name',
+    width: 170
+  },
+  {
+    Header: 'Status',
+    accessor: (row) => row.status,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.status}</Link> : null,
+    id: 'status_message',
+    width: 170
+  },
+  {
+    Header: 'Workflow',
+    accessor: (row) => row.workflow_name,
+    Cell: row => row.row.original.workflow_name,
+    id: 'workflow_name',
+    width: 170
+  },
+  {
+    Header: 'Created',
+    accessor: row => shortDateNoTimeYearFirst(row.created_at),
+    id: 'created_at',
+    width: 110
+  },
+  {
+    Header: 'Latest Edit',
+    accessor: row => shortDateNoTimeYearFirst(row.last_change),
+    id: 'last_change',
+    width: 110
+  },
+  {
+    Header: 'Locked',
+    accessor: row => bool(row.lock),
+    id: 'lock',
+    width: 100
+  },
+  {
+    Header: 'Conversation',
+    accessor: (row) => row.conversation_id ? <Link to={{ pathname: `/conversations/id/${row.conversation_id}` }}>View</Link> : null,
+    id: 'conversation_id',
+    width: 120
+  },
+];
+
+class InactiveRequestsOverview extends React.Component {
   constructor () {
     super();
     this.generateQuery = this.generateQuery.bind(this);
@@ -66,8 +90,7 @@ class RequestsOverview extends React.Component {
 
   componentDidMount () {
     const { dispatch } = this.props;
-    console.log('this props', this.props);
-    dispatch(listRequests());
+    dispatch(listInactiveRequests());
   }
 
   generateQuery () {
@@ -85,8 +108,6 @@ class RequestsOverview extends React.Component {
     } = requests;
     const unique = [...new Set(list.data.map(item => item.id))];
     const { queriedAt } = list.meta;
-    const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
-    const { canInitialize } = requestPrivileges(this.props.privileges);
     const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
     const isAdmin = this.props.privileges.ADMIN;
     if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
@@ -115,12 +136,11 @@ class RequestsOverview extends React.Component {
         </section>
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
-            { canInitialize ? <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac}>New Request</a> : null }
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.submissions_withdrawn2} Requests <span className='num--title'>{unique.length}</span></h2>
           </div>
           <List
             list={list}
-            action={listRequests}
+            action={listInactiveRequests}
             tableColumns={tableColumns}
             query={this.generateQuery()}
             rowId='id'
@@ -134,7 +154,7 @@ class RequestsOverview extends React.Component {
   }
 }
 
-RequestsOverview.propTypes = {
+InactiveRequestsOverview.propTypes = {
   requests: PropTypes.object,
   stats: PropTypes.object,
   dispatch: PropTypes.func,
@@ -146,7 +166,7 @@ RequestsOverview.propTypes = {
   roles: PropTypes.array
 };
 
-export { RequestsOverview };
+export { InactiveRequestsOverview };
 
 export default withRouter(connect(state => ({
   stats: state.stats,
@@ -156,4 +176,4 @@ export default withRouter(connect(state => ({
   submissionCSV: state.submissionCSV,
   privileges: state.api.tokens.privileges,
   roles: state.api.tokens.roles,
-}))(RequestsOverview));
+}))(InactiveRequestsOverview));

@@ -90,15 +90,15 @@ export const stepLookup = (row) => {
 export const tableColumns = [
   {
     Header: 'Data Product Name',
-    accessor: row => row.form_data.data_product_name_value || '(no name)',
-    Cell: row => <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.form_data.data_product_name_value || '(no name)'}</Link>,
+    accessor: row => row.form_data ? row.form_data.data_product_name_value || '(no name)' : '(no name)',
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || '(no name)' : '(no name)'}</Link> : '(no name)',
     id: 'name',
     width: 170
   },
   {
     Header: 'Status',
     accessor: (row) => row.status,
-    Cell: row => <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.status}</Link>,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.status}</Link> : null,
     id: 'status_message',
     width: 170
   },
@@ -159,7 +159,7 @@ export const errorTableColumns = [
   {
     Header: 'Requests',
     accessor: (row) => row.id,
-    Cell: row => submissionLink(row.row.original.id),
+    Cell: row => row.row ? submissionLink(row.row.original.id) : null,
     id: 'id',
     width: 200
   },

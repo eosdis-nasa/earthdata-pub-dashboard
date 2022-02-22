@@ -163,6 +163,15 @@ export const listRequests = (options) => ({
   }
 });
 
+export const listInactiveRequests = (options) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    id: null,
+    path: 'submission/inactive'
+  }
+});
+
 export const reviewRequest = (id, approve) => {
   return (dispatch) => {
     dispatch({

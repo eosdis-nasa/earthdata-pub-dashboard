@@ -44,14 +44,15 @@ class RequestOverview extends React.Component {
     this.applyWorkflow = this.applyWorkflow.bind(this);
     //  this.remove = this.remove.bind(this);
     this.delete = this.delete.bind(this);
+    this.restore = this.restore.bind(this);
     this.selectWorkflow = this.selectWorkflow.bind(this);
     this.displayName = strings.request;
     this.state = {};
   }
 
   componentDidMount () {
-    const { requestId } = this.props.match.params;
     const { dispatch } = this.props;
+    const { requestId } = this.props.match.params;
     // This causes a repeating query for workflows cluttering up the logs.
     // Commenting out until we add applyWorkflow capability
     // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
@@ -85,23 +86,16 @@ class RequestOverview extends React.Component {
     location.href = `/workflows?requestId=${requestId}`;
   }
 
-  restoreRequest () {
-    const { requestId } = this.props.match.params;
-    location.href = `/requests/id/${requestId}`;
-  }
-
   async delete () {
-    const { history } = this.props;
     const { requestId } = this.props.match.params;
     await this.props.dispatch(withdrawRequest(requestId));
-    history.goBack();
+    this.navigateBack();
   }
 
   async restore () {
-    const { history } = this.props;
     const { requestId } = this.props.match.params;
     await this.props.dispatch(restoreRequest(requestId));
-    history.goBack();
+    this.navigateBack();
   }
   // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
   // since this is a detailed view of a single request we are only concerned with an error for that one
@@ -125,6 +119,10 @@ class RequestOverview extends React.Component {
   render () {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
+    let isHidden = false;
+    if (typeof record.data !== 'undefined') {
+      isHidden = record.data.hidden;
+    }
     const request = record.data || false;
     let { canReassign, canWithdraw, canRestore } = requestPrivileges(this.props.privileges);
     if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
@@ -152,18 +150,22 @@ class RequestOverview extends React.Component {
     }
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
-    const dropdownConfig = [
-      {
-        text: `${_config.requestHideButtonVerbage}`,
-        action: this.delete,
-        status: deleteStatus,
-        success: this.navigateBack,
-        confirmAction: true,
-        confirmText: deleteTextWithType(requestId, 'request')
-      }
-    ];
+    let dropdownConfig = [];
 
-    if (canReassign) {
+    if (!isHidden) {
+      dropdownConfig = [
+        {
+          text: `${_config.requestHideButtonVerbage}`,
+          action: this.delete,
+          status: deleteStatus,
+          success: this.navigateBack,
+          confirmAction: true,
+          confirmText: deleteTextWithType(requestId, 'request')
+        }
+      ];
+    }
+
+    if (canReassign && !isHidden) {
       dropdownConfig.push({
         text: 'Reassign Workflow',
         action: this.applyWorkflow,
@@ -173,10 +175,10 @@ class RequestOverview extends React.Component {
       });
     }
 
-    if (canRestore) {
+    if (canRestore && isHidden) {
       dropdownConfig.push({
         text: 'Restore Request',
-        action: this.restoreRequest,
+        action: this.restore,
         status: openStatus,
         success: this.navigateBack,
         confirmAction: false
@@ -203,7 +205,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Workflow',
-        accessor: row => canReassign ? <Link to={{ pathname: `/workflows/id/${row.workflow_id}` }}>{row.workflow_name}</Link> : row.workflow_name
+        accessor: row => canReassign && row.workflow_name ? <Link to={{ pathname: `/workflows/id/${row.workflow_id}` }}>{row.workflow_name}</Link> : row.workflow_name
       },
       {
         label: 'Created',
@@ -228,12 +230,17 @@ class RequestOverview extends React.Component {
         label: 'Communication',
         accessor: conversationId => <Link to={`/conversations/id/${conversationId}`}>{conversationId ? 'Email Conversation' : null}</Link>,
         property: 'conversation_id'
-      },
-      {
-        label: 'Next Action',
-        accessor: row => stepLookup(row)
       }
     ];
+
+    if (!isHidden) {
+      metaAccessors.push(
+        {
+          label: 'Next Action',
+          accessor: row => stepLookup(row)
+        }
+      );
+    }
 
     const breadcrumbConfig = [
       {
