@@ -52,7 +52,7 @@ class Header extends React.Component {
   linkTo (path) {
     return <Link to={{
       pathname: path[1],
-      search: this.props.location.search
+      search: this.props.location.search.split('?')[0]
     }}>{path[0]}</Link>;
   }
 

@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   getRequest,
   withdrawRequest,
+  restoreRequest,
   listWorkflows
 } from '../../actions';
 import { get } from 'object-path';
@@ -43,14 +44,15 @@ class RequestOverview extends React.Component {
     this.applyWorkflow = this.applyWorkflow.bind(this);
     //  this.remove = this.remove.bind(this);
     this.delete = this.delete.bind(this);
+    this.restore = this.restore.bind(this);
     this.selectWorkflow = this.selectWorkflow.bind(this);
     this.displayName = strings.request;
     this.state = {};
   }
 
   componentDidMount () {
-    const { requestId } = this.props.match.params;
     const { dispatch } = this.props;
+    const { requestId } = this.props.match.params;
     // This causes a repeating query for workflows cluttering up the logs.
     // Commenting out until we add applyWorkflow capability
     // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
@@ -85,12 +87,16 @@ class RequestOverview extends React.Component {
   }
 
   async delete () {
-    const { history } = this.props;
     const { requestId } = this.props.match.params;
-    this.props.dispatch(withdrawRequest(requestId));
-    await history.goBack();
+    await this.props.dispatch(withdrawRequest(requestId));
+    this.navigateBack();
   }
 
+  async restore () {
+    const { requestId } = this.props.match.params;
+    await this.props.dispatch(restoreRequest(requestId));
+    this.navigateBack();
+  }
   // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
   // since this is a detailed view of a single request we are only concerned with an error for that one
   // so no need to relegate the error check to a separate function
@@ -113,8 +119,12 @@ class RequestOverview extends React.Component {
   render () {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
+    let isHidden = false;
+    if (typeof record.data !== 'undefined') {
+      isHidden = record.data.hidden;
+    }
     const request = record.data || false;
-    let { canReassign, canWithdraw } = requestPrivileges(this.props.privileges);
+    let { canReassign, canWithdraw, canRestore } = requestPrivileges(this.props.privileges);
     if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
       canReassign = false;
     }
@@ -140,18 +150,22 @@ class RequestOverview extends React.Component {
     }
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
-    const dropdownConfig = [
-      {
-        text: `${_config.requestHideButtonVerbage}`,
-        action: this.delete,
-        status: deleteStatus,
-        success: this.navigateBack,
-        confirmAction: true,
-        confirmText: deleteTextWithType(requestId, 'request')
-      }
-    ];
+    let dropdownConfig = [];
 
-    if (canReassign) {
+    if (!isHidden) {
+      dropdownConfig = [
+        {
+          text: `${_config.requestHideButtonVerbage}`,
+          action: this.delete,
+          status: deleteStatus,
+          success: this.navigateBack,
+          confirmAction: true,
+          confirmText: deleteTextWithType(requestId, 'request')
+        }
+      ];
+    }
+
+    if (canReassign && !isHidden) {
       dropdownConfig.push({
         text: 'Reassign Workflow',
         action: this.applyWorkflow,
@@ -160,6 +174,17 @@ class RequestOverview extends React.Component {
         confirmAction: false
       });
     }
+
+    if (canRestore && isHidden) {
+      dropdownConfig.push({
+        text: 'Restore Request',
+        action: this.restore,
+        status: openStatus,
+        success: this.navigateBack,
+        confirmAction: false
+      });
+    }
+
     const tableColumns = [
       {
         Header: 'Name',
@@ -180,7 +205,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Workflow',
-        accessor: row => canReassign ? <Link to={{ pathname: `/workflows/id/${row.workflow_id}` }}>{row.workflow_name}</Link> : row.workflow_name
+        accessor: row => canReassign && row.workflow_name ? <Link to={{ pathname: `/workflows/id/${row.workflow_id}` }}>{row.workflow_name}</Link> : row.workflow_name
       },
       {
         label: 'Created',
@@ -205,12 +230,17 @@ class RequestOverview extends React.Component {
         label: 'Communication',
         accessor: conversationId => <Link to={`/conversations/id/${conversationId}`}>{conversationId ? 'Email Conversation' : null}</Link>,
         property: 'conversation_id'
-      },
-      {
-        label: 'Next Action',
-        accessor: row => stepLookup(row)
       }
     ];
+
+    if (!isHidden) {
+      metaAccessors.push(
+        {
+          label: 'Next Action',
+          accessor: row => stepLookup(row)
+        }
+      );
+    }
 
     const breadcrumbConfig = [
       {
@@ -235,7 +265,7 @@ class RequestOverview extends React.Component {
 
         <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
-          { canWithdraw ? <AsyncCommands config={dropdownConfig} /> : null }
+          { canWithdraw || canRestore ? <AsyncCommands config={dropdownConfig} /> : null }
           { request && lastUpdated(request.last_change, 'Updated') }
           <dl className='status--process'>
             <dt>Status:</dt>

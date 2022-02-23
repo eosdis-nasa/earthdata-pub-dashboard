@@ -4,12 +4,14 @@ import tally from './tally';
 import { strings } from '../components/locale';
 
 const submissionRoutes = [
-  ['', null],
+  ['', '', null, ''],
+  [strings.submissions_inprogress2, '/requests', null, 'sidebar__nav--back'],
+  [strings.submissions_withdrawn2, '/requests/withdrawn', null, 'sidebar__nav--back'],
 ];
 
 const singleSubmissionRoutes = [
   [strings.back_to_submissions, null, 'sidebar__nav--back'],
-  ['Edit Metadata', 'id/:requestId/edit-metadata', 'sidebar__nav']
+  ['Edit Metadata', 'id/:requestId/edit-metadata', null, 'sidebar__nav--back']
 ];
 
 const empty = [['', '']];
@@ -27,8 +29,13 @@ const requests = {
         return copy;
       });
     } else if (currentRoute.slice(0, 9) === '/requests') {
-      count = count || [];
-      return submissionRoutes.map(d => tally(d, count));
+      return submissionRoutes.map(d => {
+        if (!d[0].match(strings.back_to_submissions) &&
+          (!d[1] || d[1].indexOf(':requestId') === -1)) {
+          return d;
+        }
+        return empty;
+      });
     } else {
       return empty;
     }

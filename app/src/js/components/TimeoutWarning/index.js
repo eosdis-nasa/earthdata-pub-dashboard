@@ -109,7 +109,7 @@ class TimeoutWarning extends React.Component {
 
 TimeoutWarning.propTypes = {
   api: PropTypes.object,
-  dispatch: PropTypes.object
+  dispatch: PropTypes.func
 };
 
 export default connect(state => ({

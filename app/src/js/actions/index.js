@@ -163,6 +163,15 @@ export const listRequests = (options) => ({
   }
 });
 
+export const listInactiveRequests = (options) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    id: null,
+    path: 'submission/inactive'
+  }
+});
+
 export const reviewRequest = (id, approve) => {
   return (dispatch) => {
     dispatch({
@@ -267,6 +276,15 @@ export const withdrawRequest = (requestId) => ({
     type: types.SUBMISSION_WITHDRAW,
     method: 'POST',
     path: 'submission/withdraw',
+    body: { id: requestId }
+  }
+});
+
+export const restoreRequest = (requestId) => ({
+  [CALL_API]: {
+    type: types.SUBMISSION_RESTORE,
+    method: 'POST',
+    path: 'submission/restore',
     body: { id: requestId }
   }
 });

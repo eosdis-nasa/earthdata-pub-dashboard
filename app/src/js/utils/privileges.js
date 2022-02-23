@@ -59,7 +59,8 @@ export const requestPrivileges = (privileges) => {
       canReassign: true,
       canLock: true,
       canUnlock: true,
-      canWithdraw: true
+      canWithdraw: true,
+      canRestore: true
     };
   } else if (privileges.REQUEST) {
     return {
@@ -73,7 +74,10 @@ export const requestPrivileges = (privileges) => {
       canReassign: privileges.REQUEST.includes('REASSIGN'),
       canLock: privileges.REQUEST.includes('LOCK'),
       canUnlock: privileges.REQUEST.includes('UNLOCK'),
-      canWithdraw: privileges.REQUEST.includes('HIDE')
+      canWithdraw: privileges.REQUEST.find(a =>
+        a === 'DAACREAD' || a === 'ADMINREAD'),
+      canRestore: privileges.REQUEST.find(a =>
+        a === 'DAACREAD' || a === 'ADMINREAD')
     };
   }
   return {
@@ -86,7 +90,8 @@ export const requestPrivileges = (privileges) => {
     canReassign: false,
     canLock: false,
     canUnlock: false,
-    canWithdraw: false
+    canWithdraw: false,
+    canRestore: false
   };
 };
 
