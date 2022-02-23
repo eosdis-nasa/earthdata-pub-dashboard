@@ -339,16 +339,16 @@ class FormOverview extends React.Component {
           </div>
         </section>
         <section className='page_section'>
-          { canReview && reviewReady && (
+          { canReview && reviewReady && typeof requestId !== 'undefined' && (
             <div className='flex__row'>
               <div className='flex__item--spacing'>
-                <button onClick={() => dispatch(reviewRequest(request.id, false))}
+                <button onClick={() => dispatch(reviewRequest(requestId, false))}
                   className='button button--no-icon button--medium button--green'>
                 Reject
                 </button>
               </div>
               <div className='flex__item--spacing'>
-                <button onClick={() => dispatch(reviewRequest(request.id, true))}
+                <button onClick={() => dispatch(reviewRequest(requestId, true))}
                   className='button button--no-icon button--medium button--green'>
                 Approve
                 </button>

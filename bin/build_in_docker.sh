@@ -40,6 +40,7 @@ rsync -av \
     SERVED_BY_EDPUB_API=$SERVED_BY_EDPUB_API \
     AUTH_METHOD=$AUTH_METHOD \
     REQUEST_HIDE_BUTTON_VERBAGE=Withdraw \
+    REQUEST_UNHIDE_BUTTON_VERBAGE=Restore \
     npm run build
 
   rsync -av ./dist/ /dist/

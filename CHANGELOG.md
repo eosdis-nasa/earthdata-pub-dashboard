@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated CONTRIBUTING.md
 
+## 1.0.14 - 2022-02-22
+
+- Added in Restore feature for withdrawn requests.  Added page for withdrawn requests. 
+- Added links to request pages to sidebar. Misc minor fixes.
+
 ## 1.0.13 - 2022-02-10
 
 - Added in for assignment / reassignment of workflows

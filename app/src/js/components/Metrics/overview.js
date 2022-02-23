@@ -35,9 +35,9 @@ const MetricOverview = ({ metrics }) => {
     dispatch(listMetrics({ count: true }));
   }, [metrics.searchString, dispatch]);
   const { queriedAt } = metrics.list.meta;
-  dispatch(getCloudMetric('2021-06-20')).then(
+  // Below cannot be fully tested until metrics reports are live
+  /* dispatch(getCloudMetric('2021-06-20')).then(
     function (image) {
-      // console.log(image);
       const byteCharacters = atob(image.data);
       const byteArrays = [];
       for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
@@ -54,7 +54,7 @@ const MetricOverview = ({ metrics }) => {
       });
       document.getElementById('testimage').src = URL.createObjectURL(blob);
     }
-  );
+  ); */
   return (
     <div className='page__component'>
       <section className='page__section page__section__controls'>
