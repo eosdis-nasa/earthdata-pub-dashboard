@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   getForm,
-  getRequest,
-  reviewRequest
+  getRequest
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -16,7 +15,8 @@ import { strings } from '../locale';
 import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
-import { formPrivileges, requestPrivileges } from '../../utils/privileges';
+import ReviewStep from '../Review/review';
+import { formPrivileges } from '../../utils/privileges';
 import _config from '../../config';
 
 const metaAccessors = [
@@ -89,16 +89,6 @@ class FormOverview extends React.Component {
       return (
         '__________________________________________'
       );
-    }
-  }
-
-  hasStepData () {
-    if (typeof this.props.requests !== 'undefined' &&
-    typeof this.props.requests.detail.data !== 'undefined' &&
-    typeof this.props.requests.detail.data.step_data !== 'undefined') {
-      return true;
-    } else {
-      return false;
     }
   }
 
@@ -202,6 +192,7 @@ class FormOverview extends React.Component {
   renderQuestions (sections, whatSection) {
     let section = '';
     const sectionQuestions = [];
+    const hasAnswers = this.hasSavedAnswers();
     for (const i in sections) {
       if (JSON.stringify(sections[i]) === '[]') { continue; }
       section = sections[i].heading;
@@ -223,14 +214,14 @@ class FormOverview extends React.Component {
                   if (question[b].inputs[a].type === 'bbox') {
                     sectionQuestions.push(
                       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
-                        {!this.hasSavedAnswers() ? <br /> : null}
+                        {!hasAnswers ? <br /> : null}
                         <div key={this.getRandom()}>{this.getBbox(question[b].inputs[a].control_id)}</div>
                       </li>
                     );
                   } else if (question[b].inputs[a].type === 'table') {
                     const keys = question[b].inputs[a].enums.map(e => e.key);
                     let data = [];
-                    if (this.hasSavedAnswers()) {
+                    if (hasAnswers) {
                       data = this.props.requests.detail.data.form_data;
                     }
                     sectionQuestions.push(<li key={this.getRandom()}><br /></li>);
@@ -246,7 +237,7 @@ class FormOverview extends React.Component {
                   } else {
                     sectionQuestions.push(
                       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
-                        {!this.hasSavedAnswers() ? <br /> : null}
+                        {!hasAnswers ? <br /> : null}
                         <div key={this.getRandom()} style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>{question[b].inputs[a].label}:</div>
                         <div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
                       </li>
@@ -269,21 +260,23 @@ class FormOverview extends React.Component {
     }
   }
 
+  hasStepData () {
+    if (typeof this.props.requests !== 'undefined' &&
+    typeof this.props.requests.detail.data !== 'undefined' &&
+    typeof this.props.requests.detail.data.step_data !== 'undefined') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   render () {
-    const dispatch = this.props.dispatch;
-    const { canReview } = requestPrivileges(this.props.privileges);
     const { canEdit } = formPrivileges(this.props.privileges);
     let requestId = this.props.location.search.split('=')[1];
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
     let daacId = '';
-    let reviewReady = false;
     if (this.hasStepData()) {
-      const request = this.props.requests.detail.data;
-      reviewReady = request &&
-        request.step_data.type === 'review' &&
-        request.step_data.data.type === 'form' &&
-        request.step_data.data.form_id === formId;
       if (typeof this.props.requests.detail.data !== 'undefined') {
         daacId = this.props.requests.detail.data.daac_id;
         requestId = this.props.requests.detail.data.id;
@@ -339,22 +332,7 @@ class FormOverview extends React.Component {
           </div>
         </section>
         <section className='page_section'>
-          { canReview && reviewReady && typeof requestId !== 'undefined' && (
-            <div className='flex__row'>
-              <div className='flex__item--spacing'>
-                <button onClick={() => dispatch(reviewRequest(requestId, false))}
-                  className='button button--no-icon button--medium button--green'>
-                Reject
-                </button>
-              </div>
-              <div className='flex__item--spacing'>
-                <button onClick={() => dispatch(reviewRequest(requestId, true))}
-                  className='button button--no-icon button--medium button--green'>
-                Approve
-                </button>
-              </div>
-            </div>
-          )}
+          <ReviewStep />
         </section>
       </div>
     );

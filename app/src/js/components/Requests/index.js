@@ -4,19 +4,11 @@ import { connect } from 'react-redux';
 import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 // import { strings } from '../locale';
-import AllRequests from './list';
-// import DatePickerHeader from '../DatePickerHeader/DatePickerHeader';
 import RequestOverview from './request';
 import RequestsOverview from './overview';
 import InactiveRequestsOverview from './withdrawn';
+import ApprovalStep from './approval';
 import EditMetadata from './edit-metadata';
-import isEqual from 'lodash.isequal';
-
-const withQueryWrapper = (Component, onQueryChange) => (props) => {
-  return (
-    <Component onQueryChange={onQueryChange} {...props} />
-  );
-};
 
 const Requests = ({
   dispatch,
@@ -25,20 +17,6 @@ const Requests = ({
   stats
 }) => {
   const { pathname } = location;
-  // const AllSubmissionsWithWrapper = withQueryWrapper(AllRequests, onQueryChange);
-  // const [queryOptions, setQueryOptions] = useState({});
-
-  /* function onQueryChange (newQueryOptions) {
-    if (!isEqual(newQueryOptions, queryOptions)) {
-      setQueryOptions(newQueryOptions);
-    }
-  } */
-
-  // function query () {
-  // dispatch(getCount({
-  //   type: 'requests'
-  // }));
-  // }
   return (
     <div className='page__requests'>
       {/*  <DatePickerHeader onChange={query} heading={strings.all_submissions}/> */}
@@ -58,6 +36,7 @@ const Requests = ({
               <Route exact path='/requests/id/:requestId' component={RequestOverview} />
               <Route exact path='/requests' component={RequestsOverview} />
               <Route path='/requests/withdrawn' component={InactiveRequestsOverview} />
+              <Route path='/requests/approval' component={ApprovalStep} />
               <Route path='/requests/id/:requestId/edit-metadata' component={EditMetadata} />
             </Switch>
           </div>
