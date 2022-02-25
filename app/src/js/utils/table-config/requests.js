@@ -101,7 +101,7 @@ export const stepLookup = (row) => {
   }
   // step_data and step_name are available, but also need form_id, service_id and action_id in order to make a generalized function
   // Until that is added to the endpoint, I need to hardcode
-  if (stepName.match(/data_accession_request_form/g) == null && stepName.match(/data_production_information_form/g) == null) {
+  if (stepName.match(/data_accession_request_form/g) == null && stepName.match(/data_production_information_form/g) == null && !stepType.match(/action/g)) {
     return existingLink(row, undefined, formalName, stepName);
   } else if (stepType.match(/review/g)) {
     if (typeof StepID === 'undefined') {
