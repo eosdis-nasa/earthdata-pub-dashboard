@@ -159,18 +159,6 @@ class WorkflowsOverview extends React.Component {
     ];
     const { queriedAt } = workflows.list.meta;
     const disabled = !workflows.list.data.length || !this.getAnySelected();
-    const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
-    const isAdmin = this.props.privileges.ADMIN;
-    if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
-      const el = document.getElementsByName('assignButton');
-      setTimeout(() => {
-        for (const i in el) {
-          if (typeof el[i].classList !== 'undefined') {
-            el[i].classList.remove('button--disabled');
-          }
-        }
-      }, 1);
-    }
     return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
