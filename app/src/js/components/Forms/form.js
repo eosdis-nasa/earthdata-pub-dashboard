@@ -15,7 +15,7 @@ import { strings } from '../locale';
 import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
-// import ReviewStep from '../Review/review';
+import ReviewStep from '../Review/review';
 import { formPrivileges } from '../../utils/privileges';
 import _config from '../../config';
 
