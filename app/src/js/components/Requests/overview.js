@@ -9,7 +9,7 @@ import {
   // clearSubmissionsSearch,
   // filterSubmissions,
   // clearSubmissionsFilter,
-  getInProgressRequests
+  listRequests
   // filterStages,
   // filterStatuses,
   // clearStagesFilter,
@@ -66,7 +66,7 @@ class RequestsOverview extends React.Component {
 
   componentDidMount () {
     const { dispatch } = this.props;
-    dispatch(getInProgressRequests());
+    dispatch(listRequests());
   }
 
   generateQuery () {
@@ -88,33 +88,33 @@ class RequestsOverview extends React.Component {
     const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
     const { canInitialize } = requestPrivileges(this.props.privileges);
     return (
-      <div className='page__component'>
-        <section className='page__section page__section__controls'>
-          <Breadcrumbs config={breadcrumbConfig} />
-        </section>
-        <section className='page__section page__section__header-wrapper'>
-          <div className='page__section__header'>
-            <h1 className='heading--large heading--shared-content with-description '>{strings.requests}</h1>
-            {lastUpdated(queriedAt)}
-            {/* <Overview items={overviewItems} inflight={false} /> */}
-          </div>
-        </section>
-        <section className='page__section page__section__controls'>
-          <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
-            { canInitialize ? <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac}>New Request</a> : null }
-          </div>
-          <List
-            list={list}
-            tableColumns={tableColumns}
-            query={this.generateQuery()}
-            rowId='id'
-            filterIdx='name'
-            filterPlaceholder='Search Requests'
-          >
-          </List>
-        </section>
-      </div>
+    <div className='page__component'>
+      <section className='page__section page__section__controls'>
+        <Breadcrumbs config={breadcrumbConfig} />
+      </section>
+      <section className='page__section page__section__header-wrapper'>
+        <div className='page__section__header'>
+          <h1 className='heading--large heading--shared-content with-description '>{strings.requests}</h1>
+          {lastUpdated(queriedAt)}
+          {/* <Overview items={overviewItems} inflight={false} /> */}
+        </div>
+      </section>
+      <section className='page__section page__section__controls'>
+        <div className='heading__wrapper--border'>
+          <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
+          { canInitialize ? <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac}>New Request</a> : null }
+        </div>
+        <List
+          list={list}
+          tableColumns={tableColumns}
+          query={this.generateQuery()}
+          rowId='id'
+          filterIdx='name'
+          filterPlaceholder='Search Requests'
+        >
+        </List>
+      </section>
+    </div>
     );
   }
 }
