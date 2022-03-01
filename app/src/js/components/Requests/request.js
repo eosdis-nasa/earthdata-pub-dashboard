@@ -136,18 +136,6 @@ class RequestOverview extends React.Component {
         showTable = true;
       }
     }
-    const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
-    const isAdmin = this.props.privileges.ADMIN;
-    if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
-      const el = document.getElementsByName('assignButton');
-      setTimeout(() => {
-        for (const i in el) {
-          if (typeof el[i].classList !== 'undefined') {
-            el[i].classList.remove('button--disabled');
-          }
-        }
-      }, 1);
-    }
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
     let dropdownConfig = [];

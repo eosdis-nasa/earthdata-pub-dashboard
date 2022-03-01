@@ -9,13 +9,13 @@ import {
   // clearSubmissionsSearch,
   // filterSubmissions,
   // clearSubmissionsFilter,
-  listRequests
+  getInProgressRequests
   // filterStages,
   // filterStatuses,
   // clearStagesFilter,
   // clearStatusesFilter,
   // listWorkflows,
-  // getOptionsSubmissionName
+  // getOptionsSubmissionName,
 } from '../../actions';
 // import { get } from 'object-path';
 import {
@@ -66,7 +66,7 @@ class RequestsOverview extends React.Component {
 
   componentDidMount () {
     const { dispatch } = this.props;
-    dispatch(listRequests());
+    dispatch(getInProgressRequests());
   }
 
   generateQuery () {
@@ -84,22 +84,9 @@ class RequestsOverview extends React.Component {
     } = requests;
     const unique = [...new Set(list.data.map(item => item.id))];
     const { queriedAt } = list.meta;
+    // const close = this.props.location.search;
     const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
     const { canInitialize } = requestPrivileges(this.props.privileges);
-    const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
-    const isAdmin = this.props.privileges.ADMIN;
-    if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
-      const el = document.getElementsByName('assignButton');
-      setTimeout(() => {
-        for (const i in el) {
-          if (typeof el[i].classList !== 'undefined') {
-            el[i].classList.remove('button--disabled');
-          }
-        }
-      }, 1);
-    }
-    // const statsCount = get(stats, 'count.data.requests.count', []);
-    // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
@@ -119,7 +106,6 @@ class RequestsOverview extends React.Component {
           </div>
           <List
             list={list}
-            action={listRequests}
             tableColumns={tableColumns}
             query={this.generateQuery()}
             rowId='id'

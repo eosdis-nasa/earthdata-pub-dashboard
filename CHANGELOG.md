@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated CONTRIBUTING.md
 
+## 1.0.15 - 2022-02-25
+
+- Added in Status page for request status grouping.
+- Added in Restore feature for withdrawn requests.  Added page for withdrawn requests. 
+
 ## 1.0.14 - 2022-02-22
 
 - Added in Restore feature for withdrawn requests.  Added page for withdrawn requests. 

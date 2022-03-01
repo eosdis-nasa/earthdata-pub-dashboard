@@ -8,6 +8,7 @@ import RequestOverview from './request';
 import RequestsOverview from './overview';
 import InactiveRequestsOverview from './withdrawn';
 import ApprovalStep from './approval';
+import ActionRequestsOverview from './status';
 import EditMetadata from './edit-metadata';
 
 const Requests = ({
@@ -37,6 +38,7 @@ const Requests = ({
               <Route exact path='/requests' component={RequestsOverview} />
               <Route path='/requests/withdrawn' component={InactiveRequestsOverview} />
               <Route path='/requests/approval' component={ApprovalStep} />
+              <Route path='/requests/status' component={ActionRequestsOverview} />
               <Route path='/requests/id/:requestId/edit-metadata' component={EditMetadata} />
             </Switch>
           </div>
