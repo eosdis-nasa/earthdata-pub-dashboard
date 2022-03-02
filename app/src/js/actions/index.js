@@ -163,6 +163,15 @@ export const getRequestByStepType = (stepType) => ({
   }
 });
 
+export const getInProgressRequests = () => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'GET',
+    id: null,
+    url: new URL('data/submissions?step_type=%21close', root).href,
+  }
+});
+
 export const listRequests = (options) => ({
   [CALL_API]: {
     type: types.REQUESTS,

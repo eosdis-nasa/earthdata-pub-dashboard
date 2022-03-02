@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  listInactiveRequests
+  listRequests
 } from '../../actions';
 import {
   lastUpdated,
@@ -15,7 +15,6 @@ import List from '../Table/Table';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import { requestPrivileges } from '../../utils/privileges';
 
 const breadcrumbConfig = [
   {
@@ -90,11 +89,32 @@ class InactiveRequestsOverview extends React.Component {
 
   componentDidMount () {
     const { dispatch } = this.props;
-    dispatch(listInactiveRequests());
+    dispatch(listRequests());
   }
 
   generateQuery () {
     return {};
+  }
+
+  filter (list) {
+    const newList = {};
+    const tmp = [];
+    for (const ea in list) {
+      const record = list[ea];
+      newList[ea] = record;
+      for (const r in record) {
+        if (record[r].hidden && typeof record[r] === 'object') {
+          tmp.push(record[r]);
+        }
+      }
+    }
+    Object.defineProperty(newList, 'data', {
+      value: tmp,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+    return newList;
   }
 
   render () {
@@ -102,11 +122,10 @@ class InactiveRequestsOverview extends React.Component {
       // stats,
       requests
     } = this.props;
-    const {
+    let {
       list,
       // dropdowns
     } = requests;
-    const unique = [...new Set(list.data.map(item => item.id))];
     const { queriedAt } = list.meta;
     const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
     const isAdmin = this.props.privileges.ADMIN;
@@ -120,6 +139,8 @@ class InactiveRequestsOverview extends React.Component {
         }
       }, 1);
     }
+    list = this.filter(list);
+    const unique = [...new Set(list.data.map(item => item.id))];
     // const statsCount = get(stats, 'count.data.requests.count', []);
     // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
@@ -140,7 +161,6 @@ class InactiveRequestsOverview extends React.Component {
           </div>
           <List
             list={list}
-            action={listInactiveRequests}
             tableColumns={tableColumns}
             query={this.generateQuery()}
             rowId='id'
