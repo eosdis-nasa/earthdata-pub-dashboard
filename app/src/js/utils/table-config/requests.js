@@ -20,15 +20,21 @@ export const newLink = (request, formalName) => {
   return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</a>;
 };
 
-export const assignWorkflow = (request, formalName) => {
-  return <a href={request} name="assignButton" className='button button--small button--green form-group__element--left button--no-icon button--disabled'>{formalName}</a>;
+export const assignWorkflow = (request, formalName, disabled = false) => {
+  const disabledClass = disabled ? 'button--disabled' : '';
+  return <a href={request} name="assignButton" className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</a>;
 };
 
-export const existingLink = (row, formId, formalName) => {
-  return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+export const existingLink = (row, formId, formalName, step) => {
+  if (typeof formId === 'undefined') {
+    return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+  } else {
+    return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+  }
 };
 
 export const getFormalName = (str) => {
+  if (typeof str === 'undefined') return '';
   const count = (str.match(/_/g) || []).length;
   if (count > 0) {
     str = str.replace(/_/g, ' ');
@@ -38,6 +44,21 @@ export const getFormalName = (str) => {
     words[i] = words[i][0].toUpperCase() + words[i].substr(1);
   }
   return words.join(' ');
+};
+
+export const getPrivileges = () => {
+  let disabled = false;
+  const user = JSON.parse(window.localStorage.getItem('auth-user'));
+  const roles = user.user_roles;
+  const privileges = user.user_privileges;
+  const isManager = roles.find(o => o.short_name.match(/manager/g));
+  const isAdmin = privileges[0].match(/ADMIN/g);
+  if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
+    disabled = false;
+  } else {
+    disabled = true;
+  }
+  return disabled;
 };
 
 export const stepLookup = (row) => {
@@ -56,7 +77,7 @@ export const stepLookup = (row) => {
         stepIDKey = `${stepType}_id`;
         stepID = row.step_data[stepIDKey];
         if (row.step_data.type.match(/close/g)) {
-          /// 'close action -> this should do something but there\'s no current api call to change status to complete'
+          // This needs to do something but the API has no function related to status'
         }
         if (typeof stepID === 'undefined' && typeof row.step_data.data !== 'undefined') {
           tmpType = row.step_data.data.type;
@@ -67,7 +88,7 @@ export const stepLookup = (row) => {
             request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
           }
         }
-        // Build url to forms app
+        // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
           request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
         // assign a workflow
@@ -78,10 +99,21 @@ export const stepLookup = (row) => {
       }
     }
   }
-  if (stepType.match(/review/g)) {
-    return existingLink(row, stepID, formalName);
+  // step_data and step_name are available, but also need form_id, service_id and action_id in order to make a generalized function
+  // Until that is added to the endpoint, I need to hardcode
+  if (stepName.match(/data_accession_request_form/g) == null && stepName.match(/data_production_information_form/g) == null && !stepType.match(/action/g) && !stepType.match(/form/g)) {
+    return existingLink(row, undefined, formalName, stepName);
+  } else if (stepType.match(/review/g)) {
+    if (typeof StepID === 'undefined') {
+      if (stepName.match(/data_accession_request_form_review/g)) {
+        stepID = '6c544723-241c-4896-a38c-adbc0a364293';
+      } else if (stepName.match(/data_production_information_form_review/g)) {
+        stepID = '19025579-99ca-4344-8610-704dae626343';
+      }
+    }
+    return existingLink(row, stepID, formalName, stepName);
   } else if (stepType.match(/action/g)) {
-    return assignWorkflow(request, formalName);
+    return assignWorkflow(request, formalName, getPrivileges());
   } else {
     return newLink(request, formalName);
   }

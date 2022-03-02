@@ -184,18 +184,6 @@ class Home extends React.Component {
   render () {
     const { requests } = this.props;
     const { list } = requests;
-    const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
-    const isAdmin = this.props.privileges.ADMIN;
-    if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
-      const el = document.getElementsByName('assignButton');
-      setTimeout(() => {
-        for (const i in el) {
-          if (typeof el[i].classList !== 'undefined') {
-            el[i].classList.remove('button--disabled');
-          }
-        }
-      }, 1);
-    }
     const view = this.getView();
     const query = this.generateQuery();
     // const { stats, count } = this.props.stats;

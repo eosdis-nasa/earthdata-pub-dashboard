@@ -6,6 +6,11 @@ import { strings } from '../components/locale';
 const submissionRoutes = [
   ['', '', null, ''],
   [strings.submissions_inprogress2, '/requests', null, 'sidebar__nav--back'],
+  [strings.submissions_actions, '/requests/status/action', null, 'sidebar__nav--back'],
+  [strings.submissions_forms, '/requests/status/form', null, 'sidebar__nav--back'],
+  [strings.submissions_review, '/requests/status/review', null, 'sidebar__nav--back'],
+  [strings.submissions_service, '/requests/status/service', null, 'sidebar__nav--back'],
+  [strings.submissions_closed, '/requests/status/closed', null, 'sidebar__nav--back'],
   [strings.submissions_withdrawn2, '/requests/withdrawn', null, 'sidebar__nav--back'],
 ];
 
@@ -30,7 +35,7 @@ const requests = {
       });
     } else if (currentRoute.slice(0, 9) === '/requests') {
       return submissionRoutes.map(d => {
-        if (!d[0].match(strings.back_to_submissions) &&
+        if (typeof d[0] !== 'undefined' && !d[0].match(strings.back_to_submissions) &&
           (!d[1] || d[1].indexOf(':requestId') === -1)) {
           return d;
         }

@@ -15,7 +15,7 @@ import {
   // clearStagesFilter,
   // clearStatusesFilter,
   // listWorkflows,
-  // getOptionsSubmissionName
+  // getOptionsSubmissionName,
 } from '../../actions';
 // import { get } from 'object-path';
 import {
@@ -84,51 +84,37 @@ class RequestsOverview extends React.Component {
     } = requests;
     const unique = [...new Set(list.data.map(item => item.id))];
     const { queriedAt } = list.meta;
+    // const close = this.props.location.search;
     const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
     const { canInitialize } = requestPrivileges(this.props.privileges);
-    const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
-    const isAdmin = this.props.privileges.ADMIN;
-    if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
-      const el = document.getElementsByName('assignButton');
-      setTimeout(() => {
-        for (const i in el) {
-          if (typeof el[i].classList !== 'undefined') {
-            el[i].classList.remove('button--disabled');
-          }
-        }
-      }, 1);
-    }
-    // const statsCount = get(stats, 'count.data.requests.count', []);
-    // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
-      <div className='page__component'>
-        <section className='page__section page__section__controls'>
-          <Breadcrumbs config={breadcrumbConfig} />
-        </section>
-        <section className='page__section page__section__header-wrapper'>
-          <div className='page__section__header'>
-            <h1 className='heading--large heading--shared-content with-description '>{strings.requests}</h1>
-            {lastUpdated(queriedAt)}
-            {/* <Overview items={overviewItems} inflight={false} /> */}
-          </div>
-        </section>
-        <section className='page__section page__section__controls'>
-          <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
-            { canInitialize ? <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac}>New Request</a> : null }
-          </div>
-          <List
-            list={list}
-            action={listRequests}
-            tableColumns={tableColumns}
-            query={this.generateQuery()}
-            rowId='id'
-            filterIdx='name'
-            filterPlaceholder='Search Requests'
-          >
-          </List>
-        </section>
-      </div>
+    <div className='page__component'>
+      <section className='page__section page__section__controls'>
+        <Breadcrumbs config={breadcrumbConfig} />
+      </section>
+      <section className='page__section page__section__header-wrapper'>
+        <div className='page__section__header'>
+          <h1 className='heading--large heading--shared-content with-description '>{strings.requests}</h1>
+          {lastUpdated(queriedAt)}
+          {/* <Overview items={overviewItems} inflight={false} /> */}
+        </div>
+      </section>
+      <section className='page__section page__section__controls'>
+        <div className='heading__wrapper--border'>
+          <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
+          { canInitialize ? <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac}>New Request</a> : null }
+        </div>
+        <List
+          list={list}
+          tableColumns={tableColumns}
+          query={this.generateQuery()}
+          rowId='id'
+          filterIdx='name'
+          filterPlaceholder='Search Requests'
+        >
+        </List>
+      </section>
+    </div>
     );
   }
 }
