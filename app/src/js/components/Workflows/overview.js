@@ -143,20 +143,27 @@ class WorkflowsOverview extends React.Component {
       {
         label: 'Dashboard Home',
         href: '/'
-      },
-      {
-        label: 'Requests',
-        href: '/requests'
-      },
-      {
-        label: requestId,
-        href: `/requests/id/${requestId}`
-      },
-      {
-        label: 'Workflows',
-        active: true
       }
     ];
+    if (typeof requestId !== 'undefined') {
+      breadcrumbConfig.push({
+        label: 'Requests',
+        href: '/requests'
+      });
+      breadcrumbConfig.push({
+        label: requestId,
+        href: `/requests/id/${requestId}`
+      });
+      breadcrumbConfig.push({
+        label: 'Workflows',
+        active: true
+      });
+    } else {
+      breadcrumbConfig.push({
+        label: 'Workflows',
+        active: true
+      });
+    }
     const { queriedAt } = workflows.list.meta;
     const disabled = !workflows.list.data.length || !this.getAnySelected();
     return (

@@ -193,7 +193,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Workflow',
-        accessor: row => canReassign && row.workflow_name ? <Link to={{ pathname: `/workflows/id/${row.workflow_id}` }}>{row.workflow_name}</Link> : row.workflow_name
+        accessor: row => canReassign && row.workflow_name ? <Link to={`/workflows/id/${row.workflow_id}`}>{row.workflow_name}</Link> : row.workflow_name
       },
       {
         label: 'Created',
