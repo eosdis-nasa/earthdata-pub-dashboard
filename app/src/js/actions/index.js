@@ -154,12 +154,30 @@ export const getRequest = (requestId) => ({
   }
 });
 
+export const getRequestByStepType = (stepType) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'GET',
+    id: null,
+    url: new URL(`data/submissions?step_type=${stepType}`, root).href,
+  }
+});
+
 export const listRequests = (options) => ({
   [CALL_API]: {
     type: types.REQUESTS,
     method: 'POST',
     id: null,
     path: 'submission/active'
+  }
+});
+
+export const listInactiveRequests = (options) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    id: null,
+    path: 'submission/inactive'
   }
 });
 
@@ -262,7 +280,25 @@ export const applyWorkflowToRequest = (requestId, workflowId) => ({
   }
 });
 
-export const deleteSubmission = (requestId) => ({
+export const withdrawRequest = (requestId) => ({
+  [CALL_API]: {
+    type: types.SUBMISSION_WITHDRAW,
+    method: 'POST',
+    path: 'submission/withdraw',
+    body: { id: requestId }
+  }
+});
+
+export const restoreRequest = (requestId) => ({
+  [CALL_API]: {
+    type: types.SUBMISSION_RESTORE,
+    method: 'POST',
+    path: 'submission/restore',
+    body: { id: requestId }
+  }
+});
+
+export const deleteRequest = (requestId) => ({
   [CALL_API]: {
     type: types.SUBMISSION_DELETE,
     method: 'DELETE',
@@ -651,6 +687,7 @@ export const listWorkflows = (options) => ({
     qs: Object.assign({ per_page: defaultPageLimit }, options)
   }
 });
+
 export const getWorkflow = (workflowId) => ({
   [CALL_API]: {
     type: types.WORKFLOW,

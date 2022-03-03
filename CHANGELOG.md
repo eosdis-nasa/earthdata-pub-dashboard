@@ -18,6 +18,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated CONTRIBUTING.md
 
+## 1.0.15 - 2022-02-25
+
+- Added in Status page for request status grouping.
+- Added in Restore feature for withdrawn requests.  Added page for withdrawn requests. 
+
+## 1.0.14 - 2022-02-22
+
+- Added in Restore feature for withdrawn requests.  Added page for withdrawn requests. 
+- Added links to request pages to sidebar. Misc minor fixes.
+
+## 1.0.13 - 2022-02-10
+
+- Added in for assignment / reassignment of workflows
+
+## 1.0.12 - 2022-02-03
+
+- Added and adjusted cumulus delete functionality to request detail page
+
+## 1.0.11 - 2022-02-02
+
+- Updated request detail page; updated form.js for multiple paths; added and applied some privileges
+
 ## 1.0.10 - 2021-12-10
 
 - Created add/edit question capability to dashboard.

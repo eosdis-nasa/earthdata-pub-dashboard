@@ -49,7 +49,7 @@ class EditMetadata extends React.Component {
       },
       {
         label: requestId,
-        herf: `/requests/${requestId}`
+        href: `/requests/id/${requestId}`
       },
       {
         label: 'Edit Metdata',

@@ -58,7 +58,9 @@ export const requestPrivileges = (privileges) => {
       canReview: true,
       canReassign: true,
       canLock: true,
-      canUnlock: true
+      canUnlock: true,
+      canWithdraw: true,
+      canRestore: true
     };
   } else if (privileges.REQUEST) {
     return {
@@ -71,7 +73,11 @@ export const requestPrivileges = (privileges) => {
       canReview: privileges.REQUEST.includes('REVIEW'),
       canReassign: privileges.REQUEST.includes('REASSIGN'),
       canLock: privileges.REQUEST.includes('LOCK'),
-      canUnlock: privileges.REQUEST.includes('UNLOCK')
+      canUnlock: privileges.REQUEST.includes('UNLOCK'),
+      canWithdraw: privileges.REQUEST.find(a =>
+        a === 'DAACREAD' || a === 'ADMINREAD'),
+      canRestore: privileges.REQUEST.find(a =>
+        a === 'DAACREAD' || a === 'ADMINREAD')
     };
   }
   return {
@@ -83,6 +89,30 @@ export const requestPrivileges = (privileges) => {
     canReview: false,
     canReassign: false,
     canLock: false,
-    canUnlock: false
+    canUnlock: false,
+    canWithdraw: false,
+    canRestore: false
+  };
+};
+
+export const formPrivileges = (privileges) => {
+  if (privileges.ADMIN) {
+    return {
+      canEdit: true,
+      canRead: true,
+      canDelete: true
+    };
+  } else if (privileges.FORM) {
+    return {
+      canRead: !!privileges.FORM.find(a =>
+        a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD'),
+      canEdit: privileges.FORM.includes('RESUME'),
+      canDelete: privileges.FORM.includes('SUBMIT')
+    };
+  }
+  return {
+    canEdit: false,
+    canRead: false,
+    canDelete: false
   };
 };

@@ -1,19 +1,22 @@
 'use strict';
 import { encode } from '../utils/browser';
-// import tally from './tally';
+import tally from './tally';
 import { strings } from '../components/locale';
 
-/* const submissionRoutes = [
-  ['', null],
-  ['Completed', 'completed', (d) => d.key === 'completed'],
-  ['Running', 'processing', (d) => d.key === 'running'],
-  ['Failed', 'failed', (d) => d.key === 'failed']
-]; */
+const submissionRoutes = [
+  ['', '', null, ''],
+  [strings.submissions_inprogress2, '/requests', null, 'sidebar__nav--back'],
+  [strings.submissions_actions, '/requests/status/action', null, 'sidebar__nav--back'],
+  [strings.submissions_forms, '/requests/status/form', null, 'sidebar__nav--back'],
+  [strings.submissions_review, '/requests/status/review', null, 'sidebar__nav--back'],
+  [strings.submissions_service, '/requests/status/service', null, 'sidebar__nav--back'],
+  [strings.submissions_closed, '/requests/status/closed', null, 'sidebar__nav--back'],
+  [strings.submissions_withdrawn2, '/requests/withdrawn', null, 'sidebar__nav--back'],
+];
 
 const singleSubmissionRoutes = [
   [strings.back_to_submissions, null, 'sidebar__nav--back'],
-  ['View Request', 'id/:requestId', 'sidebar__nav'],
-  ['Edit Metadata', 'id/:requestId/edit-metadata', 'sidebar__nav']
+  ['Edit Metadata', 'id/:requestId/edit-metadata', null, 'sidebar__nav--back']
 ];
 
 const empty = [['', '']];
@@ -31,9 +34,13 @@ const requests = {
         return copy;
       });
     } else if (currentRoute.slice(0, 9) === '/requests') {
-      count = count || [];
-      return empty;
-      // return submissionRoutes.map(d => tally(d, count));
+      return submissionRoutes.map(d => {
+        if (typeof d[0] !== 'undefined' && !d[0].match(strings.back_to_submissions) &&
+          (!d[1] || d[1].indexOf(':requestId') === -1)) {
+          return d;
+        }
+        return empty;
+      });
     } else {
       return empty;
     }

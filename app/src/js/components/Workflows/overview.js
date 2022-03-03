@@ -1,87 +1,221 @@
 'use strict';
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { withRouter, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import {
-  // getCount,
-  // searchWorkflows,
-  // clearWorkflowsSearch,
-  // filterWorkflows,
-  // clearWorkflowsFilter,
-  listWorkflows
+  listWorkflows,
+  applyWorkflowToRequest
 } from '../../actions';
-import { lastUpdated } from '../../utils/format';
-import { tableColumns } from '../../utils/table-config/workflows';
+import { lastUpdated, shortDateNoTimeYearFirst } from '../../utils/format';
 import List from '../Table/Table';
-// import Overview from '../Overview/overview';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import { requestPrivileges } from '../../utils/privileges';
 
-const breadcrumbConfig = [
-  {
-    label: 'Dashboard Home',
-    href: '/'
-  },
-  {
-    label: 'Workflows',
-    active: true
+class WorkflowsOverview extends React.Component {
+  constructor () {
+    super();
+    this.state = {};
   }
-];
 
-const WorkflowsOverview = ({ workflows }) => {
-  const dispatch = useDispatch();
-  useEffect(() => {
+  componentDidMount () {
+    const { dispatch } = this.props;
     dispatch(listWorkflows());
-  }, [workflows.searchString, dispatch]);
-  const { queriedAt } = workflows.list.meta;
-  return (
-    <div className='page__component'>
-      <section className='page__section page__section__controls'>
-        <Breadcrumbs config={breadcrumbConfig} />
-      </section>
-      <section className='page__section page__section__header-wrapper'>
-        <div className='page__section__header'>
-          <h1 className='heading--large heading--shared-content with-description '>{strings.workflow_overview}</h1>
-          {lastUpdated(queriedAt)}
-        </div>
-      </section>
-      <section className='page__section'>
-        <div className='heading__wrapper--border'>
-          <h2 className='heading--medium heading--shared-content with-description'>{strings.all_workflows} <span className='num--title'>{workflows.list.data.length}</span></h2>
-        </div>
-        {/* Someone needs to define the search parameters for workflows, e.g. steps, etc. } */}
-        <List
-          list={workflows.list}
-          dispatch={dispatch}
-          action={listWorkflows}
-          tableColumns={tableColumns}
-          query={{}}
-          bulkActions={[]}
-          rowId='id'
-          filterIdx='long_name'
-          filterPlaceholder='Search Workflows'
-        >
-          {/* <ListFilters>
-            <Search
-              dispatch={dispatch}
-              action={searchWorkflows}
-              clear={clearWorkflowsSearch}
-              label='Search'
-              placeholder="Workflow Name"
-            />
-          </ListFilters> */}
-        </List>
-      </section>
-    </div>
-  );
-};
+  }
+
+  makeSteps (row) {
+    try {
+      return Object.keys(row.steps).join(', ');
+    } catch (error) {
+      return '';
+    }
+  }
+
+  getAnySelected () {
+    const radios = document.getElementsByTagName('input');
+    for (let i = 0; i < radios.length; i++) {
+      if (radios[i].type === 'radio') {
+        if (radios[i].checked) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  checkUncheckOthers (id) {
+    const radios = document.getElementsByTagName('input');
+    for (let i = 0; i < radios.length; i++) {
+      const regex = new RegExp(`select_${id}`, 'g');
+      if (radios[i].type === 'radio') {
+        if (radios[i].id.match(regex)) {
+          continue;
+        }
+        radios[i].checked = false;
+      }
+    }
+    if (this.getAnySelected()) {
+      const el = document.getElementById('selectButton');
+      el.classList.remove('button--disabled');
+    }
+  }
+
+  setWorkflow () {
+    const { dispatch } = this.props;
+    const requestId = location.search.split('=')[1];
+    const radios = document.getElementsByTagName('input');
+    for (let i = 0; i < radios.length; i++) {
+      if (radios[i].type === 'radio' && radios[i].checked) {
+        const workflow = radios[i].id;
+        if (typeof workflow !== 'undefined' && (workflow.split('_').length - 1)) {
+          const workflowChosen = workflow.split('_')[1];
+          dispatch(applyWorkflowToRequest(requestId, workflowChosen));
+          window.location.href = '/requests';
+        }
+      }
+    }
+  }
+
+  cancelWorkflow () {
+    this.props.location.search = '';
+    this.props.history.goBack();
+  }
+
+  render () {
+    const { dispatch } = this.props;
+    const workflows = this.props.workflows;
+    const requestId = location.search.split('=')[1];
+
+    const selectInput = [{
+      Header: 'Select',
+      accessor: (row) => row.long_name,
+      Cell: row => <input type="radio" className={ 'form__element__clickable' }
+        onClick={(e) => { this.checkUncheckOthers(row.row.original.id); }} id={`select_${row.row.original.id}`}>{row.long_name}</input>,
+      id: 'select',
+      width: 50
+    }];
+
+    const defaultTableColumns = [
+      {
+        Header: 'Name',
+        accessor: (row) => row.long_name,
+        Cell: row => <Link to={{ pathname: `/workflows/id/${row.row.original.id}` }}>{row.row.original.long_name}</Link>,
+        id: 'long_name'
+      },
+      {
+        Header: 'Version',
+        accessor: (row) => row.version,
+        id: 'version',
+        width: 70
+      },
+      {
+        Header: 'Description',
+        accessor: (row) => row.description,
+        id: 'description'
+      },
+      {
+        Header: 'Steps',
+        accessor: this.makeSteps,
+        id: 'steps'
+      },
+      {
+        Header: 'Created At',
+        accessor: row => shortDateNoTimeYearFirst(row.created_at),
+        id: 'created_at'
+      }
+    ];
+
+    let tableColumns = [];
+    if (typeof requestId !== 'undefined') {
+      tableColumns = selectInput.concat(defaultTableColumns);
+      const selectTr = document.getElementsByClassName('table__sort')[0];
+      // This makes the select column header appear unclickable (although it is)
+      // Theres a better way, come back to this later
+      if (typeof selectTr !== 'undefined') {
+        selectTr.classList.remove('table__sort');
+        selectTr.removeAttribute('style');
+      }
+    } else {
+      tableColumns = defaultTableColumns;
+    }
+    const breadcrumbConfig = [
+      {
+        label: 'Dashboard Home',
+        href: '/'
+      },
+      {
+        label: 'Requests',
+        href: '/requests'
+      },
+      {
+        label: requestId,
+        href: `/requests/id/${requestId}`
+      },
+      {
+        label: 'Workflows',
+        active: true
+      }
+    ];
+    const { queriedAt } = workflows.list.meta;
+    const disabled = !workflows.list.data.length || !this.getAnySelected();
+    return (
+      <div className='page__component'>
+        <section className='page__section page__section__controls'>
+          <Breadcrumbs config={breadcrumbConfig} />
+        </section>
+        <section className='page__section page__section__header-wrapper'>
+          <div className='page__section__header'>
+            <h1 className='heading--large heading--shared-content with-description '>{strings.workflow_overview}</h1>
+            {lastUpdated(queriedAt)}
+          </div>
+        </section>
+        <section className='page__section'>
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_workflows} <span className='num--title'>{workflows.list.data.length}</span></h2>
+          </div>
+          <List
+            list={workflows.list}
+            dispatch={dispatch}
+            action={listWorkflows}
+            tableColumns={tableColumns}
+            query={{}}
+            bulkActions={[]}
+            rowId='id'
+            filterIdx='long_name'
+            filterPlaceholder='Search Workflows'
+          >
+          </List>
+          { requestId
+            ? <section className='page__section' style={{ float: 'right' }}>
+                <button onClick={(e) => { e.preventDefault(); this.setWorkflow(); }}
+                id="selectButton"
+                className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right' + (disabled ? ' button--disabled' : '')}>
+                  Select
+                </button>
+                <button
+                  className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'}
+                  id="cancelButton"
+                  onClick={(e) => { e.preventDefault(); this.cancelWorkflow(); }}
+                  readOnly={true}
+                >Cancel</button>
+              </section>
+            : null }
+        </section>
+      </div>
+    );
+  }
+}
 
 WorkflowsOverview.propTypes = {
   workflows: PropTypes.object,
   stats: PropTypes.object,
   dispatch: PropTypes.func,
-  config: PropTypes.object
+  location: PropTypes.object,
+  config: PropTypes.object,
+  privileges: PropTypes.object,
+  history: PropTypes.object,
+  roles: PropTypes.array
 };
 
 export { WorkflowsOverview };
@@ -89,5 +223,8 @@ export { WorkflowsOverview };
 export default withRouter(connect(state => ({
   stats: state.stats,
   workflows: state.workflows,
-  config: state.config
+  dispatch: state.dispatch,
+  config: state.config,
+  privileges: state.api.tokens.privileges,
+  roles: state.api.tokens.roles,
 }))(WorkflowsOverview));

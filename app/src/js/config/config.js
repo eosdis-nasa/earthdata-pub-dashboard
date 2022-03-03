@@ -22,7 +22,9 @@ const config = {
   esUser: process.env.ES_USER || '',
   esPassword: process.env.ES_PASSWORD || '',
   servedByEarthdatapubAPI: process.env.SERVED_BY_EDPUB_API || '',
-  APP_ID: process.env.APP_ID || 'Value is null'
+  APP_ID: process.env.APP_ID || 'Value is null',
+  requestHideButtonVerbage: process.env.REQUEST_HIDE_BUTTON_VERBAGE || 'Withdraw',
+  requestUnHideButtonVerbage: process.env.REQUEST_UNHIDE_BUTTON_VERBAGE || 'Restore'
 };
 
 module.exports = config;

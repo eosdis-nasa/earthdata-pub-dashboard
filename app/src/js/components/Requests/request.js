@@ -5,74 +5,33 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   getRequest,
-  // deleteRequest,
-  applyWorkflowToRequest,
+  withdrawRequest,
+  restoreRequest,
   listWorkflows
 } from '../../actions';
+import { get } from 'object-path';
 import {
   // displayCase,
   lastUpdated,
   shortDateNoTimeYearFirst,
+  shortDateShortTimeYearFirst,
   bool,
-  // deleteText
+  deleteTextWithType
 } from '../../utils/format';
-// import Table from '../SortableTable/SortableTable';
+import Table from '../SortableTable/SortableTable';
+import {
+  stepLookup
+} from '../../utils/table-config/requests';
 import Loading from '../LoadingIndicator/loading-indicator';
 // import LogViewer from '../Logs/viewer';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
-// import AsyncCommands from '../DropDown/dropdown-async-command';
+import AsyncCommands from '../DropDown/dropdown-async-command';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
-import { simpleDropdownOption } from '../../utils/table-config/requests';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-
-/* const tableColumns = [
-
-]; */
-
-const metaAccessors = [
-  {
-    label: 'Workflow',
-    property: 'workflow_name'
-  },
-  {
-    label: 'Step',
-    property: 'step_name'
-  },
-  {
-    label: 'Data Accession Request',
-    property: 'data_publication_request'
-  },
-  {
-    label: 'Data Production Information',
-    property: 'data_production_information'
-  },
-  {
-    label: 'Created',
-    accessor: d => {
-      return (shortDateNoTimeYearFirst(d));
-    },
-    property: 'created_at'
-  },
-  {
-    label: 'Latest Edit',
-    accessor: d => {
-      return (shortDateNoTimeYearFirst(d));
-    },
-    property: 'last_change'
-  },
-  {
-    label: 'Locked',
-    accessor: row => bool(row.lock),
-    property: 'lock'
-  },
-  {
-    label: 'Communication',
-    accessor: conversationId => <Link to={`/conversations/id/${conversationId}`}>{conversationId ? 'Email Conversation' : null}</Link>,
-    property: 'conversation_id'
-  }
-];
+import { requestPrivileges } from '../../utils/privileges';
+import _config from '../../config';
 
 class RequestOverview extends React.Component {
   constructor () {
@@ -85,15 +44,15 @@ class RequestOverview extends React.Component {
     this.applyWorkflow = this.applyWorkflow.bind(this);
     //  this.remove = this.remove.bind(this);
     this.delete = this.delete.bind(this);
+    this.restore = this.restore.bind(this);
     this.selectWorkflow = this.selectWorkflow.bind(this);
-    this.getExecuteOptions = this.getExecuteOptions.bind(this);
     this.displayName = strings.request;
     this.state = {};
   }
 
   componentDidMount () {
-    const { requestId } = this.props.match.params;
     const { dispatch } = this.props;
+    const { requestId } = this.props.match.params;
     // This causes a repeating query for workflows cluttering up the logs.
     // Commenting out until we add applyWorkflow capability
     // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
@@ -124,15 +83,20 @@ class RequestOverview extends React.Component {
 
   applyWorkflow () {
     const { requestId } = this.props.match.params;
-    const { workflow } = this.state;
-    this.props.dispatch(applyWorkflowToRequest(requestId, workflow));
+    location.href = `/workflows?requestId=${requestId}`;
   }
 
-  delete () {
-    // const { requestId } = this.props.match.params;
-    // this.props.dispatch(deleteRequest(requestId));
+  async delete () {
+    const { requestId } = this.props.match.params;
+    await this.props.dispatch(withdrawRequest(requestId));
+    this.navigateBack();
   }
 
+  async restore () {
+    const { requestId } = this.props.match.params;
+    await this.props.dispatch(restoreRequest(requestId));
+    this.navigateBack();
+  }
   // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
   // since this is a detailed view of a single request we are only concerned with an error for that one
   // so no need to relegate the error check to a separate function
@@ -152,31 +116,119 @@ class RequestOverview extends React.Component {
     this.setState({ workflow });
   }
 
-  getExecuteOptions () {
-    return [
-      simpleDropdownOption({
-        handler: this.selectWorkflow,
-        label: 'workflow',
-        value: this.state.workflow,
-        options: this.props.workflowOptions
-      })
-    ];
-  }
-
   render () {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
+    let isHidden = false;
+    if (typeof record.data !== 'undefined') {
+      isHidden = record.data.hidden;
+    }
     const request = record.data || false;
+    let { canReassign, canWithdraw, canRestore } = requestPrivileges(this.props.privileges);
+    if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
+      canReassign = false;
+    }
+    const requestForms = request.forms;
+    let showTable = false;
+    if (requestForms !== null &&
+      typeof requestForms !== 'undefined') {
+      if (requestForms.length > 1) {
+        showTable = true;
+      }
+    }
+    const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
+    const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
+    let dropdownConfig = [];
 
-    /* const dropdownConfig = [{
-      text: 'Delete',
-      action: this.delete,
-      disabled: !!request.submitted,
-      status: get(this.props.requests.deleted, [requestId, 'status']),
-      success: this.navigateBack,
-      confirmAction: true,
-      confirmText: deleteText(requestId)
-    }]; */
+    if (!isHidden) {
+      dropdownConfig = [
+        {
+          text: `${_config.requestHideButtonVerbage}`,
+          action: this.delete,
+          status: deleteStatus,
+          success: this.navigateBack,
+          confirmAction: true,
+          confirmText: deleteTextWithType(requestId, 'request')
+        }
+      ];
+    }
+
+    if (canReassign && !isHidden) {
+      dropdownConfig.push({
+        text: 'Reassign Workflow',
+        action: this.applyWorkflow,
+        status: openStatus,
+        success: this.navigateBack,
+        confirmAction: false
+      });
+    }
+
+    if (canRestore && isHidden) {
+      dropdownConfig.push({
+        text: 'Restore Request',
+        action: this.restore,
+        status: openStatus,
+        success: this.navigateBack,
+        confirmAction: false
+      });
+    }
+
+    const tableColumns = [
+      {
+        Header: 'Name',
+        accessor: row => <Link to={`/forms/id/${row.id}?requestId=${request.id}`}>{row.long_name}</Link>,
+        id: 'long_name'
+      },
+      {
+        Header: 'Submitted at',
+        accessor: row => shortDateShortTimeYearFirst(row.submitted_at),
+        id: 'submitted_at'
+      }
+    ];
+
+    const metaAccessors = [
+      {
+        label: 'Data Product Name',
+        accessor: row => row.form_data && row.form_data.data_product_name_value ? row.form_data.data_product_name_value : '(no name)'
+      },
+      {
+        label: 'Workflow',
+        accessor: row => canReassign && row.workflow_name ? <Link to={{ pathname: `/workflows/id/${row.workflow_id}` }}>{row.workflow_name}</Link> : row.workflow_name
+      },
+      {
+        label: 'Created',
+        accessor: d => {
+          return (shortDateNoTimeYearFirst(d));
+        },
+        property: 'created_at'
+      },
+      {
+        label: 'Latest Edit',
+        accessor: d => {
+          return (shortDateNoTimeYearFirst(d));
+        },
+        property: 'last_change'
+      },
+      {
+        label: 'Locked',
+        accessor: row => row && row.lock ? bool(row.lock) : null,
+        property: 'lock'
+      },
+      {
+        label: 'Communication',
+        accessor: conversationId => <Link to={`/conversations/id/${conversationId}`}>{conversationId ? 'Email Conversation' : null}</Link>,
+        property: 'conversation_id'
+      }
+    ];
+
+    if (!isHidden) {
+      metaAccessors.push(
+        {
+          label: 'Next Action',
+          accessor: row => stepLookup(row)
+        }
+      );
+    }
 
     const breadcrumbConfig = [
       {
@@ -199,11 +251,10 @@ class RequestOverview extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
 
-        <section className='page__section page__section__header-wrapper'>
+        <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
-          {/* <AsyncCommands config={dropdownConfig} /> */}
+          { canWithdraw || canRestore ? <AsyncCommands config={dropdownConfig} /> : null }
           { request && lastUpdated(request.last_change, 'Updated') }
-
           <dl className='status--process'>
             <dt>Status:</dt>
             <dd className={request.status}>{request.status}</dd>
@@ -214,31 +265,22 @@ class RequestOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium with-description'>{strings.request_overview}</h2>
           </div>
-          { record.inflight ? <Loading />
-            : record.error ? <ErrorReport report={record.error} />
-              : request ? <Metadata data={request} accessors={metaAccessors} />
-                : null
+          { record.inflight ? <Loading /> : record.error ? <ErrorReport report={record.error} /> : request ? <Metadata data={request} accessors={metaAccessors} /> : null
           }
         </section>
 
-        { /* <section className='page__section'>
-          <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>Files</h2>
-          </div>
-          <Table
-            data={[]}
-            tableColumns={tableColumns}
-          />
-        </section>
-
-        <section className='page__section'>
-          <LogViewer
-            query={{ q: requestId }}
-            dispatch={this.props.dispatch}
-            logs={this.props.logs}
-            notFound={`No recent logs for ${requestId}`}
-          />
-        </section> */}
+        { showTable
+          ? <section className='page__section'>
+            <div className='heading__wrapper--border'>
+              <h2 className='heading--medium heading--shared-content with-description'>Request Forms</h2>
+            </div>
+            <Table
+              data={requestForms}
+              dispatch={this.props.dispatch}
+              tableColumns={tableColumns}
+            />
+          </section>
+          : null }
       </div>
     );
   }
@@ -251,7 +293,9 @@ RequestOverview.propTypes = {
   logs: PropTypes.object,
   history: PropTypes.object,
   skipReloadOnMount: PropTypes.bool,
-  workflowOptions: PropTypes.array
+  workflowOptions: PropTypes.array,
+  privileges: PropTypes.object,
+  roles: PropTypes.array
 };
 
 RequestOverview.defaultProps = {
@@ -263,5 +307,7 @@ export { RequestOverview };
 export default withRouter(connect(state => ({
   requests: state.requests,
   workflowOptions: workflowOptionNames(state),
-  logs: state.logs
+  logs: state.logs,
+  privileges: state.api.tokens.privileges,
+  roles: state.api.tokens.roles,
 }))(RequestOverview));
