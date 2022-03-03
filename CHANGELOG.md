@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 1.0.16 - 2022-03-03
 
 - Corrected workflows breadcrumbs to be dynamic and based on assigning or viewing.
+- Fixed malformed users link.
 
 ## 1.0.15 - 2022-02-25
 
