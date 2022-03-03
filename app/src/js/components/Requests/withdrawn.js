@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  listRequests
+  listInactiveRequests
 } from '../../actions';
 import {
   lastUpdated,
@@ -89,32 +89,11 @@ class InactiveRequestsOverview extends React.Component {
 
   componentDidMount () {
     const { dispatch } = this.props;
-    dispatch(listRequests());
+    dispatch(listInactiveRequests());
   }
 
   generateQuery () {
     return {};
-  }
-
-  filter (list) {
-    const newList = {};
-    const tmp = [];
-    for (const ea in list) {
-      const record = list[ea];
-      newList[ea] = record;
-      for (const r in record) {
-        if (record[r].hidden && typeof record[r] === 'object') {
-          tmp.push(record[r]);
-        }
-      }
-    }
-    Object.defineProperty(newList, 'data', {
-      value: tmp,
-      writable: true,
-      enumerable: true,
-      configurable: true
-    });
-    return newList;
   }
 
   render () {
@@ -122,24 +101,11 @@ class InactiveRequestsOverview extends React.Component {
       // stats,
       requests
     } = this.props;
-    let {
+    const {
       list,
       // dropdowns
     } = requests;
     const { queriedAt } = list.meta;
-    const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
-    const isAdmin = this.props.privileges.ADMIN;
-    if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
-      const el = document.getElementsByName('assignButton');
-      setTimeout(() => {
-        for (const i in el) {
-          if (typeof el[i].classList !== 'undefined') {
-            el[i].classList.remove('button--disabled');
-          }
-        }
-      }, 1);
-    }
-    list = this.filter(list);
     const unique = [...new Set(list.data.map(item => item.id))];
     // const statsCount = get(stats, 'count.data.requests.count', []);
     // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
