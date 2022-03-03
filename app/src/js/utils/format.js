@@ -3,6 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import numeral from 'numeral';
 import { Link } from 'react-router-dom';
+import { requestHideButtonVerbage } from '../config';
 
 export const nullValue = '--';
 
@@ -21,6 +22,21 @@ export const shortDateNoTime = function (datestring) {
 export const shortDateNoTimeYearFirst = function (datestring) {
   if (!datestring) { return nullValue; }
   return moment(datestring).format('YYYY-MM-DD');
+};
+
+export const shortDateShortTimeYearFirst = function (datestring) {
+  if (!datestring) { return nullValue; }
+  let day, time;
+  if (datestring) {
+    const date = moment(datestring);
+    day = date.format('MMM. D, YYYY');
+    time = date.format('h:mm a');
+  }
+  return (
+    <dl>
+      <dd>{day} { time || null }</dd>
+    </dl>
+  );
 };
 
 export const parseJson = function (jsonString) {
@@ -165,6 +181,14 @@ export const disableConfirm = function (name) {
 
 export const deleteText = function (name) {
   return `Are you sure you want to permanently delete ${name}?`;
+};
+
+export const deleteTextWithType = function (name, type) {
+  return `Are you sure you want to permanently ${requestHideButtonVerbage.toLowerCase()} ${type} ${name}?`;
+};
+
+export const confirmActionType = function (action, type) {
+  return `Are you sure you want to ${action} ${type}?`;
 };
 
 export const rerunText = function (name) {

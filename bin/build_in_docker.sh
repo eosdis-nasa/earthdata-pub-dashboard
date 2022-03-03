@@ -38,7 +38,10 @@ rsync -av \
     STAGE=$STAGE \
     LABELS=$LABELS \
     SERVED_BY_EDPUB_API=$SERVED_BY_EDPUB_API \
-    AUTH_METHOD=$AUTH_METHOD npm run build
+    AUTH_METHOD=$AUTH_METHOD \
+    REQUEST_HIDE_BUTTON_VERBAGE=Withdraw \
+    REQUEST_UNHIDE_BUTTON_VERBAGE=Restore \
+    npm run build
 
   rsync -av ./dist/ /dist/
   chown -R "${DOCKER_UID}:${DOCKER_GID}" /dist/
@@ -57,5 +60,6 @@ docker run \
   --env LABELS=$LABELS \
   --env SERVED_BY_EDPUB_API=${SERVED_BY_EDPUB_API:-false} \
   --env AUTH_METHOD=$AUTH_METHOD \
+  --env REQUEST_HIDE_BUTTON_VERBAGE=$REQUEST_HIDE_BUTTON_VERBAGE \
   node:10-slim \
   /dashboard/tmp/script.sh

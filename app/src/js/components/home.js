@@ -299,6 +299,7 @@ Home.propTypes = {
   queryParams: PropTypes.object,
   setQueryParams: PropTypes.func,
   dispatch: PropTypes.func,
+  privileges: PropTypes.object,
   roles: PropTypes.array,
   groups: PropTypes.array,
   location: PropTypes.object
@@ -316,6 +317,7 @@ export default withRouter(withQueryParams()(connect((state) => ({
   pdrs: state.pdrs,
   rules: state.rules,
   stats: state.stats,
+  privileges: state.api.tokens.privileges,
   roles: state.api.tokens.roles,
   groups: state.api.tokens.groups
 }))(Home)));

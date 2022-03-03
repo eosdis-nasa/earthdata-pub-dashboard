@@ -5,8 +5,8 @@ const routes = [
 ];
 
 const singleRoutes = [
-  [strings.back_to_workflows, null, 'sidebar__nav--back'],
-  [strings.view_requests_list, '/requests', 'sidebar__nav']
+  [strings.back_to_submissions, '/requests', 'sidebar__nav--back'],
+  [strings.back_to_workflows, '/workflows', 'sidebar__nav--back']
 ];
 
 const empty = [['', '']];

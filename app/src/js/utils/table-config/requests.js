@@ -10,21 +10,31 @@ import {
   bool
 } from '../format';
 import {
-  deleteSubmission
+  deleteRequest
 } from '../../actions';
 import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 
-export const newFormLink = (request, formalName) => {
+export const newLink = (request, formalName) => {
   return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</a>;
 };
 
-export const existingFormLink = (row, formId, formalName) => {
-  return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+export const assignWorkflow = (request, formalName, disabled = false) => {
+  const disabledClass = disabled ? 'button--disabled' : '';
+  return <a href={request} name="assignButton" className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</a>;
+};
+
+export const existingLink = (row, formId, formalName, step) => {
+  if (typeof formId === 'undefined') {
+    return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+  } else {
+    return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+  }
 };
 
 export const getFormalName = (str) => {
+  if (typeof str === 'undefined') return '';
   const count = (str.match(/_/g) || []).length;
   if (count > 0) {
     str = str.replace(/_/g, ' ');
@@ -34,6 +44,21 @@ export const getFormalName = (str) => {
     words[i] = words[i][0].toUpperCase() + words[i].substr(1);
   }
   return words.join(' ');
+};
+
+export const getPrivileges = () => {
+  let disabled = false;
+  const user = JSON.parse(window.localStorage.getItem('auth-user'));
+  const roles = user.user_roles;
+  const privileges = user.user_privileges;
+  const isManager = roles.find(o => o.short_name.match(/manager/g));
+  const isAdmin = privileges[0].match(/ADMIN/g);
+  if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
+    disabled = false;
+  } else {
+    disabled = true;
+  }
+  return disabled;
 };
 
 export const stepLookup = (row) => {
@@ -51,6 +76,9 @@ export const stepLookup = (row) => {
         stepType = row.step_data.type;
         stepIDKey = `${stepType}_id`;
         stepID = row.step_data[stepIDKey];
+        if (row.step_data.type.match(/close/g)) {
+          // This needs to do something but the API has no function related to status'
+        }
         if (typeof stepID === 'undefined' && typeof row.step_data.data !== 'undefined') {
           tmpType = row.step_data.data.type;
           const tmpIDKey = `${tmpType}_id`;
@@ -60,39 +88,56 @@ export const stepLookup = (row) => {
             request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
           }
         }
-        // Build url to forms app
+        // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
           request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+        // assign a workflow
+        } else if (stepType.match(/action/g)) {
+          request = `/workflows?requestId=${row.id}`;
         }
         break;
       }
     }
   }
-  if (stepType.match(/review/g)) {
-    return existingFormLink(row, stepID, formalName);
+  // step_data and step_name are available, but also need form_id, service_id and action_id in order to make a generalized function
+  // Until that is added to the endpoint, I need to hardcode
+  if (stepName.match(/data_accession_request_form/g) == null && stepName.match(/data_production_information_form/g) == null && !stepType.match(/action/g) && !stepType.match(/form/g)) {
+    return existingLink(row, undefined, formalName, stepName);
+  } else if (stepType.match(/review/g)) {
+    if (typeof StepID === 'undefined') {
+      if (stepName.match(/data_accession_request_form_review/g)) {
+        stepID = '6c544723-241c-4896-a38c-adbc0a364293';
+      } else if (stepName.match(/data_production_information_form_review/g)) {
+        stepID = '19025579-99ca-4344-8610-704dae626343';
+      }
+    }
+    return existingLink(row, stepID, formalName, stepName);
+  } else if (stepType.match(/action/g)) {
+    return assignWorkflow(request, formalName, getPrivileges());
   } else {
-    return newFormLink(request, formalName);
+    return newLink(request, formalName);
   }
 };
 
 export const tableColumns = [
   {
     Header: 'Data Product Name',
-    accessor: row => row.form_data.data_product_name_value || '(no name)',
+    accessor: row => row.form_data ? row.form_data.data_product_name_value || '(no name)' : '(no name)',
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || '(no name)' : '(no name)'}</Link> : '(no name)',
     id: 'name',
     width: 170
   },
   {
     Header: 'Status',
     accessor: (row) => row.status,
-    Cell: row => <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.status}</Link>,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.status}</Link> : null,
     id: 'status_message',
     width: 170
   },
   {
     Header: 'Workflow',
     accessor: (row) => row.workflow_name,
-    Cell: row => <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }}>{row.row.original.workflow_name}</Link>,
+    Cell: row => row.row.original.workflow_name,
     id: 'workflow_name',
     width: 170
   },
@@ -116,8 +161,7 @@ export const tableColumns = [
   },
   {
     Header: 'Conversation',
-    accessor: (row) => row.conversation_id ? 'View' : null,
-    Cell: row => row.conversation_id ? (<Link to={{ pathname: `/conversations/id/${row.row.original.conversation_id}` }}>View</Link>) : null,
+    accessor: (row) => row.conversation_id ? <Link to={{ pathname: `/conversations/id/${row.conversation_id}` }}>View</Link> : null,
     id: 'conversation_id',
     width: 120
   },
@@ -127,34 +171,6 @@ export const tableColumns = [
     id: 'next_action',
     width: 170
   }
-  /* {
-    Header: 'Data Request Request',
-    accessor: row => dataSubmissionRequestLink(row.dataSubmissionRequest, 'Data Request Request'),
-    id: 'dataSubmissionRequest',
-    width: 225
-  },
-  {
-    Header: 'Data Product Questionionnaire',
-    accessor: row => dataProductQuestionaireLink(row.dataProductQuestionaire, 'Product Questionaire (Draft)'),
-    id: 'dataProductQuestionaire',
-    width: 225
-  },
-  {
-    Header: 'Request Date',
-    accessor: row => shortDateNoTimeYearFirst(row.submitted),
-    id: 'submitted'
-  },
-  {
-    Header: 'Primary Data Producer',
-    accessor: row => dataProducerLink(row.dataSubmissionRequest, row.dataProducer),
-    id: 'dataProducer'
-  },
-  {
-    Header: 'Point of Contact',
-    accessor: row => pointOfContactLink(row.dataProductQuestionaire, row.contact),
-    id: 'contact',
-    width: 100
-  }, */
 ];
 
 export const errorTableColumns = [
@@ -175,7 +191,7 @@ export const errorTableColumns = [
   {
     Header: 'Requests',
     accessor: (row) => row.id,
-    Cell: row => submissionLink(row.row.original.id),
+    Cell: row => row.row ? submissionLink(row.row.original.id) : null,
     id: 'id',
     width: 200
   },
@@ -231,7 +247,7 @@ export const bulkActions = function (requests, config) {
   return [
     {
       text: 'Delete',
-      action: deleteSubmission,
+      action: deleteRequest,
       state: requests.deleted,
       confirm: confirmDelete,
       className: 'button--delete'

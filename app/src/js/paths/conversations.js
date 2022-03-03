@@ -6,6 +6,7 @@ const routes = [
 ];
 
 const singleRoutes = [
+  [strings.back_to_submissions, '/requests', 'sidebar__nav--back'],
   [strings.back_to_conversations, null, 'sidebar__nav--back']
 ];
 
