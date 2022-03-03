@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.0.16 - 2022-03-02
 
-- Fixed privileges that got broken from status page update.
+- Fixed privileges that got broken from status page update. Reworked workflow next action buttons from changing to 'action' type for approval promote step.
 
 ## 1.0.15 - 2022-02-25
 
