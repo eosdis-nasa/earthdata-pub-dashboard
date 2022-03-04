@@ -17,19 +17,22 @@ import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 
 export const newLink = (request, formalName) => {
+  // This element was purposefully left as an anchor tag (rather than react Link) since the page is redirected away from
+  // the dashboard site to the forms site. Converting to a Link component will result in a malformed url.
   return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</a>;
 };
 
 export const assignWorkflow = (request, formalName, disabled = false) => {
   const disabledClass = disabled ? 'button--disabled' : '';
-  return <a href={request} name="assignButton" className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</a>;
+  return <Link className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}
+               to={`${request}`} name={`assignButton`}>{formalName}</Link>;
 };
 
 export const existingLink = (row, formId, formalName, step) => {
   if (typeof formId === 'undefined') {
     return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
   } else {
-    return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+    return <Link to={{ pathname: `/forms/id/${formId}?requestId=${row.id}`}} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
   }
 };
 
