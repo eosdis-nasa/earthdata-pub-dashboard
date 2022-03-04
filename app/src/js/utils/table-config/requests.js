@@ -32,7 +32,7 @@ export const existingLink = (row, formId, formalName, step) => {
   if (typeof formId === 'undefined') {
     return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
   } else {
-    return <Link to={{ pathname: `/forms/id/${formId}?requestId=${row.id}`}} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+    return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
   }
 };
 
