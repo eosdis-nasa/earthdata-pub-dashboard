@@ -39,7 +39,6 @@ export const getPrivileges = () => {
 };
 
 export const newLink = (request, formalName) => {
-<<<<<<< HEAD
   const allPrivs = getPrivileges();
   let disabled = false;
   if (allPrivs.canUpdateForm) {
@@ -48,12 +47,9 @@ export const newLink = (request, formalName) => {
     disabled = true;
   }
   const disabledClass = disabled ? 'button--disabled' : '';
-  return <a href={request} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</a>;
-=======
   // This element was purposefully left as an anchor tag (rather than react Link) since the page is redirected away from
   // the dashboard site to the forms site. Converting to a Link component will result in a malformed url.
-  return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</a>;
->>>>>>> c9d525bfccc822490e6888b58ae506ce62225b53
+  return <a href={request} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</a>;
 };
 
 export const assignWorkflow = (request, formalName) => {
