@@ -17,6 +17,8 @@ class WorkflowsOverview extends React.Component {
   constructor () {
     super();
     this.state = {};
+    this.setWorkflow = this.setWorkflow.bind(this);
+    this.cancelWorkflow = this.cancelWorkflow.bind(this);
   }
 
   componentDidMount () {
@@ -61,7 +63,7 @@ class WorkflowsOverview extends React.Component {
     }
   }
 
-  setWorkflow () {
+  async setWorkflow () {
     const { dispatch } = this.props;
     const requestId = location.search.split('=')[1];
     const radios = document.getElementsByTagName('input');
@@ -70,8 +72,7 @@ class WorkflowsOverview extends React.Component {
         const workflow = radios[i].id;
         if (typeof workflow !== 'undefined' && (workflow.split('_').length - 1)) {
           const workflowChosen = workflow.split('_')[1];
-          dispatch(applyWorkflowToRequest(requestId, workflowChosen));
-          window.location.href = '/requests';
+          await dispatch(applyWorkflowToRequest(requestId, workflowChosen));
         }
       }
     }
@@ -143,20 +144,27 @@ class WorkflowsOverview extends React.Component {
       {
         label: 'Dashboard Home',
         href: '/'
-      },
-      {
-        label: 'Requests',
-        href: '/requests'
-      },
-      {
-        label: requestId,
-        href: `/requests/id/${requestId}`
-      },
-      {
-        label: 'Workflows',
-        active: true
       }
     ];
+    if (typeof requestId !== 'undefined') {
+      breadcrumbConfig.push({
+        label: 'Requests',
+        href: '/requests'
+      });
+      breadcrumbConfig.push({
+        label: requestId,
+        href: `/requests/id/${requestId}`
+      });
+      breadcrumbConfig.push({
+        label: 'Workflows',
+        active: true
+      });
+    } else {
+      breadcrumbConfig.push({
+        label: 'Workflows',
+        active: true
+      });
+    }
     const { queriedAt } = workflows.list.meta;
     const disabled = !workflows.list.data.length || !this.getAnySelected();
     return (
@@ -188,16 +196,14 @@ class WorkflowsOverview extends React.Component {
           </List>
           { requestId
             ? <section className='page__section' style={{ float: 'right' }}>
-                <button onClick={(e) => { e.preventDefault(); this.setWorkflow(); }}
-                id="selectButton"
-                className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right' + (disabled ? ' button--disabled' : '')}>
+                <Link className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right' + (disabled ? ' button--disabled' : '')}
+                      onClick={this.setWorkflow} id={"selectButton"} to={`/requests`}>
                   Select
-                </button>
+                </Link>
                 <button
                   className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'}
                   id="cancelButton"
                   onClick={(e) => { e.preventDefault(); this.cancelWorkflow(); }}
-                  readOnly={true}
                 >Cancel</button>
               </section>
             : null }
