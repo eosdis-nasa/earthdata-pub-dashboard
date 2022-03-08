@@ -3,7 +3,7 @@ import React from 'react';
 import Ace from 'react-ace';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import {
     getQuestion,
     updateQuestion
@@ -22,7 +22,6 @@ class Questions extends React.Component {
         this.renderQuestionJson = this.renderQuestionJson.bind(this);
         this.renderJson = this.renderJson.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
     }
 
     componentDidMount () {
@@ -56,11 +55,6 @@ class Questions extends React.Component {
         this.setState({ data: question_aceEditorData, section_data: section_question_aceEditorData } );
         await dispatch(updateQuestion(Object.assign({}, question_aceEditorData,
             {section_question: section_question_aceEditorData})))
-        window.location.href=`/questions/id/${question_aceEditorData.id}`;
-    }
-
-    handleCancel() {
-        window.location.href='/questions';
     }
 
     render () {
@@ -116,14 +110,15 @@ class Questions extends React.Component {
                                     </div>
                                 </div> : null)
                     }
-                    <button
-                        className={`button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right`}
-                        onClick={this.handleSubmit}
-                    >Submit</button>
-                    <button
-                        className='button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'
-                        onClick={this.handleCancel}
-                    >Cancel</button>
+                    {/*TODO- Update this redirect to `/questions/id/${this.state.data.id}` once we no longer rely on user to define question id*/}
+                    <Link className={`button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right`}
+                    onClick={this.handleSubmit} to={`/questions`}>
+                        Submit
+                    </Link>
+                    <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'}
+                    to={`/questions`}>
+                        Cancel
+                    </Link>
                 </section>
             </div>
         );
