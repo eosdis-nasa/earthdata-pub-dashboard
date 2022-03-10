@@ -34,6 +34,7 @@ div.th {
   }
 
   .tbody {
+    min-width: fit-content;
     .tr {
       border-bottom: 1px solid $lightest-grey;
       .td {

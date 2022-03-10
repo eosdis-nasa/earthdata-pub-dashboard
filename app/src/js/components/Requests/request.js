@@ -83,7 +83,8 @@ class RequestOverview extends React.Component {
 
   applyWorkflow () {
     const { requestId } = this.props.match.params;
-    location.href = `/workflows?requestId=${requestId}`;
+    const { history } = this.props;
+    history.push(`/workflows?requestId=${requestId}`);
   }
 
   async delete () {
@@ -193,7 +194,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Workflow',
-        accessor: row => canReassign && row.workflow_name ? <Link to={{ pathname: `/workflows/id/${row.workflow_id}` }}>{row.workflow_name}</Link> : row.workflow_name
+        accessor: row => canReassign && row.workflow_name ? <Link to={`/workflows/id/${row.workflow_id}`}>{row.workflow_name}</Link> : row.workflow_name
       },
       {
         label: 'Created',

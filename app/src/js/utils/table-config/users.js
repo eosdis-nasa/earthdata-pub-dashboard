@@ -7,7 +7,7 @@ export const tableColumns = [
   {
     Header: 'Name',
     accessor: (row) => row.name,
-    Cell: row => <Link to={{ pathname: `users/id/${row.row.original.id}` }}>{row.row.original.name}</Link>,
+    Cell: row => <Link to={{ pathname: `/users/id/${row.row.original.id}` }}>{row.row.original.name}</Link>,
     id: 'name'
   },
   {
