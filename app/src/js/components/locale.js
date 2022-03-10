@@ -42,6 +42,7 @@ export const strings = new LocalizedStrings({
     submissions_running: 'Requests Running',
     submissions_completed: 'Requests Completed',
     submissions_failed: 'Requests Failed',
+    submissions_all: 'All Requests',
     submissions_submitted: 'Requests Submitted',
     submissions_inprogress: 'Requests In-Progress',
     submissions_inprogress2: 'In-Progress',

@@ -113,7 +113,7 @@ class ActionRequestsOverview extends React.Component {
       const record = list[ea];
       newList[ea] = record;
       for (const r in record) {
-        if (record[r].status === this.getView()) {
+        if (!record[r].hidden && typeof record[r] === 'object' && record[r].status === this.getView()) {
           tmp.push(record[r]);
         }
       }

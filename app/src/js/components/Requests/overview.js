@@ -73,20 +73,42 @@ class RequestsOverview extends React.Component {
     return {};
   }
 
+  filter (list) {
+    const newList = {};
+    const tmp = [];
+    for (const ea in list) {
+      const record = list[ea];
+      newList[ea] = record;
+      for (const r in record) {
+        if (!record[r].hidden && record[r].step_name !== 'close' && typeof record[r] === 'object') {
+          tmp.push(record[r]);
+        }
+      }
+    }
+    Object.defineProperty(newList, 'data', {
+      value: tmp,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+    return newList;
+  }
+
   render () {
     const {
       // stats,
       requests
     } = this.props;
-    const {
+    let {
       list,
       // dropdowns
     } = requests;
-    const unique = [...new Set(list.data.map(item => item.id))];
-    const { queriedAt } = list.meta;
-    // const close = this.props.location.search;
     const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
     const { canInitialize } = requestPrivileges(this.props.privileges);
+    const query = this.generateQuery();
+    const { queriedAt } = list.meta;
+    list = this.filter(list);
+    const unique = [...new Set(list.data.map(item => item.id))];
     return (
     <div className='page__component'>
       <section className='page__section page__section__controls'>
@@ -107,7 +129,7 @@ class RequestsOverview extends React.Component {
         <List
           list={list}
           tableColumns={tableColumns}
-          query={this.generateQuery()}
+          query={query}
           rowId='id'
           filterIdx='name'
           filterPlaceholder='Search Requests'

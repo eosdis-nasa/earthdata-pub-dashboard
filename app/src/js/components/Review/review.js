@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {
   getRequest,
   reviewRequest
@@ -13,7 +13,7 @@ import { requestPrivileges } from '../../utils/privileges';
 class ReviewStep extends React.Component {
   constructor () {
     super();
-    this.displayName = strings.review_step_display_name;
+    this.displayName = 'Review Step';
     this.state = {};
   }
 
@@ -26,7 +26,6 @@ class ReviewStep extends React.Component {
   async review (id, approval) {
     const { dispatch } = this.props;
     await dispatch(reviewRequest(id, approval));
-    window.location.href = '/requests';
   }
 
   hasStepData () {
@@ -52,18 +51,19 @@ class ReviewStep extends React.Component {
           <section className='page_section'>
             { canReview && reviewReady && typeof requestId !== 'undefined' && (
                 <div className='flex__row'>
-                    <div className='flex__item--spacing'>
-                        <button onClick={() => this.review(requestId, false)}
-                            className='button button--no-icon button--medium button--green'>
-                            Reject
-                        </button>
-                    </div>
-                    <div className='flex__item--spacing'>
-                        <button onClick={() => this.review(requestId, true)}
-                            className='button button--no-icon button--medium button--green'>
-                            Approve
-                        </button>
-                    </div>
+                  <div className='flex__item--spacing'>
+                    <Link className={'button button--no-icon button--medium button--green'}
+                          onClick={() => this.review(requestId, false)} to={`/requests`}
+                    >
+                      Reject
+                    </Link>
+                  </div>
+                  <div className='flex__item--spacing'>
+                    <Link className={'button button--no-icon button--medium button--green'}
+                          onClick={() => this.review(requestId, true)} to={`/requests`}>
+                      Approve
+                    </Link>
+                  </div>
                 </div>
             )}
           </section>
@@ -82,8 +82,6 @@ ReviewStep.propTypes = {
   privileges: PropTypes.object,
   params: PropTypes.object
 };
-
-ReviewStep.displayName = 'Review Step';
 
 export default withRouter(connect(state => ({
   requests: state.requests,
