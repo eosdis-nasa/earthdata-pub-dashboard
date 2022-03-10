@@ -18,10 +18,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated CONTRIBUTING.md
 
+
+## 1.0.17 - 2022-03-07
+
+- Fixed privileges that got broken from status page update. Reworked workflow next action buttons from changing to 'action' type for approval promote step.
+
 ## 1.0.16 - 2022-03-03
 
 - Corrected workflows breadcrumbs to be dynamic and based on assigning or viewing.
 - Fixed malformed users link.
+
 
 ## 1.0.15 - 2022-02-25
 

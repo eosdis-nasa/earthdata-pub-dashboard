@@ -99,20 +99,17 @@ export const formPrivileges = (privileges) => {
   if (privileges.ADMIN) {
     return {
       canEdit: true,
-      canRead: true,
-      canDelete: true
+      canRead: true
     };
   } else if (privileges.FORM) {
     return {
       canRead: !!privileges.FORM.find(a =>
         a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD'),
-      canEdit: privileges.FORM.includes('RESUME'),
-      canDelete: privileges.FORM.includes('SUBMIT')
+      canEdit: privileges.FORM.includes('UPDATE')
     };
   }
   return {
     canEdit: false,
-    canRead: false,
-    canDelete: false
+    canRead: false
   };
 };

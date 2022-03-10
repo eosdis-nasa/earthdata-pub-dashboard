@@ -16,23 +16,68 @@ import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 
-export const newLink = (request, formalName) => {
-  // This element was purposefully left as an anchor tag (rather than react Link) since the page is redirected away from
-  // the dashboard site to the forms site. Converting to a Link component will result in a malformed url.
-  return <a href={request} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</a>;
+export const getPrivileges = () => {
+  const user = JSON.parse(window.localStorage.getItem('auth-user'));
+  const roles = user.user_roles;
+  const privileges = user.user_privileges;
+  const allPrivs = {
+    isManager: privileges.find(o => o.match(/ADMIN/g))
+      ? privileges.find(o => o.match(/ADMIN/g))
+      : roles.find(o => o.short_name.match(/manager/g)),
+    isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+    canReview: privileges.find(o => o.match(/ADMIN/g))
+      ? privileges.find(o => o.match(/ADMIN/g))
+      : privileges.find(o => o.match(/REQUEST_REVIEW/g)),
+    canCreateForm: privileges.find(o => o.match(/ADMIN/g))
+      ? privileges.find(o => o.match(/ADMIN/g))
+      : privileges.find(o => o.match(/FORM_CREATE/g)),
+    canUpdateForm: privileges.find(o => o.match(/ADMIN/g))
+      ? privileges.find(o => o.match(/ADMIN/g))
+      : privileges.find(o => o.match(/FORM_UPDATE/g))
+  };
+  return allPrivs;
 };
 
-export const assignWorkflow = (request, formalName, disabled = false) => {
+export const newLink = (request, formalName) => {
+  const allPrivs = getPrivileges();
+  let disabled = false;
+  if (allPrivs.canUpdateForm) {
+    disabled = false;
+  } else {
+    disabled = true;
+  }
+  const disabledClass = disabled ? 'button--disabled' : '';
+  // This element was purposefully left as an anchor tag (rather than react Link) since the page is redirected away from
+  // the dashboard site to the forms site. Converting to a Link component will result in a malformed url.
+  return <a href={request} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</a>;
+};
+
+export const assignWorkflow = (request, formalName) => {
+  const allPrivs = getPrivileges();
+  let disabled = false;
+  if (typeof allPrivs.isManager !== 'undefined' || typeof allPrivs.isAdmin !== 'undefined') {
+    disabled = false;
+  } else {
+    disabled = true;
+  }
   const disabledClass = disabled ? 'button--disabled' : '';
   return <Link className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}
                to={`${request}`} name={`assignButton`}>{formalName}</Link>;
 };
 
 export const existingLink = (row, formId, formalName, step) => {
-  if (typeof formId === 'undefined') {
-    return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+  const allPrivs = getPrivileges();
+  let disabled = false;
+  if (allPrivs.canReview) {
+    disabled = false;
   } else {
-    return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className='button button--small button--green form-group__element--left button--no-icon'>{formalName}</Link>;
+    disabled = true;
+  }
+  const disabledClass = disabled ? 'button--disabled' : '';
+  if (typeof formId === 'undefined') {
+    return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</Link>;
+  } else {
+    return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</Link>;
   }
 };
 
@@ -47,21 +92,6 @@ export const getFormalName = (str) => {
     words[i] = words[i][0].toUpperCase() + words[i].substr(1);
   }
   return words.join(' ');
-};
-
-export const getPrivileges = () => {
-  let disabled = false;
-  const user = JSON.parse(window.localStorage.getItem('auth-user'));
-  const roles = user.user_roles;
-  const privileges = user.user_privileges;
-  const isManager = roles.find(o => o.short_name.match(/manager/g));
-  const isAdmin = privileges[0].match(/ADMIN/g);
-  if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
-    disabled = false;
-  } else {
-    disabled = true;
-  }
-  return disabled;
 };
 
 export const stepLookup = (row) => {
@@ -80,15 +110,19 @@ export const stepLookup = (row) => {
         stepIDKey = `${stepType}_id`;
         stepID = row.step_data[stepIDKey];
         if (row.step_data.type.match(/close/g)) {
-          // This needs to do something but the API has no function related to status'
+          return 'Completed';
         }
-        if (typeof stepID === 'undefined' && typeof row.step_data.data !== 'undefined') {
-          tmpType = row.step_data.data.type;
-          const tmpIDKey = `${tmpType}_id`;
-          stepID = row.step_data.data[tmpIDKey];
-          // Build url to forms app - after submitted
-          if (tmpType.match(/form/g)) {
-            request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+        if (typeof stepID === 'undefined') {
+          if (typeof row.step_data.form_id !== 'undefined') {
+            stepID = row.step_data.form_id;
+          } else if (typeof row.step_data.data !== 'undefined') {
+            tmpType = row.step_data.data.type;
+            const tmpIDKey = `${tmpType}_id`;
+            stepID = row.step_data.data[tmpIDKey];
+            // Build url to forms app - after submitted
+            if (tmpType.match(/form/g)) {
+              request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+            }
           }
         }
         // Build url to forms app if not submitted
@@ -102,21 +136,12 @@ export const stepLookup = (row) => {
       }
     }
   }
-  // step_data and step_name are available, but also need form_id, service_id and action_id in order to make a generalized function
-  // Until that is added to the endpoint, I need to hardcode
-  if (stepName.match(/data_accession_request_form/g) == null && stepName.match(/data_production_information_form/g) == null && !stepType.match(/action/g) && !stepType.match(/form/g)) {
+  if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
+    return assignWorkflow(request, formalName);
+  } else if (stepType.match(/action/g)) {
     return existingLink(row, undefined, formalName, stepName);
   } else if (stepType.match(/review/g)) {
-    if (typeof StepID === 'undefined') {
-      if (stepName.match(/data_accession_request_form_review/g)) {
-        stepID = '6c544723-241c-4896-a38c-adbc0a364293';
-      } else if (stepName.match(/data_production_information_form_review/g)) {
-        stepID = '19025579-99ca-4344-8610-704dae626343';
-      }
-    }
     return existingLink(row, stepID, formalName, stepName);
-  } else if (stepType.match(/action/g)) {
-    return assignWorkflow(request, formalName, getPrivileges());
   } else {
     return newLink(request, formalName);
   }

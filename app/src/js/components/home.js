@@ -181,9 +181,30 @@ class Home extends React.Component {
     );
   }
 
+  filter (list) {
+    const newList = {};
+    const tmp = [];
+    for (const ea in list) {
+      const record = list[ea];
+      newList[ea] = record;
+      for (const r in record) {
+        if (!record[r].hidden && record[r].step_name !== 'close' && typeof record[r] === 'object') {
+          tmp.push(record[r]);
+        }
+      }
+    }
+    Object.defineProperty(newList, 'data', {
+      value: tmp,
+      writable: true,
+      enumerable: true,
+      configurable: true
+    });
+    return newList;
+  }
+
   render () {
     const { requests } = this.props;
-    const { list } = requests;
+    let { list } = requests;
     const view = this.getView();
     const query = this.generateQuery();
     // const { stats, count } = this.props.stats;
@@ -215,7 +236,7 @@ class Home extends React.Component {
     // const submissionCount = get(count.data, 'requests.meta.count');
     // const numSubmissions = !isNaN(submissionCount) ? `${tally(submissionCount)}` : 0;
     // const submissionStatus = get(count.data, 'requests.count', []);
-
+    list = this.filter(list);
     return (
       <div className='page__home'>
         <div className='content__header content__header--lg'>
@@ -273,11 +294,13 @@ class Home extends React.Component {
               <List
                 list={list}
                 dispatch={this.props.dispatch}
-                action={listRequests}
                 tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
                 query={query}
                 rowId='id'
-              />
+                filterIdx='name'
+                filterPlaceholder='Search Requests'
+              >
+              </List>
             </div>
           </section>
         </div>

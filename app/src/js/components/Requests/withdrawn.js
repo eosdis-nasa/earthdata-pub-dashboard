@@ -15,7 +15,6 @@ import List from '../Table/Table';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import { requestPrivileges } from '../../utils/privileges';
 
 const breadcrumbConfig = [
   {
@@ -106,20 +105,8 @@ class InactiveRequestsOverview extends React.Component {
       list,
       // dropdowns
     } = requests;
-    const unique = [...new Set(list.data.map(item => item.id))];
     const { queriedAt } = list.meta;
-    const isManager = this.props.roles.find(o => o.short_name.match(/manager/g));
-    const isAdmin = this.props.privileges.ADMIN;
-    if (typeof isManager !== 'undefined' || typeof isAdmin !== 'undefined') {
-      const el = document.getElementsByName('assignButton');
-      setTimeout(() => {
-        for (const i in el) {
-          if (typeof el[i].classList !== 'undefined') {
-            el[i].classList.remove('button--disabled');
-          }
-        }
-      }, 1);
-    }
+    const unique = [...new Set(list.data.map(item => item.id))];
     // const statsCount = get(stats, 'count.data.requests.count', []);
     // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
     return (
@@ -140,7 +127,6 @@ class InactiveRequestsOverview extends React.Component {
           </div>
           <List
             list={list}
-            action={listInactiveRequests}
             tableColumns={tableColumns}
             query={this.generateQuery()}
             rowId='id'
