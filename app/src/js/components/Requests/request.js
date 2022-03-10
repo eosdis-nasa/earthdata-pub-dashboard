@@ -83,7 +83,8 @@ class RequestOverview extends React.Component {
 
   applyWorkflow () {
     const { requestId } = this.props.match.params;
-    location.href = `/workflows?requestId=${requestId}`;
+    const { history } = this.props;
+    history.push(`/workflows?requestId=${requestId}`);
   }
 
   async delete () {
