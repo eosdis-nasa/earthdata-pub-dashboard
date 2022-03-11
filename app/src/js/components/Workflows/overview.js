@@ -91,8 +91,8 @@ class WorkflowsOverview extends React.Component {
     const selectInput = [{
       Header: 'Select',
       accessor: (row) => row.long_name,
-      Cell: row => <input type="radio" className={ 'form__element__clickable' }
-        onClick={(e) => { this.checkUncheckOthers(row.row.original.id); }} id={`select_${row.row.original.id}`}>{row.long_name}</input>,
+      Cell: row => <input type="radio" className={ 'form__element__clickable' } aria-label={ 'select workflow' }
+        onClick={(e) => { this.checkUncheckOthers(row.row.original.id); }} id={`select_${row.row.original.id}`} >{row.long_name}</input>,
       id: 'select',
       width: 50
     }];
@@ -101,7 +101,7 @@ class WorkflowsOverview extends React.Component {
       {
         Header: 'Name',
         accessor: (row) => row.long_name,
-        Cell: row => <Link to={{ pathname: `/workflows/id/${row.row.original.id}` }}>{row.row.original.long_name}</Link>,
+        Cell: row => <Link to={{ pathname: `/workflows/id/${row.row.original.id}` }} aria-label="View your workflows">{row.row.original.long_name}</Link>,
         id: 'long_name'
       },
       {
@@ -197,7 +197,8 @@ class WorkflowsOverview extends React.Component {
           { requestId
             ? <section className='page__section' style={{ float: 'right' }}>
                 <Link className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right' + (disabled ? ' button--disabled' : '')}
-                      onClick={this.setWorkflow} id={"selectButton"} to={`/requests`}>
+                      onClick={this.setWorkflow} id={"selectButton"} to={`/requests`}
+                      aria-label="select workflow">
                   Select
                 </Link>
                 <button

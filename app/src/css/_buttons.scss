@@ -30,7 +30,8 @@
 
   &:disabled,
   &--disabled {
-    opacity: 0.6;
+    // Breaks accessibility
+    // opacity: 0.6;
     pointer-events: none;
   }
 

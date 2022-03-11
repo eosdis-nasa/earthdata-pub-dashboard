@@ -47,7 +47,7 @@ class DropdownAsync extends React.Component {
     const { showActions } = this.state;
     return (
       <div className='dropdown__options form-group__element--right'>
-        <a className='dropdown__options__btn button--green button button--small' href='#' onClick={this.toggleActions}><span>Options</span></a>
+        <a className='dropdown__options__btn button--green button button--small' aria-label="dropdown options" href='#' onClick={this.toggleActions}><span>Options</span></a>
         <ul className={c('dropdown__menu', {
           'dropdown__menu--hidden': !showActions
         })}>

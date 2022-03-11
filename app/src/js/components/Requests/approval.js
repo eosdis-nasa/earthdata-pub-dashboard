@@ -111,13 +111,13 @@ class ApprovalStep extends React.Component {
                       <div className='flex__item--spacing'>
                         <Link className={'button button--no-icon button--medium button--green'}
                         onClick={() => this.review(requestId, false)} to={`/requests`}
-                        >
+                        aria-label="click to reject">
                           Reject
                         </Link>
                       </div>
                       <div className='flex__item--spacing'>
                         <Link className={'button button--no-icon button--medium button--green'}
-                        onClick={() => this.review(requestId, true)} to={`/requests`}>
+                        onClick={() => this.review(requestId, true)} to={`/requests`} aria-label="click to approve">
                           Approve
                         </Link>
                       </div>

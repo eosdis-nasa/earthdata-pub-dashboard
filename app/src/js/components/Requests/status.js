@@ -24,14 +24,14 @@ export const tableColumns = [
   {
     Header: 'Data Product Name',
     accessor: row => row.form_data ? row.form_data.data_product_name_value || '(no name)' : '(no name)',
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || '(no name)' : '(no name)'}</Link> : '(no name)',
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || '(no name)' : '(no name)'}</Link> : '(no name)',
     id: 'name',
     width: 170
   },
   {
     Header: 'Status',
     accessor: (row) => row.status,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.status}</Link> : null,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.status}</Link> : null,
     id: 'status_message',
     width: 170
   },
@@ -62,7 +62,7 @@ export const tableColumns = [
   },
   {
     Header: 'Conversation',
-    accessor: (row) => row.conversation_id ? <Link to={{ pathname: `/conversations/id/${row.conversation_id}` }}>View</Link> : null,
+    accessor: (row) => row.conversation_id ? <Link to={{ pathname: `/conversations/id/${row.conversation_id}` }} aria-label="View your conversations">View</Link> : null,
     id: 'conversation_id',
     width: 120
   },

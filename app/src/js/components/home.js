@@ -162,15 +162,17 @@ class Home extends React.Component {
                 const value = d[0];
                 return (
                   <li key={d[1]}>
-                    {this.isExternalLink(d[2]) ? (
-                      <a id={d[1]} href={d[2]} className='overview-num' target='_blank'>
+                    {this.isExternalLink(d[2])
+                      ? (
+                      <a id={d[1]} href={d[2]} className='overview-num' target='_blank' aria-label={d[1]}>
                         <span className='num--large'>{value}</span> {d[1]}
                       </a>
-                    ) : (
-                      <Link id={d[1]} className='overview-num' to={{ pathname: d[2], search: this.props.location.search }}>
+                        )
+                      : (
+                      <Link id={d[1]} className='overview-num' to={{ pathname: d[2], search: this.props.location.search }} aria-label="View your overview">
                         <span className='num--large'>{value}</span> {d[1]}
                       </Link>
-                    )}
+                        )}
                   </li>
                 );
               })}
@@ -299,6 +301,7 @@ class Home extends React.Component {
                 rowId='id'
                 filterIdx='name'
                 filterPlaceholder='Search Requests'
+                ariaLabel="Search Requests"
               >
               </List>
             </div>

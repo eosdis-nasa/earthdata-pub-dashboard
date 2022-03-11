@@ -114,6 +114,8 @@ const AddRaw = ({
               mode={'json'}
               minLines={30}
               maxLines={200}
+              aria-label="create-new-record"
+              title="create-new-record"
             />
             <button
               className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right' + (status === 'inflight' ? ' button--disabled' : '')}

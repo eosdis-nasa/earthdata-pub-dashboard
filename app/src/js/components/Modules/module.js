@@ -12,6 +12,11 @@ const pageRef = React.createRef();
 const Module = ({ dispatch, modules, match }) => {
   const { moduleName } = match.params;
   const current = modules.list.mapped[moduleName];
+  useEffect(() => {
+    dispatch(getModuleUi(moduleName));
+    iframeRef.current.height = pageRef.current.offsetHeight;
+    iframeRef.current.width = '100%';
+  }, []);
   const breadcrumbConfig = [
     {
       label: 'Dashboard Home',
@@ -20,17 +25,14 @@ const Module = ({ dispatch, modules, match }) => {
     {
       label: 'Modules',
       href: '/modules'
-    },
-    {
-      label: current.long_name || '',
-      active: true
     }
   ];
-  useEffect(() => {
-    dispatch(getModuleUi(moduleName));
-    iframeRef.current.height = pageRef.current.offsetHeight;
-    iframeRef.current.width = '100%';
-  }, []);
+  if (typeof current !== 'undefined') {
+    breadcrumbConfig.push({
+      label: current.long_name || '',
+      active: true
+    });
+  }
   return (
     <div ref={pageRef} className='page__content--shortened'>
       <div className='page__component'>
@@ -39,6 +41,7 @@ const Module = ({ dispatch, modules, match }) => {
         </section>
         <section className='page__section'>
           <iframe
+            title={iframeRef}
             ref={iframeRef}
             srcDoc={modules.module.src}
             sandbox="allow-scripts allow-same-origin"
