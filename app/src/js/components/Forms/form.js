@@ -308,7 +308,7 @@ class FormOverview extends React.Component {
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{form.long_name} (Verson {form.version})</h1>
+          <h1 className='heading--large heading--shared-content with-description'>{form.long_name}</h1>
           {requestId !== '' && canEdit && this.hasSavedAnswers() ? <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl} aria-label='edit your form'>Edit</a> : null}
         </section>
 
