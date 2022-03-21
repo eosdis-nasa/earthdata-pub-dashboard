@@ -82,7 +82,12 @@ class TimeoutWarning extends React.Component {
   render () {
     const tokens = this.props.api.tokens;
     return (
-      <Modal show={this.state.show} backdrop="static" keyboard={false} centered={true}>
+      <Modal
+        show={this.state.show}
+        backdrop="static"
+        keyboard={false}
+        centered={true}
+        aria-labelledby="modal__timeout-modal">
         <Modal.Header closeButton>
           <Modal.Title>Session Expiring</Modal.Title>
         </Modal.Header>

@@ -28,6 +28,10 @@ class Workflows extends React.Component {
   renderReadOnlyJson (name, data) {
     return (
       <Ace
+        id="read-only-json-kim"
+        title={`${name}`}
+        label={`${name}`}
+        aria-label={`${name}`}
         mode='json'
         theme={config.editorTheme}
         name={`read-only-${name}`}
@@ -71,8 +75,10 @@ class Workflows extends React.Component {
           {record.data ? record.data.long_name : '...'}
         </h1>
         <section className='page__section'>
-          { record.inflight ? <Loading />
-            : record.error ? <ErrorReport report={record.error} />
+          { record.inflight
+            ? <Loading />
+            : record.error
+              ? <ErrorReport report={record.error} />
               : record.data
                 ? <div>
                   <div className='tab--wrapper'>
@@ -82,7 +88,8 @@ class Workflows extends React.Component {
                   <div>
                     {this.state.view === 'list' ? this.renderList(record.data) : this.renderJson(record.data)}
                   </div>
-                </div> : null
+                </div>
+                : null
           }
         </section>
       </div>
@@ -93,8 +100,8 @@ class Workflows extends React.Component {
     return (
       <ul>
         <li>
-          <label>{data.name}</label>
-          {this.renderReadOnlyJson('recipe', data)}
+          <label>{data.long_name}
+          {this.renderReadOnlyJson('recipe', data)}</label>
         </li>
       </ul>
     );

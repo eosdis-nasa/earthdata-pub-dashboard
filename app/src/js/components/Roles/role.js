@@ -93,8 +93,8 @@ class Roles extends React.Component {
     return (
       <ul>
         <li>
-          <label>{data.name}</label>
-          {this.renderReadOnlyJson('recipe', data)}
+          <label>{data.long_name}
+          {this.renderReadOnlyJson('recipe', data)}</label>
         </li>
       </ul>
     );

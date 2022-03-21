@@ -41,7 +41,7 @@ class Sidebar extends React.Component {
               const title = base + ' link';
               return (
                 <li key={base + i}>
-                  <Link className={classes} to={path} title={title}>
+                  <Link className={classes} to={path} title={title} aria-label={d[0]}>
                     {d[0]}
                   </Link>
                 </li>

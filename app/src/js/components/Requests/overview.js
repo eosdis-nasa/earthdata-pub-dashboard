@@ -124,7 +124,7 @@ class RequestsOverview extends React.Component {
       <section className='page__section page__section__controls'>
         <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
-          { canInitialize ? <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac}>New Request</a> : null }
+          { canInitialize ? <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac} aria-label="Create new request">New Request</a> : null }
         </div>
         <List
           list={list}

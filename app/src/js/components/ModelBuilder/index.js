@@ -17,6 +17,7 @@ class ModelBuilder extends React.Component {
   }
 
   render () {
+    console.log(this.model)
     return (
       <Form schema={this.model} formData={this.formData}
         ArrayFieldTemplate={ArrayFieldTemplate}
@@ -27,7 +28,7 @@ class ModelBuilder extends React.Component {
         noHtml5Validate={true}
         liveValidate={true}
         onSubmit={this.onSubmit} >
-        <button className='button button--small' type="submit">Submit</button>
+        <button className='button button--small' type="submit" aria-label="submit button">Submit</button>
       </Form>
     );
   }

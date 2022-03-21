@@ -94,7 +94,9 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                       onSubmit={(e) => { e.preventDefault(); reply(dispatch, conversationId); }}>
                       <textarea placeholder='Type your reply'
                         className='no-resize'
-                        ref={textRef}></textarea>
+                        ref={textRef}
+                        aria-label="Type your reply"
+                        title="Type your reply"></textarea>
                       <div>
                         <button type='submit'
                           className='button button--small button--reply form-group__element--right'>

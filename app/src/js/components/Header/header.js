@@ -53,7 +53,7 @@ class Header extends React.Component {
     return <Link to={{
       pathname: path[1],
       search: this.props.location.search.split('?')[0]
-    }}>{path[0]}</Link>;
+    }} aria-label={path[0]}>{path[0]}</Link>;
   }
 
   render () {
@@ -68,19 +68,22 @@ class Header extends React.Component {
         <div className='row'>
           <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={mainLogo} /><div>EDPub</div></Link></h1>
           <nav>
-            { !this.props.minimal ? <ul>
+            { !this.props.minimal
+              ? <ul>
               {activePaths.map(path => <li
                 key={path[0]}
                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
-              <div className='rightalign nav__order-8'>
+              <li className='rightalign nav__order-8'>
                 <ul className='right-ul'>
-                  <li className='overviewLink'>{ overviewUrl ? <a href={overviewUrl}>Overview</a> : '' }</li>
-                  <li className='overviewLink'>{ overviewUrl ? <a href="https://app.smartsheet.com/b/form/4978cb9677ad4198a96afd40102e9f2d" target="_blank">Feedback</a> : '' }</li>
+                  <li className='overviewLink'>{ overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : '' }</li>
+                  <li className='overviewLink'>{ overviewUrl ? <a href="https://app.smartsheet.com/b/form/4978cb9677ad4198a96afd40102e9f2d" target="_blank" aria-label="View feedback smartsheet">Feedback</a> : '' }</li>
                   {authenticated &&
-                    <li><Link to={'/conversations'}>Hi, {user}</Link></li>
+                    <li><Link to={'/conversations'} aria-label="View your conversations">Hi, {user}</Link></li>
                   }
-                  <li className='logOut'>{ authenticated ? <a onClick={this.logout}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link> }</li></ul></div>
-            </ul> : <li>&nbsp;</li> }
+                  <li className='logOut'>{ authenticated ? <a onClick={this.logout} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link> }</li></ul>
+              </li>
+            </ul>
+              : null }
           </nav>
         </div>
       </div>

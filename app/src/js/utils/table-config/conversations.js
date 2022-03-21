@@ -7,7 +7,7 @@ export const tableColumns = [
     accessor: (row) => (
       <div className='flex__column'>
         <div>
-          <Link to={`/conversations/id/${row.id}`}>
+          <Link to={`/conversations/id/${row.id}`} aria-label="View your conversation details">
             {row.subject}
           </Link>
         </div>

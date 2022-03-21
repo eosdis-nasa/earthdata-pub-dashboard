@@ -80,8 +80,8 @@ class Metric extends React.Component {
     return (
       <ul>
         <li>
-          <label>{data.name}</label>
-          {this.renderReadOnlyJson('recipe', data)}
+          <label>{data.name}
+          {this.renderReadOnlyJson('recipe', data)}</label>
         </li>
       </ul>
     );

@@ -13,7 +13,7 @@ const Breadcrumbs = ({ config }) => {
             key={index}
             className={`breadcrumb-item ${active ? 'active' : ''}`}
           >
-            {active ? <span>{label}</span> : <Link to={href}>{label}</Link>}
+            {active ? <span>{label}</span> : <Link to={href} aria-label={label}>{label}</Link>}
           </li>
         );
       })}

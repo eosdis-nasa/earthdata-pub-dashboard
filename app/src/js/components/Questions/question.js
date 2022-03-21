@@ -14,8 +14,8 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 function Question ({ title, version, text, help, inputs }) {
   return (
     <div>
-      <h3>Title: {title}</h3>
-      <h3>Version: {version}</h3>
+      <h1>Title: {title}</h1>
+      <h2>Version: {version}</h2>
       <h3>Text: {text}</h3>
       <h3>Help: {help}</h3>
       <h3>Inputs: </h3>
@@ -85,7 +85,8 @@ class QuestionOverview extends React.Component {
         </section>
         <section className='page__section page__section__header-wrapper'>
           { record.inflight && <Loading /> }
-          { record.error ? <ErrorReport report={record.error} />
+          { record.error
+            ? <ErrorReport report={record.error} />
             : record.data
               ? <Question
                 id={record.data.id}
@@ -93,7 +94,8 @@ class QuestionOverview extends React.Component {
                 version={record.data.version}
                 text={record.data.text}
                 help={record.data.help}
-                inputs={record.data.inputs} /> : null
+                inputs={record.data.inputs} />
+              : null
           }
         </section>
       </div>
