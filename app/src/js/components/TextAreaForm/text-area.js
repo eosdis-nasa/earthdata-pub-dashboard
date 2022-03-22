@@ -40,8 +40,8 @@ class TextAreaForm extends React.Component {
 
     return (
       <div className='form__textarea'>
-        <label>{label}</label>
         <ErrorReport report={error} />
+        <label>{label}
         <Ace
           editorProps={{ $blockScrolling: Infinity }}
           mode={mode}
@@ -56,7 +56,9 @@ class TextAreaForm extends React.Component {
           maxLines={maxLines}
           wrapEnabled={true}
           ref={setWindowEditorRef}
-        />
+          aria-label={id}
+          title={id}
+        /></label>
       </div>
     );
   }

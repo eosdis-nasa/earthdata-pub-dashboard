@@ -10,7 +10,7 @@ function FieldTemplate ({ id, classNames, label, help, required, description, er
   return (
     <div className={'model-builder-field'}>
       <label htmlFor={id} onClick={() => { setOpen(!open); }}>
-        {label} <FontAwesomeIcon icon={icon} />
+        { label || 'Please enter:'} <FontAwesomeIcon icon={icon} />
       </label>
       <Collapse in={open}>
         <div>

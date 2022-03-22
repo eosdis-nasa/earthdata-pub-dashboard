@@ -5,11 +5,13 @@
 }
 
 .ace-github .ace_gutter {
-  background: $dark-blue !important;
+  background: darken($dark-blue, 50%) !important;
   color: $white !important;
   padding-top: 5px;
 }
-
+.ace_constant {
+  color:black!important;
+}
 .ace_fold-widget {
   background-image: none !important;
   position: relative;

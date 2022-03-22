@@ -7,7 +7,7 @@ import { lastUpdated } from '../../utils/format';
 
 import {
   listMetrics,
-  getCloudMetric
+  // getCloudMetric
   // searchMetrics,
   // clearMetricsSearch
 } from '../../actions';
@@ -89,9 +89,9 @@ const MetricOverview = ({ metrics }) => {
             />
           </ListFilters> */}
         </List>
-        <div>
-          <img id="testimage" />
-        </div>
+        {/* <div>
+          <img id="testimage" alt="metrics-test-image"/>
+        </div> */}
       </section>
     </div>
   );

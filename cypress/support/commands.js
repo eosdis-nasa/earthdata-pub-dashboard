@@ -26,6 +26,9 @@
 import cloneDeep from 'lodash.clonedeep';
 import { DELETE_TOKEN, SET_TOKEN } from '../../app/src/js/actions/types';
 
+import 'cypress-localstorage-commands';
+import 'cypress-axe';
+
 Cypress.Commands.add('login', () => {
   const authUrl = `${Cypress.config('baseUrl')}/auth`;
   cy.request({

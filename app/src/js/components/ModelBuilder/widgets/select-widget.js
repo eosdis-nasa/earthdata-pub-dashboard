@@ -8,7 +8,9 @@ const SelectWidget = ({ value, onChange, options }) => {
       className="form-control"
       style={{ backgroundColor }}
       value={value || ''}
-      onChange={e => onChange(e.target.value)}>
+      onChange={e => onChange(e.target.value)}
+      aria-label={value}
+      name={value}>
       {enumOptions.map(({ label, value }, i) => {
         return (
           <option key={i} value={value}>

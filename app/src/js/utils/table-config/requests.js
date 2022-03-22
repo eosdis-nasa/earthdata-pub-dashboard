@@ -49,7 +49,7 @@ export const newLink = (request, formalName) => {
   const disabledClass = disabled ? 'button--disabled' : '';
   // This element was purposefully left as an anchor tag (rather than react Link) since the page is redirected away from
   // the dashboard site to the forms site. Converting to a Link component will result in a malformed url.
-  return <a href={request} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</a>;
+  return <a href={request} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`} aria-label={formalName || 'take action'}>{formalName}</a>;
 };
 
 export const assignWorkflow = (request, formalName) => {
@@ -62,7 +62,7 @@ export const assignWorkflow = (request, formalName) => {
   }
   const disabledClass = disabled ? 'button--disabled' : '';
   return <Link className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}
-               to={`${request}`} name={`assignButton`}>{formalName}</Link>;
+               to={`${request}`} name={'assignButton'} aria-label={formalName || 'assign workflow'}>{formalName}</Link>;
 };
 
 export const existingLink = (row, formId, formalName, step) => {
@@ -75,9 +75,9 @@ export const existingLink = (row, formId, formalName, step) => {
   }
   const disabledClass = disabled ? 'button--disabled' : '';
   if (typeof formId === 'undefined') {
-    return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</Link>;
+    return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`} aria-label={formalName}>{formalName || 'review item'}</Link>;
   } else {
-    return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`}>{formalName}</Link>;
+    return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={`button button--small button--green form-group__element--left button--no-icon ${disabledClass}`} aria-label={formalName || 'view form details'}>{formalName}</Link>;
   }
 };
 
@@ -151,14 +151,14 @@ export const tableColumns = [
   {
     Header: 'Data Product Name',
     accessor: row => row.form_data ? row.form_data.data_product_name_value || '(no name)' : '(no name)',
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || '(no name)' : '(no name)'}</Link> : '(no name)',
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || '(no name)' : '(no name)'}</Link> : '(no name)',
     id: 'name',
     width: 170
   },
   {
     Header: 'Status',
     accessor: (row) => row.status,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}>{row.row.original.status}</Link> : null,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.status}</Link> : null,
     id: 'status_message',
     width: 170
   },
@@ -189,7 +189,7 @@ export const tableColumns = [
   },
   {
     Header: 'Conversation',
-    accessor: (row) => row.conversation_id ? <Link to={{ pathname: `/conversations/id/${row.conversation_id}` }}>View</Link> : null,
+    accessor: (row) => row.conversation_id ? <Link to={{ pathname: `/conversations/id/${row.conversation_id}` }} aria-label="View your conversation details">View</Link> : null,
     id: 'conversation_id',
     width: 120
   },

@@ -33,7 +33,7 @@ class Dropdown extends React.Component {
           </li>
           <li className="dropdown__element">
             <div className='dropdown__wrapper'>
-              <select id={id} value={value} onChange={this.onChange}>
+              <select aria-label={id} id={id} value={value} onChange={this.onChange}>
                 {renderedOptions.map((option, i) => {
                   const [value, label] = Array.isArray(option) ? option : [option, option];
                   return (<option key={i} value={value}>{label}</option>);
