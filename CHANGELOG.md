@@ -10,13 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 
-### Added
+## 1.0.19 - 2022-03-22
 
-- Add NASA Apache 2.0 license
-
-### Updated
-
-- Updated CONTRIBUTING.md
+- Remove verson typo; the version is repeated later anyway
 
 ## 1.0.18 - 2022-03-11
 
@@ -81,6 +77,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.0.4 - 2021-08-23
 
+- Add NASA Apache 2.0 license
+- Updated CONTRIBUTING.md
 - Update form names
 - Use simple href link in header to allow overview and feedback urls to work
 - Add temporary feedback link. Meant to be remove after testing
