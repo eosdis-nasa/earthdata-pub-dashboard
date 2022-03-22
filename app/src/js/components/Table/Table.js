@@ -156,14 +156,17 @@ class List extends React.Component {
 
     return (
       <>
-        {filterIdx ? <input
+        {filterIdx
+          ? <input
           value={this.state.filterInput}
           onChange={(e) => {
             this.setState({ filterInput: e.target.value });
           }}
           placeholder={filterPlaceholder}
+          aria-label={filterPlaceholder}
           className={'search'}
-        /> : ''}
+        />
+          : ''}
         <ListActions
           dispatch={dispatch}
           action={action}

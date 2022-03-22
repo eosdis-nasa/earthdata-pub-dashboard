@@ -38,7 +38,7 @@ export const tableColumns = [
   {
     Header: 'Options',
     accessor: '',
-    Cell: row => <Link className='button button--small button--edit' to={{ pathname: `/questions/edit/${row.row.original.id}` }}>Edit</Link>,
+    Cell: row => <Link className='button button--small button--edit' to={{ pathname: `/questions/edit/${row.row.original.id}` }} aria-label="Edit your question">Edit</Link>,
     id: 'required'
   }
 ];

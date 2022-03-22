@@ -42,7 +42,8 @@ const EditRaw = ({
   const isSuccess = updateStatus === 'success';
   const isInflight = updateStatus === 'inflight';
   const isError = !!error;
-  const buttonText = isInflight ? 'loading...'
+  const buttonText = isInflight
+    ? 'loading...'
     : isSuccess ? 'Success!' : 'Submit';
   const recordDisplayName = displayCase(schemaKey);
 
@@ -148,7 +149,8 @@ const EditRaw = ({
         <div className="heading__wrapper--border">
           <h1 className='heading--large'>{pk}</h1>
         </div>
-        { data || data === '' ? (
+        { data || data === ''
+          ? (
           <form>
             <TextArea
               value={data}
@@ -158,6 +160,8 @@ const EditRaw = ({
               mode={'json'}
               minLines={1}
               maxLines={200}
+              aria-label='edit textarea'
+              title="edit textarea"
             />
             <button
               className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right' + (updateStatus === 'inflight' ? ' button--disabled' : '')}
@@ -169,7 +173,8 @@ const EditRaw = ({
               onClick={handleCancel}
             >Cancel</button>
           </form>
-        ) : <Loading /> }
+            )
+          : <Loading /> }
       </section>
       {hasModal &&
       <DefaultModal
