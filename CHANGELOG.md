@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 
+## 1.0.20 - 2022-03-23
+
+Added html sanitization to questions editing, so that questions links in forms can be shown as links.
+
 ## 1.0.19 - 2022-03-22
 
 - Remove verson typo; the version is repeated later anyway
