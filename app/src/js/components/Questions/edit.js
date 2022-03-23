@@ -12,6 +12,7 @@ import config from '../../config';
 import Loading from '../LoadingIndicator/loading-indicator';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import ErrorReport from '../Errors/report';
+import sanitize from 'sanitize-html';
 
 class Questions extends React.Component {
   constructor () {
@@ -50,11 +51,29 @@ class Questions extends React.Component {
 
   async handleSubmit () {
     const { dispatch } = this.props;
-    const question_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
-    const section_question_aceEditorData = this.sectionRefName.current ? JSON.parse(this.sectionRefName.current.editor.getValue()) : {};
-    this.setState({ data: question_aceEditorData, section_data: section_question_aceEditorData });
-    await dispatch(updateQuestion(Object.assign({}, question_aceEditorData,
-      { section_question: section_question_aceEditorData })));
+    const questionAceEditorData = JSON.parse(sanitize(this.refName.current.editor.getValue()));
+    const sectionQuestionAceEditorData = this.sectionRefName.current ? JSON.parse(sanitize(this.sectionRefName.current.editor.getValue())) : {};
+    this.setState({ data: questionAceEditorData, section_data: sectionQuestionAceEditorData });
+    /*
+    Sanitize Html has the following default options:
+      allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
+        'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
+        'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
+      allowedAttributes: {
+        a: [ 'href', 'name', 'target' ],
+        // We don't currently allow img itself by default, but this
+        // would make sense if we did
+        img: [ 'src' ]
+      },
+      // Lots of these won't come up by default because we don't allow them
+      selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
+      // URL schemes we permit
+      allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
+      allowedSchemesByTag: {}
+    */
+    await dispatch(updateQuestion(
+      Object.assign({}, questionAceEditorData, { section_question: sectionQuestionAceEditorData }))
+    );
   }
 
   getRandom () {
