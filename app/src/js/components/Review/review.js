@@ -26,6 +26,8 @@ class ReviewStep extends React.Component {
   async review (id, approval) {
     const { dispatch } = this.props;
     await dispatch(reviewRequest(id, approval));
+    const redirectUrl = new URL('/requests');
+    console.log('test', redirectUrl);
   }
 
   hasStepData () {
