@@ -73,6 +73,7 @@ class WorkflowsOverview extends React.Component {
         if (typeof workflow !== 'undefined' && (workflow.split('_').length - 1)) {
           const workflowChosen = workflow.split('_')[1];
           await dispatch(applyWorkflowToRequest(requestId, workflowChosen));
+          await window.location.reload(false);
         }
       }
     }
