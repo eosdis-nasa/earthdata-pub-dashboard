@@ -25,8 +25,10 @@ class ReviewStep extends React.Component {
 
   async review (id, approval) {
     const { dispatch } = this.props;
-    console.log('this.props', this.props);
     await dispatch(reviewRequest(id, approval));
+    location.href = '/requests';
+    const { history } = this.props;
+    history.push(location.href);
   }
 
   hasStepData () {
