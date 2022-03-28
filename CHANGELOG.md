@@ -10,76 +10,80 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 
-## 1.0.20 - 2022-03-23
+## 1.0.0 - 2022-03-29
 
-Added html sanitization to questions editing, so that questions links in forms can be shown as links.
+- EDPub MVP release
 
-## 1.0.19 - 2022-03-22
+## 0.3.20 - 2022-03-23
+
+- Added html sanitization to questions editing, so that questions links in forms can be shown as links.
+
+## 0.3.19 - 2022-03-22
 
 - Remove verson typo; the version is repeated later anyway
 
-## 1.0.18 - 2022-03-11
+## 0.3.18 - 2022-03-11
 
 - Accessibility updates.
 
-## 1.0.17 - 2022-03-07
+## 0.3.17 - 2022-03-07
 
 - Fixed privileges that got broken from status page update. Reworked workflow next action buttons from changing to 'action' type for approval promote step.
 
-## 1.0.16 - 2022-03-03
+## 0.3.16 - 2022-03-03
 
 - Corrected workflows breadcrumbs to be dynamic and based on assigning or viewing.
 - Fixed malformed users link.
 
 
-## 1.0.15 - 2022-02-25
+## 0.3.15 - 2022-02-25
 
 - Added in Status page for request status grouping.
 - Added in Restore feature for withdrawn requests.  Added page for withdrawn requests. 
 
-## 1.0.14 - 2022-02-22
+## 0.3.14 - 2022-02-22
 
 - Added in Restore feature for withdrawn requests.  Added page for withdrawn requests. 
 - Added links to request pages to sidebar. Misc minor fixes.
 
-## 1.0.13 - 2022-02-10
+## 0.3.13 - 2022-02-10
 
 - Added in for assignment / reassignment of workflows
 
-## 1.0.12 - 2022-02-03
+## 0.3.12 - 2022-02-03
 
 - Added and adjusted cumulus delete functionality to request detail page
 
-## 1.0.11 - 2022-02-02
+## 0.3.11 - 2022-02-02
 
 - Updated request detail page; updated form.js for multiple paths; added and applied some privileges
 
-## 1.0.10 - 2021-12-10
+## 0.3.10 - 2021-12-10
 
 - Created add/edit question capability to dashboard.
 
-## 1.0.9 - 2021-12-06
+## 0.3.9 - 2021-12-06
 
 - Updated sort/filter/pagination functionality for dashboard tables.
 
-## 1.0.8 - 2021-12-01
+## 0.3.8 - 2021-12-01
 
 - Cleaned up dependencies by removing libraries unused and upgrading libraries that do not result in breaking the dashboard or the build
 
-## 1.0.7 - 2021-11-12
+## 0.3.7 - 2021-11-12
 
 - Eliminated breaking changes from webpack4 upgrade to webpack5
 
-## 1.0.6 - 2021-11-04
+## 0.3.6 - 2021-11-04
 
 - Decoupled form names and ids and updated request.js to get next workflow action
 - Reduced vulnerabilities
 
-## 1.0.5 - 2021-10-29
+## 0.3.5 - 2021-10-29
 
 - Decoupled daac selection form
 
-## 1.0.4 - 2021-08-23
+## 0.3.4 - 2021-08-23
 
 - Add NASA Apache 2.0 license
 - Updated CONTRIBUTING.md
@@ -87,15 +91,15 @@ Added html sanitization to questions editing, so that questions links in forms c
 - Use simple href link in header to allow overview and feedback urls to work
 - Add temporary feedback link. Meant to be remove after testing
 
-## 1.0.3 - 2021-08-16
+## 0.3.3 - 2021-08-16
 
 - Update logo and favicon to nasa meatball logo
 
-## 1.0.2 - 2021-08-11
+## 0.3.2 - 2021-08-11
 
 - Added handling of no answer for table format detail
 
-## 1.0.1 - 2021-07-22
+## 0.3.1 - 2021-07-22
 
 - Updated form.js for custom table type input
 - Added cloud metrics actions, types and image to index.js, types.js and metrics/overview.js and some general cleanup.
@@ -103,9 +107,9 @@ Added html sanitization to questions editing, so that questions links in forms c
 - Updated header to include overview link
 - Added overviewUrl to config so home page displays intro paragraph
 
-## 1.0.0 - 2021-06-29
+## 0.3.0 - 2021-06-29
 
-- Open source release version 1.0.0
+- Open source release version 0.3.0 [note: this was retroactively renumbered from 1.0 to 0.3 to allow MVP release version]
 
 ## 0.2.2 - 2021-06-24
 
@@ -195,7 +199,7 @@ Added html sanitization to questions editing, so that questions links in forms c
 - Fixed bad changes to overviews
 - Changed to real dates instead of 'fromnow' dates
 
-## 0.1.0 - 2020-10-31
+## 0.0.3 - 2020-10-31
 
 - Remove unused dependencies and remove mock-api
 - Make npm run commands to start/stop api and dashboard specific to EDPUB
