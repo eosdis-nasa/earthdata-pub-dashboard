@@ -55,18 +55,16 @@ class ReviewStep extends React.Component {
             { canReview && reviewReady && typeof requestId !== 'undefined' && (
                 <div className='flex__row'>
                   <div className='flex__item--spacing'>
-                    <Link className={'button button--no-icon button--medium button--green'}
-                          onClick={() => this.review(requestId, false)} to={`/requests`}
-                          aria-label="reject this item">
+                  <button onClick={() => this.review(requestId, false)}
+                      className='button button--no-icon button--medium button--green'>
                       Reject
-                    </Link>
+                  </button>
                   </div>
                   <div className='flex__item--spacing'>
-                    <Link className={'button button--no-icon button--medium button--green'}
-                          onClick={() => this.review(requestId, true)} to={`/requests`}
-                          aria-label="approve this item">
+                  <button onClick={() => this.review(requestId, true)}
+                      className='button button--no-icon button--medium button--green'>
                       Approve
-                    </Link>
+                  </button>
                   </div>
                 </div>
             )}
