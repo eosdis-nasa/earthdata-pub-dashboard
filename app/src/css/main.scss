@@ -5,8 +5,8 @@
 /* Reboot
    ========================================================================== */
 
-   @import "normalize";
-   @import "reset";
+   @import 'normalize';
+   @import 'reset';
 
 /**
  * Using Kenneth Ormandy's OpenType features—ligatures, kerning, and
@@ -14,7 +14,7 @@
  * https://github.com/kennethormandy/normalize-opentype.css
  */
 
- @import "normalize-opentype";
+ @import 'normalize-opentype';
 
 /* Application Styles
    ========================================================================== */
@@ -32,9 +32,10 @@
 @import '../css/modules/table';
 @import '../js/components/LoadingIndicator/loading-indicator';
 @import 'pulse';
-@import "../js/components/Datepicker/Datepicker.scss";
-@import "../js/components/DatePickerHeader/DatePickerHeader.scss";
-@import "chart";
+@import '../js/components/Datepicker/Datepicker.scss';
+@import '../js/components/DatePickerHeader/DatePickerHeader.scss';
+@import 'chart';
+@import 'footer';
 
 /**********************************
 * Bootstrap
