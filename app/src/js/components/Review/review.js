@@ -26,9 +26,6 @@ class ReviewStep extends React.Component {
   async review (id, approval) {
     const { dispatch } = this.props;
     await dispatch(reviewRequest(id, approval));
-    location.href = '/requests';
-    const { history } = this.props;
-    history.push(location.href);
   }
 
   hasStepData () {
@@ -55,16 +52,18 @@ class ReviewStep extends React.Component {
             { canReview && reviewReady && typeof requestId !== 'undefined' && (
                 <div className='flex__row'>
                   <div className='flex__item--spacing'>
-                  <button onClick={() => this.review(requestId, false)}
-                      className='button button--no-icon button--medium button--green'>
+                    <Link className={'button button--no-icon button--medium button--green'}
+                          onClick={() => this.review(requestId, false)} to={`/requests`}
+                          aria-label="reject this item">
                       Reject
-                  </button>
+                    </Link>
                   </div>
                   <div className='flex__item--spacing'>
-                  <button onClick={() => this.review(requestId, true)}
-                      className='button button--no-icon button--medium button--green'>
+                    <Link className={'button button--no-icon button--medium button--green'}
+                          onClick={() => this.review(requestId, true)} to={`/requests`}
+                          aria-label="approve this item">
                       Approve
-                  </button>
+                    </Link>
                   </div>
                 </div>
             )}
