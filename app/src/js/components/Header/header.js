@@ -62,7 +62,6 @@ class Header extends React.Component {
     const activePaths = paths.filter(path => {
       return !!privileges[path[2]] || privileges.ADMIN;
     });
-    const feedbackUrl = overviewUrl + '/feedback';
     return (
       <div className='header' role="navigation" aria-label="Header">
         <div className='row'>
@@ -76,7 +75,6 @@ class Header extends React.Component {
               <li className='rightalign nav__order-8'>
                 <ul className='right-ul'>
                   <li className='overviewLink'>{ overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : '' }</li>
-                  <li className='overviewLink'>{ overviewUrl ? <a href="https://app.smartsheet.com/b/form/4978cb9677ad4198a96afd40102e9f2d" target="_blank" aria-label="View feedback smartsheet">Feedback</a> : '' }</li>
                   {authenticated &&
                     <li><Link to={'/conversations'} aria-label="View your conversations">Hi, {user}</Link></li>
                   }
