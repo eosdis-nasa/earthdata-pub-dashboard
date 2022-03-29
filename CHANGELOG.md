@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 
+## 1.0.20 - 2022-03-29
+
+- Fixed refresh issue for the approval page and the review component. Minor cleanup. Added Loading to requests overview, status page and withdrawn page.
+
 ## 1.0.19 - 2022-03-22
 
 - Remove verson typo; the version is repeated later anyway
