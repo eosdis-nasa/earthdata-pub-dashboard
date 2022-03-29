@@ -55,7 +55,7 @@ class Questions extends React.Component {
     this.setState({ data: question_aceEditorData, section_data: section_question_aceEditorData });
     await dispatch(updateQuestion(Object.assign({}, question_aceEditorData,
       { section_question: section_question_aceEditorData })));
-    this.props.history.push("/questions");
+    this.props.history.push(`/questions/id/${question_aceEditorData.id}`);
   }
 
   getRandom () {
@@ -123,7 +123,6 @@ class Questions extends React.Component {
                                 </div>
                               : null)
                     }
-                    {/* TODO- Update this redirect to `/questions/id/${this.state.data.id}` once we no longer rely on user to define question id */}
                     <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'}
                     onClick={this.handleSubmit} aria-label="submit your questions">
                         Submit
