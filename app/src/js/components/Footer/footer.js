@@ -35,7 +35,6 @@ class Footer extends React.Component {
             </ul>
           </nav>
         </div>
-        <fbm />
       </footer>
     );
   }
