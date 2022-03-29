@@ -9,6 +9,10 @@ class Footer extends React.Component {
     this.displayName = 'Footer';
   }
 
+  handler () {
+    this.feedback.showForm();
+  }
+
   render () {
     const { authenticated } = this.props.api;
     const { warning, versionNumber } = this.props.apiVersion;
@@ -31,11 +35,10 @@ class Footer extends React.Component {
               <li><a href="https://www.nasa.gov/FOIA/index.html">FOIA</a></li>
               <li><a href="https://www.nasa.gov/about/highlights/HP_Privacy.html">NASA Privacy Policy</a></li>
               <li><a href="https://www.usa.gov/">USA.gov</a></li>
-              <li><a href="javascript:feedback.showForm();">Feedback</a></li>
+              <li><a onClick={() => this.handler}>Feedback</a></li>
             </ul>
           </nav>
         </div>
-        <fbm />
       </footer>
     );
   }
