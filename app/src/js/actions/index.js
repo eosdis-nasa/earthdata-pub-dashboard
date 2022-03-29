@@ -827,6 +827,6 @@ export const updateSearchModal = (path, query) => ({
     type: types.SEARCH_MODAL,
     method: 'GET',
     path,
-    qs: Object.assign({ per_page: 10, page: 0 }, query)
+    qs: Object.assign(query)
   }
 });
