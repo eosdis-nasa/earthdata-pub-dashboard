@@ -3,7 +3,7 @@ import React from 'react';
 import Ace from 'react-ace';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, useHistory } from 'react-router-dom';
 import {
   getQuestion,
   updateQuestion
@@ -51,29 +51,12 @@ class Questions extends React.Component {
 
   async handleSubmit () {
     const { dispatch } = this.props;
-    const questionAceEditorData = JSON.parse(sanitize(this.refName.current.editor.getValue()));
-    const sectionQuestionAceEditorData = this.sectionRefName.current ? JSON.parse(sanitize(this.sectionRefName.current.editor.getValue())) : {};
-    this.setState({ data: questionAceEditorData, section_data: sectionQuestionAceEditorData });
-    /*
-    Sanitize Html has the following default options:
-      allowedTags: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
-        'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
-        'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre' ],
-      allowedAttributes: {
-        a: [ 'href', 'name', 'target' ],
-        // We don't currently allow img itself by default, but this
-        // would make sense if we did
-        img: [ 'src' ]
-      },
-      // Lots of these won't come up by default because we don't allow them
-      selfClosing: [ 'img', 'br', 'hr', 'area', 'base', 'basefont', 'input', 'link', 'meta' ],
-      // URL schemes we permit
-      allowedSchemes: [ 'http', 'https', 'ftp', 'mailto' ],
-      allowedSchemesByTag: {}
-    */
-    await dispatch(updateQuestion(
-      Object.assign({}, questionAceEditorData, { section_question: sectionQuestionAceEditorData }))
-    );
+    const question_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
+    const section_question_aceEditorData = this.sectionRefName.current ? JSON.parse(this.sectionRefName.current.editor.getValue()) : {};
+    this.setState({ data: question_aceEditorData, section_data: section_question_aceEditorData });
+    await dispatch(updateQuestion(Object.assign({}, question_aceEditorData,
+      { section_question: section_question_aceEditorData })));
+    this.props.history.push(`/questions/id/${question_aceEditorData.id}`);
   }
 
   getRandom () {
@@ -141,11 +124,10 @@ class Questions extends React.Component {
                                 </div>
                               : null)
                     }
-                    {/* TODO- Update this redirect to `/questions/id/${this.state.data.id}` once we no longer rely on user to define question id */}
-                    <Link className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'}
-                    onClick={this.handleSubmit} to={'/questions'} aria-label="submit your questions">
+                    <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'}
+                    onClick={this.handleSubmit} aria-label="submit your questions">
                         Submit
-                    </Link>
+                    </button>
                     <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'}
                     to={'/questions'} aria-label="cancel question editing">
                         Cancel
