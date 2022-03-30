@@ -12,7 +12,6 @@ import config from '../../config';
 import Loading from '../LoadingIndicator/loading-indicator';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import ErrorReport from '../Errors/report';
-import sanitize from 'sanitize-html';
 
 class Questions extends React.Component {
   constructor () {
