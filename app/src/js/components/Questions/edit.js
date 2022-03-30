@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import { withRouter, Link, useHistory } from 'react-router-dom';
 import {
   getQuestion,
-  updateQuestion
+  updateQuestion,
+  addQuestion
 } from '../../actions';
 import config from '../../config';
 import Loading from '../LoadingIndicator/loading-indicator';
@@ -53,8 +54,9 @@ class Questions extends React.Component {
     const question_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
     const section_question_aceEditorData = this.sectionRefName.current ? JSON.parse(this.sectionRefName.current.editor.getValue()) : {};
     this.setState({ data: question_aceEditorData, section_data: section_question_aceEditorData });
-    await dispatch(updateQuestion(Object.assign({}, question_aceEditorData,
-      { section_question: section_question_aceEditorData })));
+    const payload = Object.assign({}, question_aceEditorData,
+      { section_question: section_question_aceEditorData });
+    Object.keys(section_question_aceEditorData).length === 0 ? await dispatch(updateQuestion(payload)) : await dispatch(addQuestion(payload));
     this.props.history.push(`/questions/id/${question_aceEditorData.id}`);
   }
 
@@ -100,7 +102,7 @@ class Questions extends React.Component {
                                                 onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>Question JSON</button>
                                     </div>
                                     <div>
-                                        {this.renderJson((this.state.data ? this.state.data : record.data), this.refName)}
+                                        {this.renderJson((this.state.data ? this.state.data : Object.keys(record.data).filter((key) => key !== 'inputs').reduce((obj, key) => {return Object.assign(obj, {[key]: record.data[key]});}, {})), this.refName)}
                                     </div>
                                 </div>
                           : null

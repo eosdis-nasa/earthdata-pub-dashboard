@@ -243,6 +243,15 @@ export const updateQuestion = (payload) => ({
   [CALL_API]: {
     type: types.QUESTIONS,
     method: 'POST',
+    path: `data/question/${payload.id}}`,
+    json: payload
+  }
+});
+
+export const addQuestion = (payload) => ({
+  [CALL_API]: {
+    type: types.QUESTIONS,
+    method: 'POST',
     path: 'data/questions',
     json: payload
   }
