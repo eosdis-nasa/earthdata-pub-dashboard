@@ -72,7 +72,7 @@ export const requestMiddleware = ({ dispatch, getState }) => next => action => {
       .then((response) => {
         const { body } = response;
 
-        if (response.statusCode >= 400) {
+        if (+response.statusCode >= 400) {
           const error = new Error(getErrorMessage(response));
           return handleError({ id, type, error, requestAction }, next);
         }
