@@ -15,6 +15,7 @@ import List from '../Table/Table';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import Loading from '../LoadingIndicator/loading-indicator';
 
 const breadcrumbConfig = [
   {
@@ -125,7 +126,9 @@ class InactiveRequestsOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.submissions_withdrawn2} Requests <span className='num--title'>{unique.length}</span></h2>
           </div>
-          <List
+          {!list || (typeof list.data[0] !== 'undefined' && list.data[0].hidden === false)
+            ? <Loading />
+            : <List
             list={list}
             tableColumns={tableColumns}
             query={this.generateQuery()}
@@ -134,6 +137,7 @@ class InactiveRequestsOverview extends React.Component {
             filterPlaceholder='Search Requests'
           >
           </List>
+          }
         </section>
       </div>
     );

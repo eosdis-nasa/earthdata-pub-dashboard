@@ -35,7 +35,6 @@ class Header extends React.Component {
     const { dispatch, history } = this.props;
     dispatch(logout());
     localStorage.removeItem('auth-token');
-    // window.location.href = overviewUrl;
     history.push('/');
   }
 
