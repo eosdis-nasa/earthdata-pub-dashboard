@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Earthdata Pub Dashboard</title>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.svg" type="image/x-icon" />
     <meta
       name="description"
       content="Earthdata Pub Dashboard"
@@ -25,5 +25,9 @@
 
     <div id="site-canvas">
     </div>
+    <!-- Add Kayako feedback module -->
+    <script type="text/javascript" src="https://fbm.earthdata.nasa.gov/for/EDPub/feedback.js"></script>
+    <script>feedback.init();</script>
+    <script src="https://cdn.earthdata.nasa.gov/tophat2/tophat2.js" id="earthdata-tophat-script" data-show-fbm="true" data-show-status="true" data-width="1140"></script>    
 </body>
 </html>

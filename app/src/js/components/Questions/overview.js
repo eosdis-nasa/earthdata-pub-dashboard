@@ -10,6 +10,7 @@ import List from '../Table/Table';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import {Link} from "react-router-dom";
+import Loading from "../LoadingIndicator/loading-indicator";
 
 const breadcrumbConfig = [
   {
@@ -65,16 +66,17 @@ class QuestionsOverview extends React.Component {
             >Add Question
             </Link>
           </div>
-          <List
-            list={list}
-            action={listQuestions}
-            tableColumns={tableColumns}
-            query={this.generateQuery()}
-            rowId='id'
-            filterIdx='question_name'
-            filterPlaceholder='Search Questions'
-          >
-          </List>
+          {!questions.list || questions.list.data.constructor.name !== 'Array' ? <Loading /> : <List
+                list={list}
+                action={listQuestions}
+                tableColumns={tableColumns}
+                query={this.generateQuery()}
+                rowId='id'
+                filterIdx='question_name'
+                filterPlaceholder='Search Questions'
+              >
+              </List>
+          }
         </section>
       </div>
     );

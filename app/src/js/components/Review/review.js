@@ -26,6 +26,7 @@ class ReviewStep extends React.Component {
   async review (id, approval) {
     const { dispatch } = this.props;
     await dispatch(reviewRequest(id, approval));
+    window.location.href = `${window.location.origin}${window.location.pathname.split(/forms/)[0]}requests`;
   }
 
   hasStepData () {
@@ -50,22 +51,20 @@ class ReviewStep extends React.Component {
         <div className='page__component'>
           <section className='page_section'>
             { canReview && reviewReady && typeof requestId !== 'undefined' && (
-                <div className='flex__row'>
-                  <div className='flex__item--spacing'>
-                    <Link className={'button button--no-icon button--medium button--green'}
-                          onClick={() => this.review(requestId, false)} to={`/requests`}
-                          aria-label="reject this item">
+              <div className='flex__row'>
+                <div className='flex__item--spacing'>
+                  <button onClick={() => this.review(requestId, false)}
+                      className='button button--no-icon button--medium button--green'>
                       Reject
-                    </Link>
-                  </div>
-                  <div className='flex__item--spacing'>
-                    <Link className={'button button--no-icon button--medium button--green'}
-                          onClick={() => this.review(requestId, true)} to={`/requests`}
-                          aria-label="approve this item">
-                      Approve
-                    </Link>
-                  </div>
+                  </button>
                 </div>
+                <div className='flex__item--spacing'>
+                  <button onClick={() => this.review(requestId, true)}
+                      className='button button--no-icon button--medium button--green'>
+                      Approve
+                  </button>
+                </div>
+              </div>
             )}
           </section>
         </div>

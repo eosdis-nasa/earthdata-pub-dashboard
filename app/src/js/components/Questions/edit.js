@@ -3,10 +3,11 @@ import React from 'react';
 import Ace from 'react-ace';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, useHistory } from 'react-router-dom';
 import {
   getQuestion,
-  updateQuestion
+  updateQuestion,
+  addQuestion
 } from '../../actions';
 import config from '../../config';
 import Loading from '../LoadingIndicator/loading-indicator';
@@ -53,8 +54,10 @@ class Questions extends React.Component {
     const question_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
     const section_question_aceEditorData = this.sectionRefName.current ? JSON.parse(this.sectionRefName.current.editor.getValue()) : {};
     this.setState({ data: question_aceEditorData, section_data: section_question_aceEditorData });
-    await dispatch(updateQuestion(Object.assign({}, question_aceEditorData,
-      { section_question: section_question_aceEditorData })));
+    const payload = Object.assign({}, question_aceEditorData,
+      { section_question: section_question_aceEditorData });
+    Object.keys(section_question_aceEditorData).length === 0 ? await dispatch(updateQuestion(payload)) : await dispatch(addQuestion(payload));
+    this.props.history.push(`/questions/id/${question_aceEditorData.id}`);
   }
 
   getRandom () {
@@ -99,7 +102,7 @@ class Questions extends React.Component {
                                                 onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>Question JSON</button>
                                     </div>
                                     <div>
-                                        {this.renderJson((this.state.data ? this.state.data : record.data), this.refName)}
+                                        {this.renderJson((this.state.data ? this.state.data : Object.keys(record.data).filter((key) => key !== 'inputs').reduce((obj, key) => {return Object.assign(obj, {[key]: record.data[key]});}, {})), this.refName)}
                                     </div>
                                 </div>
                           : null
@@ -122,11 +125,10 @@ class Questions extends React.Component {
                                 </div>
                               : null)
                     }
-                    {/* TODO- Update this redirect to `/questions/id/${this.state.data.id}` once we no longer rely on user to define question id */}
-                    <Link className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'}
-                    onClick={this.handleSubmit} to={'/questions'} aria-label="submit your questions">
+                    <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'}
+                    onClick={this.handleSubmit} aria-label="submit your questions">
                         Submit
-                    </Link>
+                    </button>
                     <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'}
                     to={'/questions'} aria-label="cancel question editing">
                         Cancel
