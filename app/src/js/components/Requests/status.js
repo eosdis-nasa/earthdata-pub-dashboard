@@ -19,6 +19,7 @@ import List from '../Table/Table';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import Loading from '../LoadingIndicator/loading-indicator';
 
 export const tableColumns = [
   {
@@ -176,7 +177,9 @@ class ActionRequestsOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Action <span className='num--title'>{unique.length}</span></h2>
           </div>
-          <List
+          {!list
+            ? <Loading />
+            : <List
             list={this.filter(list)}
             tableColumns={tableColumns}
             query={query}
@@ -185,6 +188,7 @@ class ActionRequestsOverview extends React.Component {
             filterPlaceholder='Search Requests'
           >
           </List>
+          }
         </section>
       </div>
     );

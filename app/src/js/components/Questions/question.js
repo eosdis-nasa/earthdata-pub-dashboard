@@ -94,7 +94,7 @@ class QuestionOverview extends React.Component {
                 version={record.data.version}
                 text={record.data.text}
                 help={record.data.help}
-                inputs={record.data.inputs} />
+                inputs={record.data.inputs ? record.data.inputs : []} />
               : null
           }
         </section>
