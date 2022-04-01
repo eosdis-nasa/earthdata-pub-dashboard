@@ -257,6 +257,15 @@ export const addQuestion = (payload) => ({
   }
 });
 
+export const updateInputs = (questionId, payload) => ({
+  [CALL_API]: {
+    type: types.INPUTS,
+    method: 'POST',
+    path: `data/question/${questionId}/inputs`,
+    json: payload
+  }
+});
+
 export const clearUpdateQuestion = (questionId) => ({ type: types.UPDATE_QUESTIONS_CLEAR, id: questionId });
 
 export const getModel = (model) => ({

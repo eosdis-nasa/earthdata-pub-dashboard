@@ -7,7 +7,8 @@ import { withRouter, Link, useHistory } from 'react-router-dom';
 import {
   getQuestion,
   updateQuestion,
-  addQuestion
+  addQuestion,
+  updateInputs
 } from '../../actions';
 import config from '../../config';
 import Loading from '../LoadingIndicator/loading-indicator';
@@ -57,6 +58,7 @@ class Questions extends React.Component {
     const payload = Object.assign({}, question_aceEditorData,
       { section_question: section_question_aceEditorData });
     Object.keys(section_question_aceEditorData).length === 0 ? await dispatch(updateQuestion(payload)) : await dispatch(addQuestion(payload));
+    question_aceEditorData.inputs && question_aceEditorData.inputs.length > 0 ? await dispatch(updateInputs(question_aceEditorData.id, question_aceEditorData.inputs)) : null;
     this.props.history.push(`/questions/id/${question_aceEditorData.id}`);
   }
 
@@ -102,7 +104,7 @@ class Questions extends React.Component {
                                                 onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>Question JSON</button>
                                     </div>
                                     <div>
-                                        {this.renderJson((this.state.data ? this.state.data : Object.keys(record.data).filter((key) => key !== 'inputs').reduce((obj, key) => {return Object.assign(obj, {[key]: record.data[key]});}, {})), this.refName)}
+                                        {this.renderJson((this.state.data ? this.state.data : record.data), this.refName)}
                                     </div>
                                 </div>
                           : null
