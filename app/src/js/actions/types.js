@@ -280,6 +280,9 @@ export const FILTER_QUESTIONS = 'FILTER_QUESTIONS';
 export const CLEAR_QUESTIONS_FILTER = 'CLEAR_QUESTIONS_FILTER';
 export const UPDATE_QUESTIONS_CLEAR = 'UPDATE_QUESTIONS_CLEAR';
 
+// Inputs
+export const INPUTS = 'INPUTS';
+
 // Model
 export const MODEL = 'MODEL';
 export const MODEL_INFLIGHT = 'MODEL_INFLIGHT';

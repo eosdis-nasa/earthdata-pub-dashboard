@@ -10,7 +10,9 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel }) => {
   const { title, path, primary, fields } = config[entity];
   const [selected, setSelected] = useState(false);
   const [searchParams, setSearchParams] = useState({});
+  const [page, setPage] = useState(1);
   useEffect(() => {
+    setPage(1);
     dispatch(updateSearchModal(path, {
       ...Object.entries(searchParams).reduce((acc, [key, value]) => {
         if (value && value !== '') {
@@ -20,7 +22,13 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel }) => {
       }, {})
     }));
   }, [searchParams]);
+
+  function paginate(arr, page_size, page_number) {
+    return arr.slice((page_number - 1) * page_size, page_number * page_size);
+  }
+
   const { list, inflight } = search;
+  const entityArr = paginate(list, listSize, page);
   return (
     <div className='search-modal__background'
       onClick={() => { cancel(); }}>
@@ -43,7 +51,7 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel }) => {
                   })}></input>
               </div>))}
             </li>
-            { Array.isArray(list) ? list.map((item, key) => {
+            { Array.isArray(entityArr) ? entityArr.map((item, key) => {
               const className = `search-modal__item${item[primary] === selected
                 ? '--selected' : ''}`;
               return (<li className={className}
@@ -53,25 +61,21 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel }) => {
               </li>
               );
             }) : null}
-            { list.length < listSize &&
-            Array(listSize - list.length).fill(0).map((i, key) => (
+            { entityArr.length < listSize &&
+            Array(listSize - entityArr.length).fill(0).map((i, key) => (
               <li key={key} className='search-modal__item--hidden'></li>))
             }
           </ul>
         </div>
         <div className='search-modal__controls'>
           <button className='button button--medium button--previous'
-            onClick={() => setSearchParams({ ...searchParams, page: Math.max(0, searchParams.page - 1) })}
-            // TODO- Update below line when pagination in search modal is resolved
-            // disabled={searchParams.page <= 0 || inflight}>
-            disabled="true">
+            onClick={() => setPage(page - 1)}
+            disabled={inflight || page <= 1}>
             Previous Page
           </button>
           <button className='button button--medium button--next'
-            onClick={() => setSearchParams({ ...searchParams, page: Math.max(0, searchParams.page + 1) })}
-            // TODO- Update below line when pagination in search modal is resolved
-            // disabled={list.length < listSize || inflight}>
-            disabled="true">
+            onClick={() => setPage(page + 1)}
+            disabled={inflight || (page * listSize) >= list.length }>
             Next Page
           </button>
           <button className='button button--medium button--cancel'
