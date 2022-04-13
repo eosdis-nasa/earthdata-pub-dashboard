@@ -13,8 +13,7 @@ services:
       DATA_DIR: "/tmp/localstack/data"
   shim:   # empty container to open ports
     network_mode: "host"
-    image: node:12.19.0
-    network_mode: "host"
+    image: node:14.19.1
     command:
       bash -c "tail -f /dev/null"
     working_dir:

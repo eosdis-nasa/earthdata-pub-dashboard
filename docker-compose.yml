@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   dashboard:
-    image: node:12.19.0
+    image: node:14.19.1
     network_mode: "service:shim"
     command:
       bash -c "npm rebuild node-sass && npm run serve"
@@ -20,7 +20,7 @@ services:
       - REQUEST_HIDE_BUTTON_VERBAGE=Withdraw
       - REQUEST_UNHIDE_BUTTON_VERBAGE=Restore
   shim:   # empty container to open ports
-    image: node:12.19.0
+    image: node:14.19.1
     command:
       bash -c "tail -f /dev/null"
     working_dir:
