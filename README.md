@@ -54,7 +54,7 @@ To locate environment variables, see webpack.common.js:
 
 ## Installing
 
-The dashboard uses node v12.19.0. To build/run the dashboard on your local
+The dashboard uses node v14.19.1. To build/run the dashboard on your local
 machine, install nvm following the [nvm Install & Update Script](https://github.com/nvm-sh/nvm#install--update-script)
 instructions.
 
@@ -64,7 +64,7 @@ step is to clone the repo!
 ```bash
 git clone https://git.earthdata.nasa.gov/scm/edpub/dashboard.git
 cd api
-nvm install v12.19.0
+nvm install v14.19.1
 nvm use
 npm install
 ```
