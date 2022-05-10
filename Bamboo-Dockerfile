@@ -1,5 +1,5 @@
 # Earthdata Pub Dashboard Docker For Bamboo CI/CD
-FROM node:12.19.0
+FROM node:14.19.1
 
 COPY . /tmp/
 WORKDIR /tmp
