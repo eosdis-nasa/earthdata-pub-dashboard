@@ -53,11 +53,11 @@ export const newLink = (request, formalName) => {
     disabled = true;
   }
   if (disabled) {
-    return <span>{formalName}</span>;
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon'} aria-label={formalName}>{formalName}</Link>;
   } else {
     // This element was purposefully left as an anchor tag (rather than react Link) since the page is redirected away from
     // the dashboard site to the forms site. Converting to a Link component will result in a malformed url.
-    return <a href={request} className={'button button--small button--green form-group__element--left button--no-icon'} aria-label={formalName || 'take action'}>{formalName}</a>;
+    return <a href={request} className={'button button--medium button--green form-group__element--left button--no-icon'} aria-label={formalName || 'take action'}>{formalName}</a>;
   }
 };
 
@@ -70,9 +70,9 @@ export const assignWorkflow = (request, formalName) => {
     disabled = true;
   }
   if (disabled) {
-    return <span>{formalName}</span>;
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon'} aria-label={formalName}>{formalName}</Link>;
   } else {
-    return <Link className={'button button--small button--green form-group__element--left button--no-icon'}
+    return <Link className={'button button--medium button--green form-group__element--left button--no-icon'}
                to={`${request}`} name={'assignButton'} aria-label={formalName || 'assign workflow'}>{formalName}</Link>;
   }
 };
@@ -86,12 +86,12 @@ export const existingLink = (row, formId, formalName, step) => {
     disabled = true;
   }
   if (disabled) {
-    return <span>{formalName}</span>;
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon'} aria-label={formalName}>{formalName}</Link>;
   } else {
     if (typeof formId === 'undefined') {
-      return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--small button--green form-group__element--left button--no-icon'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+      return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon'} aria-label={formalName || 'review item'}>{formalName}</Link>;
     } else {
-      return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={'button button--small button--green form-group__element--left button--no-icon'} aria-label={formalName || 'view form details'}>{formalName}</Link>;
+      return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={'button button--medium button--green form-group__element--left button--no-icon'} aria-label={formalName || 'view form details'}>{formalName}</Link>;
     }
   }
 };

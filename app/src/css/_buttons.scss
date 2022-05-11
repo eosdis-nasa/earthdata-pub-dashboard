@@ -82,6 +82,13 @@
     }
   }
 
+  &--clear, &--clear:visited {
+    color: $midnight-blue;
+    background-color: unset;
+    pointer-events: none;
+    margin-top:-4px!important;
+  }
+
   &--green, &--green:visited {
     background-color: $light-green;
 
@@ -506,6 +513,7 @@
           top: unset;
         }
       }
+
     }
 
     &__icon--animation {
