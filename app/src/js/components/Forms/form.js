@@ -238,7 +238,8 @@ class FormOverview extends React.Component {
                     sectionQuestions.push(
                       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
                         {!hasAnswers ? <br /> : null}
-                        <div key={this.getRandom()} style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>{question[b].inputs[a].label}:</div>
+                        <div key={this.getRandom()} style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>
+                        {!question[b].inputs[a].label ? 'Response' : question[b].inputs[a].label}:</div>
                         <div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
                       </li>
                     );
