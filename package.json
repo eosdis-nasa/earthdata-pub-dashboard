@@ -16,7 +16,7 @@
   "homepage": "https://git.earthdata.nasa.gov/projects/EDPUB/repos/dashboard/browse",
   "private": true,
   "engines": {
-    "node": ">=12.19.0"
+    "node": "14.19.1"
   },
   "scripts": {
     "clean-modules": "rm -rf package-lock.json node_modules/",
