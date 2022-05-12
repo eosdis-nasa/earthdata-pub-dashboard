@@ -20,7 +20,7 @@ const Requests = ({
   const { pathname } = location;
   return (
     <div className='page__requests'>
-      {/*  <DatePickerHeader onChange={query} heading={strings.all_submissions}/> */}
+      {/*  <DatePickerHeader onChange={query} heading={strings.all_requests}/> */}
       <div className='content__header'>
         <div className='row'>
           <h1 className='heading--xlarge heading--shared-content'>Requests</h1>

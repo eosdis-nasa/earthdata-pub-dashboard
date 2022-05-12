@@ -13,7 +13,7 @@ import {
   // displayCase
 } from '../utils/format';
 import List from './Table/Table';
-// import SubmissionsProgress from './Requests/progress';
+// import RequestsProgress from './Requests/progress';
 import {
   tableColumns,
   errorTableColumns
@@ -235,9 +235,9 @@ class Home extends React.Component {
       [tally(get(dist, 'apiGateway.access.errors')), 'Gateway Access Errors', kibanaGatewayAccessErrorsLink(this.props.earthdatapubInstance, this.props.datepicker)]
     ]; */
 
-    // const submissionCount = get(count.data, 'requests.meta.count');
-    // const numSubmissions = !isNaN(submissionCount) ? `${tally(submissionCount)}` : 0;
-    // const submissionStatus = get(count.data, 'requests.count', []);
+    // const requestCount = get(count.data, 'requests.meta.count');
+    // const numRequests = !isNaN(requestCount) ? `${tally(requestCount)}` : 0;
+    // const requestStatus = get(count.data, 'requests.count', []);
     list = this.filter(list);
     return (
       <div className='page__home'>
@@ -247,7 +247,7 @@ class Home extends React.Component {
           </div>
         </div>
 
-        <div className='page__content page__content__nosidebar home_submissions_table'>
+        <div className='page__content page__content__nosidebar home_requests_table'>
           {this.renderOverview()}
           {this.renderUserInfo()}
           {/*
@@ -278,19 +278,19 @@ class Home extends React.Component {
             <div className='row'>
               <div className='heading__wrapper--border'>
                 <h2 className='heading--large heading--shared-content--right'>Requests Updates</h2>
-                <Link className='link--secondary link--learn-more' to='/requests' aria-label="Learn more about requests">{strings.view_submissions_overview}</Link>
+                <Link className='link--secondary link--learn-more' to='/requests' aria-label="Learn more about requests">{strings.view_requests_overview}</Link>
               </div>
               <div className="heading__wrapper">
-                <h2 className='heading--medium heading--shared-content--right'>{strings.submissions_updated}<span className='num--title'>{numSubmissions}</span></h2>
+                <h2 className='heading--medium heading--shared-content--right'>{strings.requests_updated}<span className='num--title'>{numRequests}</span></h2>
               </div>
 
-              <SubmissionsProgress requests={submissionStatus} />
+              <RequestsProgress requests={requestStatus} />
             </div>
           </section> */}
           <section className='page__section list--requests'>
             <div className='row'>
               <div className='heading__wrapper--border'>
-                <h2 className='heading--medium heading--shared-content--right'>{strings.submissions_inprogress}</h2>
+                <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
                 <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
               </div>
               <List

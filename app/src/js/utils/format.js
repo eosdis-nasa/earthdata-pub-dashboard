@@ -93,7 +93,7 @@ export const lastUpdated = function (datestring, text) {
   );
 };
 
-export const submissionLink = function (requestId) {
+export const requestLink = function (requestId) {
   if (!requestId) return nullValue;
   return <Link to={{ pathname: `/requests/id/${requestId}` }} aria-label="View your request details">{requestId}</Link>;
 };

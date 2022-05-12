@@ -8,7 +8,7 @@ const questionsRoutes = [
 ];
 
 const singleQuestionRoutes = [
-  [strings.back_to_submissions, '/requests', 'sidebar__nav--back'],
+  [strings.back_to_requests, '/requests', 'sidebar__nav--back'],
   [strings.back_to_questions, '/questions', 'sidebar__nav'],
 ];
 

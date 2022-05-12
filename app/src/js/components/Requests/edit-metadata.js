@@ -8,7 +8,7 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import {
   getModel,
   getRequest,
-  updateSubmissionMetadata
+  updateRequestMetadata
 } from '../../actions';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
@@ -28,7 +28,7 @@ class EditMetadata extends React.Component {
 
   updateMetadata (payload) {
     const { dispatch } = this.props;
-    dispatch(updateSubmissionMetadata(payload));
+    dispatch(updateRequestMetadata(payload));
   }
 
   render () {
