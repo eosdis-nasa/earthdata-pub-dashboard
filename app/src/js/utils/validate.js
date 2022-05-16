@@ -21,7 +21,7 @@ export const arrayWithLength = function (length) {
   };
 };
 
-export const submissionModel = function (obj) {
+export const requestModel = function (obj) {
   return isText(obj.requestId);
 };
 

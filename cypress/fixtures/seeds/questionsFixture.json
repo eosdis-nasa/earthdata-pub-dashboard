@@ -54,7 +54,7 @@
       "version": 1,
       "long_name": "Data Product Name",
       "text": "How do you refer to this data product?",
-      "help": "This is how the DAAC will refer to this data product during the data submission request process.",
+      "help": "This is how the DAAC will refer to this data product during the data accession request process.",
       "required": false,
       "created_at": "2021-02-05T20:39:54.835Z"
     },
@@ -90,9 +90,9 @@
     },
     {
       "id": "bd00dbb7-1d3c-46fa-82a4-734236f4e06c",
-      "short_name": "data_submission_reason",
+      "short_name": "data_request_reason",
       "version": 1,
-      "long_name": "Reason for Data Submission Request",
+      "long_name": "Reason for Data Accession Request",
       "text": "Please briefly explain your reasons for requesting approval to publish this data product at the DAAC.",
       "help": "For example, are you attempting to publish a paper which requires data to be archived in a trusted repository? Have you been instructed by a NASA program manager to submit your data to the DAAC? Do you want this data product archived with related data?",
       "required": false,
@@ -100,9 +100,9 @@
     },
     {
       "id": "f40956c3-9af8-400e-8dd8-c5e2965dcb8a",
-      "short_name": "data_submission_approval_dependencies",
+      "short_name": "data_request_approval_dependencies",
       "version": 1,
-      "long_name": "Dependencies for Data Submission Approval",
+      "long_name": "Dependencies for Data Request Approval",
       "text": "Do you have any dependencies related to this data product being approved to be published at the DAAC? If 'Yes', please provide a brief explanation.",
       "help": "For example, are you hoping to have this data product approved to be published at the DAAC prior publishing a paper or presenting at a conference? Does your project have a defined timeline in which this data product needs to be published?",
       "required": false,

@@ -13,7 +13,7 @@
       "short_name": "init_workflow",
       "version": 1,
       "long_name": "Initialization Workflow",
-      "description": "This workflow performs no actions and is used for initializing submissions.",
+      "description": "This workflow performs no actions and is used for initializing requests.",
       "created_at": "2021-02-05T20:39:54.835Z",
       "steps": {
         "init": {

@@ -6,7 +6,7 @@ import {
   shortDateNoTimeYearFirst,
   nullValue,
   fromNow,
-  submissionLink,
+  requestLink,
   bool
 } from '../format';
 import {
@@ -234,7 +234,7 @@ export const errorTableColumns = [
   {
     Header: 'Requests',
     accessor: (row) => row.id,
-    Cell: row => row.row ? submissionLink(row.row.original.id) : null,
+    Cell: row => row.row ? requestLink(row.row.original.id) : null,
     id: 'id',
     width: 200
   },

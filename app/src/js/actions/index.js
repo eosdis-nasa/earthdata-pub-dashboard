@@ -206,9 +206,9 @@ export const reviewRequest = (id, approve) => {
   };
 };
 
-export const updateSubmissionMetadata = (payload) => ({
+export const updateRequestMetadata = (payload) => ({
   [CALL_API]: {
-    type: types.SUBMISSION_UPDATE_METADATA,
+    type: types.REQUEST_UPDATE_METADATA,
     method: 'POST',
     path: 'submission/metadata',
     body: payload
@@ -297,7 +297,7 @@ export const listModules = () => ({
 
 export const applyWorkflowToRequest = (requestId, workflowId) => ({
   [CALL_API]: {
-    type: types.SUBMISSION_APPLYWORKFLOW,
+    type: types.REQUEST_APPLYWORKFLOW,
     method: 'POST',
     path: 'submission/apply',
     body: {
@@ -309,7 +309,7 @@ export const applyWorkflowToRequest = (requestId, workflowId) => ({
 
 export const withdrawRequest = (requestId) => ({
   [CALL_API]: {
-    type: types.SUBMISSION_WITHDRAW,
+    type: types.REQUEST_WITHDRAW,
     method: 'POST',
     path: 'submission/withdraw',
     body: { id: requestId }
@@ -318,7 +318,7 @@ export const withdrawRequest = (requestId) => ({
 
 export const restoreRequest = (requestId) => ({
   [CALL_API]: {
-    type: types.SUBMISSION_RESTORE,
+    type: types.REQUEST_RESTORE,
     method: 'POST',
     path: 'submission/restore',
     body: { id: requestId }
@@ -327,17 +327,17 @@ export const restoreRequest = (requestId) => ({
 
 export const deleteRequest = (requestId) => ({
   [CALL_API]: {
-    type: types.SUBMISSION_DELETE,
+    type: types.REQUEST_DELETE,
     method: 'DELETE',
     id: requestId,
     path: `submissions/${requestId}`
   }
 });
 
-export const searchSubmissions = (prefix) => ({ type: types.SEARCH_SUBMISSIONS, prefix: prefix });
-export const clearSubmissionsSearch = () => ({ type: types.CLEAR_SUBMISSIONS_SEARCH });
-export const filterSubmissions = (param) => ({ type: types.FILTER_SUBMISSIONS, param: param });
-export const clearSubmissionsFilter = (paramKey) => ({ type: types.CLEAR_SUBMISSIONS_FILTER, paramKey: paramKey });
+export const searchRequests = (prefix) => ({ type: types.SEARCH_REQUESTS, prefix: prefix });
+export const clearRequestsSearch = () => ({ type: types.CLEAR_REQUESTS_SEARCH });
+export const filterRequests = (param) => ({ type: types.FILTER_REQUESTS, param: param });
+export const clearRequestsFilter = (paramKey) => ({ type: types.CLEAR_REQUESTS_FILTER, paramKey: paramKey });
 
 export const filterStages = (param) => ({ type: types.FILTER_STAGES, param: param });
 export const clearStagesFilter = (paramKey) => ({ type: types.CLEAR_STAGES_FILTER, paramKey: paramKey });
@@ -345,9 +345,9 @@ export const clearStagesFilter = (paramKey) => ({ type: types.CLEAR_STAGES_FILTE
 export const filterStatuses = (param) => ({ type: types.FILTER_STATUSES, param: param });
 export const clearStatusesFilter = (paramKey) => ({ type: types.CLEAR_STATUSES_FILTER, paramKey: paramKey });
 
-export const getOptionsSubmissionName = (options) => ({
+export const getOptionsRequestName = (options) => ({
   [CALL_API]: {
-    type: types.OPTIONS_SUBMISSIONNAME,
+    type: types.OPTIONS_REQUESTNAME,
     method: 'GET',
     url: new URL('data/submissions', root).href,
     qs: { limit: 100, fields: 'long_name' }

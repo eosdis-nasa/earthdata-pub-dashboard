@@ -78,12 +78,12 @@ describe('Dashboard Requests Page', () => {
           // Primary Data Producer column has link to the form page
           cy.get('@columns').eq(7).children('a')
             .should('have.attr', 'href')
-            .and('be.eq', `/forms/id/${request.dataSubmissionRequest}`);
+            .and('be.eq', `/forms/id/${request.form_id}`);
 
           // Contact column has link to the form page
           cy.get('@columns').eq(8).children('a')
             .should('have.attr', 'href')
-            .and('be.eq', `/forms/id/${request.dataSubmissionRequest}`); */
+            .and('be.eq', `/forms/id/${request.form_id}`); */
 
           // Workflow column has link to the workflow page
           cy.get('@columns').eq(2).children('a')
@@ -187,7 +187,7 @@ describe('Dashboard Requests Page', () => {
     });
 
     it('Should reingest multiple requests and redirect to the running page.', () => {
-      const submissionIds = [
+      const requestIds = [
         'MOD09GQ.A0142558.ee5lpE.006.5112577830916',
         'MOD09GQ.A9344328.K9yI3O.006.4625818663028'
       ];
@@ -199,8 +199,8 @@ describe('Dashboard Requests Page', () => {
         response: { message: 'ingested' }
       });
       cy.visit('/requests');
-      cy.get(`[data-value="${submissionIds[0]}"] > .td >input[type="checkbox"]`).click();
-      cy.get(`[data-value="${submissionIds[1]}"] > .td >input[type="checkbox"]`).click();
+      cy.get(`[data-value="${requestIds[0]}"] > .td >input[type="checkbox"]`).click();
+      cy.get(`[data-value="${requestIds[1]}"] > .td >input[type="checkbox"]`).click();
       cy.get('.list-actions').contains('Reingest').click();
       cy.get('.button--submit').click();
       cy.get('.modal-content > .modal-title').should('contain.text', 'Complete');
@@ -210,7 +210,7 @@ describe('Dashboard Requests Page', () => {
     });
 
     it('Should fail to reingest multiple requests and remain on the page.', () => {
-      const submissionIds = [
+      const requestIds = [
         'MOD09GQ.A0142558.ee5lpE.006.5112577830916',
         'MOD09GQ.A9344328.K9yI3O.006.4625818663028'
       ];
@@ -222,8 +222,8 @@ describe('Dashboard Requests Page', () => {
         response: { message: 'Oopsie' }
       });
       cy.visit('/requests');
-      cy.get(`[data-value="${submissionIds[0]}"] > .td >input[type="checkbox"]`).click();
-      cy.get(`[data-value="${submissionIds[1]}"] > .td >input[type="checkbox"]`).click();
+      cy.get(`[data-value="${requestIds[0]}"] > .td >input[type="checkbox"]`).click();
+      cy.get(`[data-value="${requestIds[1]}"] > .td >input[type="checkbox"]`).click();
       cy.get('.list-actions').contains('Reingest').click();
       cy.get('.button--submit').click();
       cy.get('.modal-content > .modal-title').should('contain.text', 'Error');

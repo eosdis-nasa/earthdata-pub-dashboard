@@ -91,7 +91,7 @@ export const getRequest = function (requestId) {
     // do ajax query
     request.get(requestId, function (err, resp) {
       if (err) { console.log(err); }
-      dispatch(setSubmission(requestId, resp[0]));
+      dispatch(setRequest(requestId, resp[0]));
     })
   };
 }
@@ -103,8 +103,8 @@ We'll need another action to send this data to the store. Note, we probably don'
 need to export this action. In the same file:
 
 ```javascript
-function setSubmission (id, submissionData) {
-  return { type: UPDATE_SUBMISSION, id: id, data: submissionData };
+function setRequest (id, requestData) {
+  return { type: UPDATE_REQUEST, id: id, data: requestData };
 }
 ```
 
@@ -113,7 +113,7 @@ so we can identify this action in a reducer function, and place it appropriately
 In `actions.js`:
 
 ```javascript
-export const UPDATE_SUBMISSION = 'UPDATE_SUBMISSION';
+export const UPDATE_REQUEST = 'UPDATE_REQUEST';
 ```
 
 Now in `reducers/api.js` we import the primary key and export a reducer function,
@@ -122,11 +122,11 @@ because every action is sent to every reducer. The reducer doesn't manipulate th
 current state, but rather returns a new state object that includes the new data.
 
 ```javascript
-import { UPDATE_SUBMISSION } from '../actions';
+import { UPDATE_REQUEST } from '../actions';
 export function reducer (currentState, action) {
   const newState = Object.assign({}, currentState);
-  if (action.type === UPDATE_SUBMISSION) {
-    newState.submissionDetail[action.id] = action.data;
+  if (action.type === UPDATE_REQUEST) {
+    newState.requestDetail[action.id] = action.data;
   }
   return newState;
 };

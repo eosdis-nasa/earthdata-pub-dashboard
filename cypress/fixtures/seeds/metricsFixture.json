@@ -17,11 +17,11 @@
       "count": "2"
     },
     {
-      "event_type": "submission_initialized",
+      "event_type": "request_initialized",
       "count": "2"
     },
     {
-      "event_type": "submission_form_submitted",
+      "event_type": "request_form_submitted",
       "count": "1"
     }
   ]

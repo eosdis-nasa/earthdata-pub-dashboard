@@ -78,7 +78,7 @@ export const tableColumns = [
 class ActionRequestsOverview extends React.Component {
   constructor () {
     super();
-    this.displayName = strings.all_submissions;
+    this.displayName = strings.all_requests;
     this.generateQuery = this.generateQuery.bind(this);
     this.getView = this.getView.bind(this);
     this.state = {};
@@ -165,7 +165,7 @@ class ActionRequestsOverview extends React.Component {
         </section>
         <section className='page__section page__section__header-wrapper'>
           <div className='page__section__header'>
-            {/* <h1 className='heading--large heading--shared-content with-description '>{strings.submissions_actions}</h1> */}
+            {/* <h1 className='heading--large heading--shared-content with-description '>{strings.requests_actions}</h1> */}
             <h1 className='heading--large heading--shared-content with-description '>
               {displayCaseView}
             </h1>
@@ -202,7 +202,7 @@ ActionRequestsOverview.propTypes = {
   workflowOptions: PropTypes.array,
   location: PropTypes.object,
   config: PropTypes.object,
-  submissionCSV: PropTypes.object,
+  requestCSV: PropTypes.object,
   privileges: PropTypes.object,
   roles: PropTypes.array,
   onQueryChange: PropTypes.func
@@ -215,7 +215,7 @@ export default withRouter(connect(state => ({
   workflowOptions: workflowOptionNames(state),
   requests: state.requests,
   config: state.config,
-  submissionCSV: state.submissionCSV,
+  requestCSV: state.requestCSV,
   privileges: state.api.tokens.privileges,
   roles: state.api.tokens.roles,
 }))(ActionRequestsOverview));

@@ -4,42 +4,42 @@ import assignDate from './assign-date';
 
 import {
   REQUEST,
-  SUBMISSION_INFLIGHT,
-  SUBMISSION_ERROR,
+  REQUEST_INFLIGHT,
+  REQUEST_ERROR,
 
   REQUESTS,
-  SUBMISSIONS_INFLIGHT,
-  SUBMISSIONS_ERROR,
+  REQUESTS_INFLIGHT,
+  REQUESTS_ERROR,
 
-  SUBMISSION_REPROCESS,
-  SUBMISSION_REPROCESS_INFLIGHT,
-  SUBMISSION_REPROCESS_ERROR,
+  REQUEST_REPROCESS,
+  REQUEST_REPROCESS_INFLIGHT,
+  REQUEST_REPROCESS_ERROR,
 
-  SUBMISSION_REINGEST,
-  SUBMISSION_REINGEST_INFLIGHT,
-  SUBMISSION_REINGEST_ERROR,
+  REQUEST_REINGEST,
+  REQUEST_REINGEST_INFLIGHT,
+  REQUEST_REINGEST_ERROR,
 
-  SUBMISSION_APPLYWORKFLOW,
-  SUBMISSION_APPLYWORKFLOW_INFLIGHT,
-  SUBMISSION_APPLYWORKFLOW_ERROR,
+  REQUEST_APPLYWORKFLOW,
+  REQUEST_APPLYWORKFLOW_INFLIGHT,
+  REQUEST_APPLYWORKFLOW_ERROR,
 
-  SUBMISSION_REMOVE,
-  SUBMISSION_REMOVE_INFLIGHT,
-  SUBMISSION_REMOVE_ERROR,
+  REQUEST_REMOVE,
+  REQUEST_REMOVE_INFLIGHT,
+  REQUEST_REMOVE_ERROR,
 
-  SUBMISSION_DELETE,
-  SUBMISSION_DELETE_INFLIGHT,
-  SUBMISSION_DELETE_ERROR,
+  REQUEST_DELETE,
+  REQUEST_DELETE_INFLIGHT,
+  REQUEST_DELETE_ERROR,
 
-  SEARCH_SUBMISSIONS,
-  CLEAR_SUBMISSIONS_SEARCH,
+  SEARCH_REQUESTS,
+  CLEAR_REQUESTS_SEARCH,
 
-  FILTER_SUBMISSIONS,
-  CLEAR_SUBMISSIONS_FILTER,
+  FILTER_REQUESTS,
+  CLEAR_REQUESTS_FILTER,
 
-  OPTIONS_SUBMISSIONNAME,
-  OPTIONS_SUBMISSIONNAME_INFLIGHT,
-  OPTIONS_SUBMISSIONNAME_ERROR
+  OPTIONS_REQUESTNAME,
+  OPTIONS_REQUESTNAME_INFLIGHT,
+  OPTIONS_REQUESTNAME_ERROR
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 
@@ -67,10 +67,10 @@ export default createReducer(initialState, {
     set(state, ['detail', 'inflight'], false);
     set(state, ['detail', 'data'], assignDate(data));
   },
-  [SUBMISSION_INFLIGHT]: (state, action) => {
+  [REQUEST_INFLIGHT]: (state, action) => {
     set(state, ['detail', 'inflight'], true);
   },
-  [SUBMISSION_ERROR]: (state, action) => {
+  [REQUEST_ERROR]: (state, action) => {
     set(state, ['detail', 'inflight'], false);
     set(state, ['detail', 'error'], action.error);
   },
@@ -82,104 +82,104 @@ export default createReducer(initialState, {
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], false);
   },
-  [SUBMISSIONS_INFLIGHT]: (state, action) => {
+  [REQUESTS_INFLIGHT]: (state, action) => {
     set(state, ['list', 'inflight'], true);
   },
-  [SUBMISSIONS_ERROR]: (state, action) => {
+  [REQUESTS_ERROR]: (state, action) => {
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], action.error);
   },
 
-  [SUBMISSION_REPROCESS]: (state, action) => {
+  [REQUEST_REPROCESS]: (state, action) => {
     const { id } = action;
     set(state, ['reprocessed', id, 'status'], 'success');
     set(state, ['reprocessed', id, 'error'], null);
   },
-  [SUBMISSION_REPROCESS_INFLIGHT]: (state, action) => {
+  [REQUEST_REPROCESS_INFLIGHT]: (state, action) => {
     const { id } = action;
     set(state, ['reprocessed', id, 'status'], 'inflight');
   },
-  [SUBMISSION_REPROCESS_ERROR]: (state, action) => {
+  [REQUEST_REPROCESS_ERROR]: (state, action) => {
     const { id } = action;
     set(state, ['reprocessed', id, 'status'], 'error');
     set(state, ['reprocessed', id, 'error'], action.error);
   },
 
-  [SUBMISSION_REINGEST]: (state, action) => {
+  [REQUEST_REINGEST]: (state, action) => {
     const { id } = action;
     set(state, ['reingested', id, 'status'], 'success');
     set(state, ['reingested', id, 'error'], null);
   },
-  [SUBMISSION_REINGEST_INFLIGHT]: (state, action) => {
+  [REQUEST_REINGEST_INFLIGHT]: (state, action) => {
     const { id } = action;
     set(state, ['reingested', id, 'status'], 'inflight');
   },
-  [SUBMISSION_REINGEST_ERROR]: (state, action) => {
+  [REQUEST_REINGEST_ERROR]: (state, action) => {
     const { id } = action;
     set(state, ['reingested', id, 'status'], 'error');
     set(state, ['reingested', id, 'error'], action.error);
   },
 
-  [SUBMISSION_APPLYWORKFLOW]: (state, action) => {
+  [REQUEST_APPLYWORKFLOW]: (state, action) => {
     const { id } = action;
     set(state, ['executed', id, 'status'], 'success');
     set(state, ['executed', id, 'error'], null);
   },
-  [SUBMISSION_APPLYWORKFLOW_INFLIGHT]: (state, action) => {
+  [REQUEST_APPLYWORKFLOW_INFLIGHT]: (state, action) => {
     const { id } = action;
     set(state, ['executed', id, 'status'], 'inflight');
   },
-  [SUBMISSION_APPLYWORKFLOW_ERROR]: (state, action) => {
+  [REQUEST_APPLYWORKFLOW_ERROR]: (state, action) => {
     const { id } = action;
     set(state, ['executed', id, 'status'], 'error');
     set(state, ['executed', id, 'error'], action.error);
   },
 
-  [SUBMISSION_REMOVE]: (state, action) => {
+  [REQUEST_REMOVE]: (state, action) => {
     const { id } = action;
     set(state, ['removed', id, 'status'], 'success');
     set(state, ['removed', id, 'error'], null);
   },
-  [SUBMISSION_REMOVE_INFLIGHT]: (state, action) => {
+  [REQUEST_REMOVE_INFLIGHT]: (state, action) => {
     const { id } = action;
     set(state, ['removed', id, 'status'], 'inflight');
   },
-  [SUBMISSION_REMOVE_ERROR]: (state, action) => {
+  [REQUEST_REMOVE_ERROR]: (state, action) => {
     const { id } = action;
     set(state, ['removed', id, 'status'], 'error');
     set(state, ['removed', id, 'error'], action.error);
   },
 
-  [SUBMISSION_DELETE]: (state, action) => {
+  [REQUEST_DELETE]: (state, action) => {
     const { id } = action;
     set(state, ['deleted', id, 'status'], 'success');
     set(state, ['deleted', id, 'error'], null);
   },
-  [SUBMISSION_DELETE_INFLIGHT]: (state, action) => {
+  [REQUEST_DELETE_INFLIGHT]: (state, action) => {
     const { id } = action;
     set(state, ['deleted', id, 'status'], 'inflight');
   },
-  [SUBMISSION_DELETE_ERROR]: (state, action) => {
+  [REQUEST_DELETE_ERROR]: (state, action) => {
     const { id } = action;
     set(state, ['deleted', id, 'status'], 'error');
     set(state, ['deleted', id, 'error'], action.error);
   },
 
-  [SEARCH_SUBMISSIONS]: (state, action) => {
+  [SEARCH_REQUESTS]: (state, action) => {
     set(state, ['list', 'params', 'prefix'], action.prefix);
   },
-  [CLEAR_SUBMISSIONS_SEARCH]: (state, action) => {
+  [CLEAR_REQUESTS_SEARCH]: (state, action) => {
     set(state, ['list', 'params', 'prefix'], null);
   },
 
-  [FILTER_SUBMISSIONS]: (state, action) => {
+  [FILTER_REQUESTS]: (state, action) => {
     set(state, ['list', 'params', action.param.key], action.param.value);
   },
-  [CLEAR_SUBMISSIONS_FILTER]: (state, action) => {
+  [CLEAR_REQUESTS_FILTER]: (state, action) => {
     set(state, ['list', 'params', action.paramKey], null);
   },
 
-  [OPTIONS_SUBMISSIONNAME]: (state, action) => {
+  [OPTIONS_REQUESTNAME]: (state, action) => {
     // const { id } = action; - here because the below fix may not be the best solution but works for now
     const { id } = action.data[0].id;
     const options = action.data.reduce(
@@ -191,9 +191,9 @@ export default createReducer(initialState, {
     );
     set(state, ['dropdowns', 'name', 'options'], options);
   },
-  // [OPTIONS_SUBMISSIONNAME]: (state, action) => {},
-  [OPTIONS_SUBMISSIONNAME_INFLIGHT]: () => {},
-  [OPTIONS_SUBMISSIONNAME_ERROR]: (state, action) => {
+  // [OPTIONS_REQUESTNAME]: (state, action) => {},
+  [OPTIONS_REQUESTNAME_INFLIGHT]: () => {},
+  [OPTIONS_REQUESTNAME_ERROR]: (state, action) => {
     set(state, ['dropdowns', 'name', 'options'], []);
     set(state, ['list', 'error'], action.error);
   }
