@@ -10,6 +10,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 
+## 1.0.3 - 2022-05-12
+
+- Updated old form name fragments to current
+
+## 1.0.2 - 2022-05-11
+
+- Updated privileges for next action button and changed adding a disabled class,
+to just returning text using new class added, button--clear
+
+## 1.0.2 - 2022-05-05
+
+- Updated forms report for missing labels
+
 ## 1.0.1 - 2022-04-13
 
 - Updated to Node v14.19.1

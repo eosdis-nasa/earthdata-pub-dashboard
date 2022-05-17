@@ -35,10 +35,7 @@ To locate environment variables, see webpack.common.js:
 | APIROOT | the API URL. This must be set by the user. | *<https://pub.earthdata.nasa.gov/api>* |
 | OVERVIEW_URL | URL of the instructional overview of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/>* |
 | FORMS_URL | URL of the questions and answer forms that are outside of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/forms>* |
-| NEW_PUBLICATION_REQUEST_URL | URL of the publication request questions and answer forms new record | */daacs/selection* |
-| NEW_PRODUCT_INFORMATION_URL | URL of the data product questions and answer forms new record | */questionnaire/questions* |
-| PUBLICATION_REQUEST_FORM_ID | Hash of the main publication request form | *6c544723-241c-4896-a38c-adbc0a364293* |
-| PRODUCTION_INFORMATION_FORM_ID | Hash of the main publication request form | *19025579-99ca-4344-8610-704dae626343* |
+| INITIATE_REQUEST_SELECT_DAAC_URL | *<https://pub.earthdata.nasa.gov/forms/daacs/selection>*,
 | AWS_REGION | Region in which Earthdata Pub API is running. | *us-west-2*  |
 | DAAC_NAME    | e.g. LPDAAC, | *Local* |
 | STAGE | e.g. PROD, UAT, | *development* |

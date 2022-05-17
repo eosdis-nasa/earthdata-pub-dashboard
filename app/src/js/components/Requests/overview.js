@@ -5,17 +5,17 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   // getCount,
-  // searchSubmissions,
-  // clearSubmissionsSearch,
-  // filterSubmissions,
-  // clearSubmissionsFilter,
+  // searchRequests,
+  // clearRequestsSearch,
+  // filterRequests,
+  // clearRequestsFilter,
   listRequests
   // filterStages,
   // filterStatuses,
   // clearStagesFilter,
   // clearStatusesFilter,
   // listWorkflows,
-  // getOptionsSubmissionName,
+  // getOptionsRequestName,
 } from '../../actions';
 // import { get } from 'object-path';
 import {
@@ -52,7 +52,7 @@ const breadcrumbConfig = [
     href: '/requests'
   },
   {
-    label: strings.submissions_inprogress2,
+    label: strings.requests_inprogress2,
     href: '/requests',
     active: true
   }
@@ -124,7 +124,7 @@ class RequestsOverview extends React.Component {
       </section>
       <section className='page__section page__section__controls'>
         <div className='heading__wrapper--border'>
-          <h2 className='heading--medium heading--shared-content with-description'>{strings.all_submissions} <span className='num--title'>{unique.length}</span></h2>
+          <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
           { canInitialize ? <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac} aria-label="Create new request">New Request</a> : null }
         </div>
         {!list
@@ -152,7 +152,7 @@ RequestsOverview.propTypes = {
   workflowOptions: PropTypes.array,
   location: PropTypes.object,
   config: PropTypes.object,
-  submissionCSV: PropTypes.object,
+  requestCSV: PropTypes.object,
   privileges: PropTypes.object,
   roles: PropTypes.array
 };
@@ -164,7 +164,7 @@ export default withRouter(connect(state => ({
   workflowOptions: workflowOptionNames(state),
   requests: state.requests,
   config: state.config,
-  submissionCSV: state.submissionCSV,
+  requestCSV: state.requestCSV,
   privileges: state.api.tokens.privileges,
   roles: state.api.tokens.roles,
 }))(RequestsOverview));

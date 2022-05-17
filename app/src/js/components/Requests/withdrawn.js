@@ -27,7 +27,7 @@ const breadcrumbConfig = [
     href: '/requests'
   },
   {
-    label: strings.submissions_withdrawn2,
+    label: strings.requests_withdrawn2,
     href: '/requests/withdrawn',
     active: true
   }
@@ -124,7 +124,7 @@ class InactiveRequestsOverview extends React.Component {
         </section>
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.submissions_withdrawn2} Requests <span className='num--title'>{unique.length}</span></h2>
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.requests_withdrawn2} Requests <span className='num--title'>{unique.length}</span></h2>
           </div>
           {!list || (typeof list.data[0] !== 'undefined' && list.data[0].hidden === false)
             ? <Loading />
@@ -151,7 +151,7 @@ InactiveRequestsOverview.propTypes = {
   workflowOptions: PropTypes.array,
   location: PropTypes.object,
   config: PropTypes.object,
-  submissionCSV: PropTypes.object,
+  requestCSV: PropTypes.object,
   privileges: PropTypes.object,
   roles: PropTypes.array
 };
@@ -163,7 +163,7 @@ export default withRouter(connect(state => ({
   workflowOptions: workflowOptionNames(state),
   requests: state.requests,
   config: state.config,
-  submissionCSV: state.submissionCSV,
+  requestCSV: state.requestCSV,
   privileges: state.api.tokens.privileges,
   roles: state.api.tokens.roles,
 }))(InactiveRequestsOverview));
