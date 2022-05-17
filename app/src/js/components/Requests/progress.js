@@ -6,7 +6,7 @@ import { tally } from '../../utils/format';
 import { strings } from '../locale';
 
 // defines the order in which the requests meta bar appears
-const submissionMeta = [
+const requestMeta = [
   ['running', 'Running'],
   ['completed', 'Completed'],
   ['failed', 'Failed']
@@ -37,7 +37,7 @@ class Progress extends React.Component {
   render () {
     return (
       <ul className='timeline--processing--overall'>
-        {submissionMeta.map(d => {
+        {requestMeta.map(d => {
           const item = Array.isArray(d[0]) ? d[0].map(this.getItem).reduce((a, b) => {
             return a + get(b, 'count', 0);
           }, 0) : get(this.getItem(d[0]), 'count', 0);

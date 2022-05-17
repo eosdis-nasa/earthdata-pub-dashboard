@@ -6,7 +6,7 @@ import config from './config';
 
 const listSize = 10;
 
-const SearchModal = ({ dispatch, search, entity, submit, cancel }) => {
+const SearchModal = ({ dispatch, search, entity, submit, cancel, filters }) => {
   const { title, path, primary, fields } = config[entity];
   const [selected, setSelected] = useState(false);
   const [searchParams, setSearchParams] = useState({});
@@ -29,6 +29,7 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel }) => {
 
   const { list, inflight } = search;
   const entityArr = paginate(list, listSize, page);
+  const filteredArr = filters.length > 0 ? entityArr.filter((elem) => entity==='group' ? filters.includes(elem.short_name) : !filters.includes(elem.short_name)) : entityArr;
   return (
     <div className='search-modal__background'
       onClick={() => { cancel(); }}>
@@ -51,7 +52,7 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel }) => {
                   })}></input>
               </div>))}
             </li>
-            { Array.isArray(entityArr) ? entityArr.map((item, key) => {
+            { Array.isArray(filteredArr) ? filteredArr.map((item, key) => {
               const className = `search-modal__item${item[primary] === selected
                 ? '--selected' : ''}`;
               return (<li className={className}
@@ -61,8 +62,8 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel }) => {
               </li>
               );
             }) : null}
-            { entityArr.length < listSize &&
-            Array(listSize - entityArr.length).fill(0).map((i, key) => (
+            { filteredArr.length < listSize &&
+            Array(listSize - filteredArr.length).fill(0).map((i, key) => (
               <li key={key} className='search-modal__item--hidden'></li>))
             }
           </ul>

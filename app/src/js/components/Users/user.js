@@ -49,7 +49,8 @@ const removeGroup = (dispatch, id, groupId) => {
   dispatch(removeUserGroup(payload));
 };
 
-const User = ({ dispatch, user, privileges, match }) => {
+
+const User = ({ dispatch, user, privileges, match, groups }) => {
   const { userId } = match.params;
   useEffect(() => {
     dispatch(getUser(userId));
@@ -71,7 +72,8 @@ const User = ({ dispatch, user, privileges, match }) => {
     setSearchOptions({
       entity: 'group',
       cancel: searchCancel,
-      submit: addGroupSubmit
+      submit: addGroupSubmit,
+      filters: isAdmin() ? [] : groups.map((group) => group.short_name)
     });
     setShowSearch(true);
   };
@@ -79,10 +81,14 @@ const User = ({ dispatch, user, privileges, match }) => {
     setSearchOptions({
       entity: 'role',
       cancel: searchCancel,
-      submit: addRoleSubmit
+      submit: addRoleSubmit,
+      filters: isAdmin() ?  [] : ['admin']
     });
     setShowSearch(true);
   };
+  const isAdmin = () => {
+    return "ADMIN" in privileges;
+  }
   const breadcrumbConfig = [
     {
       label: 'Dashboard Home',
@@ -201,7 +207,7 @@ const User = ({ dispatch, user, privileges, match }) => {
                           {role.long_name}
                         </div>
                         <div className='flex__item--w-15'>
-                          { canRemoveRole &&
+                          { canRemoveRole && (isAdmin() || role.short_name != 'admin') &&
                             <button
                               className='button button--small button--subtract form-group__element--left'
                               onClick={() => removeRole(dispatch, data.id, role.id)}
@@ -239,10 +245,12 @@ User.propTypes = {
   dispatch: PropTypes.func,
   user: PropTypes.object,
   privileges: PropTypes.object,
-  match: PropTypes.object
+  match: PropTypes.object,
+  groups: PropTypes.object
 };
 
 export default withRouter(connect(state => ({
   user: state.users.detail,
-  privileges: state.api.tokens.privileges
+  privileges: state.api.tokens.privileges,
+  groups: state.api.tokens.groups
 }))(User));
