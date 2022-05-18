@@ -11,6 +11,7 @@ const config = {
   formsUrl: process.env.FORMS_URL || 'http://localhost:8081',
   overviewUrl: process.env.OVERVIEW_URL || '/',
   initiateRequestSelectDaac: process.env.INTITIATE_REQUEST_SELECT_DAAC_URL || '/daacs/selection',
+  sendUserToMeditor: process.env.SEND_USER_TO_MEDITOR || '/meditor',
   basepath: process.env.BASEPATH || '/',
   awsRegion: process.env.AWS_REGION || 'us-west-2',
   oauthMethod: process.env.AUTH_METHOD || 'earthdata',
