@@ -63,8 +63,8 @@ const DefaultModal = ({
       <Modal.Footer>
         {dontShowAgainCheckbox &&
           <div className={`${dontShowAgainClass}`}>
-            <label htmlFor={'dontShowAgain'}>{dontShowAgainVerbage}</label>
             <input type={'checkbox'} name={'dontShowAgain'} id={'dontShowAgain'}></input>
+            <label htmlFor={'dontShowAgain'}>{dontShowAgainVerbage}</label>
           </div>}
         {hasCancelButton && <button
           className={`button ${cancelButtonClass} button__animation--md button__arrow button__animation button--secondary form-group__element--left button__cancel`}
