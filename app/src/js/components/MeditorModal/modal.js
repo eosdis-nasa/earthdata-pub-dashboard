@@ -10,7 +10,14 @@ export let request = '';
 document.addEventListener('sendToMeditor:click', function (e) {
   request = e.detail.request;
   e.preventDefault();
-  showModal = true;
+  if (localStorage.getItem('dontShowAgain') === null || localStorage.getItem('dontShowAgain') === 'false') {
+    showModal = true;
+  } else {
+    window.open(
+      request,
+      '_blank'
+    );
+  }
 }, false);
 
 class Meditor extends React.Component {
@@ -36,6 +43,14 @@ class Meditor extends React.Component {
     );
   }
 
+  callback () {
+    if (document.getElementById('dontShowAgain').checked) {
+      localStorage.setItem('dontShowAgain', 'true');
+    } else {
+      localStorage.setItem('dontShowAgain', 'false');
+    }
+  }
+
   render () {
     return <section>
         <DefaultModal
@@ -45,6 +60,11 @@ class Meditor extends React.Component {
           onConfirm={this.onConfirm}
           title={'Continue to mEditor?'}
           showModal={showModal}
+          dontShowAgainCheckbox={true}
+          dontShowAgainVerbage='Do not show this again'
+          dontShowAgainCallback={this.callback}
+          dontShowAgainClass={'dontShowAgainClass'}
+          children={'A new tab will open to direct you to mEditor. Do you want to continue?'}
         />
       </section>;
   }

@@ -35,3 +35,37 @@
 .modal-title.h4{
   font-size: 18px;
 }
+
+.mEditorModal label {
+  cursor:pointer;
+}
+
+.mEditorModal .dontShowAgainClass {
+  margin-left: unset;
+  margin-right: 3.5rem;
+  display:flex;
+}
+
+.mEditorModal .modal-footer {
+  justify-content: space-between;
+}
+
+.mEditorModal input[type=checkbox] {
+  margin-left: 1rem;
+  margin-top: 0.25em;
+}
+
+.mEditorModal .modal-body {
+  text-align: left;
+}
+
+.mEditorOptions label {
+  display: initial;
+  margin-left: 8px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.mEditorOptions input[type=checkbox] {
+  margin-left:8px;
+}
