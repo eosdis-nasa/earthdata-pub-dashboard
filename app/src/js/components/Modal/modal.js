@@ -15,7 +15,11 @@ const DefaultModal = ({
   hasCancelButton = true,
   hasConfirmButton = true,
   confirmButtonClass = 'button--submit',
-  cancelButtonClass = 'button--cancel'
+  cancelButtonClass = 'button--cancel',
+  dontShowAgainCheckbox = false,
+  dontShowAgainVerbage = '',
+  dontShowAgainCallback,
+  dontShowAgainClass
 }) => {
   function handleCloseModal (e) {
     if (typeof onCloseModal === 'function') {
@@ -26,6 +30,9 @@ const DefaultModal = ({
   function handleConfirm (e) {
     if (typeof onConfirm === 'function') {
       onConfirm(e);
+      if (typeof dontShowAgainCallback === 'function') {
+        dontShowAgainCallback(e);
+      }
     }
   }
 
@@ -54,6 +61,11 @@ const DefaultModal = ({
         { children }
       </Modal.Body>
       <Modal.Footer>
+        {dontShowAgainCheckbox &&
+          <div className={`${dontShowAgainClass}`}>
+            <input type={'checkbox'} name={'dontShowAgain'} id={'dontShowAgain'}></input>
+            <label htmlFor={'dontShowAgain'}>{dontShowAgainVerbage}</label>
+          </div>}
         {hasCancelButton && <button
           className={`button ${cancelButtonClass} button__animation--md button__arrow button__animation button--secondary form-group__element--left button__cancel`}
           onClick={handleCancel}>
@@ -82,7 +94,11 @@ DefaultModal.propTypes = {
   hasCancelButton: PropTypes.bool,
   hasConfirmButton: PropTypes.bool,
   confirmButtonClass: PropTypes.string,
-  cancelButtonClass: PropTypes.string
+  cancelButtonClass: PropTypes.string,
+  dontShowAgainCheckbox: PropTypes.bool,
+  dontShowAgainVerbage: PropTypes.string,
+  dontShowAgainCallback: PropTypes.func,
+  dontShowAgainClass: PropTypes.string
 };
 
 export default DefaultModal;

@@ -49,11 +49,23 @@ const removeGroup = (dispatch, id, groupId) => {
   dispatch(removeUserGroup(payload));
 };
 
+function updateDontShowAgain () {
+  if (document.getElementById('dontShowAgain') !== null) {
+    let val;
+    if (document.getElementById('dontShowAgain').checked) {
+      val = 'false';
+    } else {
+      val = 'true';
+    }
+    localStorage.setItem('dontShowAgain', val);
+  }
+}
 
 const User = ({ dispatch, user, privileges, match, groups }) => {
   const { userId } = match.params;
   useEffect(() => {
     dispatch(getUser(userId));
+    updateDontShowAgain();
   }, []);
   const [showSearch, setShowSearch] = useState(false);
   const [searchOptions, setSearchOptions] = useState({});
@@ -82,13 +94,13 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
       entity: 'role',
       cancel: searchCancel,
       submit: addRoleSubmit,
-      filters: isAdmin() ?  [] : ['admin']
+      filters: isAdmin() ? [] : ['admin']
     });
     setShowSearch(true);
   };
   const isAdmin = () => {
-    return "ADMIN" in privileges;
-  }
+    return 'ADMIN' in privileges;
+  };
   const breadcrumbConfig = [
     {
       label: 'Dashboard Home',
@@ -148,6 +160,16 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
                   <div className='flex__item--w-15'>Last Login</div>
                   <div className='flex__item--w-25'>{data.last_login}</div>
                 </div>
+              </div>
+            </section>
+            <section className='page__section'>
+              <div className='page__section__header'>
+                <h1 className='heading--small heading--shared-content with-description '>
+                  Settings
+                </h1>
+              </div>
+              <div className='page__content--shortened mEditorOptions'>
+                <><input type={'checkbox'} name={'dontShowAgain'} id={'dontShowAgain'} onChange={updateDontShowAgain}></input><label htmlFor={'dontShowAgain'}>Opt-In: "Continue To" mEditor pop-up window</label></>
               </div>
             </section>
             <section className='page__section'>
@@ -234,7 +256,8 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
                 }
               </div>
             </section>
-          </div> : null
+          </div>
+          : null
         }
       </div>
     </div>
