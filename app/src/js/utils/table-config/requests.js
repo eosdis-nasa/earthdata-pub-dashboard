@@ -15,16 +15,20 @@ import {
 import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
+import { trigger } from '../../actions/events';
 
 export const getPrivileges = () => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
   const roles = user.user_roles;
   const privileges = user.user_privileges;
   const allPrivs = {
+    isAdmin: privileges.find(o => o.match(/ADMIN/g)),
     isManager: privileges.find(o => o.match(/ADMIN/g))
       ? privileges.find(o => o.match(/ADMIN/g))
       : roles.find(o => o.short_name.match(/manager/g)),
-    isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+    isCoordinator: privileges.find(o => o.match(/ADMIN/g))
+      ? privileges.find(o => o.match(/ADMIN/g))
+      : roles.find(o => o.short_name.match(/coordinator/g)),
     isProducer: privileges.find(o => o.match(/ADMIN/g))
       ? privileges.find(o => o.match(/ADMIN/g))
       : roles.find(o => o.short_name.match(/data_producer/g)),
@@ -61,6 +65,23 @@ export const newLink = (request, formalName) => {
   }
 };
 
+export const sendToMeditor = (request, formalName) => {
+  const allPrivs = getPrivileges();
+  let disabled = false;
+  formalName = 'Send to mEditor';
+  if (typeof allPrivs.isManager !== 'undefined' || typeof allPrivs.isCoordinator !== 'undefined' || typeof allPrivs.isAdmin !== 'undefined') {
+    disabled = false;
+  } else {
+    disabled = true;
+  }
+  if (disabled) {
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon disabled--cursor'} aria-label={formalName}>{formalName}</Link>;
+  } else {
+    return <Link className={'button button--medium button--green form-group__element--left button--no-icon'}
+    onClick={() => { trigger('sendToMeditor:click', { request: request }); }} id={'sendButton'} to={'#'} name={'sendButton'} aria-label={formalName || 'send to meditor'}>{formalName}</Link>;
+  }
+};
+
 export const assignWorkflow = (request, formalName) => {
   const allPrivs = getPrivileges();
   let disabled = false;
@@ -70,10 +91,10 @@ export const assignWorkflow = (request, formalName) => {
     disabled = true;
   }
   if (disabled) {
-    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon'} aria-label={formalName}>{formalName}</Link>;
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon disabled--cursor'} aria-label={formalName}>{formalName}</Link>;
   } else {
     return <Link className={'button button--medium button--green form-group__element--left button--no-icon'}
-               to={`${request}`} name={'assignButton'} aria-label={formalName || 'assign workflow'}>{formalName}</Link>;
+    to={`${request}`} name={'assignButton'} aria-label={formalName || 'assign workflow'}>{formalName}</Link>;
   }
 };
 
@@ -86,10 +107,11 @@ export const existingLink = (row, formId, formalName, step) => {
     disabled = true;
   }
   if (disabled) {
-    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon'} aria-label={formalName}>{formalName}</Link>;
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon disabled--cursor'} aria-label={formalName}>{formalName}</Link>;
   } else {
     if (typeof formId === 'undefined') {
-      return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+      return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon'}
+      aria-label={formalName || 'review item'}>{formalName}</Link>;
     } else {
       return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={'button button--medium button--green form-group__element--left button--no-icon'} aria-label={formalName || 'view form details'}>{formalName}</Link>;
     }
@@ -143,6 +165,12 @@ export const stepLookup = (row) => {
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
           request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+        } else if (stepType.match(/action/g) && stepName.match(/send_to_meditor/g)) {
+          if (window.location.pathname === '/') {
+            request = `${window.location.origin}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
+          } else {
+            request = `${window.location.origin}${window.location.pathname.split(/\/request/)[0]}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
+          }
         // assign a workflow
         } else if (stepType.match(/action/g)) {
           request = `/workflows?requestId=${row.id}`;
@@ -151,7 +179,9 @@ export const stepLookup = (row) => {
       }
     }
   }
-  if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
+  if (stepType.match(/action/g) && stepName.match(/send_to_meditor/g)) {
+    return sendToMeditor(request, formalName);
+  } else if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
   } else if (stepType.match(/action/g)) {
     return existingLink(row, undefined, formalName, stepName);

@@ -112,6 +112,10 @@ a:active {
   }
 }
 
+.disabled--cursor {
+  cursor: default!important;
+}
+
 .link--learn-more {
   margin-top: 1em;
   float: right;

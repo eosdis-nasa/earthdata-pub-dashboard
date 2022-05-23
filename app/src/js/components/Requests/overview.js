@@ -41,6 +41,7 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 // import pageSizeOptions from '../../utils/page-size';
 import { requestPrivileges } from '../../utils/privileges';
 import Loading from '../LoadingIndicator/loading-indicator';
+import Meditor from '../MeditorModal/modal';
 
 const breadcrumbConfig = [
   {
@@ -61,8 +62,8 @@ const breadcrumbConfig = [
 class RequestsOverview extends React.Component {
   constructor () {
     super();
-    this.generateQuery = this.generateQuery.bind(this);
     this.state = {};
+    this.generateQuery = this.generateQuery.bind(this);
   }
 
   componentDidMount () {
@@ -140,6 +141,7 @@ class RequestsOverview extends React.Component {
         </List>
         }
       </section>
+      <Meditor></Meditor>
     </div>
     );
   }
@@ -166,5 +168,5 @@ export default withRouter(connect(state => ({
   config: state.config,
   requestCSV: state.requestCSV,
   privileges: state.api.tokens.privileges,
-  roles: state.api.tokens.roles,
+  roles: state.api.tokens.roles
 }))(RequestsOverview));
