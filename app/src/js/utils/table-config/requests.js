@@ -136,13 +136,13 @@ export const stepLookup = (row) => {
             stepID = row.step_data.data[tmpIDKey];
             // Build url to forms app - after submitted
             if (tmpType.match(/form/g)) {
-              request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+              request = `${_config.formsUrl}/questions/${row.id}`;
             }
           }
         }
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
-          request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+          request = `${_config.formsUrl}/questions/${row.id}`;
         // assign a workflow
         } else if (stepType.match(/action/g)) {
           request = `/workflows?requestId=${row.id}`;

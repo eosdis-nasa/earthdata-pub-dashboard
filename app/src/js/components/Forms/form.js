@@ -54,7 +54,7 @@ class FormOverview extends React.Component {
   }
 
   componentDidMount () {
-    const requestId = this.props.location.search.split('=')[1];
+    const requestId = this.props.location.search.split('=')[1].split('?')[0];
     const { formId } = this.props.match.params;
     const { dispatch } = this.props;
     dispatch(getForm(formId));
@@ -272,23 +272,28 @@ class FormOverview extends React.Component {
   }
 
   render () {
+    let editable = false;
     const { canEdit } = formPrivileges(this.props.privileges);
-    let requestId = this.props.location.search.split('=')[1];
+    let requestId = this.props.location.search.split('=')[1].split('?')[0];
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
-    let daacId = '';
+
+    if (typeof this.props.location.search.split('=')[2] !== 'undefined') {
+      if ((this.props.location.search.split('=')[2] === 'true') && canEdit) {
+        editable = true;
+      }
+    } else if (canEdit) {
+      editable = true;
+    }
+
     if (this.hasStepData()) {
       if (typeof this.props.requests.detail.data !== 'undefined') {
-        daacId = this.props.requests.detail.data.daac_id;
         requestId = this.props.requests.detail.data.id;
       }
     }
-    let thisFormUrl = `${_config.formsUrl}?formId=${formId}`;
-    if (requestId !== '') {
-      thisFormUrl += `&requestId=${requestId}`;
-    }
-    if (daacId !== '') {
-      thisFormUrl += `&group=${daacId}`;
+    let thisFormUrl = `${_config.formsUrl}/questions/${requestId}`;
+    if (formId !== '' && typeof this.props.location.search.split('=')[2] !== 'undefined') {
+      thisFormUrl += `/${formId}`;
     }
     if (!record || (record.inflight && !record.data)) {
       return <Loading />;
@@ -310,7 +315,7 @@ class FormOverview extends React.Component {
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>{form.long_name}</h1>
-          {requestId !== '' && canEdit && this.hasSavedAnswers() ? <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl} aria-label='edit your form'>Edit</a> : null}
+          {requestId !== '' && editable && this.hasSavedAnswers() ? <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl} aria-label='edit your form'>Edit</a> : null}
         </section>
 
         <section className='page__section'>

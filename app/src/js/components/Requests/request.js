@@ -131,9 +131,13 @@ class RequestOverview extends React.Component {
     }
     const requestForms = request.forms;
     let showTable = false;
+    const editable = [];
     if (requestForms !== null &&
       typeof requestForms !== 'undefined') {
       if (requestForms.length > 1) {
+        if (typeof request.step_data.data !== 'undefined' && typeof request.step_data.data.form_id !== 'undefined') {
+          editable.push(request.step_data.data.form_id);
+        }
         showTable = true;
       }
     }
@@ -177,7 +181,7 @@ class RequestOverview extends React.Component {
     const tableColumns = [
       {
         Header: 'Name',
-        accessor: row => <Link to={`/forms/id/${row.id}?requestId=${request.id}`} aria-label="View your form details">{row.long_name}</Link>,
+        accessor: row => editable.includes(`${row.id}`) ? <Link to={`/forms/id/${row.id}?requestId=${request.id}?editable=true`} aria-label="View your form details">{row.long_name}</Link> : <Link to={`/forms/id/${row.id}?requestId=${request.id}?editable=false`} aria-label="View your form details">{row.long_name}</Link>,
         id: 'long_name'
       },
       {
