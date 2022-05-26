@@ -35,10 +35,12 @@ import { updateInterval, overviewUrl } from '../config';
 // import { initialValuesFromLocation } from '../utils/url-helper';
 // import Datepicker from './Datepicker/Datepicker';
 import { strings } from './locale';
+import Meditor from '../components/MeditorModal/modal';
 
 class Home extends React.Component {
   constructor (props) {
     super(props);
+    this.state = {};
     this.displayName = 'Home';
     this.query = this.query.bind(this);
     this.generateQuery = this.generateQuery.bind(this);
@@ -306,6 +308,7 @@ class Home extends React.Component {
               </List>
             </div>
           </section>
+          <Meditor></Meditor>
         </div>
       </div>
     );

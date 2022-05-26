@@ -32,10 +32,12 @@ import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { requestPrivileges } from '../../utils/privileges';
 import _config from '../../config';
+import Meditor from '../MeditorModal/modal';
 
 class RequestOverview extends React.Component {
   constructor () {
     super();
+    this.state = {};
     this.reload = this.reload.bind(this);
     this.fastReload = this.fastReload.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
@@ -47,7 +49,6 @@ class RequestOverview extends React.Component {
     this.restore = this.restore.bind(this);
     this.selectWorkflow = this.selectWorkflow.bind(this);
     this.displayName = strings.request;
-    this.state = {};
   }
 
   componentDidMount () {
@@ -98,6 +99,7 @@ class RequestOverview extends React.Component {
     await this.props.dispatch(restoreRequest(requestId));
     this.navigateBack();
   }
+
   // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
   // since this is a detailed view of a single request we are only concerned with an error for that one
   // so no need to relegate the error check to a separate function
@@ -273,7 +275,7 @@ class RequestOverview extends React.Component {
           { record.inflight ? <Loading /> : record.error ? <ErrorReport report={record.error} /> : request ? <Metadata data={request} accessors={metaAccessors} /> : null
           }
         </section>
-
+        <Meditor></Meditor>
         { showTable
           ? <section className='page__section'>
             <div className='heading__wrapper--border'>
