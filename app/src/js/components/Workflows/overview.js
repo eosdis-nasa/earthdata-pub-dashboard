@@ -92,7 +92,7 @@ class WorkflowsOverview extends React.Component {
     const selectInput = [{
       Header: 'Select',
       accessor: (row) => row.long_name,
-      Cell: row => <input type="radio" className={ 'form__element__clickable' } aria-label={ 'select workflow' }
+      Cell: row => <input type="radio" className={ `form__element__clickable select_${row.row.original.short_name}` } aria-label={ 'select workflow' }
         onClick={(e) => { this.checkUncheckOthers(row.row.original.id); }} id={`select_${row.row.original.id}`} >{row.long_name}</input>,
       id: 'select',
       width: 50
