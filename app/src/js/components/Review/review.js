@@ -18,7 +18,7 @@ class ReviewStep extends React.Component {
   }
 
   componentDidMount () {
-    const requestId = this.props.location.search.split('=')[1].split('?')[0];
+    const requestId = this.props.location.search.split('=')[1];
     const { dispatch } = this.props;
     dispatch(getRequest(requestId));
   }
@@ -41,17 +41,13 @@ class ReviewStep extends React.Component {
 
   render () {
     const { canReview } = requestPrivileges(this.props.privileges);
-    const requestId = this.props.location.search.split('=')[1].split('?')[0];
+    const requestId = this.props.location.search.split('=')[1];
     let reviewable = false;
     let reviewReady = false;
     if (this.hasStepData()) {
       const request = this.props.requests.detail.data;
       reviewReady = request && request.step_data.type === 'review';
-      if (typeof this.props.location.search.split('=')[2] !== 'undefined') {
-        if ((this.props.location.search.split('=')[2] === 'true') && canReview) {
-          reviewable = true;
-        }
-      } else if (canReview) {
+      if (canReview) {
         reviewable = true;
       }
     }

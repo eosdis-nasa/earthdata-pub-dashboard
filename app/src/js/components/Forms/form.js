@@ -54,7 +54,7 @@ class FormOverview extends React.Component {
   }
 
   componentDidMount () {
-    const requestId = this.props.location.search.split('=')[1].split('?')[0];
+    const requestId = this.props.location.search.split('=')[1];
     const { formId } = this.props.match.params;
     const { dispatch } = this.props;
     dispatch(getForm(formId));
@@ -274,25 +274,22 @@ class FormOverview extends React.Component {
   render () {
     let editable = false;
     const { canEdit } = formPrivileges(this.props.privileges);
-    let requestId = this.props.location.search.split('=')[1].split('?')[0];
+    let requestId = this.props.location.search.split('=')[1];
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
-
-    if (typeof this.props.location.search.split('=')[2] !== 'undefined') {
-      if ((this.props.location.search.split('=')[2] === 'true') && canEdit) {
-        editable = true;
-      }
-    } else if (canEdit) {
+    if (canEdit) {
       editable = true;
     }
-
     if (this.hasStepData()) {
       if (typeof this.props.requests.detail.data !== 'undefined') {
         requestId = this.props.requests.detail.data.id;
+        if (this.props.requests.detail.data.step_name.match(/close/g)) {
+          editable = false;
+        }
       }
     }
     let thisFormUrl = `${_config.formsUrl}/questions/${requestId}`;
-    if (formId !== '' && typeof this.props.location.search.split('=')[2] !== 'undefined') {
+    if (formId !== '') {
       thisFormUrl += `/${formId}`;
     }
     if (!record || (record.inflight && !record.data)) {
