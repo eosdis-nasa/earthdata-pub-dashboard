@@ -42,15 +42,19 @@ class ReviewStep extends React.Component {
   render () {
     const { canReview } = requestPrivileges(this.props.privileges);
     const requestId = this.props.location.search.split('=')[1];
+    let reviewable = false;
     let reviewReady = false;
     if (this.hasStepData()) {
       const request = this.props.requests.detail.data;
       reviewReady = request && request.step_data.type === 'review';
+      if (canReview) {
+        reviewable = true;
+      }
     }
     return (
         <div className='page__component'>
           <section className='page_section'>
-            { canReview && reviewReady && typeof requestId !== 'undefined' && (
+            { reviewable && reviewReady && typeof requestId !== 'undefined' && (
               <div className='flex__row'>
                 <div className='flex__item--spacing'>
                   <button onClick={() => this.review(requestId, false)}

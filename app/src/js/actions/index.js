@@ -177,7 +177,7 @@ export const listRequests = (options) => ({
     type: types.REQUESTS,
     method: 'POST',
     id: null,
-    path: 'submission/active'
+    path: 'data/submission/operation/active'
   }
 });
 
@@ -186,7 +186,7 @@ export const listInactiveRequests = (options) => ({
     type: types.REQUESTS,
     method: 'POST',
     id: null,
-    path: 'submission/inactive'
+    path: 'data/submission/operation/inactive'
   }
 });
 
@@ -196,7 +196,7 @@ export const reviewRequest = (id, approve) => {
       [CALL_API]: {
         type: types.REQUEST_REVIEW,
         method: 'POST',
-        path: 'submission/review',
+        path: 'data/submission/operation/review',
         body: { id, approve }
       }
     })
@@ -210,7 +210,7 @@ export const updateRequestMetadata = (payload) => ({
   [CALL_API]: {
     type: types.REQUEST_UPDATE_METADATA,
     method: 'POST',
-    path: 'submission/metadata',
+    path: 'data/submission/operation/metadata',
     body: payload
   }
 });
@@ -299,7 +299,7 @@ export const applyWorkflowToRequest = (requestId, workflowId) => ({
   [CALL_API]: {
     type: types.REQUEST_APPLYWORKFLOW,
     method: 'POST',
-    path: 'submission/apply',
+    path: 'data/submission/operation/apply',
     body: {
       id: requestId,
       workflow_id: workflowId
@@ -311,7 +311,7 @@ export const withdrawRequest = (requestId) => ({
   [CALL_API]: {
     type: types.REQUEST_WITHDRAW,
     method: 'POST',
-    path: 'submission/withdraw',
+    path: 'data/submission/operation/withdraw',
     body: { id: requestId }
   }
 });
@@ -320,7 +320,7 @@ export const restoreRequest = (requestId) => ({
   [CALL_API]: {
     type: types.REQUEST_RESTORE,
     method: 'POST',
-    path: 'submission/restore',
+    path: 'data/submission/operation/restore',
     body: { id: requestId }
   }
 });

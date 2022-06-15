@@ -41,6 +41,7 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 // import pageSizeOptions from '../../utils/page-size';
 import { requestPrivileges } from '../../utils/privileges';
 import Loading from '../LoadingIndicator/loading-indicator';
+import Meditor from '../MeditorModal/modal';
 
 const breadcrumbConfig = [
   {
@@ -61,8 +62,8 @@ const breadcrumbConfig = [
 class RequestsOverview extends React.Component {
   constructor () {
     super();
-    this.generateQuery = this.generateQuery.bind(this);
     this.state = {};
+    this.generateQuery = this.generateQuery.bind(this);
   }
 
   componentDidMount () {
@@ -125,7 +126,7 @@ class RequestsOverview extends React.Component {
       <section className='page__section page__section__controls'>
         <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
-          { canInitialize ? <a className='button button--small button--green button--add form-group__element--right' href={initiateRequestSelectDaac} aria-label="Create new request">New Request</a> : null }
+          { canInitialize ? <a className='button button--small button--green button--add form-group__element--right new-request-button' href={initiateRequestSelectDaac} aria-label="Create new request">New Request</a> : null }
         </div>
         {!list
           ? <Loading />
@@ -140,6 +141,7 @@ class RequestsOverview extends React.Component {
         </List>
         }
       </section>
+      <Meditor></Meditor>
     </div>
     );
   }
@@ -166,5 +168,5 @@ export default withRouter(connect(state => ({
   config: state.config,
   requestCSV: state.requestCSV,
   privileges: state.api.tokens.privileges,
-  roles: state.api.tokens.roles,
+  roles: state.api.tokens.roles
 }))(RequestsOverview));

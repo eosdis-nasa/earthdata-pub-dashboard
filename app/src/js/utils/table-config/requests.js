@@ -15,64 +15,84 @@ import {
 import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
+import { trigger } from '../../actions/events';
 
 export const getPrivileges = () => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
-  const roles = user.user_roles;
-  const privileges = user.user_privileges;
-  const allPrivs = {
-    isManager: privileges.find(o => o.match(/ADMIN/g))
-      ? privileges.find(o => o.match(/ADMIN/g))
-      : roles.find(o => o.short_name.match(/manager/g)),
-    isAdmin: privileges.find(o => o.match(/ADMIN/g)),
-    isProducer: privileges.find(o => o.match(/ADMIN/g))
-      ? privileges.find(o => o.match(/ADMIN/g))
-      : roles.find(o => o.short_name.match(/data_producer/g)),
-    canReview: privileges.find(o => o.match(/ADMIN/g))
-      ? privileges.find(o => o.match(/ADMIN/g))
-      : privileges.find(o => o.match(/REQUEST_REVIEW/g)),
-    canReassign: privileges.find(o => o.match(/ADMIN/g))
-      ? privileges.find(o => o.match(/ADMIN/g))
-      : privileges.find(o => o.match(/REQUEST_REASSIGN/g)),
-    canCreateForm: privileges.find(o => o.match(/ADMIN/g))
-      ? privileges.find(o => o.match(/ADMIN/g))
-      : privileges.find(o => o.match(/FORM_CREATE/g)),
-    canUpdateForm: privileges.find(o => o.match(/ADMIN/g))
-      ? privileges.find(o => o.match(/ADMIN/g))
-      : privileges.find(o => o.match(/FORM_UPDATE/g))
-  };
-  return allPrivs;
+  if (user != null) {
+    const roles = user.user_roles;
+    const privileges = user.user_privileges;
+    const allPrivs = {
+      isManager: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/manager/g)),
+      isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+      isProducer: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/data_producer/g)),
+      canReview: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : privileges.find(o => o.match(/REQUEST_REVIEW/g)),
+      canReassign: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : privileges.find(o => o.match(/REQUEST_REASSIGN/g)),
+      canCreateForm: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : privileges.find(o => o.match(/FORM_CREATE/g)),
+      canUpdateForm: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : privileges.find(o => o.match(/FORM_UPDATE/g))
+    };
+    return allPrivs;
+  }
 };
 
 export const newLink = (request, formalName) => {
   const allPrivs = getPrivileges();
   let disabled = false;
-  if (allPrivs.canUpdateForm) {
+  if (typeof allPrivs !== 'undefined' && allPrivs.canUpdateForm) {
     disabled = false;
   } else {
     disabled = true;
   }
   if (disabled) {
-    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon'} aria-label={formalName}>{formalName}</Link>;
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
   } else {
     // This element was purposefully left as an anchor tag (rather than react Link) since the page is redirected away from
     // the dashboard site to the forms site. Converting to a Link component will result in a malformed url.
-    return <a href={request} className={'button button--medium button--green form-group__element--left button--no-icon'} aria-label={formalName || 'take action'}>{formalName}</a>;
+    return <a href={request} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'take action'}>{formalName}</a>;
+  }
+};
+
+export const sendToMeditor = (request, formalName) => {
+  const allPrivs = getPrivileges();
+  let disabled = false;
+  formalName = 'Send to mEditor';
+  if (typeof allPrivs.isManager !== 'undefined' || typeof allPrivs.isCoordinator !== 'undefined' || typeof allPrivs.isAdmin !== 'undefined') {
+    disabled = false;
+  } else {
+    disabled = true;
+  }
+  if (disabled) {
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon disabled--cursor'} aria-label={formalName}>{formalName}</Link>;
+  } else {
+    return <Link className={'button button--medium button--green form-group__element--left button--no-icon'}
+    onClick={() => { trigger('sendToMeditor:click', { request: request }); }} id={'sendButton'} to={'#'} name={'sendButton'} aria-label={formalName || 'send to meditor'}>{formalName}</Link>;
   }
 };
 
 export const assignWorkflow = (request, formalName) => {
   const allPrivs = getPrivileges();
   let disabled = false;
-  if (typeof allPrivs.isManager !== 'undefined' || typeof allPrivs.isAdmin !== 'undefined') {
+  if (typeof allPrivs !== 'undefined' && (typeof allPrivs.isManager !== 'undefined' || typeof allPrivs.isAdmin !== 'undefined')) {
     disabled = false;
   } else {
     disabled = true;
   }
   if (disabled) {
-    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon'} aria-label={formalName}>{formalName}</Link>;
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else {
-    return <Link className={'button button--medium button--green form-group__element--left button--no-icon'}
+    return <Link className={'button button--medium button--green form-group__element--left button--no-icon assign-workflow'}
                to={`${request}`} name={'assignButton'} aria-label={formalName || 'assign workflow'}>{formalName}</Link>;
   }
 };
@@ -80,18 +100,18 @@ export const assignWorkflow = (request, formalName) => {
 export const existingLink = (row, formId, formalName, step) => {
   const allPrivs = getPrivileges();
   let disabled = false;
-  if (allPrivs.canReview) {
+  if (typeof allPrivs !== 'undefined' && allPrivs.canReview) {
     disabled = false;
   } else {
     disabled = true;
   }
   if (disabled) {
-    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon'} aria-label={formalName}>{formalName}</Link>;
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
   } else {
     if (typeof formId === 'undefined') {
-      return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+      return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
     } else {
-      return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={'button button--medium button--green form-group__element--left button--no-icon'} aria-label={formalName || 'view form details'}>{formalName}</Link>;
+      return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'view form details'}>{formalName}</Link>;
     }
   }
 };
@@ -136,13 +156,19 @@ export const stepLookup = (row) => {
             stepID = row.step_data.data[tmpIDKey];
             // Build url to forms app - after submitted
             if (tmpType.match(/form/g)) {
-              request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+              request = `${_config.formsUrl}/questions/${row.id}`;
             }
           }
         }
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
-          request = `${_config.formsUrl}?formId=${stepID}&requestId=${row.id}&group=${row.daac_id}`;
+          request = `${_config.formsUrl}/questions/${row.id}`;
+        } else if (stepType.match(/action/g) && stepName.match(/send_to_meditor/g)) {
+          if (window.location.pathname === '/') {
+            request = `${window.location.origin}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
+          } else {
+            request = `${window.location.origin}${window.location.pathname.split(/\/request/)[0]}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
+          }
         // assign a workflow
         } else if (stepType.match(/action/g)) {
           request = `/workflows?requestId=${row.id}`;
@@ -151,7 +177,9 @@ export const stepLookup = (row) => {
       }
     }
   }
-  if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
+  if (stepType.match(/action/g) && stepName.match(/send_to_meditor/g)) {
+    return sendToMeditor(request, formalName);
+  } else if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
   } else if (stepType.match(/action/g)) {
     return existingLink(row, undefined, formalName, stepName);
@@ -166,7 +194,7 @@ export const tableColumns = [
   {
     Header: 'Data Product Name',
     accessor: row => row.form_data ? row.form_data.data_product_name_value || '(no name)' : '(no name)',
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || '(no name)' : '(no name)'}</Link> : '(no name)',
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || '(no name)' : '(no name)'}</Link> : '(no name)',
     id: 'name',
     width: 170
   },
