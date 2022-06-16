@@ -29,7 +29,10 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel, filters }) => {
 
   const { list, inflight } = search;
   const entityArr = paginate(list, listSize, page);
-  const filteredArr = filters.length > 0 ? entityArr.filter((elem) => entity === 'group' ? filters.includes(elem.short_name) : !filters.includes(elem.short_name)) : entityArr;
+  let filteredArr;
+  if (typeof filters !=='undefined') {
+    filteredArr = filters.length > 0 ? entityArr.filter((elem) => entity === 'group' ? filters.includes(elem.short_name) : !filters.includes(elem.short_name)) : entityArr;
+  }
   return (
     <div className='search-modal__background'
       onClick={() => { cancel(); }}>
@@ -65,7 +68,7 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel, filters }) => {
                 );
               })
               : null}
-            { filteredArr.length < listSize &&
+            { typeof filteredArr !== 'undefined' && filteredArr.length < listSize &&
             Array(listSize - filteredArr.length).fill(0).map((i, key) => (
               <li key={key} className='search-modal__item--hidden'></li>))
             }

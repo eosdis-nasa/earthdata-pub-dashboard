@@ -269,7 +269,7 @@ User.propTypes = {
   user: PropTypes.object,
   privileges: PropTypes.object,
   match: PropTypes.object,
-  groups: PropTypes.object
+  groups: PropTypes.array
 };
 
 export default withRouter(connect(state => ({
