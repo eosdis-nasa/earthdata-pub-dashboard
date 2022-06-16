@@ -189,7 +189,7 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
                         <div className='flex__item--w-15'>
                           {canRemoveGroup &&
                             <button
-                              className='button button--small button--subtract form-group__element--left'
+                              className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
                               onClick={() => removeGroup(dispatch, data.id, group.id)}
                               disabled={inflight}>
                               Remove
@@ -204,7 +204,7 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
                   <div className='flex__row sm-border'>
                     <div className='flex__item-w-25'>
                       <button
-                        className='button button--small button--add'
+                        className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
                         onClick={handleAddGroup}
                         disabled={inflight}>
                         Add Group
@@ -231,7 +231,7 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
                         <div className='flex__item--w-15'>
                           { canRemoveRole && (isAdmin() || role.short_name != 'admin') &&
                             <button
-                              className='button button--small button--subtract form-group__element--left'
+                              className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
                               onClick={() => removeRole(dispatch, data.id, role.id)}
                               disabled={inflight}>
                               Remove
@@ -244,9 +244,9 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
                 }
                 { canAddRole &&
                   <div className='flex__row sm-border'>
-                    <div className='flex__item-w-25'>
+                    <div className='flex__item--w-25'>
                       <button
-                        className='button button--small button--add'
+                        className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white add-role'
                         onClick={handleAddRole}
                         disabled={inflight}>
                         Add Role

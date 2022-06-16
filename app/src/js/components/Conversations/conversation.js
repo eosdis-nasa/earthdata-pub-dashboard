@@ -99,7 +99,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                         title="Type your reply"></textarea>
                       <div>
                         <button type='submit'
-                          className='button button--small button--reply form-group__element--right'>
+                          className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                           Send Reply
                         </button>
                       </div>
@@ -127,7 +127,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                 }
                 {canAddUser &&
                   <div className='flex__item--spacing'>
-                    <button className='button button--small button--add'
+                    <button className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
                       onClick={() => setShowSearch(true)}>
                       Add Users
                     </button>
