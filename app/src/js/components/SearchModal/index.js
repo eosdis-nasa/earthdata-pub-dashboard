@@ -6,7 +6,7 @@ import config from './config';
 
 const listSize = 10;
 
-const SearchModal = ({ dispatch, search, entity, submit, cancel, filters }) => {
+const SearchModal = ({ dispatch, search, entity, submit, cancel, filters = {} }) => {
   const { title, path, primary, fields } = config[entity];
   const [selected, setSelected] = useState(false);
   const [searchParams, setSearchParams] = useState({});
