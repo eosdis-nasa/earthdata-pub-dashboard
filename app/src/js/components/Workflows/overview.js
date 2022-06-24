@@ -196,18 +196,18 @@ class WorkflowsOverview extends React.Component {
           >
           </List>
           { requestId
-            ? <section className='page__section' style={{ float: 'right' }}>
-                <Link className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right' + (disabled ? ' button--disabled' : '')}
-                      onClick={this.setWorkflow} id={"selectButton"} to={`/requests`}
-                      aria-label="select workflow">
-                  Select
-                </Link>
-                <button
-                  className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'}
-                  id="cancelButton"
-                  onClick={(e) => { e.preventDefault(); this.cancelWorkflow(); }}
-                >Cancel</button>
-              </section>
+            ? <section className='page__section'>
+              <button
+                className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
+                id="cancelButton"
+                onClick={(e) => { e.preventDefault(); this.cancelWorkflow(); }}
+              >Cancel</button>
+              <Link className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white' + (disabled ? ' button--disabled' : '')}
+                    onClick={this.setWorkflow} id={"selectButton"} to={`/requests`}
+                    aria-label="select workflow">
+                Select
+              </Link>
+            </section>
             : null }
         </section>
       </div>

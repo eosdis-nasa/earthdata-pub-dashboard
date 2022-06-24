@@ -108,16 +108,16 @@ class ApprovalStep extends React.Component {
         </section>
           <section className='page_section'>
               { canReview && reviewReady && typeof requestId !== 'undefined' && (
-                  <div className='flex__row'>
+                  <div className='flex__row reject-approve'>
                       <div className='flex__item--spacing'>
                         <button onClick={() => this.review(requestId, false)}
-                            className='button button--no-icon button--medium button--green'>
+                            className='button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'>
                             Reject
                         </button>
                         </div>
                         <div className='flex__item--spacing'>
                         <button onClick={() => this.review(requestId, true)}
-                            className='button button--no-icon button--medium button--green'>
+                            className='button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'>
                             Approve
                         </button>
                       </div>
