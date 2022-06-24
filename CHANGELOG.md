@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 
+## 1.0.4 - 2022-05-18
+
+- Added config option for mEditor url. Added custom mEditor component. Added events.js.
+- Added confirmation dialog skip checkbox option to defaultModal component.  
+- Added undo of that feature under a new 'Settings' group in the user detail form.
+
 ## 1.0.3 - 2022-05-12
 
 - Updated old form name fragments to current
