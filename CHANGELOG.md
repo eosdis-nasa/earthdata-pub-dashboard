@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 
+## 1.0.6 - 2022-06-20
+
+- Added creator and daac to request details page.
+
 ## 1.0.5 - 2022-06-16
 
 - Updated buttons to have primary secondary classes with icons.

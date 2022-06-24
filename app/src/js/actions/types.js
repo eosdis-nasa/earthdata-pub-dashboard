@@ -280,6 +280,18 @@ export const FILTER_QUESTIONS = 'FILTER_QUESTIONS';
 export const CLEAR_QUESTIONS_FILTER = 'CLEAR_QUESTIONS_FILTER';
 export const UPDATE_QUESTIONS_CLEAR = 'UPDATE_QUESTIONS_CLEAR';
 
+// Daacs
+export const DAAC = 'DAAC';
+export const DAAC_INFLIGHT = 'DAAC_INFLIGHT';
+export const DAACS = 'DAACS';
+export const DAACS_INFLIGHT = 'DAACS_INFLIGHT';
+export const DAACS_ERROR = 'DAACS_ERROR';
+export const SEARCH_DAACS = 'SEARCH_DAACS';
+export const CLEAR_DAACS_SEARCH = 'CLEAR_DAACS_SEARCH';
+export const FILTER_DAACS = 'FILTER_DAACS';
+export const CLEAR_DAACS_FILTER = 'CLEAR_DAACS_FILTER';
+export const UPDATE_DAACS_CLEAR = 'UPDATE_DAACS_CLEAR';
+
 // Inputs
 export const INPUTS = 'INPUTS';
 
