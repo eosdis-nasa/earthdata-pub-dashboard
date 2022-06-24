@@ -24,8 +24,8 @@ import Loading from '../LoadingIndicator/loading-indicator';
 export const tableColumns = [
   {
     Header: 'Data Product Name',
-    accessor: row => row.form_data ? row.form_data.data_product_name_value || '(no name)' : '(no name)',
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || '(no name)' : '(no name)'}</Link> : '(no name)',
+    accessor: row => row.form_data ? row.form_data.data_product_name_value || 'Request Initialized' : 'Request Initialized',
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || 'Request Initialized' : 'Request Initialized'}</Link> : 'Request Initialized',
     id: 'name',
     width: 170
   },
@@ -90,7 +90,8 @@ class ActionRequestsOverview extends React.Component {
     else if (pathname === '/requests/status/form') return 'Pending Form Submittal';
     else if (pathname === '/requests/status/review') return 'Pending Review';
     else if (pathname === '/requests/status/service') return 'Pending Service Completion';
-    else if (pathname === '/requests/status/closed') return 'Ready';
+    else if (pathname === '/requests/status/closed') return 'Closed';
+    else if (pathname === '/requests/status/withdrawn') return 'Withdrawn';
     else return 'all';
   }
 
@@ -114,7 +115,7 @@ class ActionRequestsOverview extends React.Component {
       const record = list[ea];
       newList[ea] = record;
       for (const r in record) {
-        if (!record[r].hidden && typeof record[r] === 'object' && record[r].status === this.getView()) {
+        if (typeof record[r] !== 'undefined' && record[r] !== null && !record[r].hidden && typeof record[r] === 'object' && record[r].status === this.getView()) {
           tmp.push(record[r]);
         }
       }
