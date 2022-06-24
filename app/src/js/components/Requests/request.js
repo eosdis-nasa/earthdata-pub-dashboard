@@ -5,6 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   getRequest,
+  getDaac,
   withdrawRequest,
   restoreRequest,
   listWorkflows
@@ -30,14 +31,29 @@ import AsyncCommands from '../DropDown/dropdown-async-command';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import { requestPrivileges } from '../../utils/privileges';
+import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 import _config from '../../config';
 import Meditor from '../MeditorModal/modal';
+
+export const getRoles = () => {
+  const user = JSON.parse(window.localStorage.getItem('auth-user'));
+  if (user != null) {
+    const roles = user.user_roles;
+    const privileges = user.user_privileges;
+    const allRoles = {
+      isManager: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/manager/g)),
+      isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+    };
+    return allRoles;
+  }
+};
 
 class RequestOverview extends React.Component {
   constructor () {
     super();
-    this.state = {};
+    this.state = { daacName: '' };
     this.reload = this.reload.bind(this);
     this.fastReload = this.fastReload.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
@@ -58,6 +74,14 @@ class RequestOverview extends React.Component {
     // Commenting out until we add applyWorkflow capability
     // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
     dispatch(getRequest(requestId));
+    setTimeout(() => {
+      const record = this.props.requests.detail;
+      if (typeof record.data !== 'undefined') {
+        this.props.dispatch(getDaac(record.data.daac_id)).then(value => {
+          this.setState({ daacName: value.data.long_name });
+        });
+      }
+    }, 2000);
   }
 
   reload (immediate, timeout) {
@@ -131,6 +155,12 @@ class RequestOverview extends React.Component {
     if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
       canReassign = false;
     }
+    let { canEdit } = formPrivileges(this.props.privileges);
+    const allRoles = getRoles();
+    let canViewUsers = false;
+    if (typeof allRoles !== 'undefined' && (allRoles.isAdmin || allRoles.isManager)) {
+      canViewUsers = true;
+    }
     const requestForms = request.forms;
     let showTable = false;
     if (requestForms !== null &&
@@ -191,6 +221,14 @@ class RequestOverview extends React.Component {
 
     const metaAccessors = [
       {
+        label: 'Daac',
+        accessor: row => this.state.daacName && canEdit ? <a href={`${_config.formsUrl}/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{this.state.daacName}</a> : this.state.daacName ? this.state.daacName : row.daac_id
+      },
+      {
+        label: 'Initiator',
+        accessor: row => row.initiator.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : row.initiator.name
+      },
+      {
         label: 'Data Product Name',
         accessor: row => row.form_data && row.form_data.data_product_name_value ? row.form_data.data_product_name_value : 'Request Initialized'
       },
@@ -219,7 +257,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Communication',
-        accessor: conversationId => <Link to={`/conversations/id/${conversationId}`} aria-label="View your conversations">{conversationId ? 'Email Conversation' : null}</Link>,
+        accessor: conversationId => <Link to={`/conversations/id/${conversationId}`} aria-label="View your conversations">{conversationId ? 'Conversation' : null}</Link>,
         property: 'conversation_id'
       }
     ];
@@ -268,8 +306,7 @@ class RequestOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium with-description' aria-label={strings.request_overview}>{strings.request_overview}</h2>
           </div>
-          { record.inflight ? <Loading /> : record.error ? <ErrorReport report={record.error} /> : request ? <Metadata data={request} accessors={metaAccessors} /> : null
-          }
+          { record.inflight ? <Loading /> : record.error ? <ErrorReport report={record.error} /> : request ? <Metadata data={request} accessors={metaAccessors} /> : null }
         </section>
         <Meditor></Meditor>
         { showTable
@@ -298,6 +335,7 @@ RequestOverview.propTypes = {
   skipReloadOnMount: PropTypes.bool,
   workflowOptions: PropTypes.array,
   privileges: PropTypes.object,
+  daacs: PropTypes.object,
   roles: PropTypes.array
 };
 

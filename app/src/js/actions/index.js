@@ -154,6 +154,19 @@ export const getRequest = (requestId) => ({
   }
 });
 
+export const getDaac = (daacId) => {
+  return (dispatch) => {
+    return dispatch({
+      [CALL_API]: {
+        type: types.DAAC,
+        method: 'GET',
+        id: daacId,
+        path: `data/daac/${daacId}`
+      }
+    });
+  };
+};
+
 export const getRequestByStepType = (stepType) => ({
   [CALL_API]: {
     type: types.REQUESTS,

@@ -56,16 +56,16 @@ class QuestionsOverview extends React.Component {
           </div>
         </section>
         <section className='page__section page__section__controls'>
-          <div className='heading__wrapper--border'>
+          <div className='heading__wrapper--border' style={{ "height": "3rem" }}>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_questions} <span className='num--title'>{questions.list.data.length}</span></h2>
-          </div>
-          <div style={{padding: '1em'}}>
             <Link
-                className='button button--green' style={{float: 'right', padding: '.65em'}}
-                to={{ pathname: `/questions/add` }}
+                className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right questions-add' to={{ pathname: `/questions/add` }}
             >Add Question
             </Link>
           </div>
+        </section>
+        <section className='page__section page__section__controls'>
+          <div>
           {!questions.list || questions.list.data.constructor.name !== 'Array' ? <Loading /> : <List
                 list={list}
                 action={listQuestions}
@@ -77,6 +77,7 @@ class QuestionsOverview extends React.Component {
               >
               </List>
           }
+          </div>
         </section>
       </div>
     );

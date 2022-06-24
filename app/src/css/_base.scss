@@ -62,6 +62,12 @@ body {
   display: block;
   width: auto;
 }
+.add-role{
+  min-width: 123px;
+}
+.flex__row.reject-approve {
+  margin-left: -21px;
+}
 
 a, a:visited {
   cursor: pointer;
@@ -889,6 +895,9 @@ a:active {
   background-color: $white;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
 }
+.search-modal button:first-child {
+  margin-left:1rem;
+}
 .search-modal__title {
   display: flex;
   justify-content: center;
@@ -955,7 +964,7 @@ a:active {
 .search-modal__controls {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: left;
   gap: 1em;
   padding: 1em;
 }

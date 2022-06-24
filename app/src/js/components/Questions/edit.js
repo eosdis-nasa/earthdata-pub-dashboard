@@ -127,14 +127,16 @@ class Questions extends React.Component {
                                 </div>
                               : null)
                     }
-                    <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'}
-                    onClick={this.handleSubmit} aria-label="submit your questions">
-                        Submit
-                    </button>
-                    <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'}
-                    to={'/questions'} aria-label="cancel question editing">
-                        Cancel
-                    </Link>
+                </section>
+                <section className='page__section'>
+                  <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
+                  to={'/questions'} id='cancelButton' aria-label="cancel question editing">
+                      Cancel
+                  </Link>
+                  <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
+                  onClick={this.handleSubmit} aria-label="submit your questions">
+                      Submit
+                  </button>
                 </section>
             </div>
     );
