@@ -192,7 +192,7 @@ class RequestOverview extends React.Component {
     const metaAccessors = [
       {
         label: 'Data Product Name',
-        accessor: row => row.form_data && row.form_data.data_product_name_value ? row.form_data.data_product_name_value : '(no name)'
+        accessor: row => row.form_data && row.form_data.data_product_name_value ? row.form_data.data_product_name_value : 'Request Initialized'
       },
       {
         label: 'Workflow',
