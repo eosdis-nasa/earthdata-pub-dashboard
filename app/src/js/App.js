@@ -56,6 +56,7 @@ const MainRoutes = () => {
         <Route path='/rules' component={Rules} />
         <Route path='/modules' component={Modules} />
         <Route path='/test-api' component={TestApi} />
+        <Route component={NotFound} />
       </Switch>
     </Main>
   );
