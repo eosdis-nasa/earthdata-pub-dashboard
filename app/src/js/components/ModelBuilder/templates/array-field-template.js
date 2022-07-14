@@ -21,7 +21,7 @@ function ArrayFieldTemplate ({ items, canAdd, onAddClick }) {
                   onClick={element.onReorderClick(element.index, element.index - 1)}>Up</button>
               )}
               <button
-                className='button button--small'
+                className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
                 onClick={element.onDropIndexClick(element.index)}>Remove</button>
             </div>
           </div>
@@ -29,7 +29,7 @@ function ArrayFieldTemplate ({ items, canAdd, onAddClick }) {
       </div>
       {canAdd && (
         <button
-          className="button button--small"
+          className="button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white"
           onClick={onAddClick} type="button">Add Row</button>
       )}
     </div>
