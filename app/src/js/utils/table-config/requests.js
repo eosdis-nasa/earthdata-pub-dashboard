@@ -172,12 +172,6 @@ export const stepLookup = (row) => {
             }
           }
         }
-        // eslint-disable-next-line no-prototype-builtins
-        console.log(`origin is ${window.location.origin}`);
-        // eslint-disable-next-line no-prototype-builtins
-        console.log(`config is ${_config.sendUserToMeditor}`);
-        // eslint-disable-next-line no-prototype-builtins
-        console.log(`request split now is ${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}`);
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
           request = `${_config.formsUrl}/questions/${row.id}`;
