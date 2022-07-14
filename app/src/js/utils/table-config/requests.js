@@ -179,7 +179,7 @@ export const stepLookup = (row) => {
           if (window.location.pathname === '/') {
             request = `${window.location.origin}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
           } else {
-            request = `${window.location.origin}${window.location.pathname.split(/\/request/)[0]}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
+            request = `${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
           }
         // assign a workflow
         } else if (stepType.match(/action/g)) {
