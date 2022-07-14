@@ -4,6 +4,12 @@
   height:2rem;
   margin-bottom:.2em;
 }
+.questions-add{
+  margin-bottom:2em;
+}
+#cancelButton{
+  margin-right:1rem;
+}
 .button {
   position: relative;
   padding: .65em 1.2em .65em 2.5em;
@@ -33,6 +39,8 @@
     // Breaks accessibility
     // opacity: 0.6;
     pointer-events: none;
+    text-decoration: none;
+    color: $white;
   }
 
   &:hover{
@@ -163,7 +171,7 @@
   }
 
   /*******ButtonGroup & Group CTA******/
-    &--add {
+    &--add-small {
       background-color: $light-green;
       position: relative;
 
@@ -245,13 +253,16 @@
         font-family: 'FontAwesome';
         content: '\f112';
         font-weight: 900;
-        top: 4px;
         left: 10px;
       }
-      &:hover {
-        background-color: darken($light-green, 5%);
-        border: 0;
-      }
+    }
+    &--reply:hover:before{
+      color: $white;
+      position: absolute;
+      font-family: 'FontAwesome';
+      content: '\f112';
+      font-weight: 900;
+      visibility: hidden;
     }
 
     &--check {
@@ -288,6 +299,29 @@
       }
     }
 
+    &--remove {
+      background-color: $error-red;
+      position: relative;
+
+      &:before{
+        color: $white;
+        position: absolute;
+        font-family: 'FontAwesome';
+        content: '\f057';
+        font-weight: 900;
+        left: 10px;
+
+      }
+    }
+
+    &--remove:hover:before{
+      color: $white;
+      position: absolute;
+      font-family: 'FontAwesome';
+      content: '\f057';
+      font-weight: 900;
+      visibility: hidden;
+  }
     &--cancel:hover:before{
       color: $white;
       position: absolute;
@@ -331,21 +365,6 @@
       }
     }
 
-    &--remove {
-      background-color: $light-green;
-      position: relative;
-
-      &:before{
-        color: $white;
-        position: absolute;
-        font-family: 'FontAwesome';
-        content: '\f0a0';
-        font-weight: 900;
-        left: 10px;
-
-      }
-    }
-
     &--execute{
       background-color: $light-green;
       position: relative;
@@ -376,7 +395,7 @@
       }
     }
 
-    &--remove, &--execute, &--reingest {
+    &--execute, &--reingest {
       &:hover {
         background-color: darken($light-green, 5%);
         color: #fff;
@@ -430,6 +449,30 @@
         left: 10px;
 
       }
+    }
+
+    &--add{
+      background-color: $light-green;
+      position: relative;
+
+      &:before{
+        color: $white;
+        position: absolute;
+        font-family: 'FontAwesome';
+        content: '\f067';
+        font-weight: 900;
+        left: 10px;
+
+      }
+    }
+
+    &--add:hover:before{
+      color: $white;
+      position: absolute;
+      font-family: 'FontAwesome';
+      content: '\f067';
+      font-weight: 900;
+      visibility: hidden;
     }
 
     &--confirm:hover:before, &--submit:hover:before{
@@ -487,7 +530,8 @@
 
     &__animation {
       position: relative;
-      display: inline-block;
+      /* display: inline-block; */
+      display: inline-flex;
       cursor: pointer;
       &:after {
         position: absolute;
