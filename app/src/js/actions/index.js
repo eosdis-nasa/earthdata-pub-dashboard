@@ -502,12 +502,12 @@ export const getOptionsFormGroup = () => ({
   }
 });
 
-export const getForm = (formId) => ({
+export const getForm = (formId, daacId) => ({
   [CALL_API]: {
     type: types.FORM,
     id: formId,
     method: 'GET',
-    path: `data/form/${formId}`
+    path: daacId ? `data/form/${formId}?daac_id=${daacId}` : `data/form/${formId}`
   }
 });
 
