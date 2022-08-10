@@ -177,9 +177,19 @@ export const stepLookup = (row) => {
           request = `${_config.formsUrl}/questions/${row.id}`;
         } else if (stepType.match(/action/g) && stepName.match(/send_to_meditor/g)) {
           if (window.location.pathname === '/') {
-            request = `${window.location.origin}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
+            request = `${window.location.origin}${_config.sendUserToMeditor}`;
+            console.log('1', request);
           } else {
-            request = `${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
+            request = `${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}`;
+            console.log('2', request);
+          }
+        } else if (stepType.match(/action/g) && stepName.match(/complete_metadata/g)) {
+          if (window.location.pathname === '/') {
+            request = `${window.location.origin}${_config.sendUserToMeditor}`;
+            console.log('1', request);
+          } else {
+            request = `${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}`;
+            console.log('2', request);
           }
         // assign a workflow
         } else if (stepType.match(/action/g)) {
@@ -189,7 +199,8 @@ export const stepLookup = (row) => {
       }
     }
   }
-  if (stepType.match(/action/g) && stepName.match(/send_to_meditor/g)) {
+  if (stepType.match(/action/g) && (stepName.match(/send_to_meditor/g) || stepName.match(/complete_metadata/g))) {
+    console.log(request)
     return sendToMeditor(request, formalName);
   } else if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
