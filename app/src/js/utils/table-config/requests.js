@@ -178,18 +178,14 @@ export const stepLookup = (row) => {
         } else if (stepType.match(/action/g) && stepName.match(/send_to_meditor/g)) {
           if (window.location.pathname === '/') {
             request = `${window.location.origin}${_config.sendUserToMeditor}`;
-            console.log('1', request);
           } else {
             request = `${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}`;
-            console.log('2', request);
           }
         } else if (stepType.match(/action/g) && stepName.match(/complete_metadata/g)) {
           if (window.location.pathname === '/') {
-            request = `${window.location.origin}${_config.sendUserToMeditor}`;
-            console.log('1', request);
+            request = `${window.location.origin}${_config.sendUserToMeditor}/Collection%20Metadata`;
           } else {
-            request = `${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}`;
-            console.log('2', request);
+            request = `${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`;
           }
         // assign a workflow
         } else if (stepType.match(/action/g)) {
@@ -199,8 +195,9 @@ export const stepLookup = (row) => {
       }
     }
   }
+  console.log(`${window.location.origin}${window.location.pathname.split(/\/dashboard\/request\//)[0]}${_config.sendUserToMeditor}`);
+  console.log(`${window.location.origin}${window.location.pathname.split(/\/dashboard\/request\//)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`);
   if (stepType.match(/action/g) && (stepName.match(/send_to_meditor/g) || stepName.match(/complete_metadata/g))) {
-    console.log(request)
     return sendToMeditor(request, formalName);
   } else if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
