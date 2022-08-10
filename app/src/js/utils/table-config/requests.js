@@ -149,12 +149,6 @@ export const stepLookup = (row) => {
   let stepIDKey = '';
   let tmpType = '';
   const formalName = getFormalName(stepName);
-  let path = '';
-  if (window.location.pathname.slice(-1) === '/' && _config.sendUserToMeditor.charAt(0) === '/') {
-    path = window.location.pathname.slice(0, -1);
-  } else {
-    path = window.location.pathname;
-  }
   for (const i in row.step_data) {
     if (typeof row.step_data[i] !== 'undefined') {
       const regex = new RegExp(stepName, 'g');
@@ -182,17 +176,9 @@ export const stepLookup = (row) => {
         if (stepType.match(/form/g)) {
           request = `${_config.formsUrl}/questions/${row.id}`;
         } else if (stepType.match(/action/g) && stepName.match(/send_to_meditor/g)) {
-          if (window.location.pathname === '/') {
-            request = `${window.location.origin}${_config.sendUserToMeditor}`;
-          } else {
-            request = `${window.location.origin}${path.split(/\/dashboard/)[0]}${_config.sendUserToMeditor}`;
-          }
+          request = `${window.location.origin}${_config.sendUserToMeditor}`;
         } else if (stepType.match(/action/g) && stepName.match(/complete_metadata/g)) {
-          if (window.location.pathname === '/') {
-            request = `${window.location.origin}${_config.sendUserToMeditor}/Collection%20Metadata`;
-          } else {
-            request = `${window.location.origin}${path.split(/\/dashboard/)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`;
-          }
+          request = `${window.location.origin}${_config.sendUserToMeditor}/Collection%20Metadata`;
         // assign a workflow
         } else if (stepType.match(/action/g)) {
           request = `/workflows?requestId=${row.id}`;
@@ -201,14 +187,6 @@ export const stepLookup = (row) => {
       }
     }
   }
-  // eslint-disable-next-line
-  console.log(`${window.location.origin}${path.split(/\/dashboard/)[0]}${_config.sendUserToMeditor}`);
-  // eslint-disable-next-line
-  console.log(`${window.location.origin}${path.split(/\/dashboard/)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`);
-  // eslint-disable-next-line
-  console.log(`${path}`);
-  // eslint-disable-next-line
-  console.log(`${window.location.origin}`);
   if (stepType.match(/action/g) && (stepName.match(/send_to_meditor/g) || stepName.match(/complete_metadata/g))) {
     return sendToMeditor(request, formalName);
   } else if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
