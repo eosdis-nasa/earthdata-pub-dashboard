@@ -185,13 +185,13 @@ export const stepLookup = (row) => {
           if (window.location.pathname === '/') {
             request = `${window.location.origin}${_config.sendUserToMeditor}`;
           } else {
-            request = `${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}`;
+            request = `${window.location.origin}${path.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}`;
           }
         } else if (stepType.match(/action/g) && stepName.match(/complete_metadata/g)) {
           if (window.location.pathname === '/') {
             request = `${window.location.origin}${_config.sendUserToMeditor}/Collection%20Metadata`;
           } else {
-            request = `${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`;
+            request = `${window.location.origin}${path.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`;
           }
         // assign a workflow
         } else if (stepType.match(/action/g)) {
