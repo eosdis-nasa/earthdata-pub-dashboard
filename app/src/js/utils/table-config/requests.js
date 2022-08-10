@@ -151,7 +151,7 @@ export const stepLookup = (row) => {
   const formalName = getFormalName(stepName);
   let path = '';
   if (window.location.pathname.slice(-1) === '/' && _config.sendUserToMeditor.charAt(0) === '/') {
-    path = window.location.pathname(0, -1);
+    path = window.location.pathname.slice(0, -1);
   } else {
     path = window.location.pathname;
   }
@@ -206,6 +206,7 @@ export const stepLookup = (row) => {
   // eslint-disable-next-line
   console.log(`${window.location.origin}${path.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`);
   // eslint-disable-next-line
+  console.log(`${path}`);
   if (stepType.match(/action/g) && (stepName.match(/send_to_meditor/g) || stepName.match(/complete_metadata/g))) {
     return sendToMeditor(request, formalName);
   } else if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
