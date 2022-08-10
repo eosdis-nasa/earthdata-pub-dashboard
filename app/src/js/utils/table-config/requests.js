@@ -199,6 +199,8 @@ export const stepLookup = (row) => {
   console.log(`${window.location.origin}${window.location.pathname.split(/\/dashboard\/request\//)[0]}${_config.sendUserToMeditor}`);
   // eslint-disable-next-line
   console.log(`${window.location.origin}${window.location.pathname.split(/\/dashboard\/request\//)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`);
+  // eslint-disable-next-line
+  console.log(`${_config.sendUserToMeditor}`);
   if (stepType.match(/action/g) && (stepName.match(/send_to_meditor/g) || stepName.match(/complete_metadata/g))) {
     return sendToMeditor(request, formalName);
   } else if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
