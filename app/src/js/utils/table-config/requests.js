@@ -202,9 +202,9 @@ export const stepLookup = (row) => {
     }
   }
   // eslint-disable-next-line
-  console.log(`${window.location.origin}${path.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}`);
+  console.log(`${window.location.origin}${path.split(/\/dashboard/)[0]}${_config.sendUserToMeditor}`);
   // eslint-disable-next-line
-  console.log(`${window.location.origin}${path.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`);
+  console.log(`${window.location.origin}${path.split(/\/dashboard/)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`);
   // eslint-disable-next-line
   console.log(`${path}`);
   if (stepType.match(/action/g) && (stepName.match(/send_to_meditor/g) || stepName.match(/complete_metadata/g))) {
