@@ -195,7 +195,9 @@ export const stepLookup = (row) => {
       }
     }
   }
+  // eslint-disable-next-line
   console.log(`${window.location.origin}${window.location.pathname.split(/\/dashboard\/request\//)[0]}${_config.sendUserToMeditor}`);
+  // eslint-disable-next-line
   console.log(`${window.location.origin}${window.location.pathname.split(/\/dashboard\/request\//)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`);
   if (stepType.match(/action/g) && (stepName.match(/send_to_meditor/g) || stepName.match(/complete_metadata/g))) {
     return sendToMeditor(request, formalName);
