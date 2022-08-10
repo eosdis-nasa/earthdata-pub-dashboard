@@ -172,6 +172,12 @@ export const stepLookup = (row) => {
             }
           }
         }
+        let path = '';
+        if (window.location.pathname.slice(-1) === '/' && _config.sendUserToMeditor.charAt(0) === '/') {
+          path = window.location.pathname.slice(-1);
+        } else {
+          path = window.location.pathname;
+        }
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
           request = `${_config.formsUrl}/questions/${row.id}`;
@@ -196,9 +202,9 @@ export const stepLookup = (row) => {
     }
   }
   // eslint-disable-next-line
-  console.log(`${window.location.origin}${window.location.pathname.split(/\/dashboard\/request\//)[0]}${_config.sendUserToMeditor}`);
+  console.log(`${window.location.origin}${path.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}`);
   // eslint-disable-next-line
-  console.log(`${window.location.origin}${window.location.pathname.split(/\/dashboard\/request\//)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`);
+  console.log(`${window.location.origin}${path.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}/Collection%20Metadata`);
   // eslint-disable-next-line
   console.log(`${_config.sendUserToMeditor}`);
   // eslint-disable-next-line
