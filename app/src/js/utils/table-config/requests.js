@@ -149,6 +149,12 @@ export const stepLookup = (row) => {
   let stepIDKey = '';
   let tmpType = '';
   const formalName = getFormalName(stepName);
+  let path = '';
+  if (window.location.pathname.slice(-1) === '/' && _config.sendUserToMeditor.charAt(0) === '/') {
+    path = window.location.pathname.slice(-1);
+  } else {
+    path = window.location.pathname;
+  }
   for (const i in row.step_data) {
     if (typeof row.step_data[i] !== 'undefined') {
       const regex = new RegExp(stepName, 'g');
@@ -171,12 +177,6 @@ export const stepLookup = (row) => {
               request = `${_config.formsUrl}/questions/${row.id}`;
             }
           }
-        }
-        let path = '';
-        if (window.location.pathname.slice(-1) === '/' && _config.sendUserToMeditor.charAt(0) === '/') {
-          path = window.location.pathname.slice(-1);
-        } else {
-          path = window.location.pathname;
         }
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
