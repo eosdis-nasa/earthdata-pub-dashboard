@@ -57,16 +57,22 @@ class ApprovalStep extends React.Component {
   }
 
   render () {
-    const { canReview } = requestPrivileges(this.props.privileges);
+    let { canReview } = requestPrivileges(this.props.privileges);
     const search = this.props.location.search.split('=');
     const requestId = search[1].replace(/&step/g, '');
     const step = search[2];
     const stepName = this.getFormalName(step);
     let reviewReady = false;
     let request = '';
+    let verbage = ['Reject', 'Approve'];
     if (this.hasStepData()) {
       request = this.props.requests.detail.data;
       reviewReady = request && request.step_data.type === 'action';
+      if (request.step_data.type === 'service') {
+        verbage = ['Go back', 'Continue'];
+        reviewReady = true;
+        canReview = true;
+      }
     }
     const breadcrumbConfig = [
       {
@@ -109,16 +115,16 @@ class ApprovalStep extends React.Component {
           <section className='page_section'>
               { canReview && reviewReady && typeof requestId !== 'undefined' && (
                   <div className='flex__row reject-approve'>
-                      <div className='flex__item--spacing'>
-                        <button onClick={() => this.review(requestId, false)}
+                        <div className='flex__item--spacing'>
+                          <button onClick={() => this.review(requestId, false)}
                             className='button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'>
-                            Reject
-                        </button>
+                            {verbage[0]}
+                          </button>
                         </div>
                         <div className='flex__item--spacing'>
                         <button onClick={() => this.review(requestId, true)}
                             className='button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'>
-                            Approve
+                            {verbage[1]}
                         </button>
                       </div>
                   </div>
