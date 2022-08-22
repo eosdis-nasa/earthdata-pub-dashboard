@@ -175,7 +175,7 @@ export const stepLookup = (row) => {
         if (stepType.match(/form/g)) {
           request = `${_config.formsUrl}/questions/${row.id}`;
         // Link to mEditor as blank page
-        } else if (stepName.match(/meditor/g)) {
+        } else if (stepName.match(/edit_metadata_in_meditor/g)) {
           request = `${window.location.origin}${_config.sendUserToMeditor}/Collection%20Metadata/${row.form_data.data_product_name_value}_1?autologin`;
         // assign a workflow
         } else if (stepType.match(/action/g)) {
@@ -185,7 +185,7 @@ export const stepLookup = (row) => {
       }
     }
   }
-  if (stepName.match(/meditor/g)) {
+  if (stepType.match(/action/g) && stepName.match(/edit_metadata_in_meditor/g)) {
     return sendToMeditor(row, stepName, request, formalName);
   } else if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
