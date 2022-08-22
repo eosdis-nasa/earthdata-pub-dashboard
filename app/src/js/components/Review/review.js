@@ -59,7 +59,7 @@ class ReviewStep extends React.Component {
                 <div className='flex__item--spacing'>
                   <button onClick={() => this.review(requestId, false)}
                       className='button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'>
-                      Reject
+                      Return
                   </button>
                 </div>
                 <div className='flex__item--spacing'>
