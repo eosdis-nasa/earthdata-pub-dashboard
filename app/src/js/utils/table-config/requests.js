@@ -176,7 +176,9 @@ export const stepLookup = (row) => {
           request = `${_config.formsUrl}/questions/${row.id}`;
         // Link to mEditor as blank page
         } else if (stepName.match(/edit_metadata_in_meditor/g)) {
-          request = `${window.location.origin}${_config.sendUserToMeditor}/Collection%20Metadata/${row.form_data.data_product_name_value}_1?autologin`;
+          const title = row.form_data.data_product_name_value.toLowerCase().replace(/ /g, '_')
+          //TODO- Update following link builder based on backend send_to_meditor action mapping
+          request = `${window.location.origin}${_config.sendUserToMeditor}/Collection%20Metadata/${title}_1?autologin`;
         // assign a workflow
         } else if (stepType.match(/action/g)) {
           request = `/workflows?requestId=${row.id}`;
