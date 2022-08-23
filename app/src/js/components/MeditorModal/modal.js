@@ -6,9 +6,11 @@ import DefaultModal from '../Modal/modal';
 
 export let showModal = false;
 export let request = '';
+export let link = '';
 
 document.addEventListener('sendToMeditor:click', function (e) {
   request = e.detail.request;
+  link = e.detail.link;
   e.preventDefault();
   if (localStorage.getItem('dontShowAgain') === null || localStorage.getItem('dontShowAgain') === 'false') {
     showModal = true;
@@ -17,6 +19,7 @@ document.addEventListener('sendToMeditor:click', function (e) {
       request,
       '_blank'
     );
+    window.location.href = link;
   }
 }, false);
 
@@ -41,6 +44,7 @@ class Meditor extends React.Component {
       request,
       '_blank'
     );
+    window.location.href = link;
   }
 
   callback () {

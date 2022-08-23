@@ -53,12 +53,12 @@ class FormOverview extends React.Component {
     this.state = {};
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const requestId = this.props.location.search.split('=')[1];
     const { formId } = this.props.match.params;
     const { dispatch } = this.props;
-    dispatch(getForm(formId));
-    dispatch(getRequest(requestId));
+    await dispatch(getRequest(requestId));
+    dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
   }
 
   navigateBack () {

@@ -67,10 +67,9 @@ export const newLink = (request, formalName) => {
   }
 };
 
-export const sendToMeditor = (request, formalName) => {
+export const sendToMeditor = (row, step, request, formalName) => {
   const allPrivs = getPrivileges();
   let disabled = false;
-  formalName = 'Send to mEditor';
   if (typeof allPrivs.isManager !== 'undefined' || typeof allPrivs.isCoordinator !== 'undefined' || typeof allPrivs.isAdmin !== 'undefined') {
     disabled = false;
   } else {
@@ -83,7 +82,7 @@ export const sendToMeditor = (request, formalName) => {
     return formalName;
   } else {
     return <Link className={'button button--medium button--green form-group__element--left button--no-icon'}
-    onClick={() => { trigger('sendToMeditor:click', { request: request }); }} id={'sendButton'} to={'#'} name={'sendButton'} aria-label={formalName || 'send to meditor'}>{formalName}</Link>;
+    onClick={() => { trigger('sendToMeditor:click', { request: request, link: `${window.location.origin}${window.location.pathname.split(/\/requests/)[0]}/requests/approval?requestId=${row.id}&step=${step}` }); }} id={'sendButton'} to={'#'} name={'sendButton'} aria-label={formalName || 'send to meditor'}>{formalName}</Link>;
   }
 };
 
@@ -106,7 +105,7 @@ export const assignWorkflow = (request, formalName) => {
   }
 };
 
-export const existingLink = (row, formId, formalName, step) => {
+export const existingLink = (row, formId, formalName, step, stepType) => {
   const allPrivs = getPrivileges();
   let disabled = false;
   if (typeof allPrivs !== 'undefined' && allPrivs.canReview) {
@@ -120,7 +119,7 @@ export const existingLink = (row, formId, formalName, step) => {
   } else if (disabled) {
     return formalName;
   } else {
-    if (typeof formId === 'undefined') {
+    if (typeof formId === 'undefined' || stepType === 'service') {
       return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
     } else {
       return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'view form details'}>{formalName}</Link>;
@@ -175,12 +174,11 @@ export const stepLookup = (row) => {
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
           request = `${_config.formsUrl}/questions/${row.id}`;
-        } else if (stepType.match(/action/g) && stepName.match(/send_to_meditor/g)) {
-          if (window.location.pathname === '/') {
-            request = `${window.location.origin}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
-          } else {
-            request = `${window.location.origin}${window.location.pathname.split(/\/dashboard\/request/)[0]}${_config.sendUserToMeditor}?requestId=${row.id}&daacId=${row.daac_id}`;
-          }
+        // Link to mEditor as blank page
+        } else if (stepName.match(/edit_metadata_in_meditor/g)) {
+          const title = row.form_data.data_product_name_value.toLowerCase().replace(/ /g, '_')
+          //TODO- Update following link builder based on backend send_to_meditor action mapping
+          request = `${window.location.origin}${_config.sendUserToMeditor}/Collection%20Metadata/${title}_1?autologin`;
         // assign a workflow
         } else if (stepType.match(/action/g)) {
           request = `/workflows?requestId=${row.id}`;
@@ -189,14 +187,14 @@ export const stepLookup = (row) => {
       }
     }
   }
-  if (stepType.match(/action/g) && stepName.match(/send_to_meditor/g)) {
-    return sendToMeditor(request, formalName);
+  if (stepType.match(/action/g) && stepName.match(/edit_metadata_in_meditor/g)) {
+    return sendToMeditor(row, stepName, request, formalName);
   } else if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
   } else if (stepType.match(/action/g)) {
     return existingLink(row, undefined, formalName, stepName);
-  } else if (stepType.match(/review/g)) {
-    return existingLink(row, stepID, formalName, stepName);
+  } else if (stepType.match(/review/g) || stepType.match(/service/g)) {
+    return existingLink(row, stepID, formalName, stepName, stepType);
   } else {
     return newLink(request, formalName);
   }
