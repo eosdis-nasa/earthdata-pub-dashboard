@@ -82,7 +82,7 @@ export const sendToMeditor = (row, step, request, formalName) => {
     return formalName;
   } else {
     return <Link className={'button button--medium button--green form-group__element--left button--no-icon'}
-    onClick={() => { trigger('sendToMeditor:click', { request: request, link: `${window.location.origin}/requests/approval?requestId=${row.id}&step=${step}` }); }} id={'sendButton'} to={'#'} name={'sendButton'} aria-label={formalName || 'send to meditor'}>{formalName}</Link>;
+    onClick={() => { trigger('sendToMeditor:click', { request: request, link: `${window.location.origin}${window.location.pathname.split(/\/requests/)[0]}/requests/approval?requestId=${row.id}&step=${step}` }); }} id={'sendButton'} to={'#'} name={'sendButton'} aria-label={formalName || 'send to meditor'}>{formalName}</Link>;
   }
 };
 
