@@ -5,6 +5,7 @@ import Sidebar from '../Sidebar/sidebar';
 import PropTypes from 'prop-types';
 import UsersOverview from './overview';
 import User from './user';
+import AddUser from './add';
 import { strings } from '../locale';
 
 class Users extends React.Component {
@@ -15,7 +16,6 @@ class Users extends React.Component {
 
   render () {
     const { pathname } = this.props.location;
-    const showSidebar = pathname !== '/users/add';
     return (
       <div className='page__users'>
         <div className='content__header'>
@@ -25,14 +25,15 @@ class Users extends React.Component {
         </div>
         <div className='page__content'>
           <div className='wrapper__sidebar'>
-            {showSidebar ? <Sidebar
+            <Sidebar
               currentPath={this.props.location.pathname}
               params={this.props.params}
-            /> : null}
-            <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
+            /> 
+            <div className='page__content--shortened'>
               <Switch>
                 <Route exact path='/users' component={UsersOverview} />
                 <Route path='/users/id/:userId' component={User} />
+                <Route path='/users/add' component={AddUser} />
               </Switch>
             </div>
           </div>
