@@ -109,14 +109,22 @@ class ActionRequestsOverview extends React.Component {
   }
 
   filter (list) {
+    const { pathname } = this.props.location;
     const newList = {};
     const tmp = [];
     for (const ea in list) {
       const record = list[ea];
       newList[ea] = record;
       for (const r in record) {
-        if (typeof record[r] !== 'undefined' && record[r] !== null && !record[r].hidden && typeof record[r] === 'object' && record[r].status === this.getView()) {
-          tmp.push(record[r]);
+        // Once closing sets records to hidden once more, one can take out else statement.  status on close says ready now.
+        if (pathname !== '/requests/status/closed') {
+          if (typeof record[r] !== 'undefined' && record[r] !== null && !record[r].hidden && typeof record[r] === 'object' && record[r].status === this.getView()) {
+            tmp.push(record[r]);
+          }
+        } else {
+          if (typeof record[r] !== 'undefined' && record[r] !== null && typeof record[r] === 'object' && (record[r].hidden || record[r].step_name.match(/close/))) {
+            tmp.push(record[r]);
+          }
         }
       }
     }
