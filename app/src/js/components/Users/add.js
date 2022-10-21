@@ -1,7 +1,7 @@
 'use strict';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   addUserRole,
@@ -39,6 +39,10 @@ const AddUser = ({ dispatch, user, privileges, match, groups }) => {
       active: true
     }
   ];
+
+  const handleSubmit = () => {
+    console.log('Add JSON build logic and query  here');
+  }
   
   return (
     <div className='page__content'>
@@ -82,14 +86,14 @@ const AddUser = ({ dispatch, user, privileges, match, groups }) => {
                 <label className='heading--small'>Roles
                     <select>
                         {testRoles.map((role, idx) => {
-                            return <option value={role}>{role}</option>
+                            return <option value={role} key={idx}>{role}</option>
                         })}
                     </select>
                 </label>
                 <label className='heading--small'>Groups
                     <select>
                         {testGroups.map((group, idx) => {
-                            return <option value={group}>{group}</option>
+                            return <option value={group} key={idx}>{group}</option>
                         })}
                     </select>
                 </label>
@@ -102,7 +106,7 @@ const AddUser = ({ dispatch, user, privileges, match, groups }) => {
                       Cancel
                   </Link>
                   <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
-                  onClick={this.handleSubmit} aria-label="submit your user">
+                  onClick={handleSubmit} aria-label="submit your user">
                       Submit
                   </button>
                 </section>
