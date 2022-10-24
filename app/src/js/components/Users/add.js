@@ -5,15 +5,21 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   addUserRole,
-  addUserGroup
+  addUserGroup,
+  listRoles,
+  listGroups
 } from '../../actions';
 import { userPrivileges } from '../../utils/privileges';
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
 
-const AddUser = ({ dispatch, user, privileges, match, groups }) => {
+const AddUser = ({ dispatch, user, privileges, match, user_groups, groups, roles }) => {
   const { userId } = match.params;
+  useEffect(() => {
+    dispatch(listRoles());
+    dispatch(listGroups());
+  }, []);
   const [showSearch, setShowSearch] = useState(false);
   const [searchOptions, setSearchOptions] = useState({});
   const { canAddRole, canRemoveRole, canAddGroup, canRemoveGroup } = userPrivileges(privileges);
@@ -42,6 +48,8 @@ const AddUser = ({ dispatch, user, privileges, match, groups }) => {
 
   const handleSubmit = () => {
     console.log('Add JSON build logic and query  here');
+    console.log(roles);
+    console.log(groups);
   }
   
   return (
@@ -85,15 +93,15 @@ const AddUser = ({ dispatch, user, privileges, match, groups }) => {
                 </label>
                 <label className='heading--small'>Roles
                     <select>
-                        {testRoles.map((role, idx) => {
-                            return <option value={role} key={idx}>{role}</option>
+                        {roles.map((role, idx) => {
+                            return <option value={role.long_name} key={idx}>{role.long_name}</option>
                         })}
                     </select>
                 </label>
                 <label className='heading--small'>Groups
                     <select>
-                        {testGroups.map((group, idx) => {
-                            return <option value={group} key={idx}>{group}</option>
+                        {groups.map((group, idx) => {
+                            return <option value={group.long_name} key={idx}>{group.long_name}</option>
                         })}
                     </select>
                 </label>
@@ -122,11 +130,15 @@ AddUser.propTypes = {
   user: PropTypes.object,
   privileges: PropTypes.object,
   match: PropTypes.object,
-  groups: PropTypes.array
+  user_groups: PropTypes.array,
+  groups: PropTypes.array,
+  roles: PropTypes.array
 };
 
 export default withRouter(connect(state => ({
   user: state.users.detail,
   privileges: state.api.tokens.privileges,
-  groups: state.api.tokens.groups
+  user_groups:state.api.tokens.groups,
+  groups: state.groups.list.data,
+  roles: state.roles.list.data
 }))(AddUser));
