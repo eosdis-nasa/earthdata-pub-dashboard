@@ -47,10 +47,10 @@ const UsersOverview = ({ users }) => {
         </div>
       </section>
       <section className='page__section'>
-        <div className='heading__wrapper--border' style={{ "height": "3rem" }}>
+        <div className='heading__wrapper--border' style={{ height: '3rem' }}>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_users} <span className='num--title'>{users.list.data.length}</span></h2>
           <Link
-                className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right questions-add' to={{ pathname: `/users/add` }}
+                className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right questions-add' to={{ pathname: '/users/add' }}
             >Add User
             </Link>
         </div>

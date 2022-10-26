@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { listQuestions } from '../../actions';
 import { lastUpdated } from '../../utils/format';
@@ -9,8 +9,7 @@ import { tableColumns } from '../../utils/table-config/questions';
 import List from '../Table/Table';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import {Link} from "react-router-dom";
-import Loading from "../LoadingIndicator/loading-indicator";
+import Loading from '../LoadingIndicator/loading-indicator';
 
 const breadcrumbConfig = [
   {
@@ -56,17 +55,19 @@ class QuestionsOverview extends React.Component {
           </div>
         </section>
         <section className='page__section page__section__controls'>
-          <div className='heading__wrapper--border' style={{ "height": "3rem" }}>
+          <div className='heading__wrapper--border' style={{ height: '3rem' }}>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_questions} <span className='num--title'>{questions.list.data.length}</span></h2>
             <Link
-                className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right questions-add' to={{ pathname: `/questions/add` }}
+                className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right questions-add' to={{ pathname: '/questions/add' }}
             >Add Question
             </Link>
           </div>
         </section>
         <section className='page__section page__section__controls'>
           <div>
-          {!questions.list || questions.list.data.constructor.name !== 'Array' ? <Loading /> : <List
+          {!questions.list || questions.list.data.constructor.name !== 'Array'
+            ? <Loading />
+            : <List
                 list={list}
                 action={listQuestions}
                 tableColumns={tableColumns}

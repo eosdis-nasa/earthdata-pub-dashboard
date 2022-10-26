@@ -11,8 +11,7 @@ import {
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
-
-const AddUser = ({ dispatch, user, privileges, match, user_groups, groups, roles }) => {
+const AddUser = ({ dispatch, match, groups, roles }) => {
   const { userId } = match.params;
   useEffect(() => {
     dispatch(listRoles());
@@ -28,7 +27,7 @@ const AddUser = ({ dispatch, user, privileges, match, user_groups, groups, roles
   const [validEmail, setValidEmail] = useState(true);
   const [name, setName] = useState('');
   const [missingReq, setMissingReq] = useState(false);
-  
+
   const breadcrumbConfig = [
     {
       label: 'Dashboard Home',
@@ -44,49 +43,49 @@ const AddUser = ({ dispatch, user, privileges, match, user_groups, groups, roles
     }
   ];
 
-  const handleRoleChange = (event) =>{
-    setSelectedRole(event.target.value)
+  const handleRoleChange = (event) => {
+    setSelectedRole(event.target.value);
   };
 
-  const handleGroupChange = (event) =>{
-    setSelectedGroup(event.target.value)
-  }
+  const handleGroupChange = (event) => {
+    setSelectedGroup(event.target.value);
+  };
 
   const handleEmail = (event) => {
-    const input = event.target.value
-    setEmail(input)
-    setValidEmail(input.match(/^\S+@\S+\.\S+$/))
-  }
+    const input = event.target.value;
+    setEmail(input);
+    setValidEmail(input.match(/^\S+@\S+\.\S+$/));
+  };
 
   const handleSubmit = () => {
-    const role = selectedRole ? roles[selectedRole-1].id : ''
-    const group = selectedGroup ? groups[selectedGroup-1].id : ''
-    if(validEmail && name && username && email){
+    const role = selectedRole ? roles[selectedRole - 1].id : '';
+    const group = selectedGroup ? groups[selectedGroup - 1].id : '';
+    if (validEmail && name && username && email) {
       const payload = {
         email: email,
         name: name,
         username: username,
         role_id: role,
         group_id: group
+      };
+      dispatch(createUser(payload));
+      history.push('/users');
+    } else {
+      !name ? setName('Required Input') : '';
+      !username ? setUsername('Required Input') : '';
+      if (!email || !validEmail) {
+        setValidEmail(false);
+        setEmail('Invalid Email');
       }
-      dispatch(createUser(payload))
-      history.push("/users")
-    }else {
-      !name ? setName("Required Input") : ''
-      !username ? setUsername("Required Input") : ''
-      if(!email || !validEmail){
-        setValidEmail(false)
-        setEmail("Invalid Email")
-      }
-      setMissingReq(true)
+      setMissingReq(true);
     }
-  }
+  };
 
   const errorCheck = (failCondition) => {
-    const borderColor = (!failCondition || failCondition === "Required Input") && missingReq ? "#DB1400" : ""
-    return borderColor
-  }
-  
+    const borderColor = (!failCondition || failCondition === 'Required Input') && missingReq ? '#DB1400' : '';
+    return borderColor;
+  };
+
   return (
     <div className='page__content'>
       <div className='page__component'>
@@ -104,7 +103,7 @@ const AddUser = ({ dispatch, user, privileges, match, user_groups, groups, roles
         {// TODO - Prettify this page and make it functional. Need to build json to send here on front end to send
          // JSON will follow the below format where role_id and group_id are optional parameters:
         // {
-        // "email": email_value, 
+        // "email": email_value,
         // "name": name_value,
         // "username": username_value,
         // "role_id": role_id,
@@ -119,24 +118,24 @@ const AddUser = ({ dispatch, user, privileges, match, user_groups, groups, roles
                 <form>
                 <label className='heading--small'>Username:
                     <input type="text" name="username" value={username} onChange={e => setUsername(e.target.value)}
-                      onClick = {() => {username === "Required Input" ? setUsername(''):''}}
-                      style={{borderColor:errorCheck(username)}} />
+                      onClick = {() => { username === 'Required Input' ? setUsername('') : ''; }}
+                      style={{ borderColor: errorCheck(username) }} />
                 </label>
                 <label className='heading--small'>Email:
                     <input type="text" name="email" value={email} onChange={handleEmail}
-                      onClick = {() => {email === "Invalid Email" ? setEmail(''):''}}
-                      style={{borderColor:errorCheck(validEmail)}} />
+                      onClick = {() => { email === 'Invalid Email' ? setEmail('') : ''; }}
+                      style={{ borderColor: errorCheck(validEmail) }} />
                 </label>
                 <label className='heading--small'>Name:
                     <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}
-                      onClick = {() => {name === "Required Input" ? setName(''):''}}
-                      style={{borderColor:errorCheck(name)}} />
+                      onClick = {() => { name === 'Required Input' ? setName('') : ''; }}
+                      style={{ borderColor: errorCheck(name) }} />
                 </label>
                 <label className='heading--small'>Roles
                     <select value={selectedRole} onChange={handleRoleChange}>
                       <option value={0} key={0} >None</option>
                       {roles.map((role, idx) => {
-                          return <option value={idx+1} key={idx+1}>{role.long_name}</option>
+                        return <option value={idx + 1} key={idx + 1}>{role.long_name}</option>;
                       })}
                     </select>
                 </label>
@@ -144,7 +143,7 @@ const AddUser = ({ dispatch, user, privileges, match, user_groups, groups, roles
                     <select value={selectedGroup} onChange={handleGroupChange}>
                       <option value={0} key={0} >None</option>
                       {groups.map((group, idx) => {
-                          return <option value={idx+1} key={idx+1}>{group.long_name}</option>
+                        return <option value={idx + 1} key={idx + 1}>{group.long_name}</option>;
                       })}
                     </select>
                 </label>
@@ -181,7 +180,7 @@ AddUser.propTypes = {
 export default withRouter(connect(state => ({
   user: state.users.detail,
   privileges: state.api.tokens.privileges,
-  user_groups:state.api.tokens.groups,
+  user_groups: state.api.tokens.groups,
   groups: state.groups.list.data,
   roles: state.roles.list.data
 }))(AddUser));

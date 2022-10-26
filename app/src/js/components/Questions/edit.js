@@ -79,7 +79,7 @@ class Questions extends React.Component {
         href: '/questions'
       },
       {
-        label: questionId ? questionId : 'Add Question',
+        label: questionId || 'Add Question',
         active: true
       }
     ];

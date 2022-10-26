@@ -73,13 +73,15 @@ class SubForm extends React.Component {
             onClick={this.toggleExpand}
             data-value={name}
           >{isExpanded ? 'Cancel' : fieldset.isEmpty ? 'Add Another' : 'Edit'}</a>
-          {isExpanded && !fieldset.isEmpty ? (
+          {isExpanded && !fieldset.isEmpty
+            ? (
             <a href='#'
               className='subform__button link--secondary subform__remove'
               onClick={this.remove}
               data-value={name}
             >✗ Remove</a>
-          ) : null}
+              )
+            : null}
         </div>
         { isExpanded ? this.renderExpandedField(fieldset) : null }
       </div>

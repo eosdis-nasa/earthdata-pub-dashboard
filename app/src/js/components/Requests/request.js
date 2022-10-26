@@ -155,7 +155,7 @@ class RequestOverview extends React.Component {
     if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
       canReassign = false;
     }
-    let { canEdit } = formPrivileges(this.props.privileges);
+    const { canEdit } = formPrivileges(this.props.privileges);
     const allRoles = getRoles();
     let canViewUsers = false;
     if (typeof allRoles !== 'undefined' && (allRoles.isAdmin || allRoles.isManager)) {

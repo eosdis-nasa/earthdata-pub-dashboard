@@ -97,7 +97,8 @@ const AddRaw = ({
     handleSubmit(e);
   }
 
-  const buttonText = status === 'inflight' ? 'loading...'
+  const buttonText = status === 'inflight'
+    ? 'loading...'
     : status === 'success' ? 'Success!' : 'Submit';
   const displayCaseType = displayCase(type);
   return (

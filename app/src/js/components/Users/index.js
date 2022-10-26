@@ -28,7 +28,7 @@ class Users extends React.Component {
             <Sidebar
               currentPath={this.props.location.pathname}
               params={this.props.params}
-            /> 
+            />
             <div className='page__content--shortened'>
               <Switch>
                 <Route exact path='/users' component={UsersOverview} />
