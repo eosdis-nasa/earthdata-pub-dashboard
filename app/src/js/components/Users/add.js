@@ -1,15 +1,13 @@
 'use strict';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  addUserRole,
-  addUserGroup,
   listRoles,
-  listGroups
+  listGroups,
+  createUser
 } from '../../actions';
-import { userPrivileges } from '../../utils/privileges';
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
@@ -20,17 +18,17 @@ const AddUser = ({ dispatch, user, privileges, match, user_groups, groups, roles
     dispatch(listRoles());
     dispatch(listGroups());
   }, []);
+  const history = useHistory();
   const [showSearch, setShowSearch] = useState(false);
   const [searchOptions, setSearchOptions] = useState({});
-  const { canAddRole, canRemoveRole, canAddGroup, canRemoveGroup } = userPrivileges(privileges);
-  const searchCancel = () => setShowSearch(false);
-  const isAdmin = () => {
-    return 'ADMIN' in privileges;
-  };
-
-  const testRoles = ['role', 'test', 'here'];
-  const testGroups = ['groups', 'test', 'here'];
-
+  const [selectedGroup, setSelectedGroup] = useState(0);
+  const [selectedRole, setSelectedRole] = useState(0);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [validEmail, setValidEmail] = useState(true);
+  const [name, setName] = useState('');
+  const [missingReq, setMissingReq] = useState(false);
+  
   const breadcrumbConfig = [
     {
       label: 'Dashboard Home',
@@ -46,10 +44,47 @@ const AddUser = ({ dispatch, user, privileges, match, user_groups, groups, roles
     }
   ];
 
+  const handleRoleChange = (event) =>{
+    setSelectedRole(event.target.value)
+  };
+
+  const handleGroupChange = (event) =>{
+    setSelectedGroup(event.target.value)
+  }
+
+  const handleEmail = (event) => {
+    const input = event.target.value
+    setEmail(input)
+    setValidEmail(input.match(/^\S+@\S+\.\S+$/))
+  }
+
   const handleSubmit = () => {
-    console.log('Add JSON build logic and query  here');
-    console.log(roles);
-    console.log(groups);
+    const role = selectedRole ? roles[selectedRole-1].id : ''
+    const group = selectedGroup ? groups[selectedGroup-1].id : ''
+    if(validEmail && name && username && email){
+      const payload = {
+        email: email,
+        name: name,
+        username: username,
+        role_id: role,
+        group_id: group
+      }
+      dispatch(createUser(payload))
+      history.push("/users")
+    }else {
+      !name ? setName("Required Input") : ''
+      !username ? setUsername("Required Input") : ''
+      if(!email || !validEmail){
+        setValidEmail(false)
+        setEmail("Invalid Email")
+      }
+      setMissingReq(true)
+    }
+  }
+
+  const errorCheck = (failCondition) => {
+    const borderColor = (!failCondition || failCondition === "Required Input") && missingReq ? "#DB1400" : ""
+    return borderColor
   }
   
   return (
@@ -83,26 +118,34 @@ const AddUser = ({ dispatch, user, privileges, match, user_groups, groups, roles
                 </h1>
                 <form>
                 <label className='heading--small'>Username:
-                    <input type="text" name="username" />
+                    <input type="text" name="username" value={username} onChange={e => setUsername(e.target.value)}
+                      onClick = {() => {username === "Required Input" ? setUsername(''):''}}
+                      style={{borderColor:errorCheck(username)}} />
                 </label>
                 <label className='heading--small'>Email:
-                    <input type="text" name="email" />
+                    <input type="text" name="email" value={email} onChange={handleEmail}
+                      onClick = {() => {email === "Invalid Email" ? setEmail(''):''}}
+                      style={{borderColor:errorCheck(validEmail)}} />
                 </label>
                 <label className='heading--small'>Name:
-                    <input type="text" name="name" />
+                    <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}
+                      onClick = {() => {name === "Required Input" ? setName(''):''}}
+                      style={{borderColor:errorCheck(name)}} />
                 </label>
                 <label className='heading--small'>Roles
-                    <select>
-                        {roles.map((role, idx) => {
-                            return <option value={role.long_name} key={idx}>{role.long_name}</option>
-                        })}
+                    <select value={selectedRole} onChange={handleRoleChange}>
+                      <option value={0} key={0} >None</option>
+                      {roles.map((role, idx) => {
+                          return <option value={idx+1} key={idx+1}>{role.long_name}</option>
+                      })}
                     </select>
                 </label>
                 <label className='heading--small'>Groups
-                    <select>
-                        {groups.map((group, idx) => {
-                            return <option value={group.long_name} key={idx}>{group.long_name}</option>
-                        })}
+                    <select value={selectedGroup} onChange={handleGroupChange}>
+                      <option value={0} key={0} >None</option>
+                      {groups.map((group, idx) => {
+                          return <option value={idx+1} key={idx+1}>{group.long_name}</option>
+                      })}
                     </select>
                 </label>
                 </form>
