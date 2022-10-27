@@ -1,5 +1,6 @@
 'use strict';
 import React, { useEffect, useState } from 'react';
+import Select from 'react-select';
 import PropTypes from 'prop-types';
 import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -10,12 +11,14 @@ import {
 } from '../../actions';
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import { generate } from 'shortid';
 
 const AddUser = ({ dispatch, match, groups, roles }) => {
   const { userId } = match.params;
   useEffect(() => {
     dispatch(listRoles());
     dispatch(listGroups());
+    generateOptions();
   }, []);
   const history = useHistory();
   const [showSearch, setShowSearch] = useState(false);
@@ -27,6 +30,10 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
   const [validEmail, setValidEmail] = useState(true);
   const [name, setName] = useState('');
   const [missingReq, setMissingReq] = useState(false);
+  const [rolesOptions, setRolesOptions] = useState([]);
+  const [rolesSelected, setRolesSelected] = useState(null);
+  const [groupsOptions, setGroupsOptions] = useState([]);
+  const [groupsSelected, setGroupsSelected] = useState(null);
 
   const breadcrumbConfig = [
     {
@@ -85,6 +92,19 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
     const borderColor = (!failCondition || failCondition === 'Required Input') && missingReq ? '#DB1400' : '';
     return borderColor;
   };
+
+  const generateOptions = () => {
+    const rls = []
+    const grps = []
+    for(let i = 0; i < roles.length; i=i+1){
+      rls.push({value: roles[i].role_id, label: roles[i].long_name})
+    }
+    for(let i = 0; i < groups.length; i=i+1){
+      grps.push({value: groups[i].role_id, label: groups[i].long_name})
+    }
+    setRolesOptions(rls)
+    setGroupsOptions(grps)
+  }
 
   return (
     <div className='page__content'>
