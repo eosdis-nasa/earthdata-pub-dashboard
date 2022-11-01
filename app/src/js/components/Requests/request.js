@@ -125,10 +125,10 @@ class RequestOverview extends React.Component {
     this.navigateBack();
   }
 
-  async exportMetadata() {
+  async exportMetadata () {
     const mappedData = JSON.stringify(this.props.requests.detail.data.metadata, null, 2);
-    let a = document.createElement("a");
-    let file = new Blob([mappedData], {type: 'application/json'});
+    const a = document.createElement('a');
+    const file = new Blob([mappedData], { type: 'application/json' });
     a.href = URL.createObjectURL(file);
     a.download = `${this.props.requests.detail.data.id}`;
     a.click();

@@ -1,6 +1,5 @@
 'use strict';
 import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
 import PropTypes from 'prop-types';
 import { withRouter, Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -11,29 +10,40 @@ import {
 } from '../../actions';
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import { generate } from 'shortid';
+import Select from 'react-select';
 
 const AddUser = ({ dispatch, match, groups, roles }) => {
   const { userId } = match.params;
   useEffect(() => {
     dispatch(listRoles());
     dispatch(listGroups());
-    generateOptions();
   }, []);
+  useEffect(() => {
+    const rls = [];
+    const grp = [];
+    console.log(roles);
+    roles.forEach(role => {
+      rls.push({ value: role.id, label: role.long_name });
+    });
+    groups.forEach(group => {
+      grp.push({ value: group.id, label: group.long_name });
+    });
+    console.log(grp);
+    setRoleOptions(rls);
+    setGroupOptions(grp);
+  }, [groups, roles]);
   const history = useHistory();
   const [showSearch, setShowSearch] = useState(false);
   const [searchOptions, setSearchOptions] = useState({});
-  const [selectedGroup, setSelectedGroup] = useState(0);
-  const [selectedRole, setSelectedRole] = useState(0);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [validEmail, setValidEmail] = useState(true);
   const [name, setName] = useState('');
   const [missingReq, setMissingReq] = useState(false);
-  const [rolesOptions, setRolesOptions] = useState([]);
-  const [rolesSelected, setRolesSelected] = useState(null);
-  const [groupsOptions, setGroupsOptions] = useState([]);
-  const [groupsSelected, setGroupsSelected] = useState(null);
+  const [roleOptions, setRoleOptions] = useState([]);
+  const [selectedRoles, setSelectedRoles] = useState([]);
+  const [groupOptions, setGroupOptions] = useState([]);
+  const [selectedGroups, setSelectedGroups] = useState([]);
 
   const breadcrumbConfig = [
     {
@@ -50,12 +60,20 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
     }
   ];
 
-  const handleRoleChange = (event) => {
-    setSelectedRole(event.target.value);
+  const extractId = (lst) => {
+    const rtnList = [];
+    lst.forEach(itm => {
+      rtnList.push(itm.value);
+    });
+    return rtnList;
   };
 
-  const handleGroupChange = (event) => {
-    setSelectedGroup(event.target.value);
+  const handleRoleSelect = (data) => {
+    setSelectedRoles(data);
+  };
+
+  const handleGroupSelect = (data) => {
+    setSelectedGroups(data);
   };
 
   const handleEmail = (event) => {
@@ -65,15 +83,15 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
   };
 
   const handleSubmit = () => {
-    const role = selectedRole ? roles[selectedRole - 1].id : '';
-    const group = selectedGroup ? groups[selectedGroup - 1].id : '';
+    const role = extractId(selectedRoles);
+    const group = extractId(selectedGroups);
     if (validEmail && name && username && email) {
       const payload = {
         email: email,
         name: name,
         username: username,
-        role_id: role,
-        group_id: group
+        role_ids: role,
+        group_ids: group
       };
       dispatch(createUser(payload));
       history.push('/users');
@@ -92,19 +110,6 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
     const borderColor = (!failCondition || failCondition === 'Required Input') && missingReq ? '#DB1400' : '';
     return borderColor;
   };
-
-  const generateOptions = () => {
-    const rls = []
-    const grps = []
-    for(let i = 0; i < roles.length; i=i+1){
-      rls.push({value: roles[i].role_id, label: roles[i].long_name})
-    }
-    for(let i = 0; i < groups.length; i=i+1){
-      grps.push({value: groups[i].role_id, label: groups[i].long_name})
-    }
-    setRolesOptions(rls)
-    setGroupsOptions(grps)
-  }
 
   return (
     <div className='page__content'>
@@ -152,20 +157,26 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
                       style={{ borderColor: errorCheck(name) }} />
                 </label>
                 <label className='heading--small'>Roles
-                    <select value={selectedRole} onChange={handleRoleChange}>
-                      <option value={0} key={0} >None</option>
-                      {roles.map((role, idx) => {
-                        return <option value={idx + 1} key={idx + 1}>{role.long_name}</option>;
-                      })}
-                    </select>
+                  <div style={{width:300}}>
+                      <Select
+                      options={roleOptions}
+                      value={selectedRoles}
+                      onChange={handleRoleSelect}
+                      isSearchable={true}
+                      isMulti={true}
+                    />
+                  </div>
                 </label>
                 <label className='heading--small'>Groups
-                    <select value={selectedGroup} onChange={handleGroupChange}>
-                      <option value={0} key={0} >None</option>
-                      {groups.map((group, idx) => {
-                        return <option value={idx + 1} key={idx + 1}>{group.long_name}</option>;
-                      })}
-                    </select>
+                  <div style={{width:300}}>
+                    <Select
+                      options={groupOptions}
+                      value={selectedGroups}
+                      onChange={handleGroupSelect}
+                      isSearchable={true}
+                      isMulti={true}
+                    />
+                  </div>
                 </label>
                 </form>
               </div>
