@@ -167,6 +167,11 @@ a:active {
   -webkit-font-smoothing: antialiased;
 }
 
+.node.current-step rect {
+  color: $light-green!important;
+  outline-style: auto;
+}
+
 /**************************************************
   Header & Navigation (Includes Sidebar)
 **************************************************/
