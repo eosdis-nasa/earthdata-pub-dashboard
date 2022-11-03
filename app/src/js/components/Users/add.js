@@ -19,18 +19,8 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
     dispatch(listGroups());
   }, []);
   useEffect(() => {
-    const rls = [];
-    const grp = [];
-    console.log(roles);
-    roles.forEach(role => {
-      rls.push({ value: role.id, label: role.long_name });
-    });
-    groups.forEach(group => {
-      grp.push({ value: group.id, label: group.long_name });
-    });
-    console.log(grp);
-    setRoleOptions(rls);
-    setGroupOptions(grp);
+    setRoleOptions(roles.map(({ id, long_name}) => ({value:id, label: long_name})));
+    setGroupOptions(groups.map(({id, long_name}) => ({value:id, label: long_name})));
   }, [groups, roles]);
   const history = useHistory();
   const [showSearch, setShowSearch] = useState(false);
@@ -83,15 +73,13 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
   };
 
   const handleSubmit = () => {
-    const role = extractId(selectedRoles);
-    const group = extractId(selectedGroups);
     if (validEmail && name && username && email) {
       const payload = {
         email: email,
         name: name,
         username: username,
-        role_ids: role,
-        group_ids: group
+        role_ids: extractId(selectedRoles),
+        group_ids: extractId(selectedGroups)
       };
       dispatch(createUser(payload));
       history.push('/users');
