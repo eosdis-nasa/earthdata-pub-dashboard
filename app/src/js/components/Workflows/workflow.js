@@ -2,50 +2,51 @@
 import React from 'react';
 import Ace from 'react-ace';
 import PropTypes from 'prop-types';
-import dagre from 'dagre-d3';
-import * as d3 from 'd3';
+import ReactFlow from 'react-flow-renderer';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { getWorkflow } from '../../actions';
 import config from '../../config';
-import { window, setWindowEditorRef } from '../../utils/browser';
+import { setWindowEditorRef } from '../../utils/browser';
 import Loading from '../LoadingIndicator/loading-indicator';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import ErrorReport from '../Errors/report';
-import {
-  workflowToGraph,
-  draw
-} from './graph-utils';
+import { workflowToGraph } from './graph-utils';
 
-if (process.env.NODE_ENV !== 'test') window.d3 = d3;
+function onLoad (reactFlowInstance) {
+  reactFlowInstance.fitView();
+  // console.log('flow loaded:', reactFlowInstance);
+}
 
 class Workflows extends React.Component {
   constructor () {
     super();
-    this.state = { view: 'json', g: null };
+    this.state = { view: 'json', nodes: [], edges: [], renderedGraph: false };
     this.renderReadOnlyJson = this.renderReadOnlyJson.bind(this);
     this.renderJson = this.renderJson.bind(this);
-    this.buildGraph = this.buildGraph.bind(this);
+    this.showGraph = this.showGraph.bind(this);
     this.hideGraph = this.hideGraph.bind(this);
+    this.onConnect = this.onConnect.bind(this);
   }
 
   componentDidMount () {
     const { dispatch } = this.props;
     const { workflowId } = this.props.match.params;
     dispatch(getWorkflow(workflowId));
+    setTimeout(() => {
+      const record = this.props.workflows.detail;
+      if (typeof record.data !== 'undefined') {
+        const graphData = workflowToGraph(record.data.steps);
+        this.setState({ nodes: graphData[0] });
+        this.setState({ edges: graphData[1] });
+      }
+    }, 2000);
   }
 
-  buildGraph (data) {
-    const graph = workflowToGraph(data.steps);
-    const render = new dagre.render();
-    const svgSelector = '.visual';
-    const svg = d3.select(svgSelector);
-    render(svg, draw(graph));
-    const { height } = d3.select(`${svgSelector} g`).node().getBBox();
-    const { width } = d3.select(`${svgSelector} g`).node().getBBox();
-    svg.attr('viewBox', `0 0 ${width} ${height}`);
-    svg.attr('width', '25%');
-    svg.attr('height', '25%');
+  showGraph () {
+    if (document.getElementById('graph') !== null) {
+      document.getElementById('graph').removeAttribute('class', 'hidden');
+    }
   }
 
   renderReadOnlyJson (name, data) {
@@ -68,9 +69,17 @@ class Workflows extends React.Component {
     );
   }
 
+  onConnect (params) {
+    this.useCallback(
+      (params) => this.setEdges((els) => this.addEdge(params, els)),
+      []
+    );
+  }
+
   render () {
     const { workflowId } = this.props.match.params;
     const record = this.props.workflows.detail;
+
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -85,7 +94,16 @@ class Workflows extends React.Component {
         active: true
       }
     ];
-
+    let reactFlowStyle = {};
+    if (record.data) {
+      const box = document.querySelector('.page__content--shortened');
+      const width = box.offsetWidth;
+      reactFlowStyle = {
+        left: `${(width - 350) / 2}px`,
+        position: 'absolute',
+        top: '400px'
+      };
+    }
     return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
@@ -108,22 +126,33 @@ class Workflows extends React.Component {
                       onClick={() => this.state.view !== 'graph' && this.setState({ view: 'graph' })}>Graphical View</button>
                   </div>
                   <div>
-                    {this.state.view === 'graph' ? this.buildGraph(record.data) : this.renderJson(record.data)}
+                    {this.state.view === 'graph' ? this.showGraph(record.data) : this.renderJson(record.data)}
                   </div>
                 </div>
                 : null}
         </section>
-        <section className='page__section'>
-          <svg className='visual'></svg>
-        </section>
+        {record.data
+          ? <section className='page__section' id='graph' style={{ height: '150vh' }}>
+            <ReactFlow
+              nodes={this.state.nodes}
+              edges={this.state.edges}
+              onInit={onLoad}
+              onConnect={this.onConnect}
+              zoomOnScroll={false}
+              panOnScroll={false}
+              style={reactFlowStyle}
+            >
+            </ReactFlow>
+          </section>
+          : null}
       </div>
     );
   }
 
   hideGraph () {
-    const svgSelector = '.visual';
-    const svg = d3.select(svgSelector);
-    svg.attr('viewBox', `0 0 0 0`);
+    if (document.getElementById('graph') !== null) {
+      document.getElementById('graph').setAttribute('class', 'hidden');
+    }
   }
 
   renderJson (data) {

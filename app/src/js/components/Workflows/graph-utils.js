@@ -1,4 +1,4 @@
-import dagre from 'dagre-d3';
+import { MarkerType } from 'react-flow-renderer';
 
 export const toProperCase = (str) => {
   return str.replace(
@@ -7,34 +7,6 @@ export const toProperCase = (str) => {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     }
   );
-};
-
-export const draw = (graph, currentStep) => {
-  const g = new dagre.graphlib.Graph({ compound: true })
-    .setGraph({})
-    .setDefaultEdgeLabel(() => ({}));
-
-  const nodes = Object.values(graph);
-  for (let i = 0; i < nodes.length; i += 1) {
-    const node = nodes[i];
-    if (node.def.next_step_name !== undefined) {
-      let clss = [node.type, node.status].join(' ');
-      if (currentStep !== undefined && node.def.next_step_name === currentStep) {
-        clss = [node.type, node.status, 'current-step'].join(' ');
-      }
-      g.setNode(i, { label: toProperCase(node.def.next_step_name.replace(/_/g, ' ')), class: clss });
-    }
-  }
-  g.nodes().forEach(function (v) {
-    const node = g.node(v);
-    node.rx = node.ry = 5;
-  });
-
-  for (let i = 0; i < (nodes.length - 1); i += 1) {
-    g.setEdge(i, i + 1);
-  }
-
-  return g;
 };
 
 function dynamicSort (property) {
@@ -50,7 +22,8 @@ function dynamicSort (property) {
 }
 
 export const workflowToGraph = (workflow) => {
-  const graph = {};
+  const nodes = [];
+  const edges = [];
   const steps = [];
   let nextStep = '';
   let cnt = 1;
@@ -76,14 +49,43 @@ export const workflowToGraph = (workflow) => {
       }
     }
   }
+
+  const nodeWidth = 250;
+  let nodeHeight = 36;
+
+  const edgeType = 'straight';
+
   const orderedSteps = steps.sort(dynamicSort('order'));
-  for (const step in orderedSteps) {
-    const id = orderedSteps[step].step_id;
-    const def = orderedSteps[step];
-    const node = {
-      def
-    };
-    graph[id] = node;
+  for (let i = 0; i < orderedSteps.length; i++) {
+    const def = orderedSteps[i];
+    if (def.next_step_name !== undefined) {
+      const label = toProperCase(def.next_step_name.replace(/_/g, ' '))
+      const node = {
+        id: `${i}`,
+        data: {
+          label: label
+        },
+        position: { x: nodeWidth, y: nodeHeight },
+        style: {
+          width: '275px'
+        },
+      };
+      if (i + 1 < orderedSteps.length) {
+        const edge = {
+          id: `${i}_edge`,
+          source: `${i}`,
+          target: `${(i + 1)}`,
+          type: edgeType,
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+          },
+          animate: true
+        };
+        edges.push(edge);
+      }
+      nodes.push(node);
+      nodeHeight += 100;
+    }
   }
-  return graph;
+  return [nodes, edges, nodes.concat(edges)];
 };
