@@ -50,10 +50,10 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
     }
   ];
 
-  const extractId = (lst) => {
+  const extractId = (list) => {
     const rtnList = [];
-    lst.forEach(itm => {
-      rtnList.push(itm.value);
+    list.forEach(item => {
+      rtnList.push(item.value);
     });
     return rtnList;
   };
@@ -129,17 +129,17 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
                   User Details
                 </h1>
                 <form>
-                <label className='heading--small'>Username:
+                <label className='heading--small'>Username
                     <input type="text" name="username" value={username} onChange={e => setUsername(e.target.value)}
                       onClick = {() => { username === 'Required Input' ? setUsername('') : ''; }}
                       style={{ borderColor: errorCheck(username) }} />
                 </label>
-                <label className='heading--small'>Email:
+                <label className='heading--small'>Email
                     <input type="text" name="email" value={email} onChange={handleEmail}
                       onClick = {() => { email === 'Invalid Email' ? setEmail('') : ''; }}
                       style={{ borderColor: errorCheck(validEmail) }} />
                 </label>
-                <label className='heading--small'>Name:
+                <label className='heading--small'>Name
                     <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}
                       onClick = {() => { name === 'Required Input' ? setName('') : ''; }}
                       style={{ borderColor: errorCheck(name) }} />
