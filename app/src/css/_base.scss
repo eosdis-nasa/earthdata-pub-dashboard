@@ -167,6 +167,11 @@ a:active {
   -webkit-font-smoothing: antialiased;
 }
 
+.node.current-step rect {
+  color: $light-green!important;
+  outline-style: auto;
+}
+
 /**************************************************
   Header & Navigation (Includes Sidebar)
 **************************************************/
@@ -967,4 +972,17 @@ a:active {
   justify-content: left;
   gap: 1em;
   padding: 1em;
+}
+.react-flow {
+  overflow:unset!important;
+  width: 275px!important;
+}
+.hidden {
+  display:none!important;
+}
+.react-flow__node{
+  pointer-events: none!important;
+}
+.react-flow__attribution a {
+  display:none!important;
 }
