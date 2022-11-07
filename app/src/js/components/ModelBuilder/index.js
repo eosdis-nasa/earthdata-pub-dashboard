@@ -17,7 +17,7 @@ class ModelBuilder extends React.Component {
   }
 
   render () {
-    console.log(this.model)
+    console.log(this.model);
     return (
       <Form schema={this.model} formData={this.formData}
         ArrayFieldTemplate={ArrayFieldTemplate}

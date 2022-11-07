@@ -185,9 +185,11 @@ export class BatchCommand extends React.Component {
 
     // show button as disabled when loading, and in the delay before we clean up.
     const buttonClass = inflight || status ? 'button--disabled' : '';
-    const modalText = inflight ? IN_PROGRESS
-      : !status ? confirm(todo)
-        : status === 'success' ? 'Success!' : 'Error';
+    const modalText = inflight
+      ? IN_PROGRESS
+      : !status
+          ? confirm(todo)
+          : status === 'success' ? 'Success!' : 'Error';
 
     return (
       <div>

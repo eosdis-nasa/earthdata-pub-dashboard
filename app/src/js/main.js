@@ -21,11 +21,13 @@ class Main extends Component {
     return (
       <div className='app'>
         <TimeoutWarning />
-        {target !== 'earthdata-pub' ? (
+        {target !== 'earthdata-pub'
+          ? (
           <div className='app__target--container' role="banner">
             <h4 className='app__target'>{displayCase(target)} ({displayCase(environment)})</h4>
           </div>
-        ) : null}
+            )
+          : null}
         <Header dispatch={this.props.dispatch} api={this.props.api} location={this.props.location} earthdatapubInstance={this.props.earthdatapubInstance}/>
         <main className='main' role='main'>
           {this.props.children}

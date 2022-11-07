@@ -203,7 +203,7 @@ class WorkflowsOverview extends React.Component {
                 onClick={(e) => { e.preventDefault(); this.cancelWorkflow(); }}
               >Cancel</button>
               <Link className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white' + (disabled ? ' button--disabled' : '')}
-                    onClick={this.setWorkflow} id={"selectButton"} to={`/requests`}
+                    onClick={this.setWorkflow} id={'selectButton'} to={'/requests'}
                     aria-label="select workflow">
                 Select
               </Link>

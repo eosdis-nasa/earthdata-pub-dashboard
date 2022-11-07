@@ -81,7 +81,8 @@ class AddRecord extends React.Component {
           <div className="page__section__header">
             <h1 className="heading--large">{title}</h1>
           </div>
-          {schema ? (
+          {schema
+            ? (
             <Schema
               data={data}
               schema={schema}
@@ -94,9 +95,10 @@ class AddRecord extends React.Component {
               exclude={this.props.exclude}
               enums={this.props.enums}
             />
-          ) : (
+              )
+            : (
             <Loading />
-          )}
+              )}
         </section>
       </div>
     );

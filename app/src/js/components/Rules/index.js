@@ -19,12 +19,14 @@ class Rules extends React.Component {
         </div>
         <div className='page__content'>
           <div className='wrapper__sidebar'>
-            {showSidebar ? (
+            {showSidebar
+              ? (
               <Sidebar
                 currentPath={this.props.location.pathname}
                 params={this.props.params}
               />
-            ) : null}
+                )
+              : null}
             <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
               <Switch>
                 <Route path='/rules/edit/:ruleName' component={EditRule} />
