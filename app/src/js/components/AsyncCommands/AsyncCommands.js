@@ -111,12 +111,14 @@ class AsyncCommand extends React.Component {
             title={text}
             children={(
               <div className='modal__internal modal__formcenter'>
-                { confirmOptions ? (confirmOptions).map(option =>
+                { confirmOptions
+                  ? (confirmOptions).map(option =>
                   <div key={`option-${confirmOptions.indexOf(option)}`}>
                     {option}
                     <br />
                   </div>
-                ) : null }
+                    )
+                  : null }
                 <h4>{confirmText}</h4>
               </div>
             )}

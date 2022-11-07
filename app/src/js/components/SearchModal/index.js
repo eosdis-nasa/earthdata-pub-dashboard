@@ -30,7 +30,7 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel, filters = {} })
   const { list, inflight } = search;
   const entityArr = paginate(list, listSize, page);
   let filteredArr;
-  if (typeof filters !=='undefined') {
+  if (typeof filters !== 'undefined') {
     filteredArr = filters.length > 0 ? entityArr.filter((elem) => entity === 'group' ? filters.includes(elem.short_name) : !filters.includes(elem.short_name)) : entityArr;
   }
   return (

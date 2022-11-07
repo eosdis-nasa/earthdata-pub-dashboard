@@ -861,3 +861,12 @@ export const updateSearchModal = (path, query) => ({
     qs: Object.assign(query)
   }
 });
+
+export const createUser = (payload) => ({
+  [CALL_API]: {
+    type: types.USER_CREATE,
+    method: 'POST',
+    path: 'user/create',
+    body: payload
+  }
+});

@@ -25,10 +25,12 @@ class Forms extends React.Component {
         </div>
         <div className='page__content'>
           <div className='wrapper__sidebar'>
-            {showSidebar ? <Sidebar
+            {showSidebar
+              ? <Sidebar
               currentPath={this.props.location.pathname}
               params={this.props.params}
-            /> : null}
+            />
+              : null}
             <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
               <Switch>
                 <Route exact path='/forms' component={FormsOverview} />
