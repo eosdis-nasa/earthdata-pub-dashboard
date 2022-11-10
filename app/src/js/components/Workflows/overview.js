@@ -88,7 +88,6 @@ class WorkflowsOverview extends React.Component {
     const { dispatch } = this.props;
     const workflows = this.props.workflows;
     const requestId = location.search.split('=')[1];
-
     const selectInput = [{
       Header: 'Select',
       accessor: (row) => row.long_name,
@@ -125,6 +124,12 @@ class WorkflowsOverview extends React.Component {
         Header: 'Created At',
         accessor: row => shortDateNoTimeYearFirst(row.created_at),
         id: 'created_at'
+      },
+      {
+        Header: 'Options',
+        accessor: '',
+        Cell: row => <Link className='button button--small button--edit' to={{ pathname: `/workflows/edit/${row.row.original.id}` }} aria-label="Edit your workflow">Edit</Link>,
+        id: 'required'
       }
     ];
 
@@ -180,21 +185,29 @@ class WorkflowsOverview extends React.Component {
           </div>
         </section>
         <section className='page__section'>
+          <Link
+            className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right workflows-add' to={{ pathname: '/workflows/add' }}
+            >Add Workflow
+          </Link>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_workflows} <span className='num--title'>{workflows.list.data.length}</span></h2>
           </div>
-          <List
-            list={workflows.list}
-            dispatch={dispatch}
-            action={listWorkflows}
-            tableColumns={tableColumns}
-            query={{}}
-            bulkActions={[]}
-            rowId='id'
-            filterIdx='long_name'
-            filterPlaceholder='Search Workflows'
-          >
-          </List>
+        </section>
+        <section className='page__section'>
+          <div>
+            <List
+              list={workflows.list}
+              dispatch={dispatch}
+              action={listWorkflows}
+              tableColumns={tableColumns}
+              query={{}}
+              bulkActions={[]}
+              rowId='id'
+              filterIdx='long_name'
+              filterPlaceholder='Search Workflows'
+            >
+            </List>
+          </div>
           { requestId
             ? <section className='page__section'>
               <button
