@@ -31,6 +31,10 @@ class Workflows extends React.Component {
     workflowId ? dispatch(getWorkflow(workflowId)) : null;
   }
 
+  cancelWorkflow () {
+    this.props.history.goBack();
+  }
+
   renderWorkflowJson (name, data, refName) {
     return (
             <Ace
@@ -54,8 +58,8 @@ class Workflows extends React.Component {
     const workflow_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
     this.setState({ data: workflow_aceEditorData });
     const payload = Object.assign({}, workflow_aceEditorData);
-    Object.keys(workflow_aceEditorData).length === 0 ? await dispatch(updateWorkflow(payload)) : await dispatch(addWorkflow(payload));
-    // Adding and updating workflows in the api is not yet implemented.  Cannot execute.
+    Object.keys(workflow_aceEditorData).length === 0 ? await dispatch(addWorkflow(payload)) : await dispatch(updateWorkflow(payload));
+    // Adding workflows in not the api.  Cannot execute addWorkflow until it's there.
     this.props.history.push(`/workflows/id/${workflow_aceEditorData.id}`);
   }
 
@@ -86,9 +90,11 @@ class Workflows extends React.Component {
                 <section className='page__section page__section__controls'>
                     <Breadcrumbs config={breadcrumbConfig} />
                 </section>
-                <h1 className='heading--large heading--shared-content with-description'>
-                    {record.data ? (record.data.long_name ? record.data.long_name : 'Add Workflow') : '...'}
-                </h1>
+                <section className='page__section'>
+                  <div className='heading__wrapper--border'>
+                    <h2 className='heading--medium heading--shared-content with-description'>{record.data ? (record.data.long_name ? record.data.long_name : 'Add Workflow') : '...'}</h2>
+                  </div>
+                </section>
                 <section className='page__section'>
                     { record.inflight
                       ? <Loading />
@@ -108,10 +114,12 @@ class Workflows extends React.Component {
                     }
                 </section>
                 <section className='page__section'>
-                  <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
-                  to={'/workflows'} id='cancelButton' aria-label="cancel workflow editing">
-                      Cancel
-                  </Link>
+                  <button
+                    className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
+                    id="cancelButton"
+                    onClick={(e) => { e.preventDefault(); this.cancelWorkflow(); }}
+                    >Cancel
+                  </button>
                   <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
                   onClick={this.handleSubmit} aria-label="submit your workflows">
                       Submit
@@ -137,7 +145,7 @@ Workflows.propTypes = {
   match: PropTypes.object,
   workflows: PropTypes.object,
   dispatch: PropTypes.func,
-  history: PropTypes.object
+  history: PropTypes.object,
 };
 
 export default withRouter(connect(state => ({
