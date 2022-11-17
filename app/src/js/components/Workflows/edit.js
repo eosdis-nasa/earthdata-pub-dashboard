@@ -50,11 +50,11 @@ class Workflows extends React.Component {
   }
 
   async handleSubmit () {
-    const { dispatch } = this.props;
+    const { dispatch, match: { params: { workflowId } } } = this.props;
     const workflow_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
     this.setState({ data: workflow_aceEditorData });
     const payload = Object.assign({}, workflow_aceEditorData);
-    Object.keys(workflow_aceEditorData).length === 0 ? await dispatch(updateWorkflow(payload)) : await dispatch(addWorkflow(payload));
+    workflowId ? await dispatch(updateWorkflow(payload)) : await dispatch(addWorkflow(payload));
     // Adding and updating workflows in the api is not yet implemented.  Cannot execute.
     this.props.history.push(`/workflows/id/${workflow_aceEditorData.id}`);
   }
