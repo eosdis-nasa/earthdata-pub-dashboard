@@ -54,7 +54,7 @@ class Workflows extends React.Component {
   }
 
   async handleSubmit () {
-    const { dispatch } = this.props;
+    const { dispatch, match: { params: { workflowId } } } = this.props;
     const workflow_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
     this.setState({ data: workflow_aceEditorData });
     const payload = Object.assign({}, workflow_aceEditorData);
