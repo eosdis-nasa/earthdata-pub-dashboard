@@ -58,7 +58,7 @@ class Workflows extends React.Component {
     const workflow_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
     this.setState({ data: workflow_aceEditorData });
     const payload = Object.assign({}, workflow_aceEditorData);
-    Object.keys(workflow_aceEditorData).length === 0 ? await dispatch(addWorkflow(payload)) : await dispatch(updateWorkflow(payload));
+    workflowId ? await dispatch(updateWorkflow(payload)) : await dispatch(addWorkflow(payload));
     // Adding workflows in not the api.  Cannot execute addWorkflow until it's there.
     this.props.history.push(`/workflows/id/${workflow_aceEditorData.id}`);
   }
