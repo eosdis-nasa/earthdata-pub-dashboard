@@ -130,7 +130,7 @@ class FormOverview extends React.Component {
 
   getTableEnums (keys, enums) {
     const length = parseInt(100 / enums.length);
-    let def = '__________________________________________'
+    let def = '__________________________________________';
     if (this.hasSavedAnswers()) {
       def = 'no answer';
     }

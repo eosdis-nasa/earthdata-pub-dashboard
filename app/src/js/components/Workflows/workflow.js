@@ -2,36 +2,72 @@
 import React from 'react';
 import Ace from 'react-ace';
 import PropTypes from 'prop-types';
+import ReactFlow from 'react-flow-renderer';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { getWorkflow } from '../../actions';
 import config from '../../config';
 import { setWindowEditorRef } from '../../utils/browser';
 import Loading from '../LoadingIndicator/loading-indicator';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import ErrorReport from '../Errors/report';
+import { workflowToGraph } from './graph-utils';
+
+function onLoad (reactFlowInstance) {
+  reactFlowInstance.fitView();
+  // console.log('flow loaded:', reactFlowInstance);
+}
+
+export const getRoles = () => {
+  const user = JSON.parse(window.localStorage.getItem('auth-user'));
+  if (user != null) {
+    const roles = user.user_roles;
+    const privileges = user.user_privileges;
+    const allRoles = {
+      isManager: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/manager/g)),
+      isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+    };
+    return allRoles;
+  }
+};
 
 class Workflows extends React.Component {
   constructor () {
     super();
-    this.state = { view: 'json' };
+    this.state = { view: 'json', nodes: [], edges: [], renderedGraph: false };
     this.renderReadOnlyJson = this.renderReadOnlyJson.bind(this);
     this.renderJson = this.renderJson.bind(this);
+    this.showGraph = this.showGraph.bind(this);
+    this.hideGraph = this.hideGraph.bind(this);
+    this.onConnect = this.onConnect.bind(this);
   }
 
   componentDidMount () {
     const { dispatch } = this.props;
     const { workflowId } = this.props.match.params;
     dispatch(getWorkflow(workflowId));
+    setTimeout(() => {
+      const record = this.props.workflows.detail;
+      if (typeof record.data !== 'undefined') {
+        const graphData = workflowToGraph(record.data.steps);
+        this.setState({ nodes: graphData[0] });
+        this.setState({ edges: graphData[1] });
+      }
+    }, 2000);
+  }
+
+  showGraph () {
+    if (document.getElementById('graph') !== null) {
+      document.getElementById('graph').removeAttribute('class', 'hidden');
+    }
   }
 
   renderReadOnlyJson (name, data) {
     return (
       <Ace
-        id="read-only-json-kim"
-        title={`${name}`}
-        label={`${name}`}
-        aria-label={`${name}`}
+        id="read-only-json"
         mode='json'
         theme={config.editorTheme}
         name={`read-only-${name}`}
@@ -48,9 +84,21 @@ class Workflows extends React.Component {
     );
   }
 
+  onConnect (params) {
+    this.useCallback(
+      (params) => this.setEdges((els) => this.addEdge(params, els)),
+      []
+    );
+  }
+
   render () {
     const { workflowId } = this.props.match.params;
     const record = this.props.workflows.detail;
+    const allRoles = getRoles();
+    let isEditable = false;
+    if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
+      isEditable = true;
+    }
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -65,17 +113,34 @@ class Workflows extends React.Component {
         active: true
       }
     ];
-
+    let reactFlowStyle = {};
+    if (record.data) {
+      const box = document.querySelector('.page__content--shortened');
+      const width = box.offsetWidth;
+      reactFlowStyle = {
+        left: `${(width - 350) / 2}px`,
+        position: 'absolute',
+        top: '475px'
+      };
+    }
     return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
-        <h1 className='heading--large heading--shared-content with-description'>
-          {record.data ? record.data.long_name : '...'}
-        </h1>
         <section className='page__section'>
-          { record.inflight
+          {record.data && isEditable
+            ? <Link
+            className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right workflows-add' to={{ pathname: `/workflows/edit/${record.data.id}` }} aria-label="Edit your workflow">Edit</Link>
+            : null}
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium heading--shared-content with-description'>{record.data ? record.data.long_name : '...'}</h2>
+          </div>
+        </section>
+        <div className='page__component'>
+      </div>
+        <section className='page__section'>
+          {record.inflight
             ? <Loading />
             : record.error
               ? <ErrorReport report={record.error} />
@@ -84,19 +149,41 @@ class Workflows extends React.Component {
                   <div className='tab--wrapper'>
                     <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
                       onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
+                    <button className={'button--tab ' + (this.state.view === 'graph' ? 'button--active' : '')}
+                      onClick={() => this.state.view !== 'graph' && this.setState({ view: 'graph' })}>Graphical View</button>
                   </div>
                   <div>
-                    {this.state.view === 'list' ? this.renderList(record.data) : this.renderJson(record.data)}
+                    {this.state.view === 'graph' ? this.showGraph(record.data) : this.renderJson(record.data)}
                   </div>
                 </div>
-                : null
-          }
+                : null}
         </section>
+        {record.data
+          ? <section className='page__section' id='graph' style={{ height: '150vh' }}>
+            <ReactFlow
+              nodes={this.state.nodes}
+              edges={this.state.edges}
+              onInit={onLoad}
+              onConnect={this.onConnect}
+              zoomOnScroll={false}
+              panOnScroll={false}
+              style={reactFlowStyle}
+            >
+            </ReactFlow>
+          </section>
+          : null}
       </div>
     );
   }
 
+  hideGraph () {
+    if (document.getElementById('graph') !== null) {
+      document.getElementById('graph').setAttribute('class', 'hidden');
+    }
+  }
+
   renderJson (data) {
+    this.hideGraph();
     return (
       <ul>
         <li>
