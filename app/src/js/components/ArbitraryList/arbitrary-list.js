@@ -64,12 +64,14 @@ class List extends React.Component {
           value={item}
           onChange={(e) => this.onChange(i, e.target.value)}
         />
-        { add ? <button
+        { add
+          ? <button
           onClick={this.add}
           className={'button form__addone--button' + (disabled ? ' button--disabled' : '')}>+</button>
           : null }
 
-        { !add ? <button
+        { !add
+          ? <button
           onClick={(e) => { e.preventDefault(); this.remove(i); }}
           className='button form__addone--button'>-</button>
           : null }

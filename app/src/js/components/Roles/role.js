@@ -71,8 +71,10 @@ class Roles extends React.Component {
           {record.data ? record.data.long_name : '...'}
         </h1>
         <section className='page__section'>
-          { record.inflight ? <Loading />
-            : record.error ? <ErrorReport report={record.error} />
+          { record.inflight
+            ? <Loading />
+            : record.error
+              ? <ErrorReport report={record.error} />
               : record.data
                 ? <div>
                   <div className='tab--wrapper'>
@@ -82,7 +84,8 @@ class Roles extends React.Component {
                   <div>
                     {this.state.view === 'list' ? this.renderList(record.data) : this.renderJson(record.data)}
                   </div>
-                </div> : null
+                </div>
+                : null
           }
         </section>
       </div>

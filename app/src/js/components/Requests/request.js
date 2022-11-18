@@ -65,6 +65,7 @@ class RequestOverview extends React.Component {
     this.restore = this.restore.bind(this);
     this.selectWorkflow = this.selectWorkflow.bind(this);
     this.displayName = strings.request;
+    this.exportMetadata = this.exportMetadata.bind(this);
   }
 
   componentDidMount () {
@@ -124,6 +125,15 @@ class RequestOverview extends React.Component {
     this.navigateBack();
   }
 
+  async exportMetadata () {
+    const mappedData = JSON.stringify(this.props.requests.detail.data.metadata, null, 2);
+    const a = document.createElement('a');
+    const file = new Blob([mappedData], { type: 'application/json' });
+    a.href = URL.createObjectURL(file);
+    a.download = `${this.props.requests.detail.data.id}`;
+    a.click();
+  }
+
   // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
   // since this is a detailed view of a single request we are only concerned with an error for that one
   // so no need to relegate the error check to a separate function
@@ -155,7 +165,7 @@ class RequestOverview extends React.Component {
     if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
       canReassign = false;
     }
-    let { canEdit } = formPrivileges(this.props.privileges);
+    const { canEdit } = formPrivileges(this.props.privileges);
     const allRoles = getRoles();
     let canViewUsers = false;
     if (typeof allRoles !== 'undefined' && (allRoles.isAdmin || allRoles.isManager)) {
@@ -205,6 +215,14 @@ class RequestOverview extends React.Component {
         confirmAction: false
       });
     }
+
+    dropdownConfig.push({
+      text: 'Export Metadata',
+      action: this.exportMetadata,
+      status: openStatus,
+      success: this.navigateBack,
+      confirmAction: false
+    });
 
     const tableColumns = [
       {
