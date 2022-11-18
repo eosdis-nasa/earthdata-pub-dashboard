@@ -736,6 +736,25 @@ export const getWorkflow = (workflowId) => ({
     path: `data/workflow/${workflowId}`
   }
 });
+
+export const updateWorkflow = (payload) => ({
+  [CALL_API]: {
+    type: types.WORKFLOWS,
+    method: 'POST',
+    path: `data/workflow/${payload.id}`,
+    json: payload
+  }
+});
+
+export const addWorkflow = (payload) => ({
+  [CALL_API]: {
+    type: types.WORKFLOWS,
+    method: 'POST',
+    path: 'data/workflows',
+    json: payload
+  }
+});
+
 export const searchWorkflows = (searchString) => ({ type: types.SEARCH_WORKFLOWS, searchString });
 export const clearWorkflowsSearch = () => ({ type: types.CLEAR_WORKFLOWS_SEARCH });
 

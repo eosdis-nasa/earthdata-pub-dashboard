@@ -4,7 +4,7 @@ import Ace from 'react-ace';
 import PropTypes from 'prop-types';
 import ReactFlow from 'react-flow-renderer';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { getWorkflow } from '../../actions';
 import config from '../../config';
 import { setWindowEditorRef } from '../../utils/browser';
@@ -17,6 +17,21 @@ function onLoad (reactFlowInstance) {
   reactFlowInstance.fitView();
   // console.log('flow loaded:', reactFlowInstance);
 }
+
+export const getRoles = () => {
+  const user = JSON.parse(window.localStorage.getItem('auth-user'));
+  if (user != null) {
+    const roles = user.user_roles;
+    const privileges = user.user_privileges;
+    const allRoles = {
+      isManager: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/manager/g)),
+      isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+    };
+    return allRoles;
+  }
+};
 
 class Workflows extends React.Component {
   constructor () {
@@ -79,7 +94,11 @@ class Workflows extends React.Component {
   render () {
     const { workflowId } = this.props.match.params;
     const record = this.props.workflows.detail;
-
+    const allRoles = getRoles();
+    let isEditable = false;
+    if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
+      isEditable = true;
+    }
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -101,7 +120,7 @@ class Workflows extends React.Component {
       reactFlowStyle = {
         left: `${(width - 350) / 2}px`,
         position: 'absolute',
-        top: '400px'
+        top: '475px'
       };
     }
     return (
@@ -109,9 +128,17 @@ class Workflows extends React.Component {
         <section className='page__section page__section__controls'>
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
-        <h1 className='heading--large heading--shared-content with-description'>
-          {record.data ? record.data.long_name : '...'}
-        </h1>
+        <section className='page__section'>
+          {record.data && isEditable
+            ? <Link
+            className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right workflows-add' to={{ pathname: `/workflows/edit/${record.data.id}` }} aria-label="Edit your workflow">Edit</Link>
+            : null}
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium heading--shared-content with-description'>{record.data ? record.data.long_name : '...'}</h2>
+          </div>
+        </section>
+        <div className='page__component'>
+      </div>
         <section className='page__section'>
           {record.inflight
             ? <Loading />

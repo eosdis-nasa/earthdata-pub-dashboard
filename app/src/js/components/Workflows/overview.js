@@ -11,7 +11,21 @@ import { lastUpdated, shortDateNoTimeYearFirst } from '../../utils/format';
 import List from '../Table/Table';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import { requestPrivileges } from '../../utils/privileges';
+
+export const getRoles = () => {
+  const user = JSON.parse(window.localStorage.getItem('auth-user'));
+  if (user != null) {
+    const roles = user.user_roles;
+    const privileges = user.user_privileges;
+    const allRoles = {
+      isManager: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/manager/g)),
+      isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+    };
+    return allRoles;
+  }
+};
 
 class WorkflowsOverview extends React.Component {
   constructor () {
@@ -88,7 +102,14 @@ class WorkflowsOverview extends React.Component {
     const { dispatch } = this.props;
     const workflows = this.props.workflows;
     const requestId = location.search.split('=')[1];
-
+    if (workflows && !Array.isArray(workflows.list.data)) {
+      window.location.reload(true)
+    }
+    const allRoles = getRoles();
+    let isEditable = false;
+    if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
+      isEditable = true;
+    }
     const selectInput = [{
       Header: 'Select',
       accessor: (row) => row.long_name,
@@ -127,6 +148,15 @@ class WorkflowsOverview extends React.Component {
         id: 'created_at'
       }
     ];
+
+    if (typeof requestId === 'undefined' && isEditable) {
+      defaultTableColumns.push({
+        Header: 'Options',
+        accessor: '',
+        Cell: row => <Link className='button button--small button--edit' to={{ pathname: `/workflows/edit/${row.row.original.id}` }} aria-label="Edit your workflow">Edit</Link>,
+        id: 'required'
+      });
+    }
 
     let tableColumns = [];
     if (typeof requestId !== 'undefined') {
@@ -180,21 +210,31 @@ class WorkflowsOverview extends React.Component {
           </div>
         </section>
         <section className='page__section'>
+          {workflows && typeof requestId === 'undefined' && isEditable
+            ? <Link
+            className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right workflows-add' to={{ pathname: '/workflows/add' }}
+            >Add Workflow
+          </Link>
+            : null}
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_workflows} <span className='num--title'>{workflows.list.data.length}</span></h2>
           </div>
-          <List
-            list={workflows.list}
-            dispatch={dispatch}
-            action={listWorkflows}
-            tableColumns={tableColumns}
-            query={{}}
-            bulkActions={[]}
-            rowId='id'
-            filterIdx='long_name'
-            filterPlaceholder='Search Workflows'
-          >
-          </List>
+        </section>
+        <section className='page__section'>
+          <div>
+            <List
+              list={workflows.list}
+              dispatch={dispatch}
+              action={listWorkflows}
+              tableColumns={tableColumns}
+              query={{}}
+              bulkActions={[]}
+              rowId='id'
+              filterIdx='long_name'
+              filterPlaceholder='Search Workflows'
+            >
+            </List>
+          </div>
           { requestId
             ? <section className='page__section'>
               <button

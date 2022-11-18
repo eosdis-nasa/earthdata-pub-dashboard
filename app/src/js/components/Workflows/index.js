@@ -5,6 +5,7 @@ import Sidebar from '../Sidebar/sidebar';
 import PropTypes from 'prop-types';
 import WorkflowsOverview from './overview';
 import Workflow from './workflow';
+import EditWorkflow from './edit';
 
 const Workflows = ({ location, params }) => {
   return (
@@ -24,6 +25,8 @@ const Workflows = ({ location, params }) => {
             <Switch>
               <Route exact path='/workflows' component={WorkflowsOverview} />
               <Route path='/workflows/id/:workflowId' component={Workflow} />
+              <Route path='/workflows/edit/:workflowId' component={EditWorkflow} />
+              <Route path='/workflows/add' component={EditWorkflow} />
             </Switch>
           </div>
         </div>
