@@ -338,6 +338,15 @@ export const restoreRequest = (requestId) => ({
   }
 });
 
+export const addUserToRequest = (requestId, userId) => ({
+  [CALL_API]: {
+    type: types.REQUEST_RESTORE,
+    method: 'POST',
+    path: 'data/submission/operation/restore',
+    body: { id: requestId }
+  }
+});
+
 export const deleteRequest = (requestId) => ({
   [CALL_API]: {
     type: types.REQUEST_DELETE,

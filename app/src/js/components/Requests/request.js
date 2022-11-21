@@ -8,6 +8,7 @@ import {
   getDaac,
   withdrawRequest,
   restoreRequest,
+  addUserToRequest,
   listWorkflows
 } from '../../actions';
 import { get } from 'object-path';
@@ -34,6 +35,7 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 import _config from '../../config';
 import Meditor from '../MeditorModal/modal';
+import SearchModal from '../SearchModal';
 
 export const getRoles = () => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
@@ -66,6 +68,10 @@ class RequestOverview extends React.Component {
     this.selectWorkflow = this.selectWorkflow.bind(this);
     this.displayName = strings.request;
     this.exportMetadata = this.exportMetadata.bind(this);
+    this.submitCallback = this.submitCallback.bind(this);
+    this.openUserForm = this.openUserForm.bind(this);
+    this.closeUserForm = this.closeUserForm.bind(this);
+    this.addUser = this.addUser.bind(this);
   }
 
   componentDidMount () {
@@ -80,6 +86,8 @@ class RequestOverview extends React.Component {
       if (typeof record.data !== 'undefined') {
         this.props.dispatch(getDaac(record.data.daac_id)).then(value => {
           this.setState({ daacName: value.data.long_name });
+          this.setState({ showSearch: false });
+          this.setState({ setShowSearch: false });
         });
       }
     }, 2000);
@@ -125,6 +133,21 @@ class RequestOverview extends React.Component {
     this.navigateBack();
   }
 
+  async openUserForm () {
+    this.setState({ showSearch: true });
+  }
+
+  async closeUserForm () {
+    this.setState({ showSearch: false });
+  }
+
+  async addUser () {
+    const { requestId } = this.props.match.params;
+    const { userId } = this.props.match.params;
+    await this.props.dispatch(addUserToRequest(requestId, userId));
+    this.navigateBack();
+  }
+
   async exportMetadata () {
     const mappedData = JSON.stringify(this.props.requests.detail.data.metadata, null, 2);
     const a = document.createElement('a');
@@ -153,9 +176,25 @@ class RequestOverview extends React.Component {
     this.setState({ workflow });
   }
 
+  submitCallback () {
+    const { requestId } = this.props.match.params;
+    const { userId } = this.props.match.params;
+    const params = {
+      requestId: requestId,
+      userId: userId
+    };
+    this.props.dispatch(addUserToRequest(params));
+    this.setState({ setShowSearch: false });
+  }
+
   render () {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
+    const searchOptions = {
+      entity: 'user',
+      submit: this.submitCallback,
+      cancel: this.closeUserForm
+    };
     let isHidden = false;
     if (typeof record.data !== 'undefined') {
       isHidden = record.data.hidden;
@@ -168,8 +207,10 @@ class RequestOverview extends React.Component {
     const { canEdit } = formPrivileges(this.props.privileges);
     const allRoles = getRoles();
     let canViewUsers = false;
+    let canAddDataUser = false;
     if (typeof allRoles !== 'undefined' && (allRoles.isAdmin || allRoles.isManager)) {
       canViewUsers = true;
+      canAddDataUser = true;
     }
     const requestForms = request.forms;
     let showTable = false;
@@ -210,6 +251,16 @@ class RequestOverview extends React.Component {
       dropdownConfig.push({
         text: 'Restore Request',
         action: this.restore,
+        status: openStatus,
+        success: this.navigateBack,
+        confirmAction: false
+      });
+    }
+
+    if (canAddDataUser && !isHidden) {
+      dropdownConfig.push({
+        text: 'Add User to Request',
+        action: this.openUserForm,
         status: openStatus,
         success: this.navigateBack,
         confirmAction: false
@@ -312,6 +363,7 @@ class RequestOverview extends React.Component {
 
         <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
+          { this.state.showSearch && <SearchModal { ...searchOptions }/> }
           { canWithdraw || canRestore ? <AsyncCommands config={dropdownConfig} /> : null }
           { request && lastUpdated(request.last_change, 'Updated') }
           <dl className='status--process'>
