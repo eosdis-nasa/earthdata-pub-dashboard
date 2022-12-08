@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Added changing of workflow step to request detail form.
 
 ## 1.0.10 - 2022-11-10
 
