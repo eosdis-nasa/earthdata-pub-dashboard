@@ -205,6 +205,28 @@ class RequestOverview extends React.Component {
     this.setState({ workflow });
   }
 
+  renderWorkflowSave (record) {
+    return (
+      <><br></br><div className="request-section">
+        <label>Set the current workflow step</label>
+        <Select
+          id="workflowSelect"
+          options={this.state.steps}
+          onChange={(e) => this.handleSelect(e, record.data.step_name)}
+          isSearchable={true}
+          value={this.state.current}
+          placeholder='Set Current Workflow Step'
+          className='workflowSelect'
+          isMulti={false} />
+      </div><br></br><section className='page__section save-section hidden'>
+          <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
+            onClick={this.handleSubmit} aria-label="change workflow step">
+            Save
+          </button>
+        </section></>
+    );
+  }
+
   render () {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
@@ -218,6 +240,10 @@ class RequestOverview extends React.Component {
       canReassign = false;
     }
     const { canEdit } = formPrivileges(this.props.privileges);
+    let workflowSave;
+    if (canWithdraw && canRestore) {
+      workflowSave = this.renderWorkflowSave(record);
+    }
     const allRoles = getRoles();
     let canViewUsers = false;
     if (typeof allRoles !== 'undefined' && (allRoles.isAdmin || allRoles.isManager)) {
@@ -376,23 +402,8 @@ class RequestOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium with-description' aria-label={strings.request_overview}>{strings.request_overview}</h2>
           </div>
-          { record.inflight ? <Loading /> : record.error ? <ErrorReport report={record.error} /> : request ? <><Metadata data={request} accessors={metaAccessors} /><br></br><div className="request-section">
-            <label>Set the current workflow step</label>
-            <Select
-              id="workflowSelect"
-              options={this.state.steps}
-              onChange={(e) => this.handleSelect(e, record.data.step_name)}
-              isSearchable={true}
-              value={this.state.current}
-              placeholder='Set Current Workflow Step'
-              className='workflowSelect'
-              isMulti={false} />
-          </div><br></br><section className='page__section save-section hidden'>
-              <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
-                onClick={this.handleSubmit} aria-label="change workflow step">
-                Save
-              </button>
-            </section></> : null }
+          { record.inflight ? <Loading /> : request ? <Metadata data={request} accessors={metaAccessors} /> : null }
+          {workflowSave}
         </section>
         <Meditor></Meditor>
         { showTable
