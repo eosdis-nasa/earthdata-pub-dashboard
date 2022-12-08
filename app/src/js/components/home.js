@@ -196,9 +196,9 @@ class Home extends React.Component {
 
   handleProducerSelect (list, e) {
     if (e.length === 0) {
-      this.setState({ list: this.filter(this.state.originalList) });
+      this.setState({ list: this.filter(this.state.originalList), filter: [] });
     } else if (e[0] !== undefined) {
-      this.setState({ list: this.filter(list, Object.values(e)) });
+      this.setState({ list: this.filter(list, Object.values(e)), filter: Object.values(e) });
     }
   }
 
@@ -215,6 +215,9 @@ class Home extends React.Component {
       newList[ea] = record;
       for (const r in record) {
         if (!record[r].hidden && record[r].step_name !== 'close' && typeof record[r] === 'object') {
+          if (match === undefined && this.state.filter !== undefined && this.state.filter.length > 0) {
+            match = this.state.filter;
+          }
           const prod = { value: record[r].form_data.data_producer_info_name, label: record[r].form_data.data_producer_info_name };
           let dataProduct = record[r].form_data.data_product_name_value;
           if (dataProduct === undefined) {
@@ -229,12 +232,14 @@ class Home extends React.Component {
           if (!isFound && JSON.stringify(prod) !== '{}') {
             this.state.producers.push(prod);
           }
-          if (match === undefined && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
-            tmp.push(record[r]);
-          } else {
-            for (const i in match) {
-              if (prod.value === match[i].value && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
-                tmp.push(record[r]);
+          if ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '') {
+            if (match === undefined) {
+              tmp.push(record[r]);
+            } else {
+              for (const i in match) {
+                if (prod.value === match[i].value) {
+                  tmp.push(record[r]);
+                }
               }
             }
           }
@@ -252,8 +257,14 @@ class Home extends React.Component {
 
   render () {
     if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
+      if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
+        const searchElement = document.querySelector('.request-section input.search');
+
+        searchElement.addEventListener('change', () => {
+          this.setState({ list: this.filter(this.state.originalList) });
+        });
+      }
       const query = this.generateQuery();
-      const list = this.state.list;
       return (
         <div className='page__home'>
           <div className='content__header content__header--lg'>
@@ -272,22 +283,22 @@ class Home extends React.Component {
                   <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                 </div>
                 <List
-                  list={this.filter(list)}
+                  list={this.filter(this.state.originalList)}
                   tableColumns={tableColumns}
                   query={query}
                   rowId='id'
                   filterIdx='name'
                   filterPlaceholder='Search Requests'
                 >
-                  <Select
-                    id="producerSelect"
-                    options={this.state.producers}
-                    onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
-                    isSearchable={true}
-                    placeholder='Select Data Producer'
-                    className='producer_select'
-                    isMulti={true}
-                  />
+                <Select
+                  id="producerSelect"
+                  options={this.state.producers}
+                  onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
+                  isSearchable={true}
+                  placeholder='Select Data Producer'
+                  className='producer_select'
+                  isMulti={true}
+                />
                 </List>
               </div>
             </section>

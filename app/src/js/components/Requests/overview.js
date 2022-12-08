@@ -105,12 +105,14 @@ class RequestsOverview extends React.Component {
           if (!isFound && JSON.stringify(prod) !== '{}') {
             this.state.producers.push(prod);
           }
-          if (match === undefined && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
-            tmp.push(record[r]);
-          } else {
-            for (const i in match) {
-              if (prod.value === match[i].value && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
-                tmp.push(record[r]);
+          if ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '') {
+            if (match === undefined) {
+              tmp.push(record[r]);
+            } else {
+              for (const i in match) {
+                if (prod.value === match[i].value) {
+                  tmp.push(record[r]);
+                }
               }
             }
           }
@@ -136,6 +138,13 @@ class RequestsOverview extends React.Component {
 
   render () {
     if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
+      if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
+        const searchElement = document.querySelector('.request-section input.search');
+
+        searchElement.addEventListener('change', () => {
+          this.setState({ list: this.filter(this.state.originalList) });
+        });
+      }
       const query = this.generateQuery();
       const { canInitialize } = requestPrivileges(this.props.privileges);
       const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
@@ -162,22 +171,22 @@ class RequestsOverview extends React.Component {
           {!list
             ? <Loading />
             : <List
-                list={this.filter(list)}
+                list={list}
                 tableColumns={tableColumns}
                 query={query}
                 rowId='id'
                 filterIdx='name'
                 filterPlaceholder='Search Requests'
               >
-                <Select
-                  id="producerSelect"
-                  options={this.state.producers}
-                  onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
-                  isSearchable={true}
-                  placeholder='Select Data Producer'
-                  className='producer_select'
-                  isMulti={true}
-                />
+              <Select
+                id="producerSelect"
+                options={this.state.producers}
+                onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
+                isSearchable={true}
+                placeholder='Select Data Producer'
+                className='producer_select'
+                isMulti={true}
+              />
               </List>
           }
         </section>

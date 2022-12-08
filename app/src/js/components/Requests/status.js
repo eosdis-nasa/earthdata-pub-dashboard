@@ -161,26 +161,28 @@ class ActionRequestsOverview extends React.Component {
           if (!isFound && JSON.stringify(prod) !== '{}') {
             this.state.producers.push(prod);
           }
-          if (pathname !== '/requests/status/closed') {
-            if (typeof record[r] !== 'undefined' && record[r] !== null && !record[r].hidden && typeof record[r] === 'object' && record[r].status === this.getView()) {
-              if (match === undefined && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
-                tmp.push(record[r]);
-              } else {
-                for (const i in match) {
-                  if (prod.value === match[i].value && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
-                    tmp.push(record[r]);
+          if (typeof record[r] === 'object') {
+            if (pathname !== '/requests/status/closed') {
+              if (!record[r].hidden && record[r].status === this.getView() && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
+                if (match === undefined) {
+                  tmp.push(record[r]);
+                } else {
+                  for (const i in match) {
+                    if (prod.value === match[i].value) {
+                      tmp.push(record[r]);
+                    }
                   }
                 }
               }
-            }
-          } else {
-            if (typeof record[r] !== 'undefined' && record[r] !== null && typeof record[r] === 'object' && (record[r].hidden || record[r].step_name.match(/close/))) {
-              if (match === undefined && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
-                tmp.push(record[r]);
-              } else {
-                for (const i in match) {
-                  if (prod.value === match[i].value && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
-                    tmp.push(record[r]);
+            } else {
+              if ((record[r].hidden || record[r].step_name.match(/close/)) && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
+                if (match === undefined) {
+                  tmp.push(record[r]);
+                } else {
+                  for (const i in match) {
+                    if (prod.value === match[i].value) {
+                      tmp.push(record[r]);
+                    }
                   }
                 }
               }
@@ -208,6 +210,13 @@ class ActionRequestsOverview extends React.Component {
 
   render () {
     if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
+      if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
+        const searchElement = document.querySelector('.request-section input.search');
+
+        searchElement.addEventListener('change', () => {
+          this.setState({ list: this.filter(this.state.originalList) });
+        });
+      }
       const view = this.getView();
       const displayCaseView = displayCase(view);
       const breadcrumbConfig = [

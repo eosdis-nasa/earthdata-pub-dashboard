@@ -137,12 +137,14 @@ class InactiveRequestsOverview extends React.Component {
           if (!isFound && JSON.stringify(prod) !== '{}') {
             this.state.producers.push(prod);
           }
-          if (match === undefined && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
-            tmp.push(record[r]);
-          } else {
-            for (const i in match) {
-              if (prod.value === match[i].value && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
-                tmp.push(record[r]);
+          if ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '') {
+            if (match === undefined) {
+              tmp.push(record[r]);
+            } else {
+              for (const i in match) {
+                if (prod.value === match[i].value) {
+                  tmp.push(record[r]);
+                }
               }
             }
           }
@@ -168,6 +170,13 @@ class InactiveRequestsOverview extends React.Component {
 
   render () {
     if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
+      if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
+        const searchElement = document.querySelector('.request-section input.search');
+
+        searchElement.addEventListener('change', () => {
+          this.setState({ list: this.filter(this.state.originalList) });
+        });
+      }
       const list = this.state.list;
       const { queriedAt } = list.meta;
       const unique = [...new Set(list.data.map(item => item.id))];
@@ -190,7 +199,7 @@ class InactiveRequestsOverview extends React.Component {
             {!list
               ? <Loading />
               : <List
-                  list={this.filter(list)}
+                  list={list}
                   tableColumns={tableColumns}
                   query={this.generateQuery()}
                   rowId='id'
