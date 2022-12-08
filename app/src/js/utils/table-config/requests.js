@@ -207,6 +207,13 @@ export const tableColumns = [
     width: 170
   },
   {
+    Header: 'Data Producer Name',
+    accessor: row => row.form_data ? row.form_data.data_producer_info_name : null,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.form_data ? row.row.original.form_data.data_producer_info_name : null}</Link> : null,
+    id: 'data_producer_info_name',
+    width: 170
+  },
+  {
     Header: 'Status',
     accessor: (row) => row.status,
     Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.status}</Link> : null,
