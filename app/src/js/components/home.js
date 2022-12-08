@@ -15,8 +15,7 @@ import {
 import List from './Table/Table';
 // import RequestsProgress from './Requests/progress';
 import {
-  tableColumns,
-  errorTableColumns
+  tableColumns
 } from '../utils/table-config/requests';
 import { updateInterval, overviewUrl } from '../config';
 /* import {

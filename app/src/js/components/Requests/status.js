@@ -13,7 +13,7 @@ import {
   displayCase
 } from '../../utils/format';
 import {
-  stepLookup
+  tableColumns
 } from '../../utils/table-config/requests';
 import List from '../Table/Table';
 import Select from 'react-select';
@@ -21,67 +21,6 @@ import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import Loading from '../LoadingIndicator/loading-indicator';
-
-export const tableColumns = [
-  {
-    Header: 'Data Product Name',
-    accessor: row => row.form_data ? row.form_data.data_product_name_value || 'Request Initialized' : 'Request Initialized',
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || 'Request Initialized' : 'Request Initialized'}</Link> : 'Request Initialized',
-    id: 'name',
-    width: 170
-  },
-  {
-    Header: 'Data Producer Name',
-    accessor: row => row.form_data ? row.form_data.data_producer_info_name : null,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.form_data ? row.row.original.form_data.data_producer_info_name : null}</Link> : null,
-    id: 'data_producer_info_name',
-    width: 170
-  },
-  {
-    Header: 'Status',
-    accessor: (row) => row.status,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.status}</Link> : null,
-    id: 'status_message',
-    width: 170
-  },
-  {
-    Header: 'Workflow',
-    accessor: (row) => row.workflow_name,
-    Cell: row => row.row.original.workflow_name,
-    id: 'workflow_name',
-    width: 170
-  },
-  {
-    Header: 'Created',
-    accessor: row => shortDateNoTimeYearFirst(row.created_at),
-    id: 'created_at',
-    width: 110
-  },
-  {
-    Header: 'Latest Edit',
-    accessor: row => shortDateNoTimeYearFirst(row.last_change),
-    id: 'last_change',
-    width: 110
-  },
-  {
-    Header: 'Locked',
-    accessor: row => bool(row.lock),
-    id: 'lock',
-    width: 100
-  },
-  {
-    Header: 'Conversation',
-    accessor: (row) => row.conversation_id ? <Link to={{ pathname: `/conversations/id/${row.conversation_id}` }} aria-label="View your conversations">View</Link> : null,
-    id: 'conversation_id',
-    width: 120
-  },
-  {
-    Header: 'Next Action',
-    accessor: row => stepLookup(row),
-    id: 'next_action',
-    width: 170
-  }
-];
 
 class ActionRequestsOverview extends React.Component {
   constructor () {
