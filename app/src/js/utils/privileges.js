@@ -113,3 +113,27 @@ export const formPrivileges = (privileges) => {
     canRead: false
   };
 };
+
+export const questionPrivileges = (privileges) => {
+  if (privileges.ADMIN) {
+    return {
+      canCreate: true,
+      canRead: true,
+      canEdit: true,
+      canDelete: true
+    };
+  } else if (privileges.QUESTION) {
+    return {
+      canCreate: privileges.QUESTION.includes('CREATE'),
+      canRead: privileges.QUESTION.includes('READ'),
+      canEdit: privileges.QUESTION.includes('UPDATE'),
+      canDelete: privileges.QUESTION.includes('DELETE')
+    };
+  }
+  return {
+    canCreate: false,
+    canRead: false,
+    canEdit: false,
+    canDelete: false
+  };
+};

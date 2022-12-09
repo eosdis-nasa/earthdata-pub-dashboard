@@ -5,6 +5,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { listQuestions } from '../../actions';
 import { lastUpdated } from '../../utils/format';
+import { questionPrivileges } from '../../utils/privileges';
 import { tableColumns } from '../../utils/table-config/questions';
 import List from '../Table/Table';
 import { strings } from '../locale';
@@ -41,7 +42,12 @@ class QuestionsOverview extends React.Component {
 
   render () {
     const { questions } = this.props;
-    const { list } = questions;
+    let { list } = questions;
+    const { canCreate, canEdit, canDelete } = questionPrivileges(this.props.privileges);
+    if ((questions && questions.list.data.constructor.name !== 'Array') || (!canCreate || !canEdit || !canDelete)) {
+      list = { data: [], meta: '', count: 0 };
+    }
+    const query = this.generateQuery();
     const { queriedAt } = list.meta;
     return (
       <div className='page__component'>
@@ -51,27 +57,29 @@ class QuestionsOverview extends React.Component {
         <section className='page__section page__section__header-wrapper'>
           <div className='page__section__header'>
             <h1 className='heading--large heading--shared-content with-description '>{strings.question_overview}</h1>
-            {lastUpdated(queriedAt)}
+            {list.meta ? lastUpdated(queriedAt) : null}
           </div>
         </section>
         <section className='page__section page__section__controls'>
           <div className='heading__wrapper--border' style={{ height: '3rem' }}>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_questions} <span className='num--title'>{questions.list.data.length}</span></h2>
-            <Link
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_questions} <span className='num--title'>{(questions.list.data.length > 0) ? questions.list.data.length : 0}</span></h2>
+            {canCreate
+              ? <Link
                 className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right questions-add' to={{ pathname: '/questions/add' }}
             >Add Question
             </Link>
+              : null}
           </div>
         </section>
         <section className='page__section page__section__controls'>
           <div>
-          {!questions.list || questions.list.data.constructor.name !== 'Array'
+          {!list
             ? <Loading />
             : <List
                 list={list}
                 action={listQuestions}
                 tableColumns={tableColumns}
-                query={this.generateQuery()}
+                query={query}
                 rowId='id'
                 filterIdx='question_name'
                 filterPlaceholder='Search Questions'
@@ -89,7 +97,8 @@ QuestionsOverview.propTypes = {
   questions: PropTypes.object,
   stats: PropTypes.object,
   dispatch: PropTypes.func,
-  config: PropTypes.object
+  config: PropTypes.object,
+  privileges: PropTypes.object
 };
 
 export { QuestionsOverview };
@@ -97,5 +106,6 @@ export { QuestionsOverview };
 export default withRouter(connect(state => ({
   stats: state.stats,
   questions: state.questions,
-  config: state.config
+  config: state.config,
+  privileges: state.api.tokens.privileges
 }))(QuestionsOverview));
