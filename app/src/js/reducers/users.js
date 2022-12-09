@@ -24,7 +24,8 @@ import {
 
   OPTIONS_USERGROUP,
   OPTIONS_USERGROUP_INFLIGHT,
-  OPTIONS_USERGROUP_ERROR
+  OPTIONS_USERGROUP_ERROR,
+  USER_CREATE
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 
@@ -106,6 +107,10 @@ export default createReducer(initialState, {
   },
   [CLEAR_USERS_FILTER]: (state, action) => {
     set(state, ['list', 'params', action.paramKey], null);
+  },
+  [USER_CREATE]: (state, action) => {
+    const { data, id } = action;
+    set(state, ['map', id, 'data'], data)
   },
 
   [OPTIONS_USERGROUP]: (state, action) => {

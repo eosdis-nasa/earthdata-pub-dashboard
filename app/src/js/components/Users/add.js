@@ -12,16 +12,28 @@ import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import Select from 'react-select';
 
-const AddUser = ({ dispatch, match, groups, roles }) => {
+const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
+
   const { userId } = match.params;
   useEffect(() => {
     dispatch(listRoles());
     dispatch(listGroups());
   }, []);
+
   useEffect(() => {
     setRoleOptions(roles.map(({ id, long_name}) => ({value:id, label: long_name})));
     setGroupOptions(groups.map(({id, long_name}) => ({value:id, label: long_name})));
   }, [groups, roles]);
+
+  useEffect(() => {
+    if(newUserStatus.error === 'Duplicate email'){
+      setValidEmail(false);
+      setEmail('Email already exits');
+    }else{
+      history.push('/users');
+    }
+  }, [newUserStatus])
+
   const history = useHistory();
   const [showSearch, setShowSearch] = useState(false);
   const [searchOptions, setSearchOptions] = useState({});
@@ -82,7 +94,7 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
         group_ids: extractId(selectedGroups)
       };
       dispatch(createUser(payload));
-      history.push('/users');
+      //history.push('/users');
     } else {
       !name ? setName('Required Input') : '';
       !username ? setUsername('Required Input') : '';
@@ -193,7 +205,8 @@ AddUser.propTypes = {
   match: PropTypes.object,
   user_groups: PropTypes.array,
   groups: PropTypes.array,
-  roles: PropTypes.array
+  roles: PropTypes.array,
+  newUserStatus: PropTypes.object
 };
 
 export default withRouter(connect(state => ({
@@ -201,5 +214,6 @@ export default withRouter(connect(state => ({
   privileges: state.api.tokens.privileges,
   user_groups: state.api.tokens.groups,
   groups: state.groups.list.data,
-  roles: state.roles.list.data
+  roles: state.roles.list.data,
+  newUserStatus: state.user_create.map.data
 }))(AddUser));
