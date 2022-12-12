@@ -215,6 +215,62 @@ select option{
   }
 }
 
+
+.request-section .list-action-wrapper{
+  display: inline-flex;
+}
+.request-section input.search {
+  font-size:.9em;
+  min-height: 27.5px;
+  margin-right: 5px;
+  margin-bottom:5px;
+  width: 140px;
+  padding-bottom: 3.5px;
+}
+#producerSelect {
+  padding: 0;
+}
+#producerSelect div {
+  border-radius: 0.5em;
+  font-size: 12.04px;
+  line-height: 1em;
+}
+#producerSelect {
+  border-radius: 0.5em;
+}
+#producerSelect div[class^=" css"][class$="control"] {
+  border: 1px solid #eceaea;
+  font-size: .9em;
+  border-radius: 0.5em;
+  box-shadow: 0 1px 3px #00000014;
+}
+#producerSelect div[class^="css"][class$="control"]:nth-child(3) {
+  border:0;
+}
+#producerSelect div[class^="css"][class$="control"] input{
+  border:0;
+  box-shadow: none;
+}
+#producerSelect span[class^="css"][class$="indicatorContainer"] {
+  border:0;
+}
+#producerSelect div:nth-child(4) {
+  margin-top:0;
+  border-radius:0;
+}
+#producerSelect div:nth-child(4) * {
+  border-radius:0;
+}
+#producerSelect div:nth-child(5) {
+  border-radius:0;
+}
+#producerSelect div input {
+  border-radius:0;
+}
+#producerSelect div div span {
+  width: 0;
+}
+
 .form__element__updateToggle {
   float: right;
   margin-top: -6px;
