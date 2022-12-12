@@ -317,6 +317,10 @@ class RequestOverview extends React.Component {
 
     const metaAccessors = [
       {
+        label: 'Data Producer Name',
+        accessor: row => row.form_data && row.form_data.data_producer_info_name ? row.form_data.data_producer_info_name : null
+      },
+      {
         label: 'Daac',
         accessor: row => this.state.daacName && canEdit ? <a href={`${_config.formsUrl}/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{this.state.daacName}</a> : this.state.daacName ? this.state.daacName : row.daac_id
       },
