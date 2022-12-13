@@ -61,6 +61,22 @@ class Workflows extends React.Component {
   showGraph () {
     if (document.getElementById('graph') !== null) {
       document.getElementById('graph').removeAttribute('class', 'hidden');
+      const section = document.querySelector('section#graph');
+      if (section !== null) {
+        setTimeout(() => {
+          const nodes = document.querySelectorAll('g .react-flow__edge');
+          let count = 1;
+          for (const ea in nodes) {
+            // eslint-disable-next-line no-prototype-builtins
+            if (nodes.hasOwnProperty(ea)) {
+              // console.log(nodes[ea].height, nodes[ea].style.height, ea.height, ea.clientHeight, ea, nodes[ea].clientHeight);
+              count++;
+            }
+          }
+          // (edges) + (nodeHeight (mines always the same)) + (top of first node to breadcrumbs)
+          section.style.height = ((count * 54) + (count * 40)) + 220 + 'px';
+        }, '1000');
+      }
     }
   }
 
@@ -159,7 +175,7 @@ class Workflows extends React.Component {
                 : null}
         </section>
         {record.data
-          ? <section className='page__section' id='graph' style={{ height: '150vh' }}>
+          ? <section className='page__section' id='graph'>
             <ReactFlow
               nodes={this.state.nodes}
               edges={this.state.edges}
