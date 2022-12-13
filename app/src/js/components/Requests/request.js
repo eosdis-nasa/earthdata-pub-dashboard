@@ -6,9 +6,11 @@ import { connect } from 'react-redux';
 import {
   getRequest,
   getDaac,
+  getWorkflow,
   withdrawRequest,
   restoreRequest,
-  listWorkflows
+  listWorkflows,
+  setWorkflowStep
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -34,6 +36,7 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 import _config from '../../config';
 import Meditor from '../MeditorModal/modal';
+import Select from 'react-select';
 
 export const getRoles = () => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
@@ -53,7 +56,7 @@ export const getRoles = () => {
 class RequestOverview extends React.Component {
   constructor () {
     super();
-    this.state = { daacName: '' };
+    this.state = { daacName: '', current: {} };
     this.reload = this.reload.bind(this);
     this.fastReload = this.fastReload.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
@@ -66,6 +69,10 @@ class RequestOverview extends React.Component {
     this.selectWorkflow = this.selectWorkflow.bind(this);
     this.displayName = strings.request;
     this.exportMetadata = this.exportMetadata.bind(this);
+    this.setSteps = this.setSteps.bind(this);
+    this.toProperCase = this.toProperCase.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount () {
@@ -81,8 +88,40 @@ class RequestOverview extends React.Component {
         this.props.dispatch(getDaac(record.data.daac_id)).then(value => {
           this.setState({ daacName: value.data.long_name });
         });
+        this.props.dispatch(getWorkflow(record.data.workflow_id)).then(value => {
+          this.setSteps(value.data.steps, record.data.step_name);
+        });
       }
     }, 2000);
+  }
+
+  toProperCase (str) {
+    return str.replace(
+      /\w\S*/g,
+      function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
+  }
+
+  setSteps (steps, current) {
+    const tmp = [];
+    for (const ea in steps) {
+      if (ea === current) {
+        this.setState({ current: { value: ea, label: this.toProperCase(ea.replace(/_/g, ' ')) } });
+      }
+      tmp.push({ value: ea, label: this.toProperCase(ea.replace(/_/g, ' ')) });
+    }
+    this.setState({ steps: tmp });
+  }
+
+  handleSelect (e, stepName) {
+    this.setState({ current: e });
+    if (JSON.stringify(this.state.current) !== JSON.stringify(e) && stepName !== e.value) {
+      document.querySelector('.save-section').classList.remove('hidden');
+    } else {
+      document.querySelector('.save-section').classList.add('hidden');
+    }
   }
 
   reload (immediate, timeout) {
@@ -111,6 +150,19 @@ class RequestOverview extends React.Component {
     const { requestId } = this.props.match.params;
     const { history } = this.props;
     history.push(`/workflows?requestId=${requestId}`);
+  }
+
+  async handleSubmit () {
+    const { requestId } = this.props.match.params;
+    const record = this.props.requests.detail;
+    const payload = {
+      id: requestId,
+      workflow_id: record.data.workflow_id,
+      step_name: this.state.current.value
+    };
+    await this.props.dispatch(setWorkflowStep(payload));
+    await this.props.dispatch(getRequest(requestId));
+    document.querySelector('.save-section').classList.add('hidden');
   }
 
   async delete () {
@@ -153,6 +205,28 @@ class RequestOverview extends React.Component {
     this.setState({ workflow });
   }
 
+  renderWorkflowSave (record) {
+    return (
+      <><br></br><div className="request-section">
+        <label>Set the current workflow step</label>
+        <Select
+          id="workflowSelect"
+          options={this.state.steps}
+          onChange={(e) => this.handleSelect(e, record.data.step_name)}
+          isSearchable={true}
+          value={this.state.current}
+          placeholder='Set Current Workflow Step'
+          className='workflowSelect'
+          isMulti={false} />
+      </div><br></br><section className='page__section save-section hidden'>
+          <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
+            onClick={this.handleSubmit} aria-label="change workflow step">
+            Save
+          </button>
+        </section></>
+    );
+  }
+
   render () {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
@@ -166,6 +240,10 @@ class RequestOverview extends React.Component {
       canReassign = false;
     }
     const { canEdit } = formPrivileges(this.props.privileges);
+    let workflowSave;
+    if (canWithdraw && canRestore) {
+      workflowSave = this.renderWorkflowSave(record);
+    }
     const allRoles = getRoles();
     let canViewUsers = false;
     if (typeof allRoles !== 'undefined' && (allRoles.isAdmin || allRoles.isManager)) {
@@ -328,7 +406,8 @@ class RequestOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium with-description' aria-label={strings.request_overview}>{strings.request_overview}</h2>
           </div>
-          { record.inflight ? <Loading /> : record.error ? <ErrorReport report={record.error} /> : request ? <Metadata data={request} accessors={metaAccessors} /> : null }
+          { record.inflight ? <Loading /> : request ? <Metadata data={request} accessors={metaAccessors} /> : null }
+          {workflowSave}
         </section>
         <Meditor></Meditor>
         { showTable

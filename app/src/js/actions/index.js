@@ -203,6 +203,15 @@ export const listInactiveRequests = (options) => ({
   }
 });
 
+export const setWorkflowStep = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/submission/operation/changeStep',
+    body: payload
+  }
+});
+
 export const reviewRequest = (id, approve) => {
   return (dispatch) => {
     dispatch({

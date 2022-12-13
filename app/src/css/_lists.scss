@@ -19,6 +19,53 @@
     margin: .75em 0;
   }
 }
+.request-section .list-action-wrapper{
+  display: inline-flex;
+}
+#workflowSelect {
+  padding: 0;
+}
+#workflowSelect div {
+  border-radius: 0.5em;
+  font-size: 12.04px;
+  line-height: 1em;
+}
+#workflowSelect {
+  border-radius: 0.5em;
+  width: 300px;
+}
+#workflowSelect div[class^=" css"][class$="control"] {
+  border: 1px solid #eceaea;
+  font-size: .9em;
+  border-radius: 0.5em;
+  box-shadow: 0 1px 3px #00000014;
+}
+#workflowSelect div[class^="css"][class$="control"]:nth-child(3) {
+  border:0;
+}
+#workflowSelect div[class^="css"][class$="control"] input{
+  border:0;
+  box-shadow: none;
+}
+#workflowSelect span[class^="css"][class$="indicatorContainer"] {
+  border:0;
+}
+#workflowSelect div:nth-child(4) {
+  margin-top:0;
+  border-radius:0;
+}
+#workflowSelect div:nth-child(4) * {
+  border-radius:0;
+}
+#workflowSelect div:nth-child(5) {
+  border-radius:0;
+}
+#workflowSelect div input {
+  border-radius:0;
+}
+#workflowSelect div div span {
+  width: 0;
+}
 
 .email__details {
   font-size: .86em;
