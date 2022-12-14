@@ -26,12 +26,12 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
   }, [groups, roles]);
 
   useEffect(() => {
-    console.log(newUserStatus)
-    if(newUserStatus.error === 'Duplicate email'){
+    if(newUserStatus.error === 'Duplicate email' && email){
       setValidEmail(false);
-      setEmail('Email already exits');
-    }else{
-      //history.push('/users');
+      setEmail(email? 'Email already exits':'');
+      setMissingReq(true);
+    }else if(newUserStatus.name === name){
+      history.push('/users');
     }
   }, [newUserStatus])
 
@@ -85,6 +85,12 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
     setValidEmail(input.match(/^\S+@\S+\.\S+$/));
   };
 
+  const handleEmailClick = () =>{
+    if(email === 'Invalid Email' || email === 'Email already exits'){
+      setEmail('')
+    }
+  }
+
   const handleSubmit = () => {
     if (validEmail && name && username && email) {
       const payload = {
@@ -94,10 +100,7 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
         role_ids: extractId(selectedRoles),
         group_ids: extractId(selectedGroups)
       };
-      console.log('createing user')
       dispatch(createUser(payload));
-      console.logZ('created user')
-      //history.push('/users');
     } else {
       !name ? setName('Required Input') : '';
       !username ? setUsername('Required Input') : '';
@@ -151,7 +154,7 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
                 </label>
                 <label className='heading--small'>Email
                     <input type="text" name="email" value={email} onChange={handleEmail}
-                      onClick = {() => { email === 'Invalid Email' ? setEmail('') : ''; }}
+                      onClick = {handleEmailClick}
                       style={{ borderColor: errorCheck(validEmail) }} />
                 </label>
                 <label className='heading--small'>Name
@@ -218,5 +221,5 @@ export default withRouter(connect(state => ({
   user_groups: state.api.tokens.groups,
   groups: state.groups.list.data,
   roles: state.roles.list.data,
-  newUserStatus: state.users.detail
+  newUserStatus: state.users.detail.data
 }))(AddUser));

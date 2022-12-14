@@ -110,7 +110,8 @@ export default createReducer(initialState, {
   },
   [USER_CREATE]: (state, action) => {
     const { data, id } = action;
-    set(state, ['map', id, 'data'], data)
+    set(state, ['detail', 'data'], data);
+    set(state, ['map', id, 'data'], data);
   },
 
   [OPTIONS_USERGROUP]: (state, action) => {
