@@ -69,7 +69,6 @@ class Workflows extends React.Component {
           for (const ea in nodes) {
             // eslint-disable-next-line no-prototype-builtins
             if (nodes.hasOwnProperty(ea)) {
-              // console.log(nodes[ea].height, nodes[ea].style.height, ea.height, ea.clientHeight, ea, nodes[ea].clientHeight);
               count++;
             }
           }
