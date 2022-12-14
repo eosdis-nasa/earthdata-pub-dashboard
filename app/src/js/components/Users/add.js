@@ -26,11 +26,12 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
   }, [groups, roles]);
 
   useEffect(() => {
+    console.log(newUserStatus)
     if(newUserStatus.error === 'Duplicate email'){
       setValidEmail(false);
       setEmail('Email already exits');
     }else{
-      history.push('/users');
+      //history.push('/users');
     }
   }, [newUserStatus])
 
@@ -93,7 +94,9 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
         role_ids: extractId(selectedRoles),
         group_ids: extractId(selectedGroups)
       };
+      console.log('createing user')
       dispatch(createUser(payload));
+      console.logZ('created user')
       //history.push('/users');
     } else {
       !name ? setName('Required Input') : '';
@@ -215,5 +218,5 @@ export default withRouter(connect(state => ({
   user_groups: state.api.tokens.groups,
   groups: state.groups.list.data,
   roles: state.roles.list.data,
-  newUserStatus: state.user_create.map.data
+  newUserStatus: state.users.detail
 }))(AddUser));
