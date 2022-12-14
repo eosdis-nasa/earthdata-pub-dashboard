@@ -87,7 +87,7 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
 
   const handleEmailClick = () =>{
     if(email === 'Invalid Email' || email === 'Email already exits'){
-      setEmail('')
+      setEmail('');
     }
   }
 
