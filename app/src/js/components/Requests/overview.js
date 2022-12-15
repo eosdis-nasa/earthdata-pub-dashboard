@@ -9,8 +9,7 @@ import {
   // clearRequestsSearch,
   // filterRequests,
   // clearRequestsFilter,
-  listRequests
-  // filterStages,
+  listRequests,
   // filterStatuses,
   // clearStagesFilter,
   // clearStatusesFilter,
@@ -27,7 +26,7 @@ import {
   tableColumns
 } from '../../utils/table-config/requests';
 import List from '../Table/Table';
-// import Dropdown from '../DropDown/dropdown';
+import Select from 'react-select';
 // import Search from '../Search/search';
 // import Overview from '../Overview/overview';
 // import statusOptions from '../../utils/status';
@@ -36,7 +35,6 @@ import _config from '../../config';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 // import { window } from '../../utils/browser';
-// import ListFilters from '../ListActions/ListFilters';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 // import pageSizeOptions from '../../utils/page-size';
 import { requestPrivileges } from '../../utils/privileges';
@@ -62,28 +60,62 @@ const breadcrumbConfig = [
 class RequestsOverview extends React.Component {
   constructor () {
     super();
-    this.state = {};
+    this.state = { producers: [], originalList: {}, list: {} };
     this.generateQuery = this.generateQuery.bind(this);
+    this.handleProducerSelect = this.handleProducerSelect.bind(this);
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { dispatch } = this.props;
-    dispatch(listRequests());
+    await dispatch(listRequests());
+    const { requests } = this.props;
+    const { list } = requests;
+    const originalList = this.filter(list);
+    this.setState({ originalList: originalList, list: originalList });
   }
 
   generateQuery () {
     return {};
   }
 
-  filter (list) {
+  filter (list, match) {
     const newList = {};
     const tmp = [];
+    let requestSearchValue = '';
+    if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
+      requestSearchValue = document.querySelector('.request-section input.search').value;
+    }
+    const re = new RegExp(requestSearchValue, 'gi');
     for (const ea in list) {
       const record = list[ea];
       newList[ea] = record;
       for (const r in record) {
         if (!record[r].hidden && record[r].step_name !== 'close' && typeof record[r] === 'object') {
-          tmp.push(record[r]);
+          const prod = { value: record[r].form_data.data_producer_info_name, label: record[r].form_data.data_producer_info_name };
+          let dataProduct = record[r].form_data.data_product_name_value;
+          if (dataProduct === undefined) {
+            dataProduct = 'Request Initialized';
+          }
+          const isFound = this.state.producers.some(element => {
+            if (element.value === prod.value) {
+              return true;
+            }
+            return false;
+          });
+          if (!isFound && JSON.stringify(prod) !== '{}') {
+            this.state.producers.push(prod);
+          }
+          if ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '') {
+            if (match === undefined) {
+              tmp.push(record[r]);
+            } else {
+              for (const i in match) {
+                if (prod.value === match[i].value) {
+                  tmp.push(record[r]);
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -96,54 +128,73 @@ class RequestsOverview extends React.Component {
     return newList;
   }
 
+  handleProducerSelect (list, e) {
+    if (e.length === 0) {
+      this.setState({ list: this.filter(this.state.originalList) });
+    } else if (e[0] !== undefined) {
+      this.setState({ list: this.filter(list, Object.values(e)) });
+    }
+  }
+
   render () {
-    const {
-      // stats,
-      requests
-    } = this.props;
-    let {
-      list,
-      // dropdowns
-    } = requests;
-    const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
-    const { canInitialize } = requestPrivileges(this.props.privileges);
-    const query = this.generateQuery();
-    const { queriedAt } = list.meta;
-    list = this.filter(list);
-    const unique = [...new Set(list.data.map(item => item.id))];
-    return (
-    <div className='page__component'>
-      <section className='page__section page__section__controls'>
-        <Breadcrumbs config={breadcrumbConfig} />
-      </section>
-      <section className='page__section page__section__header-wrapper'>
-        <div className='page__section__header'>
-          <h1 className='heading--large heading--shared-content with-description '>{strings.requests}</h1>
-          {lastUpdated(queriedAt)}
-          {/* <Overview items={overviewItems} inflight={false} /> */}
-        </div>
-      </section>
-      <section className='page__section page__section__controls'>
-        <div className='heading__wrapper--border'>
-          <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
-          { canInitialize ? <a className='button button--small button--green button--add-small form-group__element--right new-request-button' href={initiateRequestSelectDaac} aria-label="Create new request">New Request</a> : null }
-        </div>
-        {!list
-          ? <Loading />
-          : <List
-          list={list}
-          tableColumns={tableColumns}
-          query={query}
-          rowId='id'
-          filterIdx='name'
-          filterPlaceholder='Search Requests'
-        >
-        </List>
-        }
-      </section>
-      <Meditor></Meditor>
-    </div>
-    );
+    if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
+      if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
+        const searchElement = document.querySelector('.request-section input.search');
+
+        searchElement.addEventListener('change', () => {
+          this.setState({ list: this.filter(this.state.originalList) });
+        });
+      }
+      const query = this.generateQuery();
+      const { canInitialize } = requestPrivileges(this.props.privileges);
+      const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
+      const list = this.state.list;
+      const { queriedAt } = list.meta;
+      const unique = [...new Set(list.data.map(item => item.id))];
+      return (
+      <div className='page__component'>
+        <section className='page__section page__section__controls'>
+          <Breadcrumbs config={breadcrumbConfig} />
+        </section>
+        <section className='page__section page__section__header-wrapper'>
+          <div className='page__section__header'>
+            <h1 className='heading--large heading--shared-content with-description '>{strings.requests}</h1>
+            {lastUpdated(queriedAt)}
+            {/* <Overview items={overviewItems} inflight={false} /> */}
+          </div>
+        </section>
+        <section className='page__section page__section__controls request-section'>
+          <div className='heading__wrapper--border'>
+            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
+            { canInitialize ? <a className='button button--small button--green button--add-small form-group__element--right new-request-button' href={initiateRequestSelectDaac} aria-label="Create new request">New Request</a> : null }
+          </div>
+          {!list
+            ? <Loading />
+            : <List
+                list={list}
+                tableColumns={tableColumns}
+                query={query}
+                rowId='id'
+                filterIdx='name'
+                filterPlaceholder='Search Requests'
+              >
+              <Select
+                id="producerSelect"
+                options={this.state.producers}
+                onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
+                isSearchable={true}
+                placeholder='Select Data Producer'
+                className='selectButton'
+                isMulti={true}
+              />
+              </List>
+          }
+        </section>
+        <Meditor></Meditor>
+      </div>
+      );
+    }
+    return null;
   }
 }
 

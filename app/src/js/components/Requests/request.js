@@ -6,10 +6,13 @@ import { connect } from 'react-redux';
 import {
   getRequest,
   getDaac,
+  getUser,
+  getWorkflow,
   withdrawRequest,
   restoreRequest,
   addUserToRequest,
-  listWorkflows
+  listWorkflows,
+  setWorkflowStep
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -26,7 +29,6 @@ import {
 } from '../../utils/table-config/requests';
 import Loading from '../LoadingIndicator/loading-indicator';
 // import LogViewer from '../Logs/viewer';
-import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 import AsyncCommands from '../DropDown/dropdown-async-command';
 import { strings } from '../locale';
@@ -36,6 +38,7 @@ import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 import _config from '../../config';
 import Meditor from '../MeditorModal/modal';
 import SearchModal from '../SearchModal';
+import Select from 'react-select';
 
 export const getRoles = () => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
@@ -55,7 +58,7 @@ export const getRoles = () => {
 class RequestOverview extends React.Component {
   constructor () {
     super();
-    this.state = { daacName: '' };
+    this.state = { daacName: '', current: {}, names: {} };
     this.reload = this.reload.bind(this);
     this.fastReload = this.fastReload.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
@@ -71,7 +74,10 @@ class RequestOverview extends React.Component {
     this.submitCallback = this.submitCallback.bind(this);
     this.openUserForm = this.openUserForm.bind(this);
     this.closeUserForm = this.closeUserForm.bind(this);
-    this.addUser = this.addUser.bind(this);
+    this.setSteps = this.setSteps.bind(this);
+    this.toProperCase = this.toProperCase.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount () {
@@ -81,16 +87,57 @@ class RequestOverview extends React.Component {
     // Commenting out until we add applyWorkflow capability
     // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
     dispatch(getRequest(requestId));
+    this.setState({ showSearch: false });
+    this.setState({ setShowSearch: false });
     setTimeout(() => {
       const record = this.props.requests.detail;
       if (typeof record.data !== 'undefined') {
         this.props.dispatch(getDaac(record.data.daac_id)).then(value => {
           this.setState({ daacName: value.data.long_name });
-          this.setState({ showSearch: false });
-          this.setState({ setShowSearch: false });
         });
+        this.props.dispatch(getWorkflow(record.data.workflow_id)).then(value => {
+          this.setSteps(value.data.steps, record.data.step_name);
+        });
+        if (record.data.contributor_ids !== undefined) {
+          for (const ea in record.data.contributor_ids) {
+            this.props.dispatch(getUser(record.data.contributor_ids[ea])).then(value => {
+              const names = this.state.names;
+              names[value.data.id] = value.data.name;
+              this.setState({ names: names });
+            });
+          }
+        }
       }
-    }, 2000);
+    }, 1500);
+  }
+
+  toProperCase (str) {
+    return str.replace(
+      /\w\S*/g,
+      function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
+  }
+
+  setSteps (steps, current) {
+    const tmp = [];
+    for (const ea in steps) {
+      if (ea === current) {
+        this.setState({ current: { value: ea, label: this.toProperCase(ea.replace(/_/g, ' ')) } });
+      }
+      tmp.push({ value: ea, label: this.toProperCase(ea.replace(/_/g, ' ')) });
+    }
+    this.setState({ steps: tmp });
+  }
+
+  handleSelect (e, stepName) {
+    this.setState({ current: e });
+    if (JSON.stringify(this.state.current) !== JSON.stringify(e) && stepName !== e.value) {
+      document.querySelector('.save-section').classList.remove('hidden');
+    } else {
+      document.querySelector('.save-section').classList.add('hidden');
+    }
   }
 
   reload (immediate, timeout) {
@@ -121,6 +168,19 @@ class RequestOverview extends React.Component {
     history.push(`/workflows?requestId=${requestId}`);
   }
 
+  async handleSubmit () {
+    const { requestId } = this.props.match.params;
+    const record = this.props.requests.detail;
+    const payload = {
+      id: requestId,
+      workflow_id: record.data.workflow_id,
+      step_name: this.state.current.value
+    };
+    await this.props.dispatch(setWorkflowStep(payload));
+    await this.props.dispatch(getRequest(requestId));
+    document.querySelector('.save-section').classList.add('hidden');
+  }
+
   async delete () {
     const { requestId } = this.props.match.params;
     await this.props.dispatch(withdrawRequest(requestId));
@@ -141,13 +201,6 @@ class RequestOverview extends React.Component {
     this.setState({ showSearch: false });
   }
 
-  async addUser () {
-    const { requestId } = this.props.match.params;
-    const { userId } = this.props.match.params;
-    await this.props.dispatch(addUserToRequest(requestId, userId));
-    this.navigateBack();
-  }
-
   async exportMetadata () {
     const mappedData = JSON.stringify(this.props.requests.detail.data.metadata, null, 2);
     const a = document.createElement('a');
@@ -157,34 +210,52 @@ class RequestOverview extends React.Component {
     a.click();
   }
 
-  // This method is unnecessary now, it checks for any errors on any of the requests queried so far,
-  // since this is a detailed view of a single request we are only concerned with an error for that one
-  // so no need to relegate the error check to a separate function
-  // errors () {
-  //   const requestId = this.props.match.params.requestId;
-  //   return [
-  //     get(this.props.requests.map, [requestId, 'error']),
-  //     get(this.props.requests.reprocessed, [requestId, 'error']),
-  //     get(this.props.requests.reingested, [requestId, 'error']),
-  //     get(this.props.requests.executed, [requestId, 'error']),
-  //     get(this.props.requests.removed, [requestId, 'error']),
-  //     get(this.props.requests.deleted, [requestId, 'error'])
-  //   ].filter(Boolean);
-  // }
-
   selectWorkflow (selector, workflow) {
     this.setState({ workflow });
   }
 
-  submitCallback () {
+  async submitCallback (id) {
     const { requestId } = this.props.match.params;
-    const { userId } = this.props.match.params;
-    const params = {
-      requestId: requestId,
-      userId: userId
+    const payload = {
+      id: requestId,
+      contributor_ids: [id]
     };
-    this.props.dispatch(addUserToRequest(params));
-    this.setState({ setShowSearch: false });
+    await this.props.dispatch(addUserToRequest(payload));
+    await this.closeUserForm();
+    await window.location.reload(false);
+  }
+
+  renderWorkflowSave (record) {
+    return (
+      <>
+        <br></br>
+        <div className='page__section__header'>
+          <h1 className='heading--small' aria-labelledby='Set the current workflow step'>
+            Set the current workflow step
+          </h1>
+        </div>
+        <div className='indented__details'>
+          <div className="request-section">
+            <Select
+              id="workflowSelect"
+              options={this.state.steps}
+              onChange={(e) => this.handleSelect(e, record.data.step_name)}
+              isSearchable={true}
+              value={this.state.current}
+              placeholder='Set Current Workflow Step'
+              className='selectButton'
+              isMulti={false} />
+          </div>
+          <br></br>
+          <section className='page__section save-section hidden'>
+            <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
+              onClick={this.handleSubmit} aria-label="change workflow step">
+              Save
+            </button>
+          </section>
+        </div>
+      </>
+    );
   }
 
   render () {
@@ -205,10 +276,14 @@ class RequestOverview extends React.Component {
       canReassign = false;
     }
     const { canEdit } = formPrivileges(this.props.privileges);
+    let workflowSave;
+    if (canWithdraw && canRestore) {
+      workflowSave = this.renderWorkflowSave(record);
+    }
     const allRoles = getRoles();
     let canViewUsers = false;
     let canAddDataUser = false;
-    if (typeof allRoles !== 'undefined' && (allRoles.isAdmin || allRoles.isManager)) {
+    if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
       canViewUsers = true;
       canAddDataUser = true;
     }
@@ -223,7 +298,6 @@ class RequestOverview extends React.Component {
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
     let dropdownConfig = [];
-
     if (!isHidden) {
       dropdownConfig = [
         {
@@ -257,16 +331,6 @@ class RequestOverview extends React.Component {
       });
     }
 
-    if (canAddDataUser && !isHidden) {
-      dropdownConfig.push({
-        text: 'Add User to Request',
-        action: this.openUserForm,
-        status: openStatus,
-        success: this.navigateBack,
-        confirmAction: false
-      });
-    }
-
     dropdownConfig.push({
       text: 'Export Metadata',
       action: this.exportMetadata,
@@ -290,8 +354,13 @@ class RequestOverview extends React.Component {
 
     const metaAccessors = [
       {
+        label: 'Data Producer Name',
+        accessor: row => row.form_data && row.form_data.data_producer_info_name ? row.form_data.data_producer_info_name : null
+      },
+      {
         label: 'Daac',
-        accessor: row => this.state.daacName && canEdit ? <a href={`${_config.formsUrl}/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{this.state.daacName}</a> : this.state.daacName ? this.state.daacName : row.daac_id
+        accessor: row => this.state.daacName && canEdit ? <a href={`${_config.formsUrl}/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{this.state.daacName}</a> : this.state.daacName ? this.state.daacName : row.daac_id,
+        classList: 'hidden'
       },
       {
         label: 'Initiator',
@@ -354,7 +423,6 @@ class RequestOverview extends React.Component {
         active: true
       }
     ];
-
     return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
@@ -374,10 +442,66 @@ class RequestOverview extends React.Component {
 
         <section className='page__section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium with-description' aria-label={strings.request_overview}>{strings.request_overview}</h2>
+            <h1 className='heading--small' aria-labelledby={strings.request_overview}>
+              {strings.request_overview}
+            </h1>
           </div>
-          { record.inflight ? <Loading /> : record.error ? <ErrorReport report={record.error} /> : request ? <Metadata data={request} accessors={metaAccessors} /> : null }
+          { record.inflight ? <Loading /> : request ? <div className='indented__details'><Metadata data={request} accessors={metaAccessors} /></div> : null }
         </section>
+        <section className='page__section'>
+          <br></br>
+          <div className='page__section__header'>
+            <h1 className='heading--small' aria-labelledby='contributers'>
+              Contributors
+            </h1>
+          </div>
+          <div className='page__content--shortened flex__column'>
+            {
+              record.data && record.data.contributor_ids
+                ? record.data.contributor_ids.map((contributor, key) => {
+                  return (
+                  <div key={key} className='flex__row sm-border'>
+                    <div className='flex__item--w-25'>
+                      {this.state.names[contributor]}
+                    </div>
+                    <div className='flex__item--w-15'>
+                      {canAddDataUser &&
+                        <button
+                          className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                          onClick={() => alert('not yet implemented')}
+                          disabled={record.inflight}>
+                          Remove
+                        </button>
+                      }
+                    </div>
+                  </div>
+                  );
+                })
+                : null
+            }
+            { record.data && record.data.contributor_ids
+              ? canAddDataUser &&
+              <div className='flex__row sm-border'>
+                <div className='flex__item-w-25'>
+                  <button
+                    className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+                    onClick={this.openUserForm}
+                    disabled={record.inflight}>
+                    Add Contributor
+                  </button>
+                </div>
+              </div>
+              : null
+            }
+          </div>
+          </section>
+          {
+            !record.inflight
+              ? <section className='page__section'>
+              {workflowSave}
+            </section>
+              : null
+          }
         <Meditor></Meditor>
         { showTable
           ? <section className='page__section'>

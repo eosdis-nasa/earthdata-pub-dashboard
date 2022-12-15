@@ -83,6 +83,9 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
       };
       dispatch(createUser(payload));
       history.push('/users');
+      setTimeout(() => {
+        window.location.reload(false);
+      }, '500')
     } else {
       !name ? setName('Required Input') : '';
       !username ? setUsername('Required Input') : '';
