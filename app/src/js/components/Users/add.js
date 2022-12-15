@@ -11,8 +11,9 @@ import {
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import Select from 'react-select';
+import { userPrivileges } from '../../utils/privileges';
 
-const AddUser = ({ dispatch, match, groups, roles }) => {
+const AddUser = ({ dispatch, match, groups, roles, privileges }) => {
   const { userId } = match.params;
   useEffect(() => {
     dispatch(listRoles());
@@ -101,7 +102,7 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
     const borderColor = (!failCondition || failCondition === 'Required Input') && missingReq ? '#DB1400' : '';
     return borderColor;
   };
-
+  const { canCreate } = userPrivileges(privileges);
   return (
     <div className='page__content'>
       <div className='page__component'>
@@ -165,16 +166,20 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
                   placeholder='Select Groups ...'
                 /></label>
               </section>
-              <section className='page__section'>
-                <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
-                to={'/users'} id='cancelButton' aria-label="cancel user editing">
-                    Cancel
-                </Link>
-                <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
-                onClick={handleSubmit} aria-label="submit your user">
-                    Submit
-                </button>
-              </section>
+              {
+                canCreate
+                  ? <section className='page__section'>
+                  <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
+                  to={'/users'} id='cancelButton' aria-label="cancel user editing">
+                      Cancel
+                  </Link>
+                  <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
+                  onClick={handleSubmit} aria-label="submit your user">
+                      Submit
+                  </button>
+                </section>
+                  : null
+              }
           </div>
         }
       </div>

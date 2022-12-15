@@ -279,7 +279,7 @@ class RequestOverview extends React.Component {
       isHidden = record.data.hidden;
     }
     const request = record.data || false;
-    let { canReassign, canWithdraw, canRestore } = requestPrivileges(this.props.privileges);
+    let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser } = requestPrivileges(this.props.privileges);
     if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
       canReassign = false;
     }
@@ -290,10 +290,8 @@ class RequestOverview extends React.Component {
     }
     const allRoles = getRoles();
     let canViewUsers = false;
-    let canAddDataUser = false;
     if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
       canViewUsers = true;
-      canAddDataUser = true;
     }
     const requestForms = request.forms;
     let showTable = false;
@@ -473,7 +471,7 @@ class RequestOverview extends React.Component {
                       {this.state.names[contributor]}
                     </div>
                     <div className='flex__item--w-15'>
-                      {canAddDataUser &&
+                      {canRemoveUser &&
                         <button
                           className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
                           onClick={(e) => this.handleRemove(contributor)}
@@ -488,7 +486,7 @@ class RequestOverview extends React.Component {
                 : null
             }
             { record.data && record.data.contributor_ids
-              ? canAddDataUser &&
+              ? canAddUser &&
               <div className='flex__row sm-border'>
                 <div className='flex__item-w-25'>
                   <button
