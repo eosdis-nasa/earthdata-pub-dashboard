@@ -126,22 +126,22 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
         // "group_id": group_id
         // }
             <div className='page__content'>
-              <section className='page__section page__section__controls request-section'>
+              <section className='page__section page__section__controls user-section'>
                 <div className='heading__wrapper--border'>
                   <h2 className='heading--medium heading--shared-content with-description'>Add User</h2>
                 </div>
                 <label className='heading--small' htmlFor="username">Username</label>
                 <input type="text" id="username" name="username" value={username} onChange={e => setUsername(e.target.value)}
                   onClick = {() => { username === 'Required Input' ? setUsername('') : ''; }}
-                  style={{ borderColor: errorCheck(username) }} /><br></br><br></br>
+                  style={{ borderColor: errorCheck(username) }} />
                 <label className='heading--small' htmlFor="email">Email</label>
                 <input type="text" name="email" id="email" value={email} onChange={handleEmail}
                   onClick = {() => { email === 'Invalid Email' ? setEmail('') : ''; }}
-                  style={{ borderColor: errorCheck(validEmail) }} /><br></br><br></br>
+                  style={{ borderColor: errorCheck(validEmail) }} />
                 <label className='heading--small' htmlFor="name">Name</label>
                 <input type="text" name="name" id="name" value={name} onChange={e => setName(e.target.value)}
                   onClick = {() => { name === 'Required Input' ? setName('') : ''; }}
-                  style={{ borderColor: errorCheck(name) }} /><br></br><br></br>
+                  style={{ borderColor: errorCheck(name) }} />
                 <label className='heading--small'>Roles
                 <Select
                   id="roleSelect"
@@ -152,7 +152,7 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
                   isMulti={true}
                   className='selectButton'
                   placeholder='Select Roles ...'
-                /></label><br></br>
+                /></label>
                 <label className='heading--small'>Groups
                 <Select
                 id="groupSelect"
@@ -163,7 +163,7 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
                   isMulti={true}
                   className='selectButton'
                   placeholder='Select Groups ...'
-                /></label><br></br>
+                /></label>
               </section>
               <section className='page__section'>
                 <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
