@@ -19,8 +19,8 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
     dispatch(listGroups());
   }, []);
   useEffect(() => {
-    setRoleOptions(roles.map(({ id, long_name}) => ({value:id, label: long_name})));
-    setGroupOptions(groups.map(({id, long_name}) => ({value:id, label: long_name})));
+    setRoleOptions(roles.map(({ id, long_name }) => ({ value: id, label: long_name })));
+    setGroupOptions(groups.map(({ id, long_name }) => ({ value: id, label: long_name })));
   }, [groups, roles]);
   const history = useHistory();
   const [showSearch, setShowSearch] = useState(false);
@@ -85,7 +85,7 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
       history.push('/users');
       setTimeout(() => {
         window.location.reload(false);
-      }, '500')
+      }, '500');
     } else {
       !name ? setName('Required Input') : '';
       !username ? setUsername('Required Input') : '';
@@ -126,62 +126,55 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
         // "group_id": group_id
         // }
             <div className='page__content'>
-            <section className='page__section'>
-              <div className='page__section__header'>
-                <h1 className='heading--small heading--shared-content with-description '>
-                  User Details
-                </h1>
-                <form>
-                <label className='heading--small'>Username
-                    <input type="text" name="username" value={username} onChange={e => setUsername(e.target.value)}
-                      onClick = {() => { username === 'Required Input' ? setUsername('') : ''; }}
-                      style={{ borderColor: errorCheck(username) }} />
-                </label>
-                <label className='heading--small'>Email
-                    <input type="text" name="email" value={email} onChange={handleEmail}
-                      onClick = {() => { email === 'Invalid Email' ? setEmail('') : ''; }}
-                      style={{ borderColor: errorCheck(validEmail) }} />
-                </label>
-                <label className='heading--small'>Name
-                    <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}
-                      onClick = {() => { name === 'Required Input' ? setName('') : ''; }}
-                      style={{ borderColor: errorCheck(name) }} />
-                </label>
+              <section className='page__section page__section__controls request-section'>
+                <div className='heading__wrapper--border'>
+                  <h2 className='heading--medium heading--shared-content with-description'>Add User</h2>
+                </div>
+                <label className='heading--small' htmlFor="username">Username</label>
+                <input type="text" id="username" name="username" value={username} onChange={e => setUsername(e.target.value)}
+                  onClick = {() => { username === 'Required Input' ? setUsername('') : ''; }}
+                  style={{ borderColor: errorCheck(username) }} /><br></br><br></br>
+                <label className='heading--small' htmlFor="email">Email</label>
+                <input type="text" name="email" id="email" value={email} onChange={handleEmail}
+                  onClick = {() => { email === 'Invalid Email' ? setEmail('') : ''; }}
+                  style={{ borderColor: errorCheck(validEmail) }} /><br></br><br></br>
+                <label className='heading--small' htmlFor="name">Name</label>
+                <input type="text" name="name" id="name" value={name} onChange={e => setName(e.target.value)}
+                  onClick = {() => { name === 'Required Input' ? setName('') : ''; }}
+                  style={{ borderColor: errorCheck(name) }} /><br></br><br></br>
                 <label className='heading--small'>Roles
-                  <div style={{width:300}}>
-                      <Select
-                      options={roleOptions}
-                      value={selectedRoles}
-                      onChange={handleRoleSelect}
-                      isSearchable={true}
-                      isMulti={true}
-                    />
-                  </div>
-                </label>
+                <Select
+                  id="roleSelect"
+                  options={roleOptions}
+                  value={selectedRoles}
+                  onChange={handleRoleSelect}
+                  isSearchable={true}
+                  isMulti={true}
+                  className='selectButton'
+                  placeholder='Select Roles ...'
+                /></label><br></br>
                 <label className='heading--small'>Groups
-                  <div style={{width:300}}>
-                    <Select
-                      options={groupOptions}
-                      value={selectedGroups}
-                      onChange={handleGroupSelect}
-                      isSearchable={true}
-                      isMulti={true}
-                    />
-                  </div>
-                </label>
-                </form>
-              </div>
-            </section>
-            <section className='page__section'>
-                  <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
-                  to={'/users'} id='cancelButton' aria-label="cancel user editing">
-                      Cancel
-                  </Link>
-                  <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
-                  onClick={handleSubmit} aria-label="submit your user">
-                      Submit
-                  </button>
-                </section>
+                <Select
+                id="groupSelect"
+                  options={groupOptions}
+                  value={selectedGroups}
+                  onChange={handleGroupSelect}
+                  isSearchable={true}
+                  isMulti={true}
+                  className='selectButton'
+                  placeholder='Select Groups ...'
+                /></label><br></br>
+              </section>
+              <section className='page__section'>
+                <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
+                to={'/users'} id='cancelButton' aria-label="cancel user editing">
+                    Cancel
+                </Link>
+                <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
+                onClick={handleSubmit} aria-label="submit your user">
+                    Submit
+                </button>
+              </section>
           </div>
         }
       </div>

@@ -34,6 +34,10 @@ div.selectButton {
 div#producerSelect.selectButton {
   width: inherit;
 }
+div#roleSelect.selectButton,
+div#groupSelect.selectButton {
+  min-width: 188.5px;
+}
 div.selectButton div {
   border-radius: 0.5em;
   font-size: 12.04px;
@@ -41,7 +45,7 @@ div.selectButton div {
 }
 div.selectButton {
   border-radius: 0.5em;
-  width: 300px;
+  width: fit-content;
 }
 div.selectButton div[class^=" css"][class$="control"] {
   border: 1px solid #eceaea;

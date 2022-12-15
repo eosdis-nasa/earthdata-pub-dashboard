@@ -487,7 +487,7 @@ class RequestOverview extends React.Component {
                     className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
                     onClick={this.openUserForm}
                     disabled={record.inflight}>
-                    Add Contributor
+                    Add Contributor&nbsp;&nbsp;
                   </button>
                 </div>
               </div>
