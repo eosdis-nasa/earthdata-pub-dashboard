@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
-- Added adding contributor to request details page for admin
+- Added adding and removal of contributor to request details page for admin
 - Added changing of workflow step to request detail form.
 - Added producer name and filter to request pages
 

@@ -356,6 +356,15 @@ export const addUserToRequest = (payload) => ({
   }
 });
 
+export const removeUserFromRequest = (requestId, userId) => ({
+  [CALL_API]: {
+    type: types.REQUEST_DELETEUSER,
+    method: 'POST',
+    path: 'data/submission/operation/removeContributor',
+    body: { id: requestId, contributor_id: userId }
+  }
+});
+
 export const deleteRequest = (requestId) => ({
   [CALL_API]: {
     type: types.REQUEST_DELETE,

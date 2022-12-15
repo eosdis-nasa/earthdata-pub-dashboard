@@ -11,6 +11,7 @@ import {
   withdrawRequest,
   restoreRequest,
   addUserToRequest,
+  removeUserFromRequest,
   listWorkflows,
   setWorkflowStep
 } from '../../actions';
@@ -78,6 +79,7 @@ class RequestOverview extends React.Component {
     this.toProperCase = this.toProperCase.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
   }
 
   componentDidMount () {
@@ -179,6 +181,12 @@ class RequestOverview extends React.Component {
     await this.props.dispatch(setWorkflowStep(payload));
     await this.props.dispatch(getRequest(requestId));
     document.querySelector('.save-section').classList.add('hidden');
+  }
+
+  async handleRemove (contributor) {
+    const { requestId } = this.props.match.params;
+    await this.props.dispatch(removeUserFromRequest(requestId, contributor));
+    await this.props.dispatch(getRequest(requestId));
   }
 
   async delete () {
@@ -468,7 +476,7 @@ class RequestOverview extends React.Component {
                       {canAddDataUser &&
                         <button
                           className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
-                          onClick={() => alert('not yet implemented')}
+                          onClick={(e) => this.handleRemove(contributor)}
                           disabled={record.inflight}>
                           Remove
                         </button>
