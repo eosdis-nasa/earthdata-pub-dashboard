@@ -12,16 +12,29 @@ import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import Select from 'react-select';
 
-const AddUser = ({ dispatch, match, groups, roles }) => {
+const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
+
   const { userId } = match.params;
   useEffect(() => {
     dispatch(listRoles());
     dispatch(listGroups());
   }, []);
+
   useEffect(() => {
     setRoleOptions(roles.map(({ id, long_name}) => ({value:id, label: long_name})));
     setGroupOptions(groups.map(({id, long_name}) => ({value:id, label: long_name})));
   }, [groups, roles]);
+
+  useEffect(() => {
+    if(newUserStatus.error === 'Duplicate email' && email){
+      setValidEmail(false);
+      setEmail(email? 'Email already exits':'');
+      setMissingReq(true);
+    }else if(newUserStatus.name === name){
+      history.push('/users');
+    }
+  }, [newUserStatus])
+
   const history = useHistory();
   const [showSearch, setShowSearch] = useState(false);
   const [searchOptions, setSearchOptions] = useState({});
@@ -72,6 +85,12 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
     setValidEmail(input.match(/^\S+@\S+\.\S+$/));
   };
 
+  const handleEmailClick = () =>{
+    if(email === 'Invalid Email' || email === 'Email already exits'){
+      setEmail('');
+    }
+  }
+
   const handleSubmit = () => {
     if (validEmail && name && username && email) {
       const payload = {
@@ -82,7 +101,6 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
         group_ids: extractId(selectedGroups)
       };
       dispatch(createUser(payload));
-      history.push('/users');
     } else {
       !name ? setName('Required Input') : '';
       !username ? setUsername('Required Input') : '';
@@ -136,7 +154,7 @@ const AddUser = ({ dispatch, match, groups, roles }) => {
                 </label>
                 <label className='heading--small'>Email
                     <input type="text" name="email" value={email} onChange={handleEmail}
-                      onClick = {() => { email === 'Invalid Email' ? setEmail('') : ''; }}
+                      onClick = {handleEmailClick}
                       style={{ borderColor: errorCheck(validEmail) }} />
                 </label>
                 <label className='heading--small'>Name
@@ -193,7 +211,8 @@ AddUser.propTypes = {
   match: PropTypes.object,
   user_groups: PropTypes.array,
   groups: PropTypes.array,
-  roles: PropTypes.array
+  roles: PropTypes.array,
+  newUserStatus: PropTypes.object
 };
 
 export default withRouter(connect(state => ({
@@ -201,5 +220,6 @@ export default withRouter(connect(state => ({
   privileges: state.api.tokens.privileges,
   user_groups: state.api.tokens.groups,
   groups: state.groups.list.data,
-  roles: state.roles.list.data
+  roles: state.roles.list.data,
+  newUserStatus: state.users.detail.data
 }))(AddUser));
