@@ -13,16 +13,28 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import Select from 'react-select';
 import { userPrivileges } from '../../utils/privileges';
 
-const AddUser = ({ dispatch, match, groups, roles, privileges }) => {
+const AddUser = ({ dispatch, match, groups, roles, privileges, newUserStatus }) => {
   const { userId } = match.params;
   useEffect(() => {
     dispatch(listRoles());
     dispatch(listGroups());
   }, []);
+
   useEffect(() => {
     setRoleOptions(roles.map(({ id, long_name }) => ({ value: id, label: long_name })));
     setGroupOptions(groups.map(({ id, long_name }) => ({ value: id, label: long_name })));
   }, [groups, roles]);
+
+  useEffect(() => {
+    if (newUserStatus.error === 'Duplicate email' && email) {
+      setValidEmail(false);
+      setEmail(email ? 'Email already exits' : '');
+      setMissingReq(true);
+    } else if (newUserStatus.name === name) {
+      history.push('/users');
+    }
+  }, [newUserStatus]);
+
   const history = useHistory();
   const [showSearch, setShowSearch] = useState(false);
   const [searchOptions, setSearchOptions] = useState({});
@@ -71,6 +83,12 @@ const AddUser = ({ dispatch, match, groups, roles, privileges }) => {
     const input = event.target.value;
     setEmail(input);
     setValidEmail(input.match(/^\S+@\S+\.\S+$/));
+  };
+
+  const handleEmailClick = () => {
+    if (email === 'Invalid Email' || email === 'Email already exits') {
+      setEmail('');
+    }
   };
 
   const handleSubmit = () => {
@@ -194,7 +212,8 @@ AddUser.propTypes = {
   match: PropTypes.object,
   user_groups: PropTypes.array,
   groups: PropTypes.array,
-  roles: PropTypes.array
+  roles: PropTypes.array,
+  newUserStatus: PropTypes.object
 };
 
 export default withRouter(connect(state => ({
@@ -202,5 +221,6 @@ export default withRouter(connect(state => ({
   privileges: state.api.tokens.privileges,
   user_groups: state.api.tokens.groups,
   groups: state.groups.list.data,
-  roles: state.roles.list.data
+  roles: state.roles.list.data,
+  newUserStatus: state.users.detail.data
 }))(AddUser));
