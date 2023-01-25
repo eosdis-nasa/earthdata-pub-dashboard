@@ -347,6 +347,24 @@ export const restoreRequest = (requestId) => ({
   }
 });
 
+export const addUserToRequest = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUEST_ADDUSER,
+    method: 'POST',
+    path: 'data/submission/operation/addContributors',
+    json: payload
+  }
+});
+
+export const removeUserFromRequest = (requestId, userId) => ({
+  [CALL_API]: {
+    type: types.REQUEST_DELETEUSER,
+    method: 'POST',
+    path: 'data/submission/operation/removeContributor',
+    body: { id: requestId, contributor_id: userId }
+  }
+});
+
 export const deleteRequest = (requestId) => ({
   [CALL_API]: {
     type: types.REQUEST_DELETE,
@@ -547,10 +565,9 @@ export const getOptionsUserGroup = () => ({
 export const getUser = (userId) => ({
   [CALL_API]: {
     type: types.USER,
-    id: userId,
     method: 'GET',
-    path: 'user/find',
-    qs: { id: userId }
+    id: userId,
+    path: `data/user/${userId}`
   }
 });
 

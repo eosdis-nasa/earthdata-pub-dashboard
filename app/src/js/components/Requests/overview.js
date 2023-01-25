@@ -184,7 +184,7 @@ class RequestsOverview extends React.Component {
                 onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
                 isSearchable={true}
                 placeholder='Select Data Producer'
-                className='producer_select'
+                className='selectButton'
                 isMulti={true}
               />
               </List>

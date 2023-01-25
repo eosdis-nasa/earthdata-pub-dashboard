@@ -986,3 +986,61 @@ a:active {
 .react-flow__attribution a {
   display:none!important;
 }
+.request-section .list-action-wrapper{
+  display: inline-flex;
+}
+.user-section input,
+.user-section div[class^=" css"][class$="control"] {
+  margin-bottom:2em;
+}
+div.selectButton {
+  padding: 0;
+}
+div#producerSelect.selectButton {
+  width: inherit;
+}
+div#roleSelect.selectButton,
+div#groupSelect.selectButton {
+  min-width: 188.5px;
+}
+div.selectButton div {
+  border-radius: 0.5em;
+  font-size: 12.04px;
+  line-height: 1em;
+}
+div.selectButton {
+  border-radius: 0.5em;
+  width: fit-content;
+}
+div.selectButton div[class^=" css"][class$="control"] {
+  border: 1px solid #eceaea;
+  font-size: .9em;
+  border-radius: 0.5em;
+  box-shadow: 0 1px 3px #00000014;
+}
+div.selectButton div[class^="css"][class$="control"]:nth-child(3) {
+  border:0;
+}
+div.selectButton div[class^="css"][class$="control"] input{
+  border:0;
+  box-shadow: none;
+}
+div.selectButton span[class^="css"][class$="indicatorContainer"] {
+  border:0;
+}
+div.selectButton div:nth-child(4) {
+  margin-top:0;
+  border-radius:0;
+}
+div.selectButton div:nth-child(4) * {
+  border-radius:0;
+}
+div.selectButton div:nth-child(5) {
+  border-radius:0;
+}
+div.selectButton div input {
+  border-radius:0;
+}
+div.selectButton div div span {
+  width: 0;
+}
