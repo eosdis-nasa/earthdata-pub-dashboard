@@ -835,13 +835,14 @@ export const listRoles = (options) => ({
 export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
 export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
 
-export const getConversation = (conversationId) => ({
+export const getConversation = (conversationId, level = false) => ({
   [CALL_API]: {
     type: types.CONVERSATION,
     method: 'GET',
     id: conversationId,
-    path: `notification/conversation/${conversationId}`
+    path: `notification/conversation/${conversationId}?detailed=${level}`
   }
+  //path: `notification/conversation/${conversationId}?detailed=${level}`
 });
 
 export const listConversations = (options) => ({

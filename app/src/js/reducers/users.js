@@ -122,6 +122,7 @@ export default createReducer(initialState, {
       // Several `results` items can share a `userName`, but
       // these are de-duplciated by the key-value structure
       obj[user.name] = user.name;
+      obj[user.id] = user.id;
       return obj;
     }, { '': '' });
     set(state, ['dropdowns', 'groups', 'options'], options);

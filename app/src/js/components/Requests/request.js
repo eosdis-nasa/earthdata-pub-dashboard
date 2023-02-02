@@ -395,11 +395,6 @@ class RequestOverview extends React.Component {
         property: 'last_change'
       },
       {
-        label: 'Locked',
-        accessor: row => row && row.lock ? bool(row.lock) : null,
-        property: 'lock'
-      },
-      {
         label: 'Communication',
         accessor: conversationId => <Link to={`/conversations/id/${conversationId}`} aria-label="View your conversations">{conversationId ? 'Conversation' : null}</Link>,
         property: 'conversation_id'

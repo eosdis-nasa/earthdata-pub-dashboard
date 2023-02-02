@@ -16,6 +16,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added adding and removal of contributor to request details page
 - Added changing of workflow step to request detail form.
 - Added producer name and filter to request pages
+- Added level filtering to conversations detail page.
+- Add conversations to header
+- Changed Hi user to go to user detail page
+- Remove locked column from Requests
+- Removed request columns widths.
+- Change css of header to have no max width
+- Left dark blue pane style changes
+- Added helpPageDefault config option linking to the Overview apps, 'How to Use Edpub' page
 
 ## 1.0.10 - 2022-11-10
 

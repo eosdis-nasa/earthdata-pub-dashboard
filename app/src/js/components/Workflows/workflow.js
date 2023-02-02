@@ -133,7 +133,7 @@ class Workflows extends React.Component {
       const box = document.querySelector('.page__content--shortened');
       const width = box.offsetWidth;
       reactFlowStyle = {
-        left: `${(width - 350) / 2}px`,
+        left: `${(width - 275) / 2}px`,
         position: 'absolute',
         top: '475px'
       };
