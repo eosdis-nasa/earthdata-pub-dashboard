@@ -27,7 +27,8 @@ export const userPrivileges = (privileges) => {
       canRemoveRole: true,
       canAddGroup: true,
       canRemoveGroup: true,
-      canAddPermission: true
+      canAddPermission: true,
+      canCreate: true
     };
   } else if (privileges.USER) {
     return {
@@ -36,14 +37,18 @@ export const userPrivileges = (privileges) => {
       canRemoveRole: privileges.USER.includes('REMOVEROLE'),
       canAddGroup: privileges.USER.includes('ADDGROUP'),
       canRemoveGroup: privileges.USER.includes('REMOVEGROUP'),
-      canAddPermission: privileges.USER.includes('ADDPERMISSION')
+      canAddPermission: privileges.USER.includes('ADDPERMISSION'),
+      canCreate: privileges.USER.includes('CREATE'),
+      canDelete: privileges.USER.includes('DELETE')
     };
   }
   return {
     canRead: false,
     canAddRole: false,
     canAddGroup: false,
-    canAddPermission: false
+    canAddPermission: false,
+    canCreate: false,
+    canDelete: false
   };
 };
 
@@ -60,7 +65,9 @@ export const requestPrivileges = (privileges) => {
       canLock: true,
       canUnlock: true,
       canWithdraw: true,
-      canRestore: true
+      canRestore: true,
+      canAddUser: true,
+      canRemoveUser: true
     };
   } else if (privileges.REQUEST) {
     return {
@@ -77,7 +84,9 @@ export const requestPrivileges = (privileges) => {
       canWithdraw: privileges.REQUEST.find(a =>
         a === 'DAACREAD' || a === 'ADMINREAD'),
       canRestore: privileges.REQUEST.find(a =>
-        a === 'DAACREAD' || a === 'ADMINREAD')
+        a === 'DAACREAD' || a === 'ADMINREAD'),
+      canAddUser: privileges.REQUEST.includes('ADDUSER'),
+      canRemoveUser: privileges.REQUEST.includes('REMOVEUSER'),
     };
   }
   return {
@@ -91,7 +100,9 @@ export const requestPrivileges = (privileges) => {
     canLock: false,
     canUnlock: false,
     canWithdraw: false,
-    canRestore: false
+    canRestore: false,
+    canAddUser: false,
+    canRemoveUser: false
   };
 };
 

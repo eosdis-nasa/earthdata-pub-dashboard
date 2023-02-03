@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 - Applied question privileges to questions page
+- Applied REQUEST_ADDUSER and REQUEST_REMOVEUSER to request page.
+- Applied privileges to user/overview.js and user/add.js.
+- Added REQUEST_ADDUSER and REQUEST_REMOVEUSER for adding and removing contributors in requestPrivileges.
+- Added privileges for creating and deleting user to userPrivileges.
+- Added adding and removal of contributor to request details page
 - Added changing of workflow step to request detail form.
 - Added producer name and filter to request pages
 

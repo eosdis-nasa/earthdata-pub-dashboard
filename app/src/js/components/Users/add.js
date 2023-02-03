@@ -11,9 +11,9 @@ import {
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import Select from 'react-select';
+import { userPrivileges } from '../../utils/privileges';
 
-const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
-
+const AddUser = ({ dispatch, match, groups, roles, privileges, newUserStatus }) => {
   const { userId } = match.params;
   useEffect(() => {
     dispatch(listRoles());
@@ -21,19 +21,19 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
   }, []);
 
   useEffect(() => {
-    setRoleOptions(roles.map(({ id, long_name}) => ({value:id, label: long_name})));
-    setGroupOptions(groups.map(({id, long_name}) => ({value:id, label: long_name})));
+    setRoleOptions(roles.map(({ id, long_name }) => ({ value: id, label: long_name })));
+    setGroupOptions(groups.map(({ id, long_name }) => ({ value: id, label: long_name })));
   }, [groups, roles]);
 
   useEffect(() => {
-    if(newUserStatus.error === 'Duplicate email' && email){
+    if (newUserStatus.error === 'Duplicate email' && email) {
       setValidEmail(false);
-      setEmail(email? 'Email already exits':'');
+      setEmail(email ? 'Email already exits' : '');
       setMissingReq(true);
-    }else if(newUserStatus.name === name){
+    } else if (newUserStatus.name === name) {
       history.push('/users');
     }
-  }, [newUserStatus])
+  }, [newUserStatus]);
 
   const history = useHistory();
   const [showSearch, setShowSearch] = useState(false);
@@ -85,11 +85,11 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
     setValidEmail(input.match(/^\S+@\S+\.\S+$/));
   };
 
-  const handleEmailClick = () =>{
-    if(email === 'Invalid Email' || email === 'Email already exits'){
+  const handleEmailClick = () => {
+    if (email === 'Invalid Email' || email === 'Email already exits') {
       setEmail('');
     }
-  }
+  };
 
   const handleSubmit = () => {
     if (validEmail && name && username && email) {
@@ -101,6 +101,10 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
         group_ids: extractId(selectedGroups)
       };
       dispatch(createUser(payload));
+      history.push('/users');
+      setTimeout(() => {
+        window.location.reload(false);
+      }, '500');
     } else {
       !name ? setName('Required Input') : '';
       !username ? setUsername('Required Input') : '';
@@ -116,7 +120,7 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
     const borderColor = (!failCondition || failCondition === 'Required Input') && missingReq ? '#DB1400' : '';
     return borderColor;
   };
-
+  const { canCreate } = userPrivileges(privileges);
   return (
     <div className='page__content'>
       <div className='page__component'>
@@ -141,53 +145,48 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
         // "group_id": group_id
         // }
             <div className='page__content'>
-            <section className='page__section'>
-              <div className='page__section__header'>
-                <h1 className='heading--small heading--shared-content with-description '>
-                  User Details
-                </h1>
-                <form>
-                <label className='heading--small'>Username
-                    <input type="text" name="username" value={username} onChange={e => setUsername(e.target.value)}
-                      onClick = {() => { username === 'Required Input' ? setUsername('') : ''; }}
-                      style={{ borderColor: errorCheck(username) }} />
-                </label>
-                <label className='heading--small'>Email
-                    <input type="text" name="email" value={email} onChange={handleEmail}
-                      onClick = {handleEmailClick}
-                      style={{ borderColor: errorCheck(validEmail) }} />
-                </label>
-                <label className='heading--small'>Name
-                    <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}
-                      onClick = {() => { name === 'Required Input' ? setName('') : ''; }}
-                      style={{ borderColor: errorCheck(name) }} />
-                </label>
+              <section className='page__section page__section__controls user-section'>
+                <div className='heading__wrapper--border'>
+                  <h2 className='heading--medium heading--shared-content with-description'>Add User</h2>
+                </div>
+                <label className='heading--small' htmlFor="username">Username</label>
+                <input type="text" id="username" name="username" value={username} onChange={e => setUsername(e.target.value)}
+                  onClick = {() => { username === 'Required Input' ? setUsername('') : ''; }}
+                  style={{ borderColor: errorCheck(username) }} />
+                <label className='heading--small' htmlFor="email">Email</label>
+                <input type="text" name="email" id="email" value={email} onChange={handleEmail}
+                  onClick = {() => { email === 'Invalid Email' ? setEmail('') : ''; }}
+                  style={{ borderColor: errorCheck(validEmail) }} />
+                <label className='heading--small' htmlFor="name">Name</label>
+                <input type="text" name="name" id="name" value={name} onChange={e => setName(e.target.value)}
+                  onClick = {() => { name === 'Required Input' ? setName('') : ''; }}
+                  style={{ borderColor: errorCheck(name) }} />
                 <label className='heading--small'>Roles
-                  <div style={{width:300}}>
-                      <Select
-                      options={roleOptions}
-                      value={selectedRoles}
-                      onChange={handleRoleSelect}
-                      isSearchable={true}
-                      isMulti={true}
-                    />
-                  </div>
-                </label>
+                <Select
+                  id="roleSelect"
+                  options={roleOptions}
+                  value={selectedRoles}
+                  onChange={handleRoleSelect}
+                  isSearchable={true}
+                  isMulti={true}
+                  className='selectButton'
+                  placeholder='Select Roles ...'
+                /></label>
                 <label className='heading--small'>Groups
-                  <div style={{width:300}}>
-                    <Select
-                      options={groupOptions}
-                      value={selectedGroups}
-                      onChange={handleGroupSelect}
-                      isSearchable={true}
-                      isMulti={true}
-                    />
-                  </div>
-                </label>
-                </form>
-              </div>
-            </section>
-            <section className='page__section'>
+                <Select
+                id="groupSelect"
+                  options={groupOptions}
+                  value={selectedGroups}
+                  onChange={handleGroupSelect}
+                  isSearchable={true}
+                  isMulti={true}
+                  className='selectButton'
+                  placeholder='Select Groups ...'
+                /></label>
+              </section>
+              {
+                canCreate
+                  ? <section className='page__section'>
                   <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
                   to={'/users'} id='cancelButton' aria-label="cancel user editing">
                       Cancel
@@ -197,6 +196,8 @@ const AddUser = ({ dispatch, match, groups, roles, newUserStatus }) => {
                       Submit
                   </button>
                 </section>
+                  : null
+              }
           </div>
         }
       </div>
