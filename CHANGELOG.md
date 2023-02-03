@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Applied question privileges to questions page
 - Applied REQUEST_ADDUSER and REQUEST_REMOVEUSER to request page.
 - Applied privileges to user/overview.js and user/add.js.
 - Added REQUEST_ADDUSER and REQUEST_REMOVEUSER for adding and removing contributors in requestPrivileges.
