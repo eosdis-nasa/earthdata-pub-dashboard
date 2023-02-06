@@ -20,7 +20,7 @@ services:
       - AUTH_METHOD=earthdata
       - REQUEST_HIDE_BUTTON_VERBAGE=Withdraw
       - REQUEST_UNHIDE_BUTTON_VERBAGE=Restore
-      - HELP_PAGE_DEFAULT=/data_producer_resources/how_to_use_edpub
+      - HELP_PAGE_DEFAULT=http://localhost:8082/data_producer_resources/how_to_use_edpub
   shim:   # empty container to open ports
     image: node:14.19.1
     command:

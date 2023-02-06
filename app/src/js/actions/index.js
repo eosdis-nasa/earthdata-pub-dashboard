@@ -842,7 +842,6 @@ export const getConversation = (conversationId, level = false) => ({
     id: conversationId,
     path: `notification/conversation/${conversationId}?detailed=${level}`
   }
-  //path: `notification/conversation/${conversationId}?detailed=${level}`
 });
 
 export const listConversations = (options) => ({
