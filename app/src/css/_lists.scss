@@ -19,7 +19,10 @@
     margin: .75em 0;
   }
 }
-
+.indented__details {
+  padding-left: 4.5em;
+  width: 90%;
+}
 .email__details {
   font-size: .86em;
   border-bottom: 1px solid $lightest-grey;

@@ -214,7 +214,17 @@ select option{
     margin-right: .8em;
   }
 }
-
+.request-section .list-action-wrapper{
+  display: inline-flex;
+}
+.request-section input.search {
+  font-size:.9em;
+  min-height: 27.5px;
+  margin-right: 5px;
+  margin-bottom:5px;
+  width: 140px;
+  padding-bottom: 3.5px;
+}
 .form__element__updateToggle {
   float: right;
   margin-top: -6px;
@@ -237,7 +247,6 @@ select option{
     min-width: 120px;
   }
 }
-
 .form__element__refresh {
   position: absolute;
   left: -.3em;

@@ -17,6 +17,7 @@ import List from '../Table/Table';
 // import Overview from '../Overview/overview';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import { userPrivileges } from '../../utils/privileges';
 
 const breadcrumbConfig = [
   {
@@ -29,12 +30,13 @@ const breadcrumbConfig = [
   }
 ];
 
-const UsersOverview = ({ users }) => {
+const UsersOverview = ({ users, privileges }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(listUsers());
   }, [users.searchString, dispatch]);
   const { queriedAt } = users.list.meta;
+  const { canCreate } = userPrivileges(privileges);
   return (
     <div className='page__component'>
       <section className='page__section page__section__controls'>
@@ -49,10 +51,14 @@ const UsersOverview = ({ users }) => {
       <section className='page__section'>
         <div className='heading__wrapper--border' style={{ height: '3rem' }}>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_users} <span className='num--title'>{users.list.data.length}</span></h2>
-          <Link
+          {
+            canCreate
+              ? <Link
                 className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right questions-add' to={{ pathname: '/users/add' }}
             >Add User
             </Link>
+              : null
+          }
         </div>
         <List
           list={users.list}
@@ -74,7 +80,8 @@ UsersOverview.propTypes = {
   users: PropTypes.object,
   stats: PropTypes.object,
   dispatch: PropTypes.func,
-  config: PropTypes.object
+  config: PropTypes.object,
+  privileges: PropTypes.object
 };
 
 export { UsersOverview };
@@ -82,5 +89,6 @@ export { UsersOverview };
 export default withRouter(connect(state => ({
   stats: state.stats,
   users: state.users,
+  privileges: state.api.tokens.privileges,
   config: state.config
 }))(UsersOverview));
