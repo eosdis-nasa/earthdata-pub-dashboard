@@ -203,6 +203,15 @@ export const listInactiveRequests = (options) => ({
   }
 });
 
+export const setWorkflowStep = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/submission/operation/changeStep',
+    body: payload
+  }
+});
+
 export const reviewRequest = (id, approve) => {
   return (dispatch) => {
     dispatch({
@@ -335,6 +344,24 @@ export const restoreRequest = (requestId) => ({
     method: 'POST',
     path: 'data/submission/operation/restore',
     body: { id: requestId }
+  }
+});
+
+export const addUserToRequest = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUEST_ADDUSER,
+    method: 'POST',
+    path: 'data/submission/operation/addContributors',
+    json: payload
+  }
+});
+
+export const removeUserFromRequest = (requestId, userId) => ({
+  [CALL_API]: {
+    type: types.REQUEST_DELETEUSER,
+    method: 'POST',
+    path: 'data/submission/operation/removeContributor',
+    body: { id: requestId, contributor_id: userId }
   }
 });
 
@@ -538,10 +565,9 @@ export const getOptionsUserGroup = () => ({
 export const getUser = (userId) => ({
   [CALL_API]: {
     type: types.USER,
-    id: userId,
     method: 'GET',
-    path: 'user/find',
-    qs: { id: userId }
+    id: userId,
+    path: `data/user/${userId}`
   }
 });
 

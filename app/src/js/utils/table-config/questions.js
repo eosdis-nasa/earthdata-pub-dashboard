@@ -4,6 +4,20 @@ import { questionLink } from '../format';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import { Link } from 'react-router-dom';
 
+export const getPrivileges = () => {
+  const user = JSON.parse(window.localStorage.getItem('auth-user'));
+  if (user != null) {
+    const privileges = user.user_privileges;
+    const allPrivs = {
+      canCreate: privileges.find(o => o.match(/QUESTION_CREATE/g)),
+      canRead: privileges.find(o => o.match(/QUESTION_READ/g)),
+      canEdit: privileges.find(o => o.match(/QUESTION_UPDATE/g)),
+      canDelete: privileges.find(o => o.match(/QUESTION_DELETE/g))
+    };
+    return allPrivs;
+  }
+};
+
 export const tableColumns = [
   {
     Header: 'Title',
@@ -34,14 +48,20 @@ export const tableColumns = [
     Header: 'Created At',
     accessor: row => row.created_at,
     id: 'created_at'
-  },
-  {
-    Header: 'Options',
-    accessor: '',
-    Cell: row => <Link className='button button--small button--edit' to={{ pathname: `/questions/edit/${row.row.original.id}` }} aria-label="Edit your question">Edit</Link>,
-    id: 'required'
   }
 ];
+
+const allPrivs = getPrivileges();
+if (typeof allPrivs !== 'undefined' && allPrivs.canDelete && allPrivs.canEdit && allPrivs.canCreate) {
+  tableColumns.push(
+    {
+      Header: 'Options',
+      accessor: '',
+      Cell: row => <Link className='button button--small button--edit' to={{ pathname: `/questions/edit/${row.row.original.id}` }} aria-label="Edit your question">Edit</Link>,
+      id: 'required'
+    }
+  );
+}
 
 export const simpleDropdownOption = function (config) {
   return (

@@ -14,6 +14,7 @@ import config from '../../config';
 import Loading from '../LoadingIndicator/loading-indicator';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import ErrorReport from '../Errors/report';
+import { questionPrivileges } from '../../utils/privileges';
 
 class Questions extends React.Component {
   constructor () {
@@ -69,6 +70,7 @@ class Questions extends React.Component {
   render () {
     const { questionId } = this.props.match.params;
     const record = (questionId ? this.props.questions.detail : { data: {} });
+    const { canCreate, canEdit, canDelete } = questionPrivileges(this.props.privileges);
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -128,7 +130,8 @@ class Questions extends React.Component {
                               : null)
                     }
                 </section>
-                <section className='page__section'>
+                {(canDelete && canEdit && canCreate)
+                  ? <section className='page__section'>
                   <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
                   to={'/questions'} id='cancelButton' aria-label="cancel question editing">
                       Cancel
@@ -138,6 +141,7 @@ class Questions extends React.Component {
                       Submit
                   </button>
                 </section>
+                  : null}
             </div>
     );
   }
@@ -158,9 +162,11 @@ Questions.propTypes = {
   match: PropTypes.object,
   questions: PropTypes.object,
   dispatch: PropTypes.func,
-  history: PropTypes.object
+  history: PropTypes.object,
+  privileges: PropTypes.object
 };
 
 export default withRouter(connect(state => ({
+  privileges: state.api.tokens.privileges,
   questions: state.questions
 }))(Questions));

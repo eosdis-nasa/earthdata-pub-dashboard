@@ -15,8 +15,7 @@ import {
 import List from './Table/Table';
 // import RequestsProgress from './Requests/progress';
 import {
-  tableColumns,
-  errorTableColumns
+  tableColumns
 } from '../utils/table-config/requests';
 import { updateInterval, overviewUrl } from '../config';
 /* import {
@@ -34,30 +33,44 @@ import { updateInterval, overviewUrl } from '../config';
 } from '../utils/kibana'; */
 // import { initialValuesFromLocation } from '../utils/url-helper';
 // import Datepicker from './Datepicker/Datepicker';
+import Select from 'react-select';
 import { strings } from './locale';
 import Meditor from '../components/MeditorModal/modal';
 
 class Home extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {};
+    this.state = { producers: [], originalList: {}, list: {} };
     this.displayName = 'Home';
     this.query = this.query.bind(this);
     this.generateQuery = this.generateQuery.bind(this);
     this.refreshQuery = this.refreshQuery.bind(this);
+    this.handleProducerSelect = this.handleProducerSelect.bind(this);
   }
 
   getView () {
     const { pathname } = this.props.location;
-    if (pathname === '/requests/completed') return 'completed';
-    else if (pathname === '/requests/processing') return 'running';
-    else if (pathname === '/requests/failed') return 'failed';
+    if (pathname === '/requests/status/action') return 'Processing Action';
+    else if (pathname === '/requests/status/form') return 'Pending Form Submittal';
+    else if (pathname === '/requests/status/review') return 'Pending Review';
+    else if (pathname === '/requests/status/service') return 'Pending Service Completion';
+    else if (pathname === '/requests/status/closed') return 'Closed';
+    else if (pathname === '/requests/status/withdrawn') return 'Withdrawn';
     else return 'all';
   }
 
-  componentDidMount () {
-    // const { dispatch } = this.props;
+  async componentDidMount () {
     this.cancelInterval = interval(this.query, updateInterval, true);
+    this.setRequests();
+  }
+
+  async setRequests (filter = []) {
+    const { dispatch } = this.props;
+    await dispatch(listRequests());
+    const { requests } = this.props;
+    const { list } = requests;
+    const originalList = this.filter(list);
+    this.setState({ originalList: originalList, list: originalList, view: this.getView(), filter: filter });
   }
 
   componentWillUnmount () {
@@ -74,20 +87,15 @@ class Home extends React.Component {
     this.cancelInterval = interval(this.query, updateInterval, true);
   }
 
-  /* original query
-  generateQuery () {
-    return {
-      error__exists: true,
-      status: 'failed',
-      limit: 20
-    };
-  }
-  */
-  generateQuery () {
-    return {
-      status: 'running',
-      limit: 5
-    };
+  generateQuery (list) {
+    const options = {};
+    const view = this.getView();
+    if (view !== this.state.view) {
+      this.setRequests(this.state.list);
+    }
+    if (view && view !== 'all') options.status = view;
+    options.status = view;
+    return list;
   }
 
   redirect (e) {
@@ -185,15 +193,55 @@ class Home extends React.Component {
     );
   }
 
-  filter (list) {
+  handleProducerSelect (list, e) {
+    if (e.length === 0) {
+      this.setState({ list: this.filter(this.state.originalList), filter: [] });
+    } else if (e[0] !== undefined) {
+      this.setState({ list: this.filter(list, Object.values(e)), filter: Object.values(e) });
+    }
+  }
+
+  filter (list, match) {
     const newList = {};
     const tmp = [];
+    let requestSearchValue = '';
+    if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
+      requestSearchValue = document.querySelector('.request-section input.search').value;
+    }
+    const re = new RegExp(requestSearchValue, 'gi');
     for (const ea in list) {
       const record = list[ea];
       newList[ea] = record;
       for (const r in record) {
         if (!record[r].hidden && record[r].step_name !== 'close' && typeof record[r] === 'object') {
-          tmp.push(record[r]);
+          if (match === undefined && this.state.filter !== undefined && this.state.filter.length > 0) {
+            match = this.state.filter;
+          }
+          const prod = { value: record[r].form_data.data_producer_info_name, label: record[r].form_data.data_producer_info_name };
+          let dataProduct = record[r].form_data.data_product_name_value;
+          if (dataProduct === undefined) {
+            dataProduct = 'Request Initialized';
+          }
+          const isFound = this.state.producers.some(element => {
+            if (element.value === prod.value) {
+              return true;
+            }
+            return false;
+          });
+          if (!isFound && JSON.stringify(prod) !== '{}') {
+            this.state.producers.push(prod);
+          }
+          if ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '') {
+            if (match === undefined) {
+              tmp.push(record[r]);
+            } else {
+              for (const i in match) {
+                if (prod.value === match[i].value) {
+                  tmp.push(record[r]);
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -207,111 +255,58 @@ class Home extends React.Component {
   }
 
   render () {
-    const { requests } = this.props;
-    let { list } = requests;
-    const view = this.getView();
-    const query = this.generateQuery();
-    // const { stats, count } = this.props.stats;
-    // const { dist } = this.props;
-    /* const overview = [
-      [tally(get(stats.data, 'errors.value')), 'Errors', kibanaAllLogsLink(this.props.earthdatapubInstance)],
-      [tally(get(stats.data, 'requests.value')), strings.requests, '/requests'],
-      [tally(get(this.props.executions, 'list.meta.count')), 'Executions', '/executions'],
-      [tally(get(this.props.rules, 'list.meta.count')), 'Ingest Rules', '/rules'],
-      [seconds(get(stats.data, 'processingTime.value', nullValue)), 'Average processing Time', '/']
-    ];
+    if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
+      if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
+        const searchElement = document.querySelector('.request-section input.search');
 
-    const distSuccessStats = [
-      [tally(get(dist, 's3Access.successes')), 'S3 Access Successes', kibanaS3AccessSuccessesLink(this.props.earthdatapubInstance, this.props.datepicker)],
-      [tally(get(dist, 'teaLambda.successes')), 'TEA Lambda Successes', kibanaTEALambdaSuccessesLink(this.props.earthdatapubInstance, this.props.datepicker)],
-      [tally(get(dist, 'apiLambda.successes')), 'Distribution API Lambda Successes', kibanaApiLambdaSuccessesLink(this.props.earthdatapubInstance, this.props.datepicker)],
-      [tally(get(dist, 'apiGateway.execution.successes')), 'Gateway Execution Successes', kibanaGatewayExecutionSuccessesLink(this.props.earthdatapubInstance, this.props.datepicker)],
-      [tally(get(dist, 'apiGateway.access.successes')), 'Gateway Access Successes', kibanaGatewayAccessSuccessesLink(this.props.earthdatapubInstance, this.props.datepicker)]
-    ];
+        searchElement.addEventListener('change', () => {
+          this.setState({ list: this.filter(this.state.originalList) });
+        });
+      }
+      const query = this.generateQuery();
+      return (
+        <div className='page__home'>
+          <div className='content__header content__header--lg'>
+            <div className='row'>
+              <h1 className='heading--xlarge'>{strings.dashboard}</h1>
+            </div>
+          </div>
 
-    const distErrorStats = [
-      [tally(get(dist, 's3Access.errors')), 'S3 Access Errors', kibanaS3AccessErrorsLink(this.props.earthdatapubInstance, this.props.datepicker)],
-      [tally(get(dist, 'teaLambda.errors')), 'TEA Lambda Errors', kibanaTEALambdaErrorsLink(this.props.earthdatapubInstance, this.props.datepicker)],
-      [tally(get(dist, 'apiLambda.errors')), 'Distribution API Lambda Errors', kibanaApiLambdaErrorsLink(this.props.earthdatapubInstance, this.props.datepicker)],
-      [tally(get(dist, 'apiGateway.execution.errors')), 'Gateway Execution Errors', kibanaGatewayExecutionErrorsLink(this.props.earthdatapubInstance, this.props.datepicker)],
-      [tally(get(dist, 'apiGateway.access.errors')), 'Gateway Access Errors', kibanaGatewayAccessErrorsLink(this.props.earthdatapubInstance, this.props.datepicker)]
-    ]; */
-
-    // const requestCount = get(count.data, 'requests.meta.count');
-    // const numRequests = !isNaN(requestCount) ? `${tally(requestCount)}` : 0;
-    // const requestStatus = get(count.data, 'requests.count', []);
-    list = this.filter(list);
-    return (
-      <div className='page__home'>
-        <div className='content__header content__header--lg'>
-          <div className='row'>
-            <h1 className='heading--xlarge'>{strings.dashboard}</h1>
+          <div className='page__content page__content__nosidebar home_requests_table'>
+            {this.renderOverview()}
+            {this.renderUserInfo()}
+            <section className='page__section list--requests request-section'>
+              <div className='row'>
+                <div className='heading__wrapper--border'>
+                  <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
+                  <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
+                </div>
+                <List
+                  list={this.filter(this.state.originalList)}
+                  tableColumns={tableColumns}
+                  query={query}
+                  rowId='id'
+                  filterIdx='name'
+                  filterPlaceholder='Search Requests'
+                >
+                <Select
+                  id="producerSelect"
+                  options={this.state.producers}
+                  onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
+                  isSearchable={true}
+                  placeholder='Select Data Producer'
+                  className='selectButton'
+                  isMulti={true}
+                />
+                </List>
+              </div>
+            </section>
+            <Meditor></Meditor>
           </div>
         </div>
-
-        <div className='page__content page__content__nosidebar home_requests_table'>
-          {this.renderOverview()}
-          {this.renderUserInfo()}
-          {/*
-          <section className='page__section datetime'>
-            <div className='row'>
-              <div className='heading__wrapper'>
-                <h2 className='datetime__info heading--medium heading--shared-content--right'>
-                  Select date and time to refine your results. <em>Time is UTC.</em>
-                </h2>
-              </div>
-              <Datepicker onChange={this.refreshQuery}/>
-            </div>
-          </section>
-
-          <section className='page__section metrics--overview'>
-            <div className='row'>
-              <div className='heading__wrapper--border'>
-                <h2 className='heading--large heading--shared-content--right'>Metrics</h2>
-              </div>
-            </div>
-          </section>
-
-          {this.renderButtonListSection(overview, 'Updates')}
-          {this.renderButtonListSection(distErrorStats, 'Distribution Errors', 'distributionErrors')}
-          {this.renderButtonListSection(distSuccessStats, 'Distribution Successes', 'distributionSuccesses')}
-
-          <section className='page__section update--requests'>
-            <div className='row'>
-              <div className='heading__wrapper--border'>
-                <h2 className='heading--large heading--shared-content--right'>Requests Updates</h2>
-                <Link className='link--secondary link--learn-more' to='/requests' aria-label="Learn more about requests">{strings.view_requests_overview}</Link>
-              </div>
-              <div className="heading__wrapper">
-                <h2 className='heading--medium heading--shared-content--right'>{strings.requests_updated}<span className='num--title'>{numRequests}</span></h2>
-              </div>
-
-              <RequestsProgress requests={requestStatus} />
-            </div>
-          </section> */}
-          <section className='page__section list--requests'>
-            <div className='row'>
-              <div className='heading__wrapper--border'>
-                <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
-                <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
-              </div>
-              <List
-                list={list}
-                dispatch={this.props.dispatch}
-                tableColumns={view === 'failed' ? errorTableColumns : tableColumns}
-                query={query}
-                rowId='id'
-                filterIdx='name'
-                filterPlaceholder='Search Requests'
-                ariaLabel="Search Requests"
-              >
-              </List>
-            </div>
-          </section>
-          <Meditor></Meditor>
-        </div>
-      </div>
-    );
+      );
+    }
+    return null;
   }
 }
 
