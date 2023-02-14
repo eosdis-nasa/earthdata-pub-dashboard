@@ -185,6 +185,15 @@ export const getInProgressRequests = () => ({
   }
 });
 
+export const getContributers = (payload) => ({
+  [CALL_API]: {
+    type: types.USERS,
+    method: 'POST',
+    path: 'data/user/get_users',
+    body: payload
+  }
+});
+
 export const listRequests = (options) => ({
   [CALL_API]: {
     type: types.REQUESTS,

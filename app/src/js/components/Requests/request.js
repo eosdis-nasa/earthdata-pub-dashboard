@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import {
   getRequest,
   getDaac,
-  getUser,
+  getContributers,
   getWorkflow,
   withdrawRequest,
   restoreRequest,
@@ -101,13 +101,18 @@ class RequestOverview extends React.Component {
           this.setSteps(value.data.steps, record.data.step_name);
         });
         if (record.data.contributor_ids !== undefined) {
-          for (const ea in record.data.contributor_ids) {
-            this.props.dispatch(getUser(record.data.contributor_ids[ea])).then(value => {
-              const names = this.state.names;
-              names[value.data.id] = value.data.name;
-              this.setState({ names: names });
-            });
-          }
+          console.log(record.data.contributor_ids);
+          this.props.dispatch(getContributers({ "ids": record.data.contributor_ids })).then(value => {
+            /* const names = this.state.names;
+            names[value.data.id] = value.data.name;
+            this.setState({ names: names }); */
+            console.log(value)
+          });
+          /* this.props.dispatch(getUser(record.data.contributor_ids[ea])).then(value => {
+            const names = this.state.names;
+            names[value.data.id] = value.data.name;
+            this.setState({ names: names });
+          }); */
         }
       }
     }, 1500);
