@@ -101,18 +101,13 @@ class RequestOverview extends React.Component {
           this.setSteps(value.data.steps, record.data.step_name);
         });
         if (record.data.contributor_ids !== undefined) {
-          console.log(record.data.contributor_ids);
-          this.props.dispatch(getContributers({ "ids": record.data.contributor_ids })).then(value => {
-            /* const names = this.state.names;
-            names[value.data.id] = value.data.name;
-            this.setState({ names: names }); */
-            console.log(value)
-          });
-          /* this.props.dispatch(getUser(record.data.contributor_ids[ea])).then(value => {
-            const names = this.state.names;
-            names[value.data.id] = value.data.name;
+          this.props.dispatch(getContributers({ ids: record.data.contributor_ids })).then(value => {
+            const names = {};
+            for (const ea in value.data) {
+              names[value.data[ea].id] = value.data[ea].name;
+            }
             this.setState({ names: names });
-          }); */
+          });
         }
       }
     }, 1500);

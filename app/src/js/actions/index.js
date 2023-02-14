@@ -189,7 +189,7 @@ export const getContributers = (payload) => ({
   [CALL_API]: {
     type: types.USERS,
     method: 'POST',
-    path: 'data/user/get_users',
+    path: 'user/get_users',
     body: payload
   }
 });
