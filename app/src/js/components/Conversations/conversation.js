@@ -41,7 +41,6 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   }, []);
   const { data, inflight, meta } = conversation;
   const { subject, notes, participants } = data;
-  console.log(notes)
   const { queriedAt } = meta;
   const { canReply, canAddUser, canAddGroup } = notePrivileges(privileges);
   const cancelCallback = () => setShowSearch(false);
@@ -135,9 +134,9 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                   }
                 </div>
                 {
-                  notes.slice(0).reverse().map((note, key) => {
+                  notes.map((note, key) => {
                     return (<Note note={note} key={key} />);
-                  })
+                  }).reverse()
                 }
               </div>
             </section>
