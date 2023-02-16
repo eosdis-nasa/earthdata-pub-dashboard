@@ -13,7 +13,8 @@ import {
   addUserToRequest,
   removeUserFromRequest,
   listWorkflows,
-  setWorkflowStep
+  setWorkflowStep,
+  copyRequest
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -80,6 +81,7 @@ class RequestOverview extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
+    this.cloneRequest = this.cloneRequest.bind(this);
   }
 
   componentDidMount () {
@@ -168,6 +170,18 @@ class RequestOverview extends React.Component {
     const { requestId } = this.props.match.params;
     const { history } = this.props;
     history.push(`/workflows?requestId=${requestId}`);
+  }
+
+  async cloneRequest () {
+    const { requestId } = this.props.match.params;
+    const name = JSON.parse(window.localStorage.getItem('auth-user')).name;
+    const id = JSON.parse(window.localStorage.getItem('auth-user')).id;
+    const payload = {
+      id: requestId,
+      context: `Copied from bulk actions button by ${name} (${id})`
+    };
+    await this.props.dispatch(copyRequest(payload));
+    this.navigateBack();
   }
 
   async handleSubmit () {
@@ -279,7 +293,7 @@ class RequestOverview extends React.Component {
       isHidden = record.data.hidden;
     }
     const request = record.data || false;
-    let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser } = requestPrivileges(this.props.privileges);
+    let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser, canInitialize } = requestPrivileges(this.props.privileges);
     if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
       canReassign = false;
     }
@@ -304,7 +318,8 @@ class RequestOverview extends React.Component {
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
     let dropdownConfig = [];
-    if (!isHidden) {
+
+    if (canWithdraw && !isHidden) {
       dropdownConfig = [
         {
           text: `${_config.requestHideButtonVerbage}`,
@@ -315,6 +330,17 @@ class RequestOverview extends React.Component {
           confirmText: deleteTextWithType(requestId, 'request')
         }
       ];
+    }
+
+    if (canInitialize && !isHidden) {
+      dropdownConfig.push({
+        text: 'Clone Request',
+        action: this.cloneRequest,
+        status: openStatus,
+        success: this.navigateBack,
+        confirmAction: true,
+        confirmText: 'Are you sure you want to copy request?'
+      });
     }
 
     if (canReassign && !isHidden) {
@@ -433,7 +459,7 @@ class RequestOverview extends React.Component {
         <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
           { this.state.showSearch && <SearchModal { ...searchOptions }/> }
-          { canWithdraw || canRestore ? <AsyncCommands config={dropdownConfig} /> : null }
+          { canWithdraw || canRestore || canInitialize ? <AsyncCommands config={dropdownConfig} /> : null }
           { request && lastUpdated(request.last_change, 'Updated') }
           <dl className='status--process'>
             <dt>Status:</dt>

@@ -212,6 +212,15 @@ export const setWorkflowStep = (payload) => ({
   }
 });
 
+export const copyRequest = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/submission/operation/copySubmission',
+    body: payload
+  }
+});
+
 export const reviewRequest = (id, approve) => {
   return (dispatch) => {
     dispatch({

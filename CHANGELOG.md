@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 
+- Added copy submission functionality to bulk requests button on request detail page.
+
 ## 1.0.11 - 2023-02-10
 
 - Applied question privileges to questions page
