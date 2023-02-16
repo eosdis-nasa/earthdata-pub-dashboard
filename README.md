@@ -49,6 +49,7 @@ To locate environment variables, see webpack.common.js:
 | ESROOT | \<optional\> Should point to an Elasticsearch endpoint. Must be set for distribution metrics to be displayed. | |
 | ES_USER | \<optional\> Elasticsearch username, needed when protected by basic authorization | |
 | ES_PASSWORD | \<optional\> Elasticsearch password,needed when protected by basic authorization | |
+| HELP_PAGE_DEFAULT | URL of the instructional how to use Earthdata Pub in Overview | *<https://pub.earthdata.nasa.gov/data_producer_resources/how_to_use_edpub>* |
 
 ## Installing
 
