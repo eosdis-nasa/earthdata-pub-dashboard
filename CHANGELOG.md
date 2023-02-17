@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Improved contributor lookup utilizing 1 request.
 
 - Added copy submission functionality to bulk requests button on request detail page.
 
