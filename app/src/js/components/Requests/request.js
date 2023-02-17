@@ -178,7 +178,7 @@ class RequestOverview extends React.Component {
     const id = JSON.parse(window.localStorage.getItem('auth-user')).id;
     const payload = {
       id: requestId,
-      context: `Copied from bulk actions button by ${name} (${id})`
+      copy_context: `Copied from bulk actions button by ${name} (${id})`
     };
     await this.props.dispatch(copyRequest(payload));
     this.navigateBack();
