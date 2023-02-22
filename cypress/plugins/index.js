@@ -12,10 +12,10 @@
 const crypto = require('crypto');
 const webpack = require('@cypress/webpack-preprocessor');
 
-const { testUtils } = require('earthdata-pub-api/api');
-const { createJwtToken } = require('earthdata-pub-api/api/lib/token');
+// const { testUtils } = require('earthdata-pub-api/api');
+// const { createJwtToken } = require('earthdata-pub-api/api/lib/token');
 
-const { seedEverything } = require('./seedEverything');
+// const { seedEverything } = require('./seedEverything');
 
 process.env.TOKEN_SECRET = crypto.randomBytes(10).toString('hex');
 
@@ -26,13 +26,13 @@ module.exports = (on, config) => {
     webpackOptions: require('../../webpack.common'),
     watchOptions: {},
   };
-  const user = 'testUser';
+  // const user = 'testUser';
 
   // Run specialized file preprocessor to transpile ES6+ -> ES5
   // This fixes compatibility issues with Electron
   on('file:preprocessor', webpack(options));
 
-  on('task', {
+  /* on('task', {
     resetState: function () {
       return Promise.all([
         seedEverything(),
@@ -51,7 +51,7 @@ module.exports = (on, config) => {
       return null;
     },
     failed: require('cypress-failed-log/src/failed')()
-  });
+  }); */
 
   on('before:browser:launch', (browser = {}, launchOptions) => {
     // `args` is an array of all the arguments that will
