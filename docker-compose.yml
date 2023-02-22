@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   dashboard:
-    image: node:14.19.1
+    image: node:18.14.1
     network_mode: "service:shim"
     command:
       bash -c "npm rebuild node-sass && npm run serve"
@@ -22,7 +22,7 @@ services:
       - REQUEST_UNHIDE_BUTTON_VERBAGE=Restore
       - HELP_PAGE_DEFAULT=http://localhost:8082/data_producer_resources/how_to_use_edpub
   shim:   # empty container to open ports
-    image: node:14.19.1
+    image: node:18.14.1
     command:
       bash -c "tail -f /dev/null"
     working_dir:
