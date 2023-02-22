@@ -26,7 +26,7 @@ const config = {
   APP_ID: process.env.APP_ID || 'Value is null',
   requestHideButtonVerbage: process.env.REQUEST_HIDE_BUTTON_VERBAGE || 'Withdraw',
   requestUnHideButtonVerbage: process.env.REQUEST_UNHIDE_BUTTON_VERBAGE || 'Restore',
-  helpPageDefault: process.env.HELP_PAGE_DEFAULT || process.env.OVERVIEW_URL
+  helpPageDefault: process.env.HELP_PAGE_DEFAULT || (process.env.OVERVIEW_URL || '/')
 };
 
 module.exports = config;

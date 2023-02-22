@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import Ace from 'react-ace';
+import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 import ReactFlow from 'react-flow-renderer';
 import { connect } from 'react-redux';
@@ -81,7 +81,7 @@ class Workflows extends React.Component {
 
   renderReadOnlyJson (name, data) {
     return (
-      <Ace
+      <AceEditor
         id="read-only-json"
         mode='json'
         theme={config.editorTheme}

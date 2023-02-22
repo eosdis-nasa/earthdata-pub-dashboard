@@ -3,28 +3,28 @@ import { shouldBeRedirectedToLogin } from '../support/assertions';
 describe('Dashboard Forms Page', () => {
   describe('When not logged in', () => {
     it('should redirect to login page', () => {
-      cy.visit('/forms');
+      cy.visit(`${Cypress.env('baseUrl')}/forms`);
       shouldBeRedirectedToLogin();
       const formId = '';
-      cy.visit(`/forms/id/${formId}`);
+      cy.visit(`${Cypress.env('baseUrl')}/forms/id/${formId}`);
       shouldBeRedirectedToLogin();
     });
   });
 
   describe('When logged in', () => {
     before(() => {
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')}`);
       cy.task('resetState');
     });
 
     beforeEach(() => {
       cy.login();
       cy.task('resetState');
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')}`);
       cy.server();
-      cy.route('POST', '/forms').as('postForm');
-      cy.route('GET', '/forms?limit=*').as('getForms');
-      cy.route('GET', '/forms/*').as('getForm');
+      cy.route('POST', `${Cypress.env('baseUrl')}/forms`).as('postForm');
+      cy.route('GET', `${Cypress.env('baseUrl')}/forms?limit=*`).as('getForms');
+      cy.route('GET', `${Cypress.env('baseUrl')}/forms/*`).as('getForm');
     });
 
     it('should display a link to view forms', () => {

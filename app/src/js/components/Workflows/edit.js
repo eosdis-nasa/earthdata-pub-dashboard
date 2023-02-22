@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import Ace from 'react-ace';
+import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
@@ -37,7 +37,7 @@ class Workflows extends React.Component {
 
   renderWorkflowJson (name, data, refName) {
     return (
-            <Ace
+            <AceEditor
                 mode='json'
                 theme={config.editorTheme}
                 name={`edit-${name}`}
