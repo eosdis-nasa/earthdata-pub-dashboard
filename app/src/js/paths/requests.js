@@ -16,7 +16,7 @@ const requestRoutes = [
 
 const singleRequestRoutes = [
   [strings.back_to_requests, null, 'sidebar__nav--back'],
-  ['Edit Metadata', 'id/:requestId/edit-metadata', null, 'sidebar__nav--back']
+  /* ['Edit Metadata', 'id/:requestId/edit-metadata', null, 'sidebar__nav--back'] */
 ];
 
 const empty = [['', '']];

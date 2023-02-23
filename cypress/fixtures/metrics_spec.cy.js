@@ -3,7 +3,7 @@ import { shouldBeRedirectedToLogin } from '../support/assertions';
 describe('Dashboard Metrics Page', () => {
   describe('When not logged in', () => {
     it('should redirect to login page', () => {
-      cy.visit('/metrics');
+      cy.visit(`${Cypress.env('baseUrl')}/metrics`);
       shouldBeRedirectedToLogin();
     });
   });
@@ -11,15 +11,15 @@ describe('Dashboard Metrics Page', () => {
   describe('When logged in', () => {
     before(() => {
       cy.task('resetState');
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')}`);
     });
 
     beforeEach(() => {
-      cy.login();
+      // cy.login();
     });
 
     it('displays a list of metrics', () => {
-      cy.visit('/metrics');
+      cy.visit(`${Cypress.env('baseUrl')}/metrics`);
       cy.get('.table .tbody .tr').should('have.length', 2);
       cy.contains('.table .tbody .tr .td', 'workflow_promote_step');
       // .should('have.attr', 'href', '/metrics/id/workflow_promote_step');

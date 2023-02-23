@@ -11,6 +11,8 @@ const requests = require('../fixtures/seeds/requestsFixture.json');
 const roles = require('../fixtures/seeds/rolesFixture.json');
 const users = require('../fixtures/seeds/usersFixture.json');
 const workflows = require('../fixtures/seeds/workflowsFixture.json');
+const modules = require('../fixtures/seeds/modulesFixture.json');
+const conversations = require('../fixtures/seeds/conversationsFixture.json');
 
 function resetIt () {
   return Promise.all([
@@ -51,6 +53,14 @@ function seedWorkflows () {
   return serveUtils.addWorkflows(workflows.results);
 }
 
+function seedModules () {
+  return serveUtils.addModules(modules.results);
+}
+
+function seedConversations () {
+  return serveUtils.addConversations(conversations.results);
+}
+
 function seedEverything () {
   return resetIt()
     .then(seedForms)
@@ -60,7 +70,9 @@ function seedEverything () {
     .then(seedRequests)
     .then(seedRoles)
     .then(seedUsers)
-    .then(seedWorkflows);
+    .then(seedWorkflows)
+    .then(seedModules)
+    .then(seedConversations);
 }
 
 module.exports = {

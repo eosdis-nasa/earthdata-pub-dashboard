@@ -266,6 +266,7 @@ class RequestOverview extends React.Component {
               value={this.state.current}
               placeholder='Set Current Workflow Step'
               className='selectButton'
+              aria-label='Select Current Workflow Step'
               isMulti={false} />
           </div>
           <br></br>
@@ -396,7 +397,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Initiator',
-        accessor: row => row.initiator.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : row.initiator.name
+        accessor: row => row.initiator && row.initiator.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : null
       },
       {
         label: 'Data Product Name',

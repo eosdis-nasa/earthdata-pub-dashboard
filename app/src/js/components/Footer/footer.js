@@ -23,13 +23,13 @@ class Footer extends React.Component {
     return (
       <footer className="mt-auto">
         <div className="container">
-          <div className='api__summary' role="contentinfo" aria-label="Earthdata Pub API Version">
+          <div className='api__summary' aria-label="Earthdata Pub API Version">
             { authenticated &&
               <h2 className='api__version'>Earthdata Pub API Version: { versionNumber }</h2>
             }
             { versionWarning }
           </div>
-          <nav role="navigation">
+          <div>
             <ul className="footer-links">
               <li>NASA Official: Doug Newman</li>
               <li><a href="https://www.nasa.gov/FOIA/index.html">FOIA</a></li>
@@ -37,7 +37,7 @@ class Footer extends React.Component {
               <li><a href="https://www.usa.gov/">USA.gov</a></li>
               <li><a onClick={() => this.handler}>Feedback</a></li>
             </ul>
-          </nav>
+          </div>
         </div>
       </footer>
     );

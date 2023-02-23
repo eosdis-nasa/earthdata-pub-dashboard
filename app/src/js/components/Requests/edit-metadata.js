@@ -37,7 +37,7 @@ class EditMetadata extends React.Component {
     const { model } = this.props;
     const loading = model.inflight || record.inflight;
     const request = record.data || false;
-    const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: requestId, metadata: formData }); console.log('formData', model.data); };
+    const onSubmit = ({ formData }, e) => { this.updateMetadata({ id: requestId, metadata: formData }); };
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',

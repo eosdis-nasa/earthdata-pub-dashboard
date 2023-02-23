@@ -162,6 +162,7 @@ class InactiveRequestsOverview extends React.Component {
                   placeholder='Select Data Producer'
                   className='selectButton'
                   isMulti={true}
+                  aria-label='Select Data Producer'
                 />
               </List>
             }

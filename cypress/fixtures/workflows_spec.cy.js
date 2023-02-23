@@ -3,7 +3,7 @@ import { shouldBeRedirectedToLogin } from '../support/assertions';
 describe('Dashboard Workflows Page', () => {
   describe('When not logged in', () => {
     it('should redirect to login page', () => {
-      cy.visit('/workflows');
+      cy.visit(`${Cypress.env('baseUrl')}/workflows`);
       shouldBeRedirectedToLogin();
     });
   });
@@ -11,7 +11,7 @@ describe('Dashboard Workflows Page', () => {
   describe('When logged in', () => {
     before(() => {
       cy.task('resetState');
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')}`);
     });
 
     beforeEach(() => {
@@ -19,7 +19,7 @@ describe('Dashboard Workflows Page', () => {
     });
 
     it('displays a list of workflows', () => {
-      cy.visit('/workflows');
+      cy.visit(`${Cypress.env('baseUrl')}/workflows`);
       cy.get('.table .tbody .tr').should('have.length', 2);
       cy.contains('.table .tbody .tr .td', 'Initialization Workflow')
         .should('have.attr', 'href', '/workflows/id/c651b698-ec06-44d7-a69b-44bf8b4bc4f5');

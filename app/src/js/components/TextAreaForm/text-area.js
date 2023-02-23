@@ -7,7 +7,7 @@ import 'brace';
 import 'brace/mode/json';
 import 'brace/theme/github';
 
-import Ace from 'react-ace';
+import AceEditor from 'react-ace';
 import config from '../../config';
 import { setWindowEditorRef } from '../../utils/browser';
 import ErrorReport from '../Errors/report';
@@ -42,7 +42,7 @@ class TextAreaForm extends React.Component {
       <div className='form__textarea'>
         <ErrorReport report={error} />
         <label>{label}
-        <Ace
+        <AceEditor
           editorProps={{ $blockScrolling: Infinity }}
           mode={mode}
           theme={config.editorTheme}

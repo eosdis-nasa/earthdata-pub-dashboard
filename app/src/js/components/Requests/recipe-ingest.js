@@ -11,7 +11,7 @@ import {
 } from '../../actions';
 import { get } from 'object-path';
 import { lastUpdated, seconds } from '../../utils/format';
-import Ace from 'react-ace';
+import AceEditor from 'react-ace';
 import config from '../../config';
 import Loading from '../app/loading-indicator';
 import AsyncCommands from '../form/dropdown-async-command';
@@ -79,7 +79,7 @@ class GranuleRecipe extends React.Component {
         <div key={step + index} className='recipe'>
           <label>Step {index + 1}: {step}</label>
           {description ? <span className='label__description'>{description}</span> : null}
-          <Ace mode='json'
+          <AceEditor mode='json'
             theme={config.editorTheme}
             name='recipe-read-only'
             readOnly={true}
@@ -98,7 +98,7 @@ class GranuleRecipe extends React.Component {
     const ingestedFiles = Object.keys(get(granule, 'files', {})).map((filename, index) => (
       <div key={filename + index}>
         <label>{filename}</label>
-        <Ace mode='json'
+        <AceEditor mode='json'
           theme={config.editorTheme}
           name='recipe-read-only'
           readOnly={true}
