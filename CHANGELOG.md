@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved contributor lookup utilizing 1 request.
 - Updated cypress library, converted files to work with latest lib and updated e2e testing
 - Added copy submission functionality to bulk requests button on request detail page.
+- Updated Node version to v18.14.1
 
 ## 1.0.11 - 2023-02-10
 

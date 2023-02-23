@@ -4,7 +4,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Autocomplete from 'react-autocomplete';
+// Removed 2/22/23 due to react-autocomplete incompatibility with react v17
+// import Autocomplete from 'react-autocomplete';
 import { initialValueFromLocation } from '../../utils/url-helper';
 import withQueryParams from 'react-router-query-params';
 
@@ -108,7 +109,8 @@ class Dropdown extends React.Component {
       <div className='filter__item'>
         <form className='form-group__element' id={formID} onSubmit={this.onSubmit}>
           <label htmlFor={formID}>{label}
-            <Autocomplete
+          {/* Removed 2/22/23 due to react-autocomplete incompatibility with react v17 */}
+            {/* <Autocomplete
               getItemValue={item => item.value}
               items={items}
               renderItem={renderItem}
@@ -121,7 +123,7 @@ class Dropdown extends React.Component {
               wrapperStyle={{
                 display: 'block'
               }}
-            />
+            /> */}
           </label>
         </form>
       </div>
