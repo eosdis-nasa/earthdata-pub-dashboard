@@ -213,6 +213,7 @@ class ActionRequestsOverview extends React.Component {
                 placeholder='Select Data Producer'
                 className='selectButton'
                 isMulti={true}
+                aria-label='Select Data Producer'
               />
             </List>
             }
@@ -226,12 +227,9 @@ class ActionRequestsOverview extends React.Component {
 
 ActionRequestsOverview.propTypes = {
   requests: PropTypes.object,
-  stats: PropTypes.object,
   dispatch: PropTypes.func,
-  workflowOptions: PropTypes.array,
   location: PropTypes.object,
   config: PropTypes.object,
-  requestCSV: PropTypes.object,
   privileges: PropTypes.object,
   roles: PropTypes.array,
   onQueryChange: PropTypes.func
@@ -240,11 +238,8 @@ ActionRequestsOverview.propTypes = {
 export { ActionRequestsOverview };
 
 export default withRouter(connect(state => ({
-  stats: state.stats,
-  workflowOptions: workflowOptionNames(state),
   requests: state.requests,
   config: state.config,
-  requestCSV: state.requestCSV,
   privileges: state.api.tokens.privileges,
   roles: state.api.tokens.roles,
 }))(ActionRequestsOverview));

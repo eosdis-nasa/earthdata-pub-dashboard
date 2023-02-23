@@ -231,7 +231,18 @@ a:active {
     }
   }
 }
-
+.footer-links li {
+  a {
+    color: $white;
+    text-decoration: none;
+  }
+  &.active,
+  &:hover {
+    a {
+      color: $white;
+    }
+  }
+}
 .nav__order-0 { order: 0 };
 .nav__order-1 { order: 1 };
 .nav__order-2 { order: 2 };
@@ -328,7 +339,7 @@ a:active {
 }
 
 .sidebar {
-  flex: 2;
+  /* flex: 2; */
   padding: 0;
   width: 20%; 
   /* max-width: 225px;*/

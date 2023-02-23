@@ -171,6 +171,7 @@ const AddUser = ({ dispatch, match, groups, roles, privileges, newUserStatus }) 
                   isMulti={true}
                   className='selectButton'
                   placeholder='Select Roles ...'
+                  aria-label='Select Roles'
                 /></label>
                 <label className='heading--small'>Groups
                 <Select
@@ -182,6 +183,7 @@ const AddUser = ({ dispatch, match, groups, roles, privileges, newUserStatus }) 
                   isMulti={true}
                   className='selectButton'
                   placeholder='Select Groups ...'
+                  aria-label='Select Groups'
                 /></label>
               </section>
               {
