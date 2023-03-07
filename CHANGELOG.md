@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Changed workflow in request table to have link and allow for all do see workflows
 - Improved contributor lookup utilizing 1 request.
 - Updated cypress library, converted files to work with latest lib and updated e2e testing
 - Added copy submission functionality to bulk requests button on request detail page.
