@@ -131,12 +131,14 @@ class Workflows extends React.Component {
     let reactFlowStyle = {};
     if (record.data) {
       const box = document.querySelector('.page__content--shortened');
-      const width = box.offsetWidth;
-      reactFlowStyle = {
-        left: `${(width - 275) / 2}px`,
-        position: 'absolute',
-        top: '475px'
-      };
+      if (box !== null) {
+        const width = box.offsetWidth;
+        reactFlowStyle = {
+          left: `${(width - 275) / 2}px`,
+          position: 'absolute',
+          top: '475px'
+        };
+      }
     }
     return (
       <div className='page__component'>

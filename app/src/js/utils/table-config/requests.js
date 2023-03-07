@@ -223,7 +223,7 @@ export const tableColumns = [
   {
     Header: 'Workflow',
     accessor: (row) => row.workflow_name,
-    Cell: row => row.row.original.workflow_name,
+    Cell: row => row.row.original.workflow_name ? <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }} aria-label="View your workflow details">{row.row.original.workflow_name}</Link> : null,
     id: 'workflow_name',
     // width: 170
   },
