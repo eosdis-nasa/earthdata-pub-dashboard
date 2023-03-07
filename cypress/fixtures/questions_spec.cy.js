@@ -3,7 +3,7 @@ import { shouldBeRedirectedToLogin } from '../support/assertions';
 describe('Dashboard Questions Page', () => {
   describe('When not logged in', () => {
     it('should redirect to login page', () => {
-      cy.visit('/questions');
+      cy.visit(`${Cypress.env('baseUrl')}/questions`);
       shouldBeRedirectedToLogin();
     });
   });
@@ -11,15 +11,15 @@ describe('Dashboard Questions Page', () => {
   describe('When logged in', () => {
     before(() => {
       cy.task('resetState');
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')}`);
     });
 
     beforeEach(() => {
-      cy.login();
+    // cy.login();
     });
 
     it('displays a list of questions', () => {
-      cy.visit('/questions');
+      cy.visit(`${Cypress.env('baseUrl')}/questions`);
       cy.get('.table .tbody .tr').should('have.length', 2);
       cy.contains('.table .tbody .tr .td', 'Primary Data Producer')
         .should('have.attr', 'href', '/questions/id/80ac5f52-9ed9-4139-b5f9-7b4cebb6a8e2');

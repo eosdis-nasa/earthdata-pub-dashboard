@@ -33,7 +33,7 @@ module.exports = (on, config) => {
   on('file:preprocessor', webpack(options));
 
   /* on('task', {
-     resetState: function () {
+    resetState: function () {
       return Promise.all([
         seedEverything(),
         testUtils.setAuthorizedOAuthUsers([user])
@@ -52,6 +52,7 @@ module.exports = (on, config) => {
     },
     failed: require('cypress-failed-log/src/failed')()
   }); */
+
   on('before:browser:launch', (browser = {}, launchOptions) => {
     // `args` is an array of all the arguments that will
     // be passed to browsers when it launches
@@ -60,6 +61,10 @@ module.exports = (on, config) => {
     if (browser.family === 'chromium' && browser.name !== 'electron') {
       // auto open devtools
       launchOptions.args.push('--auto-open-devtools-for-tabs');
+    }
+
+    if (browser.family === 'chromium') {
+      launchOptions.args.push('--disable-dev-shm-usage');
     }
 
     if (browser.family === 'firefox') {

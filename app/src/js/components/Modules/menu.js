@@ -31,7 +31,7 @@ const ModulesMenu = ({ dispatch, modules }) => {
             <ul>
               { modules.list.data.map(module => (
                 <li key={module.id}>
-                  <Link to={`/modules/${module.short_name}`} aria-label="View your modules">
+                  <Link to={`/modules/${module.short_name}`} aria-label="View your modules" title="View your modules">
                     {module.long_name}
                   </Link>
                 </li>

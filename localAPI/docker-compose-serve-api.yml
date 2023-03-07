@@ -1,7 +1,7 @@
 version: "3"
 services:
   serve_api:
-    image: node:14.19.1
+    image: node:18.14.1
     network_mode: "service:shim"
     depends_on:
       - localstack
@@ -19,7 +19,7 @@ services:
       - FAKE_AUTH=true
   shim:   # empty container to open ports
     network_mode: "host"
-    image: node:14.19.1
+    image: node:18.14.1
     command:
       bash -c "tail -f /dev/null"
     working_dir:

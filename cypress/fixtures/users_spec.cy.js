@@ -3,25 +3,25 @@ import { shouldBeRedirectedToLogin } from '../support/assertions';
 describe('Dashboard Users Page', () => {
   describe('When not logged in', () => {
     it('should redirect to login page', () => {
-      cy.visit('/users');
+      cy.visit(`${Cypress.env('baseUrl')}/users`);
       shouldBeRedirectedToLogin();
 
       const userId = 'test-user';
-      cy.visit(`/users/id/${userId}`);
+      cy.visit(`${Cypress.env('baseUrl')}/users/id/${userId}`);
       shouldBeRedirectedToLogin();
     });
   });
 
   describe('When logged in', () => {
     before(() => {
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')}`);
       cy.task('resetState');
     });
 
     beforeEach(() => {
-      cy.login();
+      // cy.login();
       cy.task('resetState');
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')}`);
       cy.server();
       cy.route('POST', '/users').as('postUser');
       cy.route('GET', '/users?limit=*').as('getUsers');

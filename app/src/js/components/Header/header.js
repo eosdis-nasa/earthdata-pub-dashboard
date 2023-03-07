@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout, getApiVersion } from '../../actions';
-import { nav, overviewUrl } from '../../config';
+import { nav, overviewUrl, helpPageDefault} from '../../config';
 import mainLogo from '../../../assets/images/nasa-logo.svg';
 
 const paths = [
@@ -14,7 +14,8 @@ const paths = [
   ['Metrics', '/metrics', 'METRICS'],
   ['Users', '/users', 'USER'],
   ['Groups', '/groups', 'GROUP'],
-  ['Roles', '/roles', 'ROLE']
+  ['Roles', '/roles', 'ROLE'],
+  ['Conversations', '/conversations', 'CONVERSATION']
 ];
 
 class Header extends React.Component {
@@ -57,9 +58,9 @@ class Header extends React.Component {
 
   render () {
     const { authenticated } = this.props.api;
-    const { privileges, user } = this.props;
+    const { privileges, user, userId } = this.props;
     const activePaths = paths.filter(path => {
-      return !!privileges[path[2]] || privileges.ADMIN;
+      return (!!privileges[path[2]] || privileges.ADMIN) || path[2].match(/CONVERSATION/g);
     });
     return (
       <div className='header' role="navigation" aria-label="Header">
@@ -75,8 +76,9 @@ class Header extends React.Component {
                 <ul className='right-ul'>
                   <li className='overviewLink'>{ overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : '' }</li>
                   {authenticated &&
-                    <li><Link to={'/conversations'} aria-label="View your conversations">Hi, {user}</Link></li>
+                    <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>
                   }
+                  <li className='howToUseLink'>{ helpPageDefault ? <a href={helpPageDefault} aria-label="View the how to use page">Help</a> : '' }</li>
                   <li className='logOut'>{ authenticated ? <a onClick={this.logout} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link> }</li></ul>
               </li>
             </ul>
@@ -96,10 +98,12 @@ Header.propTypes = {
   minimal: PropTypes.bool,
   privileges: PropTypes.object,
   user: PropTypes.string,
+  userId: PropTypes.string,
   earthdatapubInstance: PropTypes.object
 };
 
 export default withRouter(connect(state => ({
   privileges: state.api.tokens.privileges,
-  user: state.api.tokens.userName
+  user: state.api.tokens.userName,
+  userId: state.api.tokens.userId
 }))(Header));

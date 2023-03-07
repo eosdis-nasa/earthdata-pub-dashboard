@@ -3,7 +3,7 @@ import { shouldBeRedirectedToLogin } from '../support/assertions';
 describe('Dashboard Roles Page', () => {
   describe('When not logged in', () => {
     it('should redirect to login page', () => {
-      cy.visit('/roles');
+      cy.visit(`${Cypress.env('baseUrl')}/roles`);
       shouldBeRedirectedToLogin();
     });
   });
@@ -11,15 +11,15 @@ describe('Dashboard Roles Page', () => {
   describe('When logged in', () => {
     before(() => {
       cy.task('resetState');
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')}`);
     });
 
     beforeEach(() => {
-      cy.login();
+      // cy.login();
     });
 
     it('displays a list of roles', () => {
-      cy.visit('/roles');
+      cy.visit(`${Cypress.env('baseUrl')}/roles`);
       cy.get('.table .tbody .tr').should('have.length', 2);
       cy.contains('.table .tbody .tr .td', 'poc')
         .should('have.attr', 'href', '/roles/id/29ccab4b-65e2-4764-83ec-77375d29af39');

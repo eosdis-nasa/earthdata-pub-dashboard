@@ -185,6 +185,7 @@ class RequestsOverview extends React.Component {
                 isSearchable={true}
                 placeholder='Select Data Producer'
                 className='selectButton'
+                aria-label='Select Data Producer'
                 isMulti={true}
               />
               </List>
