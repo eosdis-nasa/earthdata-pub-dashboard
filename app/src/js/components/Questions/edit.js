@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import Ace from 'react-ace';
+import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link, useHistory } from 'react-router-dom';
@@ -35,7 +35,7 @@ class Questions extends React.Component {
 
   renderQuestionJson (name, data, refName) {
     return (
-            <Ace
+            <AceEditor
                 mode='json'
                 theme={config.editorTheme}
                 name={`edit-${name}`}

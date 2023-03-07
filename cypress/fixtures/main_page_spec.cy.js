@@ -9,13 +9,13 @@ import { API_VERSION } from '../../app/src/js/actions/types';
 
 describe('Dashboard Home Page', () => {
   it('When not logged in it should redirect to login page', () => {
-    cy.visit('/');
+    cy.visit(`${Cypress.env('baseUrl')}`);
     shouldBeRedirectedToLogin();
     shouldHaveNoToken();
   });
 
   it('Logging in successfully redirects to the Dashboard main page', () => {
-    cy.visit('/');
+    cy.visit(`${Cypress.env('baseUrl')}/`);
     cy.get('div[class=modal-content]').within(() => {
       cy.get('a').click();
     });

@@ -22,6 +22,17 @@ const reply = (dispatch, id) => {
   textRef.current.value = '';
 };
 
+const getConversations = (dispatch, conversationId, lvl) => {
+  if (lvl) {
+    document.getElementById('all_button').classList.add('active');
+    document.getElementById('users_only_button').classList.remove('active');
+  } else {
+    document.getElementById('all_button').classList.remove('active');
+    document.getElementById('users_only_button').classList.add('active');
+  }
+  dispatch(getConversation(conversationId, lvl));
+};
+
 const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const { conversationId } = match.params;
   const [showSearch, setShowSearch] = useState(false);
@@ -60,6 +71,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       active: true
     }
   ];
+
   return (
     <div className='page__content--shortened'>
       <div className='page__component'>
@@ -72,6 +84,21 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
               Conversation: {subject}
             </h1>
             {lastUpdated(queriedAt)}
+          </div>
+          <div className="filter_buttons_div">
+            <label>Filter: </label>
+            <button id='all_button'
+                className={'form-group__element--right' + (status === 'inflight' ? ' button--disabled' : '')}
+                aria-label='Get all conversation detail'
+                onClick={(e) => { e.preventDefault(); getConversations(dispatch, conversationId, true); }}
+              >All
+            </button>
+            <button id='users_only_button'
+                className={'active form-group__element--right' + (status === 'inflight' ? ' button--disabled' : '')}
+                aria-label='Get user conversation detail'
+                onClick={(e) => { e.preventDefault(); getConversations(dispatch, conversationId, false); }}
+              >User Comments Only
+            </button>
           </div>
         </section>
         { showSearch && <SearchModal { ...searchOptions }/> }
@@ -109,7 +136,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                 {
                   notes.map((note, key) => {
                     return (<Note note={note} key={key} />);
-                  })
+                  }).reverse()
                 }
               </div>
             </section>

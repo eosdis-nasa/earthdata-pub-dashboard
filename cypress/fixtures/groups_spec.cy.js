@@ -3,28 +3,28 @@ import { shouldBeRedirectedToLogin } from '../support/assertions';
 describe('Dashboard Groups Page', () => {
   describe('When not logged in', () => {
     it('should redirect to login page', () => {
-      cy.visit('/groups');
+      cy.visit(`${Cypress.env('baseUrl')}/groups`);
       shouldBeRedirectedToLogin();
       const name = 'User';
-      cy.visit(`/groups/id/${name}`);
+      cy.visit(`${Cypress.env('baseUrl')}/groups/id/${name}`);
       shouldBeRedirectedToLogin();
     });
   });
 
   describe('When logged in', () => {
     before(() => {
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')}`);
       cy.task('resetState');
     });
 
     beforeEach(() => {
       cy.login();
       cy.task('resetState');
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')}`);
       cy.server();
-      cy.route('POST', '/groups').as('postGroup');
-      cy.route('GET', '/groups?limit=*').as('getGroups');
-      cy.route('GET', '/groups/*').as('getGroup');
+      cy.route('POST', `${Cypress.env('baseUrl')}/groups`).as('postGroup');
+      cy.route('GET', `${Cypress.env('baseUrl')}/groups?limit=*`).as('getGroups');
+      cy.route('GET', `${Cypress.env('baseUrl')}/groups/*`).as('getGroup');
     });
 
     it('should display a link to view groups', () => {
@@ -41,7 +41,7 @@ describe('Dashboard Groups Page', () => {
     it('should add a new group', () => {
       const name = 'Test Group';
 
-      cy.visit('/groups');
+      cy.visit(`${Cypress.env('baseUrl')}/groups`);
 
       cy.contains('.heading--large', 'Group Overview');
       cy.contains('a', 'Add Group').as('addGroup');
@@ -86,7 +86,7 @@ describe('Dashboard Groups Page', () => {
     it('should edit a group', () => {
       const name = 'Test Group';
 
-      cy.visit(`/groups/id/${name}`);
+      cy.visit(`${Cypress.env('baseUrl')}/groups/id/${name}`);
       cy.contains('.heading--large', name);
       cy.contains('a', 'Edit').as('editgroup');
       cy.get('@editgroup')
@@ -120,7 +120,7 @@ describe('Dashboard Groups Page', () => {
 
     it('should delete a group', () => {
       const name = 'Test Group';
-      cy.visit(`/groups/id/${name}`);
+      cy.visit(`${Cypress.env('baseUrl')}/groups/id/${name}`);
       cy.contains('.heading--large', name);
 
       // delete group
@@ -136,7 +136,7 @@ describe('Dashboard Groups Page', () => {
 
     it('should fail to delete a group with an associated rule', () => {
       const name = 'Test Group';
-      cy.visit(`/groups/id/${name}`);
+      cy.visit(`${Cypress.env('baseUrl')}/groups/id/${name}`);
       cy.contains('.heading--large', name);
 
       // delete group

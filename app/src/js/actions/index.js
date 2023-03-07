@@ -185,6 +185,15 @@ export const getInProgressRequests = () => ({
   }
 });
 
+export const getContributers = (payload) => ({
+  [CALL_API]: {
+    type: types.USERS,
+    method: 'POST',
+    path: 'user/get_users',
+    body: payload
+  }
+});
+
 export const listRequests = (options) => ({
   [CALL_API]: {
     type: types.REQUESTS,
@@ -208,6 +217,15 @@ export const setWorkflowStep = (payload) => ({
     type: types.REQUESTS,
     method: 'POST',
     path: 'data/submission/operation/changeStep',
+    body: payload
+  }
+});
+
+export const copyRequest = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/submission/operation/copySubmission',
     body: payload
   }
 });
@@ -835,12 +853,12 @@ export const listRoles = (options) => ({
 export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
 export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
 
-export const getConversation = (conversationId) => ({
+export const getConversation = (conversationId, level = false) => ({
   [CALL_API]: {
     type: types.CONVERSATION,
     method: 'GET',
     id: conversationId,
-    path: `notification/conversation/${conversationId}`
+    path: `notification/conversation/${conversationId}?detailed=${level}`
   }
 });
 

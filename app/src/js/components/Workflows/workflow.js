@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import Ace from 'react-ace';
+import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 import ReactFlow from 'react-flow-renderer';
 import { connect } from 'react-redux';
@@ -81,7 +81,7 @@ class Workflows extends React.Component {
 
   renderReadOnlyJson (name, data) {
     return (
-      <Ace
+      <AceEditor
         id="read-only-json"
         mode='json'
         theme={config.editorTheme}
@@ -131,12 +131,14 @@ class Workflows extends React.Component {
     let reactFlowStyle = {};
     if (record.data) {
       const box = document.querySelector('.page__content--shortened');
-      const width = box.offsetWidth;
-      reactFlowStyle = {
-        left: `${(width - 350) / 2}px`,
-        position: 'absolute',
-        top: '475px'
-      };
+      if (box !== null) {
+        const width = box.offsetWidth;
+        reactFlowStyle = {
+          left: `${(width - 275) / 2}px`,
+          position: 'absolute',
+          top: '475px'
+        };
+      }
     }
     return (
       <div className='page__component'>

@@ -5,24 +5,24 @@ import { msPerDay } from '../../app/src/js/utils/datepicker';
 describe('Dashboard Requests Page', () => {
   describe('When not logged in', () => {
     it('should redirect to login page', () => {
-      cy.visit('/requests');
+      cy.visit(`${Cypress.env('baseUrl')}/requests`);
       shouldBeRedirectedToLogin();
     });
   });
 
   describe('When logged in', () => {
     before(() => {
-      cy.visit('/');
+      cy.visit(`${Cypress.env('baseUrl')})`);
       cy.task('resetState');
     });
 
     beforeEach(() => {
-      cy.login();
-      cy.visit('/');
+      // cy.login();
+      cy.visit(`${Cypress.env('baseUrl')}`);
     });
 
     it('should display a link to view requests', () => {
-      cy.visit('/requests');
+      cy.visit(`${Cypress.env('baseUrl')}/requests`);
       cy.url().should('include', 'requests');
       cy.contains('.heading--xlarge', 'Requests');
       // cy.contains('.heading--large', 'Request Overview');

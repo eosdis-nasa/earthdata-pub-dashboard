@@ -6,14 +6,15 @@ import { connect } from 'react-redux';
 import {
   getRequest,
   getDaac,
-  getUser,
+  getContributers,
   getWorkflow,
   withdrawRequest,
   restoreRequest,
   addUserToRequest,
   removeUserFromRequest,
   listWorkflows,
-  setWorkflowStep
+  setWorkflowStep,
+  copyRequest
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -80,6 +81,7 @@ class RequestOverview extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
+    this.cloneRequest = this.cloneRequest.bind(this);
   }
 
   componentDidMount () {
@@ -101,13 +103,13 @@ class RequestOverview extends React.Component {
           this.setSteps(value.data.steps, record.data.step_name);
         });
         if (record.data.contributor_ids !== undefined) {
-          for (const ea in record.data.contributor_ids) {
-            this.props.dispatch(getUser(record.data.contributor_ids[ea])).then(value => {
-              const names = this.state.names;
-              names[value.data.id] = value.data.name;
-              this.setState({ names: names });
-            });
-          }
+          this.props.dispatch(getContributers({ ids: record.data.contributor_ids })).then(value => {
+            const names = {};
+            for (const ea in value.data) {
+              names[value.data[ea].id] = value.data[ea].name;
+            }
+            this.setState({ names: names });
+          });
         }
       }
     }, 1500);
@@ -168,6 +170,18 @@ class RequestOverview extends React.Component {
     const { requestId } = this.props.match.params;
     const { history } = this.props;
     history.push(`/workflows?requestId=${requestId}`);
+  }
+
+  async cloneRequest () {
+    const { requestId } = this.props.match.params;
+    const name = JSON.parse(window.localStorage.getItem('auth-user')).name;
+    const id = JSON.parse(window.localStorage.getItem('auth-user')).id;
+    const payload = {
+      id: requestId,
+      copy_context: `Copied from bulk actions button by ${name} (${id})`
+    };
+    await this.props.dispatch(copyRequest(payload));
+    this.navigateBack();
   }
 
   async handleSubmit () {
@@ -252,6 +266,7 @@ class RequestOverview extends React.Component {
               value={this.state.current}
               placeholder='Set Current Workflow Step'
               className='selectButton'
+              aria-label='Select Current Workflow Step'
               isMulti={false} />
           </div>
           <br></br>
@@ -279,7 +294,7 @@ class RequestOverview extends React.Component {
       isHidden = record.data.hidden;
     }
     const request = record.data || false;
-    let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser } = requestPrivileges(this.props.privileges);
+    let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser, canInitialize } = requestPrivileges(this.props.privileges);
     if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
       canReassign = false;
     }
@@ -304,7 +319,8 @@ class RequestOverview extends React.Component {
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
     let dropdownConfig = [];
-    if (!isHidden) {
+
+    if (canWithdraw && !isHidden) {
       dropdownConfig = [
         {
           text: `${_config.requestHideButtonVerbage}`,
@@ -315,6 +331,17 @@ class RequestOverview extends React.Component {
           confirmText: deleteTextWithType(requestId, 'request')
         }
       ];
+    }
+
+    if (canInitialize && !isHidden) {
+      dropdownConfig.push({
+        text: 'Clone Request',
+        action: this.cloneRequest,
+        status: openStatus,
+        success: this.navigateBack,
+        confirmAction: true,
+        confirmText: 'Are you sure you want to copy request?'
+      });
     }
 
     if (canReassign && !isHidden) {
@@ -370,7 +397,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Initiator',
-        accessor: row => row.initiator.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : row.initiator.name
+        accessor: row => row.initiator && row.initiator.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : null
       },
       {
         label: 'Data Product Name',
@@ -378,7 +405,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Workflow',
-        accessor: row => canReassign && row.workflow_name ? <Link to={`/workflows/id/${row.workflow_id}`} aria-label="View your workflows">{row.workflow_name}</Link> : row.workflow_name
+        accessor: row => row.workflow_name ? <Link to={`/workflows/id/${row.workflow_id}`} aria-label="View your workflows">{row.workflow_name}</Link> : row.workflow_name
       },
       {
         label: 'Created',
@@ -393,11 +420,6 @@ class RequestOverview extends React.Component {
           return (shortDateNoTimeYearFirst(d));
         },
         property: 'last_change'
-      },
-      {
-        label: 'Locked',
-        accessor: row => row && row.lock ? bool(row.lock) : null,
-        property: 'lock'
       },
       {
         label: 'Communication',
@@ -438,7 +460,7 @@ class RequestOverview extends React.Component {
         <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
           { this.state.showSearch && <SearchModal { ...searchOptions }/> }
-          { canWithdraw || canRestore ? <AsyncCommands config={dropdownConfig} /> : null }
+          { canWithdraw || canRestore || canInitialize ? <AsyncCommands config={dropdownConfig} /> : null }
           { request && lastUpdated(request.last_change, 'Updated') }
           <dl className='status--process'>
             <dt>Status:</dt>
