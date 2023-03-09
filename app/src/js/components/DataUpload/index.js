@@ -3,9 +3,15 @@ import React from 'react';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import PropTypes from 'prop-types';
-import Upload from './DataUpload';
+import UploadOverview from './overview';
+//import Upload from './upload';
+import { strings } from '../locale';
 
-class DataUpload extends React.Component {
+class Upload extends React.Component {
+  constructor () {
+    super();
+    this.displayName = strings.all_users;
+  }
 
   render () {
     const { pathname } = this.props.location;
@@ -24,7 +30,7 @@ class DataUpload extends React.Component {
             />
             <div className='page__content--shortened'>
               <Switch>
-                <Route exact path='/upload' component={Upload} />
+                <Route exact path='/upload' component={UploadOverview} />
               </Switch>
             </div>
           </div>
@@ -34,10 +40,10 @@ class DataUpload extends React.Component {
   }
 }
 
-DataUpload.propTypes = {
+Upload.propTypes = {
   children: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object
 };
 
-export default withRouter(DataUpload);
+export default withRouter(Upload);

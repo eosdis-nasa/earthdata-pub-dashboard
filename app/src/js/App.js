@@ -29,7 +29,7 @@ import Conversations from './components/Conversations';
 import Rules from './components/Rules';
 import Modules from './components/Modules';
 import TestApi from './components/testApi';
-import DataUpload from './components/DataUpload';
+import Upload from './components/DataUpload';
 
 import config from './config';
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
@@ -56,7 +56,7 @@ const MainRoutes = () => {
         <Route path='/conversations/' component={Conversations} />
         <Route path='/rules' component={Rules} />
         <Route path='/modules' component={Modules} />
-        <Route path='/upload' component={{DataUpload}} />
+        <Route path='/upload' component={Upload} />
         <Route path='/test-api' component={TestApi} />
         <Route component={NotFound} />
       </Switch>
