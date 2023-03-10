@@ -1,20 +1,15 @@
 'use strict';
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
+
 import {
-  // getCount,
-  // searchUsers,
-  // clearUsersSearch,
-  // filterUsers,
-  // clearUsersFilter,
-  listUsers
+  getPutUrl
 } from '../../actions';
-// import Overview from '../Overview/overview';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import crypto from 'crypto';
+import { createMD5 } from 'hash-wasm';
 
 const breadcrumbConfig = [
   {
@@ -27,35 +22,70 @@ const breadcrumbConfig = [
   }
 ];
 
-const UploadOverview = ({ users, privileges }) => {
+const UploadOverview = ({signedPut}) => {
+
+  const chunkSize = 64 * 1024 * 1024;
+  const fileReader = new FileReader();
+  let hasher = null;
+
   const dispatch = useDispatch();
+
+  const hashChunk = (chunk) =>{
+    return new Promise((resolve, reject) =>{
+      fileReader.onload = async(e) => {
+        const view = new Uint8Array(e.target.result);
+        hasher.update(view);
+        resolve();
+      }
+
+      fileReader.readAsArrayBuffer(chunk);
+    });
+  }
+
+  const readFile = async(file) => {
+    if (hasher){
+      hasher.init();
+    } else {
+      hasher = await createMD5();
+    }
+
+    const chunkNumber = Math.floor(file.size / chunkSize);
+
+    for (let i = 0; i <= chunkNumber; i++){
+      const chunk = file.slice(
+        chunkSize * i,
+        Math.min(chunkSize * (i+1), file.size)
+      );
+      await hashChunk(chunk);
+    }
+    const hash = hasher.digest();
+    return Promise.resolve(hash);
+  }
 
   const hiddenFileInput = React.createRef(null);
   const handleClick = event =>{
     hiddenFileInput.current.click();
   }
-  const handleChange = event => {
+  const handleChange = async event => {
     const fileUpload = event.target.files[0];
-    const reader = new FileReader()
-
-    reader.onload = () => {
-      console.log("made it")
-      const binary = reader.result;
-      console.log(binary)
-      const test = crypto.createHash('md5')
-      console.log(test)
-      const update = test.update("test operation")
-      console.log(update)
-      const md5Hash = update.digest('base64');
-      console.log(md5Hash)
-    }
-    reader.readAsBinaryString(fileUpload)
-    console.log(fileUpload);
+    console.log("starting");
+    const start = Date.now();
+    const hash = await readFile(fileUpload);
+    const end = Date.now();
+    const duration = end - start;
+    const payload = {
+      file_name: fileUpload.name,
+      file_type: fileUpload.type,
+      checksum_value: hash
+    };
+    console.log(`${duration} ms`);
+    console.log(payload);
+    dispatch(getPutUrl(payload));
   }
 
-  //useEffect(() => {
-  //  dispatch(listUsers());
-  //}, [users.searchString, dispatch]);
+  useEffect(() => {
+    console.log(signedPut);
+  }, [signedPut]);
 
   return (
     <div className='page__component'>
@@ -83,18 +113,16 @@ const UploadOverview = ({ users, privileges }) => {
 };
 
 UploadOverview.propTypes = {
-  users: PropTypes.object,
   stats: PropTypes.object,
   dispatch: PropTypes.func,
   config: PropTypes.object,
-  privileges: PropTypes.object
+  signedPut: PropTypes.object
 };
 
 export { UploadOverview };
 
 export default withRouter(connect(state => ({
   stats: state.stats,
-  users: state.users,
-  privileges: state.api.tokens.privileges,
-  config: state.config
+  config: state.config,
+  signedPut: state.dataUpload.detail.data
 }))(UploadOverview));
