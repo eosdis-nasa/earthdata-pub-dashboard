@@ -36,7 +36,8 @@ const UploadOverview = ({signedPut}) => {
     const resp = await fetch(url, {
       method:'PUT',
       headers:{
-        "Content-Length":data.size
+        "Content-Length":data.size,
+        "Access-Control-Allow-Origin": "*"
       },
       body: data
     })
@@ -100,12 +101,10 @@ const UploadOverview = ({signedPut}) => {
 
   useEffect(async () => {
     console.log(signedPut);
-    if(signedPut.url){
-      console.log("uploading")
-      const upload = await put(signedPut.url, uploadFile)
-      console.log(upload)
-      console.log("finished")
-    }
+    console.log("uploading")
+    const upload = await put(signedPut.url, uploadFile)
+    console.log(upload)
+    console.log("finished")
   }, [signedPut]);
 
   return (
