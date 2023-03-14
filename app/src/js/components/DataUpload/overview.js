@@ -1,5 +1,5 @@
 'use strict';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
@@ -24,11 +24,24 @@ const breadcrumbConfig = [
 
 const UploadOverview = ({signedPut}) => {
 
+  const [uploadFile, setUploadFile] = useState('');
+
   const chunkSize = 64 * 1024 * 1024;
   const fileReader = new FileReader();
   let hasher = null;
 
   const dispatch = useDispatch();
+
+  const put = async (url, data) =>{
+    const resp = await fetch(url, {
+      method:'PUT',
+      headers:{
+        "Content-Length":data.size
+      },
+      body: data
+    })
+    return resp.json()
+  }
 
   const hashChunk = (chunk) =>{
     return new Promise((resolve, reject) =>{
@@ -66,8 +79,10 @@ const UploadOverview = ({signedPut}) => {
   const handleClick = event =>{
     hiddenFileInput.current.click();
   }
+
   const handleChange = async event => {
     const fileUpload = event.target.files[0];
+    setUploadFile(fileUpload)
     console.log("starting");
     const start = Date.now();
     const hash = await readFile(fileUpload);
@@ -83,8 +98,14 @@ const UploadOverview = ({signedPut}) => {
     dispatch(getPutUrl(payload));
   }
 
-  useEffect(() => {
+  useEffect(async () => {
     console.log(signedPut);
+    if(signedPut.url){
+      console.log("uploading")
+      const upload = await put(signedPut.url, uploadFile)
+      console.log(upload)
+      console.log("finished")
+    }
   }, [signedPut]);
 
   return (
