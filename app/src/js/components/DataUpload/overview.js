@@ -9,7 +9,7 @@ import {
 } from '../../actions';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import { createMD5 } from 'hash-wasm';
+import { createSHA256 } from 'hash-wasm';
 
 const breadcrumbConfig = [
   {
@@ -37,7 +37,6 @@ const UploadOverview = ({signedPut}) => {
       method:'PUT',
       headers:{
         "Content-Type":data.type,
-
       },
       body: data
     })
@@ -60,7 +59,7 @@ const UploadOverview = ({signedPut}) => {
     if (hasher){
       hasher.init();
     } else {
-      hasher = await createMD5();
+      hasher = await createSHA256();
     }
 
     const chunkNumber = Math.floor(file.size / chunkSize);
