@@ -24,12 +24,11 @@ const breadcrumbConfig = [
 
 const UploadOverview = ({signedPut}) => {
 
-  const [uploadFile, setUploadFile] = useState('');
-
   const chunkSize = 64 * 1024 * 1024;
   const fileReader = new FileReader();
   let hasher = null;
   let fileHash = ''
+  let uploadFile = ''
 
   const dispatch = useDispatch();
 
@@ -83,17 +82,17 @@ const UploadOverview = ({signedPut}) => {
   }
 
   const handleChange = async event => {
-    const fileUpload = event.target.files[0];
-    setUploadFile(fileUpload)
+    uploadFile = event.target.files[0];
+    console.log(uploadFile)
     console.log("starting");
     const start = Date.now();
-    const fileHash = await readFile(fileUpload);
+    const fileHash = await readFile(uploadFile);
     const end = Date.now();
     const duration = end - start;
     console.log(fileHash)
     const payload = {
-      file_name: fileUpload.name,
-      file_type: fileUpload.type,
+      file_name: uploadFile.name,
+      file_type: uploadFile.type,
       checksum_value: fileHash
     };
     console.log(`${duration} ms`);
