@@ -37,7 +37,7 @@ const UploadOverview = ({signedPut}) => {
       method:'PUT',
       headers:{
         "Content-Type":data.type,
-        "Content-MD5":fileHash
+        "X-Amz-Content-Md5":fileHash
       },
       body: data
     })
@@ -72,7 +72,7 @@ const UploadOverview = ({signedPut}) => {
       );
       await hashChunk(chunk);
     }
-    const hash = hasher.digest();
+    const hash = hasher.digest('base64');
     return Promise.resolve(hash);
   }
 
