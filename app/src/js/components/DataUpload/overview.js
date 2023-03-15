@@ -36,12 +36,12 @@ const UploadOverview = ({signedPut}) => {
     const resp = await fetch(url, {
       method:'PUT',
       headers:{
-        "Content-Length":data.size,
-        "Access-Control-Allow-Origin": "*"
+        "Content-Type":data.type,
+
       },
       body: data
     })
-    return resp.json()
+    return resp
   }
 
   const hashChunk = (chunk) =>{
