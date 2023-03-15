@@ -36,6 +36,7 @@ const UploadOverview = ({signedPut}) => {
     const resp = await fetch(url, {
       method:'PUT',
       headers:{
+        "Content-Type":data.type,
         "x-amz-checksum-sha256": fileHash
       },
       body: data
