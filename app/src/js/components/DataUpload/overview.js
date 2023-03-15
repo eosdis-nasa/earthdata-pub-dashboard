@@ -35,9 +35,9 @@ const UploadOverview = ({signedPut}) => {
   const put = async (url, data) =>{
     const resp = await fetch(url, {
       method:'PUT',
-      mode:'no-cors',
       headers:{
-        "Content-Length":data.size
+        "Content-Length":data.size,
+        "Access-Control-Allow-Origin": "*"
       },
       body: data
     })
