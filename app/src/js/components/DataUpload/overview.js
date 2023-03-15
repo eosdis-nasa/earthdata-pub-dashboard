@@ -25,6 +25,7 @@ const breadcrumbConfig = [
 const UploadOverview = ({signedPut}) => {
 
   const [uploadFile, setUploadFile] = useState('');
+  const [fileHash, setFileHash] = useState('');
 
   const chunkSize = 64 * 1024 * 1024;
   const fileReader = new FileReader();
@@ -37,6 +38,7 @@ const UploadOverview = ({signedPut}) => {
       method:'PUT',
       headers:{
         "Content-Type":data.type,
+        "x-amz-checksum-sha256": fileHash
       },
       body: data
     })
@@ -88,10 +90,11 @@ const UploadOverview = ({signedPut}) => {
     const hash = await readFile(fileUpload);
     const end = Date.now();
     const duration = end - start;
+    setFileHash(hash)
     const payload = {
       file_name: fileUpload.name,
       file_type: fileUpload.type,
-      checksum_value: hash
+      checksum_value: fileHash
     };
     console.log(`${duration} ms`);
     console.log(payload);
