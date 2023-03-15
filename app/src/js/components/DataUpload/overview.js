@@ -37,8 +37,7 @@ const UploadOverview = ({signedPut}) => {
       method:'PUT',
       headers:{
         "Content-Type":data.type,
-        "x-amz-checksum-sha256":fileHash,
-        "x-amz-sdk-checksum-algorithm":'sha256'
+        "x-amz-checksum-sha256":fileHash
       },
       body: data
     })
