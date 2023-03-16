@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   getForm,
-  getRequest
+  getRequest,
+  copyRequest
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -16,8 +17,8 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 import ReviewStep from '../Review/review';
-import { formPrivileges } from '../../utils/privileges';
 import _config from '../../config';
+import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 
 const metaAccessors = [
   {
@@ -49,16 +50,28 @@ class FormOverview extends React.Component {
   constructor () {
     super();
     this.navigateBack = this.navigateBack.bind(this);
+    this.cloneRequest = this.cloneRequest.bind(this);
     this.displayName = strings.form;
-    this.state = {};
+    this.state = { clone: false };
   }
 
   async componentDidMount () {
     const requestId = this.props.location.search.split('=')[1];
     const { formId } = this.props.match.params;
     const { dispatch } = this.props;
+    let isHidden = false;
+    if (typeof this.props.requests.detail !== 'undefined' && typeof this.props.requests.data !== 'undefined' && typeof this.props.requests.detail.data.hidden !== 'undefined') {
+      isHidden = this.props.requests.detail.data.hidden;
+    }
+    const { canInitialize } = requestPrivileges(this.props.privileges);
     await dispatch(getRequest(requestId));
     dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
+    if (canInitialize && !isHidden) {
+      const { history } = this.props;
+      if (history.location.state.clone) {
+        this.setState({ clone: true });
+      }
+    }
   }
 
   navigateBack () {
@@ -75,6 +88,34 @@ class FormOverview extends React.Component {
 
   getRandom () {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+
+  async cloneRequest () {
+    const requestId = this.props.location.search.split('=')[1];
+    const name = JSON.parse(window.localStorage.getItem('auth-user')).name;
+    const id = JSON.parse(window.localStorage.getItem('auth-user')).id;
+    const fields = document.querySelectorAll('input[type=checkbox]:checked');
+    const fieldArray = [];
+    for (const ea in fields) {
+      if (fields[ea].id) {
+        if (fields[ea].getAttribute('data-type-bbox') === 'true') {
+          fieldArray.push(`${fields[ea].id}_north`.replace(/_checkbox/, ''));
+          fieldArray.push(`${fields[ea].id}_south`.replace(/_checkbox/, ''));
+          fieldArray.push(`${fields[ea].id}_east`.replace(/_checkbox/, ''));
+          fieldArray.push(`${fields[ea].id}_west`.replace(/_checkbox/, ''));
+        } else {
+          fieldArray.push(fields[ea].id.replace(/_checkbox/, ''));
+        }
+      }
+    }
+    const payload = {
+      id: requestId,
+      copy_filter: fieldArray,
+      action_copy: true,
+      copy_context: `Copied from form fields checked by ${name} (${id})`
+    };
+    await this.props.dispatch(copyRequest(payload));
+    this.navigateBack();
   }
 
   getAnswer (id) {
@@ -118,7 +159,13 @@ class FormOverview extends React.Component {
             {id.map((item) => (
               <tr key={ this.getRandom() }>
                 {keys.map((k) => (
-                  <td key={ this.getRandom() } style={{ width: `${length}%` }}>{!this.hasSavedAnswers() ? <br /> : null}{item[k]}</td>
+                  <td key={ this.getRandom() } style={{ width: `${length}%` }}>{!this.hasSavedAnswers() ? <br /> : null}
+                  {
+                    this.state.clone
+                      ? this.getCheckbox(k, item[k])
+                      : null
+                  }
+                  {item[k]}</td>
                 ))}
               </tr>
             ))}
@@ -147,7 +194,13 @@ class FormOverview extends React.Component {
           <tbody>
             <tr key={ this.getRandom() }>
               {keys.map((k) => (
-                <td key={ this.getRandom() } style={{ width: `${length}%` }}>{!this.hasSavedAnswers() ? <br /> : null}{def}</td>
+                <td key={ this.getRandom() } style={{ width: `${length}%` }}>{!this.hasSavedAnswers() ? <br /> : null}
+                {
+                  this.state.clone
+                    ? this.getCheckbox(k, def)
+                    : null
+                }
+                {def}</td>
               ))}
             </tr>
           </tbody>
@@ -156,8 +209,20 @@ class FormOverview extends React.Component {
     );
   }
 
+  getCheckbox (id, answer, bbox = false) {
+    let checked = false;
+    if (answer !== 'no answer' && answer !== '__________________________________________') {
+      checked = true;
+    }
+    return (
+      <div key={this.getRandom()} style={{ width: '25px', display: 'inline-block', float: 'left' }}>
+        <input id={`${id}_checkbox`} className='checkbox' type='checkbox' defaultChecked={checked} data-type-bbox={bbox} />
+      </div>
+    );
+  }
+
   getBbox (id) {
-    let out = '';
+    let bbox = '';
     const n = `${id}_north`;
     const s = `${id}_south`;
     const e = `${id}_east`;
@@ -165,25 +230,25 @@ class FormOverview extends React.Component {
     if (this.hasSavedAnswers()) {
       const data = this.props.requests.detail.data.form_data;
       if (typeof data[n] !== 'undefined' && data[n] !== '') {
-        out += `N:  ${data[n]} `;
+        bbox += `N:  ${data[n]} `;
       }
       if (typeof data[e] !== 'undefined' && data[e] !== '') {
-        out += `E:  ${data[e]} `;
+        bbox += `E:  ${data[e]} `;
       }
       if (typeof data[s] !== 'undefined' && data[s] !== '') {
-        out += `S:  ${data[s]} `;
+        bbox += `S:  ${data[s]} `;
       }
       if (typeof data[w] !== 'undefined' && data[w] !== '') {
-        out += `W:  ${data[w]}`;
+        bbox += `W:  ${data[w]}`;
       }
     } else {
-      out += 'N:  _______  ';
-      out += 'E:  _______  ';
-      out += 'S:  _______  ';
-      out += 'W:  _______  ';
+      bbox += 'N:  _______  ';
+      bbox += 'E:  _______  ';
+      bbox += 'S:  _______  ';
+      bbox += 'W:  _______  ';
     }
-    if (out !== '') {
-      return out;
+    if (bbox !== '') {
+      return bbox;
     } else {
       return 'no answer';
     }
@@ -215,6 +280,11 @@ class FormOverview extends React.Component {
                     sectionQuestions.push(
                       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
                         {!hasAnswers ? <br /> : null}
+                        {
+                          this.state.clone
+                            ? this.getCheckbox(question[b].inputs[a].control_id, this.getBbox(question[b].inputs[a].control_id), true)
+                            : null
+                        }
                         <div key={this.getRandom()}>{this.getBbox(question[b].inputs[a].control_id)}</div>
                       </li>
                     );
@@ -238,9 +308,13 @@ class FormOverview extends React.Component {
                     sectionQuestions.push(
                       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
                         {!hasAnswers ? <br /> : null}
-                        <div key={this.getRandom()} style={{ width: '22.5%', display: 'inline-block', float: 'left' }}>
-                        {!question[b].inputs[a].label ? 'Response' : question[b].inputs[a].label}:</div>
-                        <div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
+                        {
+                          this.state.clone
+                            ? this.getCheckbox(question[b].inputs[a].control_id, this.getAnswer(question[b].inputs[a].control_id))
+                            : null
+                        }
+                        <div key={this.getRandom()} style={{ width: '25%', display: 'inline-block', float: 'left' }}>
+                        {!question[b].inputs[a].label ? 'Response' : question[b].inputs[a].label}:</div><div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
                       </li>
                     );
                   }
@@ -308,6 +382,7 @@ class FormOverview extends React.Component {
         }
       }
     }
+
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
@@ -335,7 +410,22 @@ class FormOverview extends React.Component {
           </div>
         </section>
         <section className='page_section'>
-          <ReviewStep />
+          {this.state.clone
+            ? <div className='flex__row reject-approve'>
+                <div className='flex__item--spacing'>
+                  <button onClick={() => this.navigateBack()}
+                      className='button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'>
+                      Cancel
+                  </button>
+                </div>
+                <div className='flex__item--spacing'>
+                  <button onClick={() => this.cloneRequest()}
+                      className='button button--copy button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'>
+                      Clone Request
+                  </button>
+                </div>
+              </div>
+            : <ReviewStep />}
         </section>
       </div>
     );
