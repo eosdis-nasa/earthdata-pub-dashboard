@@ -10,7 +10,6 @@ import {
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { createSHA256 } from 'hash-wasm';
-import axios from 'axios';
 
 const breadcrumbConfig = [
   {
@@ -34,16 +33,15 @@ const UploadOverview = ({signedPut}) => {
   const dispatch = useDispatch();
 
   const put = async (url, data) =>{
-    axios.put(url, data, {
+    const resp = await fetch(url, {
+      method:'PUT',
       headers:{
         "Content-Type":data.type,
         "x-amz-checksum-sha256":fileHash
-      }
-    }).then(function(response){
-      return response
-    }).catch(function(error){
-      return(error)
-    })
+      },
+      body:data
+    });
+    return resp
   }
 
   const hashChunk = (chunk) =>{
@@ -88,7 +86,7 @@ const UploadOverview = ({signedPut}) => {
     console.log(uploadFile)
     console.log("starting");
     const start = Date.now();
-    const fileHash = await readFile(uploadFile);
+    fileHash = await readFile(uploadFile);
     const end = Date.now();
     const duration = end - start;
     console.log(fileHash)
