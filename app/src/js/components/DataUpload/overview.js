@@ -9,8 +9,7 @@ import {
 } from '../../actions';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import { createSHA256 } from 'hash-wasm';
-import axios from 'axios';
+import { createMD5 } from 'hash-wasm';
 
 const breadcrumbConfig = [
   {
@@ -34,16 +33,14 @@ const UploadOverview = ({signedPut}) => {
   const dispatch = useDispatch();
 
   const put = async (url, data) =>{
-    axios.put(url, data, {
+    const resp = await fetch(url, {
+      method:'PUT',
       headers:{
-        "Content-Type":data.type,
-        "x-amz-checksum-sha256":fileHash
-      }
-    }).then(function(response){
-      return response
-    }).catch(function(error){
-      return(error)
-    })
+        "Content-Type":data.type
+      },
+      body:data
+    });
+    return resp;
   }
 
   const hashChunk = (chunk) =>{
@@ -62,7 +59,7 @@ const UploadOverview = ({signedPut}) => {
     if (hasher){
       hasher.init();
     } else {
-      hasher = await createSHA256();
+      hasher = await createMD5();
     }
 
     const chunkNumber = Math.floor(file.size / chunkSize);
