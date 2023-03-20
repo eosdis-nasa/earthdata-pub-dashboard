@@ -38,9 +38,9 @@ const UploadOverview = ({signedPut}) => {
     const resp = await fetch(url, {
       method:'PUT',
       headers:{
-        "Content-Type":data.type
+        "Content-Type":uploadFile.type
       },
-      body:data
+      body:uploadFile
     });
     return resp
   }
