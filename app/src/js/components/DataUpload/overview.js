@@ -24,6 +24,8 @@ const breadcrumbConfig = [
 
 const UploadOverview = ({signedPut}) => {
 
+  const [statusMsg, setStatusMsg] = useState('Select a file')
+
   const chunkSize = 64 * 1024 * 1024;
   const fileReader = new FileReader();
   let hasher = null;
@@ -81,30 +83,23 @@ const UploadOverview = ({signedPut}) => {
   }
 
   const handleChange = async event => {
+    setStatusMsg('Preparing for Upload')
     uploadFile = event.target.files[0];
-    console.log(uploadFile)
-    console.log("starting");
-    const start = Date.now();
     fileHash = await readFile(uploadFile);
-    const end = Date.now();
-    const duration = end - start;
-    console.log(fileHash)
     const payload = {
       file_name: uploadFile.name,
       file_type: uploadFile.type,
       checksum_value: fileHash
     };
-    console.log(`${duration} ms`);
-    console.log(payload);
     dispatch(getPutUrl(payload));
   }
 
   useEffect(async () => {
-    console.log(signedPut);
-    console.log("uploading")
-    const upload = await put(signedPut.url, uploadFile)
-    console.log(upload)
-    console.log("finished")
+    if(signedPut !== { }){
+      setStatusMsg('Uploading')
+      await put(signedPut.url, uploadFile)
+      setStatusMsg('Select a file')
+    }
   }, [signedPut]);
 
   return (
@@ -117,6 +112,7 @@ const UploadOverview = ({signedPut}) => {
           <h1 className='heading--large heading--shared-content with-description '>{strings.user_overview}</h1>
         </div>
       </section>
+      <hi>{`${statusMsg}`}</hi>
       <section className='page__section'>
         <div className='heading__wrapper--border'/>
         <input 
