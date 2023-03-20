@@ -9,7 +9,7 @@ import {
 } from '../../actions';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import { createMD5 } from 'hash-wasm';
+import { createSHA256 } from 'hash-wasm';
 
 const breadcrumbConfig = [
   {
@@ -36,11 +36,12 @@ const UploadOverview = ({signedPut}) => {
 
   const put = async (url) =>{
     console.log(uploadFile)
+    console.log(fileHash)
     const resp = await fetch(url, {
       method:'PUT',
       headers:{
         "Content-Type":uploadFile.type,
-        "Content-MD5": fileHash
+        "x-amz-checksum-sha256": fileHash
       },
       body:uploadFile
     });
@@ -63,7 +64,7 @@ const UploadOverview = ({signedPut}) => {
     if (hasher){
       hasher.init();
     } else {
-      hasher = await createMD5();
+      hasher = await createSHA256();
     }
 
     const chunkNumber = Math.floor(file.size / chunkSize);
