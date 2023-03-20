@@ -25,24 +25,24 @@ const breadcrumbConfig = [
 const UploadOverview = ({signedPut}) => {
 
   const [statusMsg, setStatusMsg] = useState('Select a file')
-  const [uploadFileTest, setUploadFileTest] = useState('')
+  const [uploadFile, setUploadFile] = useState('')
+  const [fileHash, setFileHash] = useState('')
 
   const chunkSize = 64 * 1024 * 1024;
   const fileReader = new FileReader();
   let hasher = null;
-  let fileHash = ''
-  let uploadFile = ''
 
   const dispatch = useDispatch();
 
-  const put = async (url, data) =>{
-    console.log(uploadFileTest)
+  const put = async (url) =>{
+    console.log(uploadFile)
     const resp = await fetch(url, {
       method:'PUT',
       headers:{
-        "Content-Type":uploadFileTest.type
+        "Content-Type":uploadFile.type,
+        "Content-MD5": fileHash
       },
-      body:uploadFileTest
+      body:uploadFile
     });
     return resp
   }
@@ -86,15 +86,14 @@ const UploadOverview = ({signedPut}) => {
 
   const handleChange = async event => {
     setStatusMsg('Preparing for Upload')
-    const newFile = event.target.files[0];
-    console.log(newFile)
-    uploadFile = newFile
-    setUploadFileTest(newFile)
-    fileHash = await readFile(newFile);
+    const file = event.target.files[0];
+    setUploadFile(file)
+    const hash = await readFile(file);
+    setFileHash(hash)
     const payload = {
-      file_name: uploadFile.name,
-      file_type: uploadFile.type,
-      checksum_value: fileHash
+      file_name: file.name,
+      file_type: file.type,
+      checksum_value: hash
     };
     dispatch(getPutUrl(payload));
   }
@@ -102,7 +101,7 @@ const UploadOverview = ({signedPut}) => {
   useEffect(async () => {
     if(signedPut !== { }){
       setStatusMsg('Uploading')
-      await put(signedPut.url, uploadFile)
+      await put(signedPut.url)
       setStatusMsg('Select a file')
     }
   }, [signedPut]);
