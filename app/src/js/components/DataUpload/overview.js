@@ -25,6 +25,7 @@ const breadcrumbConfig = [
 const UploadOverview = ({signedPut}) => {
 
   const [statusMsg, setStatusMsg] = useState('Select a file')
+  const [uploadFileTest, setUploadFileTest] = useState('')
 
   const chunkSize = 64 * 1024 * 1024;
   const fileReader = new FileReader();
@@ -35,13 +36,13 @@ const UploadOverview = ({signedPut}) => {
   const dispatch = useDispatch();
 
   const put = async (url, data) =>{
-    console.log(uploadFile)
+    console.log(uploadFileTest)
     const resp = await fetch(url, {
       method:'PUT',
       headers:{
-        "Content-Type":uploadFile.type
+        "Content-Type":uploadFileTest.type
       },
-      body:uploadFile
+      body:uploadFileTest
     });
     return resp
   }
@@ -86,7 +87,9 @@ const UploadOverview = ({signedPut}) => {
   const handleChange = async event => {
     setStatusMsg('Preparing for Upload')
     const newFile = event.target.files[0];
+    console.log(newFile)
     uploadFile = newFile
+    setUploadFileTest(newFile)
     //fileHash = await readFile(newFile);
     const payload = {
       file_name: uploadFile.name,
