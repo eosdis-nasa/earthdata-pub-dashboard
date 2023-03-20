@@ -87,7 +87,7 @@ const UploadOverview = ({signedPut}) => {
     setStatusMsg('Preparing for Upload')
     const newFile = event.target.files[0];
     uploadFile = newFile
-    fileHash = await readFile(newFile);
+    //fileHash = await readFile(newFile);
     const payload = {
       file_name: uploadFile.name,
       file_type: uploadFile.type,
