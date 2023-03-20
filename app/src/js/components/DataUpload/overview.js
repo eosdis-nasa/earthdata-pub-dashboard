@@ -36,6 +36,7 @@ const UploadOverview = ({signedPut}) => {
 
   const put = async (url) =>{
     console.log(uploadFile)
+    console.log(fileHash)
     const resp = await fetch(url, {
       method:'PUT',
       headers:{
