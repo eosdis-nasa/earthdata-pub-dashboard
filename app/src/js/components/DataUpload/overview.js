@@ -90,7 +90,7 @@ const UploadOverview = ({signedPut}) => {
     console.log(newFile)
     uploadFile = newFile
     setUploadFileTest(newFile)
-    //fileHash = await readFile(newFile);
+    fileHash = await readFile(newFile);
     const payload = {
       file_name: uploadFile.name,
       file_type: uploadFile.type,
