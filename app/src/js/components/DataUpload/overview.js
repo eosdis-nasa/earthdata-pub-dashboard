@@ -35,6 +35,7 @@ const UploadOverview = ({signedPut}) => {
   const dispatch = useDispatch();
 
   const put = async (url, data) =>{
+    console.log(uploadFile)
     const resp = await fetch(url, {
       method:'PUT',
       headers:{
