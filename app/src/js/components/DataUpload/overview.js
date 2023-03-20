@@ -35,6 +35,7 @@ const UploadOverview = ({signedPut}) => {
   const dispatch = useDispatch();
 
   const put = async (url, data) =>{
+    console.log(uploadFile)
     const resp = await fetch(url, {
       method:'PUT',
       headers:{
@@ -84,8 +85,9 @@ const UploadOverview = ({signedPut}) => {
 
   const handleChange = async event => {
     setStatusMsg('Preparing for Upload')
-    uploadFile = event.target.files[0];
-    fileHash = await readFile(uploadFile);
+    const newFile = event.target.files[0];
+    uploadFile = newFile
+    fileHash = await readFile(newFile);
     const payload = {
       file_name: uploadFile.name,
       file_type: uploadFile.type,
