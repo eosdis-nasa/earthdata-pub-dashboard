@@ -143,10 +143,16 @@ class FormOverview extends React.Component {
     }
   }
 
-  getQuestionEnums (keys, enums, id) {
+  getQuestionEnums (id, keys, enums, data, title) {
+    // This is called if a table has data
     const length = parseInt(100 / enums.length);
     return (
       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+        {
+          this.state.clone
+            ? this.getCheckbox(id, data, false, true, title)
+            : null
+        }
         <table style={{ minWidth: '100%' }}>
           <thead>
             <tr key={this.getRandom()}>
@@ -156,15 +162,10 @@ class FormOverview extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {id.map((item) => (
+            {data.map((item) => (
               <tr key={ this.getRandom() }>
                 {keys.map((k) => (
                   <td key={ this.getRandom() } style={{ width: `${length}%` }}>{!this.hasSavedAnswers() ? <br /> : null}
-                  {
-                    this.state.clone
-                      ? this.getCheckbox(k, item[k])
-                      : null
-                  }
                   {item[k]}</td>
                 ))}
               </tr>
@@ -175,7 +176,8 @@ class FormOverview extends React.Component {
     );
   }
 
-  getTableEnums (keys, enums) {
+  getTableEnums (id, keys, enums, title) {
+    // This is called if a table is empty
     const length = parseInt(100 / enums.length);
     let def = '__________________________________________';
     if (this.hasSavedAnswers()) {
@@ -183,6 +185,11 @@ class FormOverview extends React.Component {
     }
     return (
       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+        {
+          this.state.clone
+            ? this.getCheckbox(id, def, false, true, title)
+            : null
+        }
         <table style={{ minWidth: '100%' }}>
           <thead>
             <tr key={this.getRandom()}>
@@ -195,11 +202,6 @@ class FormOverview extends React.Component {
             <tr key={ this.getRandom() }>
               {keys.map((k) => (
                 <td key={ this.getRandom() } style={{ width: `${length}%` }}>{!this.hasSavedAnswers() ? <br /> : null}
-                {
-                  this.state.clone
-                    ? this.getCheckbox(k, def)
-                    : null
-                }
                 {def}</td>
               ))}
             </tr>
@@ -209,15 +211,19 @@ class FormOverview extends React.Component {
     );
   }
 
-  getCheckbox (id, answer, bbox = false) {
+  getCheckbox (id, answer, bbox = false, table = false, title = '') {
     let checked = false;
     if (answer !== 'no answer' && answer !== '__________________________________________') {
       checked = true;
     }
     return (
-      <div key={this.getRandom()} style={{ width: '25px', display: 'inline-block', float: 'left' }}>
+      <><div key={this.getRandom()} style={{ width: '25px', display: 'inline-block', float: 'left' }}>
         <input id={`${id}_checkbox`} className='checkbox' type='checkbox' defaultChecked={checked} data-type-bbox={bbox} />
-      </div>
+      </div><div style={{ width: '1000px', float: 'left' }}>
+          {table
+            ? `Copy "${title}" table`
+            : null}
+        </div></>
     );
   }
 
@@ -297,11 +303,11 @@ class FormOverview extends React.Component {
                     sectionQuestions.push(<li key={this.getRandom()}><br /></li>);
                     if (typeof data[question[b].inputs[a].control_id] !== 'undefined' && data[question[b].inputs[a].control_id].length !== 0) {
                       sectionQuestions.push(
-                        this.getQuestionEnums(keys, question[b].inputs[a].enums, data[question[b].inputs[a].control_id])
+                        this.getQuestionEnums(question[b].inputs[a].control_id, keys, question[b].inputs[a].enums, data[question[b].inputs[a].control_id], question[b].long_name)
                       );
                     } else {
                       sectionQuestions.push(
-                        this.getTableEnums(keys, question[b].inputs[a].enums)
+                        this.getTableEnums(question[b].inputs[a].control_id, keys, question[b].inputs[a].enums, question[b].long_name)
                       );
                     }
                   } else {
