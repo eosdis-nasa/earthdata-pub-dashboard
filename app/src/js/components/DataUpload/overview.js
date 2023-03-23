@@ -1,5 +1,5 @@
 'use strict';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
@@ -24,11 +24,26 @@ const breadcrumbConfig = [
 
 const UploadOverview = ({signedPut}) => {
 
+  const [statusMsg, setStatusMsg] = useState('Select a file')
+  const [uploadFile, setUploadFile] = useState('')
+  const [fileHash, setFileHash] = useState('')
+
   const chunkSize = 64 * 1024 * 1024;
   const fileReader = new FileReader();
   let hasher = null;
 
   const dispatch = useDispatch();
+
+  const put = async (url) =>{
+    const resp = await fetch(url, {
+      method:'PUT',
+      headers:{
+        "Content-Type":uploadFile.type
+      },
+      body:uploadFile
+    });
+    return resp
+  }
 
   const hashChunk = (chunk) =>{
     return new Promise((resolve, reject) =>{
@@ -66,25 +81,27 @@ const UploadOverview = ({signedPut}) => {
   const handleClick = event =>{
     hiddenFileInput.current.click();
   }
+
   const handleChange = async event => {
-    const fileUpload = event.target.files[0];
-    console.log("starting");
-    const start = Date.now();
-    const hash = await readFile(fileUpload);
-    const end = Date.now();
-    const duration = end - start;
+    setStatusMsg('Preparing for Upload')
+    const file = event.target.files[0];
+    setUploadFile(file)
+    const hash = await readFile(file);
+    setFileHash(hash)
     const payload = {
-      file_name: fileUpload.name,
-      file_type: fileUpload.type,
+      file_name: file.name,
+      file_type: file.type,
       checksum_value: hash
     };
-    console.log(`${duration} ms`);
-    console.log(payload);
     dispatch(getPutUrl(payload));
   }
 
-  useEffect(() => {
-    console.log(signedPut);
+  useEffect(async () => {
+    if(signedPut !== { }){
+      setStatusMsg('Uploading')
+      await put(signedPut.url)
+      setStatusMsg('Select a file')
+    }
   }, [signedPut]);
 
   return (
@@ -97,6 +114,7 @@ const UploadOverview = ({signedPut}) => {
           <h1 className='heading--large heading--shared-content with-description '>{strings.user_overview}</h1>
         </div>
       </section>
+      <hi>{`${statusMsg}`}</hi>
       <section className='page__section'>
         <div className='heading__wrapper--border'/>
         <input 
