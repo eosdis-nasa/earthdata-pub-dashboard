@@ -60,7 +60,7 @@ const PaginationTableHeader = ({
             setPageSize(Number(e.target.value));
           }}
         >
-          {[1, 5, 10, 20, 30, 40, 50].map(pageSize => (
+          {[5, 10, 20, 30, 40, 50].map(pageSize => (
             <option key={pageSize} value={pageSize}>
               {pageSize}
             </option>
