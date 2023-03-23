@@ -11,8 +11,17 @@ const PaginationTableHeader = ({
   previousPage,
   setPageSize,
   pageIndex,
-  pageSize
+  pageSize,
 }) => {
+  if (pageOptions.length && (pageIndex + 1) > pageOptions.length) {
+    const search = document.getElementsByClassName('search');
+    if (search.length > 0) {
+      setTimeout(() => {
+        gotoPage(0);
+        document.getElementsByClassName('search')[0].value = search[0].value;
+      }, 1000);
+    }
+  }
   return (
     <ul className="pagination" style={{ display: 'flex' }}>
       <li className="total-records" style={{ textAlign: 'left', flex: 1 }}>Page {pageOptions.length ? pageIndex + 1 : 0} of {pageOptions.length}</li>
@@ -51,7 +60,7 @@ const PaginationTableHeader = ({
             setPageSize(Number(e.target.value));
           }}
         >
-          {[5, 10, 20, 30, 40, 50].map(pageSize => (
+          {[1, 5, 10, 20, 30, 40, 50].map(pageSize => (
             <option key={pageSize} value={pageSize}>
               {pageSize}
             </option>
