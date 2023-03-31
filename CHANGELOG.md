@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Altered privileges for assigning workflows to include staff role and reassign privilege
 - Updated pagination header to notice when filter is found, but current table state is not reflecting search.
 - Changed workflow in request table to have link and allow for all do see workflows
 - Improved contributor lookup utilizing 1 request.

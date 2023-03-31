@@ -7,7 +7,6 @@ import {
   nullValue,
   fromNow,
   requestLink,
-  bool
 } from '../format';
 import {
   deleteRequest
@@ -30,6 +29,9 @@ export const getPrivileges = () => {
       isProducer: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
         : roles.find(o => o.short_name.match(/data_producer/g)),
+      isStaff: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/staff/g)),
       canReview: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
         : privileges.find(o => o.match(/REQUEST_REVIEW/g)),
@@ -89,7 +91,7 @@ export const sendToMeditor = (row, step, request, formalName) => {
 export const assignWorkflow = (request, formalName) => {
   const allPrivs = getPrivileges();
   let disabled = false;
-  if (typeof allPrivs !== 'undefined' && (typeof allPrivs.isManager !== 'undefined' || typeof allPrivs.isAdmin !== 'undefined')) {
+  if (typeof allPrivs !== 'undefined' && (typeof allPrivs.isManager !== 'undefined' || typeof allPrivs.isAdmin !== 'undefined' || typeof allPrivs.isStaff !== 'undefined' || typeof allPrivs.canReassign !== 'undefined')) {
     disabled = false;
   } else {
     disabled = true;
