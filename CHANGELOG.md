@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Altered privileges for assigning workflows to include staff role and reassign privilege
+- Updated pagination header to notice when filter is found, but current table state is not reflecting search.
 - Added clone request by field functionality to form
 - Changed workflow in request table to have link and allow for all do see workflows
 - Improved contributor lookup utilizing 1 request.
@@ -112,11 +114,11 @@ to just returning text using new class added, button--clear
 ## 0.3.15 - 2022-02-25
 
 - Added in Status page for request status grouping.
-- Added in Restore feature for withdrawn requests.  Added page for withdrawn requests. 
+- Added in Restore feature for withdrawn requests.  Added page for withdrawn requests.
 
 ## 0.3.14 - 2022-02-22
 
-- Added in Restore feature for withdrawn requests.  Added page for withdrawn requests. 
+- Added in Restore feature for withdrawn requests.  Added page for withdrawn requests.
 - Added links to request pages to sidebar. Misc minor fixes.
 
 ## 0.3.13 - 2022-02-10

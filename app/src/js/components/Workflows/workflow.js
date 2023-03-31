@@ -28,6 +28,12 @@ export const getRoles = () => {
         ? privileges.find(o => o.match(/ADMIN/g))
         : roles.find(o => o.short_name.match(/manager/g)),
       isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+      isProducer: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/data_producer/g)),
+      isStaff: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/staff/g))
     };
     return allRoles;
   }

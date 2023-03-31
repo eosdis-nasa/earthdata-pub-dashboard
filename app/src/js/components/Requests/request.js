@@ -51,6 +51,12 @@ export const getRoles = () => {
         ? privileges.find(o => o.match(/ADMIN/g))
         : roles.find(o => o.short_name.match(/manager/g)),
       isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+      isProducer: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/data_producer/g)),
+      isStaff: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/staff/g))
     };
     return allRoles;
   }
@@ -320,9 +326,6 @@ class RequestOverview extends React.Component {
     }
     const request = record.data || false;
     let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser, canInitialize } = requestPrivileges(this.props.privileges);
-    if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
-      canReassign = false;
-    }
     const { canEdit } = formPrivileges(this.props.privileges);
     let workflowSave;
     if (canWithdraw && canRestore) {
@@ -332,6 +335,9 @@ class RequestOverview extends React.Component {
     let canViewUsers = false;
     if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
       canViewUsers = true;
+    }
+    if (typeof allRoles !== 'undefined' && (typeof allRoles.isManager !== 'undefined' || typeof allRoles.isAdmin !== 'undefined' || typeof allRoles.isStaff !== 'undefined' || canReassign)) {
+      canReassign = true;
     }
     const requestForms = request.forms;
     let showTable = false;
