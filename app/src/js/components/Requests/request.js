@@ -439,7 +439,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Data Product Name',
-        accessor: row => row.form_data && row.form_data.data_product_name_value ? row.form_data.data_product_name_value : 'Request Initialized'
+        accessor: row => row.form_data && row.form_data.data_product_name_value ? row.form_data.data_product_name_value : `Request Initialized by ${row.initiator.name}`
       },
       {
         label: 'Workflow',
