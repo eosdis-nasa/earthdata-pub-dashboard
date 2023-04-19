@@ -317,3 +317,6 @@ export const LIST_MODULES_ERROR = 'LIST_MODULES_ERROR';
 // SearchModal
 export const SEARCH_MODAL = 'SEARCH_MODAL';
 export const SEARCH_MODAL_INFLIGHT = 'SEARCH_MODAL_INFLIGHT';
+
+// GetUploadUrl
+export const GET_SIGNED_PUT = 'GET_SIGNED_PUT';

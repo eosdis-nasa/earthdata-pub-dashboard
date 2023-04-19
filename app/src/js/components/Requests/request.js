@@ -22,7 +22,6 @@ import {
   lastUpdated,
   shortDateNoTimeYearFirst,
   shortDateShortTimeYearFirst,
-  bool,
   deleteTextWithType
 } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
@@ -52,6 +51,12 @@ export const getRoles = () => {
         ? privileges.find(o => o.match(/ADMIN/g))
         : roles.find(o => o.short_name.match(/manager/g)),
       isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+      isProducer: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/data_producer/g)),
+      isStaff: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/staff/g))
     };
     return allRoles;
   }
@@ -60,7 +65,7 @@ export const getRoles = () => {
 class RequestOverview extends React.Component {
   constructor () {
     super();
-    this.state = { daacName: '', current: {}, names: {} };
+    this.state = { daacName: '', current: {}, names: {}, formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
     this.reload = this.reload.bind(this);
     this.fastReload = this.fastReload.bind(this);
     this.navigateBack = this.navigateBack.bind(this);
@@ -82,6 +87,7 @@ class RequestOverview extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.cloneRequest = this.cloneRequest.bind(this);
+    this.cloneRequest2 = this.cloneRequest2.bind(this);
   }
 
   componentDidMount () {
@@ -108,8 +114,21 @@ class RequestOverview extends React.Component {
             for (const ea in value.data) {
               names[value.data[ea].id] = value.data[ea].name;
             }
-            this.setState({ names: names });
+            this.setState({ names });
           });
+        }
+        if (typeof record.data.form_data !== 'undefined' && JSON.stringify(record.data.form_data) !== '{}') {
+          let hasPublicationForm = false;
+          for (const ea in record.data.forms) {
+            const formId = record.data.forms[ea].id;
+            if (this.state.formIdForClone === formId) {
+              hasPublicationForm = true;
+              break;
+            }
+          }
+          if (!hasPublicationForm) {
+            this.setState({ formIdForClone: '6c544723-241c-4896-a38c-adbc0a364293' });
+          }
         }
       }
     }, 1500);
@@ -182,6 +201,18 @@ class RequestOverview extends React.Component {
     };
     await this.props.dispatch(copyRequest(payload));
     this.navigateBack();
+  }
+
+  async cloneRequest2 () {
+    const { requestId } = this.props.match.params;
+    const { history } = this.props;
+    history.push({
+      pathname: `/forms/id/${this.state.formIdForClone}`,
+      search: `?requestId=${requestId}`,
+      state: {
+        clone: true
+      }
+    });
   }
 
   async handleSubmit () {
@@ -295,9 +326,6 @@ class RequestOverview extends React.Component {
     }
     const request = record.data || false;
     let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser, canInitialize } = requestPrivileges(this.props.privileges);
-    if (typeof request.step_name !== 'undefined' && request.step_name.match(/assign_a_workflow/g)) {
-      canReassign = false;
-    }
     const { canEdit } = formPrivileges(this.props.privileges);
     let workflowSave;
     if (canWithdraw && canRestore) {
@@ -307,6 +335,9 @@ class RequestOverview extends React.Component {
     let canViewUsers = false;
     if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
       canViewUsers = true;
+    }
+    if (typeof allRoles !== 'undefined' && (typeof allRoles.isManager !== 'undefined' || typeof allRoles.isAdmin !== 'undefined' || typeof allRoles.isStaff !== 'undefined' || canReassign)) {
+      canReassign = true;
     }
     const requestForms = request.forms;
     let showTable = false;
@@ -341,6 +372,13 @@ class RequestOverview extends React.Component {
         success: this.navigateBack,
         confirmAction: true,
         confirmText: 'Are you sure you want to copy request?'
+      });
+      dropdownConfig.push({
+        text: 'Clone Request By Field',
+        action: this.cloneRequest2,
+        status: openStatus,
+        success: this.navigateBack,
+        confirmAction: false
       });
     }
 
