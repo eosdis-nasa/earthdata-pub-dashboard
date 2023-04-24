@@ -17,6 +17,8 @@ import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 const textRef = React.createRef();
 
 const reply = (dispatch, id) => {
+  const resp = textRef.current.value.replace("\n", "\n");
+  console.log(resp);
   const payload = { conversation_id: id, text: textRef.current.value };
   dispatch(replyConversation(payload));
   textRef.current.value = '';
