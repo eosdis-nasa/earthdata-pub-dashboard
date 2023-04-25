@@ -18,7 +18,6 @@ const textRef = React.createRef();
 
 const reply = (dispatch, id) => {
   const resp = textRef.current.value.replace(/\n/g, "\\n");
-  console.log(resp);
   const payload = { conversation_id: id, text: resp };
   dispatch(replyConversation(payload));
   textRef.current.value = '';
