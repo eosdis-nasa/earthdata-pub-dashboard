@@ -87,7 +87,6 @@ const UploadOverview = ({signedPut}) => {
     const file = event.target.files[0];
     setUploadFile(file)
     const hash = await readFile(file);
-    console.log( hash)
     setFileHash(hash)
     const payload = {
       file_name: file.name,
