@@ -17,7 +17,8 @@ import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 const textRef = React.createRef();
 
 const reply = (dispatch, id) => {
-  const resp = textRef.current.value.replace(/\n/g, "\\n");
+  const resp = textRef.current.value.replace(/[\n\t\r\"]/g, "\\$&");
+  console.log(resp)
   const payload = { conversation_id: id, text: resp };
   dispatch(replyConversation(payload));
   textRef.current.value = '';
