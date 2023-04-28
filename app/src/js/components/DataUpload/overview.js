@@ -117,7 +117,7 @@ const UploadOverview = ({ signedPut }) => {
         <Breadcrumbs config={breadcrumbConfig} />
       </section>
       <div className='heading__wrapper--border'>
-        <h1 className='heading--medium heading--shared-content with-description'>Data Files 2</h1>
+        <h1 className='heading--medium heading--shared-content with-description'>Data Files</h1>
       </div>
       <div className='form__textarea'>
         <label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${statusMsg}`}
