@@ -42,7 +42,7 @@ const UploadOverview = ({ signedPut }) => {
       body: uploadFile
     }).then((resp) => {
       if (resp.status === 404) {
-        setStatusMsg('Select another file');
+        setStatusMsg('Select a file');
       } else {
         setStatusMsg('Upload Complete');
         setTimeout(() => {
@@ -105,10 +105,10 @@ const UploadOverview = ({ signedPut }) => {
   };
 
   useEffect(async () => {
-    if (signedPut !== { }) {
+    if (signedPut !== {}) {
       setStatusMsg('Uploading');
       await put(signedPut.url);
-    }
+    } 
   }, [signedPut]);
 
   return (
