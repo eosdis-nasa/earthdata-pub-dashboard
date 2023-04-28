@@ -101,12 +101,12 @@ const UploadOverview = ({ signedPut }) => {
       file_type: file.type,
       checksum_value: hash
     };
+    setStatusMsg('Uploading');
     dispatch(getPutUrl(payload));
   };
 
   useEffect(async () => {
     if (signedPut !== {}) {
-      setStatusMsg('Uploading');
       await put(signedPut.url);
     } 
   }, [signedPut]);
@@ -117,7 +117,7 @@ const UploadOverview = ({ signedPut }) => {
         <Breadcrumbs config={breadcrumbConfig} />
       </section>
       <div className='heading__wrapper--border'>
-        <h1 className='heading--medium heading--shared-content with-description'>Data Files 1</h1>
+        <h1 className='heading--medium heading--shared-content with-description'>Data Files 2</h1>
       </div>
       <div className='form__textarea'>
         <label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${statusMsg}`}
