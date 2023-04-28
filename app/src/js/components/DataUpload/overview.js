@@ -26,7 +26,7 @@ const UploadOverview = ({ signedPut }) => {
   const [statusMsg, setStatusMsg] = useState('Select a file');
   const [uploadFile, setUploadFile] = useState('');
   const [fileHash, setFileHash] = useState('');
-
+  let hiddenFileInput = React.createRef(null);
   const chunkSize = 64 * 1024 * 1024;
   const fileReader = new FileReader();
   let hasher = null;
@@ -41,12 +41,13 @@ const UploadOverview = ({ signedPut }) => {
       },
       body: uploadFile
     }).then((resp) => {
-      if (resp.status === 404) {
+      if (resp.status !== 200) {
         setStatusMsg('Select a file');
       } else {
         setStatusMsg('Upload Complete');
         setTimeout(() => {
           setStatusMsg('Select another file');
+          hiddenFileInput = React.createRef(null);
         }, '5000');
       }
     });
@@ -85,7 +86,6 @@ const UploadOverview = ({ signedPut }) => {
     return Promise.resolve(hash);
   };
 
-  const hiddenFileInput = React.createRef(null);
   const handleClick = event => {
     hiddenFileInput.current.click();
   };
@@ -117,7 +117,7 @@ const UploadOverview = ({ signedPut }) => {
         <Breadcrumbs config={breadcrumbConfig} />
       </section>
       <div className='heading__wrapper--border'>
-        <h1 className='heading--medium heading--shared-content with-description'>Data Files</h1>
+        <h1 className='heading--medium heading--shared-content with-description'>Data Files 1</h1>
       </div>
       <div className='form__textarea'>
         <label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${statusMsg}`}
