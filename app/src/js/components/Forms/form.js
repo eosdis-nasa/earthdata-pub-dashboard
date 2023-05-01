@@ -369,7 +369,8 @@ class FormOverview extends React.Component {
         }
       }
       window.print();
-      window.location.reload(false);
+      window.focus();
+      window.location.reload();
     }
   }
 
