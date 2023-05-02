@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Added print function to form for anticipation of GES DISC workflow request
 - Data Product Name default request text to include creator until data product name is present
 - Altered privileges for assigning workflows to include staff role and reassign privilege
 - Updated pagination header to notice when filter is found, but current table state is not reflecting search.
