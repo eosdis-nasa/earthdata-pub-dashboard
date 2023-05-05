@@ -354,21 +354,35 @@
     font-weight: 900;
     visibility: hidden;
   }
-    &--edit {
-      background-color: $light-green;
-      position: relative;
+  &--edit {
+    background-color: $light-green;
+    position: relative;
 
-      &:before{
-        color: $white;
-        position: absolute;
-        font-family: 'FontAwesome';
-        content: '\f044';
-        font-weight: 900;
-        left: 10px;
+    &:before{
+      color: $white;
+      position: absolute;
+      font-family: 'FontAwesome';
+      content: '\f044';
+      font-weight: 900;
+      left: 10px;
 
-      }
     }
+  }
 
+  &--print {
+    background-color: $light-green;
+    position: relative;
+
+    &:before{
+      color: $white;
+      position: absolute;
+      font-family: 'FontAwesome';
+      content: '\f02f';
+      font-weight: 900;
+      left: 10px;
+
+    }
+  }
     &--delete {
       background-color: $error-red;
       position: relative;

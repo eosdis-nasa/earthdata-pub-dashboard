@@ -6,7 +6,8 @@ import { withRouter } from 'react-router-dom';
 import {
   getForm,
   getRequest,
-  copyRequest
+  copyRequest,
+  setTokenState
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -51,6 +52,7 @@ class FormOverview extends React.Component {
     super();
     this.navigateBack = this.navigateBack.bind(this);
     this.cloneRequest = this.cloneRequest.bind(this);
+    this.printForm = this.printForm.bind(this);
     this.displayName = strings.form;
     this.state = { clone: false };
   }
@@ -68,7 +70,7 @@ class FormOverview extends React.Component {
     dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
     if (canInitialize && !isHidden) {
       const { history } = this.props;
-      if (history.location.state.clone) {
+      if (history.location.state !== undefined && history.location.state.clone) {
         this.setState({ clone: true });
       }
     }
@@ -319,7 +321,7 @@ class FormOverview extends React.Component {
                             ? this.getCheckbox(question[b].inputs[a].control_id, this.getAnswer(question[b].inputs[a].control_id))
                             : null
                         }
-                        <div key={this.getRandom()} style={{ width: '25%', display: 'inline-block', float: 'left' }}>
+                        <div key={this.getRandom()} style={{ width: '50%', display: 'inline-block', float: 'left' }}>
                         {!question[b].inputs[a].label ? 'Response' : question[b].inputs[a].label}:</div><div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
                       </li>
                     );
@@ -348,6 +350,27 @@ class FormOverview extends React.Component {
       return true;
     } else {
       return false;
+    }
+  }
+
+  printForm () {
+    const hideItems = ['div.sidebar', 'div.header', 'div.content__header', 'div.app__target--container', 'div.th-wrapper', 'img', 'button', 'a.button', 'section.page__section--top', 'footer', 'hr:last-child'];
+    if (typeof this.props.requests !== 'undefined' &&
+      typeof this.props.requests.detail.data !== 'undefined' &&
+      typeof this.props.requests.detail.data.step_data !== 'undefined') {
+      for (const ea in hideItems) {
+        const el = document.querySelectorAll(hideItems[ea]);
+        for (const i in el) {
+          if (typeof el[i].classList !== 'undefined') {
+            if (!el[i].classList.contains('hidden')) {
+              el[i].classList.add('hidden');
+            }
+          }
+        }
+      }
+      window.print();
+      window.focus();
+      window.location.reload();
     }
   }
 
@@ -394,6 +417,12 @@ class FormOverview extends React.Component {
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>{form.long_name}</h1>
           {requestId !== '' && editable && this.hasSavedAnswers() ? <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl} aria-label='edit your form'>Edit</a> : null}
+          {requestId !== ''
+            ? <button onClick={() => this.printForm()}
+                className='button button--small button--green button--print form-group__element--right'>
+                Print
+              </button>
+            : null}
         </section>
 
         <section className='page__section'>
