@@ -6,8 +6,7 @@ import { withRouter } from 'react-router-dom';
 import {
   getForm,
   getRequest,
-  copyRequest,
-  setTokenState
+  copyRequest
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -20,6 +19,7 @@ import Metadata from '../Table/Metadata';
 import ReviewStep from '../Review/review';
 import _config from '../../config';
 import { requestPrivileges, formPrivileges } from '../../utils/privileges';
+import Comments from '../Comments/comments';
 
 const metaAccessors = [
   {
@@ -67,12 +67,18 @@ class FormOverview extends React.Component {
     }
     const { canInitialize } = requestPrivileges(this.props.privileges);
     await dispatch(getRequest(requestId));
-    dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
+    await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
     if (canInitialize && !isHidden) {
       const { history } = this.props;
       if (history.location.state !== undefined && history.location.state.clone) {
         this.setState({ clone: true });
       }
+    }
+    if (localStorage.getItem('print') !== null) {
+      const backHref = localStorage.getItem('print');
+      localStorage.removeItem('print');
+      await this.printForm();
+      window.location.href = `${window.location.origin}/${backHref}`;
     }
   }
 
@@ -353,7 +359,7 @@ class FormOverview extends React.Component {
     }
   }
 
-  printForm () {
+  async printForm () {
     const hideItems = ['div.sidebar', 'div.header', 'div.content__header', 'div.app__target--container', 'div.th-wrapper', 'img', 'button', 'a.button', 'section.page__section--top', 'footer', 'hr:last-child'];
     if (typeof this.props.requests !== 'undefined' &&
       typeof this.props.requests.detail.data !== 'undefined' &&
@@ -369,14 +375,13 @@ class FormOverview extends React.Component {
         }
       }
       window.print();
-      window.focus();
-      window.location.reload();
     }
   }
 
   render () {
     let editable = false;
     const { canEdit } = formPrivileges(this.props.privileges);
+    let { canReview } = requestPrivileges(this.props.privileges);
     let requestId = this.props.location.search.split('=')[1];
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
@@ -388,6 +393,10 @@ class FormOverview extends React.Component {
         requestId = this.props.requests.detail.data.id;
         if (this.props.requests.detail.data.step_name.match(/close/g)) {
           editable = false;
+        } else if (canReview && (this.props.requests.detail.data.step_name.match(/data_publication_request_form_review/g) || this.props.requests.detail.data.step_name.match(/data_accession_request_form_review/g))) {
+          canReview = true;
+        } else if (!this.props.requests.detail.data.step_name.match(/data_publication_request_form_review/g) || !this.props.requests.detail.data.step_name.match(/data_accession_request_form_review/g)) {
+          canReview = false;
         }
       }
     }
@@ -418,7 +427,7 @@ class FormOverview extends React.Component {
           <h1 className='heading--large heading--shared-content with-description'>{form.long_name}</h1>
           {requestId !== '' && editable && this.hasSavedAnswers() ? <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl} aria-label='edit your form'>Edit</a> : null}
           {requestId !== ''
-            ? <button onClick={() => this.printForm()}
+            ? <button onClick={() => { this.printForm(); window.location.reload(); }}
                 className='button button--small button--green button--print form-group__element--right'>
                 Print
               </button>
@@ -460,7 +469,11 @@ class FormOverview extends React.Component {
                   </button>
                 </div>
               </div>
-            : <ReviewStep />}
+            : null }
+            {requestId !== '' && canReview
+              ? <><Comments /><ReviewStep /></>
+              : null
+            }
         </section>
       </div>
     );
