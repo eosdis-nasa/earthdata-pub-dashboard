@@ -382,6 +382,12 @@
       left: 10px;
 
     }
+    /* &.button__animation:hover:before {
+      visibility: hidden;
+    }
+    &:hover {
+      padding: .65em 2.7em .65em 1em!important;
+    }*/
   }
     &--delete {
       background-color: $error-red;
@@ -584,6 +590,7 @@
       &:hover {
         padding: .7em 3em .7em 1em;
       }
+      
 
       &.button--small {
         &:hover {
@@ -612,8 +619,17 @@
       top: .75em;
     }
 
+    &__arrow2:after {
+      left: 130%;
+      top: .75em;
+    }
+
     &__arrow:hover:after {
       left: 85%;
+    }
+
+    &__arrow2:hover:after {
+      left: 89%;
     }
 
     &__animation--md:hover {
