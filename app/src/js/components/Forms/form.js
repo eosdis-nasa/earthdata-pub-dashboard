@@ -321,7 +321,7 @@ class FormOverview extends React.Component {
                             ? this.getCheckbox(question[b].inputs[a].control_id, this.getAnswer(question[b].inputs[a].control_id))
                             : null
                         }
-                        <div key={this.getRandom()} style={{ width: '25%', display: 'inline-block', float: 'left' }}>
+                        <div key={this.getRandom()} style={{ width: '50%', display: 'inline-block', float: 'left' }}>
                         {!question[b].inputs[a].label ? 'Response' : question[b].inputs[a].label}:</div><div key={this.getRandom()}>{this.getAnswer(question[b].inputs[a].control_id)}</div>
                       </li>
                     );
