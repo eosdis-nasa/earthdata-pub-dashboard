@@ -11,6 +11,7 @@ import { lastUpdated, shortDateNoTimeYearFirst } from '../../utils/format';
 import List from '../Table/Table';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import { requestPrivileges } from '../../utils/privileges';
 
 export const getRoles = () => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
@@ -22,6 +23,12 @@ export const getRoles = () => {
         ? privileges.find(o => o.match(/ADMIN/g))
         : roles.find(o => o.short_name.match(/manager/g)),
       isAdmin: privileges.find(o => o.match(/ADMIN/g)),
+      isProducer: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/data_producer/g)),
+      isStaff: privileges.find(o => o.match(/ADMIN/g))
+        ? privileges.find(o => o.match(/ADMIN/g))
+        : roles.find(o => o.short_name.match(/staff/g))
     };
     return allRoles;
   }
@@ -103,12 +110,16 @@ class WorkflowsOverview extends React.Component {
     const workflows = this.props.workflows;
     const requestId = location.search.split('=')[1];
     if (workflows && !Array.isArray(workflows.list.data)) {
-      window.location.reload(true)
+      window.location.reload(true);
     }
     const allRoles = getRoles();
     let isEditable = false;
     if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
       isEditable = true;
+    }
+    let { canReassign } = requestPrivileges(this.props.privileges);
+    if (typeof allRoles !== 'undefined' && (typeof allRoles.isManager !== 'undefined' || typeof allRoles.isAdmin !== 'undefined' || typeof allRoles.isStaff !== 'undefined' || canReassign)) {
+      canReassign = true;
     }
     const selectInput = [{
       Header: 'Select',
@@ -160,6 +171,16 @@ class WorkflowsOverview extends React.Component {
 
     let tableColumns = [];
     if (typeof requestId !== 'undefined') {
+      for (const ea in workflows.list.data) {
+        if (workflows.list.data[ea].short_name.match(/assign_a_workflow/g)) {
+          const cls = `select_${workflows.list.data[ea].short_name}`;
+          setTimeout(() => {
+            if (typeof document.getElementsByClassName(cls)[0] !== 'undefined') {
+              document.getElementsByClassName(cls)[0].style.visibility = 'hidden';
+            }
+          }, 500);
+        }
+      }
       tableColumns = selectInput.concat(defaultTableColumns);
       const selectTr = document.getElementsByClassName('table__sort')[0];
       // This makes the select column header appear unclickable (although it is)
@@ -235,7 +256,7 @@ class WorkflowsOverview extends React.Component {
             >
             </List>
           </div>
-          { requestId
+          { requestId && canReassign
             ? <section className='page__section'>
               <button
                 className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}

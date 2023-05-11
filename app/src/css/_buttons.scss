@@ -346,6 +346,14 @@
       visibility: hidden;
   }
 
+  &--copy:hover:before{
+    color: $white;
+    position: absolute;
+    font-family: 'FontAwesome';
+    content: '\f0c5';
+    font-weight: 900;
+    visibility: hidden;
+  }
     &--edit {
       background-color: $light-green;
       position: relative;
