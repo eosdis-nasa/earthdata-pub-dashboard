@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+
+
+## 1.0.12 - 2023-05-12
 - Added comment component for of GES DISC workflow requests
 - Added print function to form for anticipation of GES DISC workflow request
 - Data Product Name default request text to include creator until data product name is present
