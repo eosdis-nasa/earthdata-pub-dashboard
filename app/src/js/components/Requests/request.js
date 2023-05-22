@@ -327,11 +327,11 @@ class RequestOverview extends React.Component {
     const request = record.data || false;
     let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser, canInitialize } = requestPrivileges(this.props.privileges);
     const { canEdit } = formPrivileges(this.props.privileges);
+    const allRoles = getRoles();
     let workflowSave;
-    if (canWithdraw && canRestore) {
+    if (typeof allRoles !== 'undefined' && typeof allRoles.isAdmin !== 'undefined') {
       workflowSave = this.renderWorkflowSave(record);
     }
-    const allRoles = getRoles();
     let canViewUsers = false;
     if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
       canViewUsers = true;
@@ -514,7 +514,12 @@ class RequestOverview extends React.Component {
           </div>
           { record.inflight ? <Loading /> : request ? <div className='indented__details'><Metadata data={request} accessors={metaAccessors} /></div> : null }
         </section>
-        <section className='page__section'>
+        {
+          Object.keys(this.state.names).length === 0
+            ? 
+            <Loading />
+            :
+            <section className='page__section'>
           <br></br>
           <div className='page__section__header'>
             <h1 className='heading--small' aria-labelledby='contributers'>
@@ -560,9 +565,9 @@ class RequestOverview extends React.Component {
               : null
             }
           </div>
-          </section>
+          </section>}
           {
-            !record.inflight
+            record.data && record.data.contributor_ids && Object.keys(this.state.names).length > 0
               ? <section className='page__section'>
               {workflowSave}
             </section>
