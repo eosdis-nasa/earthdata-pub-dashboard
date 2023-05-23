@@ -35,6 +35,13 @@ class Comment extends React.Component {
     return words.join(' ');
   }
 
+  formatComments () {
+    if (document.querySelectorAll('textarea#comment')[0].value !== '') {
+      document.querySelectorAll('textarea#comment')[0].placeholder = 'Enter a comment';
+      document.querySelectorAll('textarea#comment')[0].classList.remove('required');
+    }
+  }
+
   hasStepData () {
     if (typeof this.props.requests !== 'undefined' &&
     typeof this.props.requests.detail.data !== 'undefined' &&
@@ -98,7 +105,7 @@ class Comment extends React.Component {
                   id='comment'
                   aria-label="Enter a comment"
                   title="Enter a comment"
-                  onChange={(e) => { e.preventDefault(); document.querySelectorAll('button.button--reply')[0].classList.remove('hidden'); }}
+                  onChange={(e) => { e.preventDefault(); this.formatComments(); document.querySelectorAll('button.button--reply')[0].classList.remove('hidden'); }}
                   ></textarea>
                 <div style={{ minHeight: '40px' }}>
                   <button type='submit'

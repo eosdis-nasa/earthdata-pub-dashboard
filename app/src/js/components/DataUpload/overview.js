@@ -34,6 +34,7 @@ const UploadOverview = ({ signedPut }) => {
   const dispatch = useDispatch();
 
   const put = async (url) => {
+    console.log(uploadFile)
     const resp = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -122,6 +123,7 @@ const UploadOverview = ({ signedPut }) => {
       <div className='indented__details'>
         <div className='form__textarea'>
           <label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${statusMsg}`}
+            <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em' }}></span>
             <input
               onChange={handleChange}
               type="file"
