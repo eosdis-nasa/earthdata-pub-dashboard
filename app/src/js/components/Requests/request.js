@@ -40,6 +40,7 @@ import _config from '../../config';
 import Meditor from '../MeditorModal/modal';
 import SearchModal from '../SearchModal';
 import Select from 'react-select';
+import UploadOverview from '../DataUpload/overview';
 
 export const getRoles = () => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
@@ -569,6 +570,7 @@ class RequestOverview extends React.Component {
               : null
           }
         <Meditor></Meditor>
+        <UploadOverview />
         { showTable
           ? <section className='page__section'>
             <div className='heading__wrapper--border'>

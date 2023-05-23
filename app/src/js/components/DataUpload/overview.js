@@ -112,10 +112,8 @@ const UploadOverview = ({ signedPut }) => {
   }, [signedPut]);
 
   return (
+    <><br></br>
     <div className='page__component'>
-      <section className='page__section page__section__controls'>
-        <Breadcrumbs config={breadcrumbConfig} />
-      </section>
       <div className='heading__wrapper--border'>
         <h1 className='heading--medium heading--shared-content with-description'>Data Files</h1>
       </div>
@@ -132,7 +130,7 @@ const UploadOverview = ({ signedPut }) => {
         </label>
         <button onClick={handleClick} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
       </div>
-    </div>
+    </div></>
   );
 };
 
