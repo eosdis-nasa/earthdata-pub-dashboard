@@ -114,21 +114,24 @@ const UploadOverview = ({ signedPut }) => {
   return (
     <><br></br>
     <div className='page__component'>
-      <div className='heading__wrapper--border'>
-        <h1 className='heading--medium heading--shared-content with-description'>Data Files</h1>
+      <div className='page__section__header'>
+        <h1 className='heading--small' aria-labelledby='Upload Data File'>
+          Upload Data File
+        </h1>
       </div>
-      <div className='form__textarea'>
-        <label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${statusMsg}`}
-          <input
-            onChange={handleChange}
-            type = "file"
-            multiple={false}
-            style={{ display: 'none' }}
-            ref={hiddenFileInput}
-            id="hiddenFileInput"
-          />
-        </label>
-        <button onClick={handleClick} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
+      <div className='indented__details'>
+        <div className='form__textarea'>
+          <label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${statusMsg}`}
+            <input
+              onChange={handleChange}
+              type="file"
+              multiple={false}
+              style={{ display: 'none' }}
+              ref={hiddenFileInput}
+              id="hiddenFileInput" />
+          </label>
+          <button onClick={handleClick} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
+        </div>
       </div>
     </div></>
   );
