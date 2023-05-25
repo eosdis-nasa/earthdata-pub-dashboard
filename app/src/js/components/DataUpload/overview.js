@@ -34,25 +34,45 @@ const UploadOverview = ({ signedPut }) => {
   const dispatch = useDispatch();
 
   const put = async (url) => {
-    console.log(uploadFile)
-    const resp = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': uploadFile.type
-      },
-      body: uploadFile
-    }).then((resp) => {
-      if (resp.status !== 200) {
-        setStatusMsg('Select a file');
-      } else {
-        setStatusMsg('Upload Complete');
+    if (uploadFile && typeof url !== 'undefined' && !url.match(/undefined/g)) {
+      const resp = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': uploadFile.type
+        },
+        body: uploadFile
+      }).then((resp) => {
+        if (resp.status !== 200) {
+          setStatusMsg('Select a file');
+          hiddenFileInput = React.createRef(null);
+        } else {
+          setStatusMsg('Upload Complete');
+          setTimeout(() => {
+            setStatusMsg('Select another file');
+            hiddenFileInput = React.createRef(null);
+          }, '5000');
+        }
+      }).catch((resp) => {
+        console.log(`AN error has occured ${resp}`);
         setTimeout(() => {
-          setStatusMsg('Select another file');
+          setStatusMsg('Select a file');
           hiddenFileInput = React.createRef(null);
         }, '5000');
-      }
-    });
-    return resp;
+      });
+      return resp;
+    } else {
+      console.log('An error has occured. Please try again.');
+      setTimeout(() => {
+        setStatusMsg('Select a file');
+        hiddenFileInput = React.createRef(null);
+      }, '5000');
+    }
+    if (uploadFile !== '') {
+      const date = new Date();
+      const datetime = date.toLocaleString();
+      const comment = `${datetime} - ${uploadFile.name}`;
+      document.getElementById('previously-saved').innerHTML += `${comment}<br>`;
+    }
   };
 
   const hashChunk = (chunk) => {
@@ -88,7 +108,10 @@ const UploadOverview = ({ signedPut }) => {
   };
 
   const handleClick = event => {
-    hiddenFileInput.current.click();
+    if (hiddenFileInput.current === null || hiddenFileInput === null) {
+      hiddenFileInput = React.createRef(null);
+    }
+    hiddenFileInput?.current?.click();
   };
 
   const handleChange = async event => {
@@ -109,7 +132,7 @@ const UploadOverview = ({ signedPut }) => {
   useEffect(async () => {
     if (signedPut !== {}) {
       await put(signedPut.url);
-    } 
+    }
   }, [signedPut]);
 
   return (
@@ -121,9 +144,9 @@ const UploadOverview = ({ signedPut }) => {
         </h1>
       </div>
       <div className='indented__details'>
+        <span id='previously-saved'></span>
         <div className='form__textarea'>
-          <label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${statusMsg}`}
-            <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em' }}></span>
+          <br></br><label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${statusMsg}`}
             <input
               onChange={handleChange}
               type="file"
