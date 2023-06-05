@@ -329,7 +329,7 @@ class RequestOverview extends React.Component {
     const { canEdit } = formPrivileges(this.props.privileges);
     const allRoles = getRoles();
     let workflowSave;
-    if (typeof allRoles !== 'undefined' && typeof allRoles.isAdmin !== 'undefined') {
+    if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
     }
     let canViewUsers = false;
