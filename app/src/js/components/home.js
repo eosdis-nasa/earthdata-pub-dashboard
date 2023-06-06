@@ -17,7 +17,7 @@ import List from './Table/Table';
 import {
   tableColumns
 } from '../utils/table-config/requests';
-import { updateInterval, overviewUrl } from '../config';
+import { updateInterval, overviewUrl, formsUrl, initiateRequestSelectDaac } from '../config';
 /* import {
   kibanaS3AccessErrorsLink,
   kibanaS3AccessSuccessesLink,
@@ -36,6 +36,7 @@ import { updateInterval, overviewUrl } from '../config';
 import Select from 'react-select';
 import { strings } from './locale';
 import Meditor from '../components/MeditorModal/modal';
+import { requestPrivileges } from '../utils/privileges';
 
 class Home extends React.Component {
   constructor (props) {
@@ -264,6 +265,8 @@ class Home extends React.Component {
         });
       }
       const query = this.generateQuery();
+      const { canInitialize } = requestPrivileges(this.props.privileges);
+      const selectDaac = `${formsUrl}${initiateRequestSelectDaac}`;
       return (
         <div className='page__home'>
           <div className='content__header content__header--lg'>
@@ -279,6 +282,7 @@ class Home extends React.Component {
               <div className='row'>
                 <div className='heading__wrapper--border'>
                   <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
+                  { canInitialize ? <a className='button button--small button--green button--add-small form-group__element--right new-request-button' href={selectDaac} aria-label="Create new request">New Request</a> : null }
                   <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                 </div>
                 <List

@@ -29,10 +29,26 @@ class ApprovalStep extends React.Component {
     dispatch(getRequest(requestId));
   }
 
+  formatComments (approval) {
+    if (!approval && document.querySelectorAll('textarea#comment')[0].value === '') {
+      document.querySelectorAll('textarea#comment')[0].placeholder = 'required';
+      document.querySelectorAll('textarea#comment')[0].classList.add('required');
+    } else {
+      document.querySelectorAll('textarea#comment')[0].placeholder = 'Enter a comment';
+      document.querySelectorAll('textarea#comment')[0].classList.remove('required');
+    }
+  }
+
   async review (id, approval) {
-    const { dispatch } = this.props;
-    await dispatch(reviewRequest(id, approval));
-    window.location.href = `${window.location.origin}${window.location.pathname.split(/\/approval/)[0]}`;
+    this.formatComments(approval);
+    if ((!approval && document.querySelectorAll('textarea#comment')[0].value !== '' && document.getElementById('previously-saved').innerHTML === '') || approval) {
+      if (document.getElementById('previously-saved').innerHTML === '') {
+        document.querySelectorAll('button.button--reply')[0].click();
+      }
+      const { dispatch } = this.props;
+      await dispatch(reviewRequest(id, approval));
+      window.location.href = `${window.location.origin}${window.location.pathname.split(/\/approval/)[0]}`;
+    }
   }
 
   hasStepData () {
