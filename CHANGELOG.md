@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
-- Added functionality allowing users to see forms throughout the entire workflow.
+- Added functionality allowing users to see forms throughout the entire workflow. 
 - Made textareas expandable
 - Added 'New Request' button to 'Home' per info team request.
 
