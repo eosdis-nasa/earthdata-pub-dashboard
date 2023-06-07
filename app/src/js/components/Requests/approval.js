@@ -92,12 +92,12 @@ class ApprovalStep extends React.Component {
         reviewReady = true;
         canReview = true;
       }
-      if (request.step_data.type === 'review') {
-        if (this.props.requests.detail.data.forms !== null) {
-          requestForms = this.props.requests.detail.data.forms;
-        }
-        reviewReady = true;
+      if (this.props.requests.detail.data.forms !== null) {
+        requestForms = this.props.requests.detail.data.forms;
         showTable = true;
+      }
+      if (request.step_data.type === 'review') {
+        reviewReady = true;
       }
     }
     const breadcrumbConfig = [
