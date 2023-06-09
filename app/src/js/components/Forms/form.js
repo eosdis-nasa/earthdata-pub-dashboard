@@ -381,7 +381,6 @@ class FormOverview extends React.Component {
   render () {
     let editable = false;
     let reviewable = false;
-    let viewCommentsList = false;
     const { canEdit } = formPrivileges(this.props.privileges);
     let { canReview } = requestPrivileges(this.props.privileges);
     let sameFormAsStep = false;
@@ -487,8 +486,12 @@ class FormOverview extends React.Component {
                 </div>
               </div>
             : null }
+            {requestId !== ''
+              ? <><Comments /></>
+              : null
+            }
             {requestId !== '' && reviewable && sameFormAsStep
-              ? <><Comments /><ReviewStep /></>
+              ? <><ReviewStep /></>
               : null
             }
         </section>

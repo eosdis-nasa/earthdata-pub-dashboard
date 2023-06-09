@@ -870,6 +870,14 @@ export const listConversations = (options) => ({
     qs: Object.assign({ limit: defaultPageLimit }, options)
   }
 });
+export const getConversations = (payload) => ({
+  [CALL_API]: {
+    type: types.CONVERSATIONS,
+    method: 'GET',
+    path: `notification/conversation/${payload.conversation_id}?detailed=${payload.level}&step_name=${payload.step_name}`,
+    body: payload
+  }
+});
 
 export const createConversation = (payload) => ({
   [CALL_API]: {
@@ -892,6 +900,7 @@ export const replyConversation = (payload) => {
     })
       .then(() => {
         setTimeout(() => {
+          console.log(payload)
           dispatch(getConversation(payload.conversation_id));
         }, 1000);
       });

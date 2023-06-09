@@ -24,7 +24,7 @@ class ReviewStep extends React.Component {
   }
 
   formatComments (approval) {
-    if (!approval && document.querySelectorAll('textarea#comment')[0].value === '') {
+    if (!approval && document.querySelectorAll('textarea#comment')[0].value === '' && document.getElementById('previously-saved').innerHTML === '') {
       document.querySelectorAll('textarea#comment')[0].placeholder = 'required';
       document.querySelectorAll('textarea#comment')[0].classList.add('required');
     } else {
@@ -35,7 +35,8 @@ class ReviewStep extends React.Component {
 
   async review (id, approval) {
     this.formatComments(approval);
-    if ((!approval && document.querySelectorAll('textarea#comment')[0].value !== '' && document.getElementById('previously-saved').innerHTML === '') || approval) {
+    if ((!approval && document.querySelectorAll('textarea#comment')[0].value !== '' && document.getElementById('previously-saved').innerHTML === '') ||
+    (!approval && document.querySelectorAll('textarea#comment')[0].value === '' && document.getElementById('previously-saved').innerHTML !== '') || approval) {
       if (document.getElementById('previously-saved').innerHTML === '') {
         document.querySelectorAll('button.button--reply')[0].click();
       }

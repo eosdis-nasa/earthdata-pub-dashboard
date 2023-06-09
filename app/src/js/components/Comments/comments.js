@@ -5,8 +5,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   getRequest,
-  replyConversation
+  replyConversation,
+  getForm,
+  getConversations
 } from '../../actions';
+import Loading from '../LoadingIndicator/loading-indicator';
+import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 
 class Comment extends React.Component {
   constructor () {
@@ -15,11 +19,29 @@ class Comment extends React.Component {
     this.state = { textRef: React.createRef() };
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const search = this.props.location.search.split('=');
     const requestId = search[1].replace(/&step/g, '');
     const { dispatch } = this.props;
-    dispatch(getRequest(requestId));
+    const { formId } = this.props.match.params;
+    dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
+    await dispatch(getRequest(requestId));
+    let reviewStepName = `${this.props.forms.map[formId].data.short_name}_form_review`;
+    if (this.props.requests.detail.data.conversation_id) {
+      if (typeof this.props.forms.map[formId].data.short_name === 'undefined') {
+        reviewStepName = '';
+      }
+      const payload = { conversation_id: this.props.requests.detail.data.conversation_id, level: true, step_name: reviewStepName };
+      await dispatch(getConversations(payload)).then(() => {
+        for (const ea in this.props.conversations.list.data.notes) {
+          const note = this.props.conversations.list.data.notes[ea].text.split('Comment: ')[1];
+          const author = this.props.conversations.list.data.notes[ea].from.name;
+          if (document.getElementById('previously-saved') !== null) {
+            document.getElementById('previously-saved').innerHTML += `${note}, From: ${author}<br>`;
+          }
+        }
+      });
+    }
   }
 
   getFormalName (str) {
@@ -52,7 +74,7 @@ class Comment extends React.Component {
     }
   }
 
-  reply (requestName, id, stepName) {
+  reply (requestName, id, stepName, step) {
     const { dispatch } = this.props;
     if (this.state.textRef.current.value !== '') {
       const date = new Date();
@@ -60,28 +82,38 @@ class Comment extends React.Component {
       const comment = `${datetime} - ${this.state.textRef.current.value}`;
       const reply = `${requestName} - Step: ${stepName}, Comment: ${comment}`;
       const resp = reply.replace(/[\n\t\r\'\"]/g, '\\$&');
-      const payload = { conversation_id: id, text: resp };
+      const payload = { conversation_id: id, text: resp, step_name: step };
       dispatch(replyConversation(payload));
-      document.getElementById('previously-saved').innerHTML += `${datetime} - ${this.state.textRef.current.value}<br>`;
+      const author = JSON.parse(window.localStorage.getItem('auth-user')).name;
+      document.getElementById('previously-saved').innerHTML += `${datetime} - ${this.state.textRef.current.value}, From: ${author}<br>`;
       this.state.textRef.current.value = '';
       document.querySelectorAll('button.button--reply')[0].classList.add('hidden');
     }
   }
 
   render () {
+    let editable = false;
+    let reviewable = false;
+    const { canEdit } = formPrivileges(this.props.privileges);
+    let { canReview } = requestPrivileges(this.props.privileges);
+    let sameFormAsStep = false;
     const search = this.props.location.search.split('=');
     const requestId = search[1].replace(/&step/g, '');
-    const step = search[2];
+    let step = search[2];
     let stepName = this.getFormalName(step);
     let request = '';
     let conversationId = '';
     let requestName = '';
+    const formId = this.props.match.params.formId;
+    let formName = '';
     if (this.hasStepData()) {
       request = this.props.requests.detail.data;
-      if (request.step_data.type === 'review') {
+      if (JSON.stringify(this.props.forms.map) !== '{}') {
+        formName = this.props.forms.map[formId].data.short_name;
         if (this.props.requests.detail.data.forms !== null) {
           if (step === undefined) {
-            stepName = this.getFormalName(this.props.requests.detail.data.step_name);
+            step = this.props.requests.detail.data.step_name;
+            stepName = this.getFormalName(step);
           }
           if (this.props.requests.detail.data.form_data.data_product_name_value) {
             requestName = this.props.requests.detail.data.form_data.data_product_name_value;
@@ -90,32 +122,65 @@ class Comment extends React.Component {
           }
         }
         conversationId = this.props.requests.detail.data.conversation_id;
+        if (this.props.requests.detail.data.step_name.match(/close/g)) {
+          editable = false;
+          sameFormAsStep = false;
+          if (canReview) {
+            viewCommentsList = true;
+          } else {
+            canReview = false;
+          }
+        }
+        if (this.props.requests.detail.data.step_name === `${formName}_form`) {
+          if (canEdit) {
+            editable = true;
+          }
+          sameFormAsStep = true;
+          canReview = false;
+        } else if (this.props.requests.detail.data.step_name.match(/form_review/g)) {
+          editable = false;
+          if (canReview) {
+            reviewable = true;
+          }
+          if (this.props.requests.detail.data.step_name === `${formName}_form_review`) {
+            sameFormAsStep = true;
+          }
+        }
       }
     }
-
-    return (
-        <section className='page_section'>
-            {typeof requestId !== 'undefined' &&
-              <form className='flex__column flex__item--grow-1'
-                onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName); }}>
-                <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em' }}></span>
-                <textarea placeholder='Enter a comment'
-                  ref={this.state.textRef}
-                  id='comment'
-                  aria-label="Enter a comment"
-                  title="Enter a comment"
-                  onChange={(e) => { e.preventDefault(); this.formatComments(); document.querySelectorAll('button.button--reply')[0].classList.remove('hidden'); }}
-                  ></textarea>
-                <div style={{ minHeight: '40px' }}>
-                  <button type='submit'
-                    className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
-                    Save Comment
-                  </button>
-                </div>
-              </form>
-            }
-        </section>
-    );
+    if (!request || request.inflight || !this.props.conversations.list.data.notes) {
+      return <Loading />;
+    } else {
+      if (conversationId === '') {
+        conversationId = this.props.conversations.list.data.id;
+      }
+      return (
+          <section className='page_section'>
+              {typeof requestId !== 'undefined' &&
+                <form className='flex__column flex__item--grow-1'
+                  onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName, step); }}>
+                  <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em' }}></span>
+                  {requestId !== '' && reviewable && sameFormAsStep
+                    ? <><textarea placeholder='Enter a comment'
+                      ref={this.state.textRef}
+                      id='comment'
+                      aria-label="Enter a comment"
+                      title="Enter a comment"
+                      onChange={(e) => { e.preventDefault(); this.formatComments(); document.querySelectorAll('button.button--reply')[0].classList.remove('hidden'); } }
+                    ></textarea>
+                    <div style={{ minHeight: '40px' }}>
+                      <button type='submit'
+                        className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
+                        Save Comment
+                      </button>
+                    </div></>
+                    : null
+                  }
+                </form>
+              }
+          </section>
+      );
+    }
   }
 }
 
@@ -123,6 +188,8 @@ Comment.propTypes = {
   match: PropTypes.object,
   dispatch: PropTypes.func,
   requests: PropTypes.object,
+  forms: PropTypes.object,
+  conversations: PropTypes.object,
   logs: PropTypes.object,
   history: PropTypes.object,
   location: PropTypes.object,
@@ -131,6 +198,8 @@ Comment.propTypes = {
 };
 
 export default withRouter(connect(state => ({
+  forms: state.forms,
+  conversations: state.conversations,
   requests: state.requests,
   privileges: state.api.tokens.privileges,
   logs: state.logs
