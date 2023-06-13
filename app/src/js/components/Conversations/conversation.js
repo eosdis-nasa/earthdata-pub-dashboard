@@ -28,7 +28,6 @@ const reply = (dispatch, id) => {
 };
 
 const getConversations = (dispatch, conversationId, lvl) => {
-  console.log(conversationId)
   if (lvl) {
     document.getElementById('all_button').classList.add('active');
     document.getElementById('users_only_button').classList.remove('active');

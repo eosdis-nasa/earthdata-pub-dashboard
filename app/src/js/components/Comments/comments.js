@@ -22,13 +22,16 @@ class Comment extends React.Component {
   async componentDidMount () {
     const search = this.props.location.search.split('=');
     const requestId = search[1].replace(/&step/g, '');
+    const step = search[2];
     const { dispatch } = this.props;
     const { formId } = this.props.match.params;
-    dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
     await dispatch(getRequest(requestId));
+    await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
     let reviewStepName = `${this.props.forms.map[formId].data.short_name}_form_review`;
     if (this.props.requests.detail.data.conversation_id) {
-      if (typeof this.props.forms.map[formId].data.short_name === 'undefined') {
+      if (typeof this.props.forms.map[formId].data.short_name === 'undefined' && typeof step !== 'undefined') {
+        reviewStepName = step;
+      } else if (typeof this.props.forms.map[formId].data.short_name === 'undefined') {
         reviewStepName = '';
       }
       const payload = { conversation_id: this.props.requests.detail.data.conversation_id, level: true, step_name: reviewStepName };
@@ -36,7 +39,7 @@ class Comment extends React.Component {
         for (const ea in this.props.conversations.list.data.notes) {
           const note = this.props.conversations.list.data.notes[ea].text.split('Comment: ')[1];
           const author = this.props.conversations.list.data.notes[ea].from.name;
-          if (document.getElementById('previously-saved') !== null) {
+          if (document.getElementById('previously-saved') !== null && typeof note !== 'undefined') {
             document.getElementById('previously-saved').innerHTML += `${note}, From: ${author}<br>`;
           }
         }
@@ -87,14 +90,13 @@ class Comment extends React.Component {
       const author = JSON.parse(window.localStorage.getItem('auth-user')).name;
       document.getElementById('previously-saved').innerHTML += `${datetime} - ${this.state.textRef.current.value}, From: ${author}<br>`;
       this.state.textRef.current.value = '';
+      localStorage.setItem(`${this.props.requests.detail.data.id}_${step}`, 'saved');
       document.querySelectorAll('button.button--reply')[0].classList.add('hidden');
     }
   }
 
   render () {
-    let editable = false;
     let reviewable = false;
-    const { canEdit } = formPrivileges(this.props.privileges);
     let { canReview } = requestPrivileges(this.props.privileges);
     let sameFormAsStep = false;
     const search = this.props.location.search.split('=');
@@ -106,9 +108,9 @@ class Comment extends React.Component {
     let requestName = '';
     const formId = this.props.match.params.formId;
     let formName = '';
-    if (this.hasStepData()) {
-      request = this.props.requests.detail.data;
-      if (JSON.stringify(this.props.forms.map) !== '{}') {
+    request = this.props.requests.detail.data;
+    if (this.hasStepData() && request !== undefined) {
+      if (this.props.forms.map !== undefined && this.props.forms.map[formId] !== undefined && this.props.forms.map[formId].data !== undefined) {
         formName = this.props.forms.map[formId].data.short_name;
         if (this.props.requests.detail.data.forms !== null) {
           if (step === undefined) {
@@ -123,28 +125,22 @@ class Comment extends React.Component {
         }
         conversationId = this.props.requests.detail.data.conversation_id;
         if (this.props.requests.detail.data.step_name.match(/close/g)) {
-          editable = false;
           sameFormAsStep = false;
-          if (canReview) {
-            viewCommentsList = true;
-          } else {
-            canReview = false;
-          }
+          canReview = false;
         }
         if (this.props.requests.detail.data.step_name === `${formName}_form`) {
-          if (canEdit) {
-            editable = true;
-          }
           sameFormAsStep = true;
           canReview = false;
         } else if (this.props.requests.detail.data.step_name.match(/form_review/g)) {
-          editable = false;
           if (canReview) {
             reviewable = true;
           }
           if (this.props.requests.detail.data.step_name === `${formName}_form_review`) {
             sameFormAsStep = true;
           }
+        } else if (window.location.href.match(/approval/g)) {
+          reviewable = true;
+          sameFormAsStep = true;
         }
       }
     }

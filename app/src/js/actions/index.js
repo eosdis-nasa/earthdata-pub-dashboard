@@ -900,7 +900,6 @@ export const replyConversation = (payload) => {
     })
       .then(() => {
         setTimeout(() => {
-          console.log(payload)
           dispatch(getConversation(payload.conversation_id));
         }, 1000);
       });

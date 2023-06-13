@@ -30,7 +30,9 @@ class ApprovalStep extends React.Component {
   }
 
   formatComments (approval) {
-    if (!approval && document.querySelectorAll('textarea#comment')[0].value === '') {
+    const savedBefore = localStorage.getItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
+    const hasCurrentValue = document.querySelectorAll('textarea#comment')[0].value !== '';
+    if (!approval && (savedBefore === null && !hasCurrentValue)) {
       document.querySelectorAll('textarea#comment')[0].placeholder = 'required';
       document.querySelectorAll('textarea#comment')[0].classList.add('required');
     } else {
@@ -41,13 +43,20 @@ class ApprovalStep extends React.Component {
 
   async review (id, approval) {
     this.formatComments(approval);
-    if ((!approval && document.querySelectorAll('textarea#comment')[0].value !== '' && document.getElementById('previously-saved').innerHTML === '') || approval) {
-      if (document.getElementById('previously-saved').innerHTML === '') {
+    const savedBefore = localStorage.getItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
+    const re = new RegExp(document.querySelectorAll('textarea#comment')[0].value, 'i');
+    const currentInboxValueInSaved = document.getElementById('previously-saved').innerHTML.match(re);
+    const hasCurrentValue = document.querySelectorAll('textarea#comment')[0].value !== '';
+    if (((!approval && savedBefore === 'saved') || (!approval && hasCurrentValue)) || approval) {
+      if (currentInboxValueInSaved == null) {
         document.querySelectorAll('button.button--reply')[0].click();
       }
       const { dispatch } = this.props;
       await dispatch(reviewRequest(id, approval));
-      window.location.href = `${window.location.origin}${window.location.pathname.split(/\/approval/)[0]}`;
+      if (!approval) {
+        localStorage.removeItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
+      }
+      window.location.href = `${window.location.origin}${window.location.pathname.split(/\/requests/)[0]}/requests`;
     }
   }
 
@@ -149,7 +158,7 @@ class ApprovalStep extends React.Component {
             <br />
           </div>
         </section>
-        { canReview && reviewReady && typeof requestId !== 'undefined'
+        { typeof requestId !== 'undefined'
           ? <><Comments /></>
           : null
         }
