@@ -3,13 +3,15 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
-
+import _config from '../../config';
 import {
   getPutUrl
 } from '../../actions';
+import { loadToken } from '../../utils/auth';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { createMD5 } from 'hash-wasm';
+import localUpload from 'edpub-data-upload-utility';
 
 const breadcrumbConfig = [
   {
@@ -21,6 +23,8 @@ const breadcrumbConfig = [
     active: true
   }
 ];
+
+const {apiRoot} = _config;
 
 const UploadOverview = ({ signedPut }) => {
   const [statusMsg, setStatusMsg] = useState('Select a file');
@@ -94,22 +98,26 @@ const UploadOverview = ({ signedPut }) => {
     setStatusMsg('Preparing for Upload');
     const file = event.target.files[0];
     setUploadFile(file);
-    const hash = await readFile(file);
-    setFileHash(hash);
-    const payload = {
-      file_name: file.name,
-      file_type: file.type,
-      checksum_value: hash
-    };
-    setStatusMsg('Uploading');
-    dispatch(getPutUrl(payload));
+    const upload = new localUpload();
+    console.log(loadToken().token)
+    const resp = await upload.uploadFile(file, `${apiRoot}data/upload/getPutUrl`, loadToken().token);
+    console.log(resp);
+    // const hash = await readFile(file);
+    // setFileHash(hash);
+    // const payload = {
+    //   file_name: file.name,
+    //   file_type: file.type,
+    //   checksum_value: hash
+    // };
+    // setStatusMsg('Uploading');
+    // dispatch(getPutUrl(payload));
   };
 
-  useEffect(async () => {
-    if (signedPut !== {}) {
-      await put(signedPut.url);
-    } 
-  }, [signedPut]);
+  // useEffect(async () => {
+  //   if (signedPut !== {}) {
+  //     await put(signedPut.url);
+  //   } 
+  // }, [signedPut]);
 
   return (
     <div className='page__component'>
