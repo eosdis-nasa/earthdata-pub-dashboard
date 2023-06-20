@@ -100,7 +100,11 @@ const UploadOverview = ({ signedPut }) => {
     setUploadFile(file);
     const upload = new localUpload();
     console.log(loadToken().token)
-    const resp = await upload.uploadFile(file, `${apiRoot}data/upload/getPutUrl`, loadToken().token);
+    const resp = await upload.uploadFile({
+      file, 
+      apiEndpoint: `${apiRoot}data/upload/getPutUrl`, 
+      authToken: loadToken().token
+    });
     console.log(resp);
     // const hash = await readFile(file);
     // setFileHash(hash);
