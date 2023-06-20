@@ -23,6 +23,7 @@ const {apiRoot} = _config;
 
 const UploadOverview = () => {
   const [statusMsg, setStatusMsg] = useState('Select a file');
+  const [submissionId, setSubmissionId] = useState('');
   let hiddenFileInput = React.createRef(null);
 
   const handleClick = event => {
@@ -37,7 +38,8 @@ const UploadOverview = () => {
     const resp = await upload.uploadFile({
       fileObj: file, 
       apiEndpoint: `${apiRoot}data/upload/getPostUrl`, 
-      authToken: loadToken().token
+      authToken: loadToken().token,
+      submissionId: submissionId
     });
     if(resp === 'Upload successfull'){
       setStatusMsg('Upload Complete');
@@ -63,6 +65,11 @@ const UploadOverview = () => {
             id="hiddenFileInput"
           />
         </label>
+        <input 
+          type="text"
+          name="submissionId"
+          value={submissionId}
+          onChange={e => setSubmissionId(e.target.value)} />
         <button onClick={handleClick} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
       </div>
     </div>
