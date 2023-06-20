@@ -101,7 +101,7 @@ const UploadOverview = ({ signedPut }) => {
     const upload = new localUpload();
     console.log(loadToken().token)
     const resp = await upload.uploadFile({
-      file, 
+      fileObj: file, 
       apiEndpoint: `${apiRoot}data/upload/getPutUrl`, 
       authToken: loadToken().token
     });
