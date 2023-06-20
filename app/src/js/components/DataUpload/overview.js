@@ -21,11 +21,9 @@ const breadcrumbConfig = [
 
 const {apiRoot} = _config;
 
-const UploadOverview = ({ signedPut }) => {
+const UploadOverview = () => {
   const [statusMsg, setStatusMsg] = useState('Select a file');
   let hiddenFileInput = React.createRef(null);
-
-  // const dispatch = useDispatch();
 
   const handleClick = event => {
     hiddenFileInput.current.click();
@@ -35,7 +33,7 @@ const UploadOverview = ({ signedPut }) => {
     setStatusMsg('Uploading...');
     const file = event.target.files[0];
     const upload = new localUpload();
-    console.log(loadToken().token)
+    
     const resp = await upload.uploadFile({
       fileObj: file, 
       apiEndpoint: `${apiRoot}data/upload/getPostUrl`, 
@@ -43,7 +41,7 @@ const UploadOverview = ({ signedPut }) => {
     });
     if(resp === 'Upload successfull'){
       setStatusMsg('Upload Complete');
-    }
+    } else { setStatusMsg('Upload Failed'); }
   };
 
   return (
