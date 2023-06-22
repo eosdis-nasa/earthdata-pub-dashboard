@@ -380,26 +380,14 @@ class FormOverview extends React.Component {
 
   render () {
     let editable = false;
+    let reviewable = false;
+    let viewCommentsList = false;
     const { canEdit } = formPrivileges(this.props.privileges);
     let { canReview } = requestPrivileges(this.props.privileges);
+    let sameFormAsStep = false;
     let requestId = this.props.location.search.split('=')[1];
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
-    if (canEdit) {
-      editable = true;
-    }
-    if (this.hasStepData()) {
-      if (typeof this.props.requests.detail.data !== 'undefined') {
-        requestId = this.props.requests.detail.data.id;
-        if (this.props.requests.detail.data.step_name.match(/close/g)) {
-          editable = false;
-        } else if (canReview && (this.props.requests.detail.data.step_name.match(/data_publication_request_form_review/g) || this.props.requests.detail.data.step_name.match(/data_accession_request_form_review/g))) {
-          canReview = true;
-        } else if (!this.props.requests.detail.data.step_name.match(/data_publication_request_form_review/g) || !this.props.requests.detail.data.step_name.match(/data_accession_request_form_review/g)) {
-          canReview = false;
-        }
-      }
-    }
     let thisFormUrl = `${_config.formsUrl}/questions/${requestId}`;
     if (formId !== '') {
       thisFormUrl += `/${formId}`;
@@ -420,12 +408,41 @@ class FormOverview extends React.Component {
         }
       }
     }
-
+    if (this.hasStepData()) {
+      if (typeof this.props.requests.detail.data !== 'undefined') {
+        const formName = record.data.short_name;
+        requestId = this.props.requests.detail.data.id;
+        if (this.props.requests.detail.data.step_name.match(/close/g)) {
+          editable = false;
+          sameFormAsStep = false;
+          if (canReview) {
+            viewCommentsList = true;
+          } else {
+            canReview = false;
+          }
+        }
+        if (this.props.requests.detail.data.step_name === `${formName}_form`) {
+          if (canEdit) {
+            editable = true;
+          }
+          sameFormAsStep = true;
+          canReview = false;
+        } else if (this.props.requests.detail.data.step_name.match(/form_review/g)) {
+          editable = false;
+          if (canReview) {
+            reviewable = true;
+          }
+          if (this.props.requests.detail.data.step_name === `${formName}_form_review`) {
+            sameFormAsStep = true;
+          }
+        }
+      }
+    }
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>{form.long_name}</h1>
-          {requestId !== '' && editable && this.hasSavedAnswers() ? <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl} aria-label='edit your form'>Edit</a> : null}
+          {requestId !== '' && editable && this.hasSavedAnswers() && sameFormAsStep ? <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl} aria-label='edit your form'>Edit</a> : null}
           {requestId !== ''
             ? <button onClick={() => { this.printForm(); window.location.reload(); }}
                 className='button button--small button--green button--print form-group__element--right'>
@@ -470,7 +487,7 @@ class FormOverview extends React.Component {
                 </div>
               </div>
             : null }
-            {requestId !== '' && canReview
+            {requestId !== '' && reviewable && sameFormAsStep
               ? <><Comments /><ReviewStep /></>
               : null
             }

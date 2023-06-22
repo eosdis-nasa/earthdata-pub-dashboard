@@ -31,7 +31,17 @@ html {
   font-size: $root-font-size;
   height: 100%;
 }
-
+textarea#comment.required {
+  border:1px solid $error-text-red!important;
+  outline:$error-text-red!important;
+}
+textarea#comment.required::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: $error-text-red;
+  opacity: 1; /* Firefox */
+}
+textarea#comment.required::-ms-input-placeholder { /* Microsoft Edge */
+  color: $error-text-red;
+}
 body {
   color: $dark-grey;
   font-size: $base-font-size;
@@ -587,7 +597,9 @@ a:active {
   resize: none;
   margin-bottom: 1em;
 }
-
+textarea {
+  margin-bottom: 1em;
+}
 /**************************************************
   Progress Bar
 **************************************************/
