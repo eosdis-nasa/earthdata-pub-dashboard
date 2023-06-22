@@ -12,7 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.0.14
 
-- Improve comments component by adding comment to be required on 'Return' or 'Reject'. Tweaked display of workflow step and made the interface look at the admin role to match the api
+- Improve comments component by adding comment to be required on 'Return' or 'Reject'
+- Tweaked display of workflow step and made the interface look at the admin role
 - Make textareas expandable
 - Add new request button to dashboard per info team request
 - Change to look at privileges now like the api does
