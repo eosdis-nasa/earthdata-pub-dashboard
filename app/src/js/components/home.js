@@ -220,7 +220,7 @@ class Home extends React.Component {
           const prod = { value: record[r].form_data.data_producer_info_name, label: record[r].form_data.data_producer_info_name };
           let dataProduct = record[r].form_data.data_product_name_value;
           if (dataProduct === undefined) {
-            dataProduct = 'Request Initialized';
+            dataProduct = `Request Initialized by ${record[r].initiator.name}`;
           }
           const isFound = this.state.producers.some(element => {
             if (element.value === prod.value) {

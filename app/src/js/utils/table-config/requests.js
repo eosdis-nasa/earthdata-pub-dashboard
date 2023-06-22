@@ -199,12 +199,11 @@ export const stepLookup = (row) => {
     return newLink(request, formalName);
   }
 };
-
 export const tableColumns = [
   {
     Header: 'Data Product Name',
-    accessor: row => row.form_data ? row.form_data.data_product_name_value || 'Request Initialized' : 'Request Initialized',
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || 'Request Initialized' : 'Request Initialized'}</Link> : 'Request Initialized',
+    accessor: row => row.form_data ? row.form_data.data_product_name_value || `Request Initialized by ${row.initiator.name}` : `Request Initialized by ${row.initiator.name}`,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || `Request Initialized by ${row.row.original.initiator.name}` : `Request Initialized by ${row.row.original.initiator.name}`}</Link> : `Request Initialized by ${row.row.original.initiator.name}`,
     id: 'name',
     // width: 155
   },

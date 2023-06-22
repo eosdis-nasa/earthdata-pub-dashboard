@@ -354,21 +354,41 @@
     font-weight: 900;
     visibility: hidden;
   }
-    &--edit {
-      background-color: $light-green;
-      position: relative;
+  &--edit {
+    background-color: $light-green;
+    position: relative;
 
-      &:before{
-        color: $white;
-        position: absolute;
-        font-family: 'FontAwesome';
-        content: '\f044';
-        font-weight: 900;
-        left: 10px;
+    &:before{
+      color: $white;
+      position: absolute;
+      font-family: 'FontAwesome';
+      content: '\f044';
+      font-weight: 900;
+      left: 10px;
 
-      }
     }
+  }
 
+  &--print {
+    background-color: $light-green;
+    position: relative;
+
+    &:before{
+      color: $white;
+      position: absolute;
+      font-family: 'FontAwesome';
+      content: '\f02f';
+      font-weight: 900;
+      left: 10px;
+
+    }
+    /* &.button__animation:hover:before {
+      visibility: hidden;
+    }
+    &:hover {
+      padding: .65em 2.7em .65em 1em!important;
+    }*/
+  }
     &--delete {
       background-color: $error-red;
       position: relative;
@@ -570,6 +590,7 @@
       &:hover {
         padding: .7em 3em .7em 1em;
       }
+      
 
       &.button--small {
         &:hover {
@@ -598,8 +619,17 @@
       top: .75em;
     }
 
+    &__arrow2:after {
+      left: 130%;
+      top: .75em;
+    }
+
     &__arrow:hover:after {
       left: 85%;
+    }
+
+    &__arrow2:hover:after {
+      left: 89%;
     }
 
     &__animation--md:hover {

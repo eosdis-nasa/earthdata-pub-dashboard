@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+
+## 1.0.13 - 2023-06-22
+
+- Added comment component for of GES DISC workflow requests
+- Added print function to form for anticipation of GES DISC workflow request
+- Data Product Name default request text to include creator
+- Add escape for single quotes
+- Improve look
+- Make data upload pretty
+- Fix conversation messages to remove buggy blank lines (EDPUB-886)
+- Add GES DISC default community workflow
+- Add override for yaml dependency to fix Snyk issue
+
+## 1.0.12 - 2023-03
+
 - Altered privileges for assigning workflows to include staff role and reassign privilege
 - Updated pagination header to notice when filter is found, but current table state is not reflecting search.
 - Added clone request by field functionality to form
