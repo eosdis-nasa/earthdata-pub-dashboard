@@ -26,6 +26,8 @@ const {apiRoot} = _config;
 
 const UploadOverview = () => {
   const [statusMsg, setStatusMsg] = useState('Select a file');
+  const [uploadFile, setUploadFile] = useState('');
+  const [fileHash, setFileHash] = useState('');
   const [submissionId, setSubmissionId] = useState('');
   let hiddenFileInput = React.createRef(null);
   const chunkSize = 64 * 1024 * 1024;
@@ -36,6 +38,7 @@ const UploadOverview = () => {
   const {apiRoot} = _config;
 
   const put = async (url) => {
+    console.log('PUT', uploadFile, url)
     if (uploadFile && typeof url !== 'undefined' && !url.match(/undefined/g)) {
       const resp = await fetch(url, {
         method: 'PUT',
@@ -147,6 +150,7 @@ const UploadOverview = () => {
       }
       const resp = await upload.uploadFile(payload).then((resp) => {
         setStatusMsg('Uploading');
+        console.log('upload response',resp)
         if (resp.status !== 200) {
           setStatusMsg('Select a file');
           if (hiddenFileInput.current === null || hiddenFileInput === null) {
@@ -194,12 +198,7 @@ const UploadOverview = () => {
               ref={hiddenFileInput}
               id="hiddenFileInput" />
           </label>
-          <input 
-          type="text"
-          name="submissionId"
-          value={submissionId}
-          onChange={e => setSubmissionId(e.target.value)} />
-        <button onClick={handleClick} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
+          <button onClick={handleClick} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
         </div>
       </div>
     </div></>
