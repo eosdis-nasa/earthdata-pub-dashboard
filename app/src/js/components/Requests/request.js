@@ -150,7 +150,9 @@ class RequestOverview extends React.Component {
       if (ea === current) {
         this.setState({ current: { value: ea, label: this.toProperCase(ea.replace(/_/g, ' ')) } });
       }
-      tmp.push({ value: ea, label: this.toProperCase(ea.replace(/_/g, ' ')) });
+      if (ea !== 'init' && ea !== 'close') {
+        tmp.push({ value: ea, label: this.toProperCase(ea.replace(/_/g, ' ')) });
+      }
     }
     this.setState({ steps: tmp });
   }
@@ -330,7 +332,7 @@ class RequestOverview extends React.Component {
     const { canEdit } = formPrivileges(this.props.privileges);
     const allRoles = getRoles();
     let workflowSave;
-    if (typeof allRoles !== 'undefined' && typeof allRoles.isAdmin !== 'undefined') {
+    if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
     }
     let canViewUsers = false;
@@ -344,7 +346,10 @@ class RequestOverview extends React.Component {
     let showTable = false;
     if (requestForms !== null &&
       typeof requestForms !== 'undefined') {
-      if (requestForms.length > 1) {
+      if (record.data.step_name === 'close') {
+        canWithdraw = false;
+      }
+      if (requestForms.length > 0) {
         showTable = true;
       }
     }

@@ -100,7 +100,6 @@ class Comment extends React.Component {
                 onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName); }}>
                 <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em' }}></span>
                 <textarea placeholder='Enter a comment'
-                  className='no-resize'
                   ref={this.state.textRef}
                   id='comment'
                   aria-label="Enter a comment"

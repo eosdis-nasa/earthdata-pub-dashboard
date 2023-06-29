@@ -1,5 +1,5 @@
 'use strict';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
@@ -22,10 +22,11 @@ const breadcrumbConfig = [
   }
 ];
 
-const UploadOverview = ({ signedPut }) => {
+const {apiRoot} = _config;
+
+const UploadOverview = () => {
   const [statusMsg, setStatusMsg] = useState('Select a file');
-  const [uploadFile, setUploadFile] = useState('');
-  const [fileHash, setFileHash] = useState('');
+  const [submissionId, setSubmissionId] = useState('');
   let hiddenFileInput = React.createRef(null);
   const chunkSize = 64 * 1024 * 1024;
   const fileReader = new FileReader();
@@ -45,19 +46,25 @@ const UploadOverview = ({ signedPut }) => {
       }).then((resp) => {
         if (resp.status !== 200) {
           setStatusMsg('Select a file');
-          hiddenFileInput = React.createRef(null);
+          if (hiddenFileInput.current === null || hiddenFileInput === null) {
+            hiddenFileInput = React.createRef(null);
+          }
         } else {
           setStatusMsg('Upload Complete');
           setTimeout(() => {
             setStatusMsg('Select another file');
-            hiddenFileInput = React.createRef(null);
+            if (hiddenFileInput.current === null || hiddenFileInput === null) {
+              hiddenFileInput = React.createRef(null);
+            }
           }, '5000');
         }
       }).catch((resp) => {
         console.log(`AN error has occured ${resp}`);
         setTimeout(() => {
           setStatusMsg('Select a file');
-          hiddenFileInput = React.createRef(null);
+          if (hiddenFileInput.current === null || hiddenFileInput === null) {
+            hiddenFileInput = React.createRef(null);
+          }
         }, '5000');
       });
       return resp;
@@ -65,7 +72,9 @@ const UploadOverview = ({ signedPut }) => {
       console.log('An error has occured. Please try again.');
       setTimeout(() => {
         setStatusMsg('Select a file');
-        hiddenFileInput = React.createRef(null);
+        if (hiddenFileInput.current === null || hiddenFileInput === null) {
+          hiddenFileInput = React.createRef(null);
+        }
       }, '5000');
     }
     if (uploadFile !== '') {
@@ -116,7 +125,7 @@ const UploadOverview = ({ signedPut }) => {
   };
 
   const handleChange = async event => {
-    setStatusMsg('Preparing for Upload');
+    setStatusMsg('Uploading...');
     const file = event.target.files[0];
     setUploadFile(file);
     const hash = await readFile(file);
@@ -165,12 +174,6 @@ const UploadOverview = ({ signedPut }) => {
     }
   };
 
-  useEffect(async () => {
-    if (signedPut !== {}) {
-      await put(signedPut.url);
-    }
-  }, [signedPut]);
-
   return (
     <><br></br>
     <div className='page__component'>
@@ -191,7 +194,12 @@ const UploadOverview = ({ signedPut }) => {
               ref={hiddenFileInput}
               id="hiddenFileInput" />
           </label>
-          <button onClick={handleClick} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
+          <input 
+          type="text"
+          name="submissionId"
+          value={submissionId}
+          onChange={e => setSubmissionId(e.target.value)} />
+        <button onClick={handleClick} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
         </div>
       </div>
     </div></>

@@ -10,11 +10,32 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 
+## 1.0.14
 
-## 1.0.12 - 2023-05-12
+- Improve comments component by adding comment to be required on 'Return' or 'Reject'
+- Tweaked display of workflow step and made the interface look at the admin role
+- Make textareas expandable
+- Add new request button to dashboard per info team request
+- Change to look at privileges now like the api does
+- Add functionality allowing users to see forms throughout the entire workflow
+- Improve comments component by adding comment to be required on 'Return' or 'Reject'
+- Add 'New Request' button to 'Home' per info team request.
+- Add functionality allowing users to see forms throughout the entire workflow
+
+## 1.0.13 - 2023-06-22
+
 - Added comment component for of GES DISC workflow requests
 - Added print function to form for anticipation of GES DISC workflow request
-- Data Product Name default request text to include creator until data product name is present
+- Data Product Name default request text to include creator
+- Add escape for single quotes
+- Improve look
+- Make data upload pretty
+- Fix conversation messages to remove buggy blank lines (EDPUB-886)
+- Add GES DISC default community workflow
+- Add override for yaml dependency to fix Snyk issue
+
+## 1.0.12 - 2023-03
+
 - Altered privileges for assigning workflows to include staff role and reassign privilege
 - Updated pagination header to notice when filter is found, but current table state is not reflecting search.
 - Added clone request by field functionality to form
