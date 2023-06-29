@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
-
+import _config from '../../config';
+import { loadToken } from '../../utils/auth';
 import {
   getPutUrl
 } from '../../actions';
-import { strings } from '../locale';
-import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import localUpload from 'edpub-data-upload-utility';
 import { createMD5 } from 'hash-wasm';
 
 const breadcrumbConfig = [
@@ -32,6 +32,7 @@ const UploadOverview = ({ signedPut }) => {
   let hasher = null;
 
   const dispatch = useDispatch();
+  const {apiRoot} = _config;
 
   const put = async (url) => {
     if (uploadFile && typeof url !== 'undefined' && !url.match(/undefined/g)) {
@@ -120,13 +121,48 @@ const UploadOverview = ({ signedPut }) => {
     setUploadFile(file);
     const hash = await readFile(file);
     setFileHash(hash);
-    const payload = {
-      file_name: file.name,
-      file_type: file.type,
-      checksum_value: hash
-    };
-    setStatusMsg('Uploading');
-    dispatch(getPutUrl(payload));
+    const upload = new localUpload();
+    let submissionId = '';
+    if (window.location.href.indexOf('requests/id') >= 0) {
+      submissionId = window.location.href.split(/requests\/id\//g)[1];
+      if (submissionId.indexOf('&') >= 0) {
+        submissionId = submissionId.split(/&/g)[0];
+      }
+    }
+    if(submissionId !== '' && submissionId != undefined && submissionId !== null) {
+      const payload = {
+        fileObj: file, 
+        apiEndpoint: `${apiRoot}data/upload/getPostUrl`, 
+        authToken: loadToken().token,
+        submissionId: submissionId
+      }
+      const resp = await upload.uploadFile(payload).then((resp) => {
+        setStatusMsg('Uploading');
+        if (resp.status !== 200) {
+          setStatusMsg('Select a file');
+          if (hiddenFileInput.current === null || hiddenFileInput === null) {
+            hiddenFileInput = React.createRef(null);
+          }
+        } else {
+          setStatusMsg('Upload Complete');
+          dispatch(getPutUrl(payload));
+          setTimeout(() => {
+            setStatusMsg('Select another file');
+            if (hiddenFileInput.current === null || hiddenFileInput === null) {
+              hiddenFileInput = React.createRef(null);
+            }
+          }, '5000');
+        }
+      }).catch((resp) => {
+        console.log(`AN error has occured ${resp}`);
+        setTimeout(() => {
+          setStatusMsg('Select a file');
+          if (hiddenFileInput.current === null || hiddenFileInput === null) {
+            hiddenFileInput = React.createRef(null);
+          }
+        }, '5000');
+      });
+    }
   };
 
   useEffect(async () => {
