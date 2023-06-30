@@ -140,22 +140,22 @@ const UploadOverview = () => {
     }
     
     if(submissionId !== '' && submissionId != undefined && submissionId !== null) {
-      console.log(file)
       const payload = {
         fileObj: file, 
         apiEndpoint: `${apiRoot}data/upload/getPostUrl`, 
         authToken: loadToken().token,
         submissionId: submissionId
       }
-      console.log(payload)
       const resp = await upload.uploadFile(payload).then((resp) => {
         setStatusMsg('Uploading');
-        console.log(resp.status)
-        if (resp.status !== 200 && resp.status !== 204) {
-          setStatusMsg('Select a file');
-          if (hiddenFileInput.current === null || hiddenFileInput === null) {
-            hiddenFileInput = React.createRef(null);
-          }
+        if (resp.error){
+          console.log(`An error has occured: ${resp.error}.`);
+          setTimeout(() => {
+            setStatusMsg('Select a file');
+            if (hiddenFileInput.current === null || hiddenFileInput === null) {
+              hiddenFileInput = React.createRef(null);
+            }
+          }, '5000');
         } else {
           setStatusMsg('Upload Complete');
           dispatch(getPutUrl(payload));
@@ -166,15 +166,7 @@ const UploadOverview = () => {
             }
           }, '5000');
         }
-      }).catch((resp) => {
-        console.log(`AN error has occured ${resp} from payload`);
-        setTimeout(() => {
-          setStatusMsg('Select a file');
-          if (hiddenFileInput.current === null || hiddenFileInput === null) {
-            hiddenFileInput = React.createRef(null);
-          }
-        }, '5000');
-      });
+      })
     }
   };
 
