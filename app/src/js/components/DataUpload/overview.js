@@ -150,6 +150,7 @@ const UploadOverview = () => {
         console.log(resp.data)
         console.log(resp.errorMessage)
         console.log(resp.error)
+        console.log(resp.url, resp.fields)
         if (resp.error){
           console.log(`An error has occured: ${resp.error}.`);
           setTimeout(() => {
