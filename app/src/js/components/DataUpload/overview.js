@@ -148,6 +148,7 @@ const UploadOverview = () => {
       }
       const resp = await upload.uploadFile(payload).then((resp) => {
         setStatusMsg('Uploading');
+        console.log(resp)
         if (resp.error){
           console.log(`An error has occured: ${resp.error}.`);
           setTimeout(() => {
