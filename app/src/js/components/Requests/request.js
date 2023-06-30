@@ -522,10 +522,8 @@ class RequestOverview extends React.Component {
         </section>
         {
           Object.keys(this.state.names).length === 0
-            ? 
-            <Loading />
-            :
-            <section className='page__section'>
+            ? <Loading />
+            : <section className='page__section'>
           <br></br>
           <div className='page__section__header'>
             <h1 className='heading--small' aria-labelledby='contributers'>
