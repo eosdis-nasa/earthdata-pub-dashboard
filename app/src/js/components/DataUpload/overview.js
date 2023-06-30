@@ -148,9 +148,9 @@ const UploadOverview = () => {
         authToken: loadToken().token,
         submissionId: submissionId
       }
+      console.log('payload', payload)
       const resp = await upload.uploadFile(payload).then((resp) => {
         setStatusMsg('Uploading');
-        console.log('upload response',resp)
         if (resp.status !== 200) {
           setStatusMsg('Select a file');
           if (hiddenFileInput.current === null || hiddenFileInput === null) {
@@ -167,7 +167,7 @@ const UploadOverview = () => {
           }, '5000');
         }
       }).catch((resp) => {
-        console.log(`AN error has occured ${resp}`);
+        console.log(`AN error has occured ${resp} from payload: ${payload}`);
         setTimeout(() => {
           setStatusMsg('Select a file');
           if (hiddenFileInput.current === null || hiddenFileInput === null) {
