@@ -150,7 +150,7 @@ const UploadOverview = () => {
       console.log(payload)
       const resp = await upload.uploadFile(payload).then((resp) => {
         setStatusMsg('Uploading');
-        if (resp.status !== 200) {
+        if (resp.status !== 200 && resp.status !== 204) {
           setStatusMsg('Select a file');
           if (hiddenFileInput.current === null || hiddenFileInput === null) {
             hiddenFileInput = React.createRef(null);
