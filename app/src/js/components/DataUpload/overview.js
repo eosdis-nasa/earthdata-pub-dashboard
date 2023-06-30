@@ -138,7 +138,6 @@ const UploadOverview = () => {
         submissionId = submissionId.split(/&/g)[0];
       }
     }
-    
     if(submissionId !== '' && submissionId != undefined && submissionId !== null) {
       const payload = {
         fileObj: file, 
@@ -148,7 +147,9 @@ const UploadOverview = () => {
       }
       const resp = await upload.uploadFile(payload).then((resp) => {
         setStatusMsg('Uploading');
-        console.log(resp)
+        console.log(resp.data)
+        console.log(resp.errorMessage)
+        console.log(resp.error)
         if (resp.error){
           console.log(`An error has occured: ${resp.error}.`);
           setTimeout(() => {
