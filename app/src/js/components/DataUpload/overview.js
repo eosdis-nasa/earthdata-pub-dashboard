@@ -166,7 +166,7 @@ const UploadOverview = () => {
           }, '5000');
         }
       }).catch((resp) => {
-        console.log(`AN error has occured ${resp} from payload: ${JSON.stringify(payload)}`);
+        console.log(`AN error has occured ${resp} from payload`);
         setTimeout(() => {
           setStatusMsg('Select a file');
           if (hiddenFileInput.current === null || hiddenFileInput === null) {
