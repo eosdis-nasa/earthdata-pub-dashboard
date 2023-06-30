@@ -148,7 +148,7 @@ const UploadOverview = () => {
         authToken: loadToken().token,
         submissionId: submissionId
       }
-      console.log('payload', payload)
+      console.log('payload', JSON.stringify(payload))
       const resp = await upload.uploadFile(payload).then((resp) => {
         setStatusMsg('Uploading');
         if (resp.status !== 200) {
