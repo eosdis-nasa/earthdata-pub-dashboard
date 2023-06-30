@@ -130,7 +130,6 @@ const UploadOverview = () => {
   const handleChange = async event => {
     setStatusMsg('Uploading...');
     const file = event.target.files[0];
-    setUploadFile(file);
     const hash = await readFile(file);
     setFileHash(hash);
     const upload = new localUpload();
