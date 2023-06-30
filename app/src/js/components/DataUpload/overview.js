@@ -130,8 +130,6 @@ const UploadOverview = () => {
   const handleChange = async event => {
     setStatusMsg('Uploading...');
     const file = event.target.files[0];
-    const hash = await readFile(file);
-    setFileHash(hash);
     const upload = new localUpload();
     let submissionId = '';
     if (window.location.href.indexOf('requests/id') >= 0) {
@@ -140,14 +138,16 @@ const UploadOverview = () => {
         submissionId = submissionId.split(/&/g)[0];
       }
     }
+    
     if(submissionId !== '' && submissionId != undefined && submissionId !== null) {
+      console.log(file)
       const payload = {
         fileObj: file, 
         apiEndpoint: `${apiRoot}data/upload/getPostUrl`, 
         authToken: loadToken().token,
         submissionId: submissionId
       }
-      console.log('payload', JSON.stringify(payload))
+      console.log(payload)
       const resp = await upload.uploadFile(payload).then((resp) => {
         setStatusMsg('Uploading');
         if (resp.status !== 200) {
