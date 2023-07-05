@@ -135,6 +135,10 @@ class RequestOverview extends React.Component {
     }, 1500);
   }
 
+  reload () {
+    this.componentDidMount();
+  }
+
   toProperCase (str) {
     return str.replace(
       /\w\S*/g,

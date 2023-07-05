@@ -5,9 +5,6 @@ import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
-import {
-  getPutUrl
-} from '../../actions';
 import localUpload from 'edpub-data-upload-utility';
 import { createMD5 } from 'hash-wasm';
 
@@ -38,7 +35,6 @@ const UploadOverview = () => {
   const {apiRoot} = _config;
 
   const put = async (url) => {
-    console.log('PUT', uploadFile, url)
     if (uploadFile && typeof url !== 'undefined' && !url.match(/undefined/g)) {
       const resp = await fetch(url, {
         method: 'PUT',
@@ -138,26 +134,25 @@ const UploadOverview = () => {
         submissionId = submissionId.split(/&/g)[0];
       }
     }
-    
     if(submissionId !== '' && submissionId != undefined && submissionId !== null) {
-      console.log(file)
       const payload = {
         fileObj: file, 
         apiEndpoint: `${apiRoot}data/upload/getPostUrl`, 
         authToken: loadToken().token,
         submissionId: submissionId
       }
-      console.log(payload)
       const resp = await upload.uploadFile(payload).then((resp) => {
         setStatusMsg('Uploading');
-        if (resp.status !== 200) {
-          setStatusMsg('Select a file');
-          if (hiddenFileInput.current === null || hiddenFileInput === null) {
-            hiddenFileInput = React.createRef(null);
-          }
+        if (resp.error){
+          console.log(`An error has occured: ${resp.error}.`);
+          setTimeout(() => {
+            setStatusMsg('Select a file');
+            if (hiddenFileInput.current === null || hiddenFileInput === null) {
+              hiddenFileInput = React.createRef(null);
+            }
+          }, '5000');
         } else {
           setStatusMsg('Upload Complete');
-          dispatch(getPutUrl(payload));
           setTimeout(() => {
             setStatusMsg('Select another file');
             if (hiddenFileInput.current === null || hiddenFileInput === null) {
@@ -165,15 +160,7 @@ const UploadOverview = () => {
             }
           }, '5000');
         }
-      }).catch((resp) => {
-        console.log(`AN error has occured ${resp} from payload`);
-        setTimeout(() => {
-          setStatusMsg('Select a file');
-          if (hiddenFileInput.current === null || hiddenFileInput === null) {
-            hiddenFileInput = React.createRef(null);
-          }
-        }, '5000');
-      });
+      })
     }
   };
 
