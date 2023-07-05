@@ -40,7 +40,8 @@ const CommonConfig = {
       crypto: require.resolve('crypto-browserify'),
       http: require.resolve('stream-http'),
       https: require.resolve('https-browserify'),
-      buffer: require.resolve('buffer')
+      buffer: require.resolve('buffer'),
+      querystring: require.resolve('querystring-es3')
     }
   },
   module: {
