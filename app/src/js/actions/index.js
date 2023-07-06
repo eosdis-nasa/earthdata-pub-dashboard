@@ -934,11 +934,3 @@ export const createUser = (payload) => ({
   }
 });
 
-export const getPutUrl = (payload) => ({
-  [CALL_API]: {
-    type: types.GET_SIGNED_PUT,
-    method: 'POST',
-    path: 'data/upload/getPutUrl',
-    json: payload
-  }
-});
