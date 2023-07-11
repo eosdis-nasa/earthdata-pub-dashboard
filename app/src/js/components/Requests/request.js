@@ -40,6 +40,7 @@ import _config from '../../config';
 import Meditor from '../MeditorModal/modal';
 import SearchModal from '../SearchModal';
 import Select from 'react-select';
+import UploadOverview from '../DataUpload/overview';
 
 export const getRoles = () => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
@@ -132,6 +133,10 @@ class RequestOverview extends React.Component {
         }
       }
     }, 1500);
+  }
+
+  reload () {
+    this.componentDidMount();
   }
 
   toProperCase (str) {
@@ -521,10 +526,8 @@ class RequestOverview extends React.Component {
         </section>
         {
           Object.keys(this.state.names).length === 0
-            ? 
-            <Loading />
-            :
-            <section className='page__section'>
+            ? <Loading />
+            : <section className='page__section'>
           <br></br>
           <div className='page__section__header'>
             <h1 className='heading--small' aria-labelledby='contributers'>
@@ -573,12 +576,11 @@ class RequestOverview extends React.Component {
           </section>}
           {
             record.data && record.data.contributor_ids && Object.keys(this.state.names).length > 0
-              ? <section className='page__section'>
+              ? <><section className='page__section'>
               {workflowSave}
-            </section>
+            </section><Meditor></Meditor><UploadOverview /></>
               : null
           }
-        <Meditor></Meditor>
         { showTable
           ? <section className='page__section'>
             <div className='heading__wrapper--border'>
