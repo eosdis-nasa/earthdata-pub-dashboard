@@ -9,18 +9,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Added loading of comments by step. Adjusted functionality to force require comment on each rejection as opposed to per step.  
+- Adjusted functionality to allow for reading comments if not reviewable.
 
 ## 1.0.14
 
 - Improve comments component by adding comment to be required on 'Return' or 'Reject'
 - Tweaked display of workflow step and made the interface look at the admin role
 - Make textareas expandable
-- Add new request button to dashboard per info team request
 - Change to look at privileges now like the api does
 - Add functionality allowing users to see forms throughout the entire workflow
 - Improve comments component by adding comment to be required on 'Return' or 'Reject'
 - Add 'New Request' button to 'Home' per info team request.
-- Add functionality allowing users to see forms throughout the entire workflow
 
 ## 1.0.13 - 2023-06-22
 
