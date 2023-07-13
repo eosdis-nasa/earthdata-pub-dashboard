@@ -38,7 +38,8 @@
     "stop-dashboard": "npm run stop",
     "start": "docker-compose -f ./docker-compose.yml up -d",
     "stop": "docker-compose -f ./docker-compose.yml down",
-    "view-logs": "docker-compose -f ./docker-compose.yml up"
+    "view-logs": "docker-compose -f ./docker-compose.yml up",
+    "update-upload": "cd ../upload && git pull origin && cd ../dashboard && rm -rf node_modules/edpub-data-upload-utility && npm i edpub-data-upload-utility"
   },
   "ava": {
     "babel": {
