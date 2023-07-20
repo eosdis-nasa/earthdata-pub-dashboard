@@ -7,6 +7,7 @@ import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import localUpload from 'edpub-data-upload-utility';
 import { createMD5 } from 'hash-wasm';
+import { listFileUploadsBySubmission, getDaac } from '../../actions';
 
 const breadcrumbConfig = [
   {
@@ -27,93 +28,36 @@ const UploadOverview = () => {
   const [fileHash, setFileHash] = useState('');
   const [submissionId, setSubmissionId] = useState('');
   let hiddenFileInput = React.createRef(null);
-  const chunkSize = 64 * 1024 * 1024;
-  const fileReader = new FileReader();
-  let hasher = null;
 
   const dispatch = useDispatch();
   const {apiRoot} = _config;
 
-  const put = async (url) => {
-    if (uploadFile && typeof url !== 'undefined' && !url.match(/undefined/g)) {
-      const resp = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': uploadFile.type
-        },
-        body: uploadFile
-      }).then((resp) => {
-        if (resp.status !== 200) {
-          setStatusMsg('Select a file');
-          if (hiddenFileInput.current === null || hiddenFileInput === null) {
-            hiddenFileInput = React.createRef(null);
-          }
+  const updateFileList = async () => {
+    let submissionId = '';
+    if (window.location.href.indexOf('requests/id') >= 0) {
+      submissionId = window.location.href.split(/requests\/id\//g)[1];
+      if (submissionId.indexOf('&') >= 0) {
+        submissionId = submissionId.split(/&/g)[0];
+      }
+    }
+    if (submissionId !== '' && submissionId != undefined && submissionId !== null) {
+      /* dispatch(listFileUploadsBySubmission(submissionId)).then(value => {
+        console.log(value)
+        document.getElementById('previously-saved').innerHTML += `${value}<br>`;
+      }); */
+      dispatch(listFileUploadsBySubmission(submissionId)).then(resp => {
+        if (resp.error) {
+          console.log(`An error has occured: ${resp.error}.`);
         } else {
-          setStatusMsg('Upload Complete');
-          setTimeout(() => {
-            setStatusMsg('Select another file');
-            if (hiddenFileInput.current === null || hiddenFileInput === null) {
-              hiddenFileInput = React.createRef(null);
-            }
-          }, '5000');
+          console.log('str',JSON.stringify(resp))
+          console.log(resp)
+          //const date = new Date();
+          //const datetime = date.toLocaleString();
+          // const comment = `${datetime} - ${uploadFile.name}`;
+          document.getElementById('previously-saved').innerHTML += `${JSON.stringify(resp)}<br>`;
         }
-      }).catch((resp) => {
-        console.log(`AN error has occured ${resp}`);
-        setTimeout(() => {
-          setStatusMsg('Select a file');
-          if (hiddenFileInput.current === null || hiddenFileInput === null) {
-            hiddenFileInput = React.createRef(null);
-          }
-        }, '5000');
       });
-      return resp;
-    } else {
-      console.log('An error has occured. Please try again.');
-      setTimeout(() => {
-        setStatusMsg('Select a file');
-        if (hiddenFileInput.current === null || hiddenFileInput === null) {
-          hiddenFileInput = React.createRef(null);
-        }
-      }, '5000');
     }
-    if (uploadFile !== '') {
-      const date = new Date();
-      const datetime = date.toLocaleString();
-      const comment = `${datetime} - ${uploadFile.name}`;
-      document.getElementById('previously-saved').innerHTML += `${comment}<br>`;
-    }
-  };
-
-  const hashChunk = (chunk) => {
-    return new Promise((resolve, reject) => {
-      fileReader.onload = async (e) => {
-        const view = new Uint8Array(e.target.result);
-        hasher.update(view);
-        resolve();
-      };
-
-      fileReader.readAsArrayBuffer(chunk);
-    });
-  };
-
-  const readFile = async (file) => {
-    if (hasher) {
-      hasher.init();
-    } else {
-      hasher = await createMD5();
-    }
-
-    const chunkNumber = Math.floor(file.size / chunkSize);
-
-    for (let i = 0; i <= chunkNumber; i++) {
-      const chunk = file.slice(
-        chunkSize * i,
-        Math.min(chunkSize * (i + 1), file.size)
-      );
-      await hashChunk(chunk);
-    }
-    const hash = hasher.digest();
-    return Promise.resolve(hash);
   };
 
   const handleClick = event => {
@@ -153,6 +97,7 @@ const UploadOverview = () => {
           }, '5000');
         } else {
           setStatusMsg('Upload Complete');
+          updateFileList();
           setTimeout(() => {
             setStatusMsg('Select another file');
             if (hiddenFileInput.current === null || hiddenFileInput === null) {
