@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added loading of comments by step. Adjusted functionality to force require comment on each rejection as opposed to per step.  
 - Adjusted functionality to allow for reading comments if not reviewable.
 
+## 1.0.15
+
+- Added uploading to request detail page
+- Integrate upload package to dashboard and dashboard cicd (EDPUB-971)
+- Make data upload reuseable
+
 ## 1.0.14
 
 - Improve comments component by adding comment to be required on 'Return' or 'Reject'
