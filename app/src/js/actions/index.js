@@ -185,6 +185,15 @@ export const getInProgressRequests = () => ({
   }
 });
 
+export const listFileUploadsBySubmission = (submissionId) => ({
+  [CALL_API]: {
+    type: types.REQUEST,
+    method: 'GET',
+    id: submissionId,
+    path: `data/upload/list/${submissionId}`
+  }
+});
+
 export const getContributers = (payload) => ({
   [CALL_API]: {
     type: types.USERS,
