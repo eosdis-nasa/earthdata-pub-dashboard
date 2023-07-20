@@ -185,6 +185,15 @@ export const getInProgressRequests = () => ({
   }
 });
 
+export const listFileUploadsBySubmission = (submissionId) => ({
+  [CALL_API]: {
+    type: types.REQUEST,
+    method: 'GET',
+    id: submissionId,
+    path: `data/upload/list/${submissionId}`
+  }
+});
+
 export const getContributers = (payload) => ({
   [CALL_API]: {
     type: types.USERS,
@@ -868,6 +877,14 @@ export const listConversations = (options) => ({
     method: 'GET',
     path: 'notification/conversations',
     qs: Object.assign({ limit: defaultPageLimit }, options)
+  }
+});
+export const getConversations = (payload) => ({
+  [CALL_API]: {
+    type: types.CONVERSATIONS,
+    method: 'GET',
+    path: `notification/conversation/${payload.conversation_id}?detailed=${payload.level}&step_name=${payload.step_name}`,
+    body: payload
   }
 });
 
