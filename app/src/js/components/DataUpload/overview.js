@@ -21,7 +21,7 @@ class UploadOverview extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log('componentDidMount called')
+    console.log('componentDidUpdate called')
     this.updateFileList()
   }
 
@@ -156,11 +156,7 @@ class UploadOverview extends React.Component {
             </h1>
           </div>
           <div className='indented__details'>
-            {this.state.files !== '' 
-              ?
-              <span id='previously-saved' ref={this.state.files}></span>
-              : null 
-            }
+            <span id='previously-saved' ref={this.state.files}></span>
             <div className='form__textarea'>
               <br></br><label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${this.state.statusMsg}`}
                 <input
