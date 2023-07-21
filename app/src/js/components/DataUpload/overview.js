@@ -15,12 +15,17 @@ class UploadOverview extends React.Component {
     /* const [statusMsg, setStatusMsg] = useState('Select a file');
     const [uploadFile, setUploadFile] = useState('');
     const [submissionId, setSubmissionId] = useState(''); */
+    this.updateFileList = this.updateFileList.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidUpdate() {
     console.log('componentDidMount called')
+    this.updateFileList()
+  }
+
+  updateFileList(){
     const { dispatch } = this.props;
     let submissionId = '';
     if (window.location.href.indexOf('requests/id') >= 0) {
@@ -70,7 +75,7 @@ class UploadOverview extends React.Component {
           this.setState({ files: this.state.files = `${str}` });
         } else {
           const dataArr = resp.data
-          for (const ea in dataArr){
+          for (const ea in dataArr) {
             const fileName = dataArr[ea].file_name
             const key = dataArr[ea].key
             const lastModified = dataArr[ea].last_modified
