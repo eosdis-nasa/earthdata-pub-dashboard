@@ -102,53 +102,56 @@ class UploadOverview extends React.Component {
   }
 
   async handleChange (e) {
-    console.log('handle change function');
-    e.preventDefault();
-    this.setState({ statusMsg: 'Uploading' });
-    const file = event.target.files[0];
-    const upload = new localUpload();
-    let submissionId = '';
-    const { apiRoot } = _config;
-    if (window.location.href.indexOf('requests/id') >= 0) {
-      submissionId = window.location.href.split(/requests\/id\//g)[1];
-      if (submissionId.indexOf('&') >= 0) {
-        submissionId = submissionId.split(/&/g)[0];
-      }
-    }
-    if (submissionId !== '' && submissionId != undefined && submissionId !== null) {
-      const payload = {
-        fileObj: file,
-        apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
-        authToken: loadToken().token,
-        submissionId
-      };
-      await upload.uploadFile(payload).then((resp) => {
-        this.setState({ statusMsg: 'Uploading' });
-        console.log('uploading executed')
-        if (resp.error) {
-          console.log(`An error has occured: ${resp.error}.`);
-          setTimeout(() => {
-            this.setState({ statusMsg: 'Select a file' });
-            if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
-              this.setState({ hiddenFileInput: React.createRef(null) });
-            }
-          }, '1000');
-        } else {
-          this.setState({ statusMsg: 'Upload Complete' });
-          this.updateFileList();
-          setTimeout(() => {
-            this.setState({ statusMsg: 'Select another file' });
-            if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
-              this.setState({ hiddenFileInput: React.createRef(null) });
-            }
-          }, '1000');
+    if (typeof e.tartget.files !== 'undefined') {
+      console.log('handle change function');
+      e.preventDefault();
+      this.setState({ statusMsg: 'Uploading' });
+      console.log(e.target.files)
+      const file = e.target.files[0];
+      const upload = new localUpload();
+      let submissionId = '';
+      const { apiRoot } = _config;
+      if (window.location.href.indexOf('requests/id') >= 0) {
+        submissionId = window.location.href.split(/requests\/id\//g)[1];
+        if (submissionId.indexOf('&') >= 0) {
+          submissionId = submissionId.split(/&/g)[0];
         }
-      });
+      }
+      if (submissionId !== '' && submissionId != undefined && submissionId !== null) {
+        const payload = {
+          fileObj: file,
+          apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
+          authToken: loadToken().token,
+          submissionId
+        };
+        await upload.uploadFile(payload).then((resp) => {
+          this.setState({ statusMsg: 'Uploading' });
+          console.log('uploading executed')
+          if (resp.error) {
+            console.log(`An error has occured: ${resp.error}.`);
+            setTimeout(() => {
+              this.setState({ statusMsg: 'Select a file' });
+              if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
+                this.setState({ hiddenFileInput: React.createRef(null) });
+              }
+            }, '1000');
+          } else {
+            this.setState({ statusMsg: 'Upload Complete' });
+            this.updateFileList();
+            setTimeout(() => {
+              this.setState({ statusMsg: 'Select another file' });
+              if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
+                this.setState({ hiddenFileInput: React.createRef(null) });
+              }
+            }, '1000');
+          }
+        });
+      }
     }
   }
 
   render () {
-    console.log('rendering now 2');
+    console.log('rendering now 3');
     return (
       <><br></br>
         <div className='page__component'>
