@@ -146,7 +146,7 @@ class UploadOverview extends React.Component {
   };
 
   render() {
-    console.log('rendering')
+    console.log('rendering now')
     return (
       <><br></br>
         <div className='page__component'>
