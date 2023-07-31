@@ -9,7 +9,7 @@ import localUpload from 'edpub-data-upload-utility';
 import { listFileUploadsBySubmission } from '../../actions';
 
 class UploadOverview extends React.Component {
-  constructor() {
+  constructor () {
     super();
     this.state = { loaded: false, files: '', hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '' };
     /* const [statusMsg, setStatusMsg] = useState('Select a file');
@@ -20,12 +20,12 @@ class UploadOverview extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidUpdate() {
-    console.log('componentDidUpdate called')
-    this.updateFileList()
+  componentDidUpdate () {
+    console.log('componentDidUpdate called');
+    this.updateFileList();
   }
 
-  updateFileList(){
+  updateFileList () {
     const { dispatch } = this.props;
     let submissionId = '';
     if (window.location.href.indexOf('requests/id') >= 0) {
@@ -36,7 +36,7 @@ class UploadOverview extends React.Component {
     }
     if (submissionId !== '' && submissionId != undefined && submissionId !== null) {
       dispatch(listFileUploadsBySubmission(submissionId)).then(resp => {
-        /*const bucket = '15df4fda-ed0d-417f-9124-558fb5e5b561';
+        /* const bucket = '15df4fda-ed0d-417f-9124-558fb5e5b561';
         const userId = 'c259a741-1822-48a9-b6c3-9a4ecaac0338';
          resp = {
           "id": `${submissionId}`,
@@ -71,19 +71,19 @@ class UploadOverview extends React.Component {
           }
         } */
         if (resp.error) {
-          const str = `An error has occurred: ${resp.error}.  Please try again later.<br>`
+          const str = `An error has occurred: ${resp.error}.  Please try again later.<br>`;
           this.setState({ files: this.state.files = `${str}` });
         } else {
-          const dataArr = resp.data
+          const dataArr = resp.data;
           for (const ea in dataArr) {
-            const fileName = dataArr[ea].file_name
-            const key = dataArr[ea].key
-            const lastModified = dataArr[ea].last_modified
-            const size = dataArr[ea].size
+            const fileName = dataArr[ea].file_name;
+            const key = dataArr[ea].key;
+            const lastModified = dataArr[ea].last_modified;
+            const size = dataArr[ea].size;
             const date = new Date(lastModified).toISOString().split('T')[0];
             const datetime = date.toLocaleString();
-            const url = resp.config.url
-            const str = `<a target=_blank href="${url}" id="${key}" name="${fileName}" ariaLabel="Download ${key}">${fileName}</a><br>`
+            const url = resp.config.url;
+            const str = `<a target=_blank href="${url}" id="${key}" name="${fileName}" ariaLabel="Download ${key}">${fileName}</a><br>`;
             this.setState({ files: this.state.files += `${str}` });
           }
         }
@@ -91,17 +91,18 @@ class UploadOverview extends React.Component {
     }
   }
 
-  handleClick (e) {
-    console.log('handle click function')
+  async handleClick (e) {
+    console.log('handle click function');
     e.preventDefault();
     if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
       this.setState({ hiddenFileInput: React.createRef(null) });
     }
-    this.state.hiddenFileInput?.current?.click();
-  };
+    // this.state.hiddenFileInput?.current?.click();
+    await this.handleChange(e);
+  }
 
   async handleChange (e) {
-    console.log('handle change function')
+    console.log('handle change function');
     e.preventDefault();
     this.setState({ statusMsg: 'Uploading' });
     const file = event.target.files[0];
@@ -119,10 +120,11 @@ class UploadOverview extends React.Component {
         fileObj: file,
         apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
         authToken: loadToken().token,
-        submissionId: submissionId
-      }
-      const resp = await upload.uploadFile(payload).then((resp) => {
+        submissionId
+      };
+      await upload.uploadFile(payload).then((resp) => {
         this.setState({ statusMsg: 'Uploading' });
+        console.log('uploading executed')
         if (resp.error) {
           console.log(`An error has occured: ${resp.error}.`);
           setTimeout(() => {
@@ -141,12 +143,12 @@ class UploadOverview extends React.Component {
             }
           }, '1000');
         }
-      })
+      });
     }
-  };
+  }
 
-  render() {
-    console.log('rendering now')
+  render () {
+    console.log('rendering now 2');
     return (
       <><br></br>
         <div className='page__component'>
@@ -160,7 +162,7 @@ class UploadOverview extends React.Component {
             <div className='form__textarea'>
               <br></br><label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${this.state.statusMsg}`}
                 <input
-                  /* onChange={(e) => this.handleChange(e)}*/
+                  /* onChange={(e) => this.handleChange(e)} */
                   type="file"
                   multiple={false}
                   style={{ display: 'none' }}
