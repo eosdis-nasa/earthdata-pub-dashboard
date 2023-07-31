@@ -160,7 +160,7 @@ class UploadOverview extends React.Component {
             <div className='form__textarea'>
               <br></br><label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${this.state.statusMsg}`}
                 <input
-                  onChange={(e) => this.handleChange(e)}
+                  /* onChange={(e) => this.handleChange(e)}*/
                   type="file"
                   multiple={false}
                   style={{ display: 'none' }}
