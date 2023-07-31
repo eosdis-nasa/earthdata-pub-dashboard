@@ -97,16 +97,14 @@ class UploadOverview extends React.Component {
     if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
       this.setState({ hiddenFileInput: React.createRef(null) });
     }
-    // this.state.hiddenFileInput?.current?.click();
-    await this.handleChange(e);
+    await this.state.hiddenFileInput?.current?.click();
   }
 
   async handleChange (e) {
-    if (typeof e.tartget.files !== 'undefined') {
-      console.log('handle change function');
+    console.log('handle change function');
+    if (typeof e.target.files !== 'undefined') {
       e.preventDefault();
       this.setState({ statusMsg: 'Uploading' });
-      console.log(e.target.files)
       const file = e.target.files[0];
       const upload = new localUpload();
       let submissionId = '';
@@ -151,7 +149,7 @@ class UploadOverview extends React.Component {
   }
 
   render () {
-    console.log('rendering now 3');
+    console.log('rendering now 4');
     return (
       <><br></br>
         <div className='page__component'>
@@ -165,7 +163,7 @@ class UploadOverview extends React.Component {
             <div className='form__textarea'>
               <br></br><label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${this.state.statusMsg}`}
                 <input
-                  /* onChange={(e) => this.handleChange(e)} */
+                  onChange={(e) => this.handleChange(e)}
                   type="file"
                   multiple={false}
                   style={{ display: 'none' }}
