@@ -11,7 +11,7 @@ import { listFileUploadsBySubmission } from '../../actions';
 class UploadOverview extends React.Component {
   constructor () {
     super();
-    this.state = { Let me : false, files: '', hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '' };
+    this.state = { loaded: false, files: '', hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '' };
     /* const [statusMsg, setStatusMsg] = useState('Select a file');
     const [uploadFile, setUploadFile] = useState('');
     const [submissionId, setSubmissionId] = useState(''); */
@@ -145,8 +145,8 @@ class UploadOverview extends React.Component {
   }
 
   render () {
-    console.log('rendering now 6');
-    // this.updateFileList();
+    console.log('rendering no list');
+    //this.updateFileList();
     return (
       <><br></br>
         <div className='page__component'>
