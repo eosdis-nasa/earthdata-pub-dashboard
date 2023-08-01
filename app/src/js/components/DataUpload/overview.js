@@ -20,11 +20,6 @@ class UploadOverview extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidUpdate () {
-    console.log('componentDidUpdate called');
-    this.updateFileList();
-  }
-
   updateFileList () {
     const { dispatch } = this.props;
     let submissionId = '';
@@ -150,7 +145,8 @@ class UploadOverview extends React.Component {
   }
 
   render () {
-    console.log('rendering now 4');
+    console.log('rendering now 5');
+    this.updateFileList();
     return (
       <><br></br>
         <div className='page__component'>
