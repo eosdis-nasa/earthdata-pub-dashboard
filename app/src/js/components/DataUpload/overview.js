@@ -132,7 +132,7 @@ class UploadOverview extends React.Component {
           } else {
             this.setState({ statusMsg: 'Upload Complete' });
             console.log('upload complete')
-            // this.updateFileList();
+            this.updateFileList();
             setTimeout(() => {
               this.setState({ statusMsg: 'Select another file' });
               if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
