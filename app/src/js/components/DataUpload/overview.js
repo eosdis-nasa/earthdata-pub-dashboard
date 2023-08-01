@@ -122,6 +122,7 @@ class UploadOverview extends React.Component {
           authToken: loadToken().token,
           submissionId
         };
+        console.log('payload', payload)
         await upload.uploadFile(payload).then((resp) => {
           this.setState({ statusMsg: 'Uploading' });
           console.log('uploading executed')
