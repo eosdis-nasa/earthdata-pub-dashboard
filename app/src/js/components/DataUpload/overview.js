@@ -120,7 +120,7 @@ class UploadOverview extends React.Component {
         console.log('payload', payload)
         await upload.uploadFile(payload).then((resp) => {
           this.setState({ statusMsg: 'Uploading' });
-          console.log('uploading executed')
+          console.log('resp',resp)
           if (resp.error) {
             console.log(`An error has occured: ${resp.error}.`);
             setTimeout(() => {
@@ -131,7 +131,8 @@ class UploadOverview extends React.Component {
             }, '1000');
           } else {
             this.setState({ statusMsg: 'Upload Complete' });
-            this.updateFileList();
+            console.log('upload complete')
+            // this.updateFileList();
             setTimeout(() => {
               this.setState({ statusMsg: 'Select another file' });
               if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
@@ -145,7 +146,7 @@ class UploadOverview extends React.Component {
   }
 
   render () {
-    console.log('rendering no list?');
+    console.log('render function');
     //this.updateFileList();
     return (
       <><br></br>
