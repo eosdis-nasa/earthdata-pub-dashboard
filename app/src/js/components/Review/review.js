@@ -2,12 +2,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import {
   getRequest,
   reviewRequest
 } from '../../actions';
-import { strings } from '../locale';
 import { requestPrivileges } from '../../utils/privileges';
 
 class ReviewStep extends React.Component {
@@ -24,7 +23,9 @@ class ReviewStep extends React.Component {
   }
 
   formatComments (approval) {
-    if (!approval && document.querySelectorAll('textarea#comment')[0].value === '') {
+    const savedBefore = localStorage.getItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
+    const hasCurrentValue = document.querySelectorAll('textarea#comment')[0].value !== '';
+    if (!approval && (savedBefore === null && !hasCurrentValue)) {
       document.querySelectorAll('textarea#comment')[0].placeholder = 'required';
       document.querySelectorAll('textarea#comment')[0].classList.add('required');
     } else {
@@ -35,12 +36,19 @@ class ReviewStep extends React.Component {
 
   async review (id, approval) {
     this.formatComments(approval);
-    if ((!approval && document.querySelectorAll('textarea#comment')[0].value !== '' && document.getElementById('previously-saved').innerHTML === '') || approval) {
-      if (document.getElementById('previously-saved').innerHTML === '') {
+    const savedBefore = localStorage.getItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
+    const re = new RegExp(document.querySelectorAll('textarea#comment')[0].value, 'i');
+    const currentInboxValueInSaved = document.getElementById('previously-saved').innerHTML.match(re);
+    const hasCurrentValue = document.querySelectorAll('textarea#comment')[0].value !== '';
+    if (((!approval && savedBefore === 'saved') || (!approval && hasCurrentValue)) || approval) {
+      if (currentInboxValueInSaved == null) {
         document.querySelectorAll('button.button--reply')[0].click();
       }
       const { dispatch } = this.props;
       await dispatch(reviewRequest(id, approval));
+      if (!approval) {
+        localStorage.removeItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`)
+      }
       window.location.href = `${window.location.origin}${window.location.pathname.split(/forms/)[0]}requests`;
     }
   }
