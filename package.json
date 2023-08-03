@@ -1,6 +1,6 @@
 {
   "name": "earthdata-pub-dashboard",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "A dashboard for Earthdata Pub API",
   "repository": {
     "type": "git",
