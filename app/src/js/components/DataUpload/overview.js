@@ -89,12 +89,19 @@ class UploadOverview extends React.Component {
               },
               url: `https://pub.sit.earthdata.nasa.gov/api/data/upload/list/${requestId}`
             }
-          };*/
+          }; */
           if (resp.data.error) {
             const str = `An error has occurred while getting the list of files: ${resp.data.error}.`;
           } else {
             document.getElementById('previously-saved').replaceChildren();
             const dataArr = resp.data;
+            dataArr.sort(function (a, b) {
+              var keyA = new Date(a.last_modified),
+                keyB = new Date(b.last_modified);
+              if (keyA > keyB) return -1;
+              if (keyA < keyB) return 1;
+              return 0;
+            });
             for (const ea in dataArr) {
               const fileName = dataArr[ea].file_name;
               if (dataArr[ea]=== undefined || fileName === undefined){
