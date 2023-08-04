@@ -94,6 +94,9 @@ class UploadOverview extends React.Component {
             const dataArr = resp.data;
             for (const ea in dataArr) {
               const fileName = dataArr[ea].file_name;
+              if (dataArr[ea]=== undefined || fileName === undefined){
+                break
+              }
               const key = dataArr[ea].key;
               localStorage.setItem('key', key)
               const lastModified = dataArr[ea].last_modified;
