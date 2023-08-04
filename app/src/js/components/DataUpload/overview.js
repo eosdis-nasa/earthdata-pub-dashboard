@@ -108,6 +108,7 @@ class UploadOverview extends React.Component {
     const upload = new localUpload();
     let submissionId = '';
     const { apiRoot } = _config;
+    this.props.dispatch(refreshToken());
     if (window.location.href.indexOf('requests/id') >= 0) {
       submissionId = window.location.href.split(/requests\/id\//g)[1];
       if (submissionId.indexOf('&') >= 0) {
