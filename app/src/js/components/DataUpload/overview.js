@@ -172,6 +172,9 @@ class UploadOverview extends React.Component {
             this.resetInputWithTimeout('Select a file', 1000)
           } else {
             this.setState({ statusMsg: 'Upload Complete' });
+            if (document.getElementById('previously-saved') !== null) {
+              document.getElementById('previously-saved').innerHTML=='';
+            }
             this.getFileList();
             this.resetInputWithTimeout('Select another file', 1000)
           }
