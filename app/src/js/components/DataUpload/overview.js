@@ -56,7 +56,7 @@ class UploadOverview extends React.Component {
     if (requestId !== '' && requestId != undefined && requestId !== null) {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
-          /* const bucket = '15df4fda-ed0d-417f-9124-558fb5e5b561';
+          const bucket = '15df4fda-ed0d-417f-9124-558fb5e5b561';
           const userId = 'c259a741-1822-48a9-b6c3-9a4ecaac0338';
           resp = {
             id: `${requestId}`,
@@ -89,11 +89,11 @@ class UploadOverview extends React.Component {
               },
               url: `https://pub.sit.earthdata.nasa.gov/api/data/upload/list/${requestId}`
             }
-          }; */
+          };
           if (resp.data.error) {
             const str = `An error has occurred while getting the list of files: ${resp.data.error}.`;
           } else {
-            document.getElementById('previously-saved').innerHTML == '';
+            document.getElementById('previously-saved').replaceChildren();
             const dataArr = resp.data;
             for (const ea in dataArr) {
               const fileName = dataArr[ea].file_name;
