@@ -6,22 +6,46 @@ import { connect } from 'react-redux';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import localUpload from 'edpub-data-upload-utility';
-import { listFileUploadsBySubmission } from '../../actions';
+import { listFileUploadsBySubmission, listFileDownloadsBySubmission } from '../../actions';
 
 class UploadOverview extends React.Component {
   constructor() {
     super();
-    this.state = { loaded: false, hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '' };
-    /* const [statusMsg, setStatusMsg] = useState('Select a file');
-    const [uploadFile, setUploadFile] = useState('');
-    const [submissionId, setSubmissionId] = useState(''); */
+    this.state = { loaded: false, hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '', key: '' };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.getFileList = this.getFileList.bind(this);
     this.validateFile = this.validateFile.bind(this);
     this.resetInputWithTimeout = this.resetInputWithTimeout.bind(this);
+    this.getDownloadList = this.getDownloadList.bind(this);
     
-    
+  }
+
+  getDownloadList() {
+    const { dispatch } = this.props;
+    const { requestId } = this.props.match.params;
+
+    if (requestId !== '' && requestId != undefined && requestId !== null) {
+      if (this.state.key !== ''){
+        dispatch(listFileDownloadsBySubmission(requestId))
+          .then(() => {
+            const download = new localUpload();
+            const { requestId } = this.props.match.params;
+            const { apiRoot } = _config;
+            if (requestId !== '' && requestId != undefined && requestId !== null) {
+              const payload = (key, `${apiRoot}data/upload/downloadUrl/${key}`, loadToken().token)
+              // s3://bucket_name/path/to/file.txt
+              download.downloadFile(payload).then((resp) => {
+                if (resp.error) {
+                  console.log(`An error has occured: ${resp.error}.`);
+                } else {
+                  console.log('no errors', resp)
+                }
+              })
+            }
+        });
+      }
+    }
   }
 
   getFileList() {
@@ -71,6 +95,7 @@ class UploadOverview extends React.Component {
             for (const ea in dataArr) {
               const fileName = dataArr[ea].file_name;
               const key = dataArr[ea].key;
+              localStorage.setItem('key', key)
               const lastModified = dataArr[ea].last_modified;
               const size = dataArr[ea].size;
               if (typeof lastModified !== 'undefined') {
@@ -78,7 +103,7 @@ class UploadOverview extends React.Component {
                 const datetime = date.toLocaleString();
               }
               const url = resp.config.url;
-              const str = `<a target=_blank href="${url}" id="${key}" name="${fileName}" ariaLabel="Download ${key}">${fileName}</a><br>`;
+              const str = `<span id="${key}" name="${fileName}" ariaLabel="Download ${key}">${fileName}</span><br>`;
               if (document.getElementById('previously-saved') !== null) {
                 document.getElementById('previously-saved').innerHTML += `${str}`;
               }
@@ -90,6 +115,7 @@ class UploadOverview extends React.Component {
 
   componentDidMount() {
     this.getFileList()
+    this.getDownloadList()
   }
 
   handleClick(e) {
@@ -106,6 +132,7 @@ class UploadOverview extends React.Component {
       }
     }, timeout);
   }
+
   validateFile(file){
     let valid = false;
     if (file.name.match(/\.([^\.]+)$/) !== null){
@@ -122,6 +149,7 @@ class UploadOverview extends React.Component {
     }
     return valid;
   }
+  
   async handleChange(e) {
     e.preventDefault();
     const file = e.target.files[0];
@@ -144,7 +172,7 @@ class UploadOverview extends React.Component {
             this.resetInputWithTimeout('Select a file', 1000)
           } else {
             this.setState({ statusMsg: 'Upload Complete' });
-            this.updateFileList();
+            this.getFileList();
             this.resetInputWithTimeout('Select another file', 1000)
           }
         })

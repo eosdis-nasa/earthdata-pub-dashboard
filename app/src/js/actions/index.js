@@ -181,6 +181,15 @@ export const listFileUploadsBySubmission = (submissionId) => ({
   }
 });
 
+export const listFileDownloadsBySubmission = (key) => ({
+  [CALL_API]: {
+    type: types.UPLOAD,
+    method: 'GET',
+    id: key,
+    path: `data/upload/downloadUrl/${key}`
+  }
+});
+
 export const getContributers = (payload) => ({
   [CALL_API]: {
     type: types.USERS,
