@@ -91,6 +91,7 @@ class UploadOverview extends React.Component {
           if (resp.data.error) {
             const str = `An error has occurred while getting the list of files: ${resp.data.error}.`;
           } else {
+            document.getElementById('previously-saved').innerHTML == '';
             const dataArr = resp.data;
             for (const ea in dataArr) {
               const fileName = dataArr[ea].file_name;
@@ -175,9 +176,6 @@ class UploadOverview extends React.Component {
             this.resetInputWithTimeout('Select a file', 1000)
           } else {
             this.setState({ statusMsg: 'Upload Complete' });
-            if (document.getElementById('previously-saved') !== null) {
-              document.getElementById('previously-saved').innerHTML=='';
-            }
             this.getFileList();
             this.resetInputWithTimeout('Select another file', 1000)
           }
