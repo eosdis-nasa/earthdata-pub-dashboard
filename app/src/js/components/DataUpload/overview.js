@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import localUpload from 'edpub-data-upload-utility';
-import { listFileUploadsBySubmission } from '../../actions';
+import { listFileUploadsBySubmission, refreshToken } from '../../actions';
 
 class UploadOverview extends React.Component {
   constructor() {
