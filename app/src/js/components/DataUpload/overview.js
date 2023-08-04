@@ -1,5 +1,5 @@
 'use strict';
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -9,146 +9,150 @@ import localUpload from 'edpub-data-upload-utility';
 import { listFileUploadsBySubmission } from '../../actions';
 
 class UploadOverview extends React.Component {
-  constructor () {
+  constructor() {
     super();
-    this.state = { loaded: false, files: '', hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '' };
+    this.state = { loaded: false, hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '' };
     /* const [statusMsg, setStatusMsg] = useState('Select a file');
     const [uploadFile, setUploadFile] = useState('');
     const [submissionId, setSubmissionId] = useState(''); */
-    this.updateFileList = this.updateFileList.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.getFileList = this.getFileList.bind(this);
+    this.validateFile = this.validateFile.bind(this);
+    this.resetInputWithTimeout = this.resetInputWithTimeout.bind(this);
+    
+    
   }
 
-  updateFileList () {
+  getFileList() {
     const { dispatch } = this.props;
-    let submissionId = '';
-    if (window.location.href.indexOf('requests/id') >= 0) {
-      submissionId = window.location.href.split(/requests\/id\//g)[1];
-      if (submissionId.indexOf('&') >= 0) {
-        submissionId = submissionId.split(/&/g)[0];
-      }
-    }
-    if (submissionId !== '' && submissionId != undefined && submissionId !== null) {
-      dispatch(listFileUploadsBySubmission(submissionId)).then((resp) => {
-        /* const bucket = '15df4fda-ed0d-417f-9124-558fb5e5b561';
-        const userId = 'c259a741-1822-48a9-b6c3-9a4ecaac0338';
-         resp = {
-          "id": `${submissionId}`,
-          "type": "REQUEST",
-          "data": [
-            {
-              "key": `${bucket}/${submissionId}/${userId}/DAAC_logo_avatar.png`,
-              "size": 34828,
-              "last_modified": "2023-07-05T19:44:08.000Z",
-              "file_name": "DAAC_logo_avatar.png"
-            },
-            {
-              "key": `${bucket}/${submissionId}/${userId}/home.png`,
-              "size": 435471,
-              "last_modified": "2023-07-20T21:13:30.000Z",
-              "file_name": "home.png"
+    const { requestId } = this.props.match.params;
+    if (requestId !== '' && requestId != undefined && requestId !== null) {
+      dispatch(listFileUploadsBySubmission(requestId))
+        .then((resp) => {
+          /* const bucket = '15df4fda-ed0d-417f-9124-558fb5e5b561';
+          const userId = 'c259a741-1822-48a9-b6c3-9a4ecaac0338';
+          resp = {
+            id: `${requestId}`,
+            type: 'REQUEST',
+            data: [
+              {
+                key: `${bucket}/${requestId}/${userId}/Some_really_really_long_list_name_of_filename.png`,
+                size: 34828,
+                last_modified: '2023-07-05T19:44:08.000Z',
+                file_name: 'Some_really_really_long_list_name_of_filename.png'
+              },
+              {
+                key: `${bucket}/${requestId}/${userId}/home.png`,
+                size: 435471,
+                last_modified: '2023-07-20T21:13:30.000Z',
+                file_name: 'home.png'
+              }
+            ],
+            config: {
+              json: true,
+              resolveWithFullResponse: true,
+              simple: false,
+              type: 'REQUEST',
+              method: 'GET',
+              id: `${requestId}`,
+              path: `data/upload/list/${requestId}`,
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${loadToken().token}`
+              },
+              url: `https://pub.sit.earthdata.nasa.gov/api/data/upload/list/${requestId}`
             }
-          ],
-          "config": {
-            "json": true,
-            "resolveWithFullResponse": true,
-            "simple": false,
-            "type": "REQUEST",
-            "method": "GET",
-            "id": `${submissionId}`,
-            "path": `data/upload/list/${submissionId}`,
-            "headers": {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${loadToken().token}`
-            },
-            "url": `https://pub.sit.earthdata.nasa.gov/api/data/upload/list/${submissionId}`
+          }; */
+          if (resp.data.error) {
+            const str = `An error has occurred while getting the list of files: ${resp.data.error}.`;
+          } else {
+            const dataArr = resp.data;
+            for (const ea in dataArr) {
+              const fileName = dataArr[ea].file_name;
+              const key = dataArr[ea].key;
+              const lastModified = dataArr[ea].last_modified;
+              const size = dataArr[ea].size;
+              if (typeof lastModified !== 'undefined') {
+                const date = new Date(lastModified).toISOString().split('T')[0];
+                const datetime = date.toLocaleString();
+              }
+              const url = resp.config.url;
+              const str = `<a target=_blank href="${url}" id="${key}" name="${fileName}" ariaLabel="Download ${key}">${fileName}</a><br>`;
+              if (document.getElementById('previously-saved') !== null) {
+                document.getElementById('previously-saved').innerHTML += `${str}`;
+              }
+            }
           }
-        } */
-        console.log('resp on getting list',resp)
-        if (resp.error) {
-          const str = `An error has occurred: ${resp.error}.  Please try again later.<br>`;
-          this.setState({ files: this.state.files = `${str}` });
-        } else {
-          const dataArr = resp.data;
-          for (const ea in dataArr) {
-            const fileName = dataArr[ea].file_name;
-            const key = dataArr[ea].key;
-            const lastModified = dataArr[ea].last_modified;
-            const size = dataArr[ea].size;
-            const date = new Date(lastModified).toISOString().split('T')[0];
-            const datetime = date.toLocaleString();
-            const url = resp.config.url;
-            const str = `<a target=_blank href="${url}" id="${key}" name="${fileName}" ariaLabel="Download ${key}">${fileName}</a><br>`;
-            this.setState({ files: this.state.files += `${str}` });
-          }
-        }
-      });
+        });
     }
   }
 
-  async handleClick (e) {
-    console.log('handle click function');
+  componentDidMount() {
+    this.getFileList()
+  }
+
+  handleClick(e) {
     e.preventDefault();
-    if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
-      this.setState({ hiddenFileInput: React.createRef(null) });
-    }
-    await this.state.hiddenFileInput?.current?.click();
-  }
+    this.resetInputWithTimeout(undefined, 0)
+    this.state.hiddenFileInput?.current?.click();
+  };
 
-  async handleChange (e) {
-    console.log('handle change function');
-    if (typeof e.target.files !== 'undefined') {
-      e.preventDefault();
-      this.setState({ statusMsg: 'Uploading' });
-      const file = e.target.files[0];
-      const upload = new localUpload();
-      let submissionId = '';
-      const { apiRoot } = _config;
-      if (window.location.href.indexOf('requests/id') >= 0) {
-        submissionId = window.location.href.split(/requests\/id\//g)[1];
-        if (submissionId.indexOf('&') >= 0) {
-          submissionId = submissionId.split(/&/g)[0];
-        }
+  resetInputWithTimeout(msg, timeout){
+    setTimeout(() => {
+      msg ? this.setState({ statusMsg: msg }) : null
+      if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
+        this.setState({ hiddenFileInput: React.createRef(null) });
       }
-      if (submissionId !== '' && submissionId != undefined && submissionId !== null) {
+    }, timeout);
+  }
+  validateFile(file){
+    let valid = false;
+    if (file.name.match(/\.([^\.]+)$/) !== null){
+      var ext = file.name.match(/\.([^\.]+)$/)[1];
+      if (ext.match(/exe/gi)) {
+        this.setState({ statusMsg: 'exe is an invalid file type.' });
+        this.resetInputWithTimeout('Please select a different file.', 2000)
+      } else {
+        valid = true
+      }
+    } else {
+      this.setState({ statusMsg: 'The file must have an extension.' });
+      this.resetInputWithTimeout('Please select a different file.', 2000)
+    }
+    return valid;
+  }
+  async handleChange(e) {
+    e.preventDefault();
+    const file = e.target.files[0];
+    if(this.validateFile(file)){
+      this.setState({ statusMsg: 'Uploading' });
+      const upload = new localUpload();
+      const { requestId } = this.props.match.params;
+      const { apiRoot } = _config;
+      if (requestId !== '' && requestId != undefined && requestId !== null) {
         const payload = {
           fileObj: file,
           apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
           authToken: loadToken().token,
-          submissionId
-        };
-        console.log('payload', payload)
+          submissionId: requestId
+        }
         await upload.uploadFile(payload).then((resp) => {
           this.setState({ statusMsg: 'Uploading' });
-          console.log('resp',resp)
           if (resp.error) {
             console.log(`An error has occured: ${resp.error}.`);
-            setTimeout(() => {
-              this.setState({ statusMsg: 'Select a file' });
-              if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
-                this.setState({ hiddenFileInput: React.createRef(null) });
-              }
-            }, '1000');
+            this.resetInputWithTimeout('Select a file', 1000)
           } else {
             this.setState({ statusMsg: 'Upload Complete' });
-            console.log('upload complete')
             this.updateFileList();
-            setTimeout(() => {
-              this.setState({ statusMsg: 'Select another file' });
-              if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
-                this.setState({ hiddenFileInput: React.createRef(null) });
-              }
-            }, '1000');
+            this.resetInputWithTimeout('Select another file', 1000)
           }
-        });
+        })
       }
     }
-  }
+  };
 
-  render () {
-    console.log('render function');
-    //this.updateFileList();
+  render() {
     return (
       <><br></br>
         <div className='page__component'>
@@ -158,7 +162,7 @@ class UploadOverview extends React.Component {
             </h1>
           </div>
           <div className='indented__details'>
-            <span id='previously-saved' ref={this.state.files}></span>
+            <span id='previously-saved'></span>
             <div className='form__textarea'>
               <br></br><label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${this.state.statusMsg}`}
                 <input
@@ -173,7 +177,7 @@ class UploadOverview extends React.Component {
             </div>
           </div>
         </div></>
-    );
+      );
   }
 }
 
