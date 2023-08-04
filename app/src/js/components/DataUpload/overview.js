@@ -27,26 +27,25 @@ class UploadOverview extends React.Component {
     const { requestId } = this.props.match.params;
 
     if (requestId !== '' && requestId != undefined && requestId !== null) {
+      console.log('key',this.state.key)
       if (this.state.key !== ''){
         dispatch(listFileDownloadsBySubmission(requestId))
-          .then(() => {
+          .then((resp) => {
+            console.log('resp',resp)
             const download = new localUpload();
-            const { requestId } = this.props.match.params;
             const { apiRoot } = _config;
-            if (requestId !== '' && requestId != undefined && requestId !== null) {
-              const payload = (this.state.key, `${apiRoot}data/upload/downloadUrl/${this.state.key}`, loadToken().token)
-              // s3://bucket_name/path/to/file.txt
-              download.downloadFile(payload).then((resp) => {
-                localStorage.removeItem('key')
-                console.log('key is ' + this.state.key)
-                if (resp.error) {
-                  console.log(`An error has occured: ${resp.error}.`);
-                } else {
-                  console.log('no errors', resp)
-                }
-              })
-            }
-        });
+            const payload = (this.state.key, `${apiRoot}data/upload/downloadUrl/${this.state.key}`, loadToken().token)
+            // s3://bucket_name/path/to/file.txt
+            console.log('payload', payload)
+            download.downloadFile(payload).then((resp) => {
+              if (resp.error) {
+                console.log(`An error has occured: ${resp.error}.`);
+              } else {
+                console.log('no errors', resp)
+              }
+            })
+          }
+        );
       }
     }
   }
