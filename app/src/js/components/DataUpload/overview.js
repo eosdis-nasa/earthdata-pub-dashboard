@@ -33,9 +33,11 @@ class UploadOverview extends React.Component {
             const { requestId } = this.props.match.params;
             const { apiRoot } = _config;
             if (requestId !== '' && requestId != undefined && requestId !== null) {
-              const payload = (key, `${apiRoot}data/upload/downloadUrl/${key}`, loadToken().token)
+              const payload = (this.state.key, `${apiRoot}data/upload/downloadUrl/${this.state.key}`, loadToken().token)
               // s3://bucket_name/path/to/file.txt
               download.downloadFile(payload).then((resp) => {
+                localStorage.removeItem('key')
+                console.log('key is ' + this.state.key)
                 if (resp.error) {
                   console.log(`An error has occured: ${resp.error}.`);
                 } else {
@@ -99,7 +101,7 @@ class UploadOverview extends React.Component {
                 break
               }
               const key = dataArr[ea].key;
-              localStorage.setItem('key', key)
+              this.setState({ key: key });
               const lastModified = dataArr[ea].last_modified;
               const size = dataArr[ea].size;
               if (typeof lastModified !== 'undefined') {
