@@ -12,17 +12,35 @@ import { listFileUploadsBySubmission, listFileDownloadsBySubmission } from '../.
 class UploadOverview extends React.Component {
   constructor() {
     super();
-    this.state = { loaded: false, hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '', key: '' };
+    this.state = { loaded: false, hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '', keys: [] };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.getFileList = this.getFileList.bind(this);
     this.validateFile = this.validateFile.bind(this);
     this.resetInputWithTimeout = this.resetInputWithTimeout.bind(this);
-    this.getDownloadList = this.getDownloadList.bind(this);
-    
+    // this.getDownloadList = this.getDownloadList.bind(this);
+    this.keyLookup = this.keyLookup.bind(this);
   }
 
-  getDownloadList() {
+  keyLookup(event, fileName) {
+    event.preventDefault();
+    if (this.state.keys[fileName]) {
+      const { dispatch } = this.props;
+      const { requestId } = this.props.match.params;
+      const download = new localUpload();
+      const { apiRoot } = _config;
+      const payload = (this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}`, loadToken().token)
+      download.downloadFile(payload).then((resp) => {
+        if (resp.error) {
+          console.log(`An error has occured: ${resp.error}.`);
+        } else {
+          console.log('no errors', resp)
+        }
+      })
+    }
+  }
+
+  /* getDownloadList() {
     console.log('get download list is running')
     const { dispatch } = this.props;
     const { requestId } = this.props.match.params;
@@ -49,7 +67,7 @@ class UploadOverview extends React.Component {
         );
       }
     }
-  }
+  } */
 
   getFileList() {
     const { dispatch } = this.props;
@@ -57,6 +75,7 @@ class UploadOverview extends React.Component {
     if (requestId !== '' && requestId != undefined && requestId !== null) {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
+          let html = []
           /* const bucket = '15df4fda-ed0d-417f-9124-558fb5e5b561';
           const userId = 'c259a741-1822-48a9-b6c3-9a4ecaac0338';
           resp = {
@@ -93,6 +112,7 @@ class UploadOverview extends React.Component {
           }; */
           if (resp.data.error) {
             const str = `An error has occurred while getting the list of files: ${resp.data.error}.`;
+            console.log(str)
           } else {
             document.getElementById('previously-saved').replaceChildren();
             const dataArr = resp.data;
@@ -103,25 +123,30 @@ class UploadOverview extends React.Component {
               if (keyA < keyB) return 1;
               return 0;
             });
+            this.setState({ keys: [] });
+            let tmpKeys = []
             for (const ea in dataArr) {
               const fileName = dataArr[ea].file_name;
               if (dataArr[ea]=== undefined || fileName === undefined){
                 break
               }
               const key = dataArr[ea].key;
-              this.setState({ key: key });
+              tmpKeys[`${fileName}`] = key
               const lastModified = dataArr[ea].last_modified;
-              const size = dataArr[ea].size;
+              let datetime = ''
               if (typeof lastModified !== 'undefined') {
                 const date = new Date(lastModified).toISOString().split('T')[0];
-                const datetime = date.toLocaleString();
+                datetime = date.toLocaleString();
               }
-              const url = resp.config.url;
-              const str = `<span id="${key}" name="${fileName}" ariaLabel="Download ${key}">${fileName}</span><br>`;
               if (document.getElementById('previously-saved') !== null) {
-                document.getElementById('previously-saved').innerHTML += `${str}`;
+                html.push(<><a id={fileName} name={fileName} aria-label={`Download ${fileName}`} onClick={(e) => this.keyLookup(e, fileName)}>{fileName}</a><br /></>)
               }
             }
+            html.map(item =>
+              <span key={item}>{item}</span>
+            )
+            this.setState({ saved: html });
+            this.setState({ keys: tmpKeys });
           }
         });
     }
@@ -129,7 +154,7 @@ class UploadOverview extends React.Component {
 
   componentDidMount() {
     this.getFileList()
-    this.getDownloadList()
+    // this.getDownloadList()
   }
 
   handleClick(e) {
@@ -204,7 +229,9 @@ class UploadOverview extends React.Component {
             </h1>
           </div>
           <div className='indented__details'>
-            {this.state.statusMsg === 'Uploading' ? <><Loading /><span id='previously-saved' class="hidden"></span></> : <span id='previously-saved'></span>}
+            <span id='previously-saved'>
+              {this.state.saved ? this.state.saved : null}
+            </span>
             <div className='form__textarea'>
               <br></br><label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${this.state.statusMsg}`}
                 <input
