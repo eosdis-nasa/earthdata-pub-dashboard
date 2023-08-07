@@ -132,12 +132,6 @@ class UploadOverview extends React.Component {
               }
               const key = dataArr[ea].key;
               tmpKeys[`${fileName}`] = key
-              const lastModified = dataArr[ea].last_modified;
-              let datetime = ''
-              if (typeof lastModified !== 'undefined') {
-                const date = new Date(lastModified).toISOString().split('T')[0];
-                datetime = date.toLocaleString();
-              }
               if (document.getElementById('previously-saved') !== null) {
                 html.push(<><a id={fileName} name={fileName} aria-label={`Download ${fileName}`} onClick={(e) => this.keyLookup(e, fileName)}>{fileName}</a><br /></>)
               }
