@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Added getting list of files to Data Upload.
+- Added missing types for some components.
 
 ## 1.0.17
 
