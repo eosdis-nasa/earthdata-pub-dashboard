@@ -25,22 +25,25 @@ class UploadOverview extends React.Component {
     event.preventDefault();
     if (this.state.keys[fileName]) {
       const { dispatch } = this.props;
-      dispatch(listFileDownloadsByKey(this.state.keys[fileName]))
-        .then((resp) => {
-          console.log('resp', resp)
-          const download = new localUpload();
-          const { apiRoot } = _config;
-          const payload = (this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}`, loadToken().token)
-          console.log('payload', payload)
-          download.downloadFile(payload).then((resp) => {
-            if (resp.error) {
-              console.log(`An error has occured: ${resp.error}.`);
-            } else {
-              console.log('no errors', resp)
-            }
-          })
-        }
-      );
+      const { requestId } = this.props.match.params;
+      if (requestId !== '' && requestId != undefined && requestId !== null) {
+        dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
+          .then((resp) => {
+            console.log('resp', resp)
+            const download = new localUpload();
+            const { apiRoot } = _config;
+            const payload = (this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}`, loadToken().token)
+            console.log('payload', payload)
+            download.downloadFile(payload).then((resp) => {
+              if (resp.error) {
+                console.log(`An error has occured: ${resp.error}.`);
+              } else {
+                console.log('no errors', resp)
+              }
+            })
+          }
+        );
+      }
     }
   }
 
