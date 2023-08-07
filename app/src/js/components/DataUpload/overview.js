@@ -7,7 +7,7 @@ import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import Loading from '../LoadingIndicator/loading-indicator';
 import localUpload from 'edpub-data-upload-utility';
-import { listFileUploadsBySubmission, listFileDownloadsBySubmission } from '../../actions';
+import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
 
 class UploadOverview extends React.Component {
   constructor() {
@@ -18,7 +18,6 @@ class UploadOverview extends React.Component {
     this.getFileList = this.getFileList.bind(this);
     this.validateFile = this.validateFile.bind(this);
     this.resetInputWithTimeout = this.resetInputWithTimeout.bind(this);
-    // this.getDownloadList = this.getDownloadList.bind(this);
     this.keyLookup = this.keyLookup.bind(this);
   }
 
@@ -26,48 +25,24 @@ class UploadOverview extends React.Component {
     event.preventDefault();
     if (this.state.keys[fileName]) {
       const { dispatch } = this.props;
-      const { requestId } = this.props.match.params;
-      const download = new localUpload();
-      const { apiRoot } = _config;
-      const payload = (this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}`, loadToken().token)
-      download.downloadFile(payload).then((resp) => {
-        if (resp.error) {
-          console.log(`An error has occured: ${resp.error}.`);
-        } else {
-          console.log('no errors', resp)
+      dispatch(listFileDownloadsByKey(this.state.keys[fileName]))
+        .then((resp) => {
+          console.log('resp', resp)
+          const download = new localUpload();
+          const { apiRoot } = _config;
+          const payload = (this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}`, loadToken().token)
+          console.log('payload', payload)
+          download.downloadFile(payload).then((resp) => {
+            if (resp.error) {
+              console.log(`An error has occured: ${resp.error}.`);
+            } else {
+              console.log('no errors', resp)
+            }
+          })
         }
-      })
+      );
     }
   }
-
-  /* getDownloadList() {
-    console.log('get download list is running')
-    const { dispatch } = this.props;
-    const { requestId } = this.props.match.params;
-
-    if (requestId !== '' && requestId != undefined && requestId !== null) {
-      console.log('key',this.state.key)
-      if (this.state.key !== ''){
-        dispatch(listFileDownloadsBySubmission(requestId))
-          .then((resp) => {
-            console.log('resp',resp)
-            const download = new localUpload();
-            const { apiRoot } = _config;
-            const payload = (this.state.key, `${apiRoot}data/upload/downloadUrl/${this.state.key}`, loadToken().token)
-            // s3://bucket_name/path/to/file.txt
-            console.log('payload', payload)
-            download.downloadFile(payload).then((resp) => {
-              if (resp.error) {
-                console.log(`An error has occured: ${resp.error}.`);
-              } else {
-                console.log('no errors', resp)
-              }
-            })
-          }
-        );
-      }
-    }
-  } */
 
   getFileList() {
     const { dispatch } = this.props;
@@ -151,7 +126,6 @@ class UploadOverview extends React.Component {
 
   componentDidMount() {
     this.getFileList()
-    // this.getDownloadList()
   }
 
   handleClick(e) {
