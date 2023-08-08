@@ -51,12 +51,12 @@ class UploadOverview extends React.Component {
             } */
             const download = new localUpload();
             const { apiRoot } = _config;
-            const payload = (this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}`, loadToken().token)
-            console.log('key is ' + this.state.keys[fileName] + ', apiEndpointn is ' + `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}` + ', token is ' + loadToken().token)
+            const payload = (this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token)
+            console.log('key is ' + this.state.keys[fileName] + ', apiEndpointn is ' + `${apiRoot}data/upload/downloadUrl` + ', token is ' + loadToken().token)
             download.downloadFile(payload).then((resp) => {
               if (resp.error) {
                 console.log(`An error has occured: ${resp.error}. Trying something else`);
-                download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}`, loadToken().token).then((resp) => {
+                download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
                   if (resp.error) {
                     console.log(`2 An error has occured: ${resp.error}. Trying something else`);
 
