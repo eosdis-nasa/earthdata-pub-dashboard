@@ -12,7 +12,7 @@ import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actio
 class UploadOverview extends React.Component {
   constructor() {
     super();
-    this.state = { loaded: false, hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '', keys: [], saved: [] };
+    this.state = { loaded: false, hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '', keys: [] };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.getFileList = this.getFileList.bind(this);
@@ -27,6 +27,8 @@ class UploadOverview extends React.Component {
       const { dispatch } = this.props;
       const { requestId } = this.props.match.params;
       if (requestId !== '' && requestId != undefined && requestId !== null) {
+        const download = new localUpload();
+        const { apiRoot } = _config;
         download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
           if (resp.error) {
             console.log(`An error has occured - do I need dispatch?: ${resp.error}.`);
@@ -36,8 +38,6 @@ class UploadOverview extends React.Component {
         })
         dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
           .then(() => {
-            const download = new localUpload();
-            const { apiRoot } = _config;
             download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
               if (resp.error) {
                 console.log(`An error has occured: ${resp.error}.`);
@@ -57,50 +57,17 @@ class UploadOverview extends React.Component {
     if (requestId !== '' && requestId != undefined && requestId !== null) {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
-          let html = []
-          /*
-            DO NOT REMOVE - THIS IS USEFUL FOR WHEN TESTING LOCALLY
-          */
-          /* const bucket = '15df4fda-ed0d-417f-9124-558fb5e5b561';
-          const userId = 'c259a741-1822-48a9-b6c3-9a4ecaac0338';
-          resp = {
-            id: `${requestId}`,
-            type: 'REQUEST',
-            data: [
-              {
-                key: `${bucket}/${requestId}/${userId}/Some_really_really_long_list_name_of_filename.png`,
-                size: 34828,
-                last_modified: '2023-07-05T19:44:08.000Z',
-                file_name: 'Some_really_really_long_list_name_of_filename.png'
-              },
-              {
-                key: `${bucket}/${requestId}/${userId}/home.png`,
-                size: 435471,
-                last_modified: '2023-07-20T21:13:30.000Z',
-                file_name: 'home.png'
-              }
-            ],
-            config: {
-              json: true,
-              resolveWithFullResponse: true,
-              simple: false,
-              type: 'REQUEST',
-              method: 'GET',
-              id: `${requestId}`,
-              path: `data/upload/list/${requestId}`,
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${loadToken().token}`
-              },
-              url: `https://pub.sit.earthdata.nasa.gov/api/data/upload/list/${requestId}`
-            }
-          }; */
+          let html = [];
           if (resp.data.error) {
             const str = `An error has occurred while getting the list of files: ${resp.data.error}.`;
             console.log(str)
+            this.setState({ saved: str });
           } else {
             document.getElementById('previously-saved').replaceChildren();
             const dataArr = resp.data;
+            if(dataArr.length===0){
+              html.push(<>None found<br /></>)
+            }
             dataArr.sort(function (a, b) {
               var keyA = new Date(a.last_modified),
                 keyB = new Date(b.last_modified);
@@ -199,7 +166,7 @@ class UploadOverview extends React.Component {
 
   render() {
     return (
-      <><br></br>
+      <><br></br>{!this.state.saved ? <Loading /> : null}
         <div className='page__component'>
           <div className='page__section__header'>
             <h1 className='heading--small' aria-labelledby='Upload Data File'>
@@ -207,6 +174,9 @@ class UploadOverview extends React.Component {
             </h1>
           </div>
           <div className='indented__details'>
+            <><h1 className='heading--small' aria-labelledby='Files Previously Saved'>
+              Files Previously Uploaded:
+            </h1></>
             <span id='previously-saved'>
               {this.state.saved ? this.state.saved : null}
             </span>
