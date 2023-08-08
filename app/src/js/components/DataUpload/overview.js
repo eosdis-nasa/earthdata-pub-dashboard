@@ -30,13 +30,40 @@ class UploadOverview extends React.Component {
         dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
           .then((resp) => {
             console.log('resp', resp)
+            /* {
+              "id": "379caaef-45fc-452b-8ce1-4c3c498e7062",
+              "type": "UPLOAD",
+              "data": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><link rel=\"icon\" href=\"/favicon.svg\"><title>Earthdata Pub</title><script defer=\"defer\" src=\"/js/chunk-vendors.0992f19f.js\"></script><script defer=\"defer\" src=\"/js/app.d8addf74.js\"></script><link href=\"/css/chunk-vendors.3a1d7678.css\" rel=\"stylesheet\"><link href=\"/css/app.52b3d106.css\" rel=\"stylesheet\"></head><body><noscript><strong>We're sorry but earthdata-pub-overview doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id=\"app\" role=\"main\"></div><script src=\"https://fbm.earthdata.nasa.gov/for/EDPub/feedback.js\"></script><script>feedback.init();</script><script src=\"https://cdn.earthdata.nasa.gov/tophat2/tophat2.js\" id=\"earthdata-tophat-script\" data-show-fbm=\"true\" data-show-status=\"true\" data-width=\"1450\"></script></body></html>",
+              "config": {
+                "json": true,
+                "resolveWithFullResponse": true,
+                "simple": false,
+                "type": "UPLOAD",
+                "method": "GET",
+                "id": "379caaef-45fc-452b-8ce1-4c3c498e7062",
+                "path": "data/upload/downloadUrl/15df4fda-ed0d-417f-9124-558fb5e5b561/379caaef-45fc-452b-8ce1-4c3c498e7062/c259a741-1822-48a9-b6c3-9a4ecaac0338/localhost.crt",
+                "headers": {
+                  "Content-Type": "application/json",
+                  "Authorization": "Bearer eyJraWQiOiJmdjYyVTVidkVEYXJYaEZxbk9ZQ3dHNFB5akdUMHhSTjhIMTNGb010Y2lNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJjMjU5YTc0MS0xODIyLTQ4YTktYjZjMy05YTRlY2FhYzAzMzgiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtd2VzdC0yLmFtYXpvbmF3cy5jb21cL3VzLXdlc3QtMl9hWTVpOW5WeTYiLCJ2ZXJzaW9uIjoyLCJjbGllbnRfaWQiOiI2cXIwb3JpYTFhZ3Zobmk3amYyY3JoZ2lscSIsImV2ZW50X2lkIjoiYjc2MDVjMTUtMzE0Yi00ZmY2LWI5ZDktZmQwNzAyNGEyMGM4IiwidG9rZW5fdXNlIjoiYWNjZXNzIiwic2NvcGUiOiJvcGVuaWQiLCJhdXRoX3RpbWUiOjE2OTE1MDk0NjAsImV4cCI6MTY5MTUxMzA2MCwiaWF0IjoxNjkxNTA5NDYwLCJqdGkiOiJiM2E2MGViYS02ODIyLTQ5NmUtODA5Yi0zZmI3OTQ0MmI0NDEiLCJ1c2VybmFtZSI6IjVrYiJ9.fBSX7Pphv1PO9WO2P60MyhBQCGUQidyXW_ji2AFkm14j84D07909B1ovDur-MIqoUkXfEU_intbBLgaPxPoeCuWbL9pr132GBDenoGqQNzSXkOVgJH_it38brbO58tQghHmCfegV-RzefbLpWtHqy3ItOuRtrfREPhOuMvitaAzfQq8EwiVCS6TTZmPI3Dj4nD8PxE5ejnLc09fnHZsNOQ3huiUiBuBTw1bj2y_X9i7373aubyRJyzyiZbaZRF3bfnELu96zyYgOcJLMvKiDXuYkNpKfC8KvzgDMUabisthsamhwbgQaidQbBWMZFM1D21eDwaiN5FjO3RpfrgKkyQ"
+                },
+                "url": "https://pub.sit.earthdata.nasa.gov/api/data/upload/downloadUrl/15df4fda-ed0d-417f-9124-558fb5e5b561/379caaef-45fc-452b-8ce1-4c3c498e7062/c259a741-1822-48a9-b6c3-9a4ecaac0338/localhost.crt"
+              }
+            } */
             const download = new localUpload();
             const { apiRoot } = _config;
             const payload = (this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}`, loadToken().token)
-            console.log('payload', payload)
+            console.log('key is ' + this.state.keys[fileName] + ', apiEndpointn is ' + `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}` + ', token is ' + loadToken().token)
             download.downloadFile(payload).then((resp) => {
               if (resp.error) {
-                console.log(`An error has occured: ${resp.error}.`);
+                console.log(`An error has occured: ${resp.error}. Trying something else`);
+                download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl/${this.state.keys[fileName]}`, loadToken().token).then((resp) => {
+                  if (resp.error) {
+                    console.log(`2 An error has occured: ${resp.error}. Trying something else`);
+
+                  } else {
+                    console.log('2 no errors', resp)
+                  }
+                })
               } else {
                 console.log('no errors', resp)
               }
