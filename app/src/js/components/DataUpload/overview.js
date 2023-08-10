@@ -29,13 +29,6 @@ class UploadOverview extends React.Component {
       if (requestId !== '' && requestId != undefined && requestId !== null) {
         const download = new localUpload();
         const { apiRoot } = _config;
-        download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
-          if (resp.error) {
-            console.log(`An error has occured - do I need dispatch?: ${resp.error}.`);
-          } else {
-            console.log('no errors  - do I need dispatch?', resp)
-          }
-        })
         dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
           .then(() => {
             download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
@@ -166,7 +159,7 @@ class UploadOverview extends React.Component {
 
   render() {
     return (
-      <><br></br>{!this.state.saved ? <Loading /> : null}
+      <><br></br>
         <div className='page__component'>
           <div className='page__section__header'>
             <h1 className='heading--small' aria-labelledby='Upload Data File'>
@@ -174,14 +167,8 @@ class UploadOverview extends React.Component {
             </h1>
           </div>
           <div className='indented__details'>
-            <><h1 className='heading--small' aria-labelledby='Files Previously Saved'>
-              Files Previously Uploaded:
-            </h1></>
-            <span id='previously-saved'>
-              {this.state.saved ? this.state.saved : null}
-            </span>
             <div className='form__textarea'>
-              <br></br><label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${this.state.statusMsg}`}
+              <label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${this.state.statusMsg}`}
                 <input
                   onChange={(e) => this.handleChange(e)}
                   type="file"
@@ -192,6 +179,13 @@ class UploadOverview extends React.Component {
               </label>
               <button onClick={(e) => this.handleClick(e)} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
             </div>
+            <br></br><h1 className='heading--small' aria-labelledby='Files Previously Saved'>
+              Files Previously Uploaded:
+            </h1>
+            <span id='previously-saved'>
+              {!this.state.saved ? <Loading /> : null}
+              {this.state.saved ? this.state.saved : null}
+            </span>
           </div>
         </div></>
       );
