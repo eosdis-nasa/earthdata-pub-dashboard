@@ -81,9 +81,9 @@ class UploadOverview extends React.Component {
                 html.push(<><a id={fileName} name={fileName} aria-label={`Download ${fileName}`} onClick={(e) => this.keyLookup(e, fileName)}>{fileName}</a><br /></>)
               }
             }
-            /* html.map(item =>
+            html.map(item =>
               <span key={item}>{item}</span>
-            ) */
+            )
             this.setState({ saved: html });
             this.setState({ keys: tmpKeys });
           }
