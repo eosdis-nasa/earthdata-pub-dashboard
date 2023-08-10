@@ -29,6 +29,13 @@ class UploadOverview extends React.Component {
       if (requestId !== '' && requestId != undefined && requestId !== null) {
         const download = new localUpload();
         const { apiRoot } = _config;
+        download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
+          if (resp.error) {
+            console.log(`dispatch ? An error has occured: ${resp.error}.`);
+          } else {
+            console.log('dispatch ? no errors', resp)
+          }
+        })
         dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
           .then(() => {
             download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
@@ -51,15 +58,21 @@ class UploadOverview extends React.Component {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
           let html = [];
-          if (resp.data.error) {
-            const str = `An error has occurred while getting the list of files: ${resp.data.error}.`;
-            console.log(str)
-            this.setState({ saved: str });
+          if (JSON.stringify(resp) === '{}' || (resp.data && resp.data.length === 0)) {
+            this.setState({ saved: 'None found' })
+          } else if (resp.data && resp.data.error) {
+            if (!resp.data.error.match(/not authorized/gi) && !resp.data.error.match(/not implemented/gi)) {
+              const str = `An error has occurred while getting the list of files: ${resp.data.error}.`;
+              this.setState({ saved: str })
+            } else {
+              this.setState({ saved: 'None found' })
+            }
           } else {
             document.getElementById('previously-saved').replaceChildren();
             const dataArr = resp.data;
             if(dataArr.length===0){
               html.push(<>None found<br /></>)
+              return
             }
             dataArr.sort(function (a, b) {
               var keyA = new Date(a.last_modified),
@@ -182,8 +195,8 @@ class UploadOverview extends React.Component {
             <br></br><h1 className='heading--small' aria-labelledby='Files Previously Saved'>
               Files Previously Uploaded:
             </h1>
+            {!this.state.saved ? <Loading /> : null}
             <span id='previously-saved'>
-              {!this.state.saved ? <Loading /> : null}
               {this.state.saved ? this.state.saved : null}
             </span>
           </div>
