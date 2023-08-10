@@ -19,6 +19,8 @@ class UploadOverview extends React.Component {
     this.validateFile = this.validateFile.bind(this);
     this.resetInputWithTimeout = this.resetInputWithTimeout.bind(this);
     this.keyLookup = this.keyLookup.bind(this);
+    this.isFilePreviouslySaved = this.isFilePreviouslySaved.bind(this);
+    
   }
 
   keyLookup(event, fileName) {
@@ -34,8 +36,6 @@ class UploadOverview extends React.Component {
             download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
               if (resp.error) {
                 console.log(`An error has occured: ${resp.error}.`);
-              } else {
-                console.log('no errors', resp)
               }
             })
           }
@@ -116,9 +116,35 @@ class UploadOverview extends React.Component {
     }, timeout);
   }
 
+  isFilePreviouslySaved(file){
+    let alreadySaved = false;
+    if (this.state.saved) {
+      for (const ea in this.state.saved){
+        let reactElement = this.state.saved[ea]
+        for (const prop in reactElement){
+          if (typeof reactElement[prop] === 'object' && 
+            reactElement[prop] !== null && 
+            reactElement[prop]['children'] !== null && 
+            reactElement[prop]['children']!== undefined && 
+            reactElement[prop]['children'].length > 0){
+            for(const child in reactElement[prop]['children']){
+              if (reactElement[prop]['children'][child]['props']['id'] !== undefined && reactElement[prop]['children'][child]['props']['id'] === file.name) {
+                alreadySaved = true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return alreadySaved
+  }
+
   validateFile(file){
     let valid = false;
-    if (file.name.match(/\.([^\.]+)$/) !== null){
+    if (this.isFilePreviouslySaved(file)) {
+      this.setState({ statusMsg: 'This file was already uploaded.' });
+      this.resetInputWithTimeout('Please select a different file.', 2000)
+    } else if (file.name.match(/\.([^\.]+)$/) !== null){
       var ext = file.name.match(/\.([^\.]+)$/)[1];
       if (ext.match(/exe/gi)) {
         this.setState({ statusMsg: 'exe is an invalid file type.' });
@@ -174,6 +200,7 @@ class UploadOverview extends React.Component {
           </div>
           <div className='indented__details'>
             <div className='form__textarea'>
+              {this.state.statusMsg === 'Uploading' ? <Loading /> : null}
               <label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${this.state.statusMsg}`}
                 <input
                   onChange={(e) => this.handleChange(e)}
