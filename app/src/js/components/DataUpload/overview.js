@@ -29,13 +29,6 @@ class UploadOverview extends React.Component {
       if (requestId !== '' && requestId != undefined && requestId !== null) {
         const download = new localUpload();
         const { apiRoot } = _config;
-        download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
-          if (resp.error) {
-            console.log(`dispatch ? An error has occured: ${resp.error}.`);
-          } else {
-            console.log('dispatch ? no errors', resp)
-          }
-        })
         dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
           .then(() => {
             download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
