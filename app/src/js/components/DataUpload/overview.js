@@ -7,7 +7,7 @@ import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import Loading from '../LoadingIndicator/loading-indicator';
 import localUpload from 'edpub-data-upload-utility';
-import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
+import { listFileUploadsBySubmission, listFileDownloadsByKey, refreshToken } from '../../actions';
 
 class UploadOverview extends React.Component {
   constructor() {
@@ -167,6 +167,7 @@ class UploadOverview extends React.Component {
       const upload = new localUpload();
       const { requestId } = this.props.match.params;
       const { apiRoot } = _config;
+      this.props.dispatch(refreshToken());
       if (requestId !== '' && requestId != undefined && requestId !== null) {
         const payload = {
           fileObj: file,

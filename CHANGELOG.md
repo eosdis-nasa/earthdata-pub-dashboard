@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added downloading of files to Data Upload.
 - Added getting list of files to Data Upload.
 - Added missing types for some components.
+- Added auth token refresh at start of file upload to reduce issue with timeout during file upload.
 
 ## 1.0.17
 
