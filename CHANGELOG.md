@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- Unreleased changes can be added here. -->
 
+## 1.0.17
+
+- Update upload formatting add file listing
+- Move componentdidupdate to function
+- Update previously-saved
+
 ## 1.0.16
 
 - Added loading of comments by step. Adjusted functionality to force require comment on each rejection as opposed to per step.  
