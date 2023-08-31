@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Added auth token refresh at start of file upload to reduce issue with timeout during file upload.
+
+## 1.0.18
+
+- Add token refresh before upload
+- Add import
+- Update edit perms to allow daac staff to edit
 
 ## 1.0.17
 

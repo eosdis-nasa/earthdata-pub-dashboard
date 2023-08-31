@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import localUpload from 'edpub-data-upload-utility';
-import { listFileUploadsBySubmission } from '../../actions';
+import { listFileUploadsBySubmission, refreshToken } from '../../actions';
 
 class UploadOverview extends React.Component {
   constructor() {
@@ -108,6 +108,7 @@ class UploadOverview extends React.Component {
     const upload = new localUpload();
     let submissionId = '';
     const { apiRoot } = _config;
+    this.props.dispatch(refreshToken());
     if (window.location.href.indexOf('requests/id') >= 0) {
       submissionId = window.location.href.split(/requests\/id\//g)[1];
       if (submissionId.indexOf('&') >= 0) {
