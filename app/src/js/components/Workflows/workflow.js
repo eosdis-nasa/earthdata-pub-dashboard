@@ -116,9 +116,9 @@ class Workflows extends React.Component {
     const { workflowId } = this.props.match.params;
     const record = this.props.workflows.detail;
     const allRoles = getRoles();
-    const user  = JSON.parse(window.localStorage.getItem('auth-user'));
+    const user = JSON.parse(window.localStorage.getItem('auth-user'));
     let isEditable = false;
-    if (typeof user.user_privileges !== 'undefined' && user.user_privileges.includes('WORKFLOW_UPDATE') || allRoles.isAdmin) {
+    if ((typeof user.user_privileges !== 'undefined' && user.user_privileges.includes('WORKFLOW_UPDATE')) || allRoles.isAdmin) {
       isEditable = true;
     }
     const breadcrumbConfig = [
