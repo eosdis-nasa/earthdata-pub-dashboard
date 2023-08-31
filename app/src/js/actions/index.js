@@ -181,7 +181,7 @@ export const listFileUploadsBySubmission = (submissionId) => ({
   }
 });
 
-export const listFileDownloadsByKey = (key, submissionId) => ({
+export const listFileDownloadsByKey = (key) => ({
   [CALL_API]: {
     type: types.UPLOAD,
     method: 'GET',

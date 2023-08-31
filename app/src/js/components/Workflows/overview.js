@@ -233,7 +233,7 @@ class WorkflowsOverview extends React.Component {
         <section className='page__section'>
           {workflows && typeof requestId === 'undefined' && isEditable
             ? <Link
-            className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right workflows-add' to={{ pathname: '/workflows/add' }}
+              className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: '/workflows/add' }}
             >Add Workflow
           </Link>
             : null}

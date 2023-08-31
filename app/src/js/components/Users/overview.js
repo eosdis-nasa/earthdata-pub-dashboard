@@ -44,17 +44,17 @@ const UsersOverview = ({ users, privileges }) => {
       </section>
       <section className='page__section page__section__header-wrapper'>
         <div className='page__section__header'>
-          <h1 className='heading--large heading--shared-content with-description '>{strings.user_overview}</h1>
+          <h1 className='heading--large heading--shared-content with-description '>Users</h1>
           {lastUpdated(queriedAt)}
         </div>
       </section>
       <section className='page__section'>
-        <div className='heading__wrapper--border' style={{ height: '3rem' }}>
+        <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_users} <span className='num--title'>{users.list.data.length}</span></h2>
           {
             canCreate
               ? <Link
-                className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right questions-add' to={{ pathname: '/users/add' }}
+                className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: '/users/add' }}
             >Add User
             </Link>
               : null

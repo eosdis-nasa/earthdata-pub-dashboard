@@ -557,6 +557,7 @@ class RequestOverview extends React.Component {
             </section><Meditor></Meditor><UploadOverview /></>
               : null
           }
+        <br />
         { showTable
           ? <section className='page__section'>
             <div className='heading__wrapper--border'>

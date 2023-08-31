@@ -23,24 +23,21 @@ class UploadOverview extends React.Component {
     
   }
 
-  keyLookup(event, fileName) {
+  async keyLookup(event, fileName) {
     event.preventDefault();
     if (this.state.keys[fileName]) {
       const { dispatch } = this.props;
-      const { requestId } = this.props.match.params;
-      if (requestId !== '' && requestId != undefined && requestId !== null) {
-        const download = new localUpload();
-        const { apiRoot } = _config;
-        dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
-          .then(() => {
-            download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
-              if (resp.error) {
-                console.log(`An error has occured: ${resp.error}.`);
-              }
-            })
-          }
-        );
-      }
+      const { apiRoot } = _config;
+      const download = new localUpload();
+      await dispatch(listFileDownloadsByKey(this.state.keys[fileName]))
+        .then(() => {
+          download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
+            if (resp.error) {
+              console.log(`An error has occured: ${resp.error}.`);
+            }
+          })
+        }
+      );
     }
   }
 
@@ -98,7 +95,12 @@ class UploadOverview extends React.Component {
   }
 
   componentDidMount() {
-    this.getFileList()
+    const { groupId } = this.props.match.params;
+    const { requestId } = this.props.match.params;
+    if ((requestId !== '' && requestId != undefined && requestId !== null) && 
+        (groupId == '' || groupId === undefined || groupId === null)) {
+      this.getFileList()
+    }
   }
 
   handleClick(e) {
@@ -128,6 +130,7 @@ class UploadOverview extends React.Component {
             reactElement[prop]['children']!== undefined && 
             reactElement[prop]['children'].length > 0){
             for(const child in reactElement[prop]['children']){
+              console.log(reactElement[prop]['children'][child])
               if (reactElement[prop]['children'][child]['props']['id'] !== undefined && reactElement[prop]['children'][child]['props']['id'] === file.name) {
                 alreadySaved = true;
               }
@@ -166,31 +169,42 @@ class UploadOverview extends React.Component {
       this.setState({ statusMsg: 'Uploading' });
       const upload = new localUpload();
       const { requestId } = this.props.match.params;
+      const { groupId } = this.props.match.params;
       const { apiRoot } = _config;
       this.props.dispatch(refreshToken());
-      if (requestId !== '' && requestId != undefined && requestId !== null) {
-        const payload = {
-          fileObj: file,
-          apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
-          authToken: loadToken().token,
-          submissionId: requestId
-        }
-        await upload.uploadFile(payload).then((resp) => {
-          this.setState({ statusMsg: 'Uploading' });
-          if (resp.error) {
-            console.log(`An error has occured: ${resp.error}.`);
-            this.resetInputWithTimeout('Select a file', 1000)
-          } else {
-            this.setState({ statusMsg: 'Upload Complete' });
-            this.getFileList();
-            this.resetInputWithTimeout('Select another file', 1000)
-          }
-        })
+      let payload = {
+        fileObj: file,
+        authToken: loadToken().token,
       }
+      const prefix = document.getElementById('prefix').value
+      if (requestId !== '' && requestId != undefined && requestId !== null) {
+        payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
+        payload['submissionId'] = requestId
+      } else if(groupId !== '' && groupId != undefined && groupId !== null){
+        payload['apiEndpoint'] = `${apiRoot}data/upload/getGroupUploadUrl`;
+        payload['endpointParams'] = {
+          prefix: prefix,
+          groupId: groupId
+        }
+      }
+      console.log(payload)
+      await upload.uploadFile(payload).then((resp) => {
+        this.setState({ statusMsg: 'Uploading' });
+        if (resp.error) {
+          console.log(`An error has occured: ${resp.error}.`);
+          this.resetInputWithTimeout('Select a file', 1000)
+        } else {
+          this.setState({ statusMsg: 'Upload Complete' });
+          this.getFileList();
+          this.resetInputWithTimeout('Select another file', 1000)
+        }
+      })
     }
   };
 
   render() {
+    const { requestId } = this.props.match.params;
+    const { groupId } = this.props.match.params;
     return (
       <><br></br>
         <div className='page__component'>
@@ -201,8 +215,12 @@ class UploadOverview extends React.Component {
           </div>
           <div className='indented__details'>
             <div className='form__textarea'>
+              {groupId !== undefined ?
+                <><label htmlFor="prefix" style={{ marginBottom: '1rem', marginTop: '1rem', fontSize: 'unset' }}>Subfolder (If applicable): </label><input id="prefix" name="prefix" style={{ marginBottom: '1rem' }} /></>
+              : null
+              }
               {this.state.statusMsg === 'Uploading' ? <Loading /> : null}
-              <label className='heading--medium' htmlFor='hiddenFileInput' style={{ marginBottom: '1rem' }}>{`${this.state.statusMsg}`}
+              <label htmlFor='hiddenFileInput' style={{ marginBottom: '1rem', fontSize: 'unset' }}>{`${this.state.statusMsg}`}
                 <input
                   onChange={(e) => this.handleChange(e)}
                   type="file"
@@ -213,10 +231,13 @@ class UploadOverview extends React.Component {
               </label>
               <button onClick={(e) => this.handleClick(e)} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
             </div>
-            <br></br><h1 className='heading--small' aria-labelledby='Files Previously Saved'>
-              Files Previously Uploaded:
-            </h1>
-            {!this.state.saved ? <Loading /> : null}
+            {this.state.saved && requestId !== undefined && groupId === undefined 
+            ?
+            <><br></br><h1 className='heading--small' aria-labelledby='Files Previously Saved'>
+                Files Previously Uploaded:
+              </h1></>
+            : null}
+            {!this.state.saved && groupId === undefined ? <Loading /> : null}
             <span id='previously-saved'>
               {this.state.saved ? this.state.saved : null}
             </span>
