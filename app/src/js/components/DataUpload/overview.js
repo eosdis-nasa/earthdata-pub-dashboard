@@ -195,7 +195,7 @@ class UploadOverview extends React.Component {
           payload['apiEndpoint'] = `${apiRoot}data/upload/getGroupUploadUrl`;
           payload['endpointParams'] = {
             prefix: prefix,
-            groupId: groupId
+            group_id: groupId
           }
         }
         console.log(payload)
