@@ -29,15 +29,19 @@ class UploadOverview extends React.Component {
       const { dispatch } = this.props;
       const { apiRoot } = _config;
       const download = new localUpload();
-      await dispatch(listFileDownloadsByKey(this.state.keys[fileName]))
-        .then(() => {
-          download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
-            if (resp.error) {
-              console.log(`An error has occured: ${resp.error}.`);
-            }
-          })
+      try {
+        await dispatch(refreshToken());
+        let resp = await dispatch(listFileDownloadsByKey(this.state.keys[fileName]))
+        if (resp.error) {
+          console.log(`An error has occured on listFileDownloadsByKey: ${resp.error}.`);
         }
-      );
+        resp = await download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token)
+        if (resp.error) {
+          console.log(`An error has occured on downloadFile: ${resp.error}.`);
+        }
+      } catch (error) {
+        console.log(`An error has occured on try catch key lookup: ${error.stack}.`);
+      }
     }
   }
 
@@ -130,7 +134,9 @@ class UploadOverview extends React.Component {
             reactElement[prop]['children']!== undefined && 
             reactElement[prop]['children'].length > 0){
             for(const child in reactElement[prop]['children']){
-              console.log(reactElement[prop]['children'][child])
+              if (reactElement[prop]['children'][child]['props']['id'] !== undefined) {
+                console.log(reactElement[prop]['children'][child])
+              }
               if (reactElement[prop]['children'][child]['props']['id'] !== undefined && reactElement[prop]['children'][child]['props']['id'] === file.name) {
                 alreadySaved = true;
               }
@@ -167,38 +173,49 @@ class UploadOverview extends React.Component {
     const file = e.target.files[0];
     if(this.validateFile(file)){
       this.setState({ statusMsg: 'Uploading' });
+      const { dispatch } = this.props;
       const upload = new localUpload();
       const { requestId } = this.props.match.params;
       const { groupId } = this.props.match.params;
       const { apiRoot } = _config;
-      this.props.dispatch(refreshToken());
-      let payload = {
-        fileObj: file,
-        authToken: loadToken().token,
-      }
-      const prefix = document.getElementById('prefix').value
-      if (requestId !== '' && requestId != undefined && requestId !== null) {
-        payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
-        payload['submissionId'] = requestId
-      } else if(groupId !== '' && groupId != undefined && groupId !== null){
-        payload['apiEndpoint'] = `${apiRoot}data/upload/getGroupUploadUrl`;
-        payload['endpointParams'] = {
-          prefix: prefix,
-          groupId: groupId
+      try {
+        await dispatch(refreshToken());
+        let payload = {
+          fileObj: file,
+          authToken: loadToken().token,
         }
-      }
-      console.log(payload)
-      await upload.uploadFile(payload).then((resp) => {
+        let prefix = ''
+        if (requestId !== '' && requestId != undefined && requestId !== null) {
+          payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
+          payload['submissionId'] = requestId
+        } else if (groupId !== '' && groupId != undefined && groupId !== null) {
+          if (document.getElementById('prefix') !== undefined && document.getElementById('prefix') !== null && document.getElementById('prefix').value !== '') {
+            prefix = document.getElementById('prefix').value
+          }
+          payload['apiEndpoint'] = `${apiRoot}data/upload/getGroupUploadUrl`;
+          payload['endpointParams'] = {
+            prefix: prefix,
+            groupId: groupId
+          }
+        }
+        console.log(payload)
         this.setState({ statusMsg: 'Uploading' });
+        const resp = await upload.uploadFile(payload)
         if (resp.error) {
-          console.log(`An error has occured: ${resp.error}.`);
+          console.log(`An error has occured on uploadFile: ${resp.error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
         } else {
           this.setState({ statusMsg: 'Upload Complete' });
-          this.getFileList();
+          if ((requestId !== '' && requestId != undefined && requestId !== null) &&
+            (groupId == '' || groupId === undefined || groupId === null)) {
+            this.getFileList()
+          }
           this.resetInputWithTimeout('Select another file', 1000)
         }
-      })
+      } catch (error) {
+        console.log(`try catch error: ${error.stack}`);
+        this.resetInputWithTimeout('Select a file', 1000)
+      }
     }
   };
 
