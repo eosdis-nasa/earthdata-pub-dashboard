@@ -55,158 +55,6 @@ class UploadOverview extends React.Component {
         .then((resp) => {
           let html = [];
           console.log(resp)
-          /* resp1 = {
-            "id": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-            "type": "UPLOAD",
-            "data": [],
-            "config": {
-              "json": true,
-              "resolveWithFullResponse": true,
-              "simple": false,
-              "type": "UPLOAD",
-              "method": "GET",
-              "id": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-              "path": "data/upload/list/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-              "headers": {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer eyJraWQiOiJmdjYyVTVidkVEYXJYaEZxbk9ZQ3dHNFB5akdUMHhSTjhIMTNGb010Y2lNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJjMjU5YTc0MS0xODIyLTQ4YTktYjZjMy05YTRlY2FhYzAzMzgiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6Im9wZW5pZCIsImF1dGhfdGltZSI6MTY5Mzk0MDA3OSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tXC91cy13ZXN0LTJfYVk1aTluVnk2IiwiZXhwIjoxNjkzOTQzNjc5LCJpYXQiOjE2OTM5NDAwODAsInZlcnNpb24iOjIsImp0aSI6ImU3YmQ0N2MzLTNkNzgtNDBlNC04YTY1LWQ1ZjBmMjU1MDQyMyIsImNsaWVudF9pZCI6IjZxcjBvcmlhMWFndmhuaTdqZjJjcmhnaWxxIiwidXNlcm5hbWUiOiI1a2IifQ.QQ8GDfkUK1ec3AUR02sShHfHXgQ2ZxON8EJIkM0nsq1YfzbijocV1pXJQZCFtYvEI_U2Jlm6_4h4BFVDUEqXho-tOBYcu18Jxx5IjlNu-0zA2fCDkDFJcKLJ7U-PZpK8MOScLaU4CyFTmNl5pAv4YFWNy5lgiNeF3G1ZZngbX9vty8GcrR4nkHtW4j-C2xzi1_Cam1PmfMQx_uOJcXo7lVHupo4XxhhB_ez6bVZXlo2aH0tHkXxDQEdfgbtJ9ibyNeBbxOHTFpZq_XF1cByQUtqyzcQY0qfp1bAfvwLCf_dKrbYgKExNe5EjtA7VVJKmLFiAi4MAL7ovLbxINvQedg"
-              },
-              "url": "https://pub.sit.earthdata.nasa.gov/api/data/upload/list/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944"
-            }
-          } */
-          /* resp2 =  {
-            "id": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-            "type": "UPLOAD",
-            "data": [
-              {
-                "key": "15df4fda-ed0d-417f-9124-558fb5e5b561/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944/c259a741-1822-48a9-b6c3-9a4ecaac0338/Workplan Summary.pdf",
-                "size": 39344,
-                "lastModified": "2023-09-05T19:05:28.000Z",
-                "file_name": "Workplan Summary.pdf"
-              }
-            ],
-            "config": {
-              "json": true,
-              "resolveWithFullResponse": true,
-              "simple": false,
-              "type": "UPLOAD",
-              "method": "GET",
-              "id": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-              "path": "data/upload/list/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-              "headers": {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer eyJraWQiOiJmdjYyVTVidkVEYXJYaEZxbk9ZQ3dHNFB5akdUMHhSTjhIMTNGb010Y2lNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJjMjU5YTc0MS0xODIyLTQ4YTktYjZjMy05YTRlY2FhYzAzMzgiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6Im9wZW5pZCIsImF1dGhfdGltZSI6MTY5Mzk0MDA3OSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tXC91cy13ZXN0LTJfYVk1aTluVnk2IiwiZXhwIjoxNjkzOTQzNjc5LCJpYXQiOjE2OTM5NDAwODAsInZlcnNpb24iOjIsImp0aSI6ImU3YmQ0N2MzLTNkNzgtNDBlNC04YTY1LWQ1ZjBmMjU1MDQyMyIsImNsaWVudF9pZCI6IjZxcjBvcmlhMWFndmhuaTdqZjJjcmhnaWxxIiwidXNlcm5hbWUiOiI1a2IifQ.QQ8GDfkUK1ec3AUR02sShHfHXgQ2ZxON8EJIkM0nsq1YfzbijocV1pXJQZCFtYvEI_U2Jlm6_4h4BFVDUEqXho-tOBYcu18Jxx5IjlNu-0zA2fCDkDFJcKLJ7U-PZpK8MOScLaU4CyFTmNl5pAv4YFWNy5lgiNeF3G1ZZngbX9vty8GcrR4nkHtW4j-C2xzi1_Cam1PmfMQx_uOJcXo7lVHupo4XxhhB_ez6bVZXlo2aH0tHkXxDQEdfgbtJ9ibyNeBbxOHTFpZq_XF1cByQUtqyzcQY0qfp1bAfvwLCf_dKrbYgKExNe5EjtA7VVJKmLFiAi4MAL7ovLbxINvQedg"
-              },
-              "url": "https://pub.sit.earthdata.nasa.gov/api/data/upload/list/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944"
-            }
-          } */
-          /* resp3 = {
-            "id": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-            "type": "UPLOAD",
-            "data": [
-              {
-                "key": "15df4fda-ed0d-417f-9124-558fb5e5b561/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944/c259a741-1822-48a9-b6c3-9a4ecaac0338/Workplan Summary.pdf",
-                "size": 39344,
-                "lastModified": "2023-09-05T19:05:28.000Z",
-                "file_name": "Workplan Summary.pdf"
-              }
-            ],
-            "config": {
-              "json": true,
-              "resolveWithFullResponse": true,
-              "simple": false,
-              "type": "UPLOAD",
-              "method": "GET",
-              "id": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-              "path": "data/upload/list/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-              "headers": {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer eyJraWQiOiJmdjYyVTVidkVEYXJYaEZxbk9ZQ3dHNFB5akdUMHhSTjhIMTNGb010Y2lNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJjMjU5YTc0MS0xODIyLTQ4YTktYjZjMy05YTRlY2FhYzAzMzgiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6Im9wZW5pZCIsImF1dGhfdGltZSI6MTY5Mzk0MDA3OSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tXC91cy13ZXN0LTJfYVk1aTluVnk2IiwiZXhwIjoxNjkzOTQzNjc5LCJpYXQiOjE2OTM5NDAwODAsInZlcnNpb24iOjIsImp0aSI6ImU3YmQ0N2MzLTNkNzgtNDBlNC04YTY1LWQ1ZjBmMjU1MDQyMyIsImNsaWVudF9pZCI6IjZxcjBvcmlhMWFndmhuaTdqZjJjcmhnaWxxIiwidXNlcm5hbWUiOiI1a2IifQ.QQ8GDfkUK1ec3AUR02sShHfHXgQ2ZxON8EJIkM0nsq1YfzbijocV1pXJQZCFtYvEI_U2Jlm6_4h4BFVDUEqXho-tOBYcu18Jxx5IjlNu-0zA2fCDkDFJcKLJ7U-PZpK8MOScLaU4CyFTmNl5pAv4YFWNy5lgiNeF3G1ZZngbX9vty8GcrR4nkHtW4j-C2xzi1_Cam1PmfMQx_uOJcXo7lVHupo4XxhhB_ez6bVZXlo2aH0tHkXxDQEdfgbtJ9ibyNeBbxOHTFpZq_XF1cByQUtqyzcQY0qfp1bAfvwLCf_dKrbYgKExNe5EjtA7VVJKmLFiAi4MAL7ovLbxINvQedg"
-              },
-              "url": "https://pub.sit.earthdata.nasa.gov/api/data/upload/list/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944"
-            }
-          } 
-          resp4 = {
-            "id": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-            "type": "UPLOAD",
-            "data": [
-              {
-                "key": "15df4fda-ed0d-417f-9124-558fb5e5b561/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944/c259a741-1822-48a9-b6c3-9a4ecaac0338/Screenshot from 2023-08-04 13-45-08.png",
-                "size": 21578,
-                "lastModified": "2023-09-05T19:15:27.000Z",
-                "file_name": "Screenshot from 2023-08-04 13-45-08.png"
-              },
-              {
-                "key": "15df4fda-ed0d-417f-9124-558fb5e5b561/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944/c259a741-1822-48a9-b6c3-9a4ecaac0338/Screenshot from 2023-09-01 10-00-20.png",
-                "size": 78625,
-                "lastModified": "2023-09-05T19:10:32.000Z",
-                "file_name": "Screenshot from 2023-09-01 10-00-20.png"
-              },
-              {
-                "key": "15df4fda-ed0d-417f-9124-558fb5e5b561/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944/c259a741-1822-48a9-b6c3-9a4ecaac0338/Workplan Summary.pdf",
-                "size": 39344,
-                "lastModified": "2023-09-05T19:05:28.000Z",
-                "file_name": "Workplan Summary.pdf"
-              }
-            ],
-            "config": {
-              "json": true,
-              "resolveWithFullResponse": true,
-              "simple": false,
-              "type": "UPLOAD",
-              "method": "GET",
-              "id": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-              "path": "data/upload/list/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-              "headers": {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer eyJraWQiOiJmdjYyVTVidkVEYXJYaEZxbk9ZQ3dHNFB5akdUMHhSTjhIMTNGb010Y2lNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJjMjU5YTc0MS0xODIyLTQ4YTktYjZjMy05YTRlY2FhYzAzMzgiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6Im9wZW5pZCIsImF1dGhfdGltZSI6MTY5Mzk0MDA3OSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tXC91cy13ZXN0LTJfYVk1aTluVnk2IiwiZXhwIjoxNjkzOTQzNjc5LCJpYXQiOjE2OTM5NDAwODAsInZlcnNpb24iOjIsImp0aSI6ImU3YmQ0N2MzLTNkNzgtNDBlNC04YTY1LWQ1ZjBmMjU1MDQyMyIsImNsaWVudF9pZCI6IjZxcjBvcmlhMWFndmhuaTdqZjJjcmhnaWxxIiwidXNlcm5hbWUiOiI1a2IifQ.QQ8GDfkUK1ec3AUR02sShHfHXgQ2ZxON8EJIkM0nsq1YfzbijocV1pXJQZCFtYvEI_U2Jlm6_4h4BFVDUEqXho-tOBYcu18Jxx5IjlNu-0zA2fCDkDFJcKLJ7U-PZpK8MOScLaU4CyFTmNl5pAv4YFWNy5lgiNeF3G1ZZngbX9vty8GcrR4nkHtW4j-C2xzi1_Cam1PmfMQx_uOJcXo7lVHupo4XxhhB_ez6bVZXlo2aH0tHkXxDQEdfgbtJ9ibyNeBbxOHTFpZq_XF1cByQUtqyzcQY0qfp1bAfvwLCf_dKrbYgKExNe5EjtA7VVJKmLFiAi4MAL7ovLbxINvQedg"
-              },
-              "url": "https://pub.sit.earthdata.nasa.gov/api/data/upload/list/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944"
-            }
-          } resp4 = {
-            "id": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-            "type": "UPLOAD",
-            "data": [
-              {
-                "key": "15df4fda-ed0d-417f-9124-558fb5e5b561/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944/c259a741-1822-48a9-b6c3-9a4ecaac0338/EDS_Process_Template.docx",
-                "size": 261785,
-                "lastModified": "2023-09-05T19:23:47.000Z",
-                "file_name": "EDS_Process_Template.docx"
-              },
-              {
-                "key": "15df4fda-ed0d-417f-9124-558fb5e5b561/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944/c259a741-1822-48a9-b6c3-9a4ecaac0338/Screenshot from 2023-08-04 13-45-08.png",
-                "size": 21578,
-                "lastModified": "2023-09-05T19:15:27.000Z",
-                "file_name": "Screenshot from 2023-08-04 13-45-08.png"
-              },
-              {
-                "key": "15df4fda-ed0d-417f-9124-558fb5e5b561/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944/c259a741-1822-48a9-b6c3-9a4ecaac0338/Screenshot from 2023-09-01 10-00-20.png",
-                "size": 78625,
-                "lastModified": "2023-09-05T19:10:32.000Z",
-                "file_name": "Screenshot from 2023-09-01 10-00-20.png"
-              },
-              {
-                "key": "15df4fda-ed0d-417f-9124-558fb5e5b561/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944/c259a741-1822-48a9-b6c3-9a4ecaac0338/Workplan Summary.pdf",
-                "size": 39344,
-                "lastModified": "2023-09-05T19:05:28.000Z",
-                "file_name": "Workplan Summary.pdf"
-              }
-            ],
-            "config": {
-              "json": true,
-              "resolveWithFullResponse": true,
-              "simple": false,
-              "type": "UPLOAD",
-              "method": "GET",
-              "id": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-              "path": "data/upload/list/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944",
-              "headers": {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer eyJraWQiOiJmdjYyVTVidkVEYXJYaEZxbk9ZQ3dHNFB5akdUMHhSTjhIMTNGb010Y2lNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJjMjU5YTc0MS0xODIyLTQ4YTktYjZjMy05YTRlY2FhYzAzMzgiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6Im9wZW5pZCIsImF1dGhfdGltZSI6MTY5Mzk0MDA3OSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tXC91cy13ZXN0LTJfYVk1aTluVnk2IiwiZXhwIjoxNjkzOTQzNjc5LCJpYXQiOjE2OTM5NDAwODAsInZlcnNpb24iOjIsImp0aSI6ImU3YmQ0N2MzLTNkNzgtNDBlNC04YTY1LWQ1ZjBmMjU1MDQyMyIsImNsaWVudF9pZCI6IjZxcjBvcmlhMWFndmhuaTdqZjJjcmhnaWxxIiwidXNlcm5hbWUiOiI1a2IifQ.QQ8GDfkUK1ec3AUR02sShHfHXgQ2ZxON8EJIkM0nsq1YfzbijocV1pXJQZCFtYvEI_U2Jlm6_4h4BFVDUEqXho-tOBYcu18Jxx5IjlNu-0zA2fCDkDFJcKLJ7U-PZpK8MOScLaU4CyFTmNl5pAv4YFWNy5lgiNeF3G1ZZngbX9vty8GcrR4nkHtW4j-C2xzi1_Cam1PmfMQx_uOJcXo7lVHupo4XxhhB_ez6bVZXlo2aH0tHkXxDQEdfgbtJ9ibyNeBbxOHTFpZq_XF1cByQUtqyzcQY0qfp1bAfvwLCf_dKrbYgKExNe5EjtA7VVJKmLFiAi4MAL7ovLbxINvQedg"
-              },
-              "url": "https://pub.sit.earthdata.nasa.gov/api/data/upload/list/49bfe09d-8a9c-4a42-bdca-aaf7a34e6944"
-            }
-          } */
           if (JSON.stringify(resp) === '{}' || (resp.data && resp.data.length === 0)) {
             this.setState({ saved: 'None found' })
           } else if (resp.data && resp.data.error) {
@@ -249,7 +97,7 @@ class UploadOverview extends React.Component {
               <span key={item}>{item}</span>
             )
             this.setState({ saved: html });
-            console.log(this.state.saved)
+            console.log('previously saved should reflect', this.state.saved)
             this.setState({ keys: tmpKeys });
           }
         });
@@ -357,22 +205,8 @@ class UploadOverview extends React.Component {
           }
         }
         console.log(payload) //Files are correct
-        /* payload = {
-          "fileObj": File,
-          "authToken": "eyJraWQiOiJmdjYyVTVidkVEYXJYaEZxbk9ZQ3dHNFB5akdUMHhSTjhIMTNGb010Y2lNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJjMjU5YTc0MS0xODIyLTQ4YTktYjZjMy05YTRlY2FhYzAzMzgiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6Im9wZW5pZCIsImF1dGhfdGltZSI6MTY5Mzk0MDA3OSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tXC91cy13ZXN0LTJfYVk1aTluVnk2IiwiZXhwIjoxNjkzOTQzNjc5LCJpYXQiOjE2OTM5NDAwODAsInZlcnNpb24iOjIsImp0aSI6ImU3YmQ0N2MzLTNkNzgtNDBlNC04YTY1LWQ1ZjBmMjU1MDQyMyIsImNsaWVudF9pZCI6IjZxcjBvcmlhMWFndmhuaTdqZjJjcmhnaWxxIiwidXNlcm5hbWUiOiI1a2IifQ.QQ8GDfkUK1ec3AUR02sShHfHXgQ2ZxON8EJIkM0nsq1YfzbijocV1pXJQZCFtYvEI_U2Jlm6_4h4BFVDUEqXho-tOBYcu18Jxx5IjlNu-0zA2fCDkDFJcKLJ7U-PZpK8MOScLaU4CyFTmNl5pAv4YFWNy5lgiNeF3G1ZZngbX9vty8GcrR4nkHtW4j-C2xzi1_Cam1PmfMQx_uOJcXo7lVHupo4XxhhB_ez6bVZXlo2aH0tHkXxDQEdfgbtJ9ibyNeBbxOHTFpZq_XF1cByQUtqyzcQY0qfp1bAfvwLCf_dKrbYgKExNe5EjtA7VVJKmLFiAi4MAL7ovLbxINvQedg",
-          "apiEndpoint": "https://pub.sit.earthdata.nasa.gov/api/data/upload/getPostUrl",
-          "submissionId": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944"
-        } 
-        lastPayload = {
-          "fileObj": File,
-          "authToken": "eyJraWQiOiJmdjYyVTVidkVEYXJYaEZxbk9ZQ3dHNFB5akdUMHhSTjhIMTNGb010Y2lNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJjMjU5YTc0MS0xODIyLTQ4YTktYjZjMy05YTRlY2FhYzAzMzgiLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6Im9wZW5pZCIsImF1dGhfdGltZSI6MTY5Mzk0MDA3OSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLXdlc3QtMi5hbWF6b25hd3MuY29tXC91cy13ZXN0LTJfYVk1aTluVnk2IiwiZXhwIjoxNjkzOTQzNjc5LCJpYXQiOjE2OTM5NDAwODAsInZlcnNpb24iOjIsImp0aSI6ImU3YmQ0N2MzLTNkNzgtNDBlNC04YTY1LWQ1ZjBmMjU1MDQyMyIsImNsaWVudF9pZCI6IjZxcjBvcmlhMWFndmhuaTdqZjJjcmhnaWxxIiwidXNlcm5hbWUiOiI1a2IifQ.QQ8GDfkUK1ec3AUR02sShHfHXgQ2ZxON8EJIkM0nsq1YfzbijocV1pXJQZCFtYvEI_U2Jlm6_4h4BFVDUEqXho-tOBYcu18Jxx5IjlNu-0zA2fCDkDFJcKLJ7U-PZpK8MOScLaU4CyFTmNl5pAv4YFWNy5lgiNeF3G1ZZngbX9vty8GcrR4nkHtW4j-C2xzi1_Cam1PmfMQx_uOJcXo7lVHupo4XxhhB_ez6bVZXlo2aH0tHkXxDQEdfgbtJ9ibyNeBbxOHTFpZq_XF1cByQUtqyzcQY0qfp1bAfvwLCf_dKrbYgKExNe5EjtA7VVJKmLFiAi4MAL7ovLbxINvQedg",
-          "apiEndpoint": "https://pub.sit.earthdata.nasa.gov/api/data/upload/getPostUrl",
-          "submissionId": "49bfe09d-8a9c-4a42-bdca-aaf7a34e6944"
-        }*/
         this.setState({ statusMsg: 'Uploading' });
         const resp = await upload.uploadFile(payload)
-        console.log('resp after upload', resp)
-        /* Upload successfull */
         if (resp.error) {
           console.log(`An error has occured on uploadFile: ${resp.error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
