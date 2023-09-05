@@ -68,6 +68,7 @@ class UploadOverview extends React.Component {
               html.push(<>None found<br /></>)
               return
             }
+            console.log('get file list, look for hash and size', resp.data)
             dataArr.sort(function (a, b) {
               var keyA = new Date(a.last_modified),
                 keyB = new Date(b.last_modified);
