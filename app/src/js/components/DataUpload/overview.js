@@ -165,9 +165,10 @@ class UploadOverview extends React.Component {
     if (this.validateFile(file)) {
       this.setState({ statusMsg: 'Uploading' });
       const upload = new localUpload();
+      const { dispatch } = this.props;
       const { requestId } = this.props.match.params;
       const { apiRoot } = _config;
-      await dispatch(refreshToken());
+      // await dispatch(refreshToken());
       if (requestId !== '' && requestId != undefined && requestId !== null) {
         const payload = {
           fileObj: file,
