@@ -54,6 +54,7 @@ class UploadOverview extends React.Component {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
           let html = [];
+          console.log(resp)
           if (JSON.stringify(resp) === '{}' || (resp.data && resp.data.length === 0)) {
             this.setState({ saved: 'None found' })
           } else if (resp.data && resp.data.error) {
@@ -72,7 +73,6 @@ class UploadOverview extends React.Component {
               html.push(<>None found<br /></>)
               return
             }
-            // console.log('get file list, look for hash and size', resp.data)
             dataArr.sort(function (a, b) {
               var keyA = new Date(a.last_modified),
                 keyB = new Date(b.last_modified);
