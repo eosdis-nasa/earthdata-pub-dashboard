@@ -30,7 +30,7 @@ class UploadOverview extends React.Component {
       const { apiRoot } = _config;
       const download = new localUpload();
       try {
-        await dispatch(refreshToken());
+        // await dispatch(refreshToken());
         let resp = await dispatch(listFileDownloadsByKey(this.state.keys[fileName]))
         if (resp.error) {
           console.log(`An error has occured on listFileDownloadsByKey: ${resp.error}.`);
@@ -45,7 +45,7 @@ class UploadOverview extends React.Component {
     }
   }
 
-  getFileList() {
+  async getFileList() {
     const { dispatch } = this.props;
     const { requestId } = this.props.match.params;
     if (requestId !== '' && requestId != undefined && requestId !== null) {
@@ -62,13 +62,15 @@ class UploadOverview extends React.Component {
               this.setState({ saved: 'None found' })
             }
           } else {
-            document.getElementById('previously-saved').replaceChildren();
+            if (document.getElementById('previously-saved') !== null) {
+              document.getElementById('previously-saved').replaceChildren();
+            }
             const dataArr = resp.data;
             if(dataArr.length===0){
               html.push(<>None found<br /></>)
               return
             }
-            console.log('get file list, look for hash and size', resp.data)
+            // console.log('get file list, look for hash and size', resp.data)
             dataArr.sort(function (a, b) {
               var keyA = new Date(a.last_modified),
                 keyB = new Date(b.last_modified);
@@ -180,7 +182,7 @@ class UploadOverview extends React.Component {
       const { groupId } = this.props.match.params;
       const { apiRoot } = _config;
       try {
-        await dispatch(refreshToken());
+        // await dispatch(refreshToken());
         let payload = {
           fileObj: file,
           authToken: loadToken().token,

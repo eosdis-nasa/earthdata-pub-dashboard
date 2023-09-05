@@ -19,27 +19,6 @@ function onLoad (reactFlowInstance) {
   // console.log('flow loaded:', reactFlowInstance);
 }
 
-export const getRoles = () => {
-  const user = JSON.parse(window.localStorage.getItem('auth-user'));
-  if (user != null) {
-    const roles = user.user_roles;
-    const privileges = user.user_privileges;
-    const allRoles = {
-      isManager: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/manager/g)),
-      isAdmin: privileges.find(o => o.match(/ADMIN/g)),
-      isProducer: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/data_producer/g)),
-      isStaff: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/staff/g))
-    };
-    return allRoles;
-  }
-};
-
 class Workflows extends React.Component {
   constructor () {
     super();
