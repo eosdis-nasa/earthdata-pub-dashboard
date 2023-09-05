@@ -206,16 +206,17 @@ class UploadOverview extends React.Component {
         console.log(payload)
         this.setState({ statusMsg: 'Uploading' });
         const resp = await upload.uploadFile(payload)
+        console.log('resp after upload', resp)
         if (resp.error) {
           console.log(`An error has occured on uploadFile: ${resp.error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
         } else {
           this.setState({ statusMsg: 'Upload Complete' });
+          this.resetInputWithTimeout('Select another file', 1000)
           if ((requestId !== '' && requestId != undefined && requestId !== null) &&
             (groupId == '' || groupId === undefined || groupId === null)) {
             this.getFileList()
           }
-          this.resetInputWithTimeout('Select another file', 1000)
         }
       } catch (error) {
         console.log(`try catch error: ${error.stack}`);
