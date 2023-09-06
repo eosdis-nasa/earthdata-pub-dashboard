@@ -68,7 +68,7 @@ class UploadOverview extends React.Component {
           }
 
           const files = resp.data;
-          console.log(files);
+          
           if (files.length === 0) {
             this.setState({ saved: 'None found' })
             return
@@ -110,29 +110,6 @@ class UploadOverview extends React.Component {
         this.setState({ hiddenFileInput: React.createRef(null) });
       }
     }, timeout);
-  }
-
-  isFilePreviouslySaved(file) {
-    let alreadySaved = false;
-    if (this.state.saved) {
-      for (const ea in this.state.saved) {
-        let reactElement = this.state.saved[ea]
-        for (const prop in reactElement) {
-          if (typeof reactElement[prop] === 'object' &&
-            reactElement[prop] !== null &&
-            reactElement[prop]['children'] !== null &&
-            reactElement[prop]['children'] !== undefined &&
-            reactElement[prop]['children'].length > 0) {
-            for (const child in reactElement[prop]['children']) {
-              if (reactElement[prop]['children'][child]['props']['id'] !== undefined && reactElement[prop]['children'][child]['props']['id'] === file.name) {
-                alreadySaved = true;
-              }
-            }
-          }
-        }
-      }
-    }
-    return alreadySaved
   }
 
   validateFile(file) {
