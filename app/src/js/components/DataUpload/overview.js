@@ -17,8 +17,7 @@ class UploadOverview extends React.Component {
       hiddenFileInput: React.createRef(null), 
       statusMsg: 'Select a file', 
       uploadFile: '', 
-      keys: [],
-      files: []
+      keys: []
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -78,10 +77,18 @@ class UploadOverview extends React.Component {
           this.setState({ files: files })
           
           const keyDict = {}
-          forEach(files, (file) => {
+          const html = []
+          files.forEach((file) => {
             keyDict[file.file_name] = file.key
+            html.push(<><a id={file.file_name} name={file.file_name} aria-label={`Download ${file.file_name}`} onClick={(e) => this.keyLookup(e, file.file_name)}>{file.file_name}</a><br /></>)
           })
+
+          html.map(item =>
+            <span key={item}>{item}</span>  
+          )
+
           this.setState({ keys: keyDict })
+          this.setState({ saved: html })
 
 
           // let html = [];
@@ -246,22 +253,7 @@ class UploadOverview extends React.Component {
             </h1>
             {!this.state.saved ? <Loading /> : null}
             <span id='previously-saved'>
-              {!this.state?.files.length >= 0 ? 
-                this.state.saved : 
-                this.state.files.map((file) => {
-                  return (
-                    <>
-                      <a 
-                        id={file.file_name} 
-                        name={file.file_name} 
-                        aria-label={`Download ${file.file_name}`} 
-                        onClick={(e) => this.keyLookup(e, file.file_name)}
-                      >{file.file_name}</a>
-                      <br />
-                    </>
-                  )
-                })
-              }
+              {this.state.saved ? this.state.saved : null}
             </span>
           </div>
         </div></>
