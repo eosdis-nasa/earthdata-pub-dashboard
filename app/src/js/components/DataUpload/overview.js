@@ -161,7 +161,7 @@ class UploadOverview extends React.Component {
       const upload = new localUpload();
       const { requestId } = this.props.match.params;
       const { apiRoot } = _config;
-      dispatch(refreshToken()).then((resp) => {console.log(resp)});
+      // await dispatch(refreshToken());
       if (requestId !== '' && requestId != undefined && requestId !== null) {
         const payload = {
           fileObj: file,
