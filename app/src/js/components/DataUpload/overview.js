@@ -25,8 +25,6 @@ class UploadOverview extends React.Component {
     this.validateFile = this.validateFile.bind(this);
     this.resetInputWithTimeout = this.resetInputWithTimeout.bind(this);
     this.keyLookup = this.keyLookup.bind(this);
-    this.isFilePreviouslySaved = this.isFilePreviouslySaved.bind(this);
-
   }
 
   keyLookup(event, fileName) {
