@@ -29,7 +29,7 @@ class UploadOverview extends React.Component {
 
   }
 
-  async keyLookup(event, fileName) {
+  keyLookup(event, fileName) {
     event.preventDefault();
     if (this.state.keys[fileName]) {
       const { dispatch } = this.props;
