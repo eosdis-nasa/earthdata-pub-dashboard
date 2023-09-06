@@ -26,6 +26,7 @@ class UploadOverview extends React.Component {
     this.resetInputWithTimeout = this.resetInputWithTimeout.bind(this);
     this.keyLookup = this.keyLookup.bind(this);
     this.isFilePreviouslySaved = this.isFilePreviouslySaved.bind(this);
+    this.getFileList();
 
   }
 
@@ -133,9 +134,9 @@ class UploadOverview extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.getFileList()
-  }
+  // componentWillMount() {
+  //   this.getFileList()
+  // }
 
   handleClick(e) {
     e.preventDefault();
