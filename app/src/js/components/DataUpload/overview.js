@@ -1,5 +1,5 @@
 'use strict';
-import React, { useState, memo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -8,11 +8,19 @@ import { loadToken } from '../../utils/auth';
 import Loading from '../LoadingIndicator/loading-indicator';
 import localUpload from 'edpub-data-upload-utility';
 import { listFileUploadsBySubmission, listFileDownloadsByKey, refreshToken } from '../../actions';
+import { forEach } from 'core-js/core/array';
 
 class UploadOverview extends React.Component {
   constructor() {
     super();
-    this.state = { loaded: false, hiddenFileInput: React.createRef(null), statusMsg: 'Select a file', uploadFile: '', keys: [] };
+    this.state = { 
+      loaded: false, 
+      hiddenFileInput: React.createRef(null), 
+      statusMsg: 'Select a file', 
+      uploadFile: '', 
+      keys: [],
+      files: []
+    };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.getFileList = this.getFileList.bind(this);
@@ -23,7 +31,7 @@ class UploadOverview extends React.Component {
 
   }
 
-  keyLookup(event, fileName) {
+  async keyLookup(event, fileName) {
     event.preventDefault();
     if (this.state.keys[fileName]) {
       const { dispatch } = this.props;
@@ -35,7 +43,7 @@ class UploadOverview extends React.Component {
           .then(() => {
             download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
               if (resp.error) {
-                console.log(`An error has occured: ${resp.error}.`);
+                console.log(`An error has occurred: ${resp.error}.`);
               }
             })
           }
@@ -44,55 +52,77 @@ class UploadOverview extends React.Component {
     }
   }
 
-  getFileList() {
+  async getFileList() {
     const { dispatch } = this.props;
     const { requestId } = this.props.match.params;
-    if (requestId !== '' && requestId != undefined && requestId !== null) {
+    if (requestId) {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
-          let html = [];
-          if (JSON.stringify(resp) === '{}' || (resp.data && resp.data.length === 0)) {
-            this.setState({ saved: 'None found' })
-          } else if (resp.data && resp.data.error) {
+          if (resp?.data.error){
             if (!resp.data.error.match(/not authorized/gi) && !resp.data.error.match(/not implemented/gi)) {
               const str = `An error has occurred while getting the list of files: ${resp.data.error}.`;
               this.setState({ saved: str })
             } else {
               this.setState({ saved: 'None found' })
             }
-          } else {
-            document.getElementById('previously-saved').replaceChildren();
-            const dataArr = resp.data;
-            if (dataArr.length === 0) {
-              html.push(<>None found<br /></>)
-              return
-            }
-            dataArr.sort(function (a, b) {
-              var keyA = new Date(a.last_modified),
-                keyB = new Date(b.last_modified);
-              if (keyA > keyB) return -1;
-              if (keyA < keyB) return 1;
-              return 0;
-            });
-            this.setState({ keys: [] });
-            let tmpKeys = []
-            for (const ea in dataArr) {
-              const fileName = dataArr[ea].file_name;
-              if (dataArr[ea] === undefined || fileName === undefined) {
-                break
-              }
-              const key = dataArr[ea].key;
-              tmpKeys[`${fileName}`] = key
-              if (document.getElementById('previously-saved') !== null) {
-                html.push(<><a id={fileName} name={fileName} aria-label={`Download ${fileName}`} onClick={(e) => this.keyLookup(e, fileName)}>{fileName}</a><br /></>)
-              }
-            }
-            html.map(item =>
-              <span key={item}>{item}</span>
-            )
-            this.setState({ saved: html });
-            this.setState({ keys: tmpKeys });
+          } else if(!resp.data===[]){
+            this.setState({ saved: 'None found' })
           }
+
+          const files = resp.data;
+          console.log(files);
+          if (files.length === 0) {
+            this.setState({ saved: 'None found' })
+            return
+          }
+          
+          this.setState({ files: files })
+          
+          const keyDict = {}
+          forEach(files, (file) => {
+            keyDict[file.file_name] = file.key
+          })
+          this.setState({ keys: keyDict })
+
+
+          // let html = [];
+          // if (JSON.stringify(resp) === '{}' || (resp.data && resp.data.length === 0)) {
+            
+          // } else if (resp.data && resp.data.error) {
+            
+          // } else {
+          //   document.getElementById('previously-saved').replaceChildren();
+          //   const dataArr = resp.data;
+          //   if (dataArr.length === 0) {
+          //     html.push(<>None found<br /></>)
+          //     return
+          //   }
+          //   dataArr.sort(function (a, b) {
+          //     var keyA = new Date(a.last_modified),
+          //       keyB = new Date(b.last_modified);
+          //     if (keyA > keyB) return -1;
+          //     if (keyA < keyB) return 1;
+          //     return 0;
+          //   });
+          //   this.setState({ keys: [] });
+          //   let tmpKeys = []
+          //   for (const ea in dataArr) {
+          //     const fileName = dataArr[ea].file_name;
+          //     if (dataArr[ea] === undefined || fileName === undefined) {
+          //       break
+          //     }
+          //     const key = dataArr[ea].key;
+          //     tmpKeys[`${fileName}`] = key
+          //     if (document.getElementById('previously-saved') !== null) {
+          //       html.push(<><a id={fileName} name={fileName} aria-label={`Download ${fileName}`} onClick={(e) => this.keyLookup(e, fileName)}>{fileName}</a><br /></>)
+          //     }
+          //   }
+          //   html.map(item =>
+          //     <span key={item}>{item}</span>
+          //   )
+          //   this.setState({ saved: html });
+          //   this.setState({ keys: tmpKeys });
+          // }
         });
     }
   }
@@ -165,7 +195,6 @@ class UploadOverview extends React.Component {
     if (this.validateFile(file)) {
       this.setState({ statusMsg: 'Uploading' });
       const upload = new localUpload();
-      const { dispatch } = this.props;
       const { requestId } = this.props.match.params;
       const { apiRoot } = _config;
       // await dispatch(refreshToken());
@@ -176,17 +205,16 @@ class UploadOverview extends React.Component {
           authToken: loadToken().token,
           submissionId: requestId
         }
-        await upload.uploadFile(payload).then((resp) => {
-          this.setState({ statusMsg: 'Uploading' });
-          if (resp.error) {
-            console.log(`An error has occured: ${resp.error}.`);
-            this.resetInputWithTimeout('Select a file', 1000)
-          } else {
-            this.setState({ statusMsg: 'Upload Complete' });
-            this.getFileList();
-            this.resetInputWithTimeout('Select another file', 1000)
-          }
-        })
+        const resp = await upload.uploadFile(payload)
+        this.setState({ statusMsg: 'Uploading' });
+        if (resp.error) {
+          console.log(`An error has occured: ${resp.error}.`);
+          this.resetInputWithTimeout('Select a file', 1000)
+        } else {
+          this.setState({ statusMsg: 'Upload Complete' });
+          this.getFileList();
+          this.resetInputWithTimeout('Select another file', 1000)
+        }
       }
     }
   };
@@ -219,7 +247,22 @@ class UploadOverview extends React.Component {
             </h1>
             {!this.state.saved ? <Loading /> : null}
             <span id='previously-saved'>
-              {this.state.saved ? this.state.saved : null}
+              {!this.state?.files.length >= 0 ? 
+                this.state.saved : 
+                this.state.files.map((file) => {
+                  return (
+                    <>
+                      <a 
+                        id={file.file_name} 
+                        name={file.file_name} 
+                        aria-label={`Download ${file.file_name}`} 
+                        onClick={(e) => this.keyLookup(e, file.file_name)}
+                      >{file.file_name}</a>
+                      <br />
+                    </>
+                  )
+                })
+              }
             </span>
           </div>
         </div></>
