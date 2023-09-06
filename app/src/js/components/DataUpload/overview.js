@@ -89,46 +89,6 @@ class UploadOverview extends React.Component {
 
           this.setState({ keys: keyDict })
           this.setState({ saved: html })
-
-
-          // let html = [];
-          // if (JSON.stringify(resp) === '{}' || (resp.data && resp.data.length === 0)) {
-            
-          // } else if (resp.data && resp.data.error) {
-            
-          // } else {
-          //   document.getElementById('previously-saved').replaceChildren();
-          //   const dataArr = resp.data;
-          //   if (dataArr.length === 0) {
-          //     html.push(<>None found<br /></>)
-          //     return
-          //   }
-          //   dataArr.sort(function (a, b) {
-          //     var keyA = new Date(a.last_modified),
-          //       keyB = new Date(b.last_modified);
-          //     if (keyA > keyB) return -1;
-          //     if (keyA < keyB) return 1;
-          //     return 0;
-          //   });
-          //   this.setState({ keys: [] });
-          //   let tmpKeys = []
-          //   for (const ea in dataArr) {
-          //     const fileName = dataArr[ea].file_name;
-          //     if (dataArr[ea] === undefined || fileName === undefined) {
-          //       break
-          //     }
-          //     const key = dataArr[ea].key;
-          //     tmpKeys[`${fileName}`] = key
-          //     if (document.getElementById('previously-saved') !== null) {
-          //       html.push(<><a id={fileName} name={fileName} aria-label={`Download ${fileName}`} onClick={(e) => this.keyLookup(e, fileName)}>{fileName}</a><br /></>)
-          //     }
-          //   }
-          //   html.map(item =>
-          //     <span key={item}>{item}</span>
-          //   )
-          //   this.setState({ saved: html });
-          //   this.setState({ keys: tmpKeys });
-          // }
         });
     }
   }
@@ -177,10 +137,7 @@ class UploadOverview extends React.Component {
 
   validateFile(file) {
     let valid = false;
-    if (this.isFilePreviouslySaved(file)) {
-      this.setState({ statusMsg: 'This file was already uploaded.' });
-      this.resetInputWithTimeout('Please select a different file.', 2000)
-    } else if (file.name.match(/\.([^\.]+)$/) !== null) {
+    if (file.name.match(/\.([^\.]+)$/) !== null) {
       var ext = file.name.match(/\.([^\.]+)$/)[1];
       if (ext.match(/exe/gi)) {
         this.setState({ statusMsg: 'exe is an invalid file type.' });
@@ -203,7 +160,7 @@ class UploadOverview extends React.Component {
       const upload = new localUpload();
       const { requestId } = this.props.match.params;
       const { apiRoot } = _config;
-      // await dispatch(refreshToken());
+      await dispatch(refreshToken()).then((resp) => {console.log(resp)});
       if (requestId !== '' && requestId != undefined && requestId !== null) {
         const payload = {
           fileObj: file,
