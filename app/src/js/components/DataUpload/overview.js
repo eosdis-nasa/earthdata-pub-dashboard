@@ -153,6 +153,7 @@ class UploadOverview extends React.Component {
   }
 
   async handleChange(e) {
+    const { dispatch } = this.props;
     e.preventDefault();
     const file = e.target.files[0];
     if (this.validateFile(file)) {
