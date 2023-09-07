@@ -38,8 +38,8 @@ class UploadOverview extends React.Component {
         dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
           .then(() => {
             download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
-              if (resp.error) {
-                console.log(`An error has occurred: ${resp.error}.`);
+              if (resp?.data.error){
+                console.log(`An error has occurred: ${resp?.data.error}.`);
               }
             })
           }
@@ -55,14 +55,17 @@ class UploadOverview extends React.Component {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
           if (resp?.data.error){
-            if (!resp.data.error.match(/not authorized/gi) && !resp.data.error.match(/not implemented/gi)) {
-              const str = `An error has occurred while getting the list of files: ${resp.data.error}.`;
+            if (!resp?.data.error.match(/not authorized/gi) && !resp?.data.error.match(/not implemented/gi)) {
+              const str = `An error has occurred while getting the list of files: ${resp?.data.error}.`;
               this.setState({ saved: str })
+              return
             } else {
               this.setState({ saved: 'None found' })
+              return
             }
-          } else if(!resp.data===[]){
+          } else if(!resp?.data===[]){
             this.setState({ saved: 'None found' })
+            return
           }
 
           const files = resp.data;
@@ -72,14 +75,33 @@ class UploadOverview extends React.Component {
             return
           }
           
+          files.sort(function (a, b) {
+            var keyA = new Date(a.last_modified),
+              keyB = new Date(b.last_modified);
+            if (keyA > keyB) return -1;
+            if (keyA < keyB) return 1;
+            return 0;
+          });
+
           this.setState({ files: files })
           
           const keyDict = {}
           const html = []
-          files.forEach((file) => {
+          /* files.forEach((file) => {
             keyDict[file.file_name] = file.key
             html.push(<><a id={file.file_name} name={file.file_name} aria-label={`Download ${file.file_name}`} onClick={(e) => this.keyLookup(e, file.file_name)}>{file.file_name}</a><br /></>)
-          })
+          }) */
+          for (const ea in files) {
+            const fileName = files[ea].file_name;
+            if (files[ea] === undefined || fileName === undefined) {
+              break
+            }
+            const key = files[ea].key;
+            keyDict[`${fileName}`] = key
+            if (document.getElementById('previously-saved') !== null) {
+              html.push(<><a id={fileName} name={fileName} aria-label={`Download ${fileName}`} onClick={(e) => this.keyLookup(e, fileName)}>{fileName}</a><br /></>)
+            }
+          }
 
           html.map(item =>
             <span key={item}>{item}</span>  
