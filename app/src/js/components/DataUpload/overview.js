@@ -38,12 +38,13 @@ class UploadOverview extends React.Component {
         dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
           .then(() => {
             download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
-              if (resp?.data.error){
-                console.log(`An error has occurred: ${resp?.data.error}.`);
+              let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+              if (error) {
+                console.log(`An error has occurred: ${error}.`);
               }
             })
           }
-          );
+        );
       }
     }
   }
@@ -54,26 +55,23 @@ class UploadOverview extends React.Component {
     if (requestId) {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
-          if (resp?.data.error){
-            if (!resp?.data.error.match(/not authorized/gi) && !resp?.data.error.match(/not implemented/gi)) {
-              const str = `An error has occurred while getting the list of files: ${resp?.data.error}.`;
+          if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
+            this.setState({ saved: 'None found' })
+            return
+          }
+          let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+          if (error){
+            if (!error.match(/not authorized/gi) && !error.match(/not implemented/gi)) {
+              const str = `An error has occurred while getting the list of files: ${error}.`;
               this.setState({ saved: str })
               return
             } else {
               this.setState({ saved: 'None found' })
               return
             }
-          } else if(!resp?.data===[]){
-            this.setState({ saved: 'None found' })
-            return
           }
 
           const files = resp.data;
-          
-          if (files.length === 0) {
-            this.setState({ saved: 'None found' })
-            return
-          }
           
           files.sort(function (a, b) {
             var keyA = new Date(a.last_modified),
@@ -85,12 +83,9 @@ class UploadOverview extends React.Component {
 
           this.setState({ files: files })
           
-          const keyDict = {}
-          const html = []
-          /* files.forEach((file) => {
-            keyDict[file.file_name] = file.key
-            html.push(<><a id={file.file_name} name={file.file_name} aria-label={`Download ${file.file_name}`} onClick={(e) => this.keyLookup(e, file.file_name)}>{file.file_name}</a><br /></>)
-          }) */
+          const keyDict = {};
+          const html = [];
+
           for (const ea in files) {
             const fileName = files[ea].file_name;
             if (files[ea] === undefined || fileName === undefined) {
@@ -126,7 +121,7 @@ class UploadOverview extends React.Component {
   resetInputWithTimeout(msg, timeout) {
     setTimeout(() => {
       msg ? this.setState({ statusMsg: msg }) : null
-      if (this.state.hiddenFileInput.current === null || this.state.hiddenFileInput === null) {
+      if (this.state.hiddenFileInput?.current === null || this.state.hiddenFileInput === null) {
         this.setState({ hiddenFileInput: React.createRef(null) });
       }
     }, timeout);
@@ -150,7 +145,7 @@ class UploadOverview extends React.Component {
   }
 
   async handleChange(e) {
-    const { dispatch } = this.props;
+    // const { dispatch } = this.props;
     e.preventDefault();
     const file = e.target.files[0];
     if (this.validateFile(file)) {
@@ -168,8 +163,9 @@ class UploadOverview extends React.Component {
         }
         const resp = await upload.uploadFile(payload)
         this.setState({ statusMsg: 'Uploading' });
-        if (resp.error) {
-          console.log(`An error has occured: ${resp.error}.`);
+        let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+        if (error) {
+          console.log(`An error has occured: ${error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
         } else {
           this.setState({ statusMsg: 'Upload Complete' });
