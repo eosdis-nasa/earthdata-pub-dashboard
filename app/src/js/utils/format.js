@@ -39,6 +39,17 @@ export const shortDateShortTimeYearFirst = function (datestring) {
   );
 };
 
+export const shortDateShortTimeYearFirstJustValue = function (datestring) {
+  if (!datestring) { return nullValue; }
+  let day, time;
+  if (datestring) {
+    const date = moment(datestring);
+    day = date.format('MMM D, YYYY');
+    time = date.format('h:mm a');
+  }
+  return `${day} ${time}`;
+};
+
 export const parseJson = function (jsonString) {
   const parsed = JSON.parse(jsonString);
   return JSON.stringify(parsed, null, 2);
@@ -148,10 +159,10 @@ export const storage = function (n) {
   n = +n;
   if (n === 0) return n;
 
-  if (n < 1e9) return (n / 1e6).toFixed(2) + 'mb';
-  else if (n < 1e12) return (n / 1e9).toFixed(2) + 'gb';
-  else if (n < 1e15) return (n / 1e12).toFixed(2) + 'tb';
-  else return (n / 1e15).toFixed(2) + 'pb';
+  if (n < 1e9) return (n / 1e6).toFixed(2) + ' mb';
+  else if (n < 1e12) return (n / 1e9).toFixed(2) + ' gb';
+  else if (n < 1e15) return (n / 1e12).toFixed(2) + ' tb';
+  else return (n / 1e15).toFixed(2) + ' pb';
 };
 
 export const link = (url) => <a href={url} target='_blank' aria-label={url}>Link</a>;

@@ -14,7 +14,12 @@ div.th {
   white-space: -o-pre-wrap;    /* Opera 7 */
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
-
+.indented__details .table {
+  word-break: break-all;
+}
+.indented__details .table .td:nth-of-type(3) {
+  cursor: pointer;
+}
 .table {
   width: 100%;
   line-height: 1.6em;
