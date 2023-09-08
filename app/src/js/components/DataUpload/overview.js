@@ -25,7 +25,6 @@ class UploadOverview extends React.Component {
     this.validateFile = this.validateFile.bind(this);
     this.resetInputWithTimeout = this.resetInputWithTimeout.bind(this);
     this.keyLookup = this.keyLookup.bind(this);
-    this.isFilePreviouslySaved = this.isFilePreviouslySaved.bind(this);
   }
 
   keyLookup(event, fileName) {
@@ -50,7 +49,7 @@ class UploadOverview extends React.Component {
     }
   }
   
-  async keyLookupWAwaits(event, fileName) {
+  async keyLookupWAwaitsHereForTesting(event, fileName) {
     event.preventDefault();
     if (this.state.keys[fileName]) {
       const { dispatch } = this.props;
@@ -74,39 +73,12 @@ class UploadOverview extends React.Component {
     }
   }
 
-  isFilePreviouslySaved(file) {
-    let alreadySaved = false;
-    if (this.state.saved) {
-      for (const ea in this.state.saved) {
-        let reactElement = this.state.saved[ea]
-        for (const prop in reactElement) {
-          if (typeof reactElement[prop] === 'object' &&
-            reactElement[prop] !== null &&
-            reactElement[prop]['children'] !== null &&
-            reactElement[prop]['children'] !== undefined &&
-            reactElement[prop]['children'].length > 0) {
-            for (const child in reactElement[prop]['children']) {
-              if (reactElement[prop]['children'][child]['props']['id'] !== undefined) {
-                console.log(reactElement[prop]['children'][child])
-              }
-              if (reactElement[prop]['children'][child]['props']['id'] !== undefined && reactElement[prop]['children'][child]['props']['id'] === file.name) {
-                alreadySaved = true;
-              }
-            }
-          }
-        }
-      }
-    }
-    return alreadySaved
-  }
-
   async getFileList() {
     const { dispatch } = this.props;
     const { requestId } = this.props.match.params;
     if (requestId !== '' && requestId != undefined && requestId !== null) {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
-          console.log('resp', resp)
           if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
             this.setState({ saved: 'None found' })
             return
@@ -186,7 +158,6 @@ class UploadOverview extends React.Component {
 
   validateFile(file) {
     let valid = false;
-    this.isFilePreviouslySaved(file);
     if (file.name.match(/\.([^\.]+)$/) !== null) {
       var ext = file.name.match(/\.([^\.]+)$/)[1];
       if (ext.match(/exe/gi)) {
@@ -202,6 +173,7 @@ class UploadOverview extends React.Component {
     return valid;
   }
 
+  /* old handle change before group
   async handleChange(e) {
     // const { dispatch } = this.props;
     e.preventDefault();
@@ -232,9 +204,9 @@ class UploadOverview extends React.Component {
         }
       }
     }
-  };
+  }; */
 
-  async NewHandleChange(e) {
+  async handleChange(e) {
     e.preventDefault();
     const file = e.target.files[0];
     if (this.validateFile(file)) {
@@ -255,7 +227,7 @@ class UploadOverview extends React.Component {
           payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
           payload['submissionId'] = requestId
         } else if (groupId !== '' && groupId != undefined && groupId !== null) {
-          if (document.getElementById('prefix') !== undefined && document.getElementById('prefix') !== null && document.getElementById('prefix').value !== '') {
+          if (document.getElementById('prefix') && document.getElementById('prefix') !== null) {
             prefix = document.getElementById('prefix').value
           }
           payload['apiEndpoint'] = `${apiRoot}data/upload/getGroupUploadUrl`;
@@ -288,7 +260,6 @@ class UploadOverview extends React.Component {
   render() {
     const { requestId } = this.props.match.params;
     const { groupId } = this.props.match.params;
-    /* new return with group
     return (
       <><br></br>
         <div className='page__component'>
@@ -328,7 +299,7 @@ class UploadOverview extends React.Component {
           </div>
         </div></>
     );
-    */
+    /* old return with no group
     return (
       <><br></br>
         <div className='page__component'>
@@ -360,7 +331,7 @@ class UploadOverview extends React.Component {
             </span>
           </div>
         </div></>
-    );
+    ); */
   }
 }
 

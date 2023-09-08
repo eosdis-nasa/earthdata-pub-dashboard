@@ -23,7 +23,7 @@ const reply = (dispatch, id) => {
     .replace(/\r/g, '\\r')
     .replace(/\"/g, '\\"');
   const payload = { conversation_id: id, text: resp };
-  dispatch(replyConversation(payload));
+    dispatch(replyConversation(payload));
   textRef.current.value = '';
 };
 
