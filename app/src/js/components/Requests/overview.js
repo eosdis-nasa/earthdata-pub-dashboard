@@ -91,8 +91,8 @@ class RequestsOverview extends React.Component {
       newList[ea] = record;
       for (const r in record) {
         if (!record[r].hidden && record[r].step_name !== 'close' && typeof record[r] === 'object') {
-          const prod = { value: record[r].form_data.data_producer_info_name, label: record[r].form_data.data_producer_info_name };
-          let dataProduct = record[r].form_data.data_product_name_value;
+          const prod = { value: record[r].form_data?.data_producer_info_name, label: record[r].form_data?.data_producer_info_name };
+          let dataProduct = record[r].form_data?.data_product_name_value;
           if (dataProduct === undefined) {
             dataProduct = `Request Initialized by ${record[r].initiator.name}`;
           }

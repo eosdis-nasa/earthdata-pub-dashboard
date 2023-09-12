@@ -219,8 +219,8 @@ class Home extends React.Component {
           if (match === undefined && this.state.filter !== undefined && this.state.filter.length > 0) {
             match = this.state.filter;
           }
-          const prod = { value: record[r].form_data.data_producer_info_name, label: record[r].form_data.data_producer_info_name };
-          let dataProduct = record[r].form_data.data_product_name_value;
+          const prod = { value: record[r].form_data?.data_producer_info_name, label: record[r].form_data?.data_producer_info_name };
+          let dataProduct = record[r].form_data?.data_product_name_value;
           if (dataProduct === undefined) {
             dataProduct = `Request Initialized by ${record[r].initiator.name}`;
           }

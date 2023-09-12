@@ -187,6 +187,7 @@ class UploadOverview extends React.Component {
 
   async handleChange(e) {
     e.preventDefault();
+    const { dispatch } = this.props;
     const file = e.target.files[0];
     if (this.validateFile(file)) {
       this.setState({ statusMsg: 'Uploading' });
