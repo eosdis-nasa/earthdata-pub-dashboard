@@ -46,7 +46,7 @@ class UploadOverview extends React.Component {
               }
             })
           }
-          );
+        );
       }
     }
   };
@@ -57,42 +57,6 @@ class UploadOverview extends React.Component {
     if (requestId !== '' && requestId != undefined && requestId !== null) {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
-          const bucket = '15df4fda-ed0d-417f-9124-558fb5e5b561';
-          const userId = '04cf0dfa-cfb8-42e1-902a-e4a5172b74e1';
-          resp = {
-            id: `${requestId}`,
-            type: 'REQUEST',
-            data: [
-              {
-                key: `${bucket}/${requestId}/${userId}/Some_really_really_long_list_name_of_filename.png`,
-                size: 34828,
-                last_modified: '2023-07-05T19:44:08.000Z',
-                file_name: 'Some_really_really_long_list_name_of_filename.png',
-                sha256Checksum: "hLDbLxMpidIzU+wmlVRjBlKJ/+ef2Cj1YdHSBrrNlP4="
-              },
-              {
-                key: `${bucket}/${requestId}/${userId}/home.png`,
-                size: 435471,
-                last_modified: '2023-07-20T21:13:30.000Z',
-                file_name: 'home.png',
-                sha256Checksum: "hLDbLxMpidIzU+wmlVRjBlKJ/+ef2Cj1YdHSBrrNlP4="
-              }
-            ],
-            config: {
-              json: true,
-              resolveWithFullResponse: true,
-              simple: false,
-              type: 'REQUEST',
-              method: 'GET',
-              id: `${requestId}`,
-              path: `data/upload/list/${requestId}`,
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${loadToken().token}`
-              },
-              url: `https://pub.sit.earthdata.nasa.gov/api/data/upload/list/${requestId}`
-            }
-          };
           if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
             this.setState({ saved: 'None found' })
             return
