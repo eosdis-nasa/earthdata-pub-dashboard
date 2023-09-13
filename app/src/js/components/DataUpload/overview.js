@@ -58,17 +58,15 @@ class UploadOverview extends React.Component {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
           if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
-            this.setState({ saved: 'None found' })
             return
           }
           let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
           if (error){
             if (!error.match(/not authorized/gi) && !error.match(/not implemented/gi)) {
               const str = `An error has occurred while getting the list of files: ${error}.`;
-              this.setState({ saved: str })
+              console.log(str)
               return
             } else {
-              this.setState({ saved: 'None found' })
               return
             }
           }
@@ -233,7 +231,7 @@ class UploadOverview extends React.Component {
               Upload Data File
             </h1>
           </div>
-          <div className='indented__details'>
+          <div className='indented__details' style={{ paddingTop: '1rem' }}>
             <div className='form__textarea'>
               {groupId !== undefined ?
                 <><label htmlFor="prefix" style={{ marginBottom: '1rem', marginTop: '1rem', fontSize: 'unset' }}>Subfolder (If applicable): </label><input id="prefix" name="prefix" style={{ marginBottom: '1rem' }} /></>
@@ -251,21 +249,19 @@ class UploadOverview extends React.Component {
               </label>
               <button onClick={(e) => this.handleClick(e)} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
             </div>
-            {this.state.saved && requestId !== undefined && groupId === undefined 
+            {this.state.saved && requestId !== undefined && groupId === undefined
             ?
               <><br /><section className = 'page__section'>
                 <div style={{ borderBottom: '1px solid #E2DFDF'}}>
                 <h2 className='heading--medium heading--shared-content with-description'>Files Previously Uploaded</h2>
                 </div>
-                {this.state.files.length > 0 ?
                 <Table
                   data={this.state.files}
                   dispatch={this.props.dispatch}
                   tableColumns={tableColumns}
-                /> : null}
+                />
               </section></>
               : null }
-            {!this.state.saved && groupId === undefined ? <Loading /> : null}
             <span>{this.state.saved ? this.state.saved : null}</span>
           </div>
         </div></>
