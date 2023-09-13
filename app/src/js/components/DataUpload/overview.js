@@ -106,12 +106,13 @@ class UploadOverview extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { groupId } = this.props.match.params;
     const { requestId } = this.props.match.params;
     if ((requestId !== '' && requestId != undefined && requestId !== null) &&
       (groupId == '' || groupId === undefined || groupId === null)) {
-      this.getFileList()
+      await this.getFileList()
+      this.setState({ loaded: true })
     }
   }
 
@@ -149,7 +150,6 @@ class UploadOverview extends React.Component {
 
   async handleChange(e) {
     e.preventDefault();
-    const { dispatch } = this.props;
     const file = e.target.files[0];
     if (this.validateFile(file)) {
       this.setState({ statusMsg: 'Uploading' });
@@ -262,6 +262,7 @@ class UploadOverview extends React.Component {
                 />
               </section></>
               : null }
+            {!this.state.loaded && groupId === undefined ? <Loading /> : null}
             <span>{this.state.saved ? this.state.saved : null}</span>
           </div>
         </div></>
@@ -272,10 +273,12 @@ class UploadOverview extends React.Component {
 UploadOverview.propTypes = {
   stats: PropTypes.object,
   dispatch: PropTypes.func,
-  config: PropTypes.object
+  config: PropTypes.object,
+  logs: PropTypes.object,
 };
 
 export default withRouter(connect(state => ({
   stats: state.stats,
-  config: state.config
+  config: state.config,
+  logs: state.logs
 }))(UploadOverview));
