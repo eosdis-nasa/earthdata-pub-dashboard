@@ -257,11 +257,12 @@ class UploadOverview extends React.Component {
                 <div style={{ borderBottom: '1px solid #E2DFDF'}}>
                 <h2 className='heading--medium heading--shared-content with-description'>Files Previously Uploaded</h2>
                 </div>
+                {this.state.files.length > 0 ?
                 <Table
                   data={this.state.files}
                   dispatch={this.props.dispatch}
                   tableColumns={tableColumns}
-                />
+                /> : null}
               </section></>
               : null }
             {!this.state.saved && groupId === undefined ? <Loading /> : null}
