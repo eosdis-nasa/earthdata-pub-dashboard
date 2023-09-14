@@ -92,7 +92,7 @@ class Workflows extends React.Component {
                 </section>
                 <section className='page__section'>
                   <div className='heading__wrapper--border'>
-                    <h2 className='heading--medium heading--shared-content with-description'>{record.data ? (record.data.long_name ? record.data.long_name : 'Add Workflow') : '...'}</h2>
+                    <h2 className='heading--medium heading--shared-content with-description'>{record.data ? 'Workflow Overview' : 'Add Workflow'}</h2>
                   </div>
                 </section>
                 <section className='page__section'>
@@ -133,7 +133,7 @@ class Workflows extends React.Component {
     return (
             <ul>
                 <li>
-                    <label>{data.name}
+                    <label>{data.long_name}
                     {this.renderWorkflowJson(`recipe_${this.getRandom()}`, data, refName)}</label>
                 </li>
             </ul>

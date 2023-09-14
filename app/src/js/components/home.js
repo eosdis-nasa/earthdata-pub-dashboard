@@ -37,6 +37,7 @@ import Select from 'react-select';
 import { strings } from './locale';
 import Meditor from '../components/MeditorModal/modal';
 import { requestPrivileges } from '../utils/privileges';
+import Loading from '../components/LoadingIndicator/loading-indicator';
 
 class Home extends React.Component {
   constructor (props) {
@@ -311,7 +312,7 @@ class Home extends React.Component {
         </div>
       );
     }
-    return null;
+    return <Loading />;
   }
 }
 

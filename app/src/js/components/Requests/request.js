@@ -41,27 +41,6 @@ import SearchModal from '../SearchModal';
 import Select from 'react-select';
 import UploadOverview from '../DataUpload/overview';
 
-export const getRoles = () => {
-  const user = JSON.parse(window.localStorage.getItem('auth-user'));
-  if (user != null) {
-    const roles = user.user_roles;
-    const privileges = user.user_privileges;
-    const allRoles = {
-      isManager: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/manager/g)),
-      isAdmin: privileges.find(o => o.match(/ADMIN/g)),
-      isProducer: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/data_producer/g)),
-      isStaff: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/staff/g))
-    };
-    return allRoles;
-  }
-};
-
 class RequestOverview extends React.Component {
   constructor (props) {
     super(props);
@@ -310,16 +289,17 @@ class RequestOverview extends React.Component {
     const request = record.data || false;
     let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser, canInitialize } = requestPrivileges(this.props.privileges);
     const { canEdit } = formPrivileges(this.props.privileges);
-    const allRoles = getRoles();
+    const { roles } = this.props;
+    const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
     let workflowSave;
     if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
     }
     let canViewUsers = false;
-    if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
+    if (role.includes('admin')) {
       canViewUsers = true;
     }
-    if (typeof allRoles !== 'undefined' && (typeof allRoles.isManager !== 'undefined' || typeof allRoles.isAdmin !== 'undefined' || typeof allRoles.isStaff !== 'undefined' || canReassign)) {
+    if (role.includes('manager') || role.includes('admin') || role.includes('staff') || canReassign) {
       canReassign = true;
     }
     const requestForms = request.forms;
@@ -557,6 +537,7 @@ class RequestOverview extends React.Component {
             </section><Meditor></Meditor><UploadOverview /></>
               : null
           }
+        <br />
         { showTable
           ? <section className='page__section'>
             <div className='heading__wrapper--border'>

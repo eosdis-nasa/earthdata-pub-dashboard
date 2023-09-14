@@ -50,7 +50,7 @@ class QuestionsOverview extends React.Component {
     const query = this.generateQuery();
     const { queriedAt } = list.meta;
     return (
-      <div className='page__component'>
+      <div className='page__component questions-overview'>
         <section className='page__section page__section__controls'>
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
@@ -65,7 +65,7 @@ class QuestionsOverview extends React.Component {
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_questions} <span className='num--title'>{(questions.list.data.length > 0) ? questions.list.data.length : 0}</span></h2>
             {canCreate
               ? <Link
-                className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right questions-add' to={{ pathname: '/questions/add' }}
+                className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: '/questions/add' }}
             >Add Question
             </Link>
               : null}

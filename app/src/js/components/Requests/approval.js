@@ -154,15 +154,13 @@ class ApprovalStep extends React.Component {
         <section className='page__section'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium with-description'><strong>Step</strong>:&nbsp;&nbsp;&nbsp;&nbsp;{stepName}</h2>
-            <br />
-            <br />
           </div>
         </section>
         { typeof requestId !== 'undefined'
           ? <><Comments /></>
           : null
         }
-        <section className='page_section'>
+        <section className='page__section'>
             { canReview && reviewReady && typeof requestId !== 'undefined' && (
                 <div className='flex__row reject-approve'>
                       <div className='flex__item--spacing'>
@@ -182,18 +180,14 @@ class ApprovalStep extends React.Component {
           </section>
           <br />
           <br />
-          <section className='page_section'>
+          <section className='page__section'>
             { showTable && typeof requestId !== 'undefined'
-              ? <section className='page__section'>
-                <div className='heading__wrapper--border'>
-                  <h2 className='heading--medium heading--shared-content with-description'>Request Forms</h2>
-                </div>
-                <Table
-                  data={requestForms}
-                  dispatch={this.props.dispatch}
-                  tableColumns={tableColumns}
-                />
-              </section>
+              ? <>
+              <h2 className='heading--medium with-description heading__wrapper--border'>Request Forms</h2>
+            <Table
+                data={requestForms}
+                dispatch={this.props.dispatch}
+                tableColumns={tableColumns} /></>
               : null }
             </section>
         </div>

@@ -14,7 +14,6 @@ class Upload extends React.Component {
   }
 
   render () {
-    const { pathname } = this.props.location;
     return (
       <div className='page__users'>
         <div className='content__header'>
