@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+- Removed update interval from home page; verified request page searches work the same.
 - Updated css for some font discrepancies
 - Added in group upload functionality
 - Added group privileges
