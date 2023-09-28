@@ -14,6 +14,7 @@ import UploadOverview from '../DataUpload/overview';
 import Metadata from '../Table/Metadata';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import _config from '../../config';
 
 const metaAccessors = [
   {
@@ -96,7 +97,7 @@ class GroupOverview extends React.Component {
             </h1>
           </div>
           <div className='indented__details'><Metadata data={group} accessors={metaAccessors} /></div>
-          {record.data && canUpload ? <UploadOverview /> : null }
+          {record.data && canUpload && (_config.fileUploadDefault === 'true') ? <UploadOverview /> : null }
         </section>
       </div>
     );
