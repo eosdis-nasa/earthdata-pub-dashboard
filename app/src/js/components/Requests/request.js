@@ -316,7 +316,6 @@ class RequestOverview extends React.Component {
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
     let dropdownConfig = [];
-
     if (canWithdraw && !isHidden) {
       dropdownConfig = [
         {
@@ -534,7 +533,7 @@ class RequestOverview extends React.Component {
             record.data && record.data.contributor_ids && Object.keys(this.state.names).length > 0
               ? <><section className='page__section'>
               {workflowSave}
-            </section><Meditor></Meditor><UploadOverview /></>
+            </section><Meditor></Meditor>{(_config.fileUploadDefault === 'true') ? <UploadOverview /> : null}</>
               : null
           }
         <br />
