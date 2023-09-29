@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 <!-- Unreleased changes can be added here. -->
+
+## 1.0.19
+
 - Added config variable for file upload
 - Updated css for some font discrepancies
 - Added in group upload functionality
