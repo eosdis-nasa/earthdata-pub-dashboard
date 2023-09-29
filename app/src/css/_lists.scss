@@ -1,5 +1,5 @@
 .metadata__details {
-  font-size: .86em;
+  /* font-size: .86em;*/
   @extend .clearfix;
   dt {
     font-weight: $base-font-semibold;
@@ -7,7 +7,7 @@
     padding-right: 8px;
   }
   dd {
-    width: 20%;
+    /* width: 20%;*/
     color: $dark-grey;
     &:nth-of-type(odd) {
       margin-right: 10%;
@@ -15,7 +15,7 @@
   }
   dt, dd {
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: top;
     margin: .75em 0;
   }
 }
@@ -41,7 +41,7 @@
     padding-right: 8px;
   }
   dd {
-    vertical-align: middle;
+    vertical-align: top;
     width: 100%;
     color: $dark-grey;
     &:nth-of-type(odd) {

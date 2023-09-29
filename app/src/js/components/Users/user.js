@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   getUser,
   addUserRole,
@@ -11,11 +11,12 @@ import {
   removeUserGroup
 } from '../../actions';
 import { userPrivileges } from '../../utils/privileges';
-import { lastUpdated, fullDate } from '../../utils/format';
+import { lastUpdated, shortDateNoTimeYearFirst } from '../../utils/format';
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import Metadata from '../Table/Metadata';
+import { strings } from '../locale';
 
 const addRole = (dispatch, id, roleId) => {
   const payload = {
@@ -115,6 +116,30 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
       active: true
     }
   ];
+  const metaAccessors = [
+    {
+      label: 'Name',
+      property: 'name'
+    },
+    {
+      label: 'Email',
+      property: 'email'
+    },
+    {
+      label: 'Registered',
+      accessor: d => {
+        return (shortDateNoTimeYearFirst(d));
+      },
+      property: 'registered'
+    },
+    {
+      label: 'Last Login',
+      accessor: d => {
+        return (shortDateNoTimeYearFirst(d));
+      },
+      property: 'last_login'
+    }
+  ];
   return (
     <div className='page__content'>
       <div className='page__component'>
@@ -133,35 +158,14 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
         { inflight && <LoadingOverlay /> }
         { data.id
           ? <div className='page__content'>
-            <section className='page__section'>
-              <div className='page__section__header'>
-                <h1 className='heading--small heading--shared-content with-description '>
-                  User Details
+            <section className='page__section page__section__header-wrapper'>
+              <div className='heading__wrapper--border'>
+                <h1 className='heading--small' aria-labelledby={strings.user_overview}>
+                  {strings.user_overview}
                 </h1>
               </div>
-              <div className='page__content--shortened flex__column'>
-                <div className='flex__row sm-border'>
-                  <div className='flex__item--w-15'>Id</div>
-                  <div className='flex__item--w-25'>{data.id}</div>
-                </div>
-                <div className='flex__row sm-border'>
-                  <div className='flex__item--w-15'>Name</div>
-                  <div className='flex__item--w-25'>{data.name}</div>
-                </div>
-                <div className='flex__row sm-border'>
-                  <div className='flex__item--w-15'>Email</div>
-                  <div className='flex__item--w-25'>{data.email}</div>
-                </div>
-                <div className='flex__row sm-border'>
-                  <div className='flex__item--w-15'>Registered</div>
-                  <div className='flex__item--w-25'>{data.registered}</div>
-                </div>
-                <div className='flex__row sm-border'>
-                  <div className='flex__item--w-15'>Last Login</div>
-                  <div className='flex__item--w-25'>{data.last_login}</div>
-                </div>
-              </div>
-            </section>
+              <div className='indented__details'><Metadata data={data} accessors={metaAccessors} /></div>
+            </section><br />
             <section className='page__section'>
               <div className='page__section__header'>
                 <h1 className='heading--small heading--shared-content with-description '>

@@ -28,7 +28,8 @@ export const userPrivileges = (privileges) => {
       canAddGroup: true,
       canRemoveGroup: true,
       canAddPermission: true,
-      canCreate: true
+      canCreate: true,
+      canUpdateWorkflow: true
     };
   } else if (privileges.USER) {
     return {
@@ -39,7 +40,8 @@ export const userPrivileges = (privileges) => {
       canRemoveGroup: privileges.USER.includes('REMOVEGROUP'),
       canAddPermission: privileges.USER.includes('ADDPERMISSION'),
       canCreate: privileges.USER.includes('CREATE'),
-      canDelete: privileges.USER.includes('DELETE')
+      canDelete: privileges.USER.includes('DELETE'),
+      canUpdateWorkflow: privileges.USER.includes('WORKFLOW_UPDATE')
     };
   }
   return {
@@ -48,7 +50,38 @@ export const userPrivileges = (privileges) => {
     canAddGroup: false,
     canAddPermission: false,
     canCreate: false,
-    canDelete: false
+    canDelete: false,
+    canUpdateWorkflow: false
+  };
+};
+
+export const groupPrivileges = (privileges) => {
+  if (privileges.ADMIN) {
+    return {
+      canCreate: true,
+      canRead: true,
+      canEdit: true,
+      canDelete: true,
+      canAddPermission: true,
+      canUpload: true,
+    };
+  } else if (privileges.GROUP) {
+    return {
+      canCreate: privileges.GROUP.includes('GROUP_CREATE'),
+      canRead: privileges.GROUP.includes('GROUP_READ'),
+      canEdit: privileges.GROUP.includes('GROUP_UPDATE'),
+      canDelete: privileges.GROUP.includes('GROUP_DELETE'),
+      canAddPermission: privileges.GROUP.includes('GROUP_ADDPERMISSION'),
+      canUpload: privileges.GROUP.includes('GROUP_UPLOAD'),
+    };
+  }
+  return {
+    canCreate: false,
+    canRead: false,
+    canEdit: false,
+    canDelete: false,
+    canAddPermission: false,
+    canUpload: false
   };
 };
 

@@ -21,7 +21,10 @@ class Comment extends React.Component {
 
   async componentDidMount () {
     const search = this.props.location.search.split('=');
-    const requestId = search[1].replace(/&step/g, '');
+    let requestId = '';
+    if (search[1]!==undefined) {
+      requestId = search[1].replace(/&step/g, '');
+    }
     const step = search[2];
     const { dispatch } = this.props;
     const { formId } = this.props.match.params;
@@ -100,7 +103,10 @@ class Comment extends React.Component {
     let { canReview } = requestPrivileges(this.props.privileges);
     let sameFormAsStep = false;
     const search = this.props.location.search.split('=');
-    const requestId = search[1].replace(/&step/g, '');
+    let requestId = '';
+    if (search[1] !== undefined) {
+      requestId = search[1].replace(/&step/g, '');
+    }
     let step = search[2];
     let stepName = this.getFormalName(step);
     let request = '';

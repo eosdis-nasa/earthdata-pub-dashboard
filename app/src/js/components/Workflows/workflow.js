@@ -12,32 +12,12 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import ErrorReport from '../Errors/report';
 import { workflowToGraph } from './graph-utils';
+import { userPrivileges } from '../../utils/privileges';
 
 function onLoad (reactFlowInstance) {
   reactFlowInstance.fitView();
   // console.log('flow loaded:', reactFlowInstance);
 }
-
-export const getRoles = () => {
-  const user = JSON.parse(window.localStorage.getItem('auth-user'));
-  if (user != null) {
-    const roles = user.user_roles;
-    const privileges = user.user_privileges;
-    const allRoles = {
-      isManager: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/manager/g)),
-      isAdmin: privileges.find(o => o.match(/ADMIN/g)),
-      isProducer: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/data_producer/g)),
-      isStaff: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/staff/g))
-    };
-    return allRoles;
-  }
-};
 
 class Workflows extends React.Component {
   constructor () {
@@ -115,12 +95,7 @@ class Workflows extends React.Component {
   render () {
     const { workflowId } = this.props.match.params;
     const record = this.props.workflows.detail;
-    const allRoles = getRoles();
-    const user = JSON.parse(window.localStorage.getItem('auth-user'));
-    let isEditable = false;
-    if ((typeof user.user_privileges !== 'undefined' && user.user_privileges.includes('WORKFLOW_UPDATE')) || allRoles.isAdmin) {
-      isEditable = true;
-    }
+    const { canUpdateWorkflow } = userPrivileges(this.props.privileges);
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -153,12 +128,12 @@ class Workflows extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
         <section className='page__section'>
-          {record.data && isEditable
+          {record.data && canUpdateWorkflow
             ? <Link
-            className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right workflows-add' to={{ pathname: `/workflows/edit/${record.data.id}` }} aria-label="Edit your workflow">Edit</Link>
+              className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: `/workflows/edit/${record.data.id}` }} aria-label="Edit your workflow">Edit</Link>
             : null}
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{record.data ? record.data.long_name : '...'}</h2>
+            <h2 className='heading--medium heading--shared-content with-description'>Workflow Overview</h2>
           </div>
         </section>
         <div className='page__component'>
@@ -222,9 +197,11 @@ class Workflows extends React.Component {
 Workflows.propTypes = {
   match: PropTypes.object,
   workflows: PropTypes.object,
+  privileges: PropTypes.object,
   dispatch: PropTypes.func
 };
 
 export default withRouter(connect(state => ({
+  privileges: state.api.tokens.privileges,
   workflows: state.workflows
 }))(Workflows));

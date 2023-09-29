@@ -67,9 +67,10 @@ class Roles extends React.Component {
         <section className='page__section page__section__controls'>
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
-        <h1 className='heading--large heading--shared-content with-description'>
-          {record.data ? record.data.long_name : '...'}
+        <h1 className='heading--large heading--shared-content with-description '>
+          Role Overview
         </h1>
+        <br /><br />
         <section className='page__section'>
           { record.inflight
             ? <Loading />

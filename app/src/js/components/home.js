@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import withQueryParams from 'react-router-query-params';
-import { interval, listRequests } from '../actions';
+import { listRequests } from '../actions';
 import {
   // tally,
   // seconds
@@ -17,7 +17,7 @@ import List from './Table/Table';
 import {
   tableColumns
 } from '../utils/table-config/requests';
-import { updateInterval, overviewUrl, formsUrl, initiateRequestSelectDaac } from '../config';
+import { overviewUrl, formsUrl, initiateRequestSelectDaac } from '../config';
 /* import {
   kibanaS3AccessErrorsLink,
   kibanaS3AccessSuccessesLink,
@@ -37,15 +37,14 @@ import Select from 'react-select';
 import { strings } from './locale';
 import Meditor from '../components/MeditorModal/modal';
 import { requestPrivileges } from '../utils/privileges';
+import Loading from '../components/LoadingIndicator/loading-indicator';
 
 class Home extends React.Component {
   constructor (props) {
     super(props);
     this.state = { producers: [], originalList: {}, list: {} };
     this.displayName = 'Home';
-    this.query = this.query.bind(this);
     this.generateQuery = this.generateQuery.bind(this);
-    this.refreshQuery = this.refreshQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
   }
 
@@ -60,43 +59,17 @@ class Home extends React.Component {
     else return 'all';
   }
 
-  async componentDidMount () {
-    this.cancelInterval = interval(this.query, updateInterval, true);
-    this.setRequests();
-  }
-
-  async setRequests (filter = []) {
+  async componentDidMount() {
     const { dispatch } = this.props;
     await dispatch(listRequests());
     const { requests } = this.props;
     const { list } = requests;
     const originalList = this.filter(list);
-    this.setState({ originalList: originalList, list: originalList, view: this.getView(), filter: filter });
+    this.setState({ originalList, list: originalList });
   }
 
-  componentWillUnmount () {
-    if (this.cancelInterval) { this.cancelInterval(); }
-  }
-
-  query () {
-    const { dispatch } = this.props;
-    dispatch(listRequests(this.generateQuery()));
-  }
-
-  refreshQuery () {
-    if (this.cancelInterval) { this.cancelInterval(); }
-    this.cancelInterval = interval(this.query, updateInterval, true);
-  }
-
-  generateQuery (list) {
-    const options = {};
-    const view = this.getView();
-    if (view !== this.state.view) {
-      this.setRequests(this.state.list);
-    }
-    if (view && view !== 'all') options.status = view;
-    options.status = view;
-    return list;
+  generateQuery() {
+    return {};
   }
 
   redirect (e) {
@@ -194,11 +167,11 @@ class Home extends React.Component {
     );
   }
 
-  handleProducerSelect (list, e) {
+  handleProducerSelect(list, e) {
     if (e.length === 0) {
-      this.setState({ list: this.filter(this.state.originalList), filter: [] });
+      this.setState({ list: this.filter(this.state.originalList) });
     } else if (e[0] !== undefined) {
-      this.setState({ list: this.filter(list, Object.values(e)), filter: Object.values(e) });
+      this.setState({ list: this.filter(list, Object.values(e)) });
     }
   }
 
@@ -267,6 +240,7 @@ class Home extends React.Component {
       const query = this.generateQuery();
       const { canInitialize } = requestPrivileges(this.props.privileges);
       const selectDaac = `${formsUrl}${initiateRequestSelectDaac}`;
+      const list = this.state.list;
       return (
         <div className='page__home'>
           <div className='content__header content__header--lg'>
@@ -286,23 +260,23 @@ class Home extends React.Component {
                   <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                 </div>
                 <List
-                  list={this.filter(this.state.originalList)}
+                  list={list}
                   tableColumns={tableColumns}
                   query={query}
                   rowId='id'
                   filterIdx='name'
                   filterPlaceholder='Search Requests'
                 >
-                <Select
-                  id="producerSelect"
-                  options={this.state.producers}
-                  onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
-                  isSearchable={true}
-                  placeholder='Select Data Producer'
-                  className='selectButton'
-                  isMulti={true}
-                  aria-label='Select Data Producer'
-                />
+                  <Select
+                    id="producerSelect"
+                    options={this.state.producers}
+                    onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
+                    isSearchable={true}
+                    placeholder='Select Data Producer'
+                    className='selectButton'
+                    aria-label='Select Data Producer'
+                    isMulti={true}
+                  />
                 </List>
               </div>
             </section>
@@ -311,7 +285,7 @@ class Home extends React.Component {
         </div>
       );
     }
-    return null;
+    return <Loading />;
   }
 }
 
