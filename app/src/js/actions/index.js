@@ -85,6 +85,39 @@ export const login = (redirect) => {
   };
 };
 
+export const associate = (token) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.LOGIN,
+        method: 'POST',
+        auth_token: `Bearer ${token}`
+      }
+    })
+      .then(({ data }) => {
+        console.log('data', data)
+        // window.location.href = data.redirect;
+      });
+  };
+};
+
+export const verify = (topsToken, token) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.LOGIN,
+        method: 'POST',
+        tops_token: `${topsToken}`,
+        auth_token: `Bearer ${token}`
+      }
+    })
+      .then(({ data }) => {
+        console.log('data', data)
+        // window.location.href = data.redirect;
+      });
+  };
+};
+
 export const setTokenState = (token) => ({ type: types.SET_TOKEN, token });
 
 export const interval = function (action, wait, immediate) {
