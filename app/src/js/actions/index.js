@@ -91,13 +91,12 @@ export const associate = (token) => {
       [CALL_API]: {
         type: types.LOGIN,
         method: 'POST',
-        auth_token: `Bearer ${token}`
+        path: 'data/mfa/associate',
+        body: { auth_token: `Bearer ${token}` }
       }
-    })
-      .then(({ data }) => {
-        console.log('data', data)
-        // window.location.href = data.redirect;
-      });
+    }).then(({ data }) => {
+      console.log('associate data', data);
+    });
   };
 };
 
@@ -107,14 +106,12 @@ export const verify = (topsToken, token) => {
       [CALL_API]: {
         type: types.LOGIN,
         method: 'POST',
-        tops_token: `${topsToken}`,
-        auth_token: `Bearer ${token}`
+        path: 'data/mfa/verify',
+        body: { tops_token: topsToken, auth_token: `Bearer ${token}` }
       }
-    })
-      .then(({ data }) => {
-        console.log('data', data)
-        // window.location.href = data.redirect;
-      });
+    }).then(({ data }) => {
+      console.log('verify data', data);
+    });
   };
 };
 

@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import withQueryParams from 'react-router-query-params';
 import { withRouter } from 'react-router-dom';
-import { login, fetchToken, redirectWithToken } from '../../actions';
+import { login, fetchToken, redirectWithToken, associate, verify } from '../../actions';
 import PropTypes from 'prop-types';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import ErrorReport from '../Errors/report';
@@ -13,34 +13,84 @@ import Modal from 'react-bootstrap/Modal';
 import QRCode from 'react-qr-code';
 
 class Auth extends React.Component {
-  constructor () {
-    super();
+  constructor(props) {
+    super(props);
+    this.state = { associated: false, verified: false, body: '', mfa_enabled: false };
     this.clickLogin = this.clickLogin.bind(this);
+    this.callAssociate = this.callAssociate.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidUpdate () {
-    const { api, queryParams } = this.props;
-    const { state } = queryParams;
-    const { authenticated, tokens } = api;
-    if (authenticated && !tokens.user.mfa_enabled) {
-      this.renderQrCode();
-    } else if (authenticated) {
-      redirectWithToken(state, tokens.token);
+  async componentDidUpdate () {
+    const { dispatch, api, queryParams } = this.props;
+    const { code, state, redirect } = queryParams;
+    const { authenticated, inflight, tokens } = api;
+    console.log('component did update', authenticated, this.state.mfa_enabled, tokens.user.mfa_enabled, this.state.associated, this.state.verified)
+    // false, false, true, false .. right after login with a state of dashboard and with a code
+
+    // false, false, true, true .. right after submit after successful verification with state of dashboard and with a code
+
+    // true, false, true, false .. redirects to the page and shouldn't
+    // if (!tokens.user.mfa_enabled && !this.state.associated) {
+    if (!this.state.mfa_enabled && !this.state.associated) {
+      this.callAssociate();
+    } else if (authenticated && this.state.mfa_enabled) {
+      redirectWithToken(redirect || 'dashboard', tokens.token);
+    } else if (!inflight) {
+      if (code && this.state.mfa_enabled) {
+        dispatch(fetchToken(code, state));
+      }
     }
+  }
+
+  async handleSubmit() {
+    const { api, queryParams } = this.props;
+    const { authenticated, inflight, tokens } = api;
+    const { redirect } = queryParams;
+    if (this.state.associated && !this.state.verified && document.getElementById('totp')?.value !== '') {
+      const resp = verify(document.getElementById('totp').value, tokens.token);
+      let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+      if (error) {
+        console.log(`An error has occurred: ${error}.`);
+      } else {
+        this.setState({ verified: true });
+        this.setState({ body: '' });
+        this.setState({ mfa_enabled: true });
+        console.log(this.state.associated, this.state.verified, inflight, redirect, this.state.mfa_enabled, tokens.user.mfa_enabled)
+        if ((this.state.associated && this.state.verified && !inflight) || authenticated) {
+          redirectWithToken(redirect || 'dashboard', tokens.token);
+        } 
+      }
+    } 
   }
 
   componentDidMount () {
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
+    console.log('component did mount', authenticated)
     const { code, state, redirect } = queryParams;
-    if (authenticated && !tokens.user.mfa_enabled) {
-      this.renderQrCode();
-    } else if (authenticated) {
+    // if (!tokens.user.mfa_enabled && !this.state.associated) {
+    if (!this.state.mfa_enabled && !this.state.associated) {
+      this.callAssociate();
+    } else if (authenticated && this.state.mfa_enabled) {
       redirectWithToken(redirect || 'dashboard', tokens.token);
     } else if (!inflight) {
       if (code) {
         dispatch(fetchToken(code, state));
       }
+    }
+  }
+
+  async callAssociate(){
+    const { api } = this.props;
+    const { tokens } = api;
+    const resp = associate(tokens.token);
+    let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+    if (error) {
+      console.log(`An error has occurred: ${error}.`);
+    } else {
+      this.setState({ associated: true });
+      this.setState({ body: this.renderQrCode(resp) });
     }
   }
 
@@ -50,9 +100,13 @@ class Auth extends React.Component {
     dispatch(login(redirect || 'dashboard'));
   }
 
-  renderQrCode () {
-    const otpPath = 'https://testsigma.com';
-    const setupCode = 'https://testsigma.com';
+  renderQrCode (string) {
+    let otpPath = string;
+    let setupCode = string;
+    if(typeof(string) !=='string'){
+      otpPath='someteststring'
+      setupCode = 'someteststring'
+    }
     return (
       <div style={{ textAlign: 'left' }}>
         <div className="eui-info-box">
@@ -77,20 +131,17 @@ class Auth extends React.Component {
           <div id="secretcode" className="eui-info-box" style={{ marginTop: '2rem' }}>Setup Code: <strong>{setupCode}</strong></div>
           <input type="hidden" id="secret" name="secret" value={otpPath} />
           <br />
-          <form id="setuptotp" action="/totp/setup" acceptCharset="UTF-8" method="post">
-            <p>
-              <label htmlFor="totp">Enter Authentication Code from Verification App </label>
-              <br />
-              <input type="text" name="totp" id="totp" autoFocus="autofocus" className="default" style={{ width: '20%' }} />
-            </p>
-            <p style={{ marginTop: '1rem' }}>
-              { /* <input type="submit" name="commit" value="SUBMIT" className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'} data-disable-with="TOTP" /> */}
-              <button value="SUBMIT" className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
-                aria-label="submit your user" data-disable-with="TOTP">
-                Submit
-              </button>
-            </p>
-          </form>
+          <p>
+            <label htmlFor="totp">Enter Authentication Code from Verification App </label>
+            <br />
+            <input type="text" name="totp" id="totp" autoFocus="autofocus" className="default" style={{ width: '20%' }} />
+          </p>
+          <p style={{ marginTop: '1rem' }}>
+            <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
+              aria-label="submit your user" data-disable-with="TOTP" onClick={this.handleSubmit}>
+              Submit
+            </button>
+          </p>
         </div>
       </div>
     );
@@ -99,9 +150,12 @@ class Auth extends React.Component {
   render () {
     const { dispatch, api, apiVersion, queryParams } = this.props;
     const { code, token } = queryParams;
-    const mfaEnabled = api.tokens.user.mfa_enabled;
-    const showLoginButton = !api.authenticated && !api.inflight && !code && !token && !mfaEnabled;
-    const showAuthMessage = api.inflight || code || token;
+    const { tokens } = api;
+    // const mfaEnabled = api.tokens.user.mfa_enabled;
+    let mfaEnabled = this.state.mfa_enabled;
+    console.log('mfaEnabled', this.state.mfa_enabled, tokens.user.mfa_enabled)
+    const showLoginButton = !api.authenticated && !api.inflight && !code && !token;
+    const showAuthMessage = api.inflight || token || this.state.verified;
     return (
       <div className='app'>
         <Header dispatch={dispatch} api={api} apiVersion={apiVersion} minimal={true}/>
@@ -118,14 +172,15 @@ class Auth extends React.Component {
               <Modal.Title id="modal__oauth-modal" className="oauth-modal__title">Welcome To Earthdata Pub Dashboard</Modal.Title>
               <Modal.Body>
                 { showAuthMessage &&
-                  <><LoadingOverlay /><div>
+                  <><LoadingOverlay />
+                  <div>
                     <h2 className='heading--medium'>
                       Authenticating...
                     </h2>
                   </div></>
                 }
-                {!mfaEnabled ? this.renderQrCode() : null }
                 { api.error && <ErrorReport report={api.error} /> }
+                { !mfaEnabled && !showLoginButton ? this.state.body : null}
               </Modal.Body>
               <Modal.Footer>
                 { showLoginButton &&
