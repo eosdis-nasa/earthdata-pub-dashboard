@@ -84,19 +84,21 @@ class Auth extends React.Component {
   async callAssociate(){
     const { dispatch, api } = this.props;
     const { tokens } = api;
-    const resp = dispatch(associate(tokens.token));
-    console.log('resp from associate', tokens.token, resp)
-    /* {
-      "message": "Local placeholder for associate MFA function."
-    } */
-    let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
-    if (error) {
-      console.log(`An error has occurred: ${error}.`);
-    } else {
-      this.setState({ associated: true });
-      this.setState({ body: this.renderQrCode(resp.message) });
-    }
-  }
+    dispatch(associate(tokens.token)).then(value => {
+      const resp = value
+      console.log('resp from associate', value)
+      /* {
+        "message": "Local placeholder for associate MFA function."
+      } */
+      let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+      if (error) {
+        console.log(`An error has occurred: ${error}.`);
+      } else {
+        this.setState({ associated: true });
+        this.setState({ body: this.renderQrCode(resp.message) });
+      }
+    })
+  };
 
   clickLogin () {
     const { dispatch, queryParams } = this.props;
