@@ -39,6 +39,7 @@ class Auth extends React.Component {
     // true, false, false, false, false,  should have form
 
     // if (!tokens.user.mfa_enabled && !this.state.associated) {
+    console.log(tokens.token, tokens.user.mfa_enabled, this.state.mfa_enabled, this.state.associated, this.state.verified, code, inflight, state, redirect, authenticated)
     if (tokens.token !== null && tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
       console.log('about to call associate from did update')
       this.callAssociate();
@@ -100,14 +101,18 @@ class Auth extends React.Component {
   async callAssociate(){
     const { dispatch, api } = this.props;
     const { tokens } = api;
+    console.log('call associate has token', tokens.token)
     dispatch(associate(tokens.token)).then(value => {
       const resp = value
+      console.log('resp', value)
       let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
       if (error) {
         console.log(`An error has occurred: ${error}.`);
       } else {
         this.setState({ associated: true });
+        console.log(this.state.associated)
         this.setState({ body: this.renderQrCode(resp.data.SecretCode) });
+        console.log('body', this.state.body)
       }
     })
   };
@@ -174,7 +179,7 @@ class Auth extends React.Component {
     const showLoginButton = !api.authenticated && !api.inflight && !code && !token;
     const showAuthMessage = api.inflight || token || this.state.verified;
     console.log('mfaEnabled', this.state.mfa_enabled, tokens.user.mfa_enabled, showLoginButton, this.state.body, showAuthMessage)
-    // false false undefined false
+    // false undefined false <empty string> false
     return (
       <div className='app'>
         <Header dispatch={dispatch} api={api} apiVersion={apiVersion} minimal={true}/>
