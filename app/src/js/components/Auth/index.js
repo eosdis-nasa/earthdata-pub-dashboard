@@ -34,7 +34,7 @@ class Auth extends React.Component {
 
     // false, false, undefined, false, false means haven't clicked the button yet, so shouldn't run call associate.
     // if (!tokens.user.mfa_enabled && !this.state.associated) {
-    if (tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
+    if (tokens.token !== null && tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
       this.callAssociate();
     } else if (authenticated && this.state.mfa_enabled) {
       redirectWithToken(redirect || 'dashboard', tokens.token);
@@ -52,7 +52,7 @@ class Auth extends React.Component {
     if (this.state.associated && !this.state.verified && document.getElementById('totp')?.value !== '') {
       dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
         const resp = value;
-        let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+        let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
         if (error) {
           console.log(`An error has occurred: ${error}.`);
         } else {
@@ -72,8 +72,9 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
     const { code, state, redirect } = queryParams;
+    console.log('tokens token', tokens.token)
     // if (!tokens.user.mfa_enabled && !this.state.associated) {
-    if (tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
+    if (tokens.token !==null && tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
       this.callAssociate();
     } else if (authenticated && this.state.mfa_enabled) {
       redirectWithToken(redirect || 'dashboard', tokens.token);
@@ -89,16 +90,12 @@ class Auth extends React.Component {
     const { tokens } = api;
     dispatch(associate(tokens.token)).then(value => {
       const resp = value
-      console.log('resp from associate', value)
-      /* {
-        "message": "Local placeholder for associate MFA function."
-      } */
-      let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+      let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
       if (error) {
         console.log(`An error has occurred: ${error}.`);
       } else {
         this.setState({ associated: true });
-        this.setState({ body: this.renderQrCode(resp.message) });
+        this.setState({ body: this.renderQrCode(resp.data.SecretCode) });
       }
     })
   };
