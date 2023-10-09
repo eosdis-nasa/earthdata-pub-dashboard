@@ -85,6 +85,7 @@ class Auth extends React.Component {
     const { api } = this.props;
     const { tokens } = api;
     const resp = associate(tokens.token);
+    console.log('resp from associate', resp)
     let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
     if (error) {
       console.log(`An error has occurred: ${error}.`);
