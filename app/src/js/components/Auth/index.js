@@ -31,8 +31,10 @@ class Auth extends React.Component {
     // false, false, true, true .. right after submit after successful verification with state of dashboard and with a code
 
     // true, false, true, false .. redirects to the page and shouldn't
+
+    // false, false, undefined, false, false means haven't clicked the button yet, so shouldn't run call associate.
     // if (!tokens.user.mfa_enabled && !this.state.associated) {
-    if (!this.state.mfa_enabled && !this.state.associated) {
+    if (tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
       this.callAssociate();
     } else if (authenticated && this.state.mfa_enabled) {
       redirectWithToken(redirect || 'dashboard', tokens.token);
@@ -48,29 +50,30 @@ class Auth extends React.Component {
     const { authenticated, inflight, tokens } = api;
     const { redirect } = queryParams;
     if (this.state.associated && !this.state.verified && document.getElementById('totp')?.value !== '') {
-      const resp = dispatch(verify(document.getElementById('totp').value, tokens.token));
-      let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
-      if (error) {
-        console.log(`An error has occurred: ${error}.`);
-      } else {
-        this.setState({ verified: true });
-        this.setState({ body: '' });
-        this.setState({ mfa_enabled: true });
-        console.log(this.state.associated, this.state.verified, inflight, redirect, this.state.mfa_enabled, tokens.user.mfa_enabled)
-        if ((this.state.associated && this.state.verified && !inflight) || authenticated) {
-          redirectWithToken(redirect || 'dashboard', tokens.token);
-        } 
-      }
+      dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
+        const resp = value;
+        let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+        if (error) {
+          console.log(`An error has occurred: ${error}.`);
+        } else {
+          this.setState({ verified: true });
+          this.setState({ body: '' });
+          this.setState({ mfa_enabled: true });
+          console.log(this.state.associated, this.state.verified, inflight, redirect, this.state.mfa_enabled, tokens.user.mfa_enabled)
+          if ((this.state.associated && this.state.verified && !inflight) || authenticated) {
+            redirectWithToken(redirect || 'dashboard', tokens.token);
+          } 
+        }
+      })
     } 
   }
 
   componentDidMount () {
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
-    console.log('component did mount', authenticated, tokens.token)
     const { code, state, redirect } = queryParams;
     // if (!tokens.user.mfa_enabled && !this.state.associated) {
-    if (!this.state.mfa_enabled && !this.state.associated) {
+    if (tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
       this.callAssociate();
     } else if (authenticated && this.state.mfa_enabled) {
       redirectWithToken(redirect || 'dashboard', tokens.token);
