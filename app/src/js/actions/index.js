@@ -87,7 +87,7 @@ export const login = (redirect) => {
 
 export const associate = (token) => ({
   [CALL_API]: {
-    type: types.LOGIN,
+    type: types.MFA,
     method: 'POST',
     path: 'data/mfa/associate',
     body: { auth_token: `${token}` }
@@ -98,7 +98,7 @@ export const verify = (topsToken, token) => {
   return (dispatch) => {
     dispatch({
       [CALL_API]: {
-        type: types.LOGIN,
+        type: types.MFA,
         method: 'POST',
         path: 'data/mfa/verify',
         body: { tops_token: topsToken, auth_token: `${token}` }
