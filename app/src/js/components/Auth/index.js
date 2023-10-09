@@ -55,7 +55,8 @@ class Auth extends React.Component {
 
   async handleSubmit() {
     const { api, queryParams } = this.props;
-    const { authenticated, inflight, tokens } = api;
+    const { authenticated, inflight } = api;
+    let { tokens } = api
     const { redirect } = queryParams;
     if (this.state.associated && !this.state.verified && document.getElementById('totp')?.value !== '') {
       dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
@@ -68,7 +69,7 @@ class Auth extends React.Component {
           this.setState({ verified: true });
           this.setState({ body: '' });
           this.setState({ mfa_enabled: true });
-          console.log(this.state.associated, this.state.verified, inflight, redirect, this.state.mfa_enabled, tokens.user.mfa_enabled)
+          console.log(this.state.associated, this.state.verified, inflight, redirect, this.state.mfa_enabled, tokens.user.mfa_enabled, this.props.api.tokens)
           if ((this.state.associated && this.state.verified && !inflight) || authenticated) {
             redirectWithToken(redirect || 'dashboard', tokens.token);
           } 
@@ -173,6 +174,7 @@ class Auth extends React.Component {
     const showLoginButton = !api.authenticated && !api.inflight && !code && !token;
     const showAuthMessage = api.inflight || token || this.state.verified;
     console.log('mfaEnabled', this.state.mfa_enabled, tokens.user.mfa_enabled, showLoginButton, this.state.body, showAuthMessage)
+    // false false undefined false
     return (
       <div className='app'>
         <Header dispatch={dispatch} api={api} apiVersion={apiVersion} minimal={true}/>
@@ -197,7 +199,7 @@ class Auth extends React.Component {
                   </div></>
                 }
                 { api.error && <ErrorReport report={api.error} /> }
-                { !mfaEnabled && !showLoginButton && this.state.body!== '' ? this.state.body : null}
+                { !mfaEnabled && !showLoginButton ? this.state.body : null}
               </Modal.Body>
               <Modal.Footer>
                 { showLoginButton &&
