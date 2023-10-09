@@ -37,8 +37,10 @@ class Auth extends React.Component {
 
     // false, false, undefined, false, false means haven't clicked the button yet, so shouldn't run call associate.
     // true, false, false, false, false,  should have form
+
     // if (!tokens.user.mfa_enabled && !this.state.associated) {
     if (tokens.token !== null && tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
+      console.log('about to call associate')
       this.callAssociate();
     } else if (authenticated && this.state.mfa_enabled) {
       redirectWithToken(redirect || 'dashboard', tokens.token);
