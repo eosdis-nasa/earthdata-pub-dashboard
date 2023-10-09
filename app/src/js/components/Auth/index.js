@@ -26,6 +26,9 @@ class Auth extends React.Component {
     const { code, state, redirect } = queryParams;
     const { authenticated, inflight, tokens } = api;
     console.log('component did update', authenticated, this.state.mfa_enabled, tokens.user.mfa_enabled, this.state.associated, this.state.verified)
+    if (authenticated){
+      console.log('component did update', authenticated, tokens.token, tokens.user.mfa_enabled)
+    }
     // false, false, true, false .. right after login with a state of dashboard and with a code
 
     // false, false, true, true .. right after submit after successful verification with state of dashboard and with a code
@@ -33,6 +36,7 @@ class Auth extends React.Component {
     // true, false, true, false .. redirects to the page and shouldn't
 
     // false, false, undefined, false, false means haven't clicked the button yet, so shouldn't run call associate.
+    // true, false, false, false, false,  should have form
     // if (!tokens.user.mfa_enabled && !this.state.associated) {
     if (tokens.token !== null && tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
       this.callAssociate();
