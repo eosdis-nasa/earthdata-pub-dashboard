@@ -25,10 +25,10 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { code, state, redirect } = queryParams;
     const { authenticated, inflight, tokens } = api;
-    console.log('component did update', authenticated, this.state.mfa_enabled, tokens.user.mfa_enabled, this.state.associated, this.state.verified)
+    /* console.log('component did update', authenticated, this.state.mfa_enabled, tokens.user.mfa_enabled, this.state.associated, this.state.verified)
     if (authenticated){
       console.log('component did update', authenticated, tokens.token, tokens.user.mfa_enabled)
-    }
+    } */
     // false, false, true, false .. right after login with a state of dashboard and with a code
 
     // false, false, true, true .. right after submit after successful verification with state of dashboard and with a code
@@ -40,12 +40,14 @@ class Auth extends React.Component {
 
     // if (!tokens.user.mfa_enabled && !this.state.associated) {
     if (tokens.token !== null && tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
-      console.log('about to call associate')
+      console.log('about to call associate from did update')
       this.callAssociate();
     } else if (authenticated && this.state.mfa_enabled) {
+      console.log('redirect with token from did update')
       redirectWithToken(redirect || 'dashboard', tokens.token);
     } else if (!inflight) {
       if (code && this.state.mfa_enabled) {
+        console.log('fetch token from did update')
         dispatch(fetchToken(code, state));
       }
     }
@@ -58,6 +60,7 @@ class Auth extends React.Component {
     if (this.state.associated && !this.state.verified && document.getElementById('totp')?.value !== '') {
       dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
         const resp = value;
+        console.log('resp from handle submit', value)
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
         if (error) {
           console.log(`An error has occurred: ${error}.`);
@@ -78,14 +81,16 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
     const { code, state, redirect } = queryParams;
-    console.log('tokens token', tokens.token)
     // if (!tokens.user.mfa_enabled && !this.state.associated) {
     if (tokens.token !==null && tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
+      console.log('about to call associate from did mount')
       this.callAssociate();
     } else if (authenticated && this.state.mfa_enabled) {
+      console.log('redirect with token from did mount')
       redirectWithToken(redirect || 'dashboard', tokens.token);
     } else if (!inflight) {
       if (code) {
+        console.log('fetch token from did mount')
         dispatch(fetchToken(code, state));
       }
     }
@@ -165,7 +170,7 @@ class Auth extends React.Component {
     const { tokens } = api;
     // const mfaEnabled = api.tokens.user.mfa_enabled;
     let mfaEnabled = this.state.mfa_enabled;
-    console.log('mfaEnabled', this.state.mfa_enabled, tokens.user.mfa_enabled)
+    console.log('mfaEnabled', this.state.mfa_enabled, tokens.user.mfa_enabled, showLoginButton, this.state.body!=='')
     const showLoginButton = !api.authenticated && !api.inflight && !code && !token;
     const showAuthMessage = api.inflight || token || this.state.verified;
     return (
@@ -192,7 +197,7 @@ class Auth extends React.Component {
                   </div></>
                 }
                 { api.error && <ErrorReport report={api.error} /> }
-                { !mfaEnabled && !showLoginButton ? this.state.body : null}
+                { !mfaEnabled && !showLoginButton && this.state.body!== '' ? this.state.body : null}
               </Modal.Body>
               <Modal.Footer>
                 { showLoginButton &&
