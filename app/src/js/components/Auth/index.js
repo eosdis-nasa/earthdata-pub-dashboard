@@ -170,9 +170,9 @@ class Auth extends React.Component {
     const { tokens } = api;
     // const mfaEnabled = api.tokens.user.mfa_enabled;
     let mfaEnabled = this.state.mfa_enabled;
-    console.log('mfaEnabled', this.state.mfa_enabled, tokens.user.mfa_enabled, showLoginButton, this.state.body!=='')
     const showLoginButton = !api.authenticated && !api.inflight && !code && !token;
     const showAuthMessage = api.inflight || token || this.state.verified;
+    console.log('mfaEnabled', this.state.mfa_enabled, tokens.user.mfa_enabled, showLoginButton, this.state.body, showAuthMessage)
     return (
       <div className='app'>
         <Header dispatch={dispatch} api={api} apiVersion={apiVersion} minimal={true}/>
