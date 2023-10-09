@@ -84,6 +84,7 @@ class Auth extends React.Component {
   async callAssociate(){
     const { api } = this.props;
     const { tokens } = api;
+    console.log('tokens', tokens.token)
     const resp = associate(tokens.token);
     console.log('resp from associate', tokens.token, resp)
     /* {
