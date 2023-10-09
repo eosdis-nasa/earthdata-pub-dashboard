@@ -48,7 +48,7 @@ class Auth extends React.Component {
     const { authenticated, inflight, tokens } = api;
     const { redirect } = queryParams;
     if (this.state.associated && !this.state.verified && document.getElementById('totp')?.value !== '') {
-      const resp = verify(document.getElementById('totp').value, tokens.token);
+      const resp = dispatch(verify(document.getElementById('totp').value, tokens.token));
       let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
       if (error) {
         console.log(`An error has occurred: ${error}.`);
@@ -82,10 +82,9 @@ class Auth extends React.Component {
   }
 
   async callAssociate(){
-    const { api } = this.props;
+    const { dispatch, api } = this.props;
     const { tokens } = api;
-    console.log('tokens', tokens.token)
-    const resp = associate(tokens.token);
+    const resp = dispatch(associate(tokens.token));
     console.log('resp from associate', tokens.token, resp)
     /* {
       "message": "Local placeholder for associate MFA function."

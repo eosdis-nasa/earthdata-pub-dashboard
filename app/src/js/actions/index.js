@@ -85,14 +85,18 @@ export const login = (redirect) => {
   };
 };
 
-export const associate = (token) => ({
-  [CALL_API]: {
-    type: types.LOGIN,
-    method: 'POST',
-    path: 'data/mfa/associate',
-    body: { auth_token: `${token}` }
-  }
-});
+export const associate = (token) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.LOGIN,
+        method: 'POST',
+        path: 'data/mfa/associate',
+        body: { auth_token: `${token}` }
+      }
+    });
+  };
+};
 
 export const verify = (topsToken, token) => {
   return (dispatch) => {
