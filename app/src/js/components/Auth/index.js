@@ -67,7 +67,7 @@ class Auth extends React.Component {
   componentDidMount () {
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
-    console.log('component did mount', authenticated)
+    console.log('component did mount', authenticated, tokens.token)
     const { code, state, redirect } = queryParams;
     // if (!tokens.user.mfa_enabled && !this.state.associated) {
     if (!this.state.mfa_enabled && !this.state.associated) {
@@ -85,13 +85,16 @@ class Auth extends React.Component {
     const { api } = this.props;
     const { tokens } = api;
     const resp = associate(tokens.token);
-    console.log('resp from associate', resp)
+    console.log('resp from associate', tokens.token, resp)
+    /* {
+      "message": "Local placeholder for associate MFA function."
+    } */
     let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
     if (error) {
       console.log(`An error has occurred: ${error}.`);
     } else {
       this.setState({ associated: true });
-      this.setState({ body: this.renderQrCode(resp) });
+      this.setState({ body: this.renderQrCode(resp.message) });
     }
   }
 

@@ -92,7 +92,7 @@ export const associate = (token) => {
         type: types.LOGIN,
         method: 'POST',
         path: 'data/mfa/associate',
-        body: { auth_token: `Bearer ${token}` }
+        body: { auth_token: `${token}` }
       }
     }).then(({ data }) => {
       console.log('associate data', data);
