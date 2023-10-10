@@ -6,6 +6,7 @@ export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const MFA = 'MFA';
 export const MFA_INFLIGHT = 'MFA_INFLIGHT';
 export const MFA_ERROR = 'MFA_ERROR';
+export const SET_MFA = 'SET_MFA';
 export const FETCH_TOKEN = 'FETCH_TOKEN';
 export const FETCH_TOKEN_INFLIGHT = 'FETCH_TOKEN_INFLIGHT';
 export const FETCH_TOKEN_ERROR = 'FETCH_TOKEN_ERROR';

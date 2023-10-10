@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import withQueryParams from 'react-router-query-params';
 import { withRouter } from 'react-router-dom';
-import { login, fetchToken, redirectWithToken, associate, verify } from '../../actions';
+import { login, fetchToken, fetchToken2, redirectWithToken, associate, verify, setAuthenticatedState } from '../../actions';
 import PropTypes from 'prop-types';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import ErrorReport from '../Errors/report';
@@ -12,45 +12,24 @@ import Header from '../Header/header';
 import Modal from 'react-bootstrap/Modal';
 import QRCode from 'react-qr-code';
 import config from '../../config';
+import ourConfigureStore from '../../store/configureStore';
 
 class Auth extends React.Component {
   constructor(props) {
     super(props);
+    this.store = ourConfigureStore({});
     this.state = { associated: false, verified: false, body: '', mfa_enabled: false };
     this.clickLogin = this.clickLogin.bind(this);
     this.callAssociate = this.callAssociate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  async componentDidUpdate () {
-    const { dispatch, api, queryParams } = this.props;
-    const { code, state, redirect } = queryParams;
-    const { authenticated, inflight, tokens } = api;
-    if (tokens?.user?.mfa_enabled !== this.state.mfa_enabled && !config.environment.match(/LOCALHOST/g) && tokens?.user?.mfa_enabled !== undefined) {
-      this.setState({ mfa_enabled: tokens.user.mfa_enabled });
-      console.log('reset to ' + this.state.mfa_enabled)
-    }
-    if (authenticated && this.state.mfa_enabled) {
-      console.log('component did update authenticated, redirecting')
-      redirectWithToken(state, tokens.token);
-    } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
-      console.log('calling associate from did update')
-      this.callAssociate()
-    }
-  }
-
   async callAssociate() {
-    const { dispatch, api, queryParams } = this.props;
-    let { tokens, inflight } = api;
-    const { code, state } = queryParams;
+    const { dispatch, api } = this.props;
+    const { tokens } = api;
     let secretCode = '';
     if (config.environment.match(/LOCALHOST/g)) {
-      tokens = {};
-      tokens.token = 'somefaketoken';
       secretCode = 'somefakesecretcode'
-    } 
-    if (tokens.token === null && !inflight && code) {
-      dispatch(fetchToken(code, state));
     }
     if (tokens.token !== null && !this.state.associated) {
       await dispatch(associate(tokens.token)).then(value => {
@@ -62,8 +41,7 @@ class Auth extends React.Component {
         if (error && !config.environment.match(/LOCALHOST/g)) {
           console.log(`An error has occurred: ${error}.`);
         } else {
-          this.setState({ body: this.renderQrCode(secretCode) });
-          this.setState({ associated: true });
+          this.setState({ body: this.renderQrCode(secretCode), associated: true });
         }
       })
     }
@@ -71,13 +49,8 @@ class Auth extends React.Component {
 
   async handleSubmit() {
     const { api, dispatch, queryParams } = this.props;
-    const { authenticated, inflight } = api;
-    const { redirect, code } = queryParams;
-    let { tokens } = api;
-    if (config.environment.match(/LOCALHOST/g)) {
-      tokens = {};
-      tokens.token = 'somefaketoken';
-    }
+    const { authenticated, inflight, tokens } = api;
+    const { code, state, redirect } = queryParams;
     if (this.state.associated && tokens.token!== null && !this.state.verified && document.getElementById('totp')?.value !== '') {
       dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
         const resp = value;
@@ -85,11 +58,13 @@ class Auth extends React.Component {
         if (error && !config.environment.match(/LOCALHOST/g)) {
           console.log(`An error has occurred: ${error}.`);
         } else {
-          this.setState({ verified: true });
-          this.setState({ mfa_enabled: true });
-          this.setState({ body: '' });
-          console.log('verified', this.state.associated, this.state.verified, this.state.mfa_enabled, inflight, authenticated, code)
-          if (this.state.associated && this.state.verified && this.state.mfa_enabled && !inflight && code) {
+          let new_user = { ...tokens.user };
+          new_user.mfa_enabled = true;
+          window.localStorage.removeItem('auth-user');
+          window.localStorage.setItem('auth-user', JSON.stringify(new_user))
+          // console.log('authenticated', this.store.getState().api.authenticated)
+          this.setState({ verified: true, mfa_enabled: true, body: '' });
+          if (!inflight && code) {
             redirectWithToken(redirect || 'dashboard', tokens.token);
           } 
         }
@@ -98,34 +73,25 @@ class Auth extends React.Component {
   }
 
   async componentDidMount () {
+    console.log('compoennt did mount')
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
-    const { code, state, redirect } = queryParams;
-    if (tokens?.user?.mfa_enabled !== this.state.mfa_enabled && !config.environment.match(/LOCALHOST/g) && tokens?.user?.mfa_enabled !== undefined) {
-      this.setState({ mfa_enabled: tokens.user.mfa_enabled });
-      console.log('(mounted) reset to ' + this.state.mfa_enabled)
+    const { code, state, redirect, mfa_enabled } = queryParams;
+    if (window.localStorage.getItem('auth-user') !== null && window.localStorage.getItem('auth-user').mfa_enabled !== this.state.mfa_enabled) {
+      this.setState({ mfa_enabled: window.localStorage.getItem('auth-user').mfa_enabled });
     }
-    if (authenticated && this.state.mfa_enabled) {
+    if (tokens.token === null && !inflight && code) {
+      const { data } = await dispatch(fetchToken2(code, state))
+      const { token } = data;
+      window.localStorage.setItem('auth-token', token);
+    }
+    if (authenticated || this.state.mfa_enabled) {
       console.log('redirecting with token')
       redirectWithToken(redirect || 'dashboard', tokens.token);
-    } else if (!inflight) {
-      if (code) {
-        console.log('getting token')
-        // dispatch(fetchToken(code, state));
-      }
-    }
-    /* if (authenticated) {
-      console.log('component did mount authenticated')
-      redirectWithToken(redirect || 'dashboard', tokens.token);
-    } else if (!inflight && this.state.mfa_enabled) {
-      if (code) {
-        console.log('component did mount fetching token')
-        dispatch(fetchToken(code, state));
-      }
-    } else if (authenticated && !this.state.associated) {
-      console.log('calling associate from did mount', authenticated, this.state.associated, this.state.verified, code, inflight, this.state.mfa_enabled)
+    } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
+      console.log('calling associate from did mount')
       this.callAssociate()
-    } */
+    }
   }
 
   clickLogin () {
@@ -210,7 +176,7 @@ class Auth extends React.Component {
                     </div></>
                 }
                 {api.error && <ErrorReport report={api.error} />}
-                {this.state.body ? this.state.body : null}
+                {this.state.body!=='' ? this.state.body : null}
               </Modal.Body>
               <Modal.Footer>
                 {showLoginButton &&
