@@ -26,7 +26,7 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { code, state, redirect } = queryParams;
     const { authenticated, inflight, tokens } = api;
-    if (tokens?.user?.mfa_enabled !== this.state.mfa_enabled && !config.environment.match(/LOCALHOST/g)) {
+    if (tokens?.user?.mfa_enabled !== this.state.mfa_enabled && !config.environment.match(/LOCALHOST/g) && tokens?.user?.mfa_enabled !== undefined) {
       this.setState({ mfa_enabled: tokens.user.mfa_enabled });
       console.log('reset to ' + this.state.mfa_enabled)
     }
@@ -47,8 +47,10 @@ class Auth extends React.Component {
       tokens = {};
       tokens.token = 'somefaketoken';
       secretCode = 'somefakesecretcode'
+    } 
+    if (tokens.token === null && !inflight && code) {
+      dispatch(fetchToken(code, state));
     }
-    console.log('token', tokens.token, this.state.associated)
     if (tokens.token !== null && !this.state.associated) {
       await dispatch(associate(tokens.token)).then(value => {
         let resp = value
@@ -98,17 +100,17 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
     const { code, state, redirect } = queryParams;
-    if (tokens?.user?.mfa_enabled !== this.state.mfa_enabled && !config.environment.match(/LOCALHOST/g)) {
+    if (tokens?.user?.mfa_enabled !== this.state.mfa_enabled && !config.environment.match(/LOCALHOST/g) && tokens?.user?.mfa_enabled !== undefined) {
       this.setState({ mfa_enabled: tokens.user.mfa_enabled });
       console.log('(mounted) reset to ' + this.state.mfa_enabled)
     }
-    if (authenticated) {
+    if (authenticated && this.state.mfa_enabled) {
       console.log('redirecting with token')
       redirectWithToken(redirect || 'dashboard', tokens.token);
     } else if (!inflight) {
       if (code) {
         console.log('getting token')
-        dispatch(fetchToken(code, state));
+        // dispatch(fetchToken(code, state));
       }
     }
     /* if (authenticated) {
