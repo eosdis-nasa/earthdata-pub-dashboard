@@ -143,7 +143,7 @@ export const getFormalName = (str) => {
 };
 
 export const stepLookup = (row) => {
-  const stepName = row.step_name;
+  const stepName = row.step_data.name;
   let request = '';
   let stepID = '';
   let stepType = '';

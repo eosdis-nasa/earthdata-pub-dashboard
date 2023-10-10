@@ -4,14 +4,11 @@ import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  getRequest,
-  getContributers,
-  getWorkflow,
+  getRequestDetails,
   withdrawRequest,
   restoreRequest,
   addUserToRequest,
   removeUserFromRequest,
-  listWorkflows,
   setWorkflowStep,
   copyRequest
 } from '../../actions';
@@ -46,7 +43,7 @@ class RequestOverview extends React.Component {
     super(props);
     this.state = { current: {}, names: {}, formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
     this.navigateBack = this.navigateBack.bind(this);
-    this.queryWorkflows = this.queryWorkflows.bind(this);
+    // this.queryWorkflows = this.queryWorkflows.bind(this);
     //  this.reingest = this.reingest.bind(this);
     this.applyWorkflow = this.applyWorkflow.bind(this);
     //  this.remove = this.remove.bind(this);
@@ -73,42 +70,43 @@ class RequestOverview extends React.Component {
     // This causes a repeating query for workflows cluttering up the logs.
     // Commenting out until we add applyWorkflow capability
     // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
-    dispatch(getRequest(requestId))
+    dispatch(getRequestDetails(requestId))
       .then((value) => {
         const record = this.props.requests.detail;
-        dispatch(getWorkflow(value.data.workflow_id))
-          .then(() => {
-            this.setSteps(this.props.workflows.detail.data.steps, record.data.step_name);
-            if (typeof record.data.form_data !== 'undefined' && JSON.stringify(record.data.form_data) !== '{}') {
-              let hasPublicationForm = false;
-              for (const ea in record.data.forms) {
-                const formId = record.data.forms[ea].id;
-                if (this.state.formIdForClone === formId) {
-                  hasPublicationForm = true;
-                  break;
-                }
-              }
-              if (!hasPublicationForm) {
-                this.setState({ formIdForClone: '6c544723-241c-4896-a38c-adbc0a364293' });
-              }
-            }
-          });
-        if (record.data.contributor_ids !== undefined) {
-          dispatch(getContributers({ ids: record.data.contributor_ids })).then(value => {
-            const names = {};
-            for (const ea in value.data) {
-              names[value.data[ea].id] = value.data[ea].name;
-            }
-            this.setState({ names });
-          });
-        }
+        this.handleSelect(record.data.step_data.name, record.data.step_data.name)
+        // dispatch(getWorkflow(value.data.workflow_id))
+        //   .then(() => {
+        //     this.setSteps(this.props.workflows.detail.data.steps, record.data.step_name);
+        //     if (typeof record.data.form_data !== 'undefined' && JSON.stringify(record.data.form_data) !== '{}') {
+        //       let hasPublicationForm = false;
+        //       for (const ea in record.data.forms) {
+        //         const formId = record.data.forms[ea].id;
+        //         if (this.state.formIdForClone === formId) {
+        //           hasPublicationForm = true;
+        //           break;
+        //         }
+        //       }
+        //       if (!hasPublicationForm) {
+        //         this.setState({ formIdForClone: '6c544723-241c-4896-a38c-adbc0a364293' });
+        //       }
+        //     }
+        //   });
+        // if (record.data.contributor_ids !== undefined) {
+        //   dispatch(getContributers({ ids: record.data.contributor_ids })).then(value => {
+        //     const names = {};
+        //     for (const ea in value.data) {
+        //       names[value.data[ea].id] = value.data[ea].name;
+        //     }
+        //     this.setState({ names });
+        //   });
+        // }
       });
     this.setState({ showSearch: false });
     this.setState({ setShowSearch: false });
   }
 
   toProperCase (str) {
-    return str.replace(
+    return str?.replace(
       /\w\S*/g,
       function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -143,9 +141,9 @@ class RequestOverview extends React.Component {
     history.push('/requests');
   }
 
-  queryWorkflows () {
-    this.props.dispatch(listWorkflows());
-  }
+  // queryWorkflows () {
+  //   this.props.dispatch(listWorkflows());
+  // }
 
   applyWorkflow () {
     const { requestId } = this.props.match.params;
@@ -186,14 +184,14 @@ class RequestOverview extends React.Component {
       step_name: this.state.current.value
     };
     await this.props.dispatch(setWorkflowStep(payload));
-    await this.props.dispatch(getRequest(requestId));
+    await this.props.dispatch(getRequestDetails(requestId));
     document.querySelector('.save-section').classList.add('hidden');
   }
 
   async handleRemove (contributor) {
     const { requestId } = this.props.match.params;
     await this.props.dispatch(removeUserFromRequest(requestId, contributor));
-    await this.props.dispatch(getRequest(requestId));
+    await this.props.dispatch(getRequestDetails(requestId));
   }
 
   async delete () {
@@ -253,7 +251,12 @@ class RequestOverview extends React.Component {
           <div className="request-section">
             <Select
               id="workflowSelect"
-              options={this.state.steps}
+              options={record?.data?.workflow_steps.map((step) => {
+                return {
+                  value: step, 
+                  label: this.toProperCase(step.replace(/_/g, ' '))
+                }
+              })}
               onChange={(e) => this.handleSelect(e, record.data.step_name)}
               isSearchable={true}
               value={this.state.current}
@@ -304,12 +307,11 @@ class RequestOverview extends React.Component {
     }
     const requestForms = request.forms;
     let showTable = false;
-    if (requestForms !== null &&
-      typeof requestForms !== 'undefined') {
-      if (record.data.step_name === 'close') {
+    if (!requestForms?.length) {
+      if (record?.data?.step_name === 'close') {
         canWithdraw = false;
       }
-      if (requestForms.length > 0) {
+      if (requestForms?.length > 0) {
         showTable = true;
       }
     }
@@ -479,10 +481,7 @@ class RequestOverview extends React.Component {
           </div>
           { record.inflight ? <Loading /> : request ? <div className='indented__details'><Metadata data={request} accessors={metaAccessors} /></div> : null }
         </section>
-        {
-          Object.keys(this.state.names).length === 0
-            ? <Loading />
-            : <section className='page__section'>
+        <section className='page__section'>
           <br></br>
           <div className='page__section__header'>
             <h1 className='heading--small' aria-labelledby='contributers'>
@@ -491,50 +490,44 @@ class RequestOverview extends React.Component {
           </div>
           <div className='page__content--shortened flex__column'>
             {
-              record.data && record.data.contributor_ids
-                ? record.data.contributor_ids.map((contributor, key) => {
-                  return (
-                  <div key={key} className='flex__row sm-border'>
-                    <div className='flex__item--w-25'>
-                      {this.state.names[contributor]}
-                    </div>
-                    <div className='flex__item--w-15'>
-                      {canRemoveUser &&
-                        <button
-                          className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
-                          onClick={(e) => this.handleRemove(contributor)}
-                          disabled={record.inflight}>
-                          Remove
-                        </button>
-                      }
-                    </div>
+              record?.data?.contributors?.map((contributor, key) => {
+                return (
+                <div key={key} className='flex__row sm-border'>
+                  <div className='flex__item--w-25'>
+                    {contributor}
                   </div>
-                  );
-                })
-                : null
-            }
-            { record.data && record.data.contributor_ids
-              ? canAddUser &&
-              <div className='flex__row sm-border'>
-                <div className='flex__item-w-25'>
-                  <button
-                    className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
-                    onClick={this.openUserForm}
-                    disabled={record.inflight}>
-                    Add Contributor&nbsp;&nbsp;
-                  </button>
+                  <div className='flex__item--w-15'>
+                    {canRemoveUser &&
+                      <button
+                        className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                        onClick={(e) => this.handleRemove(contributor)}
+                        disabled={record.inflight}>
+                        Remove
+                      </button>
+                    }
+                  </div>
                 </div>
-              </div>
-              : null
+                );
+              })
             }
+            <div className='flex__row sm-border'>
+              <div className='flex__item-w-25'>
+                <button
+                  className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+                  onClick={this.openUserForm}
+                  disabled={record.inflight}>
+                  Add Contributor&nbsp;&nbsp;
+                </button>
+              </div>
+            </div>
           </div>
-          </section>}
-          {
-            record.data && record.data.contributor_ids && Object.keys(this.state.names).length > 0
-              ? <><section className='page__section'>
+          </section>
+          { record.inflight ? <Loading /> :
+            <>
+              <section className='page__section'>
               {workflowSave}
-            </section><Meditor></Meditor>{(_config.fileUploadDefault === 'true') ? <UploadOverview /> : null}</>
-              : null
+              </section><Meditor></Meditor>{(_config.fileUploadDefault === 'true') ? <UploadOverview /> : null}
+            </>
           }
         <br />
         { showTable
