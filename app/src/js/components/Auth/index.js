@@ -103,6 +103,15 @@ class Auth extends React.Component {
       console.log('(mounted) reset to ' + this.state.mfa_enabled)
     }
     if (authenticated) {
+      console.log('redirecting with token')
+      redirectWithToken(redirect || 'dashboard', tokens.token);
+    } else if (!inflight) {
+      if (code) {
+        console.log('getting token')
+        dispatch(fetchToken(code, state));
+      }
+    }
+    /* if (authenticated) {
       console.log('component did mount authenticated')
       redirectWithToken(redirect || 'dashboard', tokens.token);
     } else if (!inflight && this.state.mfa_enabled) {
@@ -113,7 +122,7 @@ class Auth extends React.Component {
     } else if (authenticated && !this.state.associated) {
       console.log('calling associate from did mount', authenticated, this.state.associated, this.state.verified, code, inflight, this.state.mfa_enabled)
       this.callAssociate()
-    }
+    } */
   }
 
   clickLogin () {
