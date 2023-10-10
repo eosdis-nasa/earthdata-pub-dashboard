@@ -94,18 +94,14 @@ export const associate = (token) => ({
   }
 });
 
-export const verify = (topsToken, token) => {
-  return (dispatch) => {
-    dispatch({
-      [CALL_API]: {
-        type: types.MFA,
-        method: 'POST',
-        path: 'data/mfa/verify',
-        body: { tops_token: topsToken, auth_token: `${token}` }
-      }
-    });
-  };
-};
+export const verify = (topsToken, token) => ({
+  [CALL_API]: {
+    type: types.MFA,
+    method: 'POST',
+    path: 'data/mfa/verify',
+    body: { tops_token: topsToken, auth_token: `${token}` }
+  }
+});
 
 export const setTokenState = (token) => ({ type: types.SET_TOKEN, token });
 

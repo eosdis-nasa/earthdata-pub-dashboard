@@ -11,6 +11,7 @@ import ErrorReport from '../Errors/report';
 import Header from '../Header/header';
 import Modal from 'react-bootstrap/Modal';
 import QRCode from 'react-qr-code';
+import config from '../../config';
 
 class Auth extends React.Component {
   constructor(props) {
@@ -25,55 +26,66 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { code, state, redirect } = queryParams;
     const { authenticated, inflight, tokens } = api;
-    /* console.log('component did update', authenticated, this.state.mfa_enabled, tokens.user.mfa_enabled, this.state.associated, this.state.verified)
-    if (authenticated){
-      console.log('component did update', authenticated, tokens.token, tokens.user.mfa_enabled)
-    } */
-    // false, false, true, false .. right after login with a state of dashboard and with a code
-
-    // false, false, true, true .. right after submit after successful verification with state of dashboard and with a code
-
-    // true, false, true, false .. redirects to the page and shouldn't
-
-    // false, false, undefined, false, false means haven't clicked the button yet, so shouldn't run call associate.
-    // true, false, false, false, false,  should have form
-
-    // if (!tokens.user.mfa_enabled && !this.state.associated) {
-    // console.log(tokens.token, tokens.user.mfa_enabled, this.state.mfa_enabled, this.state.associated, this.state.verified, code, inflight, state, redirect, authenticated)
-    
-    // if (tokens.token !== null && tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
-    if (tokens.token !== null && !this.state.mfa_enabled && !this.state.associated) {
-      console.log('about to call associate from did update')
-      this.callAssociate();
-    } else if (authenticated && this.state.mfa_enabled) {
-      console.log('redirect with token from did update')
-      redirectWithToken(redirect || 'dashboard', tokens.token);
-    } else if (!inflight) {
-      if (code && this.state.mfa_enabled) {
-        console.log('fetch token from did update')
-        dispatch(fetchToken(code, state));
-      }
+    if (tokens?.user?.mfa_enabled !== this.state.mfa_enabled && !config.environment.match(/LOCALHOST/g)) {
+      this.setState({ mfa_enabled: tokens.user.mfa_enabled });
+      console.log('reset to ' + this.state.mfa_enabled)
+    }
+    if (authenticated && this.state.mfa_enabled) {
+      console.log('component did update authenticated, redirecting')
+      redirectWithToken(state, tokens.token);
+    } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
+      console.log('calling associate from did update')
+      this.callAssociate()
     }
   }
 
+  async callAssociate() {
+    const { dispatch, api } = this.props;
+    let { tokens } = api;
+    let secretCode = '';
+    if (config.environment.match(/LOCALHOST/g)) {
+      tokens = {};
+      tokens.token = 'somefaketoken';
+      secretCode = 'somefakesecretcode'
+    }
+    if (tokens.token !== null && !this.state.associated) {
+      await dispatch(associate(tokens.token)).then(value => {
+        let resp = value
+        let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
+        if (!config.environment.match(/LOCALHOST/g)) {
+          secretCode = resp.data.SecretCode
+        }
+        if (error && !config.environment.match(/LOCALHOST/g)) {
+          console.log(`An error has occurred: ${error}.`);
+        } else {
+          this.setState({ body: this.renderQrCode(secretCode) });
+          this.setState({ associated: true });
+        }
+      })
+    }
+  };
+
   async handleSubmit() {
-    const { api, queryParams } = this.props;
-    const { authenticated, inflight, tokens } = api;
-    const { redirect } = queryParams;
-    if (this.state.associated && !this.state.verified && document.getElementById('totp')?.value !== '') {
+    const { api, dispatch, queryParams } = this.props;
+    const { authenticated, inflight } = api;
+    const { redirect, code } = queryParams;
+    let { tokens } = api;
+    if (config.environment.match(/LOCALHOST/g)) {
+      tokens = {};
+      tokens.token = 'somefaketoken';
+    }
+    if (this.state.associated && tokens.token!== null && !this.state.verified && document.getElementById('totp')?.value !== '') {
       dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
         const resp = value;
-        console.log('resp from handle submit', value)
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
-        console.log('error on handleSubmit', error)
-        if (error) {
+        if (error && !config.environment.match(/LOCALHOST/g)) {
           console.log(`An error has occurred: ${error}.`);
         } else {
           this.setState({ verified: true });
-          this.setState({ body: '' });
           this.setState({ mfa_enabled: true });
-          console.log(this.state.associated, this.state.verified, inflight, redirect, this.state.mfa_enabled, tokens.user.mfa_enabled, this.props.api.tokens)
-          if ((this.state.associated && this.state.verified && !inflight) || authenticated) {
+          this.setState({ body: '' });
+          console.log('verified', this.state.associated, this.state.verified, this.state.mfa_enabled, inflight, authenticated, code)
+          if (this.state.associated && this.state.verified && this.state.mfa_enabled && !inflight && code) {
             redirectWithToken(redirect || 'dashboard', tokens.token);
           } 
         }
@@ -85,44 +97,23 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
     const { code, state, redirect } = queryParams;
-    // if (!tokens.user.mfa_enabled && !this.state.associated) {
-    // if (tokens.token !==null && tokens.user.mfa_enabled !== undefined && !this.state.mfa_enabled && !this.state.associated) {
-    if (tokens.token !== null && !this.state.mfa_enabled && !this.state.associated) {
-      console.log('about to call associate from did mount')
-      this.callAssociate();
-    } else if (authenticated && this.state.mfa_enabled) {
-      console.log('redirect with token from did mount')
+    if (tokens?.user?.mfa_enabled !== this.state.mfa_enabled && !config.environment.match(/LOCALHOST/g)) {
+      this.setState({ mfa_enabled: tokens.user.mfa_enabled });
+      console.log('(mounted) reset to ' + this.state.mfa_enabled)
+    }
+    if (authenticated) {
+      console.log('component did mount authenticated')
       redirectWithToken(redirect || 'dashboard', tokens.token);
     } else if (!inflight && this.state.mfa_enabled) {
       if (code) {
-        console.log('fetch token from did mount')
+        console.log('component did mount fetching token')
         dispatch(fetchToken(code, state));
       }
+    } else if (authenticated && !this.state.associated) {
+      console.log('calling associate from did mount', authenticated, this.state.associated, this.state.verified, code, inflight, this.state.mfa_enabled)
+      this.callAssociate()
     }
   }
-
-  async callAssociate(){
-    const { dispatch, api } = this.props;
-    const { tokens } = api;
-    if (tokens.token !== null) {
-      await dispatch(associate(tokens.token)).then(value => {
-        let resp = value
-        console.log('resp', value)
-        let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
-        console.log('error', error)
-        if (error) {
-          console.log(`An error has occurred: ${error}.`);
-        } else {
-          console.log(this.state.associated)
-          alert('before')
-          this.setState({ associated: true });
-          console.log(this.state.associated)
-          this.setState({ body: this.renderQrCode(resp.data.SecretCode) });
-          alert('after')
-        }
-      })
-    }
-  };
 
   clickLogin () {
     const { dispatch, queryParams } = this.props;
@@ -180,22 +171,11 @@ class Auth extends React.Component {
   render () {
     const { dispatch, api, apiVersion, queryParams } = this.props;
     const { code, token } = queryParams;
-    const { tokens } = {};
-    // const mfaEnabled = api.tokens.user.mfa_enabled;
-    let mfaEnabled = this.state.mfa_enabled;
-    let showMFA = false;
-    const showLoginButton = !api.authenticated && !api.inflight && !code && !token;
-    if (!this.state.verified && !mfaEnabled && tokens !== undefined && tokens.token !== null && !showLoginButton){
-      showMFA = true;
-      this.callAssociate()
-    }
-    if(!showMFA && !showLoginButton){
-      this.state.mfa_enabled = true;
-    }
-    const showAuthMessage = api.inflight || token || (!showMFA && !showLoginButton);
+    const showLoginButton = !api.authenticated && !api.inflight && !code && !token && !this.state.associated;
+    const showAuthMessage = (api.inflight || code || token) && this.state.mfa_enabled;
     return (
       <div className='app'>
-        <Header dispatch={dispatch} api={api} apiVersion={apiVersion} minimal={true}/>
+        <Header dispatch={dispatch} api={api} apiVersion={apiVersion} minimal={true} />
         <main className='main' role='main'>
           <div className="modal-content">
             <Modal
@@ -208,19 +188,19 @@ class Auth extends React.Component {
               <Modal.Header className="oauth-modal__header"></Modal.Header>
               <Modal.Title id="modal__oauth-modal" className="oauth-modal__title">Welcome To Earthdata Pub Dashboard</Modal.Title>
               <Modal.Body>
-                { showAuthMessage &&
+                {showAuthMessage &&
                   <><LoadingOverlay />
-                  <div>
-                    <h2 className='heading--medium'>
-                      Authenticating...
-                    </h2>
-                  </div></>
+                    <div>
+                      <h2 className='heading--medium'>
+                        Authenticating...
+                      </h2>
+                    </div></>
                 }
-                { api.error && <ErrorReport report={api.error} /> }
-                {showMFA ? this.state.body : null}
+                {api.error && <ErrorReport report={api.error} />}
+                {this.state.body ? this.state.body : null}
               </Modal.Body>
               <Modal.Footer>
-                { showLoginButton &&
+                {showLoginButton &&
                   <button className="button button--oauth" onClick={this.clickLogin}>Login to Earthdata Pub</button>
                 }
               </Modal.Footer>
