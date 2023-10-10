@@ -41,7 +41,7 @@ class Auth extends React.Component {
 
   async callAssociate() {
     const { dispatch, api } = this.props;
-    let { tokens } = api;
+    let { tokens, inflight } = api;
     let secretCode = '';
     if (config.environment.match(/LOCALHOST/g)) {
       tokens = {};
