@@ -40,7 +40,7 @@ class Auth extends React.Component {
   }
 
   async callAssociate() {
-    const { dispatch, api } = this.props;
+    const { dispatch, api, queryParams } = this.props;
     let { tokens, inflight } = api;
     const { code, state } = queryParams;
     let secretCode = '';
