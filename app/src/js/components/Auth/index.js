@@ -48,6 +48,7 @@ class Auth extends React.Component {
       tokens.token = 'somefaketoken';
       secretCode = 'somefakesecretcode'
     }
+    console.log('token', tokens.token, this.state.associated)
     if (tokens.token !== null && !this.state.associated) {
       await dispatch(associate(tokens.token)).then(value => {
         let resp = value
