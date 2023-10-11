@@ -50,7 +50,7 @@ class Auth extends React.Component {
   async handleSubmit() {
     const { api, dispatch, queryParams } = this.props;
     const { inflight, tokens } = api;
-    const { code, redirect } = queryParams;
+    const { code } = queryParams;
     if (this.state.associated && tokens.token!== null && !this.state.verified && document.getElementById('totp')?.value !== '') {
       dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
         const resp = value;
@@ -83,8 +83,8 @@ class Auth extends React.Component {
       const { token } = data;
       window.localStorage.setItem('auth-token', token);
     }
-    console.log('state', window.localStorage.getItem('auth-user'), window.localStorage.getItem('auth-user').mfa_enabled, this.state.mfa_enabled, authenticated)
-    if (authenticated || this.state.mfa_enabled) {
+    console.log('state', window.localStorage.getItem('auth-user'), localStorage.getItem('auth-user').mfa_enabled, this.state.mfa_enabled, authenticated)
+    if (this.state.mfa_enabled) {
       window.location.href = config.basepath;
     } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
       this.callAssociate()
