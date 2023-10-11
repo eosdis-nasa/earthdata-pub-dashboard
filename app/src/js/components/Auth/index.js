@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import withQueryParams from 'react-router-query-params';
 import { withRouter } from 'react-router-dom';
-import { login, fetchToken, fetchToken2, redirectWithToken, associate, verify, setAuthenticatedState } from '../../actions';
+import { login, fetchToken2, redirectWithToken, associate, verify } from '../../actions';
 import PropTypes from 'prop-types';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import ErrorReport from '../Errors/report';
@@ -62,10 +62,10 @@ class Auth extends React.Component {
           new_user.mfa_enabled = true;
           window.localStorage.removeItem('auth-user');
           window.localStorage.setItem('auth-user', JSON.stringify(new_user))
-          // console.log('authenticated', this.store.getState().api.authenticated)
-          this.setState({ verified: true, mfa_enabled: true, body: '' });
+          this.setState({ verified: true, mfa_enabled: true, body: '', authenticated: true});
           if (!inflight && code) {
-            redirectWithToken(redirect || 'dashboard', tokens.token);
+            window.location.href = '/';
+            // redirectWithToken(redirect || 'dashboard', tokens.token, true);
           } 
         }
       })
@@ -86,8 +86,9 @@ class Auth extends React.Component {
       window.localStorage.setItem('auth-token', token);
     }
     if (authenticated || this.state.mfa_enabled) {
-      console.log('redirecting with token')
-      redirectWithToken(redirect || 'dashboard', tokens.token);
+      console.log('auth?2', this.store.getState().api.authenticated)
+      window.location.href = '/';
+      // redirectWithToken(redirect || 'dashboard', tokens.token, true);
     } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
       console.log('calling associate from did mount')
       this.callAssociate()

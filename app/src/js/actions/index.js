@@ -28,11 +28,11 @@ const redirects = {
 };
 
 export const redirectWithToken = (redirect, token, mfaEnabled) => {
-  console.log(redirects[redirect])
   if (redirects[redirect]) {
     const redirectUrl = new URL(redirects[redirect]);
     redirectUrl.searchParams.set('token', token);
     redirectUrl.searchParams.set('mfa_enabled', mfaEnabled);
+    console.log('redirect with token', mfaEnabled, redirectUrl.href);
     window.location.href = redirectUrl.href;
   } else {
     history.push('/');
