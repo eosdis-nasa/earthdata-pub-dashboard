@@ -49,8 +49,8 @@ class Auth extends React.Component {
 
   async handleSubmit() {
     const { api, dispatch, queryParams } = this.props;
-    const { authenticated, inflight, tokens } = api;
-    const { code, state, redirect } = queryParams;
+    const { inflight, tokens } = api;
+    const { code, redirect } = queryParams;
     if (this.state.associated && tokens.token!== null && !this.state.verified && document.getElementById('totp')?.value !== '') {
       dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
         const resp = value;
@@ -75,7 +75,7 @@ class Auth extends React.Component {
     console.log('compoennt did mount')
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
-    const { code, state, redirect, mfa_enabled } = queryParams;
+    const { code, state, redirect } = queryParams;
     if (window.localStorage.getItem('auth-user') !== null && window.localStorage.getItem('auth-user').mfa_enabled !== this.state.mfa_enabled) {
       this.setState({ mfa_enabled: window.localStorage.getItem('auth-user').mfa_enabled });
     }
@@ -86,7 +86,7 @@ class Auth extends React.Component {
     }
     if (authenticated || this.state.mfa_enabled) {
       console.log('auth?2', this.store.getState().api.authenticated)
-      redirectWithToken(redirect || 'dashboard', tokens.token, true);
+      redirectWithToken(redirect || 'dashboard', tokens.token);
     } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
       console.log('calling associate from did mount')
       this.callAssociate()
