@@ -64,7 +64,6 @@ class Auth extends React.Component {
           window.localStorage.setItem('auth-user', JSON.stringify(new_user))
           this.setState({ verified: true, mfa_enabled: true, body: '', authenticated: true});
           if (!inflight && code) {
-            console.log('config', config)
             window.location.href = config.basepath;
           } 
         }
@@ -73,7 +72,6 @@ class Auth extends React.Component {
   }
 
   async componentDidMount () {
-    console.log('compoennt did mount')
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
     const { code, state, redirect } = queryParams;
@@ -85,14 +83,10 @@ class Auth extends React.Component {
       const { token } = data;
       window.localStorage.setItem('auth-token', token);
     }
-    console.log(this.state.mfa_enabled)
+    console.log('state', window.localStorage.getItem('auth-user'), window.localStorage.getItem('auth-user').mfa_enabled, this.state.mfa_enabled, authenticated)
     if (authenticated || this.state.mfa_enabled) {
-      console.log('auth?2', this.store.getState().api.authenticated)
-      console.log('config', config)
       window.location.href = config.basepath;
-      // redirectWithToken(redirect || 'dashboard', tokens.token);
     } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
-      console.log('calling associate from did mount')
       this.callAssociate()
     }
   }
