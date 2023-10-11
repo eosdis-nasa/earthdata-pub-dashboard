@@ -75,16 +75,15 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { authenticated, inflight, tokens } = api;
     const { code, state, redirect } = queryParams;
-    if (window.localStorage.getItem('auth-user') !== null && window.localStorage.getItem('auth-user').mfa_enabled !== this.state.mfa_enabled) {
-      this.setState({ mfa_enabled: window.localStorage.getItem('auth-user').mfa_enabled });
+    if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled !== this.state.mfa_enabled) {
+      this.setState({ mfa_enabled: JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled });
     }
     if (tokens.token === null && !inflight && code) {
       const { data } = await dispatch(fetchToken2(code, state))
       const { token } = data;
       window.localStorage.setItem('auth-token', token);
     }
-    console.log('state', window.localStorage.getItem('auth-user'), localStorage.getItem('auth-user').mfa_enabled, this.state.mfa_enabled, JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled)
-    if (authenticated || this.state.mfa_enabled) {
+    if (this.state.mfa_enabled) {
       window.location.href = config.basepath;
     } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
       this.callAssociate()
