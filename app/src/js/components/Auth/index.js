@@ -83,7 +83,7 @@ class Auth extends React.Component {
       const { token } = data;
       window.localStorage.setItem('auth-token', token);
     }
-    console.log('state', window.localStorage.getItem('auth-user'), localStorage.getItem('auth-user').mfa_enabled, this.state.mfa_enabled, authenticated)
+    console.log('state', window.localStorage.getItem('auth-user'), localStorage.getItem('auth-user').mfa_enabled, this.state.mfa_enabled, JSON.parse(window.location.localStorage.getItem('auth-user')).mfa_enabled)
     if (this.state.mfa_enabled) {
       window.location.href = config.basepath;
     } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
