@@ -120,12 +120,12 @@ class Auth extends React.Component {
           <div>
             Please scan the QR code with your mobile device or use the setup code provided in your TOTP app, and enter the Time-based One-Time Password(TOTP) below.
           </div>
-          <div style={{ height: 'auto', margin: '0 auto', maxWidth: 64, width: '100%' }}>
+          <div style={{ height: 'auto', margin: '0 auto', maxWidth: 150, width: '100%' }}>
             <QRCode
-              size={300}
+              size={500}
               style={{ height: 'auto', maxWidth: '100%', width: '100%', marginTop: '2rem' }}
               value={otpPath}
-              viewBox={'0 0 300 300'}
+              viewBox={'0 0 500 500'}
             />
           </div>
           <div id="secretcode" style={{ marginTop: '2rem' }}>Setup Code: <strong style={{wordBreak:'break-all'}}>{setupCode}</strong></div>
