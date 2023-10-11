@@ -73,20 +73,16 @@ class Auth extends React.Component {
 
   async componentDidMount () {
     const { dispatch, api, queryParams } = this.props;
-    const { authenticated, inflight, tokens } = api;
-    const { code, state, redirect } = queryParams;
-    if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled !== this.state.mfa_enabled) {
-      this.setState({ mfa_enabled: JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled });
-    }
+    const { inflight, tokens } = api;
+    const { code, state } = queryParams;
     if (tokens.token === null && !inflight && code) {
       const { data } = await dispatch(fetchToken2(code, state))
       const { token } = data;
       window.localStorage.setItem('auth-token', token);
     }
-    console.log(this.state.mfa_enabled)
-    if (this.state.mfa_enabled) {
+    if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
       window.location.href = config.basepath;
-    } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
+    } else if (code && !this.state.associated && !this.state.verified && !JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
       this.callAssociate()
     }
   }
@@ -148,7 +144,7 @@ class Auth extends React.Component {
     const { dispatch, api, apiVersion, queryParams } = this.props;
     const { code, token } = queryParams;
     const showLoginButton = !api.authenticated && !api.inflight && !code && !token && !this.state.associated;
-    const showAuthMessage = (api.inflight || code || token) && this.state.mfa_enabled;
+    const showAuthMessage = (api.inflight || code || token) && (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled);
     return (
       <div className='app'>
         <Header dispatch={dispatch} api={api} apiVersion={apiVersion} minimal={true} />
