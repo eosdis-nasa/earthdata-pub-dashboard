@@ -64,8 +64,7 @@ class Auth extends React.Component {
           window.localStorage.setItem('auth-user', JSON.stringify(new_user))
           this.setState({ verified: true, mfa_enabled: true, body: '', authenticated: true});
           if (!inflight && code) {
-            window.location.href = '/';
-            // redirectWithToken(redirect || 'dashboard', tokens.token, true);
+            redirectWithToken(redirect || 'dashboard', tokens.token);
           } 
         }
       })
@@ -87,8 +86,7 @@ class Auth extends React.Component {
     }
     if (authenticated || this.state.mfa_enabled) {
       console.log('auth?2', this.store.getState().api.authenticated)
-      window.location.href = '/';
-      // redirectWithToken(redirect || 'dashboard', tokens.token, true);
+      redirectWithToken(redirect || 'dashboard', tokens.token, true);
     } else if (code && !this.state.associated && !this.state.verified && !this.state.mfa_enabled) {
       console.log('calling associate from did mount')
       this.callAssociate()
