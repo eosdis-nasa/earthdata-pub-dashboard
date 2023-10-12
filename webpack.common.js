@@ -182,7 +182,8 @@ const CommonConfig = {
         SEND_USER_TO_MEDITOR: config.sendUserToMeditor,
         BASEPATH: config.basepath,
         REQUEST_HIDE_BUTTON_VERBAGE: config.requestHideButtonVerbage,
-        HELP_PAGE_DEFAULT: config.helpPageDefault
+        HELP_PAGE_DEFAULT: config.helpPageDefault,
+        FILE_UPLOAD_DEFAULT: config.fileUploadDefault
       }
     )
   ]

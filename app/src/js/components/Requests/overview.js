@@ -78,7 +78,7 @@ class RequestsOverview extends React.Component {
     return {};
   }
 
-  filter (list, match) {
+  filter(list, match) {
     const newList = {};
     const tmp = [];
     let requestSearchValue = '';
@@ -91,8 +91,11 @@ class RequestsOverview extends React.Component {
       newList[ea] = record;
       for (const r in record) {
         if (!record[r].hidden && record[r].step_name !== 'close' && typeof record[r] === 'object') {
-          const prod = { value: record[r].form_data.data_producer_info_name, label: record[r].form_data.data_producer_info_name };
-          let dataProduct = record[r].form_data.data_product_name_value;
+          if (match === undefined && this.state.filter !== undefined && this.state.filter.length > 0) {
+            match = this.state.filter;
+          }
+          const prod = { value: record[r].form_data?.data_producer_info_name, label: record[r].form_data?.data_producer_info_name };
+          let dataProduct = record[r].form_data?.data_product_name_value;
           if (dataProduct === undefined) {
             dataProduct = `Request Initialized by ${record[r].initiator.name}`;
           }

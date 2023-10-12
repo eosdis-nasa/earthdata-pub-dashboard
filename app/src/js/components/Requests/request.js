@@ -5,7 +5,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   getRequest,
-  getDaac,
   getContributers,
   getWorkflow,
   withdrawRequest,
@@ -42,33 +41,10 @@ import SearchModal from '../SearchModal';
 import Select from 'react-select';
 import UploadOverview from '../DataUpload/overview';
 
-export const getRoles = () => {
-  const user = JSON.parse(window.localStorage.getItem('auth-user'));
-  if (user != null) {
-    const roles = user.user_roles;
-    const privileges = user.user_privileges;
-    const allRoles = {
-      isManager: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/manager/g)),
-      isAdmin: privileges.find(o => o.match(/ADMIN/g)),
-      isProducer: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/data_producer/g)),
-      isStaff: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/staff/g))
-    };
-    return allRoles;
-  }
-};
-
 class RequestOverview extends React.Component {
-  constructor () {
-    super();
-    this.state = { daacName: '', current: {}, names: {}, formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
-    this.reload = this.reload.bind(this);
-    this.fastReload = this.fastReload.bind(this);
+  constructor (props) {
+    super(props);
+    this.state = { current: {}, names: {}, formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
     this.navigateBack = this.navigateBack.bind(this);
     this.queryWorkflows = this.queryWorkflows.bind(this);
     //  this.reingest = this.reingest.bind(this);
@@ -97,20 +73,28 @@ class RequestOverview extends React.Component {
     // This causes a repeating query for workflows cluttering up the logs.
     // Commenting out until we add applyWorkflow capability
     // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
-    dispatch(getRequest(requestId));
-    this.setState({ showSearch: false });
-    this.setState({ setShowSearch: false });
-    setTimeout(() => {
-      const record = this.props.requests.detail;
-      if (typeof record.data !== 'undefined') {
-        this.props.dispatch(getDaac(record.data.daac_id)).then(value => {
-          this.setState({ daacName: value.data.long_name });
-        });
-        this.props.dispatch(getWorkflow(record.data.workflow_id)).then(value => {
-          this.setSteps(value.data.steps, record.data.step_name);
-        });
+    dispatch(getRequest(requestId))
+      .then((value) => {
+        const record = this.props.requests.detail;
+        dispatch(getWorkflow(value.data.workflow_id))
+          .then(() => {
+            this.setSteps(this.props.workflows.detail.data.steps, record.data.step_name);
+            if (typeof record.data.form_data !== 'undefined' && JSON.stringify(record.data.form_data) !== '{}') {
+              let hasPublicationForm = false;
+              for (const ea in record.data.forms) {
+                const formId = record.data.forms[ea].id;
+                if (this.state.formIdForClone === formId) {
+                  hasPublicationForm = true;
+                  break;
+                }
+              }
+              if (!hasPublicationForm) {
+                this.setState({ formIdForClone: '6c544723-241c-4896-a38c-adbc0a364293' });
+              }
+            }
+          });
         if (record.data.contributor_ids !== undefined) {
-          this.props.dispatch(getContributers({ ids: record.data.contributor_ids })).then(value => {
+          dispatch(getContributers({ ids: record.data.contributor_ids })).then(value => {
             const names = {};
             for (const ea in value.data) {
               names[value.data[ea].id] = value.data[ea].name;
@@ -118,25 +102,9 @@ class RequestOverview extends React.Component {
             this.setState({ names });
           });
         }
-        if (typeof record.data.form_data !== 'undefined' && JSON.stringify(record.data.form_data) !== '{}') {
-          let hasPublicationForm = false;
-          for (const ea in record.data.forms) {
-            const formId = record.data.forms[ea].id;
-            if (this.state.formIdForClone === formId) {
-              hasPublicationForm = true;
-              break;
-            }
-          }
-          if (!hasPublicationForm) {
-            this.setState({ formIdForClone: '6c544723-241c-4896-a38c-adbc0a364293' });
-          }
-        }
-      }
-    }, 1500);
-  }
-
-  reload () {
-    this.componentDidMount();
+      });
+    this.setState({ showSearch: false });
+    this.setState({ setShowSearch: false });
   }
 
   toProperCase (str) {
@@ -168,19 +136,6 @@ class RequestOverview extends React.Component {
     } else {
       document.querySelector('.save-section').classList.add('hidden');
     }
-  }
-
-  reload (immediate, timeout) {
-    // timeout = timeout || updateInterval;
-    // const requestId = this.props.match.params.requestId;
-    // const { dispatch } = this.props;
-    // if (this.cancelInterval) { this.cancelInterval(); }
-    // this.cancelInterval = interval(() => dispatch(getRequest(requestId)), timeout, immediate);
-  }
-
-  fastReload () {
-    // decrease timeout to better see updates
-    // this.reload(true, updateInterval / 2);
   }
 
   navigateBack () {
@@ -334,16 +289,17 @@ class RequestOverview extends React.Component {
     const request = record.data || false;
     let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser, canInitialize } = requestPrivileges(this.props.privileges);
     const { canEdit } = formPrivileges(this.props.privileges);
-    const allRoles = getRoles();
+    const { roles } = this.props;
+    const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
     let workflowSave;
     if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
     }
     let canViewUsers = false;
-    if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
+    if (role.includes('admin')) {
       canViewUsers = true;
     }
-    if (typeof allRoles !== 'undefined' && (typeof allRoles.isManager !== 'undefined' || typeof allRoles.isAdmin !== 'undefined' || typeof allRoles.isStaff !== 'undefined' || canReassign)) {
+    if (role.includes('manager') || role.includes('admin') || role.includes('staff') || canReassign) {
       canReassign = true;
     }
     const requestForms = request.forms;
@@ -360,7 +316,6 @@ class RequestOverview extends React.Component {
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
     let dropdownConfig = [];
-
     if (canWithdraw && !isHidden) {
       dropdownConfig = [
         {
@@ -440,7 +395,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Daac',
-        accessor: row => this.state.daacName && canEdit ? <a href={`${_config.formsUrl}/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{this.state.daacName}</a> : this.state.daacName ? this.state.daacName : row.daac_id,
+        accessor: row => row.daac_name && canEdit ? <a href={`${_config.formsUrl}/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{row.daac_name}</a> : row.daac_name ? row.daac_name : row.daac_id,
         classList: 'hidden'
       },
       {
@@ -578,9 +533,10 @@ class RequestOverview extends React.Component {
             record.data && record.data.contributor_ids && Object.keys(this.state.names).length > 0
               ? <><section className='page__section'>
               {workflowSave}
-            </section><Meditor></Meditor><UploadOverview /></>
+            </section><Meditor></Meditor>{(_config.fileUploadDefault === 'true') ? <UploadOverview /> : null}</>
               : null
           }
+        <br />
         { showTable
           ? <section className='page__section'>
             <div className='heading__wrapper--border'>
@@ -604,10 +560,12 @@ RequestOverview.propTypes = {
   requests: PropTypes.object,
   logs: PropTypes.object,
   history: PropTypes.object,
+  workflows: PropTypes.object,
   skipReloadOnMount: PropTypes.bool,
   workflowOptions: PropTypes.array,
   privileges: PropTypes.object,
   daacs: PropTypes.object,
+  steps: PropTypes.object,
   roles: PropTypes.array
 };
 
@@ -619,6 +577,7 @@ export { RequestOverview };
 
 export default withRouter(connect(state => ({
   requests: state.requests,
+  workflows: state.workflows,
   workflowOptions: workflowOptionNames(state),
   logs: state.logs,
   privileges: state.api.tokens.privileges,

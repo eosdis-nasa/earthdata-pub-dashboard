@@ -154,19 +154,6 @@ export const getRequest = (requestId) => ({
   }
 });
 
-export const getDaac = (daacId) => {
-  return (dispatch) => {
-    return dispatch({
-      [CALL_API]: {
-        type: types.DAAC,
-        method: 'GET',
-        id: daacId,
-        path: `data/daac/${daacId}`
-      }
-    });
-  };
-};
-
 export const getRequestByStepType = (stepType) => ({
   [CALL_API]: {
     type: types.REQUESTS,
@@ -187,10 +174,19 @@ export const getInProgressRequests = () => ({
 
 export const listFileUploadsBySubmission = (submissionId) => ({
   [CALL_API]: {
-    type: types.REQUEST,
+    type: types.UPLOAD,
     method: 'GET',
     id: submissionId,
     path: `data/upload/list/${submissionId}`
+  }
+});
+
+export const listFileDownloadsByKey = (key) => ({
+  [CALL_API]: {
+    type: types.UPLOAD,
+    method: 'GET',
+    id: key,
+    path: `data/upload/downloadUrl/${key}`
   }
 });
 
@@ -223,7 +219,7 @@ export const listInactiveRequests = (options) => ({
 
 export const setWorkflowStep = (payload) => ({
   [CALL_API]: {
-    type: types.REQUESTS,
+    type: types.STEPS,
     method: 'POST',
     path: 'data/submission/operation/changeStep',
     body: payload
@@ -401,16 +397,16 @@ export const deleteRequest = (requestId) => ({
   }
 });
 
-export const searchRequests = (prefix) => ({ type: types.SEARCH_REQUESTS, prefix: prefix });
+export const searchRequests = (prefix) => ({ type: types.SEARCH_REQUESTS, prefix });
 export const clearRequestsSearch = () => ({ type: types.CLEAR_REQUESTS_SEARCH });
-export const filterRequests = (param) => ({ type: types.FILTER_REQUESTS, param: param });
-export const clearRequestsFilter = (paramKey) => ({ type: types.CLEAR_REQUESTS_FILTER, paramKey: paramKey });
+export const filterRequests = (param) => ({ type: types.FILTER_REQUESTS, param });
+export const clearRequestsFilter = (paramKey) => ({ type: types.CLEAR_REQUESTS_FILTER, paramKey });
 
-export const filterStages = (param) => ({ type: types.FILTER_STAGES, param: param });
-export const clearStagesFilter = (paramKey) => ({ type: types.CLEAR_STAGES_FILTER, paramKey: paramKey });
+export const filterStages = (param) => ({ type: types.FILTER_STAGES, param });
+export const clearStagesFilter = (paramKey) => ({ type: types.CLEAR_STAGES_FILTER, paramKey });
 
-export const filterStatuses = (param) => ({ type: types.FILTER_STATUSES, param: param });
-export const clearStatusesFilter = (paramKey) => ({ type: types.CLEAR_STATUSES_FILTER, paramKey: paramKey });
+export const filterStatuses = (param) => ({ type: types.FILTER_STATUSES, param });
+export const clearStatusesFilter = (paramKey) => ({ type: types.CLEAR_STATUSES_FILTER, paramKey });
 
 export const getOptionsRequestName = (options) => ({
   [CALL_API]: {
@@ -565,10 +561,10 @@ export const getForm = (formId, daacId) => ({
   }
 });
 
-export const searchForms = (prefix) => ({ type: types.SEARCH_FORMS, prefix: prefix });
+export const searchForms = (prefix) => ({ type: types.SEARCH_FORMS, prefix });
 export const clearFormsSearch = () => ({ type: types.CLEAR_FORMS_SEARCH });
-export const filterForms = (param) => ({ type: types.FILTER_FORMS, param: param });
-export const clearFormsFilter = (paramKey) => ({ type: types.CLEAR_FORMS_FILTER, paramKey: paramKey });
+export const filterForms = (param) => ({ type: types.FILTER_FORMS, param });
+export const clearFormsFilter = (paramKey) => ({ type: types.CLEAR_FORMS_FILTER, paramKey });
 
 export const listUsers = (options) => ({
   [CALL_API]: {
@@ -662,10 +658,10 @@ export const removeUserGroup = (payload) => {
   };
 };
 
-export const searchUsers = (prefix) => ({ type: types.SEARCH_USERS, prefix: prefix });
+export const searchUsers = (prefix) => ({ type: types.SEARCH_USERS, prefix });
 export const clearUsersSearch = () => ({ type: types.CLEAR_USERS_SEARCH });
-export const filterUsers = (param) => ({ type: types.FILTER_USERS, param: param });
-export const clearUsersFilter = (paramKey) => ({ type: types.CLEAR_USERS_FILTER, paramKey: paramKey });
+export const filterUsers = (param) => ({ type: types.FILTER_USERS, param });
+export const clearUsersFilter = (paramKey) => ({ type: types.CLEAR_USERS_FILTER, paramKey });
 
 export const listGroups = (options) => ({
   [CALL_API]: {
@@ -726,10 +722,10 @@ export const deleteGroup = (groupId) => ({
   }
 });
 
-export const searchGroups = (prefix) => ({ type: types.SEARCH_GROUPS, prefix: prefix });
+export const searchGroups = (prefix) => ({ type: types.SEARCH_GROUPS, prefix });
 export const clearGroupsSearch = () => ({ type: types.CLEAR_GROUPS_SEARCH });
-export const filterGroups = (param) => ({ type: types.FILTER_GROUPS, param: param });
-export const clearGroupsFilter = (paramKey) => ({ type: types.CLEAR_GROUPS_FILTER, paramKey: paramKey });
+export const filterGroups = (param) => ({ type: types.FILTER_GROUPS, param });
+export const clearGroupsFilter = (paramKey) => ({ type: types.CLEAR_GROUPS_FILTER, paramKey });
 
 export const getLogs = (options) => {
   return (dispatch, getState) => {
@@ -950,4 +946,3 @@ export const createUser = (payload) => ({
     body: payload
   }
 });
-

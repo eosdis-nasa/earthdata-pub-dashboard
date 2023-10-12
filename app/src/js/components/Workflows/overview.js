@@ -13,27 +13,6 @@ import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { requestPrivileges } from '../../utils/privileges';
 
-export const getRoles = () => {
-  const user = JSON.parse(window.localStorage.getItem('auth-user'));
-  if (user != null) {
-    const roles = user.user_roles;
-    const privileges = user.user_privileges;
-    const allRoles = {
-      isManager: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/manager/g)),
-      isAdmin: privileges.find(o => o.match(/ADMIN/g)),
-      isProducer: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/data_producer/g)),
-      isStaff: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : roles.find(o => o.short_name.match(/staff/g))
-    };
-    return allRoles;
-  }
-};
-
 class WorkflowsOverview extends React.Component {
   constructor () {
     super();
@@ -112,13 +91,14 @@ class WorkflowsOverview extends React.Component {
     if (workflows && !Array.isArray(workflows.list.data)) {
       window.location.reload(true);
     }
-    const allRoles = getRoles();
+    const { roles } = this.props;
+    const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
     let isEditable = false;
-    if (typeof allRoles !== 'undefined' && allRoles.isAdmin) {
+    if (role.includes('admin')) {
       isEditable = true;
     }
     let { canReassign } = requestPrivileges(this.props.privileges);
-    if (typeof allRoles !== 'undefined' && (typeof allRoles.isManager !== 'undefined' || typeof allRoles.isAdmin !== 'undefined' || typeof allRoles.isStaff !== 'undefined' || canReassign)) {
+    if (role.includes('manager') || role.includes('admin') || role.includes('staff') || canReassign) {
       canReassign = true;
     }
     const selectInput = [{
@@ -233,7 +213,7 @@ class WorkflowsOverview extends React.Component {
         <section className='page__section'>
           {workflows && typeof requestId === 'undefined' && isEditable
             ? <Link
-            className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right workflows-add' to={{ pathname: '/workflows/add' }}
+              className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: '/workflows/add' }}
             >Add Workflow
           </Link>
             : null}
