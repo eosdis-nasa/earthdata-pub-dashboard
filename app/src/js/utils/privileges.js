@@ -66,13 +66,14 @@ export const groupPrivileges = (privileges) => {
       canUpload: true,
     };
   } else if (privileges.GROUP) {
+    console.log(privileges.GROUP)
     return {
       canCreate: privileges.GROUP.includes('GROUP_CREATE'),
       canRead: privileges.GROUP.includes('GROUP_READ'),
       canEdit: privileges.GROUP.includes('GROUP_UPDATE'),
       canDelete: privileges.GROUP.includes('GROUP_DELETE'),
       canAddPermission: privileges.GROUP.includes('GROUP_ADDPERMISSION'),
-      canUpload: privileges.GROUP.includes('GROUP_UPLOAD'),
+      canUpload: privileges.GROUP.includes('UPLOAD'),
     };
   }
   return {
