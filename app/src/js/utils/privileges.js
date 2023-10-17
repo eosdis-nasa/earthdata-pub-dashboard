@@ -72,7 +72,7 @@ export const groupPrivileges = (privileges) => {
       canEdit: privileges.GROUP.includes('GROUP_UPDATE'),
       canDelete: privileges.GROUP.includes('GROUP_DELETE'),
       canAddPermission: privileges.GROUP.includes('GROUP_ADDPERMISSION'),
-      canUpload: privileges.GROUP.includes('GROUP_UPLOAD'),
+      canUpload: privileges.GROUP.includes('UPLOAD'),
     };
   }
   return {
