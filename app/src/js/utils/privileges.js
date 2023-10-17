@@ -66,7 +66,6 @@ export const groupPrivileges = (privileges) => {
       canUpload: true,
     };
   } else if (privileges.GROUP) {
-    console.log(privileges.GROUP)
     return {
       canCreate: privileges.GROUP.includes('GROUP_CREATE'),
       canRead: privileges.GROUP.includes('GROUP_READ'),
