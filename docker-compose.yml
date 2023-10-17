@@ -21,7 +21,7 @@ services:
       - REQUEST_HIDE_BUTTON_VERBAGE=Withdraw
       - REQUEST_UNHIDE_BUTTON_VERBAGE=Restore
       - HELP_PAGE_DEFAULT=http://localhost:8082/data_producer_resources/how_to_use_edpub
-      - FILE_UPLOAD_DEFAULT=TRUE
+      - FILE_UPLOAD_DEFAULT=true
   shim:   # empty container to open ports
     image: node:18.14.1
     command:
