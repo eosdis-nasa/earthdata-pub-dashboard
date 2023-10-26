@@ -31,6 +31,7 @@ export const redirectWithToken = (redirect, token) => {
   if (redirects[redirect]) {
     const redirectUrl = new URL(redirects[redirect]);
     redirectUrl.searchParams.set('token', token);
+    redirectUrl.searchParams.set('mfa_enabled');
     window.location.href = redirectUrl.href;
   } else {
     history.push('/');
@@ -53,6 +54,16 @@ export const fetchToken = (code, state) => {
       });
   };
 };
+
+export const fetchToken2 = (code, state) => ({
+  [CALL_API]: {
+    type: types.FETCH_TOKEN,
+    method: 'GET',
+    id: null,
+    path: 'token',
+    qs: { code, state }
+  }
+});
 
 export const refreshToken = () => {
   return (dispatch) => {
@@ -85,7 +96,26 @@ export const login = (redirect) => {
   };
 };
 
+export const associate = (token) => ({
+  [CALL_API]: {
+    type: types.MFA,
+    method: 'POST',
+    path: 'data/mfa/associate',
+    body: { auth_token: `${token}` }
+  }
+});
+
+export const verify = (topsToken, token) => ({
+  [CALL_API]: {
+    type: types.MFA,
+    method: 'POST',
+    path: 'data/mfa/verify',
+    body: { tops_token: topsToken, auth_token: `${token}` }
+  }
+});
+
 export const setTokenState = (token) => ({ type: types.SET_TOKEN, token });
+export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });
 
 export const interval = function (action, wait, immediate) {
   if (immediate) { action(); }

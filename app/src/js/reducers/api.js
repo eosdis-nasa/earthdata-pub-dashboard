@@ -41,7 +41,7 @@ export const initialState = (() => {
   const currentTime = Math.floor(Date.now() / 1000);
   const expired = expiration < currentTime;
   return {
-    authenticated: !expired && token,
+    authenticated: !expired && token && user.mfa_enabled,
     inflight: false,
     error: null,
     tokens: {
@@ -51,6 +51,7 @@ export const initialState = (() => {
       expiration: expiration,
       userName: !expired ? user.name : '',
       userId: !expired ? user.id : '',
+      user: !expired ? user : '',
       roles: !expired ? user.user_roles : [],
       groups: !expired ? user.user_groups : [],
       privileges: !expired ? reducePrivileges(user) : {}
@@ -74,11 +75,12 @@ export default createReducer(initialState, {
   [FETCH_TOKEN]: (state, action) => {
     const { token, user } = action.data;
     saveToken({ token, user });
-    set(state, 'authenticated', true);
+    set(state, 'authenticated', false);
     set(state, 'inflight', false);
     set(state, 'tokens.token', action.data.token);
     set(state, 'tokens.userName', user.name);
     set(state, 'tokens.userId', user.id);
+    set(state, 'tokens.user', user);
     set(state, 'tokens.roles', user.user_roles);
     set(state, 'tokens.groups', user.user_groups);
     set(state, 'tokens.privileges', reducePrivileges(user));
