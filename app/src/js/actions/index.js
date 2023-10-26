@@ -184,6 +184,15 @@ export const getRequest = (requestId) => ({
   }
 });
 
+export const getRequestDetails = (requestId) => ({
+  [CALL_API]: {
+    type: types.REQUEST,
+    method: 'GET',
+    id: requestId,
+    path: `data/submission/${requestId}/details`
+  }
+});
+
 export const getRequestByStepType = (stepType) => ({
   [CALL_API]: {
     type: types.REQUESTS,
