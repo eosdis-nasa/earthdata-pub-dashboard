@@ -143,14 +143,14 @@ export const getFormalName = (str) => {
 };
 
 export const stepLookup = (row) => {
-  const stepName = row.step_name;
+  const stepName = row?.step_data?.name;
   let request = '';
   let stepID = '';
   let stepType = '';
   let stepIDKey = '';
   let tmpType = '';
   const formalName = getFormalName(stepName);
-  for (const i in row.step_data) {
+  for (const i in row?.step_data) {
     if (typeof row.step_data[i] !== 'undefined') {
       const regex = new RegExp(stepName, 'g');
       if (i.match('name') && row.step_data[i].match(regex)) {
