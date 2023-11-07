@@ -1,0 +1,73 @@
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem 1rem 0rem 1rem;
+  border-bottom: none;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+}
+
+.modal-footer {
+  /* display: flex; */
+  align-items: center;
+  justify-content: flex-end;
+  padding: 2rem 1rem 2rem 1rem;
+  border-top: none;
+  border-bottom-right-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
+}
+
+.modal-footer > :not(:first-child) {
+  margin-left: 0;
+}
+
+.modal-footer .form-group__element--left {
+  margin-right: 1em;
+  margin-top: 0;
+  margin-left: 1em;
+}
+
+.modal-title {
+  padding: 0rem 1rem 1rem 1rem;
+}
+
+.modal-title.h4{
+  font-size: 18px;
+}
+
+.mEditorModal label {
+  cursor:pointer;
+  margin-bottom: 0!important;
+  margin-top: inherit;
+}
+
+.mEditorModal .dontShowAgainClass {
+  margin-left: unset;
+  margin-right: 3.5rem;
+  display:flex;
+}
+
+.mEditorModal .modal-footer {
+  justify-content: space-between;
+}
+
+.mEditorModal input[type=checkbox] {
+  margin-top: 0.25em;
+  margin-right: 8px;
+}
+
+.mEditorModal .modal-body {
+  text-align: left;
+}
+
+.mEditorOptions label {
+  display: initial;
+  margin-left: 8px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.mEditorOptions input[type=checkbox] {
+  margin-left:8px;
+}

@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "name": "earthdata-pub-api",
+    "stack": "test-src-integration",
+    "table": "wokflow",
+    "limit": 10,
+    "page": 1,
+    "count": 2
+  },
+  "results": [
+    {
+      "event_type": "workflow_promote_step",
+      "count": "2"
+    },
+    {
+      "event_type": "workflow_completed",
+      "count": "2"
+    },
+    {
+      "event_type": "request_initialized",
+      "count": "2"
+    },
+    {
+      "event_type": "request_form_submitted",
+      "count": "1"
+    }
+  ]
+}

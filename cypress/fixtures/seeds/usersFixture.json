@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "name": "earthdata-pub-api",
+    "stack": "test-src-integration",
+    "table": "edpuser",
+    "limit": 10,
+    "page": 1,
+    "count": 2
+  },
+  "results": [
+    {
+      "id": "1b10a09d-d342-4eee-a9eb-c99acd2dde17",
+      "name": "Earthdata Pub System",
+      "email": "no_email",
+      "registered": "2021-02-05T20:39:54.835Z",
+      "last_login": "2021-02-05T20:39:54.835Z"
+    }
+  ]
+}

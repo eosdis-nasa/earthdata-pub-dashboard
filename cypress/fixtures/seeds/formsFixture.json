@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "name": "earthdata-pub-api",
+    "stack": "test-src-integration",
+    "table": "form",
+    "limit": 10,
+    "page": 1,
+    "count": 2
+  },
+  "results": [
+    {
+      "id": "6c544723-241c-4896-a38c-adbc0a364293",
+      "short_name": "data_accession_request",
+      "version": 1,
+      "long_name": "Data Accession Request",
+      "description": "This form is used to get high level information about a dataset, typically this will be submitted by the data provider or an appropriate agent.",
+      "text": "To express interest in archiving a data product, please fill out the following form.",
+      "created_at": "2021-02-05T20:39:54.835Z"
+    },
+    {
+      "id": "19025579-99ca-4344-8610-704dae626343",
+      "short_name": "data_publication_request",
+      "version": 1,
+      "long_name": "Data Publication Request",
+      "description": "This form is used to get high level information about a dataset, typically this will be submitted by the data provider or an appropriate agent.",
+      "text": "To express interest in submitting a data product, please fill out the following form.",
+      "created_at": "2021-02-05T20:39:54.835Z"
+    }
+  ]
+}

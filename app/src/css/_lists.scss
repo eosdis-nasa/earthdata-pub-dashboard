@@ -1,0 +1,92 @@
+.metadata__details {
+  /* font-size: .86em;*/
+  @extend .clearfix;
+  dt {
+    font-weight: $base-font-semibold;
+    width: 22%;
+    padding-right: 8px;
+  }
+  dd {
+    /* width: 20%;*/
+    color: $dark-grey;
+    &:nth-of-type(odd) {
+      margin-right: 10%;
+    }
+  }
+  dt, dd {
+    display: inline-block;
+    vertical-align: top;
+    margin: .75em 0;
+  }
+}
+.indented__details {
+  padding-left: 4.5em;
+  width: 90%;
+}
+.email__details {
+  font-size: .86em;
+  border-bottom: 1px solid $lightest-grey;
+  padding-bottom: .3em;
+  margin-bottom: 1em;
+  margin-top: 2em;
+
+  h2, h3, h4 {
+    margin-bottom: .5em;
+  }
+  @extend .clearfix;
+  dt {
+    vertical-align: top;
+    font-weight: $base-font-semibold;
+    width: 22%;
+    padding-right: 8px;
+  }
+  dd {
+    vertical-align: top;
+    width: 100%;
+    color: $dark-grey;
+    &:nth-of-type(odd) {
+      margin-right: 10%;
+    }
+  }
+  dd {
+    display: inline-block;
+    margin: .75em 0;
+  }
+}
+
+.logs__item {
+  margin-bottom: .5em;
+}
+
+.logs__item--date {
+  color: $light-grey;
+}
+
+.logs__item--level {
+  color: $black;
+}
+
+.logs__item--debug,
+.logs__item--trace {
+  color: $grey;
+}
+
+.logs__item--info {
+  color: $light-green;
+}
+
+.logs__item--warn {
+  color: $orange;
+}
+
+.logs__item--error {
+  color: $error-red;
+}
+
+.logs__item--fatal {
+  color: $error-text-red;
+}
+
+.logs__item--meta {
+  color: $sky-blue;
+}

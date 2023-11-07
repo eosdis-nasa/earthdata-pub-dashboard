@@ -1,0 +1,147 @@
+.datetime{
+  &__info{
+    font-weight: $base-font-regular;
+    margin-top: 1rem;
+  }
+  &__header{
+    display: flex;
+    justify-content: space-between;
+  }
+  &__header li:first-child{
+    float: left;
+  }
+  &__header li:nth-child(2){
+    float: right;
+  }
+  &__wrapper{
+    background-color: $white;
+    padding: 1.5em 1em .5em;
+    display: inline-block;
+    border-radius: .5em;
+    border: 1px solid #eceaea;
+    box-shadow: $shadow__default;
+    font-size: .86em;
+    width: 1015px;
+    height: 127px;
+    margin: .8em 1.5em .8em 0;
+    color: #8C8C8C;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s ease 0s;
+    overflow: hidden;
+    clear: right;
+    position: absolute;
+    z-index: 0;
+    top: 510px;
+  }
+  &__wrapper h3{
+    font-size: 1.3em;
+    font-weight: $base-font-semibold;
+    margin-bottom: .5em;
+  }
+  &__wrapper hr{
+    height: 1px;
+    background-color: $lightest-grey;
+    border: none;
+    margin-bottom: 1em;
+    margin-top: .25em;
+  }
+  &__internal{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    flex-direction: row;
+  }
+  &__internal li{
+    justify-content: space-evenly;
+    margin-right: 2em;
+  }
+
+  &__internal label{
+    font-size: 1em;
+    font-weight: $base-font-regular;
+    margin-bottom: .4em;
+  }
+
+  &.selector__hrformat{
+    position: relative;
+      &:after {
+        position: absolute;
+        font-family: 'FontAwesome';
+        content: '\f0dc';
+        color: $white;
+        font-weight: 900;
+        top: .28em;
+        left: 4em;
+      }
+  }
+
+  &.selector__hrformat select{
+    display: block;
+    position: relative;
+    padding-left: 11px;
+    background-color: $ocean-blue;
+    color: $white;
+    width: 75px;
+    height: 28px;
+  }
+
+  &.dropdown__dtrange{
+    position: relative;
+    &:after {
+      position: absolute;
+      font-family: 'FontAwesome';
+      content: '\f0dc';
+      color: $white;
+      font-weight: 900;
+      top: .55em;
+      left: 8.3em;
+    }
+  }
+
+  &.dropdown__dtrange select{
+    background-color: $ocean-blue;
+    color: $white;
+    width: 135px;
+    height: 35px;
+    font-size: 14px;
+    position: relative;
+  }
+
+  &__range{
+    z-index: 1;
+    position: relative;
+    top: 73px;
+    display: flex;
+    justify-content: center;
+    width: 1040px;
+  }
+
+  &__clear{
+    position: relative;
+    margin: .7em 0em 0em 5.1em !important;
+    float: right;
+    &:after {
+      position: absolute;
+      font-family: 'FontAwesome';
+      content: '\f00d';
+      color: $white;
+      font-weight: 900;
+      top: .25em;
+      left: 1em;
+    }
+  }
+
+  &__refresh{
+    position: relative;
+    &:after {
+      position: absolute;
+      font-family: 'FontAwesome';
+      content: '\f01e';
+      color: $white;
+      font-weight: 900;
+      top: .25em;
+      left: .7em;
+    }
+  }
+}

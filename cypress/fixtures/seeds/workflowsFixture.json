@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "name": "earthdata-pub-api",
+    "stack": "test-src-integration",
+    "table": "wokflow",
+    "limit": 10,
+    "page": 1,
+    "count": 2
+  },
+  "results": [
+    {
+      "id": "c651b698-ec06-44d7-a69b-44bf8b4bc4f5",
+      "short_name": "init_workflow",
+      "version": 1,
+      "long_name": "Initialization Workflow",
+      "description": "This workflow performs no actions and is used for initializing requests.",
+      "created_at": "2021-02-05T20:39:54.835Z",
+      "steps": {
+        "init": {
+          "type": "init",
+          "next_step_name": "close"
+        },
+        "close": {
+          "type": "close",
+          "prev_step_name": "init"
+        }
+      }
+    },
+    {
+      "id": "4bc927f2-f34a-4033-afe3-02520cc7dcf7",
+      "short_name": "archival_interest_workflow",
+      "version": 1,
+      "long_name": "Archival Interest Workflow",
+      "description": "This is the default initial workflow for a new archival request.",
+      "created_at": "2021-02-05T20:39:54.835Z",
+      "steps": {
+        "init": {
+          "type": "init",
+          "next_step_name": "archival_interest_form"
+        },
+        "close": {
+          "type": "close",
+          "prev_step_name": "archival_interest_form"
+        },
+        "archival_interest_form": {
+          "type": "form",
+          "form_id": "6c544723-241c-4896-a38c-adbc0a364293",
+          "next_step_name": "close",
+          "prev_step_name": "init"
+        }
+      }
+    }
+  ]
+}

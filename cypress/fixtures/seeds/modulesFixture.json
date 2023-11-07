@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "name": "earthdata-pub-api",
+    "stack": "test-src-integration",
+    "table": "module",
+    "limit": 10,
+    "page": 1,
+    "count": 1
+  },
+  "results": [
+    {
+      "id": "56dbe71e-06ed-44cf-b333-7091a8d76075",
+      "short_name": "test",
+      "long_name":"Test Module",
+      "description": "This is a test module.",
+      "created_at": "2021-02-05T20:39:54.835Z",
+      "arn": "none"
+    }
+  ]
+}

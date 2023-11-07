@@ -1,0 +1,17 @@
+====================================================================================
+Earthdata Pub Dev Team
+====================================================================================
+
+Product Owner: Will Ellett (GHRC)
+Scrum Master: Taylor Wright (GHRC)
+
+------------------------------------------------------------------------------------
+
+/* Architects */
+Ajinkya Kulkarni (GHRC)
+Daine Wright (ORNL DAAC)
+
+/* Developers */
+Brian Ellingston (GHRC)
+Eddie Campos (GHRC)
+Kimberly Broughton (ORNL DAAC)
