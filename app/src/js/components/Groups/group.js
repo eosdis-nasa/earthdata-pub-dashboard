@@ -61,7 +61,7 @@ class GroupOverview extends React.Component {
       return <Loading />;
     }
     const group = record.data;
-    if (!group.short_name.match(/ghrc_daac/)) {
+    if (!group.short_name.match(/ghrc_daac|root_group/)) {
       canUpload = false;
     }
     const breadcrumbConfig = [
