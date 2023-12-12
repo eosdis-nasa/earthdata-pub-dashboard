@@ -61,7 +61,7 @@ class GroupOverview extends React.Component {
       return <Loading />;
     }
     const group = record.data;
-    if (group.short_name.match(/unassigned/)) {
+    if (!group.short_name.match(/ghrc_daac|root_group/)) {
       canUpload = false;
     }
     const breadcrumbConfig = [
@@ -97,7 +97,7 @@ class GroupOverview extends React.Component {
             </h1>
           </div>
           <div className='indented__details'><Metadata data={group} accessors={metaAccessors} /></div>
-          {record.data && canUpload && (_config.fileUploadDefault === 'true') ? <UploadOverview /> : null }
+          {record.data && canUpload ? <UploadOverview /> : null }
         </section>
       </div>
     );
