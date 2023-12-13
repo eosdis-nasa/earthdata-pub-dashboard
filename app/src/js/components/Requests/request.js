@@ -4,20 +4,16 @@ import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  getRequest,
-  getContributers,
-  getWorkflow,
+  getRequestDetails,
   withdrawRequest,
   restoreRequest,
   addUserToRequest,
   removeUserFromRequest,
-  listWorkflows,
   setWorkflowStep,
   copyRequest
 } from '../../actions';
 import { get } from 'object-path';
 import {
-  // displayCase,
   lastUpdated,
   shortDateNoTimeYearFirst,
   shortDateShortTimeYearFirst,
@@ -28,7 +24,6 @@ import {
   stepLookup
 } from '../../utils/table-config/requests';
 import Loading from '../LoadingIndicator/loading-indicator';
-// import LogViewer from '../Logs/viewer';
 import Metadata from '../Table/Metadata';
 import AsyncCommands from '../DropDown/dropdown-async-command';
 import { strings } from '../locale';
@@ -46,10 +41,7 @@ class RequestOverview extends React.Component {
     super(props);
     this.state = { current: {}, names: {}, formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
     this.navigateBack = this.navigateBack.bind(this);
-    this.queryWorkflows = this.queryWorkflows.bind(this);
-    //  this.reingest = this.reingest.bind(this);
     this.applyWorkflow = this.applyWorkflow.bind(this);
-    //  this.remove = this.remove.bind(this);
     this.delete = this.delete.bind(this);
     this.restore = this.restore.bind(this);
     this.selectWorkflow = this.selectWorkflow.bind(this);
@@ -73,42 +65,17 @@ class RequestOverview extends React.Component {
     // This causes a repeating query for workflows cluttering up the logs.
     // Commenting out until we add applyWorkflow capability
     // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
-    dispatch(getRequest(requestId))
+    dispatch(getRequestDetails(requestId))
       .then((value) => {
         const record = this.props.requests.detail;
-        dispatch(getWorkflow(value.data.workflow_id))
-          .then(() => {
-            this.setSteps(this.props.workflows.detail.data.steps, record.data.step_name);
-            if (typeof record.data.form_data !== 'undefined' && JSON.stringify(record.data.form_data) !== '{}') {
-              let hasPublicationForm = false;
-              for (const ea in record.data.forms) {
-                const formId = record.data.forms[ea].id;
-                if (this.state.formIdForClone === formId) {
-                  hasPublicationForm = true;
-                  break;
-                }
-              }
-              if (!hasPublicationForm) {
-                this.setState({ formIdForClone: '6c544723-241c-4896-a38c-adbc0a364293' });
-              }
-            }
-          });
-        if (record.data.contributor_ids !== undefined) {
-          dispatch(getContributers({ ids: record.data.contributor_ids })).then(value => {
-            const names = {};
-            for (const ea in value.data) {
-              names[value.data[ea].id] = value.data[ea].name;
-            }
-            this.setState({ names });
-          });
-        }
+        this.handleSelect(record?.data?.step_data?.name, record?.data?.step_data?.name)
       });
     this.setState({ showSearch: false });
     this.setState({ setShowSearch: false });
   }
 
   toProperCase (str) {
-    return str.replace(
+    return str?.replace(
       /\w\S*/g,
       function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -141,10 +108,6 @@ class RequestOverview extends React.Component {
   navigateBack () {
     const { history } = this.props;
     history.push('/requests');
-  }
-
-  queryWorkflows () {
-    this.props.dispatch(listWorkflows());
   }
 
   applyWorkflow () {
@@ -182,18 +145,22 @@ class RequestOverview extends React.Component {
     const record = this.props.requests.detail;
     const payload = {
       id: requestId,
-      workflow_id: record.data.workflow_id,
+      workflow_id: record.data.workflow.id,
       step_name: this.state.current.value
     };
     await this.props.dispatch(setWorkflowStep(payload));
-    await this.props.dispatch(getRequest(requestId));
+    // TODO - Remove the below call; you should get a response from the above with
+    // the request details
+    await this.props.dispatch(getRequestDetails(requestId));
     document.querySelector('.save-section').classList.add('hidden');
   }
 
-  async handleRemove (contributor) {
+  async handleRemove (contributorId) {
     const { requestId } = this.props.match.params;
-    await this.props.dispatch(removeUserFromRequest(requestId, contributor));
-    await this.props.dispatch(getRequest(requestId));
+    await this.props.dispatch(removeUserFromRequest(requestId, contributorId));
+    // TODO - Remove the below call; you should get a response from the above with
+    // the request details
+    await this.props.dispatch(getRequestDetails(requestId));
   }
 
   async delete () {
@@ -253,11 +220,16 @@ class RequestOverview extends React.Component {
           <div className="request-section">
             <Select
               id="workflowSelect"
-              options={this.state.steps}
+              options={record?.data?.workflow?.steps.map((step) => {
+                return {
+                  value: step, 
+                  label: this.toProperCase(step.replace(/_/g, ' '))
+                }
+              })}
               onChange={(e) => this.handleSelect(e, record.data.step_name)}
               isSearchable={true}
               value={this.state.current}
-              placeholder='Set Current Workflow Step'
+              placeholder={this.toProperCase(record?.data?.step_data?.name.replace(/_/g, ' ')) || 'Set Current Workflow Step'}
               className='selectButton'
               aria-label='Select Current Workflow Step'
               isMulti={false} />
@@ -304,12 +276,11 @@ class RequestOverview extends React.Component {
     }
     const requestForms = request.forms;
     let showTable = false;
-    if (requestForms !== null &&
-      typeof requestForms !== 'undefined') {
-      if (record.data.step_name === 'close') {
+    if (requestForms?.length) {
+      if (record?.data?.step_name === 'close') {
         canWithdraw = false;
       }
-      if (requestForms.length > 0) {
+      if (requestForms?.length > 0) {
         showTable = true;
       }
     }
@@ -391,7 +362,7 @@ class RequestOverview extends React.Component {
     const metaAccessors = [
       {
         label: 'Data Producer Name',
-        accessor: row => row.form_data && row.form_data.data_producer_info_name ? row.form_data.data_producer_info_name : null
+        accessor: row => row.data_producer_name
       },
       {
         label: 'Daac',
@@ -400,15 +371,15 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Initiator',
-        accessor: row => row.initiator && row.initiator.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : null
+        accessor: row => row?.initiator?.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : null
       },
       {
         label: 'Data Product Name',
-        accessor: row => row.form_data && row.form_data.data_product_name_value ? row.form_data.data_product_name_value : row.initiator && row.initiator.name && canViewUsers ? `Request Initialized by ${row.initiator.name}` : null
+        accessor: row => row.data_product_name || (row?.initiator?.name && canViewUsers ? `Request Initialized by ${row.initiator.name}` : null)
       },
       {
         label: 'Workflow',
-        accessor: row => row.workflow_name ? <Link to={`/workflows/id/${row.workflow_id}`} aria-label="View your workflows">{row.workflow_name}</Link> : row.workflow_name
+        accessor: row => row?.workflow?.name ? <Link to={`/workflows/id/${row.workflow.id}`} aria-label="View your workflows">{row.workflow.name}</Link> : row?.workflow?.name
       },
       {
         label: 'Created',
@@ -470,85 +441,79 @@ class RequestOverview extends React.Component {
             <dd className={request.status}>{request.status}</dd>
           </dl>
         </section>
-
-        <section className='page__section'>
-          <div className='heading__wrapper--border'>
-            <h1 className='heading--small' aria-labelledby={strings.request_overview}>
-              {strings.request_overview}
-            </h1>
-          </div>
-          { record.inflight ? <Loading /> : request ? <div className='indented__details'><Metadata data={request} accessors={metaAccessors} /></div> : null }
-        </section>
-        {
-          Object.keys(this.state.names).length === 0
-            ? <Loading />
-            : <section className='page__section'>
-          <br></br>
-          <div className='page__section__header'>
-            <h1 className='heading--small' aria-labelledby='contributers'>
-              Contributors
-            </h1>
-          </div>
-          <div className='page__content--shortened flex__column'>
-            {
-              record.data && record.data.contributor_ids
-                ? record.data.contributor_ids.map((contributor, key) => {
-                  return (
-                  <div key={key} className='flex__row sm-border'>
-                    <div className='flex__item--w-25'>
-                      {this.state.names[contributor]}
+          { record.inflight ? <Loading /> : request ?
+              <>
+              <section className='page__section'>
+                <div className='heading__wrapper--border'>
+                  <h1 className='heading--small' aria-labelledby={strings.request_overview}>
+                    {strings.request_overview}
+                  </h1>
+                </div>
+                <div className='indented__details'>
+                    <Metadata data={request} accessors={metaAccessors} />
+                </div>
+              </section>
+              <section className='page__section'>
+              <br></br>
+              <div className='page__section__header'>
+                <h1 className='heading--small' aria-labelledby='contributers'>
+                  Contributors
+                </h1>
+              </div>
+              <div className='page__content--shortened flex__column'>
+                {
+                  record?.data?.contributors?.map((contributor, key) => {
+                    return (
+                    <div key={key} className='flex__row sm-border'>
+                      <div className='flex__item--w-25'>
+                        {contributor.name}
+                      </div>
+                      <div className='flex__item--w-15'>
+                        {canRemoveUser &&
+                          <button
+                            className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                            onClick={(e) => this.handleRemove(contributor.id)}
+                            disabled={record.inflight}>
+                            Remove
+                          </button>
+                        }
+                      </div>
                     </div>
-                    <div className='flex__item--w-15'>
-                      {canRemoveUser &&
-                        <button
-                          className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
-                          onClick={(e) => this.handleRemove(contributor)}
-                          disabled={record.inflight}>
-                          Remove
-                        </button>
-                      }
-                    </div>
+                    );
+                  })
+                }
+                <div className='flex__row sm-border'>
+                  <div className='flex__item-w-25'>
+                    <button
+                      className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+                      onClick={this.openUserForm}
+                      disabled={record.inflight}>
+                      Add Contributor&nbsp;&nbsp;
+                    </button>
                   </div>
-                  );
-                })
-                : null
-            }
-            { record.data && record.data.contributor_ids
-              ? canAddUser &&
-              <div className='flex__row sm-border'>
-                <div className='flex__item-w-25'>
-                  <button
-                    className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
-                    onClick={this.openUserForm}
-                    disabled={record.inflight}>
-                    Add Contributor&nbsp;&nbsp;
-                  </button>
                 </div>
               </div>
-              : null
-            }
-          </div>
-          </section>}
-          {
-            record.data && record.data.contributor_ids && Object.keys(this.state.names).length > 0
-              ? <><section className='page__section'>
-              {workflowSave}
-            </section><Meditor></Meditor>{(_config.fileUploadDefault === 'true') ? <UploadOverview /> : null}</>
-              : null
+              </section>
+              <section className='page__section'>
+                {workflowSave}
+              </section>
+              <Meditor></Meditor>
+              {(_config.fileUploadDefault === 'true') ? <UploadOverview /> : null}
+              { showTable
+                ? <section className='page__section'>
+                  <div className='heading__wrapper--border'>
+                    <h2 className='heading--medium heading--shared-content with-description'>Request Forms</h2>
+                  </div>
+                  <Table
+                    data={requestForms}
+                    dispatch={this.props.dispatch}
+                    tableColumns={tableColumns}
+                  />
+                </section>
+                : null }
+              </> : null
           }
         <br />
-        { showTable
-          ? <section className='page__section'>
-            <div className='heading__wrapper--border'>
-              <h2 className='heading--medium heading--shared-content with-description'>Request Forms</h2>
-            </div>
-            <Table
-              data={requestForms}
-              dispatch={this.props.dispatch}
-              tableColumns={tableColumns}
-            />
-          </section>
-          : null }
       </div>
     );
   }
