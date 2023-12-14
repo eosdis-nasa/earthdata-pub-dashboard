@@ -17,7 +17,7 @@ not support this option.
 
 ## Fix tests
 
-1. Missing ava valiation tests
+1. Missing ava validation tests
 
     ```bash
     $ npx ava cypress/validation-tests/main-page.js

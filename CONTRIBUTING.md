@@ -33,11 +33,11 @@ See individual EDPub repos for specific coding standards.
 General coding standards are:
 
 1. document as you go
-1. make your code readable
-1. think about security from the start
-1. use a standard style guide (such as [PEP 8](https://www.python.org/dev/peps/pep-0008/))
-1. use a linter (such as [pylint](https://www.pylint.org/))
-1. use .gitignore to exclude files that should not be in a repo (see this repo's
+2. make your code readable
+3. think about security from the start
+4. use a standard style guide (such as [PEP 8](https://www.python.org/dev/peps/pep-0008/))
+5. use a linter (such as [pylint](https://www.pylint.org/))
+6. use .gitignore to exclude files that should not be in a repo (see this repo's
 [.gitignore](./.gitignore))
 
 An IDE, such as [VS Code](https://code.visualstudio.com/), helps to create and
@@ -58,7 +58,7 @@ If you want to submit your own contributions, follow these steps:
 - Create a new branch from the branch you'd like to contribute to
 - If an issue doesn't already exist, submit one (see above)
 - [Create a pull request](https://github.com/eosdis-nasa/earthdata-pub-dashboard/pulls)
-from your fork into the target branch of the earthdatapub/forms repo
+from your fork into the target branch of the earthdata-pub-dashboard repo
 - Be sure to [mention the corresponding issue number](https://help.github.com/articles/closing-issues-using-keywords/)
 in the PR description, i.e. "Fixes Issue #10"
 - Upon submission of a pull request, the EDPub development team will
@@ -76,7 +76,7 @@ When possible, feature branches should be tied directly to a Jira ticket.
 Always write a clear log message for your commits. One-line messages are fine for
 small changes, but bigger changes should look like this:
 
-```bash
+```
 $ git commit -m "A brief summary of the commit
 >
 > A paragraph describing what changed and its impact."
@@ -122,9 +122,8 @@ See the [CHANGELOG.md](CHANGELOG.md) for examples.
 ### Pull Requests
 
 Please make a new Pull Request with a clear list of what you've done (read more
-about [pull requests](https://www.atlassian.com/git/tutorials/making-a-pull-request)).
-Assign merge requests to someone else for a code review. Don't approve your own
-requests. Follow our coding standards (above). Make all of your commits atomic
+about [pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)).
+Merge requests will be assigned to an EDPub developer for a code review. Follow our coding standards (above). Make all of your commits atomic
 (one feature per commit).
 
 #### Template
@@ -166,7 +165,7 @@ _(copy/paste-able change log notes. check the box when the change is also in CHA
 * [Fix _____](link to commitid)
 ```
 
-## github settings
+## Github settings
 
 All github settings should be the same across all EDPub repositories. Developers will have an easier time working across repos if the behavior is consistent.
 
@@ -175,13 +174,13 @@ All github settings should be the same across all EDPub repositories. Developers
 1. Core repo - The core EDPub repo will be a quick start to the entire
    EDPub framework. All other repos will follow include versions of the high level
    *.md files from there, e.g. CONTRIBUTING.md. The core repo is <https://github.com/eosdis-nasa/earthdata-pub>
-1. Repositories - EDPub repositories shall be named `earthdatapub/thing`,
-   for example: `earthdatapub/forms`, `earthdatapub/api`.
-1. Modules - EDPub core modules will be named "EDPub Thing" where "Thing" is
+2. Repositories - EDPub repositories shall be named `earthdata-pub-thing`,
+   for example: `earthdata-pub-forms`, `earthdata-pub-api`.
+3. Modules - EDPub core modules will be named "EDPub Thing" where "Thing" is
    always capitalized and one word. The name should be descriptive. Examples are
    "EDPub Forms", "EDPub API", "EDPub Dashboard", "EDPub Workflows". It is acceptable
    to use Thing as a name by itself when the context is obvious. So, Dashboard as
    a label inside an EDPub diagram makes sense.
-1. Abbreviation - We will use the abbreviation "EDPub" to shorten EDPub, however
+4. Abbreviation - We will use the abbreviation "EDPub" to shorten EDPub, however
    this abbreviation will appear in all caps in the Wiki, JIRA, and ECC repository
    space, which is <https://wiki.earthdata.nasa.gov/display/EDPUB>

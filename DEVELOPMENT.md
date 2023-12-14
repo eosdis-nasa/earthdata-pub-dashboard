@@ -164,7 +164,7 @@ const Request = React.createClass({
 #### Writing the Source Code
 
 When writing the source code, the main differences will be in the fetch url which
-should point to localhost:4566. An example of source code for pulling data from a
+should point to localhost:8080. An example of source code for pulling data from a
 local EDPUB API instance can be found at ./app/src/js/components/testApi.js with
 some of the main differences in the snippet below
 
@@ -174,7 +174,7 @@ some of the main differences in the snippet below
         this.state = {data: [{id: 'test',}]};
         //The below value presumably would normally be passed into this file so that you would dynamically query the desired id
         this.query_id = 'xxxxxx';
-        this.url = `http://localhost:4566/restapis/${process.env.APP_ID}/prod/_user_request_/information/form?p_key=${this.query_id}`;
+        this.url = `http://localhost:8080/restapis/${process.env.APP_ID}/prod/_user_request_/information/form?p_key=${this.query_id}`;
     }
 
     componentDidMount() {
@@ -204,7 +204,7 @@ api repo in the directory above your local dashboard repo.
 To deploy the EDPUB API locally, simply run the following command which will deploy
 the EDPUB api locally and add some data to test the api calls.
 
-```bash
+```
 npm run start-edpub-local-api
 ```
 
@@ -212,13 +212,13 @@ You should then source the .env file which will pull the local EDPUB API instanc
 rest api ID and store this as an environment variable which can be referenced within
 the source code.
 
-```bash
+```
 source .env
 ```
 
 You can then serve the dashboard as normal using the following command:
 
-```bash
+```
 APIROOT=http://localhost:8080 npm run serve
 ```
 
@@ -226,44 +226,3 @@ APIROOT=http://localhost:8080 npm run serve
 
 We follow a [Bem](http://getbem.com/naming/) naming format.
 
-## Cross-repository Development
-
-What to do when you need to make changes to Earthdata Pub core in order to implement
-a dashboard need. For example, if you needed to update the Fake Authentication code
-on the @earthdata-pub-api/api in order to test something on the dashboard. These
-instructions can be extrapolated for other core packages.
-
-The basic steps to follow are:
-
-1. Link your local @earthdata-pub-api/api code so that it's visible to the dashboard.
-
-    This is a two step process, where you use [`npm link`](https://docs.npmjs.com/cli-commands/link.html)
-    to prepare the @earthdata-pub-api/api by running `npm link` in the `earthdata-pub-api/package`
-    directoryand then use it in the dashboard project by running `npm link @earthdata-pub-api/api`
-    in the dashboard root directory.
-
-    When you have done this, you need to make sure that you only use the LocalStack/Elasticsearch
-    portion of the docker-compose containers, e.g. run `npm run start-localstack`
-    and `npm run serve-api` in order to run the linked version of the @earthdata-pub-api/api.
-    Do all of your development locally including running unit and integration tests.
-    When you are satisfied with the changes to the Earthdata Pub core code (and when
-    that is merged) you can do an alpha release of the code by building an alpha
-    release of the package `npm version prerelease --preid=alpha` and then publishing
-    to npm with a tag of `alpha`. `npm publish --tag next`. This will upload the
-    contents of your `earthdata-pub-api/package` to npm with a version that looks
-    like `1.18.1-alpha.0` and a tag of `next`.
-
-2. Update the dashboard to use the alpha package for CI.
-
-    Update package.json to use the alpha version of the @earthdata-pub-api/api by
-    installing it `npm install @earthdata-pub-api/api@1.0.1 --save-dev`  This will
-    install the package from npm as well as allow circleCI to run all of the tests.
-
-3. Clean up when core package is released.
-
-    When Earthdata Pub core releases a new version, install it to the dashboard,
-    make sure that tests still pass and then deprecate the alpha version that was
-    published. `npm deprecate @earthdata-pub-api/api@1.0.1`, this will remove it
-    from the current version history on npm. and
-    `npm dist-tag rm @earthdata-pub-api/api@1.0.1 next` to remove the tag and prevent
-    the alpha package from showing up under current tags.

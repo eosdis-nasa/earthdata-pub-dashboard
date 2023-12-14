@@ -87,13 +87,13 @@ repo.
 
 The API Swagger documentation will available at <http://localhost:8080/docs/>
 
-The Forms will available at <http://localhost:8081/>
+The Forms application will available at <http://localhost:8081/>
 
-#### Troubleshooting local deployement
+#### Troubleshooting local deployment
 
 If you have previously built using docker, you may need to remove docker orphans.
 
-```bash
+```
 docker-compose down --remove-orphans
 ```
 
@@ -103,7 +103,7 @@ If something is not running correctly, or you're just interested, you can view
 the logs with a helper script, this will print out logs from each of the running
 docker containers.
 
-```bash
+```
 npm run view-logs
 ```
 
@@ -113,7 +113,7 @@ A common error is running the dashboard containers when other containers are
 running on your machine. Just stop that stack and restart the dashboard stack
 to resolve.
 
-```sh
+```
 ERROR: for localapi_shim_1  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
 
 ERROR: for shim  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
@@ -132,7 +132,7 @@ reinstall with `npm install`.
 The Earthdata Pub Dashboard can be built inside of a Docker container, without
 needing to install any local dependencies.
 
-```bash
+```
 DAAC_NAME=LPDAAC STAGE=production LABELS=daac APIROOT=https://myapi.com ./bin/build_in_docker.sh
 ```
 
@@ -144,7 +144,7 @@ The compiled files will be placed in the `dist` directory.
 
 To build the dashboard:
 
-```bash
+```
 nvm use
 [SERVED_BY_EDPUB_API=true] [DAAC_NAME=LPDAAC] [STAGE=production] [LABELS=daac] APIROOT=https://myapi.com npm run build
 ```
@@ -156,7 +156,7 @@ nvm use
 Earthdata Pub Dashboard versions are distributed using tags in github. You
 can pull a specific version in the following manner:
 
-```bash
+```
 git clone https://github.com/eosdis-nasa/earthdata-pub-dashboard.git
 cd dashboard
 git fetch origin ${tagNumber}:refs/tags/${tagNumber}
@@ -167,8 +167,7 @@ Then follow the steps noted above to build the dashboard locally or using Docker
 
 ## Deploying
 
-Deployment is done through Bamboo. The following deprecated instructions are included
-in case Bamboo becomes unavailable.
+Deployment is done through Bamboo. The following deprecated instructions are included in case Bamboo becomes unavailable.
 
 First build the site
 
@@ -179,7 +178,7 @@ npm run build
 
 Then deploy the `dist` folder
 
-```bash
+```
 aws s3 sync dist s3://my-bucket-to-be-used --acl public-read
 ```
 
@@ -187,7 +186,7 @@ aws s3 sync dist s3://my-bucket-to-be-used --acl public-read
 
 ### Unit Tests
 
-```bash
+```
 npm run test
 ```
 
@@ -199,20 +198,20 @@ separate terminal sessions:
 
 Run background localstack application.
 
-```bash
+```
 npm run start-localstack
 ```
 
 Serve the dashboard web application (another terminal)
 
-```bash
+```
 [SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:8080] npm run serve
 ```
 
 If you're just testing dashboard code, you can generally run all of the above
 commands as a single docker-compose stack.
 
-```bash
+```
 npm run start-dashboard
 ```
 
@@ -220,7 +219,7 @@ This brings up LocalStack, Elasticsearch, the Earthdata Pub localAPI, and the da
 
 Run the test suite (yet another terminal window)
 
-```bash
+```
 npm run validate
 npm run cypress
 ```
@@ -231,7 +230,7 @@ When the cypress editor opens, click on `run all specs`.
 
 You can run all of the cypress tests locally that circleCI runs with a single command:
 
-```bash
+```
 npm run e2e-tests
 ```
 
@@ -241,7 +240,7 @@ This is primarily used for CircleCI, but can be useful to developers.
 
 Likewise the validation tests can be run with this command:
 
-```bash
+```
 npm run validation-tests
 ```
 
