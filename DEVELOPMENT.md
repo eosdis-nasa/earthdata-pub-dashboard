@@ -204,7 +204,7 @@ api repo in the directory above your local dashboard repo.
 To deploy the EDPUB API locally, simply run the following command which will deploy
 the EDPUB api locally and add some data to test the api calls.
 
-```
+```bash
 npm run start-edpub-local-api
 ```
 
@@ -212,13 +212,13 @@ You should then source the .env file which will pull the local EDPUB API instanc
 rest api ID and store this as an environment variable which can be referenced within
 the source code.
 
-```
+```bash
 source .env
 ```
 
 You can then serve the dashboard as normal using the following command:
 
-```
+```bash
 APIROOT=http://localhost:8080 npm run serve
 ```
 
