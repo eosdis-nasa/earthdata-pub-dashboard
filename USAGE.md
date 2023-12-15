@@ -4,23 +4,11 @@ Earthdata Pub Dashboard shows comprehensive data on the stage and workings of th
 Earthdata Pub system. In this Dashboard you will find both aggregate and individual
 data slices.
 
-Earthdata Pub is a moving system. Almost all of the data views in Dashboard will
-update automatically to show the latest data every 15 seconds, so you don't have
-to refresh the page manually. Many pages provide a timer and adjacent clickable span
-to stop automatic updates, should you need to. Once stopped, you can click again
-to restart automatic updates.
-
 ## Searching and filtering
 
 Many tables provide dropdowns to filter the data based on attributes like status. 
 Often, you will find search fields where you can enter arbitrary search
-strings. As you type, the Earthdata Pub Dashboard and API will attempt to find
-records containing attributes with **prefixes** that match your search string.
-
-For example, say a request has the stage `In-progress`. In the requests
-section under "All Requests," searching for that stage will return a selection
-containing requests that relate. However, searching requests with the stage
-'Review' are not shown.
+strings.
 
 ## Sorting
 
@@ -67,7 +55,7 @@ fill out before you can submit.
 Once you successfully submit a form, the API will do it's own validation to confirm
 that the data you submitted matches the format that it expects. Some ways it could
 return a failed notification is, for example, you try to create a new User record
-using the same name that already exists in the database.
+using the same email that already exists in the database.
 
 For these, you should also see a corresponding error message at the top of the page.
 
@@ -86,5 +74,4 @@ form to the last saved state.
 
 When you successfully save a record, you will be redirected to the overview for
 that section. If you do not see your changes immediately represented in the tables,
-check back in 15 or 30 seconds, as it sometimes takes a bit for the changes to propagate
-through the Earthdata Pub system.
+check back in 15 or 30 seconds, as it sometimes takes a bit for the changes to propagate through the Earthdata Pub system.

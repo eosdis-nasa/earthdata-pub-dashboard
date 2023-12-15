@@ -87,9 +87,9 @@ repo.
 
 The API Swagger documentation will available at <http://localhost:8080/docs/>
 
-The Forms will available at <http://localhost:8081/>
+The Forms application will available at <http://localhost:8081/>
 
-#### Troubleshooting local deployement
+#### Troubleshooting local deployment
 
 If you have previously built using docker, you may need to remove docker orphans.
 
@@ -113,7 +113,7 @@ A common error is running the dashboard containers when other containers are
 running on your machine. Just stop that stack and restart the dashboard stack
 to resolve.
 
-```sh
+```bash
 ERROR: for localapi_shim_1  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
 
 ERROR: for shim  Cannot start service shim: driver failed programming external connectivity on endpoint localapi_shim_1 (7105603a4ff7fbb6f92211086f617bfab45d78cff47232793d152a244eb16feb): Bind for 0.0.0.0:9200 failed: port is already allocated
@@ -167,8 +167,7 @@ Then follow the steps noted above to build the dashboard locally or using Docker
 
 ## Deploying
 
-Deployment is done through Bamboo. The following deprecated instructions are included
-in case Bamboo becomes unavailable.
+Deployment is done through Bamboo. The following deprecated instructions are included in case Bamboo becomes unavailable.
 
 First build the site
 

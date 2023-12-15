@@ -9,7 +9,7 @@
   "author": {
     "name": "Earthdata Pub Dev Team"
   },
-  "license": "Apache-2.0",
+  "license": "BSD 3-Clause License",
   "bugs": {
     "url": "https://bugs.earthdata.nasa.gov/browse/EDPUB"
   },
