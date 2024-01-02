@@ -9,7 +9,7 @@
   "author": {
     "name": "Earthdata Pub Dev Team"
   },
-  "license": "Apache-2.0",
+  "license": "BSD 3-Clause License",
   "bugs": {
     "url": "https://bugs.earthdata.nasa.gov/browse/EDPUB"
   },
@@ -39,7 +39,7 @@
     "start": "docker-compose -f ./docker-compose.yml up -d",
     "stop": "docker-compose -f ./docker-compose.yml down",
     "view-logs": "docker-compose -f ./docker-compose.yml up",
-    "update-upload": "cd ../upload && git pull origin && cd ../dashboard && rm -rf node_modules/edpub-data-upload-utility && npm i edpub-data-upload-utility"
+    "update-upload": "cd ../earthdata-pub-upload && git pull origin && cd ../earthdata-pub-dashboard && rm -rf node_modules/edpub-data-upload-utility && npm i edpub-data-upload-utility"
   },
   "ava": {
     "babel": {
@@ -156,7 +156,7 @@
     "connected-react-router": "^6.6.1",
     "crypto-browserify": "^3.12.0",
     "deepmerge": "^4.2.2",
-    "edpub-data-upload-utility": "file:../upload",
+    "edpub-data-upload-utility": "file:../earthdata-pub-upload",
     "global": "^4.3.1",
     "hash-wasm": "4.9.0",
     "history": "^4.10.1",
