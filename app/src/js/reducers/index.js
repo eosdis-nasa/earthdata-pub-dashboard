@@ -22,6 +22,7 @@ import conversations from './conversations';
 import searchModal from './search-modal';
 import earthdatapubInstance from './earthdatapub-instance';
 import dataUpload from './data-upload';
+import { rtkApiSlice } from '../feature/api/rtkApiSlice.js';
 
 const def = (state = {}, action) => state;
 
@@ -48,10 +49,12 @@ export const reducers = {
   roles,
   conversations,
   searchModal,
-  dataUpload
+  dataUpload,
+  //[rtkApiSlice.reducerPath] : rtkApiSlice.reducer
 };
 
 export const createRootReducer = (history) => combineReducers({
   router: connectRouter(history),
+  [rtkApiSlice.reducerPath] : rtkApiSlice.reducer,
   ...reducers
 });

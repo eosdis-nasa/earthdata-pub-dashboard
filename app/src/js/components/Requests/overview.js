@@ -1,5 +1,5 @@
 'use strict';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -9,7 +9,7 @@ import {
   // clearRequestsSearch,
   // filterRequests,
   // clearRequestsFilter,
-  listRequests,
+  //listRequests,
   // filterStatuses,
   // clearStagesFilter,
   // clearStatusesFilter,
@@ -40,6 +40,8 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { requestPrivileges } from '../../utils/privileges';
 import Loading from '../LoadingIndicator/loading-indicator';
 import Meditor from '../MeditorModal/modal';
+import { useListRequestsQuery } from '../../feature/api/rtkApiSlice';
+
 
 const breadcrumbConfig = [
   {
@@ -57,28 +59,37 @@ const breadcrumbConfig = [
   }
 ];
 
-class RequestsOverview extends React.Component {
-  constructor () {
-    super();
-    this.state = { producers: [], originalList: {}, list: {} };
-    this.generateQuery = this.generateQuery.bind(this);
-    this.handleProducerSelect = this.handleProducerSelect.bind(this);
-  }
+function RequestsOverview () {
+  const [producers, setProducers] = useState([]);
+  const [originalList, setOriginalList] = useState({});
+  const [list, setList] = useState({});
 
-  async componentDidMount () {
-    const { dispatch } = this.props;
-    await dispatch(listRequests());
-    const { requests } = this.props;
-    const { list } = requests;
-    const originalList = this.filter(list);
-    this.setState({ originalList, list: originalList });
-  }
 
-  generateQuery () {
+  const {
+    data: requests,
+    isSuccess: requestIsSuccess,
+    isError: requestIsError,
+    error: requestsError,
+  } = useListRequestsQuery({},{refetchOnMountOrArgChange: true});
+
+  useEffect(() => {
+    if (requestIsSuccess){
+      console.log(requests);
+      const {list: tmpOriginalList} = requests;
+      console.log(tmpOriginalList);
+      const tmpList = filter(tmpOriginalList);
+      setOriginalList(tmpList);
+      setList(tmpList);
+    }
+    
+  }, [requests]);
+
+
+  function generateQuery () {
     return {};
   }
 
-  filter(list, match) {
+  function filter(baseList, match) {
     const newList = {};
     const tmp = [];
     let requestSearchValue = '';
@@ -86,8 +97,8 @@ class RequestsOverview extends React.Component {
       requestSearchValue = document.querySelector('.request-section input.search').value;
     }
     const re = new RegExp(requestSearchValue, 'gi');
-    for (const ea in list) {
-      const record = list[ea];
+    for (const ea in baseList) {
+      const record = baseList[ea];
       newList[ea] = record;
       for (const r in record) {
         if (!record[r].hidden && record[r].step_name !== 'close' && typeof record[r] === 'object') {
@@ -99,14 +110,14 @@ class RequestsOverview extends React.Component {
           if (dataProduct === undefined) {
             dataProduct = `Request Initialized by ${record[r].initiator.name}`;
           }
-          const isFound = this.state.producers.some(element => {
+          const isFound = producers.some(element => {
             if (element.value === prod.value) {
               return true;
             }
             return false;
           });
           if (!isFound && JSON.stringify(prod) !== '{}') {
-            this.state.producers.push(prod);
+            producers.push(prod);
           }
           if ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '') {
             if (match === undefined) {
@@ -131,30 +142,31 @@ class RequestsOverview extends React.Component {
     return newList;
   }
 
-  handleProducerSelect (list, e) {
+  function handleProducerSelect (list, e) {
     if (e.length === 0) {
-      this.setState({ list: this.filter(this.state.originalList) });
+      setList(filter(originalList));
     } else if (e[0] !== undefined) {
-      this.setState({ list: this.filter(list, Object.values(e)) });
+      setList(filter(originalList, Object.values(e)));
     }
   }
+    
 
-  render () {
-    if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
-      if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
-        const searchElement = document.querySelector('.request-section input.search');
+  if (list !== undefined && list.meta !== undefined && list.data !== undefined) {
+    if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
+      const searchElement = document.querySelector('.request-section input.search');
 
-        searchElement.addEventListener('change', () => {
-          this.setState({ list: this.filter(this.state.originalList) });
-        });
-      }
-      const query = this.generateQuery();
-      const { canInitialize } = requestPrivileges(this.props.privileges);
-      const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
-      const list = this.state.list;
-      const { queriedAt } = list.meta;
-      const unique = [...new Set(list.data.map(item => item.id))];
-      return (
+      searchElement.addEventListener('change', () => {
+        setList(filter(originalList));
+      });
+    }
+    const query = generateQuery();
+    const { canInitialize } = requestPrivileges(this.props.privileges);
+    const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
+    const constList = list;
+    const { queriedAt } = constList.meta;
+    const unique = [...new Set(constList.data.map(item => item.id))];
+
+    return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
           <Breadcrumbs config={breadcrumbConfig} />
@@ -183,8 +195,8 @@ class RequestsOverview extends React.Component {
               >
               <Select
                 id="producerSelect"
-                options={this.state.producers}
-                onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
+                options={producers}
+                onChange={(e) => handleProducerSelect(originalList, e)}
                 isSearchable={true}
                 placeholder='Select Data Producer'
                 className='selectButton'
@@ -196,10 +208,11 @@ class RequestsOverview extends React.Component {
         </section>
         <Meditor></Meditor>
       </div>
-      );
-    }
-    return null;
+    );
   }
+  return (
+    <></>
+  )
 }
 
 RequestsOverview.propTypes = {

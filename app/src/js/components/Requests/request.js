@@ -69,6 +69,7 @@ class RequestOverview extends React.Component {
       .then((value) => {
         const record = this.props.requests.detail;
         this.handleSelect(record?.data?.step_data?.name, record?.data?.step_data?.name)
+        console.log(record);
       });
     this.setState({ showSearch: false });
     this.setState({ setShowSearch: false });

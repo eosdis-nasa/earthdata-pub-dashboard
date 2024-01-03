@@ -1,11 +1,13 @@
 import { createBrowserHistory } from 'history';
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 import { routerMiddleware } from 'connected-react-router';
 import { createRootReducer } from '../reducers';
 import { requestMiddleware } from '../middleware/request';
 import { createLogger } from 'redux-logger';
 import { window } from '../utils/browser';
+import { rtkApiSlice } from '../feature/api/rtkApiSlice';
 import config from '../config';
+
 
 export const history = createBrowserHistory({ basename: config.basepath });
 
@@ -28,8 +30,16 @@ const isDevelopment = config.environment === 'development';
 const middlewares = [
   routerMiddleware(history), // for dispatching history actions
   requestMiddleware,
+  rtkApiSlice.middleware,
   ...getDefaultMiddleware()
 ];
+
+// [
+//   routerMiddleware(history), // for dispatching history actions
+//   requestMiddleware,
+//   ...getDefaultMiddleware().concat(rtkApiSlice.middleware)
+  
+// ];
 
 if (isDevelopment) {
   const logger = createLogger({
