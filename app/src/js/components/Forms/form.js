@@ -414,9 +414,7 @@ class FormOverview extends React.Component {
         if (this.props.requests.detail.data.step_name.match(/close/g)) {
           editable = false;
           sameFormAsStep = false;
-          if (canReview) {
-            viewCommentsList = true;
-          } else {
+          if (!canReview) {
             canReview = false;
           }
         }
