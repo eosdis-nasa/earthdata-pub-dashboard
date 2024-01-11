@@ -1,12 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { API_URL } from '../../config'
+import { get as getProperty } from 'object-path';
+import _config from '../../config';
+
+const {apiRoot} = _config
 
 export const rtkApiSlice = createApi({
-    reducerPath: 'api',
+    reducerPath: 'rtkApiSlice',
     baseQuery: fetchBaseQuery({
-        baseUrl: API_URL,
+        baseUrl: apiRoot,
         prepareHeaders: (headers, { getState }) => {
-            const token = getState().auth.token
+            const token = getProperty(getState(), 'api.tokens.token')
             if (token) {
                 headers.set('authorization', `Bearer ${token}`)
             }
@@ -15,7 +18,7 @@ export const rtkApiSlice = createApi({
     }),
     endpoints: builder => ({
         listRequests: builder.query({
-            query: () => ({
+            query: ({}) => ({
                 url: 'data/submission/operation/active',
                 method: 'POST'
             }),

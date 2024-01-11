@@ -62,7 +62,7 @@ const breadcrumbConfig = [
 function RequestsOverview () {
   const [producers, setProducers] = useState([]);
   const [originalList, setOriginalList] = useState({});
-  const [list, setList] = useState({});
+  const [list, setList] = useState([]);
 
 
   const {
@@ -75,7 +75,7 @@ function RequestsOverview () {
   useEffect(() => {
     if (requestIsSuccess){
       console.log(requests);
-      const {list: tmpOriginalList} = requests;
+      const tmpOriginalList = requests;
       console.log(tmpOriginalList);
       const tmpList = filter(tmpOriginalList);
       setOriginalList(tmpList);
@@ -160,7 +160,7 @@ function RequestsOverview () {
       });
     }
     const query = generateQuery();
-    const { canInitialize } = requestPrivileges(this.props.privileges);
+    const { canInitialize } = requestPrivileges(props.privileges);
     const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
     const constList = list;
     const { queriedAt } = constList.meta;
