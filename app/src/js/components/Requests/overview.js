@@ -69,7 +69,9 @@ class RequestsOverview extends React.Component {
     const { dispatch } = this.props;
     await dispatch(listRequests());
     const { requests } = this.props;
+    console.log(requests);
     const { list } = requests;
+    console.log(list);
     const originalList = this.filter(list);
     this.setState({ originalList, list: originalList });
   }
