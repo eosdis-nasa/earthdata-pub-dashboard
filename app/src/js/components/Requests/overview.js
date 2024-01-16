@@ -142,7 +142,7 @@ class RequestsOverview extends React.Component {
   }
 
   render () {
-    if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
+    //if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
       if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
         const searchElement = document.querySelector('.request-section input.search');
 
@@ -154,8 +154,8 @@ class RequestsOverview extends React.Component {
       const { canInitialize } = requestPrivileges(this.props.privileges);
       const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
       const list = this.state.list;
-      const { queriedAt } = list.meta;
-      const unique = [...new Set(list.data.map(item => item.id))];
+      const queriedAt = list.meta?.queriedAt
+      const unique = [...new Set(list.data?.map(item => item.id))];
       return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
@@ -175,7 +175,9 @@ class RequestsOverview extends React.Component {
           </div>
           {!list
             ? <Loading />
-            : <List
+            : <>{ 
+              list.data?
+              <List
                 list={list}
                 tableColumns={tableColumns}
                 query={query}
@@ -193,14 +195,15 @@ class RequestsOverview extends React.Component {
                 aria-label='Select Data Producer'
                 isMulti={true}
               />
-              </List>
+              </List>:<></>
+            }</>
           }
         </section>
         <Meditor></Meditor>
       </div>
       );
-    }
-    return null;
+    // }
+    // return null;
   }
 }
 
