@@ -37,7 +37,7 @@ import Select from 'react-select';
 import UploadOverview from '../DataUpload/overview';
 
 class RequestOverview extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = { current: {}, names: {}, formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
     this.navigateBack = this.navigateBack.bind(this);
@@ -59,7 +59,7 @@ class RequestOverview extends React.Component {
     this.cloneRequest2 = this.cloneRequest2.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { dispatch } = this.props;
     const { requestId } = this.props.match.params;
     // This causes a repeating query for workflows cluttering up the logs.
@@ -74,7 +74,7 @@ class RequestOverview extends React.Component {
     this.setState({ setShowSearch: false });
   }
 
-  toProperCase (str) {
+  toProperCase(str) {
     return str?.replace(
       /\w\S*/g,
       function (txt) {
@@ -83,7 +83,7 @@ class RequestOverview extends React.Component {
     );
   }
 
-  setSteps (steps, current) {
+  setSteps(steps, current) {
     const tmp = [];
     for (const ea in steps) {
       if (ea === current) {
@@ -96,27 +96,27 @@ class RequestOverview extends React.Component {
     this.setState({ steps: tmp });
   }
 
-  handleSelect (e, stepName) {
+  handleSelect(e, stepName) {
     this.setState({ current: e });
-    if (JSON.stringify(this.state.current) !== JSON.stringify(e) && stepName !== e.value) {
-      document.querySelector('.save-section').classList.remove('hidden');
+    if (JSON.stringify(this.state.current) !== JSON.stringify(e) && stepName !== e?.value) {
+      document.querySelector('.save-section')?.classList?.remove('hidden');
     } else {
-      document.querySelector('.save-section').classList.add('hidden');
+      document.querySelector('.save-section')?.classList?.add('hidden');
     }
   }
 
-  navigateBack () {
+  navigateBack() {
     const { history } = this.props;
     history.push('/requests');
   }
 
-  applyWorkflow () {
+  applyWorkflow() {
     const { requestId } = this.props.match.params;
     const { history } = this.props;
     history.push(`/workflows?requestId=${requestId}`);
   }
 
-  async cloneRequest () {
+  async cloneRequest() {
     const { requestId } = this.props.match.params;
     const name = JSON.parse(window.localStorage.getItem('auth-user')).name;
     const id = JSON.parse(window.localStorage.getItem('auth-user')).id;
@@ -128,7 +128,7 @@ class RequestOverview extends React.Component {
     this.navigateBack();
   }
 
-  async cloneRequest2 () {
+  async cloneRequest2() {
     const { requestId } = this.props.match.params;
     const { history } = this.props;
     history.push({
@@ -140,7 +140,7 @@ class RequestOverview extends React.Component {
     });
   }
 
-  async handleSubmit () {
+  async handleSubmit() {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
     const payload = {
@@ -152,10 +152,10 @@ class RequestOverview extends React.Component {
     // TODO - Remove the below call; you should get a response from the above with
     // the request details
     await this.props.dispatch(getRequestDetails(requestId));
-    document.querySelector('.save-section').classList.add('hidden');
+    document.querySelector('.save-section')?.classList.add('hidden');
   }
 
-  async handleRemove (contributorId) {
+  async handleRemove(contributorId) {
     const { requestId } = this.props.match.params;
     await this.props.dispatch(removeUserFromRequest(requestId, contributorId));
     // TODO - Remove the below call; you should get a response from the above with
@@ -163,27 +163,27 @@ class RequestOverview extends React.Component {
     await this.props.dispatch(getRequestDetails(requestId));
   }
 
-  async delete () {
+  async delete() {
     const { requestId } = this.props.match.params;
     await this.props.dispatch(withdrawRequest(requestId));
     this.navigateBack();
   }
 
-  async restore () {
+  async restore() {
     const { requestId } = this.props.match.params;
     await this.props.dispatch(restoreRequest(requestId));
     this.navigateBack();
   }
 
-  async openUserForm () {
+  async openUserForm() {
     this.setState({ showSearch: true });
   }
 
-  async closeUserForm () {
+  async closeUserForm() {
     this.setState({ showSearch: false });
   }
 
-  async exportMetadata () {
+  async exportMetadata() {
     const mappedData = JSON.stringify(this.props.requests.detail.data.metadata, null, 2);
     const a = document.createElement('a');
     const file = new Blob([mappedData], { type: 'application/json' });
@@ -192,11 +192,11 @@ class RequestOverview extends React.Component {
     a.click();
   }
 
-  selectWorkflow (selector, workflow) {
+  selectWorkflow(selector, workflow) {
     this.setState({ workflow });
   }
 
-  async submitCallback (id) {
+  async submitCallback(id) {
     const { requestId } = this.props.match.params;
     const payload = {
       id: requestId,
@@ -207,7 +207,7 @@ class RequestOverview extends React.Component {
     await window.location.reload(false);
   }
 
-  renderWorkflowSave (record) {
+  renderWorkflowSave(record) {
     return (
       <>
         <br></br>
@@ -222,7 +222,7 @@ class RequestOverview extends React.Component {
               id="workflowSelect"
               options={record?.data?.workflow?.steps.map((step) => {
                 return {
-                  value: step, 
+                  value: step,
                   label: this.toProperCase(step.replace(/_/g, ' '))
                 }
               })}
@@ -246,7 +246,7 @@ class RequestOverview extends React.Component {
     );
   }
 
-  render () {
+  render() {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
     const searchOptions = {
@@ -433,27 +433,27 @@ class RequestOverview extends React.Component {
 
         <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
-          { this.state.showSearch && <SearchModal { ...searchOptions }/> }
-          { canWithdraw || canRestore || canInitialize ? <AsyncCommands config={dropdownConfig} /> : null }
-          { request && lastUpdated(request.last_change, 'Updated') }
+          {this.state.showSearch && <SearchModal {...searchOptions} />}
+          {canWithdraw || canRestore || canInitialize ? <AsyncCommands config={dropdownConfig} /> : null}
+          {request && lastUpdated(request.last_change, 'Updated')}
           <dl className='status--process'>
             <dt>Status:</dt>
             <dd className={request.status}>{request.status}</dd>
           </dl>
         </section>
-          { record.inflight ? <Loading /> : request ?
-              <>
-              <section className='page__section'>
-                <div className='heading__wrapper--border'>
-                  <h1 className='heading--small' aria-labelledby={strings.request_overview}>
-                    {strings.request_overview}
-                  </h1>
-                </div>
-                <div className='indented__details'>
-                    <Metadata data={request} accessors={metaAccessors} />
-                </div>
-              </section>
-              <section className='page__section'>
+        {record.inflight ? <Loading /> : request ?
+          <>
+            <section className='page__section'>
+              <div className='heading__wrapper--border'>
+                <h1 className='heading--small' aria-labelledby={strings.request_overview}>
+                  {strings.request_overview}
+                </h1>
+              </div>
+              <div className='indented__details'>
+                <Metadata data={request} accessors={metaAccessors} />
+              </div>
+            </section>
+            <section className='page__section'>
               <br></br>
               <div className='page__section__header'>
                 <h1 className='heading--small' aria-labelledby='contributers'>
@@ -464,21 +464,21 @@ class RequestOverview extends React.Component {
                 {
                   record?.data?.contributors?.map((contributor, key) => {
                     return (
-                    <div key={key} className='flex__row sm-border'>
-                      <div className='flex__item--w-25'>
-                        {contributor.name}
+                      <div key={key} className='flex__row sm-border'>
+                        <div className='flex__item--w-25'>
+                          {contributor.name}
+                        </div>
+                        <div className='flex__item--w-15'>
+                          {canRemoveUser &&
+                            <button
+                              className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                              onClick={(e) => this.handleRemove(contributor.id)}
+                              disabled={record.inflight}>
+                              Remove
+                            </button>
+                          }
+                        </div>
                       </div>
-                      <div className='flex__item--w-15'>
-                        {canRemoveUser &&
-                          <button
-                            className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
-                            onClick={(e) => this.handleRemove(contributor.id)}
-                            disabled={record.inflight}>
-                            Remove
-                          </button>
-                        }
-                      </div>
-                    </div>
                     );
                   })
                 }
@@ -493,26 +493,26 @@ class RequestOverview extends React.Component {
                   </div>
                 </div>
               </div>
+            </section>
+            <section className='page__section'>
+              {workflowSave}
+            </section>
+            <Meditor></Meditor>
+            {(_config.fileUploadDefault === 'true') ? <UploadOverview /> : null}
+            {showTable
+              ? <section className='page__section'>
+                <div className='heading__wrapper--border'>
+                  <h2 className='heading--medium heading--shared-content with-description'>Request Forms</h2>
+                </div>
+                <Table
+                  data={requestForms}
+                  dispatch={this.props.dispatch}
+                  tableColumns={tableColumns}
+                />
               </section>
-              <section className='page__section'>
-                {workflowSave}
-              </section>
-              <Meditor></Meditor>
-              {(_config.fileUploadDefault === 'true') ? <UploadOverview /> : null}
-              { showTable
-                ? <section className='page__section'>
-                  <div className='heading__wrapper--border'>
-                    <h2 className='heading--medium heading--shared-content with-description'>Request Forms</h2>
-                  </div>
-                  <Table
-                    data={requestForms}
-                    dispatch={this.props.dispatch}
-                    tableColumns={tableColumns}
-                  />
-                </section>
-                : null }
-              </> : null
-          }
+              : null}
+          </> : null
+        }
         <br />
       </div>
     );
