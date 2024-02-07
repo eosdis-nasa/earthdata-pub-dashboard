@@ -112,6 +112,10 @@ export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;
   return <Link to={{ pathname: `/questions/id/${questionId}` }} aria-label="View your question details">{questionName}</Link>;
 };
+export const daacLink = function (daacId) {
+  if (!daacId) return nullValue;
+  return <Link to={`/daacs/id/${daacId}`} aria-label="View your daac details">{daacId}</Link>;
+};
 export const groupLink = function (groupId) {
   if (!groupId) return nullValue;
   return <Link to={`/groups/id/${groupId}`} aria-label="View your group details">{groupId}</Link>;
