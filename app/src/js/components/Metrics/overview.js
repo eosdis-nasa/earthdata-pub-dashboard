@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Loading from '../LoadingIndicator/loading-indicator';
-import LoadingEllipsis from '../LoadingEllipsis/loading-ellipsis';
 import SearchModal from '../SearchModal';
 import { lastUpdated } from '../../utils/format';
 
@@ -126,7 +125,7 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
         <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_metrics} <span className='num--title'>{metrics?.list?.data?.length}</span></h2>
         </div>
-        {metrics?.list?.data?.length > 0 ?
+        {metrics?.list ?
         <List
           list={metrics?.list}
           dispatch={dispatch}
