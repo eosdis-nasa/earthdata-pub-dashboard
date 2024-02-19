@@ -12,7 +12,6 @@ import model from './model';
 import forms from './forms';
 import questions from './questions';
 import users from './users';
-import daacs from './daacs';
 import groups from './groups';
 import logs from './logs';
 import schema from './schema';
@@ -41,7 +40,6 @@ export const reducers = {
   forms,
   questions,
   users,
-  daacs,
   groups,
   logs,
   schema,

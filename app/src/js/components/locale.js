@@ -11,7 +11,6 @@ export const strings = new LocalizedStrings({
     all_forms: 'All Forms',
     all_users: 'All Users',
     all_groups: 'All Groups',
-    all_daacs: 'All Daacs',
     all_workflows: 'All Workflows',
     all_roles: 'All Roles',
     all_metrics: 'All Metrics',
