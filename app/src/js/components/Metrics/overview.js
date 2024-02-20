@@ -27,14 +27,13 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
   const { requestId } = match.params.requestId ? match.params.requestId : '';
   const metric = match.params.metric ? match.params.metric : undefined;
   useEffect(() => {
-    dispatch(listDaacs());
     dispatch(listWorkflows());
     // dispatch(getRequestDetails(requestId));
     dispatch(listCloudMetrics(metric));
   }, []);
 
   useEffect(() => {
-    setDaacOptions(daacs.map(({ id, short_name }) => ({ value: id, label: short_name })));
+    setDaacOptions(daacOptionNames);
     setWorkflowOptions(workflows.map(({ id, long_name }) => ({ value: id, label: long_name })));
     // requests.searchString,
     setMetricOptions(metricOptionNames);
@@ -211,7 +210,6 @@ MetricOverview.propTypes = {
   match: PropTypes.object,
   user_groups: PropTypes.array,
   groups: PropTypes.array,
-  daacs: PropTypes.array,
   states: PropTypes.array,
   workflows: PropTypes.array,
   requests: PropTypes.object,
@@ -225,7 +223,6 @@ export default withRouter(connect(state => ({
   metrics: state.metrics,
   user_groups: state.api.tokens.groups,
   groups: state.groups.list.data,
-  daacs: state.daacs.list.data,
   workflows: state.workflows.list.data,
   requests: state.requests,
   states: state.states,
