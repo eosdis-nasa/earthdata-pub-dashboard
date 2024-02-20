@@ -20,14 +20,6 @@ export const initialState = {
   searchString: null,
 };
 
-function createMap (data) {
-  const map = {};
-  data.forEach(d => {
-    map[d.name] = d;
-  });
-  return map;
-}
-
 /**
  * Filters intput data by filterstring on the data'a object's name.
 *
@@ -46,8 +38,11 @@ export default createReducer(initialState, {
   [METRICS]: (state, action) => {
     const { data: rawData } = action;
     const data = filterData(rawData, state.searchString);
-    set(state, 'map', createMap(data));
-    set(state, ['list', 'data'], data);
+    set(state, 'map', data);
+    
+    const allData = action.config.body?.metric === 'time_to_publish' ? data : action.config.body?.metric === 'user_count'  ? [data] : data.submissions ? data.submissions : [];
+    
+    set(state, ['list', 'data'], allData);
     set(state, ['list', 'meta'], { queriedAt: Date.now() });
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], false);
@@ -64,5 +59,5 @@ export default createReducer(initialState, {
   },
   [CLEAR_METRICS_SEARCH]: (state) => {
     set(state, ['searchString'], null);
-  },
+  }
 });

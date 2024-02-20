@@ -4,7 +4,7 @@ import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { listMetrics } from '../../actions';
+// import { listMetrics } from '../../actions';
 import config from '../../config';
 import { setWindowEditorRef } from '../../utils/browser';
 import Loading from '../LoadingIndicator/loading-indicator';
@@ -30,7 +30,7 @@ class Metric extends React.Component {
   }
 
   get (metricName) {
-    this.props.dispatch(listMetrics());
+    // this.props.dispatch(listMetrics());
   }
 
   renderReadOnlyJson (name, data) {
