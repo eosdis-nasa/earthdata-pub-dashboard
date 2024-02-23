@@ -13,16 +13,16 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 
 class Comment extends React.Component {
-  constructor () {
+  constructor() {
     super();
     this.displayName = 'Comment';
     this.state = { textRef: React.createRef() };
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     const search = this.props.location.search.split('=');
     let requestId = '';
-    if (search[1]!==undefined) {
+    if (search[1] !== undefined) {
       requestId = search[1].replace(/&step/g, '');
     }
     const step = search[2];
@@ -50,7 +50,7 @@ class Comment extends React.Component {
     }
   }
 
-  getFormalName (str) {
+  getFormalName(str) {
     if (typeof str === 'undefined') return '';
     const count = (str.match(/_/g) || []).length;
     if (count > 0) {
@@ -63,24 +63,24 @@ class Comment extends React.Component {
     return words.join(' ');
   }
 
-  formatComments () {
-    if (document.querySelectorAll('textarea#comment')[0].value !== '') {
+  formatComments() {
+    if (document.querySelectorAll('textarea#comment') !== undefined && document.querySelectorAll('textarea#comment')[0] !== undefined && document.querySelectorAll('textarea#comment')[0].value !== '') {
       document.querySelectorAll('textarea#comment')[0].placeholder = 'Enter a comment';
       document.querySelectorAll('textarea#comment')[0].classList.remove('required');
     }
   }
 
-  hasStepData () {
+  hasStepData() {
     if (typeof this.props.requests !== 'undefined' &&
-    typeof this.props.requests.detail.data !== 'undefined' &&
-    typeof this.props.requests.detail.data.step_data !== 'undefined') {
+      typeof this.props.requests.detail.data !== 'undefined' &&
+      typeof this.props.requests.detail.data.step_data !== 'undefined') {
       return true;
     } else {
       return false;
     }
   }
 
-  reply (requestName, id, stepName, step) {
+  reply(requestName, id, stepName, step) {
     const { dispatch } = this.props;
     if (this.state.textRef.current.value !== '') {
       const date = new Date();
@@ -98,7 +98,7 @@ class Comment extends React.Component {
     }
   }
 
-  render () {
+  render() {
     let reviewable = false;
     let { canReview } = requestPrivileges(this.props.privileges);
     let sameFormAsStep = false;
@@ -157,30 +157,30 @@ class Comment extends React.Component {
         conversationId = this.props.conversations.list.data.id;
       }
       return (
-          <section className='page_section'>
-              {typeof requestId !== 'undefined' &&
-                <form className='flex__column flex__item--grow-1'
-                  onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName, step); }}>
-                  <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em' }}></span>
-                  {requestId !== '' && reviewable && sameFormAsStep
-                    ? <><textarea placeholder='Enter a comment'
-                      ref={this.state.textRef}
-                      id='comment'
-                      aria-label="Enter a comment"
-                      title="Enter a comment"
-                      onChange={(e) => { e.preventDefault(); this.formatComments(); document.querySelectorAll('button.button--reply')[0].classList.remove('hidden'); } }
-                    ></textarea>
-                    <div style={{ minHeight: '40px' }}>
-                      <button type='submit'
-                        className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
-                        Save Comment
-                      </button>
-                    </div></>
-                    : null
-                  }
-                </form>
+        <section className='page_section'>
+          {typeof requestId !== 'undefined' &&
+            <form className='flex__column flex__item--grow-1'
+              onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName, step); }}>
+              <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em' }}></span>
+              {requestId !== '' && reviewable && sameFormAsStep
+                ? <><textarea placeholder='Enter a comment'
+                  ref={this.state.textRef}
+                  id='comment'
+                  aria-label="Enter a comment"
+                  title="Enter a comment"
+                  onChange={(e) => { e.preventDefault(); this.formatComments(); document.querySelectorAll('button.button--reply')[0].classList.remove('hidden'); }}
+                ></textarea>
+                  <div style={{ minHeight: '40px' }}>
+                    <button type='submit'
+                      className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
+                      Save Comment
+                    </button>
+                  </div></>
+                : null
               }
-          </section>
+            </form>
+          }
+        </section>
       );
     }
   }

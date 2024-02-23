@@ -17,60 +17,64 @@ import Table from '../SortableTable/SortableTable';
 import Comments from '../Comments/comments';
 
 class ApprovalStep extends React.Component {
-  constructor () {
+  constructor() {
     super();
     this.displayName = 'ApproveStep';
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const search = this.props.location.search.split('=');
     const requestId = search[1].replace(/&step/g, '');
     const { dispatch } = this.props;
     dispatch(getRequest(requestId));
   }
 
-  formatComments (approval) {
-    const savedBefore = localStorage.getItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
-    const hasCurrentValue = document.querySelectorAll('textarea#comment')[0].value !== '';
-    if (!approval && (savedBefore === null && !hasCurrentValue)) {
-      document.querySelectorAll('textarea#comment')[0].placeholder = 'required';
-      document.querySelectorAll('textarea#comment')[0].classList.add('required');
-    } else {
-      document.querySelectorAll('textarea#comment')[0].placeholder = 'Enter a comment';
-      document.querySelectorAll('textarea#comment')[0].classList.remove('required');
+  formatComments(approval) {
+    if (document.querySelectorAll('textarea#comment') !== undefined && document.querySelectorAll('textarea#comment')[0] !== undefined) {
+      const savedBefore = localStorage.getItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
+      const hasCurrentValue = document.querySelectorAll('textarea#comment')[0].value !== '';
+      if (!approval && (savedBefore === null && !hasCurrentValue)) {
+        document.querySelectorAll('textarea#comment')[0].placeholder = 'required';
+        document.querySelectorAll('textarea#comment')[0].classList.add('required');
+      } else {
+        document.querySelectorAll('textarea#comment')[0].placeholder = 'Enter a comment';
+        document.querySelectorAll('textarea#comment')[0].classList.remove('required');
+      }
     }
   }
 
-  async review (id, approval) {
+  async review(id, approval) {
     this.formatComments(approval);
-    const savedBefore = localStorage.getItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
-    const re = new RegExp(document.querySelectorAll('textarea#comment')[0].value, 'i');
-    const currentInboxValueInSaved = document.getElementById('previously-saved').innerHTML.match(re);
-    const hasCurrentValue = document.querySelectorAll('textarea#comment')[0].value !== '';
-    if (((!approval && savedBefore === 'saved') || (!approval && hasCurrentValue)) || approval) {
-      if (currentInboxValueInSaved == null) {
-        document.querySelectorAll('button.button--reply')[0].click();
+    if (document.querySelectorAll('textarea#comment') !== undefined && document.querySelectorAll('textarea#comment')[0] !== undefined) {
+      const savedBefore = localStorage.getItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
+      const re = new RegExp(document.querySelectorAll('textarea#comment')[0].value, 'i');
+      const currentInboxValueInSaved = document.getElementById('previously-saved').innerHTML.match(re);
+      const hasCurrentValue = document.querySelectorAll('textarea#comment')[0].value !== '';
+      if (((!approval && savedBefore === 'saved') || (!approval && hasCurrentValue)) || approval) {
+        if (currentInboxValueInSaved == null) {
+          document.querySelectorAll('button.button--reply')[0].click();
+        }
+        const { dispatch } = this.props;
+        await dispatch(reviewRequest(id, approval));
+        if (!approval) {
+          localStorage.removeItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
+        }
+        window.location.href = `${window.location.origin}${window.location.pathname.split(/\/requests/)[0]}/requests`;
       }
-      const { dispatch } = this.props;
-      await dispatch(reviewRequest(id, approval));
-      if (!approval) {
-        localStorage.removeItem(`${this.props.requests.detail.data.id}_${this.props.requests.detail.data.step_name}`);
-      }
-      window.location.href = `${window.location.origin}${window.location.pathname.split(/\/requests/)[0]}/requests`;
     }
   }
 
-  hasStepData () {
+  hasStepData() {
     if (typeof this.props.requests !== 'undefined' &&
-    typeof this.props.requests.detail.data !== 'undefined' &&
-    typeof this.props.requests.detail.data.step_data !== 'undefined') {
+      typeof this.props.requests.detail.data !== 'undefined' &&
+      typeof this.props.requests.detail.data.step_data !== 'undefined') {
       return true;
     } else {
       return false;
     }
   }
 
-  getFormalName (str) {
+  getFormalName(str) {
     if (typeof str === 'undefined') return '';
     const count = (str.match(/_/g) || []).length;
     if (count > 0) {
@@ -83,7 +87,7 @@ class ApprovalStep extends React.Component {
     return words.join(' ');
   }
 
-  render () {
+  render() {
     let { canReview } = requestPrivileges(this.props.privileges);
     const search = this.props.location.search.split('=');
     const requestId = search[1].replace(/&step/g, '');
@@ -137,60 +141,60 @@ class ApprovalStep extends React.Component {
       }
     ];
     return (
-        <div className='page__component'>
-          <section className='page__section page__section__controls'>
+      <div className='page__component'>
+        <section className='page__section page__section__controls'>
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
         <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
-          { request && lastUpdated(request.last_change, 'Updated') }
-          { request
+          {request && lastUpdated(request.last_change, 'Updated')}
+          {request
             ? <dl className='status--process'>
               <dt>Request Status:</dt>
               <dd className={request.status}>{request.status}</dd>
             </dl>
-            : null }
+            : null}
         </section>
         <section className='page__section'>
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium with-description'><strong>Step</strong>:&nbsp;&nbsp;&nbsp;&nbsp;{stepName}</h2>
           </div>
         </section>
-        { typeof requestId !== 'undefined'
+        {typeof requestId !== 'undefined'
           ? <><Comments /></>
           : null
         }
         <section className='page__section'>
-            { canReview && reviewReady && typeof requestId !== 'undefined' && (
-                <div className='flex__row reject-approve'>
-                      <div className='flex__item--spacing'>
-                        <button onClick={() => this.review(requestId, false)}
-                          className='button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'>
-                          {verbage[0]}
-                        </button>
-                      </div>
-                      <div className='flex__item--spacing'>
-                      <button onClick={() => this.review(requestId, true)}
-                          className='button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'>
-                          {verbage[1]}
-                      </button>
-                    </div>
-                </div>
-            )}
-          </section>
-          <br />
-          <br />
-          <section className='page__section'>
-            { showTable && typeof requestId !== 'undefined'
-              ? <>
+          {canReview && reviewReady && typeof requestId !== 'undefined' && (
+            <div className='flex__row reject-approve'>
+              <div className='flex__item--spacing'>
+                <button onClick={() => this.review(requestId, false)}
+                  className='button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary form-group__element--right'>
+                  {verbage[0]}
+                </button>
+              </div>
+              <div className='flex__item--spacing'>
+                <button onClick={() => this.review(requestId, true)}
+                  className='button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'>
+                  {verbage[1]}
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+        <br />
+        <br />
+        <section className='page__section'>
+          {showTable && typeof requestId !== 'undefined'
+            ? <>
               <h2 className='heading--medium with-description heading__wrapper--border'>Request Forms</h2>
-            <Table
+              <Table
                 data={requestForms}
                 dispatch={this.props.dispatch}
                 tableColumns={tableColumns} /></>
-              : null }
-            </section>
-        </div>
+            : null}
+        </section>
+      </div>
     );
   }
 }

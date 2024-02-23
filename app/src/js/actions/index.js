@@ -672,6 +672,25 @@ export const clearUsersSearch = () => ({ type: types.CLEAR_USERS_SEARCH });
 export const filterUsers = (param) => ({ type: types.FILTER_USERS, param });
 export const clearUsersFilter = (paramKey) => ({ type: types.CLEAR_USERS_FILTER, paramKey });
 
+export const getDaac = (daacId) => ({
+  [CALL_API]: {
+    type: types.DAAC,
+    id: daacId,
+    method: 'GET',
+    path: `data/daac/${daacId}`
+  }
+});
+
+export const listDaacs = (options) => ({
+  [CALL_API]: {
+    type: types.DAACS,
+    method: 'GET',
+    id: null,
+    path: 'data/daacs',
+    qs: Object.assign({ per_page: defaultPageLimit }, options)
+  }
+});
+
 export const listGroups = (options) => ({
   [CALL_API]: {
     type: types.GROUPS,
@@ -816,14 +835,6 @@ export const addWorkflow = (payload) => ({
 export const searchWorkflows = (searchString) => ({ type: types.SEARCH_WORKFLOWS, searchString });
 export const clearWorkflowsSearch = () => ({ type: types.CLEAR_WORKFLOWS_SEARCH });
 
-export const listMetrics = (options) => ({
-  [CALL_API]: {
-    type: types.METRICS,
-    method: 'GET',
-    url: new URL('metrics', root).href,
-    qs: Object.assign({ per_page: defaultPageLimit }, options)
-  }
-});
 export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });
 export const clearMetricsSearch = () => ({ type: types.CLEAR_METRICS_SEARCH });
 
@@ -838,10 +849,10 @@ export const getCloudMetric = (cloudMetricId) => ({
 
 export const listCloudMetrics = (options) => ({
   [CALL_API]: {
-    type: types.CLOUD_METRICS,
-    method: 'GET',
-    path: 'metrics/reports',
-    qs: Object.assign({ limit: defaultPageLimit }, options)
+    type: types.METRICS,
+    method: 'POST',
+    path: 'metrics/generateReport',
+    body: options
   }
 });
 export const searchCloudMetrics = (searchString) => ({ type: types.SEARCH_CLOUD_METRICS, searchString });
