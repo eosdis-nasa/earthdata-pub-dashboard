@@ -9,13 +9,13 @@ export const formatError = (response = {}, body) => {
   body = body || {};
   if (body.name) error = body.name;
   if (body.message) error += `${(error ? ': ' : '')}${body.message}`;
+  if (response && response.error && response.error.message) error += `${(error ? ': ' : '')}${response.error.message}`;
   return error;
 };
 
 export const getErrorMessage = (response) => {
   const { body } = response;
-  const errorMessage = (body && body.errorMessage) || (body && body.message) || (body && body.detail);
-
+  const errorMessage = (body && body.errorMessage) || (body && body.message) || (body && body.detail) || (response && response.error && response.error.message);
   if (errorMessage) return errorMessage;
   return formatError(response, body);
 };
