@@ -35,9 +35,8 @@ General coding standards are:
 1. document as you go
 2. make your code readable
 3. think about security from the start
-4. use a standard style guide (such as [PEP 8](https://www.python.org/dev/peps/pep-0008/))
-5. use a linter (such as [pylint](https://www.pylint.org/))
-6. use .gitignore to exclude files that should not be in a repo (see this repo's
+4. use a linter (such as [ESLint](https://eslint.org/))
+5. use .gitignore to exclude files that should not be in a repo (see this repo's
 [.gitignore](./.gitignore))
 
 An IDE, such as [VS Code](https://code.visualstudio.com/), helps to create and
