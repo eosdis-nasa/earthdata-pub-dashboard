@@ -25,6 +25,7 @@ export const strings = new LocalizedStrings({
     back_to_workflows: 'Back to Workflows',
     back_to_forms: 'Back to Forms',
     back_to_request_detail: 'Back to Request Detail Page',
+    daacs_onboarded: 'Onboarded DAAC Metrics',
     dashboard: 'Earthdata Pub Dashboard',
     request: 'Request',
     requests: 'Requests',

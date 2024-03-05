@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { shortDateNoTimeYearFirst } from '../../utils/format';
 import { daacOptionNames } from '../../selectors';
-
 export const tableColumns = [
   {
     Header: 'Event',
@@ -18,8 +17,12 @@ export const tableColumns = [
 ];
 
 export const getTime = (obj) => {
+  if (!obj) return '';
   if (typeof obj === 'undefined') return '';
   let time = '';
+  if (obj.days) {
+    time += `${obj.days} days `;
+  }
   if (obj.hours) {
     time += `${obj.hours} hours `;
   }
@@ -75,9 +78,9 @@ export const requestTableColumns = [
   },
   {
     Header: 'Workflow',
-    accessor: (row) => row.workflow_id,
-    Cell: row => row.row.original.workflow_id ? <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }} aria-label="View your workflow details">{row.row.original.workflow_id}</Link> : null,
-    id: 'workflow_id',
+    accessor: (row) => row.workflow_name,
+    Cell: row => row.row.original.workflow_id ? <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }} aria-label="View your workflow details">{row.row.original.workflow_name}</Link> : null,
+    id: 'workflow_name',
     // width: 170
   },
   {
@@ -120,10 +123,34 @@ export const timeColumns = [
 
 export const countColumns = [
   {
-    Header: 'Count',
+    Header: 'User Count',
     accessor: (row) => row.count,
-    Cell: row => row.row.original.count ? row.row.original.count : null,
-    id: 'count',
+    Cell: row => row.row.original.user_count ? row.row.original.user_count : null,
+    id: 'user_count',
     // width: 170
+  }
+];
+
+export const daacTableColumns = [
+  {
+    Header: 'DAAC',
+    accessor: 'daac_id',
+    id: 'daac_id',
+    Cell: row => row.row.original.daac_id && getDaac(row.row.original.daac_id, row) ? getDaac(row.row.original.daac_id, row) : null,
+  },
+  {
+    Header: 'Requests Submitted',
+    accessor: 'request_submitted',
+    id: 'request_submitted', 
+  },
+  {
+    Header: 'Requests Completed',
+    accessor: 'request_completed',
+    id: 'request_completed',
+  },
+  {
+    Header: 'Avg Time to Publish',
+    accessor: (row) => getTime(row.average_time_to_publish),
+    id: 'average_time_to_publish',
   }
 ];

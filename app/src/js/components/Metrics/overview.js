@@ -4,12 +4,10 @@ import PropTypes from 'prop-types';
 import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Loading from '../LoadingIndicator/loading-indicator';
-import SearchModal from '../SearchModal';
-import { lastUpdated } from '../../utils/format';
+import { displayCase } from '../../utils/format';
 
 import {
   listCloudMetrics,
-  listDaacs,
   listWorkflows,
   // getRequestDetails,
   // searchRequests,
@@ -18,8 +16,7 @@ import {
 import List from '../Table/Table';
 import Select from 'react-select';
 import { metricOptionNames, workflowOptionNames, stateOptionNames, daacOptionNames } from '../../selectors';
-import Search from '../Search/search';
-import { tableColumns, requestTableColumns, timeColumns, countColumns } from '../../utils/table-config/metrics';
+import { tableColumns, requestTableColumns, timeColumns, countColumns, daacTableColumns } from '../../utils/table-config/metrics';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
@@ -55,19 +52,9 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
   const [selectedStates, setSelectedStates] = useState([]);
 
   useEffect(() => {
-    handleSubmit()
+        handleSubmit()
   }, [selectedDaacs, selectedMetrics, selectedWorkflows, selectedStates])
 
-  const breadcrumbConfig = [
-    {
-      label: 'Dashboard Home',
-      href: '/'
-    },
-    {
-      label: 'Metrics',
-      active: true
-    }
-  ];
 
   /* const extractId = (list) => {
     const rtnList = [];
@@ -104,32 +91,183 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
       metric: selectedMetrics?.value,
       state: selectedStates?.value
     };
-    history.push('/metrics');
+    history.push(history.location);
     await dispatch(listCloudMetrics(payload))
   };
+
+  const getView = () => {
+    const { pathname } = history.location;
+
+    if (pathname === '/metrics/daacs') return 'DAAC';
+    else if (pathname === '/metrics/users') {
+      return 'User';
+    }
+    else if (pathname === '/metrics') return 'Overview';
+    else return 'all';
+  };
+
+  const view = getView();
+
+  useEffect(() => {
+    setSelectedMetrics({})
+
+    if (view === 'User') {
+      setSelectedMetrics({ value: "user_count", label: "User Count" });
+    }else if(view === 'DAAC'){
+      setSelectedWorkflows(null);
+    }
+  }, [view]);
+
+  const displayCaseView = displayCase(view);
+  const breadcrumbConfig = [
+    {
+      label: 'Dashboard Home',
+      href: '/'
+    },
+    {
+      label: 'Metrics',
+      href: '/metrics'
+    },
+    {
+      label: displayCaseView,
+      active: true
+    }
+  ];
+
+// Extract the 'data' array from the metrics.list object
+const { data } = metrics.list;
+
+// Create an object to store counts and total time for each daac_id
+const daacIdInfo = {};
+// Filter out duplicates and keep only the first occurrence of each unique daac_id
+const uniqueData = data.filter(item => {
+  // Check if the daac_id already exists in the daacIdInfo object
+  if (!daacIdInfo[item.daac_id]) {
+      // If it doesn't exist, initialize its count to 0 and other properties to 0
+      daacIdInfo[item.daac_id] = {
+          count: 0,
+          completed: 0,
+          published: 0,
+          total_days: 0,
+          total_hours: 0,
+          total_minutes: 0,
+          total_seconds: 0,
+          total_milliseconds: 0
+      };
+  }
   
+  // Increment the count for this daac_id
+  daacIdInfo[item.daac_id].count++;
   
+  // If the step_name is "close", increment the completed count
+  if (item.step_name === "close") {
+      daacIdInfo[item.daac_id].completed++;
+  }
+  
+  // If time_to_publish exists, update the published count and total time components
+  if (item.time_to_publish) {
+      daacIdInfo[item.daac_id].published++;
+      daacIdInfo[item.daac_id].total_days += item.time_to_publish.days || 0;
+      daacIdInfo[item.daac_id].total_hours += item.time_to_publish.hours || 0;
+      daacIdInfo[item.daac_id].total_minutes += item.time_to_publish.minutes || 0;
+      daacIdInfo[item.daac_id].total_seconds += item.time_to_publish.seconds || 0;
+      daacIdInfo[item.daac_id].total_milliseconds += item.time_to_publish.milliseconds || 0;
+  }
+  
+  // Return true if this is the first occurrence of the daac_id, false otherwise
+  return daacIdInfo[item.daac_id].count === 1;
+});
+
+// Calculate the average time_to_publish for each daac_id group
+Object.keys(daacIdInfo).forEach(daac_id => {
+  const info = daacIdInfo[daac_id];
+  if (info.count >= 1) {
+      const totalMilliseconds =
+      ((info.total_days || 0) * 24 * 60 * 60 * 1000) +
+      ((info.total_hours || 0) * 60 * 60 * 1000) +
+      ((info.total_minutes || 0) * 60 * 1000) +
+      ((info.total_seconds || 0) * 1000) +
+      (info.total_milliseconds || 0);
+
+      const averageMilliseconds = Math.floor(totalMilliseconds / info.count);
+      let remainingMilliseconds = averageMilliseconds;
+
+      const averageDays = Math.floor(remainingMilliseconds / (24 * 60 * 60 * 1000));
+      remainingMilliseconds %= 24 * 60 * 60 * 1000;
+
+      const averageHours = Math.floor(remainingMilliseconds / (60 * 60 * 1000));
+      remainingMilliseconds %= 60 * 60 * 1000;
+
+      const averageMinutes = Math.floor(remainingMilliseconds / (60 * 1000));
+      remainingMilliseconds %= 60 * 1000;
+
+      const averageSeconds = Math.floor(remainingMilliseconds / 1000);
+
+      info.average_time_to_publish = {
+          days: averageDays,
+          hours: averageHours,
+          minutes: averageMinutes,
+          seconds: averageSeconds,
+          milliseconds: remainingMilliseconds
+      };
+  }
+});
+
+// Add the average_time_to_publish property to each object in the filtered data array
+const dataWithAverageTimeToPublish = uniqueData.map(item => ({
+    ...item,
+    request_submitted: daacIdInfo[item.daac_id]?.count || null,
+    average_time_to_publish: daacIdInfo[item.daac_id]?.average_time_to_publish || null,
+    request_completed: daacIdInfo[item.daac_id]?.completed || 0
+}));
+
+// Create a new object with the filtered 'data' array containing average_time_to_publish
+const filteredMetricsList = { ...metrics.list, data: dataWithAverageTimeToPublish };
+
+const getTableColumns = (selectedMetrics, view) =>
+  selectedMetrics?.value && selectedMetrics.value.match(/time_to_publish/g)
+    ? timeColumns
+    : selectedMetrics?.value && selectedMetrics.value.match(/user_count/g)
+    ? countColumns
+    : view === 'DAAC' ? daacTableColumns 
+    : requestTableColumns;
+
+const tableColumnsFiltered = getTableColumns(selectedMetrics, view);
+
+const metricsWorkflow = data.map(item => ({
+  ...item,
+  workflow_name: workflows.find(workflow => workflow.id === item.workflow_id)?.long_name || "Unknown Workflow"
+}));
+
+const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
+
   return (
     <div className='page__component'>
       <section className='page__section page__section__controls'>
         <Breadcrumbs config={breadcrumbConfig} />
       </section>
       <section className='page__section page__section__header-wrapper'>
-        <div className='page__section__header'>
+      {view !== 'DAAC' && <div className='page__section__header'>
           <h1 className='heading--large heading--shared-content with-description '>{strings.metric_overview}</h1>
-        </div>
+        </div>}
+        {view === 'DAAC' && <div className='page__section__header'>
+          <h1 className='heading--large heading--shared-content with-description '>{strings.daacs_onboarded}</h1>
+        </div>}
       </section>
       {/* {showSearch && <SearchModal {...searchOptions} />} */}
       <section className='page__section'>
-        <div className='heading__wrapper--border'>
+        {view !== 'DAAC' && <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_metrics} <span className='num--title'>{metrics?.list?.data?.length}</span></h2>
-        </div>
+        </div>}
+        {view === 'DAAC' && <div className='heading__wrapper--border'>
+          <h2 className='heading--medium heading--shared-content with-description'>{'Daacs onboarded'} <span className='num--title'>{filteredMetricsList.data?.length}</span></h2>
+        </div>}
         {metrics?.list ?
-        <List
-          list={metrics?.list}
+          <List
+          list={view === 'DAAC'? filteredMetricsList : metricsWorkflows}
           dispatch={dispatch}
           action={listCloudMetrics}
-            tableColumns={selectedMetrics?.value && selectedMetrics?.value.match(/time_to_publish/g) ? timeColumns : selectedMetrics?.value && selectedMetrics?.value.match(/user_count/g) ? countColumns : requestTableColumns}
+          tableColumns={tableColumnsFiltered}
           query={{}}
           bulkActions={[]}
           rowId='event'
@@ -142,8 +280,8 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
               label='Search'
               placeholder="Request ID"
             
-  /> */}    
-            <label className='heading--small'>State
+  /> */}
+              {(view === 'Overview') && ( <label className='heading--small'>State
               <Select
                 id="stateSelect"
                 options={stateOptions}
@@ -155,8 +293,8 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
                 className='selectButton'
                 placeholder='Select State ...'
                 aria-label='Select State'
-              /></label>
-              <label className='heading--small'>Workflows
+              /></label>)}
+              {(view === 'Overview') && (<label className='heading--small'>Workflows
                 <Select
                   id="workflowSelect"
                   options={workflowOptions}
@@ -168,8 +306,8 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
                   className='selectButton'
                   placeholder='Select Workflows ...'
                   aria-label='Select Workflows'
-                /></label>
-            <label className='heading--small'>Daacs
+                /></label>)}
+              {(view === 'Overview' || view === 'DAAC') && (<label className='heading--small'>Daacs
               <Select
                 id="daacSelect"
                 options={daacOptions}
@@ -181,8 +319,8 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
                 className='selectButton'
                 placeholder='Select Daac ...'
                 aria-label='Select Daac'
-              /></label>
-              <label className='heading--small'>Metrics
+              /></label>)}
+              {/*<label className='heading--small'>Metrics
                 <Select
                   id="metricSelect"
                   options={metricOptions}
@@ -194,7 +332,7 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
                   className='selectButton'
                   placeholder='Select Metrics ...'
                   aria-label='Select Metrics'
-                /></label>
+                /></label>*/}
             </div>
         </List>
           : <Loading />}
