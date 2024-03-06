@@ -16,7 +16,7 @@ import {
 import List from '../Table/Table';
 import Select from 'react-select';
 import { metricOptionNames, workflowOptionNames, stateOptionNames, daacOptionNames } from '../../selectors';
-import { tableColumns, requestTableColumns, timeColumns, countColumns, daacTableColumns } from '../../utils/table-config/metrics';
+import { tableColumns, requestTableColumns, timeColumns, daacTableColumns } from '../../utils/table-config/metrics';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
@@ -97,11 +97,8 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
 
   const getView = () => {
     const { pathname } = history.location;
-
     if (pathname === '/metrics/daacs') return 'DAAC';
-    else if (pathname === '/metrics/users') {
-      return 'User';
-    }
+    else if (pathname === '/metrics/users') return 'User';
     else if (pathname === '/metrics') return 'Overview';
     else return 'all';
   };
@@ -110,7 +107,6 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
 
   useEffect(() => {
     setSelectedMetrics({})
-
     if (view === 'User') {
       setSelectedMetrics({ value: "user_count", label: "User Count" });
     }else if(view === 'DAAC'){
@@ -227,8 +223,6 @@ const filteredMetricsList = { ...metrics.list, data: dataWithAverageTimeToPublis
 const getTableColumns = (selectedMetrics, view) =>
   selectedMetrics?.value && selectedMetrics.value.match(/time_to_publish/g)
     ? timeColumns
-    : selectedMetrics?.value && selectedMetrics.value.match(/user_count/g)
-    ? countColumns
     : view === 'DAAC' ? daacTableColumns 
     : requestTableColumns;
 
@@ -256,13 +250,18 @@ const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
       </section>
       {/* {showSearch && <SearchModal {...searchOptions} />} */}
       <section className='page__section'>
-        {view !== 'DAAC' && <div className='heading__wrapper--border'>
+        {view === 'Overview' && <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_metrics} <span className='num--title'>{metrics?.list?.data?.length}</span></h2>
+        </div>}
+        {view === 'User' && <div className='heading__wrapper--border'>
+          <h2 className='heading--medium heading--shared-content with-description'>{strings.users} <span className='num--title'>{metrics?.list?.data?.[0]?.user_count}</span></h2>
         </div>}
         {view === 'DAAC' && <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{'Daacs onboarded'} <span className='num--title'>{filteredMetricsList.data?.length}</span></h2>
         </div>}
-        {metrics?.list ?
+
+        {view !== 'User'?
+        metrics?.list ?
           <List
           list={view === 'DAAC'? filteredMetricsList : metricsWorkflows}
           dispatch={dispatch}
@@ -335,7 +334,7 @@ const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
                 /></label>*/}
             </div>
         </List>
-          : <Loading />}
+          : <Loading />:<div></div>}
       </section>
     </div>
   );

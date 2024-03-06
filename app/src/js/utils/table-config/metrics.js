@@ -121,16 +121,6 @@ export const timeColumns = [
   }
 ];
 
-export const countColumns = [
-  {
-    Header: 'User Count',
-    accessor: (row) => row.count,
-    Cell: row => row.row.original.user_count ? row.row.original.user_count : null,
-    id: 'user_count',
-    // width: 170
-  }
-];
-
 export const daacTableColumns = [
   {
     Header: 'DAAC',

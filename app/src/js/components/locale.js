@@ -63,6 +63,7 @@ export const strings = new LocalizedStrings({
     view_requests_list: 'View Requests List',
     view_requests_overview: 'View Requests',
     view_questions_overview: 'View Questions',
+    users: 'Users'
   },
   gitc: {
     all_requests: 'All Products',
