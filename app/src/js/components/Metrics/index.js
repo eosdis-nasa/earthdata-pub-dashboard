@@ -4,9 +4,15 @@ import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
 import PropTypes from 'prop-types';
 import MetricsOverview from './overview';
-import Metric from './metric';
+// import Metric from './metric';
+import { strings } from '../locale';
 
 class Metrics extends React.Component {
+  constructor() {
+    super();
+    this.displayName = strings.all_metrics;
+  }
+
   render () {
     return (
       <div className='page__metrics'>
@@ -24,7 +30,7 @@ class Metrics extends React.Component {
             <div className='page__content--shortened'>
               <Switch>
                 <Route exact path='/metrics' component={MetricsOverview} />
-                <Route path='/metrics/:metricName' component={Metric} />
+                <Route path='/metrics/:metricName' component={MetricsOverview} />
               </Switch>
             </div>
           </div>
