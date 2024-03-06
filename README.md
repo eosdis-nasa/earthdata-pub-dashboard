@@ -41,14 +41,9 @@ To locate environment variables, see webpack.common.js:
 | DAAC_NAME    | e.g. LPDAAC, | *Local* |
 | STAGE | e.g. PROD, UAT, | *development* |
 | LABELS | gitc or daac localization. | *daac* |
-| AUTH_METHOD | The type of authorization method protecting the Earthdata Pub API. [launchpad or earthdata] | *earthdata*  |
 | REQUEST_HIDE_BUTTON_VERBAGE | The hide button verbage displayed on the request detail page. | Withdraw |
 | REQUEST_UNHIDE_BUTTON_VERBAGE | The hide button verbage displayed on the request detail page. | Restore |
-| KIBANAROOT | \<optional\> Should point to a Kibana endpoint. Must be set to examine distribution metrics details. | |
 | SHOW_DISTRIBUTION_API_METRICS | \<optional\> Display metrics from Earthdata Pub Distribution API.| *false* |
-| ESROOT | \<optional\> Should point to an Elasticsearch endpoint. Must be set for distribution metrics to be displayed. | |
-| ES_USER | \<optional\> Elasticsearch username, needed when protected by basic authorization | |
-| ES_PASSWORD | \<optional\> Elasticsearch password,needed when protected by basic authorization | |
 | HELP_PAGE_DEFAULT | URL of the instructional how to use Earthdata Pub in Overview | *<https://pub.earthdata.nasa.gov/data_producer_resources/how_to_use_edpub>* |
 | FILE_UPLOAD_DEFAULT | Turns on and off file-upload functionality | *false* |
 
