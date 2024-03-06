@@ -22,7 +22,8 @@ class Error extends React.Component {
     return (
       <div className='page__404' style={{ textAlign: 'center' }}>
         <h1 style={{ fontSize: '10em', marginBottom: '0' }}>Error</h1>
-        <p style={{ fontSize: '5em' }}> {this.state.error}</p>
+        <p style={{ fontSize: '3em' }}>An internal error occurred.</p>
+        <p style={{ fontSize: '3em' }}>If the error continues, reach out to EDPub development team.</p>
       </div>
     );
   }

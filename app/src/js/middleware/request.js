@@ -74,8 +74,6 @@ export const requestMiddleware = ({ dispatch, getState }) => next => action => {
         const errorCode = response?.error?.code || 200
         if(errorCode !== 200){
             const redirectUrl = new URL(`${window.location.origin}/error`);
-            redirectUrl.searchParams.set('code', errorCode);
-            redirectUrl.searchParams.set('error', encodeURIComponent(getErrorMessage(response)));
             window.location.href=redirectUrl
         }
         const { body } = response;
