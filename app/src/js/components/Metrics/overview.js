@@ -107,11 +107,14 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
 
   useEffect(() => {
     setSelectedMetrics({})
+    setSelectedDaacs(null);
+    setSelectedWorkflows(null);
+    setSelectedStates(null);
+
     if (view === 'User') {
       setSelectedMetrics({ value: "user_count", label: "User Count" });
-    }else if(view === 'DAAC'){
-      setSelectedWorkflows(null);
     }
+
   }, [view]);
 
   const displayCaseView = displayCase(view);
@@ -133,6 +136,7 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
 // Extract the 'data' array from the metrics.list object
 const { data } = metrics.list;
 
+
 // Create an object to store counts and total time for each daac_id
 const daacIdInfo = {};
 // Filter out duplicates and keep only the first occurrence of each unique daac_id
@@ -144,11 +148,7 @@ const uniqueData = data.filter(item => {
           count: 0,
           completed: 0,
           published: 0,
-          total_days: 0,
-          total_hours: 0,
-          total_minutes: 0,
-          total_seconds: 0,
-          total_milliseconds: 0
+          time_to_publish: 0
       };
   }
   
@@ -159,15 +159,11 @@ const uniqueData = data.filter(item => {
   if (item.step_name === "close") {
       daacIdInfo[item.daac_id].completed++;
   }
-  
+
   // If time_to_publish exists, update the published count and total time components
   if (item.time_to_publish) {
       daacIdInfo[item.daac_id].published++;
-      daacIdInfo[item.daac_id].total_days += item.time_to_publish.days || 0;
-      daacIdInfo[item.daac_id].total_hours += item.time_to_publish.hours || 0;
-      daacIdInfo[item.daac_id].total_minutes += item.time_to_publish.minutes || 0;
-      daacIdInfo[item.daac_id].total_seconds += item.time_to_publish.seconds || 0;
-      daacIdInfo[item.daac_id].total_milliseconds += item.time_to_publish.milliseconds || 0;
+      daacIdInfo[item.daac_id].time_to_publish += item.time_to_publish !== "" ? parseInt(item.time_to_publish) : 0;
   }
   
   // Return true if this is the first occurrence of the daac_id, false otherwise
@@ -178,34 +174,7 @@ const uniqueData = data.filter(item => {
 Object.keys(daacIdInfo).forEach(daac_id => {
   const info = daacIdInfo[daac_id];
   if (info.count >= 1) {
-      const totalMilliseconds =
-      ((info.total_days || 0) * 24 * 60 * 60 * 1000) +
-      ((info.total_hours || 0) * 60 * 60 * 1000) +
-      ((info.total_minutes || 0) * 60 * 1000) +
-      ((info.total_seconds || 0) * 1000) +
-      (info.total_milliseconds || 0);
-
-      const averageMilliseconds = Math.floor(totalMilliseconds / info.count);
-      let remainingMilliseconds = averageMilliseconds;
-
-      const averageDays = Math.floor(remainingMilliseconds / (24 * 60 * 60 * 1000));
-      remainingMilliseconds %= 24 * 60 * 60 * 1000;
-
-      const averageHours = Math.floor(remainingMilliseconds / (60 * 60 * 1000));
-      remainingMilliseconds %= 60 * 60 * 1000;
-
-      const averageMinutes = Math.floor(remainingMilliseconds / (60 * 1000));
-      remainingMilliseconds %= 60 * 1000;
-
-      const averageSeconds = Math.floor(remainingMilliseconds / 1000);
-
-      info.average_time_to_publish = {
-          days: averageDays,
-          hours: averageHours,
-          minutes: averageMinutes,
-          seconds: averageSeconds,
-          milliseconds: remainingMilliseconds
-      };
+      info.average_time_to_publish = Math.floor(info.time_to_publish / info.published);
   }
 });
 

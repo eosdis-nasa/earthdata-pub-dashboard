@@ -16,6 +16,22 @@ export const tableColumns = [
   }
 ];
 
+export const convertSecondsToDHMS = seconds => {
+  seconds = Math.floor(seconds); // Convert to integer, ignoring decimal points
+  const days = Math.floor(seconds / (3600 * 24));
+  let remainingSeconds = seconds % (3600 * 24);
+  const hours = Math.floor(remainingSeconds / 3600);
+  remainingSeconds %= 3600; // No need to redeclare the variable
+  const minutes = Math.floor(remainingSeconds / 60);
+  remainingSeconds %= 60; // No need to redeclare the variable
+  return {
+      days,
+      hours,
+      minutes,
+      seconds: remainingSeconds
+  };
+};
+
 export const getTime = (obj) => {
   if (!obj) return '';
   if (typeof obj === 'undefined') return '';
@@ -99,7 +115,7 @@ export const requestTableColumns = [
   },
   {
     Header: 'Time to Publish',
-    accessor: (row) => getTime(row.time_to_publish),
+    accessor: (row) => getTime(convertSecondsToDHMS(row.time_to_publish)),
     id: 'time_to_publish',
     // width: 120
   }
@@ -115,7 +131,7 @@ export const timeColumns = [
   },
   {
     Header: 'Time to Publish',
-    accessor: (row) => getTime(row.time_to_publish),
+    accessor: (row) => getTime(convertSecondsToDHMS(row.time_to_publish)),
     id: 'time_to_publish',
     // width: 120
   }
@@ -140,7 +156,7 @@ export const daacTableColumns = [
   },
   {
     Header: 'Avg Time to Publish',
-    accessor: (row) => getTime(row.average_time_to_publish),
+    accessor: (row) => getTime(convertSecondsToDHMS(row.average_time_to_publish)),
     id: 'average_time_to_publish',
   }
 ];
