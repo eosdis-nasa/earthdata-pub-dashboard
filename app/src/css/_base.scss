@@ -1028,6 +1028,7 @@ textarea {
 }
 div.selectButton {
   padding: 0;
+  z-index: 10;
 }
 div#producerSelect.selectButton {
   width: inherit;
