@@ -123,7 +123,7 @@ export const existingLink = (row, formId, formalName, step, stepType) => {
   } else {
     if (typeof formId === 'undefined' || stepType === 'service') {
         if (row.step_data && row.step_data.action_id) {
-        return <Link to={''} className={'button button--medium btn btn-secondary form-group__element--left button--no-icon next-action button--disabled button--secondary'} aria-label={formalName}>{formalName}</Link>;
+        return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
       }
       return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
     } else {
