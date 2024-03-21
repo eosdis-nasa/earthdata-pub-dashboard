@@ -379,6 +379,15 @@ export const restoreRequest = (requestId) => ({
   }
 });
 
+export const metadataMapper = (requestId) => ({
+  [CALL_API]: {
+    type: types.REQUEST_RESTORE,
+    method: 'POST',
+    path: 'data/submission/operation/mapMetadata',
+    body: { id: requestId }
+  }
+});
+
 export const addUserToRequest = (payload) => ({
   [CALL_API]: {
     type: types.REQUEST_ADDUSER,
