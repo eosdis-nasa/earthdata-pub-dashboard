@@ -19,7 +19,9 @@ class UploadOverview extends React.Component {
       hiddenFileInput: React.createRef(null), 
       statusMsg: 'Select a file', 
       uploadFile: '', 
-      keys: []
+      keys: [],
+      showProgressBar: false, // Added state to control the visibility of the progress bar,
+      progressValue: 0 // Initialize progressValue
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -153,6 +155,15 @@ class UploadOverview extends React.Component {
     const file = e.target.files[0];
     if (this.validateFile(file)) {
       this.setState({ statusMsg: 'Uploading' });
+      this.setState({ showProgressBar: true }); // Show progress bar when uploading starts
+      this.setState({ progressValue: 0 }); // Reset progress value to 0 before starting upload
+      
+      // Define the callback function to update progress value in state
+      const updateProgress = (progress) => {
+        console.log('callback', progress)
+        this.setState({ progressValue: Math.min(progress, 100) });
+      };
+
       const upload = new localUpload();
       const { requestId } = this.props.match.params;
       const { groupId } = this.props.match.params;
@@ -177,10 +188,11 @@ class UploadOverview extends React.Component {
           }
         }
         this.setState({ statusMsg: 'Uploading' });
-        const resp = await upload.uploadFile(payload)
+        const resp = await upload.uploadFile(payload, updateProgress)
+        clearInterval(incrementInterval); // Clear the interval when upload is complete
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
         if (error) {
-          console.log(`An error has occured on uploadFile: ${error}.`);
+          console.log(`An error has occurred on uploadFile: ${error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
         } else {
           this.setState({ statusMsg: 'Upload Complete' });
@@ -195,9 +207,31 @@ class UploadOverview extends React.Component {
         this.resetInputWithTimeout('Select a file', 1000)
       }
     }
-  };
+  }
+  
 
   render() {
+
+    const progressBarStyle = {
+      width: '100%',
+      backgroundColor: '#ddd', // Set default background color
+      height: '40px' // Set the height of the progress bar
+    };
+  
+    const progressBarFillStyle = {
+      height: '100%',
+      backgroundColor: '#007bff', // Set default fill color to blue
+      textAlign: 'center',
+      lineHeight: '40px', // Vertically center the text
+      color: 'white', // Set text color to white
+      fontSize: '20px', // Increase font size
+      width: `${this.state.progressValue}%` // Set width based on progress value
+    };
+  
+    const numberDisplayStyle = {
+      fontSize: '24px' // Increase font size of the number
+    };
+
     const tableColumns = [
       {
         Header: 'Filename',
@@ -224,7 +258,8 @@ class UploadOverview extends React.Component {
     const { requestId } = this.props.match.params;
     const { groupId } = this.props.match.params;
     return (
-      <><br></br>
+      <>
+        <br></br>
         <div className='page__component'>
           <div className='page__section__header'>
             <h1 className='heading--small' aria-labelledby='Upload Data File'>
@@ -234,10 +269,19 @@ class UploadOverview extends React.Component {
           <div className='indented__details' style={{ paddingTop: '1rem' }}>
             <div className='form__textarea'>
               {groupId !== undefined ?
-                <><label htmlFor="prefix" style={{ marginBottom: '1rem', marginTop: '1rem', fontSize: 'unset' }}>Subfolder (If applicable): </label><input id="prefix" name="prefix" style={{ marginBottom: '1rem' }} /></>
-              : null
+                <>
+                  <label htmlFor="prefix" style={{ marginBottom: '1rem', marginTop: '1rem', fontSize: 'unset' }}>Subfolder (If applicable): </label>
+                  <input id="prefix" name="prefix" style={{ marginBottom: '1rem' }} />
+                </>
+                : null
               }
               {this.state.statusMsg === 'Uploading' ? <Loading /> : null}
+              {this.state.showProgressBar && 
+                <div style={progressBarStyle}>
+      <div style={progressBarFillStyle}>
+        <span style={numberDisplayStyle}>{`${this.state.progressValue}%`}</span>
+      </div>
+    </div>}
               <label htmlFor='hiddenFileInput' style={{ marginBottom: '1rem', fontSize: 'unset' }}>{`${this.state.statusMsg}`}
                 <input
                   onChange={(e) => this.handleChange(e)}
@@ -247,25 +291,30 @@ class UploadOverview extends React.Component {
                   ref={this.state.hiddenFileInput}
                   id="hiddenFileInput" />
               </label>
+              
               <button onClick={(e) => this.handleClick(e)} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
             </div>
             {this.state.saved && requestId !== undefined && groupId === undefined
-            ?
-              <><br /><section className = 'page__section'>
-                <div style={{ borderBottom: '1px solid #E2DFDF'}}>
-                <h2 className='heading--medium heading--shared-content with-description'>Files Previously Uploaded</h2>
-                </div>
-                <Table
-                  data={this.state.files}
-                  dispatch={this.props.dispatch}
-                  tableColumns={tableColumns}
-                />
-              </section></>
-              : null }
+              ?
+              <>
+                <br />
+                <section className='page__section'>
+                  <div style={{ borderBottom: '1px solid #E2DFDF' }}>
+                    <h2 className='heading--medium heading--shared-content with-description'>Files Previously Uploaded</h2>
+                  </div>
+                  <Table
+                    data={this.state.files}
+                    dispatch={this.props.dispatch}
+                    tableColumns={tableColumns}
+                  />
+                </section>
+              </>
+              : null}
             {!this.state.loaded && groupId === undefined ? <Loading /> : null}
             <span>{this.state.saved ? this.state.saved : null}</span>
           </div>
-        </div></>
+        </div>
+      </>
     );
   }
 }
