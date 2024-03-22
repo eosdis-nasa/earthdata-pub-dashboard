@@ -10,7 +10,7 @@ import { library, dom } from '@fortawesome/fontawesome-svg-core';
 import { faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faChevronDown, faSort, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 // Authorization & Error Handling
-// import ErrorBoundary from './components/Errors/ErrorBoundary';
+import Error from './components/error';
 import NotFound from './components/404';
 import Auth from './components/Auth';
 
@@ -44,6 +44,7 @@ const MainRoutes = () => {
     <Main path='/'>
       <Switch>
         <Route exact path='/' component={Home} />
+        <Route path='/error' component={Error} />
         <Route path='/404' component={NotFound} />
         <Route path='/requests' component={Requests} />
         <Route path='/forms' component={Forms} />
@@ -58,7 +59,7 @@ const MainRoutes = () => {
         <Route path='/modules' component={Modules} />
         <Route path='/upload' component={Upload} />
         <Route path='/test-api' component={TestApi} />
-        <Route component={NotFound} />
+        <Route component={Error} />
       </Switch>
     </Main>
   );

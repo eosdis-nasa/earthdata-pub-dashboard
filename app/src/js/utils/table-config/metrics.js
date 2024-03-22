@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { shortDateNoTimeYearFirst } from '../../utils/format';
 import { daacOptionNames } from '../../selectors';
-
 export const tableColumns = [
   {
     Header: 'Event',
@@ -17,9 +16,29 @@ export const tableColumns = [
   }
 ];
 
+export const convertSecondsToDHMS = seconds => {
+  seconds = Math.floor(seconds); // Convert to integer, ignoring decimal points
+  const days = Math.floor(seconds / (3600 * 24));
+  let remainingSeconds = seconds % (3600 * 24);
+  const hours = Math.floor(remainingSeconds / 3600);
+  remainingSeconds %= 3600; // No need to redeclare the variable
+  const minutes = Math.floor(remainingSeconds / 60);
+  remainingSeconds %= 60; // No need to redeclare the variable
+  return {
+      days,
+      hours,
+      minutes,
+      seconds: remainingSeconds
+  };
+};
+
 export const getTime = (obj) => {
+  if (!obj) return '';
   if (typeof obj === 'undefined') return '';
   let time = '';
+  if (obj.days) {
+    time += `${obj.days} days `;
+  }
   if (obj.hours) {
     time += `${obj.hours} hours `;
   }
@@ -75,9 +94,9 @@ export const requestTableColumns = [
   },
   {
     Header: 'Workflow',
-    accessor: (row) => row.workflow_id,
-    Cell: row => row.row.original.workflow_id ? <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }} aria-label="View your workflow details">{row.row.original.workflow_id}</Link> : null,
-    id: 'workflow_id',
+    accessor: (row) => row.workflow_name,
+    Cell: row => row.row.original.workflow_id ? <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }} aria-label="View your workflow details">{row.row.original.workflow_name}</Link> : null,
+    id: 'workflow_name',
     // width: 170
   },
   {
@@ -96,7 +115,7 @@ export const requestTableColumns = [
   },
   {
     Header: 'Time to Publish',
-    accessor: (row) => getTime(row.time_to_publish),
+    accessor: (row) => getTime(convertSecondsToDHMS(row.time_to_publish)),
     id: 'time_to_publish',
     // width: 120
   }
@@ -112,18 +131,32 @@ export const timeColumns = [
   },
   {
     Header: 'Time to Publish',
-    accessor: (row) => getTime(row.time_to_publish),
+    accessor: (row) => getTime(convertSecondsToDHMS(row.time_to_publish)),
     id: 'time_to_publish',
     // width: 120
   }
 ];
 
-export const countColumns = [
+export const daacTableColumns = [
   {
-    Header: 'Count',
-    accessor: (row) => row.count,
-    Cell: row => row.row.original.count ? row.row.original.count : null,
-    id: 'count',
-    // width: 170
+    Header: 'DAAC',
+    accessor: 'daac_id',
+    id: 'daac_id',
+    Cell: row => row.row.original.daac_id && getDaac(row.row.original.daac_id, row) ? getDaac(row.row.original.daac_id, row) : null,
+  },
+  {
+    Header: 'Requests Submitted',
+    accessor: 'request_submitted',
+    id: 'request_submitted', 
+  },
+  {
+    Header: 'Requests Completed',
+    accessor: 'request_completed',
+    id: 'request_completed',
+  },
+  {
+    Header: 'Avg Time to Publish',
+    accessor: (row) => getTime(convertSecondsToDHMS(row.average_time_to_publish)),
+    id: 'average_time_to_publish',
   }
 ];

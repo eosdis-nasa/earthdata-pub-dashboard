@@ -10,7 +10,8 @@ import {
   addUserToRequest,
   removeUserFromRequest,
   setWorkflowStep,
-  copyRequest
+  copyRequest,
+  metadataMapper
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -184,7 +185,9 @@ class RequestOverview extends React.Component {
   }
 
   async exportMetadata() {
-    const mappedData = JSON.stringify(this.props.requests.detail.data.metadata, null, 2);
+    const { requestId } = this.props.match.params;
+    const updatedMetadata = await this.props.dispatch(metadataMapper(requestId)); 
+    const mappedData = updatedMetadata.data ? JSON.stringify(updatedMetadata.data): "";
     const a = document.createElement('a');
     const file = new Blob([mappedData], { type: 'application/json' });
     a.href = URL.createObjectURL(file);

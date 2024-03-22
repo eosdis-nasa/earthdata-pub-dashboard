@@ -122,6 +122,9 @@ export const existingLink = (row, formId, formalName, step, stepType) => {
     return formalName;
   } else {
     if (typeof formId === 'undefined' || stepType === 'service') {
+        if (row.step_data && row.step_data.action_id) {
+        return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
+      }
       return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
     } else {
       return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'view form details'}>{formalName}</Link>;

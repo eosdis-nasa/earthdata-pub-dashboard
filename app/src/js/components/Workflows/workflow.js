@@ -22,7 +22,7 @@ function onLoad (reactFlowInstance) {
 class Workflows extends React.Component {
   constructor () {
     super();
-    this.state = { view: 'json', nodes: [], edges: [], renderedGraph: false };
+    this.state = { view: 'graph', nodes: [], edges: [], renderedGraph: false };
     this.renderReadOnlyJson = this.renderReadOnlyJson.bind(this);
     this.renderJson = this.renderJson.bind(this);
     this.showGraph = this.showGraph.bind(this);
@@ -146,10 +146,10 @@ class Workflows extends React.Component {
               : record.data
                 ? <div>
                   <div className='tab--wrapper'>
-                    <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
-                      onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
                     <button className={'button--tab ' + (this.state.view === 'graph' ? 'button--active' : '')}
                       onClick={() => this.state.view !== 'graph' && this.setState({ view: 'graph' })}>Graphical View</button>
+                    <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
+                      onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
                   </div>
                   <div>
                     {this.state.view === 'graph' ? this.showGraph(record.data) : this.renderJson(record.data)}

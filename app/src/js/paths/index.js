@@ -7,6 +7,7 @@ import groups from './groups';
 import roles from './roles';
 import workflows from './workflows';
 import conversations from './conversations';
+import handler from "./metrics";
 
-const paths = [requests, forms, questions, users, groups, workflows, roles, conversations];
+const paths = [requests, forms, questions, handler, users, groups, workflows, roles, conversations];
 export default paths;

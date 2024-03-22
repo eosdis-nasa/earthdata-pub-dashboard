@@ -60,6 +60,26 @@ class Home extends React.Component {
   }
 
   async componentDidMount() {
+    await this.updateList();
+  
+    let elapsedTime = 0; // Track elapsed time
+  
+    const intervalId = setInterval(async () => {
+      elapsedTime += 30000; // Increment elapsed time by 30 seconds
+      const { list } = this.props.requests;
+      const hasActionId = list.data.some(item => item.step_data && item.step_data.action_id);
+      
+      if (!hasActionId || elapsedTime > 2 * 60000) {
+        clearInterval(intervalId);
+      } else {
+        await this.updateList();
+      }
+    }, 30000); // Check every 30 seconds
+  
+    this.setState({ intervalId });
+  }
+  
+  async updateList() {
     const { dispatch } = this.props;
     await dispatch(listRequests());
     const { requests } = this.props;
@@ -67,7 +87,12 @@ class Home extends React.Component {
     const originalList = this.filter(list);
     this.setState({ originalList, list: originalList });
   }
+  
 
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId);
+  }
+  
   generateQuery() {
     return {};
   }

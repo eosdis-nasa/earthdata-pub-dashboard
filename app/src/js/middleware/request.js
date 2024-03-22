@@ -9,6 +9,7 @@ import {
 } from '../actions/helpers';
 import log from '../utils/log';
 import { isValidApiRequestAction } from './validate';
+import Error from '../components/error';
 
 const handleError = ({ id, type, error, requestAction }, next) => {
   console.groupCollapsed('handleError');
@@ -70,8 +71,12 @@ export const requestMiddleware = ({ dispatch, getState }) => next => action => {
     const start = new Date();
     return requestPromise(requestAction)
       .then((response) => {
+        const errorCode = response?.error?.code || 200
+        if(errorCode !== 200){
+            const redirectUrl = new URL(`${window.location.origin}/error`);
+            window.location.href=redirectUrl
+        }
         const { body } = response;
-
         if (+response.statusCode >= 400) {
           const error = new Error(getErrorMessage(response));
           return handleError({ id, type, error, requestAction }, next);
@@ -83,6 +88,5 @@ export const requestMiddleware = ({ dispatch, getState }) => next => action => {
       })
       .catch((error) => handleError({ id, type, error, requestAction }, next));
   }
-
   return next(action);
 };
