@@ -65,13 +65,38 @@ class RequestsOverview extends React.Component {
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
+    await this.updateList();
+  
+    let elapsedTime = 0; // Track elapsed time
+  
+    const intervalId = setInterval(async () => {
+      elapsedTime += 30000; // Increment elapsed time by 30 seconds
+      const { list } = this.props.requests;
+      const hasActionId = list.data.some(item => item.step_data && item.step_data.action_id);
+      
+      if (!hasActionId || elapsedTime > 2 * 60000) {
+        clearInterval(intervalId);
+      } else {
+        await this.updateList();
+      }
+    }, 30000); // Check every 30 seconds
+  
+    this.setState({ intervalId });
+  }
+  
+  async updateList() {
     const { dispatch } = this.props;
     await dispatch(listRequests());
     const { requests } = this.props;
     const { list } = requests;
     const originalList = this.filter(list);
     this.setState({ originalList, list: originalList });
+  }
+  
+
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId);
   }
 
   generateQuery () {
@@ -138,7 +163,7 @@ class RequestsOverview extends React.Component {
       this.setState({ list: this.filter(list, Object.values(e)) });
     }
   }
-
+  
   render () {
     if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
       if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {

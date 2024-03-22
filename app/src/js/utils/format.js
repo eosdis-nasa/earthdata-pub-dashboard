@@ -91,7 +91,8 @@ export const lastUpdated = function (datestring, text) {
   const meta = text || 'Last Updated';
   let day, time;
   if (datestring) {
-    const date = moment(datestring);
+    const date = moment.utc(datestring); // Parse the date as UTC
+    const localDate = date.local(); // Convert to local time zone
     day = date.format('MMM. D, YYYY');
     time = date.format('h:mm a');
   }
