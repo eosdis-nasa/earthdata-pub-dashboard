@@ -189,7 +189,6 @@ class UploadOverview extends React.Component {
         }
         this.setState({ statusMsg: 'Uploading' });
         const resp = await upload.uploadFile(payload, updateProgress)
-        clearInterval(incrementInterval); // Clear the interval when upload is complete
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
         if (error) {
           console.log(`An error has occurred on uploadFile: ${error}.`);
