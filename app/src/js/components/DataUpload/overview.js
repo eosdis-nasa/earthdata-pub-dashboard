@@ -217,7 +217,7 @@ class UploadOverview extends React.Component {
 
     const progressBarStyle = {
       width: '100%',
-      backgroundColor: '#2275aa', // Set default background color
+      backgroundColor: this.state.uploadFailed ? '#db1400' : '#2275aa', // Set default background color
       height: '40px' // Set the height of the progress bar
     };
     
@@ -229,12 +229,12 @@ class UploadOverview extends React.Component {
 
     const progressBarFillStyle = {
       height: '100%',
-      backgroundColor: '#007bff', // Set default fill color to blue
+      backgroundColor: this.state.uploadFailed ? '#db1400' : '#007bff', // Set default fill color to blue
       textAlign: 'center',
       lineHeight: '40px', // Vertically center the text
       color: 'white', // Set text color to white
       fontSize: '20px', // Increase font size
-      width: `${this.state.progressValue}%` // Set width based on progress value
+      width: this.state.uploadFailed ? '100%' : `${this.state.progressValue}%` // Set width based on progress value
     };
   
     const numberDisplayStyle = {
@@ -286,9 +286,9 @@ class UploadOverview extends React.Component {
               }
               {this.state.statusMsg === 'Uploading' ? <Loading /> : null}
               {this.state.showProgressBar && this.state.progressValue >0 && 
-                <div style={this.state.uploadFailed ? progressBarStyleFailed: progressBarStyle}>
+                <div style={progressBarStyle}>
       <div style={progressBarFillStyle}>
-        <span style={numberDisplayStyle}>{this.state.uploadFailed ? 'Uploaded Failed': `${this.state.progressValue}%`}</span>
+        <span style={numberDisplayStyle}>{this.state.uploadFailed ? 'Upload Failed': `${this.state.progressValue}%`}</span>
       </div>
     </div>}
               <label htmlFor='hiddenFileInput' style={{ marginBottom: '1rem', fontSize: 'unset' }}>{`${this.state.statusMsg}`}
