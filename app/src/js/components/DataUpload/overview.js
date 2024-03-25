@@ -21,7 +21,8 @@ class UploadOverview extends React.Component {
       uploadFile: '', 
       keys: [],
       showProgressBar: false, // Added state to control the visibility of the progress bar,
-      progressValue: 0 // Initialize progressValue
+      progressValue: 0, // Initialize progressValue,
+      uploadFailed: false
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -194,6 +195,7 @@ class UploadOverview extends React.Component {
         if (error) {
           console.log(`An error has occurred on uploadFile: ${error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
+          this.setState({ uploadFailed: true });
         } else {
           this.setState({ statusMsg: 'Upload Complete' });
           this.setState({ progressValue: 0 });
@@ -215,10 +217,16 @@ class UploadOverview extends React.Component {
 
     const progressBarStyle = {
       width: '100%',
-      backgroundColor: '#ddd', // Set default background color
+      backgroundColor: '#2275aa', // Set default background color
       height: '40px' // Set the height of the progress bar
     };
-  
+    
+    const progressBarStyleFailed = {
+      width: '100%',
+      backgroundColor: '#db1400', // Set default background color
+      height: '40px' // Set the height of the progress bar
+    };
+
     const progressBarFillStyle = {
       height: '100%',
       backgroundColor: '#007bff', // Set default fill color to blue
@@ -278,9 +286,9 @@ class UploadOverview extends React.Component {
               }
               {this.state.statusMsg === 'Uploading' ? <Loading /> : null}
               {this.state.showProgressBar && this.state.progressValue >0 && 
-                <div style={progressBarStyle}>
+                <div style={this.state.uploadFailed ? progressBarStyleFailed: progressBarStyle}>
       <div style={progressBarFillStyle}>
-        <span style={numberDisplayStyle}>{`${this.state.progressValue}%`}</span>
+        <span style={numberDisplayStyle}>{this.state.uploadFailed ? 'Uploaded Failed': `${this.state.progressValue}%`}</span>
       </div>
     </div>}
               <label htmlFor='hiddenFileInput' style={{ marginBottom: '1rem', fontSize: 'unset' }}>{`${this.state.statusMsg}`}
