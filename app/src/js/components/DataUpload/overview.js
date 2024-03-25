@@ -189,12 +189,14 @@ class UploadOverview extends React.Component {
         }
         this.setState({ statusMsg: 'Uploading' });
         const resp = await upload.uploadFile(payload, updateProgress)
+        console.log('resp', resp)
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
         if (error) {
           console.log(`An error has occurred on uploadFile: ${error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
         } else {
           this.setState({ statusMsg: 'Upload Complete' });
+          this.setState({ progressValue: 0 });
           this.resetInputWithTimeout('Select another file', 1000)
           if ((requestId !== '' && requestId != undefined && requestId !== null) &&
             (groupId == '' || groupId === undefined || groupId === null)) {
@@ -275,7 +277,7 @@ class UploadOverview extends React.Component {
                 : null
               }
               {this.state.statusMsg === 'Uploading' ? <Loading /> : null}
-              {this.state.showProgressBar && 
+              {this.state.showProgressBar && this.state.progressValue >0 && 
                 <div style={progressBarStyle}>
       <div style={progressBarFillStyle}>
         <span style={numberDisplayStyle}>{`${this.state.progressValue}%`}</span>
