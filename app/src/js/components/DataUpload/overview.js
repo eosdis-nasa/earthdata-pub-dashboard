@@ -188,7 +188,7 @@ class UploadOverview extends React.Component {
             group_id: groupId
           }
         }
-        this.setState({ statusMsg: 'Uploading' });
+        this.setState({ statusMsg: 'Uploading', uploadFailed: false });
         const resp = await upload.uploadFile(payload, updateProgress)
         console.log('resp', resp)
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
@@ -285,12 +285,12 @@ class UploadOverview extends React.Component {
                 : null
               }
               {this.state.statusMsg === 'Uploading' ? <Loading /> : null}
-              {this.state.showProgressBar && this.state.progressValue >0 && 
+              {this.state.showProgressBar && this.state.progressValue > 0 && 
                 <div style={progressBarStyle}>
-      <div style={progressBarFillStyle}>
-        <span style={numberDisplayStyle}>{this.state.uploadFailed ? 'Upload Failed': `${this.state.progressValue}%`}</span>
-      </div>
-    </div>}
+                  <div style={progressBarFillStyle}>
+                    <span style={numberDisplayStyle}>{this.state.uploadFailed ? 'Upload Failed': `${this.state.progressValue}%`}</span>
+                  </div>
+                </div>}
               <label htmlFor='hiddenFileInput' style={{ marginBottom: '1rem', fontSize: 'unset' }}>{`${this.state.statusMsg}`}
                 <input
                   onChange={(e) => this.handleChange(e)}
