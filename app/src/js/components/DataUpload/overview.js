@@ -228,8 +228,9 @@ class UploadOverview extends React.Component {
         <div className='page__component'>
           <div className='page__section__header'>
             <h1 className='heading--small' aria-labelledby='Upload Data File'>
-              Upload Data File
+              Sample Data and Data Product Documentation File(s): Add or replace file(s).
             </h1>
+            <p>Providing sample data files that are representative of the range of data within this data product will help the DAAC understand and provide feedback on the data format, structure, and content. Documentation files may include descriptions of the variables, filename conventions, processing steps, and/or data quality.  If more than 10 total sample data and documentation files are necessary to represent and describe the data product, please contact the DAAC for assistance.  Files must be less than 5 GB and cannot include .exe or .dll extensions.</p>
           </div>
           <div className='indented__details' style={{ paddingTop: '1rem' }}>
             <div className='form__textarea'>
