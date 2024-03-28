@@ -160,9 +160,9 @@ class UploadOverview extends React.Component {
       this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: file.name });
 
       // Define the callback function to update progress value in state
-      const updateProgress = (progress) => {
+      const updateProgress = (progress, fileObj) => {
         console.log('callback', progress)
-        this.setState({ progressValue: Math.min(progress, 100) });
+        this.setState({ progressValue: Math.min(progress, 100), uploadFileName: fileObj.name });
       };
 
       const upload = new localUpload();
