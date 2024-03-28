@@ -22,7 +22,8 @@ class UploadOverview extends React.Component {
       keys: [],
       showProgressBar: false, // Added state to control the visibility of the progress bar,
       progressValue: 0, // Initialize progressValue,
-      uploadFailed: false
+      uploadFailed: false,
+      uploadFileName: ''
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -155,7 +156,8 @@ class UploadOverview extends React.Component {
     e.preventDefault();
     const file = e.target.files[0];
     if (this.validateFile(file)) {
-      this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0 });
+      console.log('file', file)
+      this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: file.name });
 
       // Define the callback function to update progress value in state
       const updateProgress = (progress) => {
@@ -196,7 +198,7 @@ class UploadOverview extends React.Component {
           this.resetInputWithTimeout('Select a file', 1000)
           this.setState({ uploadFailed: true });
         } else {
-          this.setState({ statusMsg: 'Upload Complete', progressValue: 0 });
+          this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
           this.resetInputWithTimeout('Select another file', 1000)
           if ((requestId !== '' && requestId != undefined && requestId !== null) &&
             (groupId == '' || groupId === undefined || groupId === null)) {
@@ -275,7 +277,7 @@ class UploadOverview extends React.Component {
                 </>
                 : null
               }
-              {this.state.statusMsg === 'Uploading' && this.state.progressValue == 0? <Loading /> : null}
+              {this.state.statusMsg === 'Uploading' && this.state.progressValue == 0? <Loading /> : this.state.uploadFileName}
               {this.state.showProgressBar && this.state.progressValue > 0 && 
                 <div style={progressBarStyle}>
                   <div style={progressBarFillStyle}>
