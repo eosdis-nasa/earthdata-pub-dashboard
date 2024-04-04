@@ -23,7 +23,8 @@ class UploadOverview extends React.Component {
       showProgressBar: false, // Added state to control the visibility of the progress bar,
       progressValue: 0, // Initialize progressValue,
       uploadFailed: false,
-      uploadFileName: ''
+      uploadFileName: '',
+      error: ''
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -156,13 +157,11 @@ class UploadOverview extends React.Component {
     e.preventDefault();
     const file = e.target.files[0];
     if (this.validateFile(file)) {
-      console.log('file', file)
-      this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: file.name });
+      this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: file ? file.name: '' });
 
       // Define the callback function to update progress value in state
       const updateProgress = (progress, fileObj) => {
-        console.log('callback', progress)
-        this.setState({ progressValue: Math.min(progress, 100), uploadFileName: fileObj.name });
+        this.setState({ progressValue: Math.min(progress, 100), uploadFileName: fileObj ? fileObj.name: '' });
       };
 
       const upload = new localUpload();
@@ -189,14 +188,13 @@ class UploadOverview extends React.Component {
           }
         }
         this.setState({ statusMsg: 'Uploading', uploadFailed: false });
-        console.log('print', upload)
-        const resp = await upload.uploadFile(payload, updateProgress)
-        console.log('resp', resp)
+        const resp = await upload.uploadFile(payload, updateProgress);
+
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
         if (error) {
           console.log(`An error has occurred on uploadFile: ${error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
-          this.setState({ uploadFailed: true });
+          this.setState({ uploadFailed: true, error: error.error ? error.error: "Check Console Logs"});
         } else {
           this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
           this.resetInputWithTimeout('Select another file', 1000)
@@ -206,6 +204,7 @@ class UploadOverview extends React.Component {
           }
         }
       } catch (error) {
+        this.setState({ uploadFailed: true });
         console.log(`try catch error: ${error.stack}`);
         this.resetInputWithTimeout('Select a file', 1000)
       }
@@ -216,7 +215,7 @@ class UploadOverview extends React.Component {
   render() {
     const progressBarStyle = {
       width: '100%',
-      backgroundColor: this.state.uploadFailed ? '#db1400' : 'white', // Set default background color
+      backgroundColor: this.state.uploadFailed ? '#db1400' : 'white',
       height: '30px' // Set the height of the progress bar
     };
 
@@ -224,14 +223,14 @@ class UploadOverview extends React.Component {
       height: '100%',
       backgroundColor: this.state.uploadFailed ? '#db1400' : '#2275aa', // Set default fill color to blue
       textAlign: 'center',
-      lineHeight: '30px', // Vertically center the text
-      color: 'white', // Set text color to white
-      fontSize: '20px', // Increase font size
+      lineHeight: '30px', 
+      color: 'white', 
+      fontSize: '20px', 
       width: this.state.uploadFailed ? '100%' : `${this.state.progressValue}%` // Set width based on progress value
     };
   
     const numberDisplayStyle = {
-      fontSize: '20px' // Increase font size of the number
+      fontSize: '20px' 
     };
 
     const tableColumns = [
@@ -277,11 +276,12 @@ class UploadOverview extends React.Component {
                 </>
                 : null
               }
-              {this.state.statusMsg === 'Uploading' && this.state.progressValue == 0? <Loading /> : this.state.uploadFileName}
+              {this.state.statusMsg === 'Uploading' && this.state.progressValue == 0 ? <Loading /> : this.state.uploadFileName}
+              
               {this.state.showProgressBar && this.state.progressValue > 0 && 
                 <div style={progressBarStyle}>
                   <div style={progressBarFillStyle}>
-                    <span style={numberDisplayStyle}>{this.state.uploadFailed ? 'Upload Failed': `${this.state.progressValue}%`}</span>
+                    <span style={numberDisplayStyle}>{this.state.uploadFailed ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={this.state.error}></span></span>: `${this.state.progressValue}%`}</span>
                   </div>
                 </div>}
               <label htmlFor='hiddenFileInput' style={{ marginBottom: '1rem', fontSize: 'unset' }}>{`${this.state.statusMsg}`}

@@ -313,6 +313,32 @@ a:active {
     top: 1.54em;
   }
 }
+.info-icon{
+  margin-left: 2rem;
+  position: relative; /* Needed for positioning the tooltip */
+  &:before {
+    position: absolute;
+    color: white; /* Assuming $white is a variable for your desired color */
+    font-family: 'FontAwesome';
+    content: '\f129'; /* Unicode for the info icon in FontAwesome */
+    font-weight: 900;
+  }
+  &:hover:after {
+    content: attr(data-tooltip); ; /* Adjust as needed */
+    position: absolute;
+    bottom: -20px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1;
+  }
+}
+
 .content__header {
   background-color: $ocean-blue;
   color: $white;
