@@ -194,7 +194,7 @@ class UploadOverview extends React.Component {
         if (error) {
           console.log(`An error has occurred on uploadFile: ${error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
-          this.setState({ uploadFailed: true, error: error.error ? error.error: "Check Console Logs"});
+          this.setState({ uploadFailed: true, error: error});
         } else {
           this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
           this.resetInputWithTimeout('Select another file', 1000)
