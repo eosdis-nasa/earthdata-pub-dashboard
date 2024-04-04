@@ -276,7 +276,7 @@ class UploadOverview extends React.Component {
                 </>
                 : null
               }
-              {this.state.statusMsg === 'Uploading' && this.state.progressValue == 0 ? <Loading /> : this.state.uploadFileName}
+               <span style={{ paddingBottom: '1rem' }}>{this.state.statusMsg === 'Uploading' && this.state.progressValue == 0 ? <Loading /> : this.state.uploadFileName}</span>
               
               {this.state.showProgressBar && this.state.progressValue > 0 && 
                 <div style={progressBarStyle}>
