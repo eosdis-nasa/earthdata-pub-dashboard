@@ -144,8 +144,6 @@ export const requestPrivileges = (privileges, stepName) => {
  * Allows for more granular privilege checking based on the step name.
  */
 export const requestCanReview = (privileges, stepName) => {
-  console.log('request can review ', privileges, stepName)
-
   if (stepName && stepName.match(/management_review/g)) {
     return privileges.REQUEST.includes("REVIEW_MANAGER");
   }
