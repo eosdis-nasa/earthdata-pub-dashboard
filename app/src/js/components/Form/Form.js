@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { createNextState } from '@reduxjs/toolkit';
-import { generate } from 'shortid';
+/* import { generate } from 'shortid'; */
+import { nanoid } from 'nanoid';
 import { set } from 'object-path';
 import slugify from 'slugify';
 import ErrorReport from '../Errors/report';
@@ -85,7 +86,7 @@ export class Form extends React.Component {
     super(props);
 
     // Generate ID for this form
-    this.id = generate();
+    this.id = nanoid();
     this.onChange = this.onChange.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.onSubmit = this.onSubmit.bind(this);

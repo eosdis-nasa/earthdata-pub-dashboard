@@ -41,7 +41,8 @@ const CommonConfig = {
       http: require.resolve('stream-http'),
       https: require.resolve('https-browserify'),
       buffer: require.resolve('buffer'),
-      querystring: require.resolve('querystring-es3')
+      querystring: require.resolve('querystring-es3'),
+      vm: require.resolve('vm-browserify')
     }
   },
   module: {
