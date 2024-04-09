@@ -1036,6 +1036,8 @@ div#producerSelect.selectButton {
 div#roleSelect.selectButton,
 div#groupSelect.selectButton {
   min-width: 188.5px;
+  z-index: unset!important;
+  padding: 0;
 }
 div.selectButton div {
   border-radius: 0.5em;
