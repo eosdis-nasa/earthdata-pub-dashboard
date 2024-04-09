@@ -315,18 +315,18 @@ a:active {
 }
 .info-icon{
   margin-left: 0.5rem;
-  position: relative; /* Needed for positioning the tooltip */
+  position: relative; 
   &:before {
     position: absolute;
-    color: white; /* Assuming $white is a variable for your desired color */
+    color: white; 
     font-family: 'FontAwesome';
     content: '\f129'; /* Unicode for the info icon in FontAwesome */
     font-weight: 900;
   }
   &:hover:after {
-    content: attr(data-tooltip); ; /* Adjust as needed */
+    content: attr(data-tooltip); ; 
     position: absolute;
-    bottom: -20px; /* Adjust as needed */
+    bottom: -20px; 
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.8);
