@@ -501,7 +501,7 @@ class RequestOverview extends React.Component {
               {workflowSave}
             </section>
             <Meditor></Meditor>
-            {(_config.fileUploadDefault === 'true') ? <UploadOverview /> : null}
+            <UploadOverview />
             {showTable
               ? <section className='page__section'>
                 <div className='heading__wrapper--border'>
