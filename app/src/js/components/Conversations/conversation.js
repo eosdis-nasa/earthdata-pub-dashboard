@@ -17,11 +17,7 @@ import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 const textRef = React.createRef();
 
 const reply = (dispatch, id) => {
-  const resp = textRef.current.value
-    .replace(/\n/g, "\\n")
-    .replace(/\t/g, '\\t')
-    .replace(/\r/g, '\\r')
-    .replace(/\"/g, '\\"');
+  const resp = encodeURI(textRef.current.value);
   const payload = { conversation_id: id, text: resp };
     dispatch(replyConversation(payload));
   textRef.current.value = '';
@@ -140,7 +136,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                 {
                   notes.map((note, key) => {
                     return (<Note note={note} key={key} />);
-                  }).reverse()
+                  })
                 }
               </div>
             </section>
@@ -187,7 +183,7 @@ const Note = ({ note }) => {
         <h3>{ note.from.name }</h3>
         {lastUpdated(note.sent, 'Sent')}
       </div>
-      <div className='flex__item--grow-1-wrap'>{ note.text }</div>
+      <div className='flex__item--grow-1-wrap'style={{whiteSpace: "pre"}}>{ decodeURI(note.text) }</div>
     </div>
   );
 };
