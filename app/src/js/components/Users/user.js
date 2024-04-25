@@ -9,7 +9,8 @@ import {
   removeUserRole,
   addUserGroup,
   removeUserGroup,
-  updateUsername
+  updateUsername,
+  refreshToken
 } from '../../actions';
 import { userPrivileges } from '../../utils/privileges';
 import { lastUpdated, shortDateNoTimeYearFirst } from '../../utils/format';
@@ -33,6 +34,7 @@ const updateUser = (dispatch, id, roleId, name) => {
     name
   };
   dispatch(updateUsername(payload));
+  dispatch(refreshToken());
 };
 
 const removeRole = (dispatch, id, roleId) => {
