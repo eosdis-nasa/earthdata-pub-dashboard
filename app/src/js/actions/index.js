@@ -975,3 +975,19 @@ export const createUser = (payload) => ({
     body: payload
   }
 });
+
+export const updateUsername = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.USERNAME_UPDATE,
+        method: 'POST',
+        path: 'user/update_username',
+        body: payload
+      }
+    })
+      .then(() => {
+        dispatch(getUser(payload.id));
+      });
+  };
+};
