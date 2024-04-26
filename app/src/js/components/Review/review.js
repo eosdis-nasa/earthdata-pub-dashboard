@@ -68,8 +68,10 @@ class ReviewStep extends React.Component {
   }
 
   render() {
-    const { canReview } = requestPrivileges(this.props.privileges);
-    const requestId = this.props.location.search.split('=')[1];
+    const search = this.props.location.search.split('=');
+    const requestId = search[1].replace(/&step/g, '');
+    const step = search[2];
+    let { canReview } = requestPrivileges(this.props.privileges, step);
     let reviewable = false;
     let reviewReady = false;
     if (this.hasStepData()) {

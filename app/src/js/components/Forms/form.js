@@ -382,7 +382,8 @@ class FormOverview extends React.Component {
     let editable = false;
     let reviewable = false;
     const { canEdit } = formPrivileges(this.props.privileges);
-    let { canReview } = requestPrivileges(this.props.privileges);
+    const search = new URLSearchParams(this.props.location.search);
+    let { canReview } = requestPrivileges(this.props.privileges, search.get('step'));
     let sameFormAsStep = false;
     let requestId = this.props.location.search.split('=')[1];
     const formId = this.props.match.params.formId;

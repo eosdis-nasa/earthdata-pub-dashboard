@@ -88,11 +88,11 @@ class ApprovalStep extends React.Component {
   }
 
   render() {
-    let { canReview } = requestPrivileges(this.props.privileges);
     const search = this.props.location.search.split('=');
     const requestId = search[1].replace(/&step/g, '');
     const step = search[2];
     const stepName = this.getFormalName(step);
+    let { canReview } = requestPrivileges(this.props.privileges, step);
     let requestForms = [];
     let showTable = false;
     let reviewReady = false;
