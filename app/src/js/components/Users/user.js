@@ -187,9 +187,6 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
                   Settings
                 </h1>
               </div>
-              <div className='page__content--shortened mEditorOptions'>
-                <><input type={'checkbox'} name={'dontShowAgain'} id={'dontShowAgain'} onChange={updateDontShowAgain}></input><label htmlFor={'dontShowAgain'}>Opt-In: "Continue To" mEditor pop-up window</label></>
-              </div>
             </section>
             <section className='page__section'>
               <div className='page__section__header'>
