@@ -19,7 +19,12 @@ class UploadOverview extends React.Component {
       hiddenFileInput: React.createRef(null), 
       statusMsg: 'Select a file', 
       uploadFile: '', 
-      keys: []
+      keys: [],
+      showProgressBar: false, // Added state to control the visibility of the progress bar,
+      progressValue: 0, // Initialize progressValue,
+      uploadFailed: false,
+      uploadFileName: '',
+      error: ''
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -152,7 +157,13 @@ class UploadOverview extends React.Component {
     e.preventDefault();
     const file = e.target.files[0];
     if (this.validateFile(file)) {
-      this.setState({ statusMsg: 'Uploading' });
+      this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: file ? file.name: '' });
+
+      // Define the callback function to update progress value in state
+      const updateProgress = (progress, fileObj) => {
+        this.setState({ progressValue: Math.min(progress, 100), uploadFileName: fileObj ? fileObj.name: '' });
+      };
+
       const upload = new localUpload();
       const { requestId } = this.props.match.params;
       const { groupId } = this.props.match.params;
@@ -176,14 +187,16 @@ class UploadOverview extends React.Component {
             group_id: groupId
           }
         }
-        this.setState({ statusMsg: 'Uploading' });
-        const resp = await upload.uploadFile(payload)
+        this.setState({ statusMsg: 'Uploading', uploadFailed: false });
+        const resp = await upload.uploadFile(payload, updateProgress);
+
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
         if (error) {
-          console.log(`An error has occured on uploadFile: ${error}.`);
+          console.log(`An error has occurred on uploadFile: ${error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
+          this.setState({ uploadFailed: true, error: error});
         } else {
-          this.setState({ statusMsg: 'Upload Complete' });
+          this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
           this.resetInputWithTimeout('Select another file', 1000)
           if ((requestId !== '' && requestId != undefined && requestId !== null) &&
             (groupId == '' || groupId === undefined || groupId === null)) {
@@ -191,13 +204,35 @@ class UploadOverview extends React.Component {
           }
         }
       } catch (error) {
+        this.setState({ uploadFailed: true });
         console.log(`try catch error: ${error.stack}`);
         this.resetInputWithTimeout('Select a file', 1000)
       }
     }
-  };
+  }
+  
 
   render() {
+    const progressBarStyle = {
+      width: '100%',
+      backgroundColor: this.state.uploadFailed ? '#db1400' : 'white',
+      height: '30px' // Set the height of the progress bar
+    };
+
+    const progressBarFillStyle = {
+      height: '100%',
+      backgroundColor: this.state.uploadFailed ? '#db1400' : '#2275aa', // Set default fill color to blue
+      textAlign: 'center',
+      lineHeight: '30px', 
+      color: 'white', 
+      fontSize: '20px', 
+      width: this.state.uploadFailed ? '100%' : `${this.state.progressValue}%` // Set width based on progress value
+    };
+  
+    const numberDisplayStyle = {
+      fontSize: '20px' 
+    };
+
     const tableColumns = [
       {
         Header: 'Filename',
@@ -224,20 +259,32 @@ class UploadOverview extends React.Component {
     const { requestId } = this.props.match.params;
     const { groupId } = this.props.match.params;
     return (
-      <><br></br>
+      <>
+        <br></br>
         <div className='page__component'>
           <div className='page__section__header'>
             <h1 className='heading--small' aria-labelledby='Upload Data File'>
-              Upload Data File
+              Sample Data and Data Product Documentation File(s): Add or replace file(s).
             </h1>
+            <p>Providing sample data files that are representative of the range of data within this data product will help the DAAC understand and provide feedback on the data format, structure, and content. Documentation files may include descriptions of the variables, filename conventions, processing steps, and/or data quality.  If more than 10 total sample data and documentation files are necessary to represent and describe the data product, please contact the DAAC for assistance.  Files must be less than 5 GB and cannot include .exe or .dll extensions.</p>
           </div>
           <div className='indented__details' style={{ paddingTop: '1rem' }}>
             <div className='form__textarea'>
               {groupId !== undefined ?
-                <><label htmlFor="prefix" style={{ marginBottom: '1rem', marginTop: '1rem', fontSize: 'unset' }}>Subfolder (If applicable): </label><input id="prefix" name="prefix" style={{ marginBottom: '1rem' }} /></>
-              : null
+                <>
+                  <label htmlFor="prefix" style={{ marginBottom: '1rem', marginTop: '1rem', fontSize: 'unset' }}>Subfolder (If applicable): </label>
+                  <input id="prefix" name="prefix" style={{ marginBottom: '1rem' }} />
+                </>
+                : null
               }
-              {this.state.statusMsg === 'Uploading' ? <Loading /> : null}
+               <span style={{ paddingBottom: '1rem' }}>{this.state.statusMsg === 'Uploading' && this.state.progressValue == 0 ? <Loading /> : this.state.uploadFileName}</span>
+              
+              {this.state.showProgressBar && this.state.progressValue > 0 && 
+                <div style={progressBarStyle}>
+                  <div style={progressBarFillStyle}>
+                    <span style={numberDisplayStyle}>{this.state.uploadFailed ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={this.state.error}></span></span>: `${this.state.progressValue}%`}</span>
+                  </div>
+                </div>}
               <label htmlFor='hiddenFileInput' style={{ marginBottom: '1rem', fontSize: 'unset' }}>{`${this.state.statusMsg}`}
                 <input
                   onChange={(e) => this.handleChange(e)}
@@ -250,22 +297,26 @@ class UploadOverview extends React.Component {
               <button onClick={(e) => this.handleClick(e)} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
             </div>
             {this.state.saved && requestId !== undefined && groupId === undefined
-            ?
-              <><br /><section className = 'page__section'>
-                <div style={{ borderBottom: '1px solid #E2DFDF'}}>
-                <h2 className='heading--medium heading--shared-content with-description'>Files Previously Uploaded</h2>
-                </div>
-                <Table
-                  data={this.state.files}
-                  dispatch={this.props.dispatch}
-                  tableColumns={tableColumns}
-                />
-              </section></>
-              : null }
+              ?
+              <>
+                <br />
+                <section className='page__section'>
+                  <div style={{ borderBottom: '1px solid #E2DFDF' }}>
+                    <h2 className='heading--medium heading--shared-content with-description'>Files Previously Uploaded</h2>
+                  </div>
+                  <Table
+                    data={this.state.files}
+                    dispatch={this.props.dispatch}
+                    tableColumns={tableColumns}
+                  />
+                </section>
+              </>
+              : null}
             {!this.state.loaded && groupId === undefined ? <Loading /> : null}
             <span>{this.state.saved ? this.state.saved : null}</span>
           </div>
-        </div></>
+        </div>
+      </>
     );
   }
 }

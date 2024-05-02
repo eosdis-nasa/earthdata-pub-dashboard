@@ -45,7 +45,7 @@ const handleError = ({ id, type, error, requestAction }, next) => {
     id,
     config: requestAction,
     type: errorType,
-    error: error.message
+    error: 'An internal error occurred. If the error continues, reach out to the EDPub development team.'
   });
 };
 
