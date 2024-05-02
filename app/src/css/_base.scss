@@ -313,6 +313,17 @@ a:active {
     top: 1.54em;
   }
 }
+.edit-icon{
+  margin-left: 2rem;
+  &:before {
+    position: absolute;
+    color: gray;
+    font-family: 'FontAwesome';
+    content: '\f044';
+    font-weight: 900;
+    cursor: pointer;
+  }
+}
 .info-icon{
   margin-left: 0.5rem;
   position: relative; 

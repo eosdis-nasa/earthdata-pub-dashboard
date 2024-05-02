@@ -15,12 +15,15 @@ import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 import { trigger } from '../../actions/events';
+import { getPrivilegesByType, requestPrivileges } from '../privileges';
 
-export const getPrivileges = () => {
+export const getPrivileges = (step) => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
   if (user != null) {
     const roles = user.user_roles;
     const privileges = user.user_privileges;
+    const privilegesByType = getPrivilegesByType(privileges, step);
+
     const allPrivs = {
       isManager: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
@@ -32,18 +35,13 @@ export const getPrivileges = () => {
       isStaff: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
         : roles.find(o => o.short_name.match(/staff/g)),
-      canReview: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : privileges.find(o => o.match(/REQUEST_REVIEW/g)),
-      canReassign: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : privileges.find(o => o.match(/REQUEST_REASSIGN/g)),
       canCreateForm: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
         : privileges.find(o => o.match(/FORM_CREATE/g)),
       canUpdateForm: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
-        : privileges.find(o => o.match(/FORM_UPDATE/g))
+        : privileges.find(o => o.match(/FORM_UPDATE/g)),
+      ...requestPrivileges(privilegesByType, step),
     };
     return allPrivs;
   }
@@ -108,7 +106,7 @@ export const assignWorkflow = (request, formalName) => {
 };
 
 export const existingLink = (row, formId, formalName, step, stepType) => {
-  const allPrivs = getPrivileges();
+  const allPrivs = getPrivileges(step);
   let disabled = false;
   if (typeof allPrivs !== 'undefined' && allPrivs.canReview) {
     disabled = false;
