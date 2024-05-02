@@ -20,6 +20,9 @@ import ReviewStep from '../Review/review';
 import _config from '../../config';
 import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 import Comments from '../Comments/comments';
+import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
+import { loadToken } from '../../utils/auth';
+import localUpload from 'edpub-data-upload-utility';
 
 const metaAccessors = [
   {
@@ -68,6 +71,8 @@ class FormOverview extends React.Component {
     const { canInitialize } = requestPrivileges(this.props.privileges);
     await dispatch(getRequest(requestId));
     await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
+    await this.getUploadedFiles(requestId);
+
     if (canInitialize && !isHidden) {
       const { history } = this.props;
       if (history.location.state !== undefined && history.location.state.clone) {
@@ -268,6 +273,97 @@ class FormOverview extends React.Component {
     }
   }
 
+  keyLookup(e, fileName) {
+    e.preventDefault();
+    if (this.state.keys[fileName]) {
+      const { dispatch } = this.props;
+      const requestId = this.props.location.search.split('=')[1];
+
+      if (requestId !== '' && requestId != undefined && requestId !== null) {
+        const download = new localUpload();
+        const { apiRoot } = _config;
+        dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
+          .then(() => {
+            download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
+              let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+              if (error) {
+                console.log(`An error has occurred: ${error}.`);
+              }
+            })
+          }
+        );
+      }
+    }
+  };
+
+  getFileList(){
+    // TODO once the api is updated to split the file types this will need to take that into account
+    let files = this.state.files
+    let displayList = [];
+
+    if (Array.isArray(files)){        
+          files.map((item) => (
+            displayList.push (
+              <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+                <div key={this.getRandom()} style={{ width: '50%', display: 'inline-block', float: 'left' }}>Uploaded File:</div>
+                <div key={this.getRandom()}><a onClick={(e) => this.keyLookup(e, item.file_name)}>{item.file_name}</a></div>
+              </li>
+            )
+        ))
+
+      return displayList;
+
+    }
+
+  }
+
+  async getUploadedFiles(requestId) {
+    const { dispatch } = this.props;
+    if (requestId !== '' && requestId != undefined && requestId !== null) {
+      await dispatch(listFileUploadsBySubmission(requestId))
+        .then((resp) => {
+          if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
+            return
+          }
+          let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+          if (error){
+            if (!error.match(/not authorized/gi) && !error.match(/not implemented/gi)) {
+              const str = `An error has occurred while getting the list of files: ${error}.`;
+              console.log(str)
+              return
+            } else {
+              return
+            }
+          }
+  
+          const files = resp.data;
+
+          files.sort(function (a, b) {
+            var keyA = new Date(a.lastModified),
+              keyB = new Date(b.lastModified);
+            if (keyA > keyB) return -1;
+            if (keyA < keyB) return 1;
+            return 0;
+          });
+
+          this.setState({ files: files })
+          
+          const keyDict = {};
+
+          for (const ea in files) {
+            const fileName = files[ea].file_name;
+            if (files[ea] === undefined || fileName === undefined) {
+              break
+            }
+            const key = files[ea].key;
+            keyDict[`${fileName}`] = key
+          }
+
+          this.setState({ keys: keyDict })
+        });
+      }
+  }
+
   renderQuestions (sections, whatSection) {
     let section = '';
     const sectionQuestions = [];
@@ -318,6 +414,10 @@ class FormOverview extends React.Component {
                         this.getTableEnums(question[b].inputs[a].control_id, keys, question[b].inputs[a].enums, question[b].long_name)
                       );
                     }
+                  } else if (question[b].inputs[a].type === 'file'){
+                      sectionQuestions.push(
+                        this.getFileList()
+                        );
                   } else {
                     sectionQuestions.push(
                       <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
