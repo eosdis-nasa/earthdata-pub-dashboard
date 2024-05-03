@@ -13,7 +13,6 @@ services:
       - APIROOT=http://localhost:8080/api
       - FORMS_URL=http://localhost:8081
       - OVERVIEW_URL=/
-      - SEND_USER_TO_MEDITOR=/meditor
       - DAAC_NAME=local
       - STAGE=LOCALHOST-Development
       - SHOW_DISTRIBUTION_API_METRICS=false
