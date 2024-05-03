@@ -251,7 +251,6 @@ class RequestOverview extends React.Component {
 
   render() {
     const { requestId } = this.props.match.params;
-    console.log(this.props.requests)
     let record = this.props.requests.detail;
     const request = record.data || {
         "queriedAt": 0,
@@ -267,7 +266,6 @@ class RequestOverview extends React.Component {
       cancel: this.closeUserForm
     };
     const isHidden = record?.hidden || false;
-    console.log(record)
     if (record?.data?.contributors===undefined){
         record = {
             "inflight": true,
