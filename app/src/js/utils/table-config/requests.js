@@ -145,6 +145,7 @@ export const getFormalName = (str) => {
 
 export const stepLookup = (row) => {
   const stepName = row?.step_data?.name;
+  console.log(row.step_data?.step_status_label, "-------step-status-label-----------")
   let request = '';
   let stepID = '';
   let stepType = '';
@@ -218,7 +219,7 @@ export const tableColumns = [
   {
     Header: 'Status',
     accessor: (row) => row.status,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.status}</Link> : null,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.step_data?.step_status_label ?? row.row.original.status}</Link> : null,
     id: 'status_message',
     // width: 170
   },
