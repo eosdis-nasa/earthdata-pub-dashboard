@@ -38,7 +38,6 @@ import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 // import pageSizeOptions from '../../utils/page-size';
 import { requestPrivileges } from '../../utils/privileges';
-import Loading from '../LoadingIndicator/loading-indicator';
 import Meditor from '../MeditorModal/modal';
 
 const breadcrumbConfig = [
@@ -60,7 +59,14 @@ const breadcrumbConfig = [
 class RequestsOverview extends React.Component {
   constructor () {
     super();
-    this.state = { producers: [], originalList: {}, list: {} };
+    const blank = {
+        "data": [{}],
+        "meta": {"queriedAt": 0},
+        "params": {},
+        "inflight": true,
+        "error": false
+    }
+    this.state = { producers: [], originalList: blank, list: blank };
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
   }
@@ -97,6 +103,7 @@ class RequestsOverview extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.state.intervalId);
+    const { dispatch, clear, paramKey } = this.props;
   }
 
   generateQuery () {
@@ -115,7 +122,7 @@ class RequestsOverview extends React.Component {
       const record = list[ea];
       newList[ea] = record;
       for (const r in record) {
-        if (!record[r].hidden && record[r].step_name !== 'close' && typeof record[r] === 'object') {
+        if (!record[r]?.hidden && record[r]?.step_name !== 'close' && typeof record[r] === 'object') {
           if (match === undefined && this.state.filter !== undefined && this.state.filter.length > 0) {
             match = this.state.filter;
           }
@@ -165,7 +172,7 @@ class RequestsOverview extends React.Component {
   }
   
   render () {
-    if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
+    
       if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
         const searchElement = document.querySelector('.request-section input.search');
 
@@ -196,9 +203,7 @@ class RequestsOverview extends React.Component {
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
             { canInitialize ? <a className='button button--small button--green button--add-small form-group__element--right new-request-button' href={initiateRequestSelectDaac} aria-label="Create new request">New Request</a> : null }
           </div>
-          {!list
-            ? <Loading />
-            : <List
+          {<List
                 list={list}
                 tableColumns={tableColumns}
                 query={query}
@@ -222,8 +227,6 @@ class RequestsOverview extends React.Component {
         <Meditor></Meditor>
       </div>
       );
-    }
-    return null;
   }
 }
 

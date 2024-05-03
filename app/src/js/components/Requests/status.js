@@ -8,8 +8,6 @@ import {
 } from '../../actions';
 import {
   lastUpdated,
-  shortDateNoTimeYearFirst,
-  bool,
   displayCase
 } from '../../utils/format';
 import {
@@ -18,9 +16,7 @@ import {
 import List from '../Table/Table';
 import Select from 'react-select';
 import { strings } from '../locale';
-import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import Loading from '../LoadingIndicator/loading-indicator';
 
 class ActionRequestsOverview extends React.Component {
   constructor () {
@@ -28,9 +24,16 @@ class ActionRequestsOverview extends React.Component {
     this.displayName = strings.all_requests;
     this.generateQuery = this.generateQuery.bind(this);
     this.getView = this.getView.bind(this);
-    this.state = { producers: [], originalList: {}, list: {} };
+    const blank = {
+        "data": [{}],
+        "meta": {"queriedAt": 0},
+        "params": {},
+        "inflight": true,
+        "error": false
+    }
+    this.state = { producers: [], originalList: blank, list: blank };
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
-    this.setRequests = this.setRequests.bind(this);
+    this.updateList = this.updateList.bind(this);
   }
 
   getView () {
@@ -45,23 +48,44 @@ class ActionRequestsOverview extends React.Component {
   }
 
   async componentDidMount () {
-    this.setRequests();
+    await this.updateList();
+  
+    let elapsedTime = 0; // Track elapsed time
+  
+    const intervalId = setInterval(async () => {
+      elapsedTime += 30000; // Increment elapsed time by 30 seconds
+      const { list } = this.props.requests;
+      const hasActionId = list.data.some(item => item.step_data && item.step_data.action_id);
+      
+      if (!hasActionId || elapsedTime > 2 * 60000) {
+        clearInterval(intervalId);
+      } else {
+        await this.updateList();
+      }
+    }, 30000); // Check every 30 seconds
+  
+    this.setState({ intervalId });
   }
 
-  async setRequests (filter = []) {
+  async updateList(filter=[]) {
     const { dispatch } = this.props;
     await dispatch(listRequests());
     const { requests } = this.props;
     const { list } = requests;
     const originalList = this.filter(list);
-    this.setState({ originalList: originalList, list: originalList, view: this.getView(), filter: filter });
+    this.setState({ originalList, list: originalList, view: this.getView(), filter: filter });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId);
+    const { dispatch, clear, paramKey } = this.props;
   }
 
   generateQuery (list) {
     const options = {};
     const view = this.getView();
     if (view !== this.state.view) {
-      this.setRequests(this.state.list);
+      this.updateList(this.state.list);
     }
     if (view && view !== 'all') options.status = view;
     options.status = view;
@@ -88,8 +112,10 @@ class ActionRequestsOverview extends React.Component {
           // Once closing sets records to hidden once more, one can take out else statement.  status on close says ready now.
           const prod = { value: record[r].form_data?.data_producer_info_name, label: record[r].form_data?.data_producer_info_name };
           let dataProduct = record[r].form_data?.data_product_name_value;
-          if (dataProduct === undefined) {
+          if (dataProduct === undefined && record[r]?.initiator?.name) {
             dataProduct = `Request Initialized by ${record[r].initiator.name}`;
+          } else if (dataProduct === undefined) {
+            dataProduct = `Request Initialized`;
           }
           const isFound = this.state.producers.some(element => {
             if (element.value === prod.value) {
@@ -114,7 +140,7 @@ class ActionRequestsOverview extends React.Component {
                 }
               }
             } else {
-              if ((record[r].hidden || record[r].step_name.match(/close/)) && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
+              if ((record[r].hidden || record[r]?.step_name?.match(/close/)) && ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '')) {
                 if (match === undefined) {
                   tmp.push(record[r]);
                 } else {
@@ -148,7 +174,6 @@ class ActionRequestsOverview extends React.Component {
   }
 
   render () {
-    if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
       if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
         const searchElement = document.querySelector('.request-section input.search');
 
@@ -195,9 +220,7 @@ class ActionRequestsOverview extends React.Component {
             <div className='heading__wrapper--border'>
               <h2 className='heading--medium heading--shared-content with-description'>Action <span className='num--title'>{unique.length}</span></h2>
             </div>
-            {!list
-              ? <Loading />
-              : <List
+            {<List
                 list={this.filter(this.state.originalList)}
                 tableColumns={tableColumns}
                 query={query}
@@ -220,8 +243,6 @@ class ActionRequestsOverview extends React.Component {
           </section>
         </div>
       );
-    }
-    return null;
   }
 }
 

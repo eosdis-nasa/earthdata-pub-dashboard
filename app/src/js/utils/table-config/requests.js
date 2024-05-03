@@ -16,6 +16,7 @@ import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 import { trigger } from '../../actions/events';
 import { getPrivilegesByType, requestPrivileges } from '../privileges';
+import Loading from '../../components/LoadingIndicator/loading-indicator';
 
 export const getPrivileges = (step) => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
@@ -144,6 +145,10 @@ export const getFormalName = (str) => {
 };
 
 export const stepLookup = (row) => {
+  if (row.step_data === undefined || JSON.stringify(row.step_data)==='{}') {
+    return '--'
+  }
+  // const isHidden = row?.hidden || false;
   const stepName = row?.step_data?.name;
   let request = '';
   let stepID = '';
@@ -159,7 +164,7 @@ export const stepLookup = (row) => {
         stepIDKey = `${stepType}_id`;
         stepID = row.step_data[stepIDKey];
         if (row.step_data.type.match(/close/g)) {
-          return 'Completed';
+            return 'Completed';
         }
         if (typeof stepID === 'undefined') {
           if (typeof row.step_data.form_id !== 'undefined') {
@@ -203,8 +208,8 @@ export const stepLookup = (row) => {
 export const tableColumns = [
   {
     Header: 'Data Product Name',
-    accessor: row => row.form_data ? row.form_data.data_product_name_value || `Request Initialized by ${row.initiator.name}` : `Request Initialized by ${row.initiator.name}`,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || `Request Initialized by ${row.row.original.initiator.name}` : `Request Initialized by ${row.row.original.initiator.name}`}</Link> : `Request Initialized by ${row.row.original.initiator.name}`,
+    accessor: row => row.form_data ? row.form_data.data_product_name_value || row.initiator.name ? `Request Initialized by ${row.initiator.name}` : `Request Initialized` : `Request Initialized` ,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.form_data ? row.row.original.form_data.data_product_name_value || row.row.original.initiator.name ? `Request Initialized by ${row.row.original.initiator.name}` : `Request Initialized` : null}</Link> : row.row.original.initiator.name ? `Request Initialized by ${row.row.original.initiator.name}` : `Request Initialized`,
     id: 'name',
     // width: 155
   },
@@ -249,7 +254,7 @@ export const tableColumns = [
   },
   {
     Header: 'Next Action',
-    accessor: row => stepLookup(row),
+    accessor: row => row ? stepLookup(row) : '--',
     id: 'next_action',
     // width: 170
   }

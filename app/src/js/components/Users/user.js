@@ -16,7 +16,7 @@ import { userPrivileges } from '../../utils/privileges';
 import { lastUpdated, shortDateNoTimeYearFirst } from '../../utils/format';
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import LoadingOverlay from '../LoadingIndicator/loading-overlay';
+import Loading from '../LoadingIndicator/loading-indicator';
 import MetadataEditable from '../Table/MetadataEditable';
 import { strings } from '../locale';
 
@@ -81,7 +81,16 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
   }, []);
   const [showSearch, setShowSearch] = useState(false);
   const [searchOptions, setSearchOptions] = useState({});
-  const { data, inflight, meta } = user;
+  const { data, inflight, meta } = user || {
+    inflight: true,
+    data: {
+      long_name: 'unknown',
+      detailed: false
+    },
+    meta: {
+      queriedAt: 0
+    }
+  };
   const { canAddRole, canRemoveRole, canAddGroup, canRemoveGroup } = userPrivileges(privileges);
   const addRoleSubmit = (id) => {
     addRole(dispatch, userId, id);
@@ -131,12 +140,17 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
     {
       label: 'Name',
       property: 'name',
-      editable: true,
-      onClick: () => setEditMode('name')
+      accessor: d => {
+        return (d || <Loading/>);
+      },
+      editable: true
     },
     {
       label: 'Email',
-      property: 'email'
+      property: 'email',
+      accessor: d => {
+        return (d || '--');
+      },
     },
     {
       label: 'Registered',
@@ -168,9 +182,7 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
           </div>
         </section>
         { showSearch && <SearchModal { ...searchOptions }/> }
-        { inflight && <LoadingOverlay /> }
-        { data.id
-          ? <div className='page__content'>
+        {<div className='page__content'>
             <section className='page__section page__section__header-wrapper'>
               <div className='heading__wrapper--border'>
                 <h1 className='heading--small' aria-labelledby={strings.user_overview}>
@@ -276,7 +288,6 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
               </div>
             </section>
           </div>
-          : null
         }
       </div>
     </div>

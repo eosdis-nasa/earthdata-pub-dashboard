@@ -46,7 +46,10 @@ class Roles extends React.Component {
 
   render () {
     const { roleId } = this.props.match.params;
-    const record = this.props.roles.detail;
+    const record = this.props.roles.detail || {
+      inflight: true,
+      data: {}
+    };
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
@@ -72,21 +75,15 @@ class Roles extends React.Component {
         </h1>
         <br /><br />
         <section className='page__section'>
-          { record.inflight
-            ? <Loading />
-            : record.error
-              ? <ErrorReport report={record.error} />
-              : record.data
-                ? <div>
+          {<div>
                   <div className='tab--wrapper'>
                     <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
                       onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
                   </div>
                   <div>
-                    {this.state.view === 'list' ? this.renderList(record.data) : this.renderJson(record.data)}
+                    {record.inflight ? <Loading/> : this.state.view === 'list' ? this.renderList(record.data) : this.renderJson(record.data)}
                   </div>
                 </div>
-                : null
           }
         </section>
       </div>

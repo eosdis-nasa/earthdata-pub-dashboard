@@ -30,18 +30,16 @@ class Workflows extends React.Component {
     this.onConnect = this.onConnect.bind(this);
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { dispatch } = this.props;
     const { workflowId } = this.props.match.params;
-    dispatch(getWorkflow(workflowId));
-    setTimeout(() => {
-      const record = this.props.workflows.detail;
-      if (typeof record.data !== 'undefined') {
-        const graphData = workflowToGraph(record.data.steps);
-        this.setState({ nodes: graphData[0] });
-        this.setState({ edges: graphData[1] });
-      }
-    }, 2000);
+    await dispatch(getWorkflow(workflowId));
+    const record = this.props.workflows.detail;
+    if (typeof record.data !== 'undefined') {
+      const graphData = workflowToGraph(record.data.steps);
+      this.setState({ nodes: graphData[0] });
+      this.setState({ edges: graphData[1] });
+    }
   }
 
   showGraph () {
@@ -94,7 +92,24 @@ class Workflows extends React.Component {
 
   render () {
     const { workflowId } = this.props.match.params;
-    const record = this.props.workflows.detail;
+    const record = this.props.workflows.detail || {
+      inflight: false,
+      data: {
+        steps: {
+          init: {
+            type: 'init',
+            step_id: 'c4fe6885-9285-490e-b604-da9385defdd6',
+            step_message: '',
+            next_step_name: 'close'
+          },
+          close: {
+            type: 'close',
+            step_id: '95412168-16a5-4ad5-b8db-08c5530a626a',
+            prev_step_name: 'init'
+          }
+        }
+      }
+    };
     const { canUpdateWorkflow } = userPrivileges(this.props.privileges);
     const breadcrumbConfig = [
       {
@@ -128,9 +143,9 @@ class Workflows extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
         <section className='page__section'>
-          {record.data && canUpdateWorkflow
+          {canUpdateWorkflow
             ? <Link
-              className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: `/workflows/edit/${record.data.id}` }} aria-label="Edit your workflow">Edit</Link>
+              className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: `/workflows/edit/${record.data?.id}` }} aria-label="Edit your workflow">Edit</Link>
             : null}
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Workflow Overview</h2>
@@ -139,12 +154,7 @@ class Workflows extends React.Component {
         <div className='page__component'>
       </div>
         <section className='page__section'>
-          {record.inflight
-            ? <Loading />
-            : record.error
-              ? <ErrorReport report={record.error} />
-              : record.data
-                ? <div>
+          {<div>
                   <div className='tab--wrapper'>
                     <button className={'button--tab ' + (this.state.view === 'graph' ? 'button--active' : '')}
                       onClick={() => this.state.view !== 'graph' && this.setState({ view: 'graph' })}>Graphical View</button>
@@ -152,13 +162,12 @@ class Workflows extends React.Component {
                       onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
                   </div>
                   <div>
-                    {this.state.view === 'graph' ? this.showGraph(record.data) : this.renderJson(record.data)}
+                    {record.inflight ? <Loading/> : this.state.view === 'graph' ? this.showGraph(record.data) : this.renderJson(record.data)}
                   </div>
                 </div>
-                : null}
+                }
         </section>
-        {record.data
-          ? <section className='page__section' id='graph'>
+        {<section className='page__section' id='graph'>
             <ReactFlow
               nodes={this.state.nodes}
               edges={this.state.edges}
@@ -170,7 +179,7 @@ class Workflows extends React.Component {
             >
             </ReactFlow>
           </section>
-          : null}
+         }
       </div>
     );
   }

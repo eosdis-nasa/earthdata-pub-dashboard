@@ -37,12 +37,18 @@ import Select from 'react-select';
 import { strings } from './locale';
 import Meditor from '../components/MeditorModal/modal';
 import { requestPrivileges } from '../utils/privileges';
-import Loading from '../components/LoadingIndicator/loading-indicator';
 
 class Home extends React.Component {
   constructor (props) {
     super(props);
-    this.state = { producers: [], originalList: {}, list: {} };
+    const blank = {
+        "data": [{}],
+        "meta": {"queriedAt": 0},
+        "params": {},
+        "inflight": true,
+        "error": false
+    }
+    this.state = { producers: [], originalList: blank, list: blank };
     this.displayName = 'Home';
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
@@ -212,14 +218,16 @@ class Home extends React.Component {
       const record = list[ea];
       newList[ea] = record;
       for (const r in record) {
-        if (!record[r].hidden && record[r].step_name !== 'close' && typeof record[r] === 'object') {
+        if (!record[r]?.hidden && record[r]?.step_name !== 'close' && typeof record[r] === 'object') {
           if (match === undefined && this.state.filter !== undefined && this.state.filter.length > 0) {
             match = this.state.filter;
           }
           const prod = { value: record[r].form_data?.data_producer_info_name, label: record[r].form_data?.data_producer_info_name };
           let dataProduct = record[r].form_data?.data_product_name_value;
-          if (dataProduct === undefined) {
+          if (dataProduct === undefined && record[r]?.initiator?.name) {
             dataProduct = `Request Initialized by ${record[r].initiator.name}`;
+          } else if (dataProduct === undefined ) {
+            dataProduct = `Request Initialized`
           }
           const isFound = this.state.producers.some(element => {
             if (element.value === prod.value) {
@@ -254,7 +262,6 @@ class Home extends React.Component {
   }
 
   render () {
-    if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
       if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
         const searchElement = document.querySelector('.request-section input.search');
 
@@ -310,8 +317,6 @@ class Home extends React.Component {
         </div>
       );
     }
-    return <Loading />;
-  }
 }
 
 Home.propTypes = {

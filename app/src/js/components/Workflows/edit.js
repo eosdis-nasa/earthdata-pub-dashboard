@@ -25,10 +25,10 @@ class Workflows extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { dispatch } = this.props;
     const { workflowId } = this.props.match.params;
-    workflowId ? dispatch(getWorkflow(workflowId)) : null;
+    workflowId ? await dispatch(getWorkflow(workflowId)) : null;
   }
 
   cancelWorkflow () {
@@ -96,21 +96,15 @@ class Workflows extends React.Component {
                   </div>
                 </section>
                 <section className='page__section'>
-                    { record.inflight
-                      ? <Loading />
-                      : record.error
-                        ? <ErrorReport report={record.error} />
-                        : record.data
-                          ? <div>
+                    { <div>
                                     <div className='tab--wrapper'>
-                                        <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
-                                                onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>Workflow JSON</button>
+                                        <button className={'button--tab ' + (this.state?.view === 'json' ? 'button--active' : '')}
+                                                onClick={() => this.state?.view !== 'json' && this.setState({ view: 'json' })}>Workflow JSON</button>
                                     </div>
                                     <div>
-                                        {this.renderJson((this.state.data ? this.state.data : record.data), this.refName)}
+                                        {this.renderJson((this.state?.data ? this.state?.data : record.data), this.refName)}
                                     </div>
                                 </div>
-                          : null
                     }
                 </section>
                 <section className='page__section'>

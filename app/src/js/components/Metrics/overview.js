@@ -223,7 +223,7 @@ const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_metrics} <span className='num--title'>{metrics?.list?.data?.length}</span></h2>
         </div>}
         {view === 'User' && <div className='heading__wrapper--border'>
-          <h2 className='heading--medium heading--shared-content with-description'>{strings.users} <span className='num--title'>{metrics?.list?.data?.[0]?.user_count}</span></h2>
+          <h2 className='heading--medium heading--shared-content with-description'>{strings.users} <span className='num--title'>{metrics?.list?.data?.[0]?.user_count > 0 ? metrics?.list?.data?.[0]?.user_count : 0}</span></h2>
         </div>}
         {view === 'DAAC' && <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{'Daacs onboarded'} <span className='num--title'>{filteredMetricsList.data?.length}</span></h2>

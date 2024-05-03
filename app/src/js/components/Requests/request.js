@@ -40,7 +40,7 @@ import UploadOverview from '../DataUpload/overview';
 class RequestOverview extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { current: {}, names: {}, formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
+    this.state = { current: { value: 'Set Current Workflow Step', label: 'Set Current Workflow Step' }, names: {}, formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
     this.navigateBack = this.navigateBack.bind(this);
     this.applyWorkflow = this.applyWorkflow.bind(this);
     this.delete = this.delete.bind(this);
@@ -251,24 +251,41 @@ class RequestOverview extends React.Component {
 
   render() {
     const { requestId } = this.props.match.params;
-    const record = this.props.requests.detail;
+    console.log(this.props.requests)
+    let record = this.props.requests.detail;
+    const request = record.data || {
+        "queriedAt": 0,
+        "contributors": [{}],
+        "workflow": {},
+        "step_data": {},
+        "forms": [],
+        "metadata": {}
+    };
     const searchOptions = {
       entity: 'user',
       submit: this.submitCallback,
       cancel: this.closeUserForm
     };
-    let isHidden = false;
-    if (typeof record.data !== 'undefined') {
-      isHidden = record.data.hidden;
+    const isHidden = record?.hidden || false;
+    console.log(record)
+    if (record?.data?.contributors===undefined){
+        record = {
+            "inflight": true,
+            "data": {"contributors": [{"id": "--",
+            "name": "--"}]},
+            "workflow": {},
+            "step_data": {},
+            "forms": [],
+            "metadata": {}
+        }
     }
-    const request = record.data || false;
     let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser, canInitialize } = requestPrivileges(this.props.privileges);
     const { canEdit } = formPrivileges(this.props.privileges);
     const { roles } = this.props;
     const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
     let workflowSave;
     if (canWithdraw && canRestore) {
-      workflowSave = this.renderWorkflowSave(record);
+      workflowSave = this.renderWorkflowSave(record)
     }
     let canViewUsers = false;
     if (role.includes('admin')) {
@@ -278,13 +295,9 @@ class RequestOverview extends React.Component {
       canReassign = true;
     }
     const requestForms = request.forms;
-    let showTable = false;
     if (requestForms?.length) {
       if (record?.data?.step_name === 'close') {
         canWithdraw = false;
-      }
-      if (requestForms?.length > 0) {
-        showTable = true;
       }
     }
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
@@ -361,28 +374,28 @@ class RequestOverview extends React.Component {
         id: 'submitted_at'
       }
     ];
-
+    
     const metaAccessors = [
       {
         label: 'Data Producer Name',
-        accessor: row => row.data_producer_name
+        accessor: row => row.data_producer_name ? row.data_producer_name : '--'
       },
       {
         label: 'Daac',
-        accessor: row => row.daac_name && canEdit ? <a href={`${_config.formsUrl}/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{row.daac_name}</a> : row.daac_name ? row.daac_name : row.daac_id,
+        accessor: row => row.daac_name && canEdit ? <a href={`${_config.formsUrl}/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{row.daac_name}</a> : row.daac_name ? row.daac_name : <Loading/>,
         classList: 'hidden'
       },
       {
         label: 'Initiator',
-        accessor: row => row?.initiator?.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : null
+        accessor: row => row?.initiator?.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : row.initiator?.name ? row.initiator?.name : '--',
       },
       {
         label: 'Data Product Name',
-        accessor: row => row.data_product_name || (row?.initiator?.name && canViewUsers ? `Request Initialized by ${row.initiator.name}` : null)
+        accessor: row => row.data_product_name || (row?.initiator?.name && canViewUsers ? `Request Initialized by ${row.initiator.name}` : '--')
       },
       {
         label: 'Workflow',
-        accessor: row => row?.workflow?.name ? <Link to={`/workflows/id/${row.workflow.id}`} aria-label="View your workflows">{row.workflow.name}</Link> : row?.workflow?.name
+        accessor: row => row?.workflow?.name ? <Link to={`/workflows/id/${row?.workflow?.id}`} aria-label="View your workflows">{row?.workflow?.name}</Link> : '--'
       },
       {
         label: 'Created',
@@ -400,19 +413,17 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Communication',
-        accessor: conversationId => <Link to={`/conversations/id/${conversationId}`} aria-label="View your conversations">{conversationId ? 'Conversation' : null}</Link>,
+        accessor: conversationId => conversationId ? <Link to={`/conversations/id/${conversationId}`} aria-label="View your conversations">{conversationId ? 'Conversation' : null}</Link> : '--',
         property: 'conversation_id'
       }
     ];
 
-    if (!isHidden) {
-      metaAccessors.push(
+    metaAccessors.push(
         {
           label: 'Next Action',
-          accessor: row => stepLookup(row)
+          accessor: row => row ? stepLookup(row) : '--'
         }
       );
-    }
 
     const breadcrumbConfig = [
       {
@@ -444,7 +455,7 @@ class RequestOverview extends React.Component {
             <dd className={request.status}>{request.status}</dd>
           </dl>
         </section>
-        {record.inflight ? <Loading /> : request ?
+        {
           <>
             <section className='page__section'>
               <div className='heading__wrapper--border'>
@@ -453,7 +464,7 @@ class RequestOverview extends React.Component {
                 </h1>
               </div>
               <div className='indented__details'>
-                <Metadata data={request} accessors={metaAccessors} />
+                {!request ? <Loading/> : <Metadata data={request} accessors={metaAccessors} />}
               </div>
             </section>
             <section className='page__section'>
@@ -501,9 +512,8 @@ class RequestOverview extends React.Component {
               {workflowSave}
             </section>
             <Meditor></Meditor>
-            <UploadOverview />
-            {showTable
-              ? <section className='page__section'>
+            <UploadOverview /><br></br>
+            {<section className='page__section'>
                 <div className='heading__wrapper--border'>
                   <h2 className='heading--medium heading--shared-content with-description'>Request Forms</h2>
                 </div>
@@ -513,9 +523,8 @@ class RequestOverview extends React.Component {
                   tableColumns={tableColumns}
                 />
               </section>
-              : null}
-          </> : null
-        }
+              }
+          </>}
         <br />
       </div>
     );

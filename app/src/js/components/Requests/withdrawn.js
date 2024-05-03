@@ -8,15 +8,12 @@ import {
 } from '../../actions';
 import {
   lastUpdated,
-  shortDateNoTimeYearFirst,
-  bool
 } from '../../utils/format';
 import List from '../Table/Table';
 import Select from 'react-select';
 import { strings } from '../locale';
 import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import Loading from '../LoadingIndicator/loading-indicator';
 import {
   tableColumns
 } from '../../utils/table-config/requests';
@@ -41,17 +38,48 @@ class InactiveRequestsOverview extends React.Component {
   constructor () {
     super();
     this.generateQuery = this.generateQuery.bind(this);
-    this.state = { producers: [], originalList: {}, list: {} };
+    const blank = {
+        "data": [{}],
+        "meta": {"queriedAt": 0},
+        "params": {},
+        "inflight": true,
+        "error": false
+    }
+    this.state = { producers: [], originalList: blank, list: blank };
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
+    await this.updateList();
+  
+    let elapsedTime = 0; // Track elapsed time
+  
+    const intervalId = setInterval(async () => {
+      elapsedTime += 30000; // Increment elapsed time by 30 seconds
+      const { list } = this.props.requests;
+      const hasActionId = list.data.some(item => item.step_data && item.step_data.action_id);
+      
+      if (!hasActionId || elapsedTime > 2 * 60000) {
+        clearInterval(intervalId);
+      } else {
+        await this.updateList();
+      }
+    }, 30000); // Check every 30 seconds
+  
+    this.setState({ intervalId });
+  }
+  
+  async updateList() {
     const { dispatch } = this.props;
     await dispatch(listInactiveRequests());
     const { requests } = this.props;
     const { list } = requests;
     const originalList = this.filter(list);
-    this.setState({ originalList: originalList, list: originalList });
+    this.setState({ originalList, list: originalList });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId);
   }
 
   generateQuery () {
@@ -76,8 +104,10 @@ class InactiveRequestsOverview extends React.Component {
           }
           const prod = { value: record[r].form_data?.data_producer_info_name, label: record[r].form_data?.data_producer_info_name };
           let dataProduct = record[r].form_data?.data_product_name_value;
-          if (dataProduct === undefined) {
+          if (dataProduct === undefined && record[r]?.initiator?.name) {
             dataProduct = `Request Initialized by ${record[r].initiator.name}`;
+          } else if (dataProduct === undefined) {
+            dataProduct = `Request Initialized`
           }
           const isFound = this.state.producers.some(element => {
             if (element.value === prod.value) {
@@ -120,7 +150,6 @@ class InactiveRequestsOverview extends React.Component {
   }
 
   render () {
-    if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
       if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
         const searchElement = document.querySelector('.request-section input.search');
 
@@ -147,9 +176,7 @@ class InactiveRequestsOverview extends React.Component {
             <div className='heading__wrapper--border'>
               <h2 className='heading--medium heading--shared-content with-description'>{strings.requests_withdrawn2} Requests <span className='num--title'>{unique.length}</span></h2>
             </div>
-            {!list
-              ? <Loading />
-              : <List
+            {<List
                   list={list}
                   tableColumns={tableColumns}
                   query={this.generateQuery()}
@@ -173,8 +200,6 @@ class InactiveRequestsOverview extends React.Component {
         </div>
       );
     }
-    return null;
-  }
 }
 
 InactiveRequestsOverview.propTypes = {

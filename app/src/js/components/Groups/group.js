@@ -19,15 +19,24 @@ import _config from '../../config';
 const metaAccessors = [
   {
     label: 'Short Name',
-    property: 'short_name'
+    property: 'short_name',
+    accessor: d => {
+      return (d || <Loading/>);
+    },
   },
   {
     label: 'Name',
-    property: 'long_name'
+    property: 'long_name',
+    accessor: d => {
+      return (d || '--');
+    },
   },
   {
     label: 'Description',
-    property: 'description'
+    property: 'description',
+    accessor: d => {
+      return (d || '--');
+    },
   }
 ];
 
@@ -38,10 +47,10 @@ class GroupOverview extends React.Component {
     this.navigateBack = this.navigateBack.bind(this);
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { dispatch } = this.props;
     const { groupId } = this.props.match.params;
-    dispatch(getGroup(groupId));
+    await dispatch(getGroup(groupId));
   }
 
   componentWillUnmount () {
@@ -55,13 +64,13 @@ class GroupOverview extends React.Component {
 
   render () {
     const groupId = this.props.match.params.groupId;
-    const record = this.props.groups.map[groupId];
+    const record = this.props.groups.map[groupId] || {
+      inflight: true,
+      data: {}
+    };
     let { canUpload } = groupPrivileges(this.props.privileges);
-    if (!record || (record.inflight && !record.data)) {
-      return <Loading />;
-    }
-    const group = record.data;
-    if (!group.short_name.match(/ghrc_daac|root_group/)) {
+    const group = record?.data;
+    if (!group?.short_name?.match(/ghrc_daac|root_group/)) {
       canUpload = false;
     }
     const breadcrumbConfig = [
@@ -96,8 +105,13 @@ class GroupOverview extends React.Component {
               {strings.group_overview}
             </h1>
           </div>
-          <div className='indented__details'><Metadata data={group} accessors={metaAccessors} /></div>
-          {record.data && canUpload ? <UploadOverview /> : null }
+          <div className='indented__details'><Metadata data={group} accessors={metaAccessors} /></div><br></br>
+          <div className='heading__wrapper--border'>
+            <h1 className='heading--small' aria-labelledby="File Upload">
+            File Upload
+            </h1>
+          </div>
+          {canUpload ? <UploadOverview /> : null }
         </section>
       </div>
     );

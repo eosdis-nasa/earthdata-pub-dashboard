@@ -138,7 +138,7 @@ class List extends React.Component {
       data
     } = this.props;
     const { meta, data: listData } = list;
-    const { count, limit } = meta;
+    const { count, limit } = meta || 0;
     const tableData = data || listData;
     const {
       page,

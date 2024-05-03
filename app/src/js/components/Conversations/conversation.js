@@ -12,18 +12,18 @@ import { notePrivileges } from '../../utils/privileges';
 import { lastUpdated } from '../../utils/format';
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import LoadingOverlay from '../LoadingIndicator/loading-overlay';
+import Loading from '../LoadingIndicator/loading-indicator';
 
 const textRef = React.createRef();
 
-const reply = (dispatch, id) => {
+const reply = async (dispatch, id) => {
   const resp = encodeURI(textRef.current.value);
   const payload = { conversation_id: id, text: resp };
-    dispatch(replyConversation(payload));
+  await dispatch(replyConversation(payload));
   textRef.current.value = '';
 };
 
-const getConversations = (dispatch, conversationId, lvl) => {
+const getConversations = async (dispatch, conversationId, lvl) => {
   if (lvl) {
     document.getElementById('all_button').classList.add('active');
     document.getElementById('users_only_button').classList.remove('active');
@@ -31,7 +31,7 @@ const getConversations = (dispatch, conversationId, lvl) => {
     document.getElementById('all_button').classList.remove('active');
     document.getElementById('users_only_button').classList.add('active');
   }
-  dispatch(getConversation(conversationId, lvl));
+  await dispatch(getConversation(conversationId, lvl));
 };
 
 const Conversation = ({ dispatch, conversation, privileges, match }) => {
@@ -40,17 +40,17 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   useEffect(() => {
     dispatch(getConversation(conversationId));
   }, []);
-  const { data, inflight, meta } = conversation;
+  const { data, inflight, meta } = conversation
   const { subject, notes, participants } = data;
   const { queriedAt } = meta;
   const { canReply, canAddUser, canAddGroup } = notePrivileges(privileges);
   const cancelCallback = () => setShowSearch(false);
-  const submitCallback = (id) => {
+  const submitCallback = async (id) => {
     const params = {
       conversation_id: conversationId,
       user_id: id
     };
-    dispatch(addUsersToConversation(params));
+    await dispatch(addUsersToConversation(params));
     setShowSearch(false);
   };
   const searchOptions = {
@@ -103,13 +103,12 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
           </div>
         </section>
         { showSearch && <SearchModal { ...searchOptions }/> }
-        { inflight && <LoadingOverlay /> }
-        { notes &&
-          <section className='page__section flex__row'>
+        { inflight && <Loading /> }
+        {<section className='page__section flex__row'>
             <section className='page__section flex__item--grow-1'>
               <div className='heading__wrapper--border'>
                 <h2 className='heading--medium heading--shared-content with-description'>
-                  Notes <span className='num--title'>{notes.length}</span>
+                  Notes <span className='num--title'>{notes?.length > 0 ? notes?.length : 0}</span>
                 </h2>
               </div>
               <div className='flex__column--reverse'>
@@ -134,7 +133,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                   }
                 </div>
                 {
-                  notes.map((note, key) => {
+                  notes?.map((note, key) => {
                     return (<Note note={note} key={key} />);
                   })
                 }
@@ -143,12 +142,12 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
             <section className='page__section flex__item--w-17 flex__item-end'>
               <div className='heading__wrapper--border'>
                 <h2 className='heading--medium heading--shared-content with-description'>
-                  Participants <span className='num--title'>{participants.length}</span>
+                  Participants <span className='num--title'>{participants?.length > 0 ? participants?.length : 0}</span>
                 </h2>
               </div>
               <div className='flex__column'>
                 {
-                  participants.map((user, key) => {
+                  participants?.map((user, key) => {
                     return <div className='sm-border' key={key}>{user.name}</div>;
                   })
                 }
@@ -183,7 +182,7 @@ const Note = ({ note }) => {
         <h3>{ note.from.name }</h3>
         {lastUpdated(note.sent, 'Sent')}
       </div>
-      <div className='flex__item--grow-1-wrap'style={{whiteSpace: "pre"}}>{ decodeURI(note.text) }</div>
+      <div className='flex__item--grow-1-wrap'style={{ whiteSpace: 'pre' }}>{ decodeURI(note.text) }</div>
     </div>
   );
 };

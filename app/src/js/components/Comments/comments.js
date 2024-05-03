@@ -9,17 +9,16 @@ import {
   getForm,
   getConversations
 } from '../../actions';
-import Loading from '../LoadingIndicator/loading-indicator';
 import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 
 class Comment extends React.Component {
-  constructor() {
+  constructor () {
     super();
     this.displayName = 'Comment';
     this.state = { textRef: React.createRef() };
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     const search = this.props.location.search.split('=');
     let requestId = '';
     if (search[1] !== undefined) {
@@ -50,7 +49,7 @@ class Comment extends React.Component {
     }
   }
 
-  getFormalName(str) {
+  getFormalName (str) {
     if (typeof str === 'undefined') return '';
     const count = (str.match(/_/g) || []).length;
     if (count > 0) {
@@ -63,14 +62,14 @@ class Comment extends React.Component {
     return words.join(' ');
   }
 
-  formatComments() {
+  formatComments () {
     if (document.querySelectorAll('textarea#comment') !== undefined && document.querySelectorAll('textarea#comment')[0] !== undefined && document.querySelectorAll('textarea#comment')[0].value !== '') {
       document.querySelectorAll('textarea#comment')[0].placeholder = 'Enter a comment';
       document.querySelectorAll('textarea#comment')[0].classList.remove('required');
     }
   }
 
-  hasStepData() {
+  hasStepData () {
     if (typeof this.props.requests !== 'undefined' &&
       typeof this.props.requests.detail.data !== 'undefined' &&
       typeof this.props.requests.detail.data.step_data !== 'undefined') {
@@ -80,7 +79,7 @@ class Comment extends React.Component {
     }
   }
 
-  reply(requestName, id, stepName, step) {
+  reply (requestName, id, stepName, step) {
     const { dispatch } = this.props;
     if (this.state.textRef.current.value !== '') {
       const date = new Date();
@@ -98,7 +97,7 @@ class Comment extends React.Component {
     }
   }
 
-  render() {
+  render () {
     let reviewable = false;
     let sameFormAsStep = false;
     const search = this.props.location.search.split('=');
@@ -109,60 +108,60 @@ class Comment extends React.Component {
     let step = search[2];
     let stepName = this.getFormalName(step);
     let { canReview } = requestPrivileges(this.props.privileges, step);
-    let request = '';
+    let request = {
+      queriedAt: 0,
+      contributors: [{}],
+      workflow: {},
+      step_data: {},
+      forms: [],
+      metadata: {}
+    };
     let conversationId = '';
     let requestName = '';
     const formId = this.props.match.params.formId;
     let formName = '';
-    request = this.props.requests.detail.data;
-    if (this.hasStepData() && request !== undefined) {
-      if (this.props.forms.map !== undefined && this.props.forms.map[formId] !== undefined && this.props.forms.map[formId].data !== undefined) {
-        formName = this.props.forms.map[formId].data.short_name;
-        if (this.props.requests.detail.data.forms !== null) {
-          if (step === undefined) {
-            step = this.props.requests.detail.data.step_name;
-            stepName = this.getFormalName(step);
-          }
-          if (this.props.requests.detail.data.form_data.data_product_name_value) {
-            requestName = this.props.requests.detail.data.form_data.data_product_name_value;
-          } else {
-            requestName = requestId;
-          }
+    request = this.props?.requests?.detail?.data;
+    if (this.props.forms.map !== undefined && this.props.forms.map[formId] !== undefined && this.props.forms.map[formId].data !== undefined) {
+      formName = this.props.forms?.map[formId]?.data?.short_name;
+      if (this.props.requests?.detail?.data?.forms !== null) {
+        if (step === undefined) {
+          step = this.props.requests?.detail?.data?.step_name;
+          stepName = this.getFormalName(step);
         }
-        conversationId = this.props.requests.detail.data.conversation_id;
-        if (this.props.requests.detail.data.step_name.match(/close/g)) {
-          sameFormAsStep = false;
-          canReview = false;
-        }
-        if (this.props.requests.detail.data.step_name === `${formName}_form`) {
-          sameFormAsStep = true;
-          canReview = false;
-        } else if (this.props.requests.detail.data.step_name.match(/form_review/g)) {
-          if (canReview) {
-            reviewable = true;
-          }
-          if (this.props.requests.detail.data.step_name === `${formName}_form_review`) {
-            sameFormAsStep = true;
-          }
-        } else if (window.location.href.match(/approval/g)) {
-          reviewable = true;
-          sameFormAsStep = true;
+        if (this.props.requests?.detail?.data?.form_data?.data_product_name_value) {
+          requestName = this.props.requests?.detail?.data?.form_data?.data_product_name_value;
+        } else {
+          requestName = requestId;
         }
       }
-    }
-    if (!request || request.inflight || !this.props.conversations.list.data.notes) {
-      return <Loading />;
-    } else {
+      conversationId = this.props.requests?.detail?.data?.conversation_id;
+      if (this.props.requests?.detail?.data?.step_name?.match(/close/g)) {
+        sameFormAsStep = false;
+        canReview = false;
+      }
+      if (this.props.requests?.detail?.data?.step_name === `${formName}_form`) {
+        sameFormAsStep = true;
+        canReview = false;
+      } else if (this.props.requests?.detail?.data?.step_name?.match(/form_review/g)) {
+        if (canReview) {
+          reviewable = true;
+        }
+        if (this.props.requests?.detail?.data?.step_name === `${formName}_form_review`) {
+          sameFormAsStep = true;
+        }
+      } else if (window.location.href.match(/approval/g)) {
+        reviewable = true;
+        sameFormAsStep = true;
+      }
       if (conversationId === '') {
-        conversationId = this.props.conversations.list.data.id;
+        conversationId = this.props.conversations?.list?.data?.id;
       }
       return (
         <section className='page_section'>
-          {typeof requestId !== 'undefined' &&
-            <form className='flex__column flex__item--grow-1'
+          <form className='flex__column flex__item--grow-1'
               onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName, step); }}>
               <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em' }}></span>
-              {requestId !== '' && reviewable && sameFormAsStep
+              {reviewable && sameFormAsStep
                 ? <><textarea placeholder='Enter a comment'
                   ref={this.state.textRef}
                   id='comment'
@@ -179,10 +178,28 @@ class Comment extends React.Component {
                 : null
               }
             </form>
-          }
         </section>
       );
-    }
+    } return (
+        <section className='page_section'>
+          <form className='flex__column flex__item--grow-1 disabled'>
+              <span style={{ padding: '0.3em 2em 0.4em 0.7em' }}></span>
+              {<><textarea placeholder='' disabled
+                  ref={''}
+                  id='comment'
+                  aria-label="Loading ..."
+                  title="Loading ..."
+                ></textarea>
+                  <div style={{ minHeight: '40px' }}>
+                    <button disabled
+                      className='button button--reply form-group__element--right button__arrow button--disabled'>
+                      Save Comment
+                    </button>
+                  </div></>
+              }
+            </form>
+        </section>
+    )
   }
 }
 

@@ -52,7 +52,7 @@
   &:disabled,
   &--disabled {
     // Breaks accessibility
-    // opacity: 0.6;
+    opacity: 0.6;
     pointer-events: none;
     text-decoration: none;
     color: $white;
@@ -258,7 +258,7 @@
       }
     }
 
-    &--reply {
+    &--reply:not(.button--disabled) {
       background-color: $light-green;
       position: relative;
 
@@ -271,6 +271,19 @@
         left: 10px;
       }
     }
+    &--reply.button--disabled {
+        background-color: $grey;
+        position: relative;
+  
+        &:before {
+          color: $white;
+          position: absolute;
+          font-family: 'FontAwesome';
+          content: '\f112';
+          font-weight: 900;
+          left: 10px;
+        }
+      }
     &--reply:hover:before{
       color: $white;
       position: absolute;
