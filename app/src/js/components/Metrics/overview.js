@@ -264,19 +264,6 @@ const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
                 placeholder='Select Daac ...'
                 aria-label='Select Daac'
               /></label>)}
-              {/*<label className='heading--small'>Metrics
-                <Select
-                  id="metricSelect"
-                  options={metricOptions}
-                  value={selectedMetrics}
-                  onChange={handleMetricSelect}
-                  isSearchable={true}
-                  isMulti={false}
-                  isClearable={true}
-                  className='selectButton'
-                  placeholder='Select Metrics ...'
-                  aria-label='Select Metrics'
-                /></label>*/}
             </div>
         </List>
           : <Loading />:<div></div>}
