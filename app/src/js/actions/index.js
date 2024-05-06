@@ -137,14 +137,6 @@ export const checkApiVersion = () => {
   };
 };
 
-/* export const getEarthdatapubInstanceMetadata = () => ({
-  [CALL_API]: {
-    type: types.ADD_INSTANCE_META,
-    method: 'GET',
-    path: 'instanceMeta'
-  }
-}); */
-
 export const getRequest = (requestId) => ({
   [CALL_API]: {
     type: types.REQUEST,
@@ -280,7 +272,6 @@ export const getQuestion = (questionId) => ({
 
 export const listQuestions = (options) => {
   return (dispatch, getState) => {
-    // const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
     return dispatch({
       [CALL_API]: {
         type: types.QUESTIONS,
@@ -548,7 +539,6 @@ export const getCount = (options) => {
 
 export const listForms = (options) => {
   return (dispatch, getState) => {
-    // const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
     return dispatch({
       [CALL_API]: {
         type: types.FORMS,

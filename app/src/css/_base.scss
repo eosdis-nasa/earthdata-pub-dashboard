@@ -76,7 +76,6 @@ body {
   @extend .clearfix;
   margin-left: auto;
   margin-right: auto;
-  /* max-width: 1280px; */
   padding: 0 48px;
   display: block;
   width: auto;
@@ -119,7 +118,6 @@ a:active {
   font-size: .88em;
   font-weight: $base-font-regular;
   border-bottom: 1px solid $ocean-blue;
-  /*padding-bottom: .3em;*/
   transition: all 0.3s ease 0s;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
@@ -205,7 +203,6 @@ a:active {
     font-weight: 1000;
     text-align: center;
     img {
-      // padding-top: 7px;  Adjusted for hiding DatePickerHeader
       padding-top: 16.2px;
       height: 60px;
     }
@@ -216,7 +213,6 @@ a:active {
     }
   }
   nav{
-    // height: 4.688em; adjusted for hiding DatePickerHeader
     height: 5.688em;
   }
   nav ul {
@@ -319,7 +315,6 @@ a:active {
   padding-top: 2em;
   padding-bottom: 2em;
   box-shadow: $shadow__header;
-  // min-height:110px; Removed so it does not look weird with other page headers with hidden DatePickerHeader
   h1 {
     margin-bottom: .3em;
   }
@@ -358,16 +353,12 @@ a:active {
 }
 
 .sidebar {
-  /* flex: 2; */
   padding: 0;
   width: 20%; 
-  /* max-width: 225px;*/
   min-width: 175px; 
-  /* float: left; */
   min-height: 100vh;
   background-color: $sub-blue;
   color: #E7E4E4;
-  /* position: absolute; */
   margin: 0;
   a {
     color: #E7E4E4;
@@ -411,19 +402,14 @@ a:active {
 }
 .sidebar:before {
   content: "";
-  /*position: absolute;*/
   top: 0;
   bottom: 0;
-  /* subtract h2 padding (1.5rem) */
-  /*left: -50em;*/
   background: $sub-blue;
   height: 100%;
-  /*width: 50em;*/
 }
 
 .sidebar__row {
   display: flex;
-  /* align-items: center;*/
   justify-content: left;
   background-color: $dark-blue;
   padding: 0 48px;
@@ -447,7 +433,6 @@ a:active {
 .page__content--shortened {
   flex: 10;
   padding: 2em 4em 2em 4em;
-  /*float: left;*/
   width: 80%;
 }
 
@@ -459,9 +444,6 @@ a:active {
 
 .page__section {
   @extend .clearfix;
-  /*&:last-of-type {
-  margin-bottom: 3em;
-  }*/
 }
 
 .page_section__overview {
@@ -887,7 +869,6 @@ textarea {
 }
 
 .api__warning {
-  /*color: $error-red;*/
   color: $white;
   font-weight: 500;
   position: relative;
@@ -901,7 +882,6 @@ textarea {
 
   &:before {
     position: absolute;
-    /*color: $error-red;*/
     color: $white;
     font-family: 'FontAwesome';
     content: '\f071';
@@ -950,8 +930,6 @@ textarea {
 .search-modal__body {
   flex-grow: 1;
   padding: 2em;
-}
-.search-modal__list {
 }
 .search-modal__list-header {
   display: flex;
