@@ -38,7 +38,6 @@ import { workflowOptionNames } from '../../selectors';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 // import pageSizeOptions from '../../utils/page-size';
 import { requestPrivileges } from '../../utils/privileges';
-import Meditor from '../MeditorModal/modal';
 
 const breadcrumbConfig = [
   {
@@ -224,7 +223,6 @@ class RequestsOverview extends React.Component {
               </List>
           }
         </section>
-        <Meditor></Meditor>
       </div>
       );
   }
