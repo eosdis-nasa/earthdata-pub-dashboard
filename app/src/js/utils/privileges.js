@@ -85,7 +85,7 @@ export const groupPrivileges = (privileges) => {
   };
 };
 
-export const requestPrivileges = (privileges) => {
+export const requestPrivileges = (privileges, stepName) => {
   if (privileges.ADMIN) {
     return {
       canRead: true,
@@ -110,7 +110,7 @@ export const requestPrivileges = (privileges) => {
       canResume: privileges.REQUEST.includes('RESUME'),
       canSubmit: privileges.REQUEST.includes('SUBMIT'),
       canApply: privileges.REQUEST.includes('APPLY'),
-      canReview: privileges.REQUEST.includes('REVIEW'),
+      canReview: requestCanReview(privileges, stepName),
       canReassign: privileges.REQUEST.includes('REASSIGN'),
       canLock: privileges.REQUEST.includes('LOCK'),
       canUnlock: privileges.REQUEST.includes('UNLOCK'),
@@ -138,6 +138,18 @@ export const requestPrivileges = (privileges) => {
     canRemoveUser: false
   };
 };
+
+/**
+ * Determines if the user has privileges to review the request.
+ * Allows for more granular privilege checking based on the step name.
+ */
+export const requestCanReview = (privileges, stepName) => {
+  if (stepName && stepName.match(/management_review/g)) {
+    return privileges.REQUEST.includes("REVIEW_MANAGER");
+  }
+
+  return privileges.REQUEST.includes("REVIEW");
+}
 
 export const formPrivileges = (privileges) => {
   if (privileges.ADMIN) {
@@ -181,3 +193,19 @@ export const questionPrivileges = (privileges) => {
     canDelete: false
   };
 };
+
+/**
+ * given an array of privileges (strings), return an object with keys as the type of privilege and values as an array of actions
+ * 
+ * @example given an array of privileges ['USER_READ', 'USER_CREATE', 'GROUP_READ', 'GROUP_CREATE'], will return { USER: ['READ', 'CREATE'], GROUP: ['READ', 'CREATE'] }
+ */
+export const getPrivilegesByType = (privileges) => {
+    return privileges.reduce((acc, privilege) => {
+        const [type, action] = privilege.split(/_(.+)/);
+        if (!acc[type]) {
+            acc[type] = [];
+        }
+        acc[type].push(action);
+        return acc;
+    }, {});
+}

@@ -35,7 +35,6 @@ import { overviewUrl, formsUrl, initiateRequestSelectDaac } from '../config';
 // import Datepicker from './Datepicker/Datepicker';
 import Select from 'react-select';
 import { strings } from './locale';
-import Meditor from '../components/MeditorModal/modal';
 import { requestPrivileges } from '../utils/privileges';
 import Loading from '../components/LoadingIndicator/loading-indicator';
 
@@ -305,7 +304,6 @@ class Home extends React.Component {
                 </List>
               </div>
             </section>
-            <Meditor></Meditor>
           </div>
         </div>
       );

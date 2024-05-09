@@ -100,7 +100,6 @@ class Comment extends React.Component {
 
   render() {
     let reviewable = false;
-    let { canReview } = requestPrivileges(this.props.privileges);
     let sameFormAsStep = false;
     const search = this.props.location.search.split('=');
     let requestId = '';
@@ -109,6 +108,7 @@ class Comment extends React.Component {
     }
     let step = search[2];
     let stepName = this.getFormalName(step);
+    let { canReview } = requestPrivileges(this.props.privileges, step);
     let request = '';
     let conversationId = '';
     let requestName = '';

@@ -180,11 +180,9 @@ const CommonConfig = {
         FORMS_URL: config.formsUrl,
         OVERVIEW_URL: config.overviewUrl,
         INITIATE_REQUEST_SELECT_DAAC_URL: config.initiateRequestSelectDaac,
-        SEND_USER_TO_MEDITOR: config.sendUserToMeditor,
         BASEPATH: config.basepath,
         REQUEST_HIDE_BUTTON_VERBAGE: config.requestHideButtonVerbage,
-        HELP_PAGE_DEFAULT: config.helpPageDefault,
-        FILE_UPLOAD_DEFAULT: config.fileUploadDefault
+        HELP_PAGE_DEFAULT: config.helpPageDefault
       }
     )
   ]

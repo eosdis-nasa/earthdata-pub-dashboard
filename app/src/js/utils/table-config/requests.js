@@ -15,12 +15,15 @@ import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 import { trigger } from '../../actions/events';
+import { getPrivilegesByType, requestPrivileges } from '../privileges';
 
-export const getPrivileges = () => {
+export const getPrivileges = (step) => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
   if (user != null) {
     const roles = user.user_roles;
     const privileges = user.user_privileges;
+    const privilegesByType = getPrivilegesByType(privileges, step);
+
     const allPrivs = {
       isManager: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
@@ -32,18 +35,13 @@ export const getPrivileges = () => {
       isStaff: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
         : roles.find(o => o.short_name.match(/staff/g)),
-      canReview: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : privileges.find(o => o.match(/REQUEST_REVIEW/g)),
-      canReassign: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : privileges.find(o => o.match(/REQUEST_REASSIGN/g)),
       canCreateForm: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
         : privileges.find(o => o.match(/FORM_CREATE/g)),
       canUpdateForm: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
-        : privileges.find(o => o.match(/FORM_UPDATE/g))
+        : privileges.find(o => o.match(/FORM_UPDATE/g)),
+      ...requestPrivileges(privilegesByType, step),
     };
     return allPrivs;
   }
@@ -69,25 +67,6 @@ export const newLink = (request, formalName) => {
   }
 };
 
-export const sendToMeditor = (row, step, request, formalName) => {
-  const allPrivs = getPrivileges();
-  let disabled = false;
-  if (typeof allPrivs.isManager !== 'undefined' || typeof allPrivs.isCoordinator !== 'undefined' || typeof allPrivs.isAdmin !== 'undefined') {
-    disabled = false;
-  } else {
-    disabled = true;
-  }
-  const isDetailPage = location.href.match(/id/g);
-  if (isDetailPage === null && disabled) {
-    return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
-  } else if (disabled) {
-    return formalName;
-  } else {
-    return <Link className={'button button--medium button--green form-group__element--left button--no-icon'}
-    onClick={() => { trigger('sendToMeditor:click', { request: request, link: `${window.location.origin}${window.location.pathname.split(/\/requests/)[0]}/requests/approval?requestId=${row.id}&step=${step}` }); }} id={'sendButton'} to={'#'} name={'sendButton'} aria-label={formalName || 'send to meditor'}>{formalName}</Link>;
-  }
-};
-
 export const assignWorkflow = (request, formalName) => {
   const allPrivs = getPrivileges();
   let disabled = false;
@@ -108,7 +87,7 @@ export const assignWorkflow = (request, formalName) => {
 };
 
 export const existingLink = (row, formId, formalName, step, stepType) => {
-  const allPrivs = getPrivileges();
+  const allPrivs = getPrivileges(step);
   let disabled = false;
   if (typeof allPrivs !== 'undefined' && allPrivs.canReview) {
     disabled = false;
@@ -179,9 +158,6 @@ export const stepLookup = (row) => {
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
           request = `${_config.formsUrl}/questions/${row.id}`;
-        // Link to mEditor as blank page
-        } else if (stepName.match(/edit_metadata_in_meditor/g)) {
-          request = `${window.location.origin}${_config.sendUserToMeditor}/Collection%20Metadata/${row.metadata.ShortName}_${row.metadata.Version}?autologin`;
         // assign a workflow
         } else if (stepType.match(/action/g)) {
           request = `/workflows?requestId=${row.id}`;
@@ -190,9 +166,7 @@ export const stepLookup = (row) => {
       }
     }
   }
-  if (stepType.match(/action/g) && stepName.match(/edit_metadata_in_meditor/g)) {
-    return sendToMeditor(row, stepName, request, formalName);
-  } else if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
+  if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
   } else if (stepType.match(/action/g)) {
     return existingLink(row, undefined, formalName, stepName);

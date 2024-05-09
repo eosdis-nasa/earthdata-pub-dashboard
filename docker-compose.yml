@@ -13,7 +13,6 @@ services:
       - APIROOT=http://localhost:8080/api
       - FORMS_URL=http://localhost:8081
       - OVERVIEW_URL=/
-      - SEND_USER_TO_MEDITOR=/meditor
       - DAAC_NAME=local
       - STAGE=LOCALHOST-Development
       - SHOW_DISTRIBUTION_API_METRICS=false
@@ -21,7 +20,6 @@ services:
       - REQUEST_HIDE_BUTTON_VERBAGE=Withdraw
       - REQUEST_UNHIDE_BUTTON_VERBAGE=Restore
       - HELP_PAGE_DEFAULT=http://localhost:8082/data_producer_resources/how_to_use_edpub
-      - FILE_UPLOAD_DEFAULT=true
   shim:   # empty container to open ports
     image: node:18.14.1
     command:

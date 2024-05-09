@@ -313,6 +313,43 @@ a:active {
     top: 1.54em;
   }
 }
+.edit-icon{
+  margin-left: 2rem;
+  &:before {
+    position: absolute;
+    color: gray;
+    font-family: 'FontAwesome';
+    content: '\f044';
+    font-weight: 900;
+    cursor: pointer;
+  }
+}
+.info-icon{
+  margin-left: 0.5rem;
+  position: relative; 
+  &:before {
+    position: absolute;
+    color: white; 
+    font-family: 'FontAwesome';
+    content: '\f129'; /* Unicode for the info icon in FontAwesome */
+    font-weight: 900;
+  }
+  &:hover:after {
+    content: attr(data-tooltip); ; 
+    position: absolute;
+    bottom: -20px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1;
+  }
+}
+
 .content__header {
   background-color: $ocean-blue;
   color: $white;
@@ -1036,6 +1073,8 @@ div#producerSelect.selectButton {
 div#roleSelect.selectButton,
 div#groupSelect.selectButton {
   min-width: 188.5px;
+  z-index: unset!important;
+  padding: 0;
 }
 div.selectButton div {
   border-radius: 0.5em;

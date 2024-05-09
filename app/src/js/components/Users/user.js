@@ -8,14 +8,16 @@ import {
   addUserRole,
   removeUserRole,
   addUserGroup,
-  removeUserGroup
+  removeUserGroup,
+  updateUsername,
+  refreshToken
 } from '../../actions';
 import { userPrivileges } from '../../utils/privileges';
 import { lastUpdated, shortDateNoTimeYearFirst } from '../../utils/format';
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
-import Metadata from '../Table/Metadata';
+import MetadataEditable from '../Table/MetadataEditable';
 import { strings } from '../locale';
 
 const addRole = (dispatch, id, roleId) => {
@@ -24,6 +26,15 @@ const addRole = (dispatch, id, roleId) => {
     role_id: roleId
   };
   dispatch(addUserRole(payload));
+};
+
+const updateUser = (dispatch, id, roleId, name) => {
+  const payload = {
+    id,
+    name
+  };
+  dispatch(updateUsername(payload));
+  dispatch(refreshToken());
 };
 
 const removeRole = (dispatch, id, roleId) => {
@@ -119,7 +130,9 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
   const metaAccessors = [
     {
       label: 'Name',
-      property: 'name'
+      property: 'name',
+      editable: true,
+      onClick: () => setEditMode('name')
     },
     {
       label: 'Email',
@@ -164,16 +177,15 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
                   {strings.user_overview}
                 </h1>
               </div>
-              <div className='indented__details'><Metadata data={data} accessors={metaAccessors} /></div>
+              <div className='indented__details'>
+              <MetadataEditable data={data} accessors={metaAccessors} userId={userId} dispatch={dispatch} updateUser={updateUser}/>
+              </div>
             </section><br />
             <section className='page__section'>
               <div className='page__section__header'>
                 <h1 className='heading--small heading--shared-content with-description '>
                   Settings
                 </h1>
-              </div>
-              <div className='page__content--shortened mEditorOptions'>
-                <><input type={'checkbox'} name={'dontShowAgain'} id={'dontShowAgain'} onChange={updateDontShowAgain}></input><label htmlFor={'dontShowAgain'}>Opt-In: "Continue To" mEditor pop-up window</label></>
               </div>
             </section>
             <section className='page__section'>
@@ -184,7 +196,7 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
               </div>
               <div className='page__content--shortened flex__column'>
                 {
-                  data.user_groups.map((group, key) => {
+                  data.user_groups && data.user_groups.map((group, key) => {
                     return (
                       <div key={key} className='flex__row sm-border'>
                         <div className='flex__item--w-25'>
@@ -226,7 +238,7 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
               </div>
               <div className='page__content--shortened flex__column'>
                 {
-                  data.user_roles.map((role, key) => {
+                  data.user_roles && data.user_roles.map((role, key) => {
                     return (
                       <div key={key} className='flex__row sm-border'>
                         <div className='flex__item--w-25'>
