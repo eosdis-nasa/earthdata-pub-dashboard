@@ -198,7 +198,6 @@
     "style-loader": "^3.3.1"
   },
   "overrides": {
-    "yaml": "2.2.2",
-    "uuid": "^7"
+    "yaml": "2.2.2"
   }
 }
