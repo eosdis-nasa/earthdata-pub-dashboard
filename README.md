@@ -43,7 +43,7 @@ To locate environment variables, see webpack.common.js:
 | REQUEST_HIDE_BUTTON_VERBAGE | The hide button verbage displayed on the request detail page. | Withdraw |
 | REQUEST_UNHIDE_BUTTON_VERBAGE | The hide button verbage displayed on the request detail page. | Restore |
 | SHOW_DISTRIBUTION_API_METRICS | \<optional\> Display metrics from Earthdata Pub Distribution API.| *false* |
-| HELP_PAGE_DEFAULT | URL of the instructional how to use Earthdata Pub in Overview | *<https://pub.earthdata.nasa.gov/data_producer_resources/how_to_use_edpub>* |
+| HELP_PAGE_DEFAULT | URL of the instructional how to use Earthdata Pub in Overview | *<https://pub.earthdata.nasa.gov/getting_started>* |
 
 ## Installing
 
