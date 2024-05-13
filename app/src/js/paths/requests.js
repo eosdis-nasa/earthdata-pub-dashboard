@@ -1,6 +1,5 @@
 'use strict';
 import { encode } from '../utils/browser';
-import tally from './tally';
 import { strings } from '../components/locale';
 
 const requestRoutes = [
@@ -15,8 +14,7 @@ const requestRoutes = [
 ];
 
 const singleRequestRoutes = [
-  [strings.back_to_requests, null, 'sidebar__nav--back'],
-  /* ['Edit Metadata', 'id/:requestId/edit-metadata', null, 'sidebar__nav--back'] */
+  [strings.back_to_requests, null, 'sidebar__nav--back']
 ];
 
 const empty = [['', '']];
