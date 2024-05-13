@@ -2,7 +2,8 @@
 import React from 'react';
 import AceEditor from 'react-ace';
 import PropTypes from 'prop-types';
-import ReactFlow from 'react-flow-renderer';
+import ReactFlow from 'reactflow';
+import 'reactflow/dist/style.css';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { getWorkflow } from '../../actions';
@@ -48,7 +49,8 @@ class Workflows extends React.Component {
       const section = document.querySelector('section#graph');
       if (section !== null) {
         setTimeout(() => {
-          const nodes = document.querySelectorAll('g .react-flow__edge');
+          /* const nodes = document.querySelectorAll('g .react-flow__edge'); */
+          const nodes = document.querySelectorAll('.react-flow__node');
           let count = 1;
           for (const ea in nodes) {
             // eslint-disable-next-line no-prototype-builtins
@@ -128,12 +130,12 @@ class Workflows extends React.Component {
     let reactFlowStyle = {};
     if (record.data) {
       const box = document.querySelector('.page__content--shortened');
+      const sidebar = document.querySelector('div.sidebar').offsetWidth;
       if (box !== null) {
         const width = box.offsetWidth;
         reactFlowStyle = {
-          left: `${(width - 275) / 2}px`,
-          position: 'absolute',
-          top: '475px'
+          left: `${((width - 275) / 2) - sidebar}px`,
+          position: 'relative'
         };
       }
     }

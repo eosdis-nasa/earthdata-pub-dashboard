@@ -25,27 +25,21 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
   const metric = match.params.metric ? match.params.metric : undefined;
   useEffect(() => {
     dispatch(listWorkflows());
-    // dispatch(getRequestDetails(requestId));
     dispatch(listCloudMetrics(metric));
   }, []);
 
   useEffect(() => {
     setDaacOptions(daacOptionNames);
     setWorkflowOptions(workflows.map(({ id, long_name }) => ({ value: id, label: long_name })));
-    // requests.searchString,
     setMetricOptions(metricOptionNames);
     setStateOptions(stateOptionNames);
   }, [daacs, workflows, requests, metrics, states]);
 
   const history = useHistory();
-  // const [showSearch, setShowSearch] = useState(false);
-  // const [searchOptions, setSearchOptions] = useState({});
   const [daacOptions, setDaacOptions] = useState([]);
   const [selectedDaacs, setSelectedDaacs] = useState([]);
   const [workflowOptions, setWorkflowOptions] = useState([]);
   const [selectedWorkflows, setSelectedWorkflows] = useState([]);
-  // const [request, setRequest] = useState('');
-  // const [validRequest, setValidRequest] = useState(true);
   const [metricOptions, setMetricOptions] = useState([]);
   const [selectedMetrics, setSelectedMetrics] = useState([]);
   const [stateOptions, setStateOptions] = useState([]);
@@ -54,15 +48,6 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
   useEffect(() => {
         handleSubmit()
   }, [selectedDaacs, selectedMetrics, selectedWorkflows, selectedStates])
-
-
-  /* const extractId = (list) => {
-    const rtnList = [];
-    list.forEach(item => {
-      rtnList.push(item.value);
-    });
-    return rtnList;
-  }; */
 
   const handleDaacSelect = (data) => {
     setSelectedDaacs(data);
@@ -217,7 +202,6 @@ const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
           <h1 className='heading--large heading--shared-content with-description '>{strings.daacs_onboarded}</h1>
         </div>}
       </section>
-      {/* {showSearch && <SearchModal {...searchOptions} />} */}
       <section className='page__section'>
         {view === 'Overview' && <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_metrics} <span className='num--title'>{metrics?.list?.data?.length}</span></h2>
@@ -241,14 +225,6 @@ const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
           rowId='event'
         >
             <div className="filterGrid">
-            {/* <Search
-              dispatch={dispatch}
-              action={handleRequest}
-              clear={clearRequestsSearch}
-              label='Search'
-              placeholder="Request ID"
-            
-  /> */}
               {(view === 'Overview') && ( <label className='heading--small'>State
               <Select
                 id="stateSelect"
@@ -288,19 +264,6 @@ const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
                 placeholder='Select Daac ...'
                 aria-label='Select Daac'
               /></label>)}
-              {/*<label className='heading--small'>Metrics
-                <Select
-                  id="metricSelect"
-                  options={metricOptions}
-                  value={selectedMetrics}
-                  onChange={handleMetricSelect}
-                  isSearchable={true}
-                  isMulti={false}
-                  isClearable={true}
-                  className='selectButton'
-                  placeholder='Select Metrics ...'
-                  aria-label='Select Metrics'
-                /></label>*/}
             </div>
         </List>
           : <Loading />:<div></div>}

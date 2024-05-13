@@ -52,7 +52,7 @@
   &:disabled,
   &--disabled {
     // Breaks accessibility
-    opacity: 0.6;
+    // opacity: 0.6;
     pointer-events: none;
     text-decoration: none;
     color: $white;
@@ -395,12 +395,6 @@
       left: 10px;
 
     }
-    /* &.button__animation:hover:before {
-      visibility: hidden;
-    }
-    &:hover {
-      padding: .65em 2.7em .65em 1em!important;
-    }*/
   }
     &--delete {
       background-color: $error-red;
@@ -586,12 +580,10 @@
 
     &__animation {
       position: relative;
-      /* display: inline-block; */
       display: inline-flex;
       cursor: pointer;
       &:after {
         position: absolute;
-        /*color: $white;*/
         font-family: 'FontAwesome';
         content: '\f061';
         font-weight: 900;
@@ -646,7 +638,6 @@
     }
 
     &__animation--md:hover {
-      /*padding: .65em 3em .65em 1em;*/
       padding: .65em 2.7em .65em 1em;
     }
 

@@ -208,12 +208,10 @@ class ActionRequestsOverview extends React.Component {
           </section>
           <section className='page__section page__section__header-wrapper'>
             <div className='page__section__header'>
-              {/* <h1 className='heading--large heading--shared-content with-description '>{strings.requests_actions}</h1> */}
               <h1 className='heading--large heading--shared-content with-description '>
                 {displayCaseView}
               </h1>
               {lastUpdated(queriedAt)}
-              {/* <Overview items={overviewItems} inflight={false} /> */}
             </div>
           </section>
           <section className='page__section page__section__controls request-section'>

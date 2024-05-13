@@ -1,26 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
-// import { strings } from '../locale';
 import RequestOverview from './request';
 import RequestsOverview from './overview';
 import InactiveRequestsOverview from './withdrawn';
 import ApprovalStep from './approval';
 import ActionRequestsOverview from './status';
-// import EditMetadata from './edit-metadata';
 
 const Requests = ({
-  dispatch,
   location,
-  params,
-  stats
+  params
 }) => {
   const { pathname } = location;
   return (
     <div className='page__requests'>
-      {/*  <DatePickerHeader onChange={query} heading={strings.all_requests}/> */}
       <div className='content__header'>
         <div className='row'>
           <h1 className='heading--xlarge heading--shared-content'>Requests</h1>
@@ -39,7 +34,6 @@ const Requests = ({
               <Route path='/requests/withdrawn' component={InactiveRequestsOverview} />
               <Route path='/requests/approval' component={ApprovalStep} />
               <Route path='/requests/status' component={ActionRequestsOverview} />
-              {/*  <Route path='/requests/id/:requestId/edit-metadata' component={EditMetadata} /> */}
             </Switch>
           </div>
         </div>
