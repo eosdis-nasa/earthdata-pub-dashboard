@@ -249,6 +249,31 @@ class RequestOverview extends React.Component {
     );
   }
 
+  AssignUWGmembers(record) {
+    return (
+      <>
+        <br></br>
+        <div className='page__section__header'>
+          <h1 className='heading--small' aria-labelledby='Assign UWG Members for review'>
+            Assign UWG Members for review
+          </h1>
+        </div>
+        <div className='indented__details'>
+          <div className="request-section">
+            <Select
+              id="UWGmembersSelect"
+              isSearchable={true}
+              value={this.state.current}
+              placeholder={'Assign GES DISC UWG Members'}
+              className='selectButton'
+              aria-label='Assign GES DISC UWG Members'
+              isMulti={false} />
+          </div>
+        </div>
+      </>
+    );
+  }
+
   render() {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
@@ -269,6 +294,10 @@ class RequestOverview extends React.Component {
     let workflowSave;
     if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
+    }
+    let assignUWG;
+    if (canWithdraw && canRestore) {
+      assignUWG = this.AssignUWGmembers(record);
     }
     let canViewUsers = false;
     if (role.includes('admin')) {
@@ -500,6 +529,11 @@ class RequestOverview extends React.Component {
             <section className='page__section'>
               {workflowSave}
             </section>
+            { record?.data?.step_data?.name.includes('uwg_review') && (
+              <section className='page__section'>
+                 {assignUWG}
+              </section>
+            )}
             <Meditor></Meditor>
             <UploadOverview />
             {showTable
