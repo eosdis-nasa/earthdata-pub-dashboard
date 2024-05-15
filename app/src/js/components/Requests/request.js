@@ -264,9 +264,9 @@ class RequestOverview extends React.Component {
               id="UWGmembersSelect"
               isSearchable={true}
               value={this.state.current}
-              placeholder={'Assign GES DISC UWG Members'}
+              placeholder={'Assign UWG Members'}
               className='selectButton'
-              aria-label='Assign GES DISC UWG Members'
+              aria-label='Assign UWG Members'
               isMulti={false} />
           </div>
         </div>
@@ -295,9 +295,9 @@ class RequestOverview extends React.Component {
     if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
     }
-    let assignUWG;
+    let assignUWGReviewers;
     if (canWithdraw && canRestore) {
-      assignUWG = this.AssignUWGmembers(record);
+      assignUWGReviewers = this.AssignUWGmembers(record);
     }
     let canViewUsers = false;
     if (role.includes('admin')) {
@@ -531,7 +531,7 @@ class RequestOverview extends React.Component {
             </section>
             { record?.data?.step_data?.name.includes('uwg_review') && (
               <section className='page__section'>
-                 {assignUWG}
+                 {assignUWGReviewers}
               </section>
             )}
             <Meditor></Meditor>
