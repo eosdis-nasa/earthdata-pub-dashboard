@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { resolve } from 'path';
 import sections from '../../paths';
-import chevronRight from '../../../assets/images/layout/chevron-right.svg';
+import chevronRight from '../../../assets/images/layout/chevron-right-icon.svg';
 import chevronLeft from '../../../assets/images/layout/chevron-left.svg';
 
 const currentPathClass = 'sidebar__nav--selected';
@@ -74,7 +74,7 @@ class Sidebar extends React.Component {
         }
       }
     }
-    document.getElementById('openButton').style.display = 'none';
+    document.getElementById('openButton').classList.add('hidden');
   }
 
   closeNav () {
@@ -86,7 +86,7 @@ class Sidebar extends React.Component {
         }
       }
     }
-    document.getElementById('openButton').style.display = 'unset';
+    document.getElementById('openButton').classList.remove('hidden');
   }
 
   render () {
@@ -99,7 +99,7 @@ class Sidebar extends React.Component {
       return (
             <><button className={mobile === 'true' || document.querySelectorAll('div.sidebar.hidden').length > 0 ? 'openbtn' : 'openbtn hidden'} onClick={this.openNav} id="openButton"><img width="30px" src={chevronRight} /></button>
             <div className={mobile === 'true' ? 'sidebar hidden' : 'sidebar'}>
-                <a href="#" onClick={this.closeNav} className='closebtn' id="closeButton"><img width="30px" src={chevronLeft} style={{ marginTop: '10px' }}/></a>
+                <button onClick={this.closeNav} className='closebtn' id="closeButton"><img width="30px" src={chevronLeft} /></button>
                 <div className='sidebar__row'>
                   {sections.map(this.renderNavSection)}
                 </div>

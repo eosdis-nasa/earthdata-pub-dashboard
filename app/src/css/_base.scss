@@ -568,16 +568,31 @@ a:active {
   width: 100%;
 }
 .closebtn {
-    font-size: large;
-    float:right!important;
+    width: -webkit-fill-available;
+    text-align-last: right;
+    padding:4px;
 }
 .openbtn {
+    text-align-last: left;
+    padding:4px;
+    align-self: self-start;
+    img {
+        height:25px!important;
+        width:30px!important;
+        opacity: 70%;
+    }
+}
+.openbtn, .closebtn {
     font-size: large;
     border-top-style: none;
     border-bottom-style: none;
-    border-right-width: thin;
+    border-right-style: none;
     border-left-style: none;
-    padding: 0px;
+    background: transparent;
+    img {
+        padding-top:3px;
+        
+    }
 }
 .sidebar {
   padding: 0;
