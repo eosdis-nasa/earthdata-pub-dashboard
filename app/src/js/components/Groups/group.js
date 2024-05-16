@@ -106,11 +106,11 @@ class GroupOverview extends React.Component {
             </h1>
           </div>
           <div className='indented__details'><Metadata data={group} accessors={metaAccessors} /></div><br></br>
-          <div className='heading__wrapper--border'>
+          {canUpload ? <div className='heading__wrapper--border'>
             <h1 className='heading--small' aria-labelledby="File Upload">
             File Upload
             </h1>
-          </div>
+          </div> : null}
           {canUpload ? <UploadOverview /> : null }
         </section>
       </div>
