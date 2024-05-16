@@ -24,7 +24,11 @@ function getExpiration (token) {
 
 function reducePrivileges (user) {
   const privileges = user.user_privileges.reduce((acc, privilege) => {
-    const [entity, action] = privilege.split('_');
+    // Split the privilege into entity and action by the first underscore
+    // ex. REQUEST_REVIEW -> ['REQUEST', 'REVIEW']
+    // ex. REQUEST_REVIEW_MANAGER -> ['REQUEST', 'REVIEW_MANAGER']
+    const [entity, action] = privilege.split(/_(.+)/);
+
     if (!acc[entity]) {
       acc[entity] = [action || '-'];
     } else {
@@ -32,6 +36,7 @@ function reducePrivileges (user) {
     }
     return acc;
   }, {});
+
   return privileges;
 }
 
