@@ -47,16 +47,6 @@ const RoleOverview = ({ roles }) => {
         <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_roles} <span className='num--title'>{roles.list.data.length}</span></h2>
         </div>
-        {/* Someone needs to define the search parameters for workflows, e.g. steps, etc. } */}
-        {/* <div className='filters'>
-          <Search
-            dispatch={dispatch}
-            action={searchRoles}
-            clear={clearRolesSearch}
-            label='Search'
-            placeholder="Role Name"
-          />
-        </div> */}
         <List
           list={roles.list}
           dispatch={dispatch}

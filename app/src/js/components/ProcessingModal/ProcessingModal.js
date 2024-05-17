@@ -20,7 +20,6 @@ class ProcessingModal extends React.Component {
       >
         <Modal.Header className="processing-modal__header" />
         <Modal.Title id="modal__processing-modal" className="processing-modal__title">
-          { /* This title is based on the previous modal's title */}
         </Modal.Title>
         <Modal.Body>
           <h2>Your request is processing...</h2>

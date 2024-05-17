@@ -15,27 +15,6 @@ export const tableColumns = [
     accessor: row => row.email,
     id: 'email'
   },
-  /* ,
-  {
-    Header: 'Roles',
-    accessor: row => row.roles.join(', '),
-    id: 'roles'
-  },
-  {
-    Header: 'Groups',
-    accessor: row => row.groups.join(', '),
-    id: 'groups'
-  },
-  {
-    Header: 'Permissions',
-    accessor: row => row.permissions.join(', '),
-    id: 'permissions'
-  },
-  {
-    Header: 'Subscriptions',
-    accessor: row => row.subscriptions.join(', '),
-    id: 'subscriptions'
-  }, */
   {
     Header: 'Registered',
     accessor: row => shortDateNoTimeYearFirst(row.registered),

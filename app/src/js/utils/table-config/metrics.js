@@ -21,9 +21,9 @@ export const convertSecondsToDHMS = seconds => {
   const days = Math.floor(seconds / (3600 * 24));
   let remainingSeconds = seconds % (3600 * 24);
   const hours = Math.floor(remainingSeconds / 3600);
-  remainingSeconds %= 3600; // No need to redeclare the variable
+  remainingSeconds %= 3600; 
   const minutes = Math.floor(remainingSeconds / 60);
-  remainingSeconds %= 60; // No need to redeclare the variable
+  remainingSeconds %= 60; 
   return {
       days,
       hours,
@@ -83,41 +83,34 @@ export const requestTableColumns = [
     Header: 'Request ID',
     accessor: (row) => row.request_id,
     Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.id}</Link> : null,
-    id: 'id',
-    // width: 170
+    id: 'id'
   },
   {
     Header: 'State',
     accessor: row => getState(row.step_name, row.hidden),
-    id: 'state',
-    // width: 170
+    id: 'state'
   },
   {
     Header: 'Workflow',
     accessor: (row) => row.workflow_name,
     Cell: row => row.row.original.workflow_id ? <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }} aria-label="View your workflow details">{row.row.original.workflow_name}</Link> : null,
-    id: 'workflow_name',
-    // width: 170
+    id: 'workflow_name'
   },
   {
     Header: 'DAAC',
     accessor: (row) => row.daac_id,
-    /* accessor: row => get(row, 'error.Error', nullValue), */
     Cell: row => row.row.original.daac_id && getDaac(row.row.original.daac_id, row) ? getDaac(row.row.original.daac_id, row) : null,
-    id: 'daac_id',
-    // width: 170
+    id: 'daac_id'
   },
   {
     Header: 'Latest Edit',
     accessor: row => shortDateNoTimeYearFirst(row.last_change),
-    id: 'last_change',
-    // width: 110
+    id: 'last_change'
   },
   {
     Header: 'Time to Publish',
     accessor: (row) => getTime(convertSecondsToDHMS(row.time_to_publish)),
-    id: 'time_to_publish',
-    // width: 120
+    id: 'time_to_publish'
   }
 ];
 
@@ -126,14 +119,12 @@ export const timeColumns = [
     Header: 'DAAC',
     accessor: (row) => row.daac_id,
     Cell: row => row.row.original.daac_id ? <Link to={{ pathname: `/daacs/id/${row.row.original.daac_id}` }} aria-label="View your daac details">{row.row.original.daac_id}</Link> : null,
-    id: 'daac_id',
-    // width: 170
+    id: 'daac_id'
   },
   {
     Header: 'Time to Publish',
     accessor: (row) => getTime(convertSecondsToDHMS(row.time_to_publish)),
-    id: 'time_to_publish',
-    // width: 120
+    id: 'time_to_publish'
   }
 ];
 
