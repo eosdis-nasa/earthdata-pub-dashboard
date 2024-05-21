@@ -22,7 +22,7 @@ describe('Dashboard Roles Page', () => {
       cy.visit(`${Cypress.env('baseUrl')}/roles`);
       cy.get('.table .tbody .tr').should('have.length', 2);
       cy.contains('.table .tbody .tr .td', 'poc')
-        .should('have.attr', 'href', '/roles/id/29ccab4b-65e2-4764-83ec-77375d29af39');
+        .should('have.attr', 'href', '/roles/id/804b335c-f191-4d26-9b98-1ec1cb62b97d');
       cy.contains('.table .tbody .tr .td', 'Data Producer');
     });
 
