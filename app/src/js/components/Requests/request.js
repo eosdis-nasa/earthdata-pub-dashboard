@@ -295,7 +295,11 @@ class RequestOverview extends React.Component {
       workflowSave = this.renderWorkflowSave(record);
     }
     let assignUWGReviewers;
-    if (canWithdraw && canRestore) {
+    let canAssignUWG = false;
+    if (role.includes('admin') || role.includes('manager') || role.includes('staff')) {
+      canAssignUWG = true;
+    }
+    if ( canAssignUWG && canWithdraw && canRestore) {
       assignUWGReviewers = this.AssignUWGmembers(record);
     }
     let canViewUsers = false;
