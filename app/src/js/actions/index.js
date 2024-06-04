@@ -948,6 +948,42 @@ export const addUsersToConversation = (payload) => {
   };
 };
 
+export const removeUserFromNote = (payload, conversationId) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.NOTE_REMOVE_VIEWER,
+        method: 'POST',
+        path: 'notification/remove_viewer',
+        body: payload
+      }
+    })
+      .then(() => {
+        setTimeout(() => {
+          dispatch(getConversation(conversationId));
+        }, 1000);
+      });
+  };
+};
+
+export const removeRoleFromNote = (payload, conversationId) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.NOTE_REMOVE_VIEWER_ROLE,
+        method: 'POST',
+        path: 'notification/remove_viewer_role',
+        body: payload
+      }
+    })
+      .then(() => {
+        setTimeout(() => {
+          dispatch(getConversation(conversationId));
+        }, 1000);
+      });
+  };
+};
+
 export const updateSearchModal = (path, query) => ({
   [CALL_API]: {
     type: types.SEARCH_MODAL,

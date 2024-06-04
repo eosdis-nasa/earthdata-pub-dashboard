@@ -6,7 +6,9 @@ import { connect, useDispatch } from 'react-redux';
 import {
   getConversation,
   replyConversation,
-  addUsersToConversation
+  addUsersToConversation,
+  removeUserFromNote,
+  removeRoleFromNote
 } from '../../actions';
 import { notePrivileges } from '../../utils/privileges';
 import { lastUpdated } from '../../utils/format';
@@ -33,6 +35,26 @@ const getConversations = (dispatch, conversationId, lvl) => {
   }
   dispatch(getConversation(conversationId, lvl));
 };
+
+const handleRemove = (dispatch, conversationId, noteId, viewerId, viewerType) => {
+  let payload;
+  switch(viewerType){
+    case "user":
+      payload = {
+        "note_id": noteId,
+        "viewer_id": viewerId, 
+      }
+      dispatch(removeUserFromNote(payload, conversationId));
+      break;
+    case "role":
+      payload = {
+        "note_id": noteId,
+        "viewer_role": viewerId, 
+      }
+      dispatch(removeRoleFromNote(payload, conversationId));
+      break;
+  }
+}
 
 const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const { conversationId } = match.params;
@@ -135,7 +157,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                 </div>
                 {
                   notes.map((note, key) => {
-                    return (<Note note={note} key={key} />);
+                    return (<Note dispatch={dispatch} conversationId={conversationId} note={note} privileges={privileges} key={key} />);
                   })
                 }
               </div>
@@ -176,12 +198,63 @@ Conversation.propTypes = {
   match: PropTypes.object
 };
 
-const Note = ({ note }) => {
+const Note = ({ dispatch, note, conversationId, privileges }) => {
+  const { canAddUser, canRemoveUser } = notePrivileges(privileges);
   return (
     <div className='flex__row--border'>
       <div className='flex__item--w-15'>
         <h3>{ note.from.name }</h3>
         {lastUpdated(note.sent, 'Sent')}
+        <br/>
+        {note.viewers.users || note.viewers.roles ? <h3>Note Visability</h3> : null}
+        <div className='flex__column'>
+          {
+            note.viewers.users &&
+            note.viewers.users.map((user) => {
+              return (
+                <div key={user.id} className='flex__row sm-border'>
+                  <div className='flex__item--w-25'>
+                    {user.name}
+                    <div className='flex__item--w-10'>
+                      {canRemoveUser &&
+                        <button
+                          className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                          onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, user.id, 'user'); }}
+                          >
+                          Remove
+                        </button>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+              )
+            })
+          }   
+          {
+            note.viewers.roles &&
+            note.viewers.roles.map((role) => {
+              return (
+                <div key={role.id} className='flex__row sm-border'>
+                  <div className='flex__item--w-25'>
+                    {role.name}
+                    <div className='flex__item--w-10'>
+                      {canRemoveUser &&
+                        <button
+                          className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                          onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, role.id, 'role'); }}
+                          >
+                          Remove
+                        </button>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+              )
+            })
+          }              
+        </div>
       </div>
       <div className='flex__item--grow-1-wrap'style={{whiteSpace: "pre"}}>{ decodeURI(note.text) }</div>
     </div>
@@ -189,7 +262,10 @@ const Note = ({ note }) => {
 };
 
 Note.propTypes = {
-  note: PropTypes.object
+  dispatch: PropTypes.func,
+  note: PropTypes.object,
+  conversationId: PropTypes.string,
+  privileges: PropTypes.object
 };
 
 export default withRouter(connect(state => ({

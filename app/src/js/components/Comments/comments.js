@@ -42,8 +42,20 @@ class Comment extends React.Component {
         for (const ea in this.props.conversations.list.data.notes) {
           const note = this.props.conversations.list.data.notes[ea].text.split('Comment: ')[1];
           const author = this.props.conversations.list.data.notes[ea].from.name;
+          const viewer_users = this.props.conversations.list.data.notes[ea].viewers.users;
+          const viewer_roles = this.props.conversations.list.data.notes[ea].viewers.roles;
+          let viewers = [];
+          viewer_users && viewer_users.forEach( function(user){
+            viewers.push(user.name)
+          })
+          viewer_roles && viewer_roles.forEach( function(role){
+            viewers.push(role.name)
+          })
+
+          const viewer_str = viewers && viewers.length ? `, Viewers: ${viewers.join(", ")}` : "";
+
           if (document.getElementById('previously-saved') !== null && typeof note !== 'undefined') {
-            document.getElementById('previously-saved').innerHTML += `${note}, From: ${author}<br>`;
+            document.getElementById('previously-saved').innerHTML += `${note}, From: ${author} ${viewer_str}<br>`;
           }
         }
       });
