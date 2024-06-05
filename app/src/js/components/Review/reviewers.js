@@ -1,37 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { listRequestReviewers } from "../../actions";
 
-const Reviewers = ({requestId, stepNameName}) => {
-    const rawReviewers = useSelector(state => state.reviewers);
-    const dispatch = useDispatch();
+
+
+const Reviewers = ({stepName, rawReviewers}) => {
     const [filteredReviewers, setFilteredReviewers] = useState([]);
 
-    useEffect(() => {
-        dispatch(listRequestReviewers(requestId));
-    }, [requestId]);
+    function parseStatus(status){
+        return status.split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
 
     useEffect(() => {
-        if(rawReviewers.inflight){
-            return;
-        }
-        if(rawReviewers.error){
-            return;
-        }
-        if(rawReviewers.data){
-            const reviewers = rawReviewers.data.map(reviewer => {
-                if(stepName === reviewer.step_name){
-                    return {
-                        name: reviewer.name,
-                        status: reviewer.status
-                    }
+        const reviewers = rawReviewers
+            .filter(reviewer => stepName === reviewer.step_name)
+            .map(reviewer => {
+                return {
+                    name: reviewer.name,
+                    status: parseStatus(reviewer.user_review_status)
                 }
-            });
-            setFilteredReviewers(reviewers);
-        }
-    }, [rawReviewers]);
+        });
+        setFilteredReviewers(reviewers);
+    }, [rawReviewers, stepName]);
 
-    return(filteredReviewers?<section className="page__section">
+    return(filteredReviewers.length >0 ?<section className="page__section">
         <div className='page__section__header'>
             <h1 className='heading--small heading--shared-content with-description '>
                 Reviewers
