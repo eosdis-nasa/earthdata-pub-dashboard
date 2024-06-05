@@ -80,11 +80,15 @@ class Auth extends React.Component {
       const { token } = data;
       window.localStorage.setItem('auth-token', token);
     }
+    console.log('Before conditional')
     if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
+      console.log('In 1st conditional')
       window.location.href = config.basepath;
     } else if (code && !this.state.associated && !this.state.verified && !JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
+      console.log('In 2nd conditional')
       this.callAssociate()
     }
+    console.log('After conditional')
   }
 
   clickLogin () {
