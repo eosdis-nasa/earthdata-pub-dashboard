@@ -150,48 +150,6 @@ class AllGroups extends React.Component {
             query={query}
             rowId='id'
           >
-            {/* <ListFilters>
-              <Dropdown
-                getOptions={getOptionsCollectionName}
-                options={get(dropdowns, ['name', 'options'])}
-                action={filterGroups}
-                clear={clearGroupsFilter}
-                paramKey='id'
-                label='Collection'
-                inputProps={{
-                  placeholder: 'All'
-                }}
-              />
-              {statusOpts &&
-                <Dropdown
-                  options={statusOpts}
-                  action={filterGroups}
-                  clear={clearGroupsFilter}
-                  paramKey='status'
-                  label='Status'
-                  inputProps={{
-                    placeholder: 'All'
-                  }}
-                />
-              }
-              <Search
-                dispatch={dispatch}
-                action={searchGroups}
-                clear={clearGroupsSearch}
-                label='Search'
-                placeholder='Group ID'
-              />
-              <Dropdown
-                options={pageSizeOptions}
-                action={filterGroups}
-                clear={clearGroupsFilter}
-                paramKey='limit'
-                label='Results Per Page'
-                inputProps={{
-                  placeholder: 'Results Per Page',
-                }}
-              />
-            </ListFilters> */}
           </List>
         </section>
         <LogViewer

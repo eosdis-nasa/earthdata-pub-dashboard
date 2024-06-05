@@ -33,16 +33,8 @@ const FormsOverview = ({ forms }) => {
   useEffect(() => {
     dispatch(listForms());
   }, [forms.searchString, dispatch]);
-  // const count = forms.list.data.length;
   const { queriedAt } = forms.list.meta;
-  // const { stats } = this.props;
-  // const statsCount = get(stats, 'count.data.forms.count', []);
-  // const overviewItems = statsCount.map(d => [tally(d.count), displayCase(d.key)]);
-  /* render () {
-    const { list } = forms;
-    const { queriedAt } = list.meta;
-
-     */
+  
   return (
     <div className='page__component'>
       <section className='page__section page__section__controls'>
@@ -52,7 +44,6 @@ const FormsOverview = ({ forms }) => {
         <div className='page__section__header'>
           <h1 className='heading--large heading--shared-content with-description '>{strings.form_overview}</h1>
           {lastUpdated(queriedAt)}
-          {/* <Overview items={overviewItems} inflight={false} />  */}
         </div>
       </section>
       <section className='page__section'>

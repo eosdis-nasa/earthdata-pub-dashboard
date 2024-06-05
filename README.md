@@ -36,7 +36,6 @@ To locate environment variables, see webpack.common.js:
 | OVERVIEW_URL | URL of the instructional overview of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/>* |
 | FORMS_URL | URL of the questions and answer forms that are outside of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/forms>* |
 | INITIATE_REQUEST_SELECT_DAAC_URL | *<https://pub.earthdata.nasa.gov/forms/daacs/selection>*,
-| SEND_USER_TO_MEDITOR | *<https://pub.earthdata.nasa.gov/meditor>*,
 | AWS_REGION | Region in which Earthdata Pub API is running. | *us-west-2*  |
 | DAAC_NAME    | e.g. LPDAAC, | *Local* |
 | STAGE | e.g. PROD, UAT, | *development* |
@@ -44,7 +43,7 @@ To locate environment variables, see webpack.common.js:
 | REQUEST_HIDE_BUTTON_VERBAGE | The hide button verbage displayed on the request detail page. | Withdraw |
 | REQUEST_UNHIDE_BUTTON_VERBAGE | The hide button verbage displayed on the request detail page. | Restore |
 | SHOW_DISTRIBUTION_API_METRICS | \<optional\> Display metrics from Earthdata Pub Distribution API.| *false* |
-| HELP_PAGE_DEFAULT | URL of the instructional how to use Earthdata Pub in Overview | *<https://pub.earthdata.nasa.gov/data_producer_resources/how_to_use_edpub>* |
+| HELP_PAGE_DEFAULT | URL of the instructional how to use Earthdata Pub in Overview | *<https://pub.earthdata.nasa.gov/getting_started>* |
 
 ## Installing
 

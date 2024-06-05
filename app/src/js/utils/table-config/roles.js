@@ -18,15 +18,4 @@ export const tableColumns = [
     accessor: (row) => row.description,
     id: 'description'
   }
-  /* ,
-  {
-    Header: 'Permissions',
-    accessor: row => row.permissions.join(', '),
-    id: 'permissions'
-  },
-  {
-    Header: 'Subscriptions',
-    accessor: row => row.subscriptions.join(', '),
-    id: 'subscriptions'
-  }, */
 ];
