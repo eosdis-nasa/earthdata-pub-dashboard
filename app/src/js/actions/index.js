@@ -12,7 +12,6 @@ import { apiLambdaSearchTemplate } from './action-config/apiLambdaSearch';
 import { teaLambdaSearchTemplate } from './action-config/teaLambdaSearch';
 import { s3AccessSearchTemplate } from './action-config/s3AccessSearch';
 import * as types from './types';
-import path from 'path';
 
 const CALL_API = types.CALL_API;
 const {
