@@ -76,7 +76,7 @@ class Auth extends React.Component {
     const { inflight, tokens } = api;
     const { code, state } = queryParams;
     console.log('Before first conditional');
-    console.log('token.token', tokens.token);
+    console.log('authenticated', this.store.getState().api.authenticated);
     console.log('inflight', inflight);
     console.log('code', code);
     if (!this.store.getState().api.authenticated && !inflight && code) {
