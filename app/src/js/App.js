@@ -30,6 +30,7 @@ import Rules from './components/Rules';
 import Modules from './components/Modules';
 import TestApi from './components/testApi';
 import Upload from './components/DataUpload';
+import MfaRedirect from './components/MfaRedirect';
 
 import config from './config';
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
@@ -88,6 +89,7 @@ class App extends Component {
             <Switch>
               <Redirect exact from='/login' to='/auth' />
               <Route path='/auth' component={Auth} />
+              <Route path='/mfa/status' component={MfaRedirect} />
               <Route path='/' render={() => this.isLoggedIn() ? <MainRoutes /> : <Redirect to='/auth' />} />
             </Switch>
           </ConnectedRouter>
