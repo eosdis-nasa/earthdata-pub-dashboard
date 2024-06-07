@@ -20,7 +20,7 @@ class Auth extends React.Component {
     this.store = ourConfigureStore({});
     this.state = { associated: false, verified: false, body: '', mfa_enabled: false };
     this.clickLogin = this.clickLogin.bind(this);
-    this.callAssociate = this.callAssociate.bind(this);
+    // this.callAssociate = this.callAssociate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
