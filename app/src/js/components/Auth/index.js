@@ -75,22 +75,16 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { inflight, tokens } = api;
     const { code, state } = queryParams;
-    console.log('Before first conditional');
-    console.log('authenticated', this.store.getState().api.authenticated);
-    console.log('inflight', inflight);
-    console.log('code', code);
     if (!this.store.getState().api.authenticated && !inflight && code) {
-      // const { data } = await dispatch(fetchToken2(code, state))
-      // const { token } = data;
-      const resp = await dispatch(fetchToken2(code, state));
-      console.log(resp);
-      // window.localStorage.setItem('auth-token', token);
+      const { data } = await dispatch(fetchToken2(code, state))
+      const { token } = data;
+      window.localStorage.setItem('auth-token', token);
     }
-    if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
-      window.location.href = config.basepath;
-    } else if (code && !this.state.associated && !this.state.verified && !JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
-      this.callAssociate()
-    }
+    // if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
+    //   window.location.href = config.basepath;
+    // } else if (code && !this.state.associated && !this.state.verified && !JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
+    //   this.callAssociate()
+    // }
   }
 
   clickLogin () {
