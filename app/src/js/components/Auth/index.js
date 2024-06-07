@@ -81,7 +81,7 @@ class Auth extends React.Component {
       window.localStorage.setItem('auth-token', token);
       if ('mfaSecretCode' in data) this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
     }
-    if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
+    if (window.localStorage.getItem('auth-user') !== null) {
       window.location.href = config.basepath;
     }
   }
