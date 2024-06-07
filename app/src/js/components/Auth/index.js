@@ -24,28 +24,28 @@ class Auth extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  async callAssociate() {
-    const { dispatch, api } = this.props;
-    const { tokens } = api;
-    let secretCode = '';
-    if (config.environment.match(/LOCALHOST/g)) {
-      secretCode = 'somefakesecretcode'
-    }
-    if (tokens.token !== null && !this.state.associated) {
-      await dispatch(associate(tokens.token)).then(value => {
-        let resp = value
-        let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
-        if (!config.environment.match(/LOCALHOST/g)) {
-          secretCode = resp.data.SecretCode
-        }
-        if (error && !config.environment.match(/LOCALHOST/g)) {
-          console.log(`An error has occurred: ${error}.`);
-        } else {
-          this.setState({ body: this.renderQrCode(secretCode), associated: true });
-        }
-      })
-    }
-  };
+  // async callAssociate() {
+  //   const { dispatch, api } = this.props;
+  //   const { tokens } = api;
+  //   let secretCode = '';
+  //   if (config.environment.match(/LOCALHOST/g)) {
+  //     secretCode = 'somefakesecretcode'
+  //   }
+  //   if (tokens.token !== null && !this.state.associated) {
+  //     await dispatch(associate(tokens.token)).then(value => {
+  //       let resp = value
+  //       let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
+  //       if (!config.environment.match(/LOCALHOST/g)) {
+  //         secretCode = resp.data.SecretCode
+  //       }
+  //       if (error && !config.environment.match(/LOCALHOST/g)) {
+  //         console.log(`An error has occurred: ${error}.`);
+  //       } else {
+  //         this.setState({ body: this.renderQrCode(secretCode), associated: true });
+  //       }
+  //     })
+  //   }
+  // };
 
   async handleSubmit() {
     const { api, dispatch, queryParams } = this.props;
@@ -79,12 +79,11 @@ class Auth extends React.Component {
       const { data } = await dispatch(fetchToken2(code, state))
       const { token } = data;
       window.localStorage.setItem('auth-token', token);
+      if (data.mfaSecretCode) this.setState({ body: this.renderQrCode(mfaSecretCode)});
     }
-    // if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
-    //   window.location.href = config.basepath;
-    // } else if (code && !this.state.associated && !this.state.verified && !JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
-    //   this.callAssociate()
-    // }
+    if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
+      window.location.href = config.basepath;
+    }
   }
 
   clickLogin () {
@@ -93,11 +92,10 @@ class Auth extends React.Component {
     dispatch(login(redirect || 'dashboard'));
   }
 
-  renderQrCode (string) {
-    let otpPath = string;
-    let setupCode = string;
+  renderQrCode (secretCode) {
+    console.log('secretCode type', typeof(secretCode))
+    let setupCode = secretCode;
     if(typeof(string) !=='string'){
-      otpPath='someteststring'
       setupCode = 'someteststring'
     }
     return (
@@ -117,12 +115,12 @@ class Auth extends React.Component {
             <QRCode
               size={500}
               style={{ height: 'auto', maxWidth: '100%', width: '100%', marginTop: '2rem' }}
-              value={otpPath}
+              value={setupCode}
               viewBox={'0 0 500 500'}
             />
           </div>
           <div id="secretcode" style={{ marginTop: '2rem' }}>Setup Code: <strong style={{wordBreak:'break-all'}}>{setupCode}</strong></div>
-          <input type="hidden" id="secret" name="secret" value={otpPath} />
+          <input type="hidden" id="secret" name="secret" value={setupCode} />
           <br />
           <p>
             <label htmlFor="totp">Enter Authentication Code from Verification App </label>
