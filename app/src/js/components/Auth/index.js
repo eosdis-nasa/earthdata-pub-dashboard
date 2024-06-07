@@ -77,8 +77,9 @@ class Auth extends React.Component {
     const { code, state } = queryParams;
     if (!this.state.authenticated && !inflight && code) {
       const { data } = await dispatch(fetchToken2(code, state))
-      const { token } = data;
+      const { token, user } = data;
       window.localStorage.setItem('auth-token', token);
+      window.localStorage.setItem('auth-user', {...user, ...{authenticated: true}});
       if ('mfaSecretCode' in data) this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
       this.setState({authenticated: true});
     }

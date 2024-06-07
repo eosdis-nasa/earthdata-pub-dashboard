@@ -1011,13 +1011,4 @@ export const verify = (topsToken, token) => ({
   }
 });
 
-export const getMFAStatus = () => ({
-  [CALL_API]: {
-    type: types.REQUESTS,
-    method: 'GET',
-    path: 'data/mfa/status'
-  }
-});
-
 export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });
-
