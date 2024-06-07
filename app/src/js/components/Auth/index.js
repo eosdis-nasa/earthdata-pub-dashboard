@@ -13,6 +13,7 @@ import Modal from 'react-bootstrap/Modal';
 import QRCode from 'react-qr-code';
 import config from '../../config';
 import ourConfigureStore from '../../store/configureStore';
+import { saveToken } from '../../utils/auth';
 
 class Auth extends React.Component {
   constructor (props) {
@@ -79,7 +80,7 @@ class Auth extends React.Component {
       const { data } = await dispatch(fetchToken2(code, state))
       const { token, user } = data;
       window.localStorage.setItem('auth-token', token);
-      window.localStorage.setItem('auth-user', {...user, ...{authenticated: true}});
+      window.localStorage.setItem('auth-user', JSON.stringify({...user, ...{authenticated: true}}));
       if ('mfaSecretCode' in data) this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
       this.setState({authenticated: true});
     }
