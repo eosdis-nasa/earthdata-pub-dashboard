@@ -75,20 +75,19 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { inflight, tokens } = api;
     const { code, state } = queryParams;
+    console.log('Before first conditional');
     if (tokens.token === null && !inflight && code) {
-      const { data } = await dispatch(fetchToken2(code, state))
-      const { token } = data;
-      window.localStorage.setItem('auth-token', token);
+      // const { data } = await dispatch(fetchToken2(code, state))
+      // const { token } = data;
+      const resp = await dispatch(fetchToken2(code, state));
+      console.log(resp);
+      // window.localStorage.setItem('auth-token', token);
     }
-    console.log('Before conditional')
     if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
-      console.log('In 1st conditional')
       window.location.href = config.basepath;
     } else if (code && !this.state.associated && !this.state.verified && !JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
-      console.log('In 2nd conditional')
       this.callAssociate()
     }
-    console.log('After conditional')
   }
 
   clickLogin () {
