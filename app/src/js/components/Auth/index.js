@@ -79,7 +79,7 @@ class Auth extends React.Component {
     console.log('token.token', tokens.token);
     console.log('inflight', inflight);
     console.log('code', code);
-    if (tokens.token === null && !inflight && code) {
+    if (!this.store.getState().api.authenticated && !inflight && code) {
       // const { data } = await dispatch(fetchToken2(code, state))
       // const { token } = data;
       const resp = await dispatch(fetchToken2(code, state));
