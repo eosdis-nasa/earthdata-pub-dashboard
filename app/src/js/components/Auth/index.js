@@ -18,7 +18,7 @@ class Auth extends React.Component {
   constructor (props) {
     super(props);
     this.store = ourConfigureStore({});
-    this.state = { associated: false, verified: false, body: '', mfa_enabled: false };
+    this.state = { associated: false, verified: false, body: '', authenticated: false };
     this.clickLogin = this.clickLogin.bind(this);
     // this.callAssociate = this.callAssociate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -75,15 +75,15 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { inflight, tokens } = api;
     const { code, state } = queryParams;
-    if (!this.store.getState().authenticated && !inflight && code) {
+    if (!this.state.authenticated && !inflight && code) {
       const { data } = await dispatch(fetchToken2(code, state))
       const { token } = data;
       window.localStorage.setItem('auth-token', token);
       if ('mfaSecretCode' in data) this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
       this.setState({authenticated: true});
     }
-    console.log(this.store.getState().authenticated);
-    if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).mfa_enabled) {
+    console.log(this.state.authenticated);
+    if (window.localStorage.getItem('auth-user') !== null && this.state.authenticated) {
       window.location.href = config.basepath;
     }
   }
