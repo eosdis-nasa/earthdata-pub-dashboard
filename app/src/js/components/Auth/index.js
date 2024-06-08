@@ -85,7 +85,7 @@ class Auth extends React.Component {
       this.setState({authenticated: true});
     }
     console.log(this.store.getState().api.authenticated);
-    if (window.localStorage.getItem('auth-user') !== null && this.store.getState().api.authenticated) {
+    if (this.store.getState().api.authenticated) {
       window.location.href = config.basepath;
     }
   }

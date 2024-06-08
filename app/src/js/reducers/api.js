@@ -45,9 +45,6 @@ export const initialState = (() => {
   const expiration = token ? getExpiration(token) : 0;
   const currentTime = Math.floor(Date.now() / 1000);
   const expired = expiration < currentTime;
-  console.log('expired', expired);
-  console.log('token', token);
-  console.log('user.authenticated', user.authenticated);
   return {
     authenticated: !expired && token && user.authenticated,
     inflight: false,
@@ -83,7 +80,7 @@ export default createReducer(initialState, {
   [FETCH_TOKEN]: (state, action) => {
     const { token, user } = action.data;
     saveToken({ token, user });
-    set(state, 'authenticated', false);
+    set(state, 'authenticated', true);
     set(state, 'inflight', false);
     set(state, 'tokens.token', action.data.token);
     set(state, 'tokens.userName', user.name);
