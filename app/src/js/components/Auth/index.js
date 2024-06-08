@@ -63,7 +63,7 @@ class Auth extends React.Component {
           new_user.mfa_enabled = true;
           window.localStorage.removeItem('auth-user');
           window.localStorage.setItem('auth-user', JSON.stringify(new_user))
-          this.setState({ verified: true, mfa_enabled: true, body: '', authenticated: true});
+          this.setState({ verified: true, mfa_enabled: true, body: ''});
           if (!inflight && code) {
             window.location.href = config.basepath;
           } 
@@ -74,7 +74,7 @@ class Auth extends React.Component {
 
   async componentDidMount () {
     const { dispatch, api, queryParams } = this.props;
-    const { inflight, tokens } = api;
+    const { inflight } = api;
     const { code, state } = queryParams;
     if (!this.store.getState().api.authenticated && !inflight && code) {
       const { data } = await dispatch(fetchToken2(code, state))
@@ -82,10 +82,9 @@ class Auth extends React.Component {
       window.localStorage.setItem('auth-token', token);
       window.localStorage.setItem('auth-user', JSON.stringify({...user, ...{authenticated: true}}));
       if ('mfaSecretCode' in data) this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
-      this.setState({authenticated: true});
     }
 
-    if (window.localStorage.getItem('auth-user') !== null && JSON.parse(window.localStorage.getItem('auth-user')).authenticated) {
+    if (JSON.parse(window.localStorage.getItem('auth-user'))?.authenticated) {
       window.location.href = config.basepath;
     }
   }
