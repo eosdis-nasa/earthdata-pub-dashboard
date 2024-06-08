@@ -80,7 +80,7 @@ export default createReducer(initialState, {
   [FETCH_TOKEN]: (state, action) => {
     const { token, user } = action.data;
     saveToken({ token, user });
-    set(state, 'authenticated', true);
+    set(state, 'authenticated', false);
     set(state, 'inflight', false);
     set(state, 'tokens.token', action.data.token);
     set(state, 'tokens.userName', user.name);
