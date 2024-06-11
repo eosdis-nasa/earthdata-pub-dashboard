@@ -19,7 +19,7 @@ class Auth extends React.Component {
   constructor (props) {
     super(props);
     this.store = ourConfigureStore({});
-    this.state = { associated: false, verified: false, body: '', authenticated: false };
+    this.state = {body: ''};
     this.clickLogin = this.clickLogin.bind(this);
     // this.callAssociate = this.callAssociate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -52,7 +52,7 @@ class Auth extends React.Component {
     const { api, dispatch, queryParams } = this.props;
     const { inflight, tokens } = api;
     const { code } = queryParams;
-    if (this.state.associated && tokens.token!== null && !this.state.verified && document.getElementById('totp')?.value !== '') {
+    if (tokens.token!== null && document.getElementById('totp')?.value !== '') {
       dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
         const resp = value;
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
@@ -60,10 +60,9 @@ class Auth extends React.Component {
           console.log(`An error has occurred: ${error}.`);
         } else {
           let new_user = { ...tokens.user };
-          new_user.mfa_enabled = true;
           window.localStorage.removeItem('auth-user');
           window.localStorage.setItem('auth-user', JSON.stringify(new_user))
-          this.setState({ verified: true, mfa_enabled: true, body: ''});
+          this.setState({ body: ''});
           if (!inflight && code) {
             window.location.href = config.basepath;
           } 
@@ -83,7 +82,7 @@ class Auth extends React.Component {
       const { token, user } = data;
       if (!('mfaSecretCode' in data)) {
         window.localStorage.setItem('auth-token', token);
-        window.localStorage.setItem('auth-user', JSON.stringify({...user, ...{authenticated: true}}));
+        window.localStorage.setItem('auth-user', JSON.stringify(user));
         window.location.href = config.basepath;
       } else this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
     }
@@ -140,7 +139,7 @@ class Auth extends React.Component {
   render () {
     const { dispatch, api, apiVersion, queryParams } = this.props;
     const { code, token } = queryParams;
-    const showLoginButton = !api.authenticated && !api.inflight && !code && !token && !this.state.associated;
+    const showLoginButton = !this.store.getState().api.authenticated && !api.inflight && !code && !token;
     const showAuthMessage = (api.inflight || code || token) && this.store.getState().api.authenticated;
 
     return (
