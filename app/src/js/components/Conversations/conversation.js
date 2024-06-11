@@ -247,18 +247,18 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
             note.viewers.users.map((user) => {
               return (
                 <div key={user.id} className='flex__row sm-border'>
-                  <div className='flex__item--w-25'>
+                  <div className='flex__item--w-15'>
                     {user.name}
-                    <div className='flex__item--w-10'>
-                      {canRemoveUser &&
-                        <button
-                          className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
-                          onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, user.id, 'user'); }}
-                          >
-                          Remove
-                        </button>
-                      }
-                    </div>
+                  </div>
+                  <div className='flex__item--w-15'>
+                    {canRemoveUser &&
+                      <button
+                        className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                        onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, user.id, 'user'); }}
+                        >
+                        Remove
+                      </button>
+                    }
                   </div>
                 </div>
 
@@ -270,18 +270,18 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
             note.viewers.roles.map((role) => {
               return (
                 <div key={role.id} className='flex__row sm-border'>
-                  <div className='flex__item--w-25'>
+                  <div className='flex__item--w-15'>
                     {role.name}
-                    <div className='flex__item--w-10'>
-                      {canRemoveUser &&
-                        <button
-                          className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
-                          onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, role.id, 'role'); }}
-                          >
-                          Remove
-                        </button>
-                      }
-                    </div>
+                  </div>
+                  <div className='flex__item--w-15'>
+                    {canRemoveUser &&
+                      <button
+                        className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                        onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, role.id, 'role'); }}
+                        >
+                        Remove
+                      </button>
+                    }
                   </div>
                 </div>
 
