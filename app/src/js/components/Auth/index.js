@@ -97,7 +97,7 @@ class Auth extends React.Component {
   }
 
   renderQrCode (secretCode, username, issuer) {
-    const qrPrefix = `otpauth://totp/${issuer}}:${username}?secret=`;
+    const qrPrefix = `otpauth://totp/${issuer.replace(/(^\w+:|^)\/\//, '')}:${username}?secret=`;
     return (
       <div style={{ textAlign: 'left' }}>
         <div className="eui-info-box">
