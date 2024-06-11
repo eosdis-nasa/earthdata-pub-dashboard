@@ -76,15 +76,14 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { inflight } = api;
     const { code, state } = queryParams;
-    if (!this.store.getState().api.authenticated && !inflight && code) {
+    if (this.store.getState().api.authenticated) {
+      window.location.href = config.basepath;
+    } else if (!inflight && code) {
       const { data } = await dispatch(fetchToken2(code, state))
       const { token, user } = data;
+      if ('mfaSecretCode' in data) this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
       window.localStorage.setItem('auth-token', token);
       window.localStorage.setItem('auth-user', JSON.stringify({...user, ...{authenticated: true}}));
-      if ('mfaSecretCode' in data) this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
-      window.location.href = config.basepath;
-    }
-    if (this.store.getState().api.authenticated) {
       window.location.href = config.basepath;
     }
   }
