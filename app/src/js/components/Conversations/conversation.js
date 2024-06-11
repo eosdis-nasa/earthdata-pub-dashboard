@@ -7,7 +7,9 @@ import {
   getConversation,
   replyConversation,
   addUsersToConversation,
+  addUserToNote,
   removeUserFromNote,
+  addRoleToNote,
   removeRoleFromNote
 } from '../../actions';
 import { notePrivileges } from '../../utils/privileges';
@@ -199,7 +201,39 @@ Conversation.propTypes = {
 };
 
 const Note = ({ dispatch, note, conversationId, privileges }) => {
+  const noteId  = note.id;
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchType, setSearchType] = useState('user');
   const { canAddUser, canRemoveUser } = notePrivileges(privileges);
+  const cancelCallback = () => setShowSearch(false);
+  const viewerSubmitCallback = (id) => {
+    const params = {
+      note_id: noteId,
+      viewer_ids: [id]
+    };
+    dispatch(addUserToNote(params, conversationId));
+    setShowSearch(false);
+  };
+  const roleSubmitCallback = (id) => {
+    const params = {
+      note_id: noteId,
+      viewer_roles: [id]
+    };
+    dispatch(addRoleToNote(params, conversationId));
+    setShowSearch(false);
+  };
+  const searchOptions = {
+    user: {
+      entity: 'user',
+      submit: viewerSubmitCallback,
+      cancel: cancelCallback
+    },
+    role: {
+      entity: 'role',
+      submit: roleSubmitCallback,
+      cancel: cancelCallback
+    }
+  };
   return (
     <div className='flex__row--border'>
       <div className='flex__item--w-15'>
@@ -255,7 +289,27 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
             })
           }              
         </div>
+        <div className='flex__item--w-10'>
+          {canAddUser &&
+            <button
+              className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+              onClick={() => {setShowSearch(true); setSearchType('user')}}
+            >
+              Add Viewer&nbsp;&nbsp;
+            </button>
+          }
+          <br /><br />
+          {canAddUser &&
+            <button
+              className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+              onClick={() => {setShowSearch(true); setSearchType('role')}}
+            >
+              Add Viewer Role&nbsp;&nbsp;
+            </button>
+          }
+        </div>
       </div>
+      { showSearch && <SearchModal { ...searchOptions[searchType] }/> }
       <div className='flex__item--grow-1-wrap'style={{whiteSpace: "pre"}}>{ decodeURI(note.text) }</div>
     </div>
   );
