@@ -96,10 +96,7 @@ class Auth extends React.Component {
   }
 
   renderQrCode (secretCode) {
-    let setupCode = secretCode;
-    if(typeof(string) !=='string'){
-      setupCode = 'someteststring'
-    }
+    console.log(secretCode);
     return (
       <div style={{ textAlign: 'left' }}>
         <div className="eui-info-box">
@@ -117,12 +114,12 @@ class Auth extends React.Component {
             <QRCode
               size={500}
               style={{ height: 'auto', maxWidth: '100%', width: '100%', marginTop: '2rem' }}
-              value={setupCode}
+              value={secretCode}
               viewBox={'0 0 500 500'}
             />
           </div>
-          <div id="secretcode" style={{ marginTop: '2rem' }}>Setup Code: <strong style={{wordBreak:'break-all'}}>{setupCode}</strong></div>
-          <input type="hidden" id="secret" name="secret" value={setupCode} />
+          <div id="secretcode" style={{ marginTop: '2rem' }}>Setup Code: <strong style={{wordBreak:'break-all'}}>{secretCode}</strong></div>
+          <input type="hidden" id="secret" name="secret" value={secretCode} />
           <br />
           <p>
             <label htmlFor="totp">Enter Authentication Code from Verification App </label>
