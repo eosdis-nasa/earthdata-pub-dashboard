@@ -81,10 +81,12 @@ class Auth extends React.Component {
     } else if (!inflight && code) {
       const { data } = await dispatch(fetchToken2(code, state))
       const { token, user } = data;
-      if ('mfaSecretCode' in data) this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
-      window.localStorage.setItem('auth-token', token);
-      window.localStorage.setItem('auth-user', JSON.stringify({...user, ...{authenticated: true}}));
-      window.location.href = config.basepath;
+      if (!('mfaSecretCode' in data)) {
+        window.localStorage.setItem('auth-token', token);
+        window.localStorage.setItem('auth-user', JSON.stringify({...user, ...{authenticated: true}}));
+        window.location.href = config.basepath;
+      }
+      this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
     }
   }
 
