@@ -60,8 +60,11 @@ class Auth extends React.Component {
           console.log(`An error has occurred: ${error}.`);
         } else {
           let new_user = { ...tokens.user };
+          console.log(window.localStorage.getItem('auth-token'));
+          window.localStorage.removeItem('auth-token');
           window.localStorage.removeItem('auth-user');
-          window.localStorage.setItem('auth-user', JSON.stringify(new_user))
+          window.localStorage.setItem('auth-token', tokens.token);
+          window.localStorage.setItem('auth-user', JSON.stringify({...new_user, ...{authenticated: true}}))
           this.setState({ body: ''});
           if (!inflight && code) {
             window.location.href = config.basepath;
@@ -82,7 +85,7 @@ class Auth extends React.Component {
       const { token, user } = data;
       if (!('mfaSecretCode' in data)) {
         window.localStorage.setItem('auth-token', token);
-        window.localStorage.setItem('auth-user', JSON.stringify(user));
+        window.localStorage.setItem('auth-user', JSON.stringify({...user, ...{authenticated: true}}));
         window.location.href = config.basepath;
       } else this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
     }
