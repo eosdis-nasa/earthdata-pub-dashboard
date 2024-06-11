@@ -60,7 +60,6 @@ class Auth extends React.Component {
           console.log(`An error has occurred: ${error}.`);
         } else {
           let new_user = { ...tokens.user };
-          console.log(window.localStorage.getItem('auth-token'));
           window.localStorage.removeItem('auth-token');
           window.localStorage.removeItem('auth-user');
           window.localStorage.setItem('auth-token', tokens.token);
@@ -87,7 +86,7 @@ class Auth extends React.Component {
         window.localStorage.setItem('auth-token', token);
         window.localStorage.setItem('auth-user', JSON.stringify({...user, ...{authenticated: true}}));
         window.location.href = config.basepath;
-      } else this.setState({ body: this.renderQrCode(data.mfaSecretCode)});
+      } else this.setState({ body: this.renderQrCode(data.mfaSecretCode, user.username, user.issuer)});
     }
   }
 
@@ -97,8 +96,8 @@ class Auth extends React.Component {
     dispatch(login(redirect || 'dashboard'));
   }
 
-  renderQrCode (secretCode) {
-    console.log(secretCode);
+  renderQrCode (secretCode, username, issuer) {
+    const qrPrefix = `otpauth://totp/${issuer}}:${username}?secret=`;
     return (
       <div style={{ textAlign: 'left' }}>
         <div className="eui-info-box">
@@ -116,7 +115,7 @@ class Auth extends React.Component {
             <QRCode
               size={500}
               style={{ height: 'auto', maxWidth: '100%', width: '100%', marginTop: '2rem' }}
-              value={secretCode}
+              value={`${qrPrefix}${secretCode}`}
               viewBox={'0 0 500 500'}
             />
           </div>
