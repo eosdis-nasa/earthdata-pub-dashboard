@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import withQueryParams from 'react-router-query-params';
 import { withRouter } from 'react-router-dom';
-import { login, fetchToken2, redirectWithToken, associate, verify } from '../../actions';
+import { login, mfaTokenFetch, verify } from '../../actions';
 import PropTypes from 'prop-types';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import ErrorReport from '../Errors/report';
@@ -13,7 +13,6 @@ import Modal from 'react-bootstrap/Modal';
 import QRCode from 'react-qr-code';
 import config from '../../config';
 import ourConfigureStore from '../../store/configureStore';
-import { saveToken } from '../../utils/auth';
 
 class Auth extends React.Component {
   constructor (props) {
@@ -21,32 +20,8 @@ class Auth extends React.Component {
     this.store = ourConfigureStore({});
     this.state = {body: ''};
     this.clickLogin = this.clickLogin.bind(this);
-    // this.callAssociate = this.callAssociate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
-  // async callAssociate() {
-  //   const { dispatch, api } = this.props;
-  //   const { tokens } = api;
-  //   let secretCode = '';
-  //   if (config.environment.match(/LOCALHOST/g)) {
-  //     secretCode = 'somefakesecretcode'
-  //   }
-  //   if (tokens.token !== null && !this.state.associated) {
-  //     await dispatch(associate(tokens.token)).then(value => {
-  //       let resp = value
-  //       let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
-  //       if (!config.environment.match(/LOCALHOST/g)) {
-  //         secretCode = resp.data.SecretCode
-  //       }
-  //       if (error && !config.environment.match(/LOCALHOST/g)) {
-  //         console.log(`An error has occurred: ${error}.`);
-  //       } else {
-  //         this.setState({ body: this.renderQrCode(secretCode), associated: true });
-  //       }
-  //     })
-  //   }
-  // };
 
   async handleSubmit() {
     const { api, dispatch, queryParams } = this.props;
@@ -80,7 +55,7 @@ class Auth extends React.Component {
     if (this.store.getState().api.authenticated) {
       window.location.href = config.basepath;
     } else if (!inflight && code) {
-      const { data } = await dispatch(fetchToken2(code, state))
+      const { data } = await dispatch(mfaTokenFetch(code, state))
       const { token, user } = data;
       if (!('mfaSecretCode' in data)) {
         window.localStorage.setItem('auth-token', token);

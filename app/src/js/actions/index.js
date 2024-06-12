@@ -31,7 +31,6 @@ export const redirectWithToken = (redirect, token) => {
   if (redirects[redirect]) {
     const redirectUrl = new URL(redirects[redirect]);
     redirectUrl.searchParams.set('token', token);
-    redirectUrl.searchParams.set('mfa_enabled');
     window.location.href = redirectUrl.href;
   } else {
     history.push('/');
@@ -55,7 +54,7 @@ export const fetchToken = (code, state) => {
   };
 };
 
-export const fetchToken2 = (code, state) => ({
+export const mfaTokenFetch = (code, state) => ({
   [CALL_API]: {
     type: types.FETCH_TOKEN,
     method: 'GET',
@@ -992,15 +991,6 @@ export const updateUsername = (payload) => {
       });
   };
 };
-
-export const associate = (token) => ({
-  [CALL_API]: {
-    type: types.MFA,
-    method: 'POST',
-    path: 'data/mfa/associate',
-    body: { auth_token: `${token}` }
-  }
-});
 
 export const verify = (topsToken, token) => ({
   [CALL_API]: {
