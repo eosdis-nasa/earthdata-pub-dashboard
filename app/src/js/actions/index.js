@@ -20,7 +20,8 @@ const {
   apiRoot: root,
   formsUrl,
   defaultPageLimit,
-  minCompatibleApiVersion
+  minCompatibleApiVersion,
+  basepath
 } = _config;
 
 const redirects = {
@@ -33,7 +34,7 @@ export const redirectWithToken = (redirect, token) => {
     redirectUrl.searchParams.set('token', token);
     window.location.href = redirectUrl.href;
   } else {
-    history.push('/');
+    window.location.href = basepath;
   }
 };
 

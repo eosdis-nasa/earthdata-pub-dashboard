@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import withQueryParams from 'react-router-query-params';
 import { withRouter } from 'react-router-dom';
-import { login, mfaTokenFetch, verify } from '../../actions';
+import { login, mfaTokenFetch, redirectWithToken, verify } from '../../actions';
 import PropTypes from 'prop-types';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import ErrorReport from '../Errors/report';
@@ -50,10 +50,10 @@ class Auth extends React.Component {
 
   async componentDidMount () {
     const { dispatch, api, queryParams } = this.props;
-    const { inflight } = api;
-    const { code, state } = queryParams;
+    const { inflight, tokens } = api;
+    const { code, state, redirect } = queryParams;
     if (this.store.getState().api.authenticated) {
-      window.location.href = config.basepath;
+      redirectWithToken(redirect || 'dashboard', tokens.token);
     } else if (!inflight && code) {
       const { data } = await dispatch(mfaTokenFetch(code, state))
       const { token, user } = data;
