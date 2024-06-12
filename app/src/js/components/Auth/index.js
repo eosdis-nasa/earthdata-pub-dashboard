@@ -34,7 +34,7 @@ class Auth extends React.Component {
         if (error && !config.environment.match(/LOCALHOST/g)) {
           console.log(`An error has occurred: ${error}.`);
         } else {
-          let new_user = { ...tokens.user };
+          const new_user = { ...tokens.user };
           window.localStorage.removeItem('auth-token');
           window.localStorage.removeItem('auth-user');
           window.localStorage.setItem('auth-token', tokens.token);
