@@ -35,8 +35,6 @@ class Groups extends React.Component {
             <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
               <Switch>
                 <Route exact path='/groups' component={GroupsOverview} />
-                {/* <Route path='/groups/add' component={AddGroup} />-->
-                <Route path='/groups/edit/:groupId' component={EditGroup} /> */}
                 <Route path='/groups/id/:groupId' component={GroupOverview} />
               </Switch>
             </div>

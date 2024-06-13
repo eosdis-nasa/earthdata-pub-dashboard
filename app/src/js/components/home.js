@@ -1,41 +1,20 @@
 'use strict';
 import React from 'react';
-// import { get } from 'object-path';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import withQueryParams from 'react-router-query-params';
 import { listRequests } from '../actions';
 import {
-  // tally,
-  // seconds
   nullValue,
-  // displayCase
 } from '../utils/format';
 import List from './Table/Table';
-// import RequestsProgress from './Requests/progress';
 import {
   tableColumns
 } from '../utils/table-config/requests';
 import { overviewUrl, formsUrl, initiateRequestSelectDaac } from '../config';
-/* import {
-  kibanaS3AccessErrorsLink,
-  kibanaS3AccessSuccessesLink,
-  kibanaApiLambdaErrorsLink,
-  kibanaApiLambdaSuccessesLink,
-  kibanaTEALambdaErrorsLink,
-  kibanaTEALambdaSuccessesLink,
-  kibanaGatewayAccessErrorsLink,
-  kibanaGatewayAccessSuccessesLink,
-  kibanaGatewayExecutionErrorsLink,
-  kibanaGatewayExecutionSuccessesLink,
-  kibanaAllLogsLink,
-} from '../utils/kibana'; */
-// import { initialValuesFromLocation } from '../utils/url-helper';
-// import Datepicker from './Datepicker/Datepicker';
 import Select from 'react-select';
 import { strings } from './locale';
-import Meditor from '../components/MeditorModal/modal';
 import { requestPrivileges } from '../utils/privileges';
 import Loading from '../components/LoadingIndicator/loading-indicator';
 
@@ -305,7 +284,6 @@ class Home extends React.Component {
                 </List>
               </div>
             </section>
-            <Meditor></Meditor>
           </div>
         </div>
       );
