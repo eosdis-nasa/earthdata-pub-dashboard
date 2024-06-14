@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed zindex on user creation page.
 - Removed funny line from dropdown
 - Added error page form and routes to it if an api return (response.error.code) not 200
+- Update MFA to EDPub custom flow
 <!-- Unreleased changes can be added here. -->
 
 ## 1.0.19

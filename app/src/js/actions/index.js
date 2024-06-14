@@ -20,7 +20,8 @@ const {
   apiRoot: root,
   formsUrl,
   defaultPageLimit,
-  minCompatibleApiVersion
+  minCompatibleApiVersion,
+  basepath
 } = _config;
 
 const redirects = {
@@ -33,7 +34,7 @@ export const redirectWithToken = (redirect, token) => {
     redirectUrl.searchParams.set('token', token);
     window.location.href = redirectUrl.href;
   } else {
-    history.push('/');
+    window.location.href = basepath;
   }
 };
 
@@ -53,6 +54,16 @@ export const fetchToken = (code, state) => {
       });
   };
 };
+
+export const mfaTokenFetch = (code, state) => ({
+  [CALL_API]: {
+    type: types.FETCH_TOKEN,
+    method: 'GET',
+    id: null,
+    path: 'token',
+    qs: { code, state }
+  }
+});
 
 export const refreshToken = () => {
   return (dispatch) => {
@@ -981,3 +992,14 @@ export const updateUsername = (payload) => {
       });
   };
 };
+
+export const verify = (topsToken, token) => ({
+  [CALL_API]: {
+    type: types.MFA,
+    method: 'POST',
+    path: 'data/mfa/verify',
+    body: { tops_token: topsToken, auth_token: `${token}` }
+  }
+});
+
+export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });
