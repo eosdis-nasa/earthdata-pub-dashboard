@@ -74,8 +74,8 @@ class InactiveRequestsOverview extends React.Component {
           if (match === undefined && this.state.filter !== undefined && this.state.filter.length > 0) {
             match = this.state.filter;
           }
-          const prod = { value: record[r].form_data?.data_producer_info_name, label: record[r].form_data?.data_producer_info_name };
-          let dataProduct = record[r].form_data?.data_product_name_value;
+          const prod = { value: record[r]?.data_producer_name, label: record[r]?.data_producer_name };
+          let dataProduct = record[r]?.name;
           if (dataProduct === undefined) {
             dataProduct = `Request Initialized by ${record[r].initiator.name}`;
           }
@@ -85,7 +85,7 @@ class InactiveRequestsOverview extends React.Component {
             }
             return false;
           });
-          if (!isFound && JSON.stringify(prod) !== '{}') {
+          if (!isFound && JSON.stringify(prod) !== '{}' && prod.value !== null) {
             this.state.producers.push(prod);
           }
           if ((requestSearchValue !== '' && dataProduct.match(re)) || requestSearchValue === '') {
