@@ -289,7 +289,7 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
             })
           }              
         </div>
-        <div className='flex__item--w-10'>
+        <div className='flex__item--w-15'>
           {canAddUser &&
             <button
               className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'

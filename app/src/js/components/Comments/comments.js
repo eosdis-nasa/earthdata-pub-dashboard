@@ -7,16 +7,31 @@ import {
   getRequest,
   replyConversation,
   getForm,
-  getConversations
+  getConversations,
+  getUser,
+  getRole
 } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
-import { requestPrivileges, formPrivileges } from '../../utils/privileges';
+import { requestPrivileges, formPrivileges, notePrivileges } from '../../utils/privileges';
+import SearchModal from '../SearchModal';
 
 class Comment extends React.Component {
   constructor() {
     super();
     this.displayName = 'Comment';
-    this.state = { textRef: React.createRef() };
+    this.state = { 
+      textRef: React.createRef(), 
+      showSearch: false, 
+      searchType: 'user', 
+      commentViewers: [], 
+      commentViewerRoles: [],
+      idMap: {} 
+    };
+
+    this.openSearch = this.openSearch.bind(this);
+    this.closeSearch = this.closeSearch.bind(this);
+    this.addViewer = this.addViewer.bind(this);
+    this.addRole = this.addRole.bind(this)
   }
 
   async componentDidMount() {
@@ -100,15 +115,64 @@ class Comment extends React.Component {
       const comment = `${datetime} - ${this.state.textRef.current.value}`;
       const reply = `${requestName} - Step: ${stepName}, Comment: ${comment}`;
       const resp = reply.replace(/[\n\t\r\'\"]/g, '\\$&');
-      const payload = { conversation_id: id, text: resp, step_name: step };
+      const payload = { conversation_id: id, text: resp, step_name: step , viewer_users: this.state.commentViewers, viewer_roles: this.state.commentViewerRoles};
       dispatch(replyConversation(payload));
       const author = JSON.parse(window.localStorage.getItem('auth-user')).name;
-      document.getElementById('previously-saved').innerHTML += `${datetime} - ${this.state.textRef.current.value}, From: ${author}<br>`;
+      let viewerList = Object.values(this.state.idMap);
+      const viewer_str = viewerList && viewerList.length ? `, Viewers: ${viewerList.join(", ")}` : "";
+      document.getElementById('previously-saved').innerHTML += `${datetime} - ${this.state.textRef.current.value}, From: ${author}${viewer_str}<br>`;
       this.state.textRef.current.value = '';
+      this.setState({ commentViewers: []})
+      this.setState({ commentViewerRoles: []})
+      this.setState({ idMap: {}})
       localStorage.setItem(`${this.props.requests.detail.data.id}_${step}`, 'saved');
       document.querySelectorAll('button.button--reply')[0].classList.add('hidden');
     }
   }
+
+  async openSearch(searchEntity) {
+    this.setState({ searchType: searchEntity});
+    this.setState({ showSearch: true });
+  }
+
+  async closeSearch() {
+    this.setState({ showSearch: false });
+  }
+
+  async addViewer(id) {
+    const { dispatch } = this.props;
+    await dispatch(getUser(id)).then( (user) =>{
+      let mapCopy = { ...this.state.idMap }; 
+      mapCopy[id] = user.data.name;
+      this.setState({idMap: mapCopy});
+      this.setState({ commentViewers: [...this.state.commentViewers, id]})
+      this.setState({ showSearch: false });
+    })
+  };
+
+  async addRole(id) {
+    const { dispatch } = this.props;
+    await dispatch(getRole(id)).then( (role) =>{
+      let mapCopy = { ...this.state.idMap }; 
+      mapCopy[id] = role.data.long_name;
+      this.setState({idMap: mapCopy});
+      this.setState({ commentViewerRoles: [...this.state.commentViewerRoles, id]})
+      this.setState({ showSearch: false });
+    })
+  };
+
+  async removeViewer(viewerId, viewerType) {
+    switch(viewerType){
+      case "user":
+          const newViewers = this.state.commentViewers.filter((viewer) => viewer !== viewerId);
+          this.setState({ commentViewers: newViewers })
+        break;
+      case "role":
+        const newRoles = this.state.commentViewerRoles.filter((viewer) => viewer !== viewerId);
+          this.setState({ commentViewerRoles: newRoles })
+        break;
+    }
+  };
 
   render() {
     let reviewable = false;
@@ -121,12 +185,25 @@ class Comment extends React.Component {
     let step = search[2];
     let stepName = this.getFormalName(step);
     let { canReview } = requestPrivileges(this.props.privileges, step);
+    const { canAddUser, canRemoveUser } = notePrivileges(this.props.privileges);
     let request = '';
     let conversationId = '';
     let requestName = '';
     const formId = this.props.match.params.formId;
     let formName = '';
     request = this.props.requests.detail.data;
+    const searchOptions = {
+      user: {
+        entity: 'user',
+        submit: this.addViewer,
+        cancel: this.closeSearch
+      },
+      role: {
+        entity: 'role',
+        submit: this.addRole,
+        cancel: this.closeSearch
+      }
+    };
     if (this.hasStepData() && request !== undefined) {
       if (this.props.forms.map !== undefined && this.props.forms.map[formId] !== undefined && this.props.forms.map[formId].data !== undefined) {
         formName = this.props.forms.map[formId].data.short_name;
@@ -182,6 +259,66 @@ class Comment extends React.Component {
                   title="Enter a comment"
                   onChange={(e) => { e.preventDefault(); this.formatComments(); document.querySelectorAll('button.button--reply')[0].classList.remove('hidden'); }}
                 ></textarea>
+                  {this.state.showSearch && <SearchModal {...searchOptions[this.state.searchType]} />}
+                  <p>Comment Visability:</p>
+                  { this.state.commentViewers && this.state.commentViewers.map((viewer) => {
+                    return (
+                      <div key={viewer} className='flex__row sm-border'>
+                        <div className='flex__item--w-25'>
+                          {this.state.idMap[viewer]}
+                        </div>
+                        <div className='flex__item--w-15'>
+                          {canRemoveUser &&
+                            <button
+                              className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                              onClick={(e) => { e.preventDefault(); this.removeViewer(viewer, 'user'); }}
+                              >
+                              Remove
+                            </button>
+                          }
+                        </div>
+                      </div>
+                    )}
+                  )}
+                  { this.state.commentViewerRoles && this.state.commentViewerRoles.map((viewer) => {
+                    return (
+                      <div key={viewer} className='flex__row sm-border'>
+                        <div className='flex__item--w-25'>
+                          {this.state.idMap[viewer]}
+                        </div>
+                        <div className='flex__item--w-15'>
+                          {canRemoveUser &&
+                            <button
+                              className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                              onClick={(e) => { e.preventDefault(); this.removeViewer(viewer, 'role') }}
+                              >
+                              Remove
+                            </button>
+                          }
+                        </div>
+                      </div>
+                    )}
+                  )}
+                  { canAddUser &&
+                    <div className='flex__row'>
+                      <div className='flex__item--spacing'>
+                        <button type='button'
+                          className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+                          onClick={() => this.openSearch('user')}
+                        >
+                          Add Viewer
+                        </button>
+                      </div>
+                      <div className='flex__item--spacing'>
+                        <button type='button'
+                          className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+                          onClick={() => this.openSearch('role')}
+                          >
+                          Add Viewer Role
+                        </button>
+                      </div>
+                    </div>
+                  }
                   <div style={{ minHeight: '40px' }}>
                     <button type='submit'
                       className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
