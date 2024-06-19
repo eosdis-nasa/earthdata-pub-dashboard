@@ -140,25 +140,32 @@ class Comment extends React.Component {
   }
 
   async addViewer(id) {
-    const { dispatch } = this.props;
-    await dispatch(getUser(id)).then( (user) =>{
-      let mapCopy = { ...this.state.idMap }; 
-      mapCopy[id] = user.data.name;
-      this.setState({idMap: mapCopy});
-      this.setState({ commentViewers: [...this.state.commentViewers, id]})
-      this.setState({ showSearch: false });
-    })
+    if (!this.state.commentViewers.includes(id)){
+      const { dispatch } = this.props;
+      await dispatch(getUser(id)).then( (user) =>{
+        let mapCopy = { ...this.state.idMap }; 
+        mapCopy[id] = user.data.name;
+        this.setState({idMap: mapCopy});
+        this.setState({ commentViewers: [...this.state.commentViewers, id]})
+      })
+    }
+
+    this.setState({ showSearch: false });
   };
 
   async addRole(id) {
-    const { dispatch } = this.props;
-    await dispatch(getRole(id)).then( (role) =>{
-      let mapCopy = { ...this.state.idMap }; 
-      mapCopy[id] = role.data.long_name;
-      this.setState({idMap: mapCopy});
-      this.setState({ commentViewerRoles: [...this.state.commentViewerRoles, id]})
-      this.setState({ showSearch: false });
-    })
+    if (!this.state.commentViewerRoles.includes(id)){
+      const { dispatch } = this.props;
+      await dispatch(getRole(id)).then( (role) =>{
+        let mapCopy = { ...this.state.idMap }; 
+        mapCopy[id] = role.data.long_name;
+        this.setState({idMap: mapCopy});
+        this.setState({ commentViewerRoles: [...this.state.commentViewerRoles, id]})
+
+      })
+    }
+    
+    this.setState({ showSearch: false });
   };
 
   async removeViewer(viewerId, viewerType) {
@@ -247,6 +254,7 @@ class Comment extends React.Component {
       }
       return (
         <section className='page_section'>
+          {this.state.showSearch && <SearchModal {...searchOptions[this.state.searchType]} />}
           {typeof requestId !== 'undefined' &&
             <form className='flex__column flex__item--grow-1'
               onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName, step); }}>
@@ -259,7 +267,6 @@ class Comment extends React.Component {
                   title="Enter a comment"
                   onChange={(e) => { e.preventDefault(); this.formatComments(); document.querySelectorAll('button.button--reply')[0].classList.remove('hidden'); }}
                 ></textarea>
-                  {this.state.showSearch && <SearchModal {...searchOptions[this.state.searchType]} />}
                   <p>Comment Visability:</p>
                   { this.state.commentViewers && this.state.commentViewers.map((viewer) => {
                     return (
