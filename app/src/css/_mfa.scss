@@ -1,0 +1,50 @@
+.login {
+    padding: 1em;
+    padding-top: 1em;
+    border: 1px;
+    float: right;
+}
+
+.eui-btn--round {
+    border-color: white;
+}
+
+.mfa {
+    padding: 1em;
+}
+
+.profile,
+.totpSetup {
+    margin-top:1rem;
+}
+
+.warning {
+    margin: 1em;
+    display: inline-block;
+}
+
+ul {
+    list-style-type: none;
+}
+
+footer ul li {
+    display: inline;
+    margin: 1em;
+}
+
+.eui-masthead-logo h1 {
+    color: white;
+}
+
+.title {
+    font-size: 1em;
+    font-weight: normal;
+}
+
+.eui-masthead-logo h1 a:link {
+    background-image: url('https://cdn.earthdata.nasa.gov/conduit/upload/15051/nasa-meatball.png');
+    vertical-align: middle;
+    margin-left: 0.5em;
+    border: 0;
+    padding-right: 0;
+}
