@@ -47,12 +47,6 @@ const config = {
         field: 'name',
         searchable: true,
         sortable: true
-      },
-      {
-        heading: 'Email',
-        field: 'email',
-        searchable: true,
-        sortable: true
       }
     ]
   }
