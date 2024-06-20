@@ -240,7 +240,7 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
         <h3>{ note.from.name }</h3>
         {lastUpdated(note.sent, 'Sent')}
         <br/>
-        {note.viewers.users || note.viewers.roles ? <h3>Note Visability</h3> : null}
+        {note.viewers.users || note.viewers.roles ? <h3>Note Visibility</h3> : null}
         <div className='flex__column'>
           {
             note.viewers.users &&

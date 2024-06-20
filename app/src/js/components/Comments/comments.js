@@ -267,7 +267,7 @@ class Comment extends React.Component {
                   title="Enter a comment"
                   onChange={(e) => { e.preventDefault(); this.formatComments(); document.querySelectorAll('button.button--reply')[0].classList.remove('hidden'); }}
                 ></textarea>
-                  <p>Comment Visability:</p>
+                  <p>Comment Visibility:</p>
                   { this.state.commentViewers && this.state.commentViewers.map((viewer) => {
                     return (
                       <div key={viewer} className='flex__row sm-border'>
