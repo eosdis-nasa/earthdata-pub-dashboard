@@ -22,6 +22,7 @@ import conversations from './conversations';
 import searchModal from './search-modal';
 import earthdatapubInstance from './earthdatapub-instance';
 import dataUpload from './data-upload';
+import reviewers from './reviewers.js';
 
 const def = (state = {}, action) => state;
 
@@ -34,6 +35,7 @@ export const reducers = {
   datepicker,
   earthdatapubInstance,
   requests,
+  reviewers,
   stats,
   model,
   modules,

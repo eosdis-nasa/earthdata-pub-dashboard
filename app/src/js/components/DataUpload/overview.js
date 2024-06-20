@@ -4,12 +4,16 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _config from '../../config';
-import { loadToken } from '../../utils/auth';
+import { loadToken, saveToken } from '../../utils/auth';
 import Loading from '../LoadingIndicator/loading-indicator';
 import localUpload from 'edpub-data-upload-utility';
-import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
+import { listFileUploadsBySubmission, listFileDownloadsByKey, refreshToken } from '../../actions';
 import { shortDateShortTimeYearFirstJustValue, storage } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 class UploadOverview extends React.Component {
   constructor() {
@@ -24,7 +28,8 @@ class UploadOverview extends React.Component {
       progressValue: 0, // Initialize progressValue,
       uploadFailed: false,
       uploadFileName: '',
-      error: ''
+      error: '',
+      file: null
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -153,9 +158,8 @@ class UploadOverview extends React.Component {
     return valid;
   }
 
-  async handleChange(e) {
-    e.preventDefault();
-    const file = e.target.files[0];
+  async uploadFile(){
+    const file = this.state.file
     if (this.validateFile(file)) {
       this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: file ? file.name: '' });
 
@@ -168,6 +172,7 @@ class UploadOverview extends React.Component {
       const { requestId } = this.props.match.params;
       const { groupId } = this.props.match.params;
       const { apiRoot } = _config;
+
       try {
         let payload = {
           fileObj: file,
@@ -209,6 +214,21 @@ class UploadOverview extends React.Component {
         this.resetInputWithTimeout('Select a file', 1000)
       }
     }
+  }
+
+  async componentDidUpdate(prevProps){
+    if (prevProps.tokens.inflight !== this.props.tokens.inflight) {
+      if (!this.props.tokens.inflight) {
+        await this.uploadFile()
+      }
+    }
+  }
+
+  async handleChange(e) {
+    const { dispatch } = this.props;
+    e.preventDefault();
+    this.setState({file: e.target.files[0]})
+    dispatch(refreshToken())
   }
   
 
@@ -326,10 +346,12 @@ UploadOverview.propTypes = {
   dispatch: PropTypes.func,
   config: PropTypes.object,
   logs: PropTypes.object,
+  tokens: PropTypes.object
 };
 
 export default withRouter(connect(state => ({
   stats: state.stats,
   config: state.config,
-  logs: state.logs
+  logs: state.logs,
+  tokens: state.api.tokens
 }))(UploadOverview));
