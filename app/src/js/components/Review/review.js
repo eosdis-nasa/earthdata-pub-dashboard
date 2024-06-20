@@ -5,9 +5,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   getRequest,
-  reviewRequest
+  reviewRequest,
+  listRequestReviewers
 } from '../../actions';
 import { requestPrivileges } from '../../utils/privileges';
+import Reviewers from './reviewers';
 
 class ReviewStep extends React.Component {
   constructor() {
@@ -20,6 +22,7 @@ class ReviewStep extends React.Component {
     const requestId = this.props.location.search.split('=')[1];
     const { dispatch } = this.props;
     dispatch(getRequest(requestId));
+    dispatch(listRequestReviewers(requestId));
   }
 
   formatComments(approval) {
@@ -67,6 +70,13 @@ class ReviewStep extends React.Component {
     }
   }
 
+  inReviewers(){
+    console.log(this.props.rawReviewers.data);
+    const reviewers = this.props.rawReviewers.data
+      .filter(reviewer => this.props.requests.detail.data.step_data.name === reviewer.step_name);
+    return reviewers.some(reviewer => reviewer.name === this.props.user) || reviewers.length === 0;
+  }
+
   render() {
     const search = this.props.location.search.split('=');
     const requestId = search[1].replace(/&step/g, '');
@@ -74,15 +84,21 @@ class ReviewStep extends React.Component {
     let { canReview } = requestPrivileges(this.props.privileges, step);
     let reviewable = false;
     let reviewReady = false;
+    let stepName = '';
     if (this.hasStepData()) {
       const request = this.props.requests.detail.data;
       reviewReady = request && request.step_data.type === 'review';
-      if (canReview) {
+      stepName = request.step_data.name
+      if (canReview && this.inReviewers()) {
         reviewable = true;
       }
     }
     return (
       <div className='page__component'>
+        <Reviewers 
+          stepName={stepName} 
+          rawReviewers={this.props.rawReviewers.data}
+        />
         <section className='page_section'>
           {reviewable && reviewReady && typeof requestId !== 'undefined' && (
             <div className='flex__row reject-approve'>
@@ -110,15 +126,19 @@ ReviewStep.propTypes = {
   match: PropTypes.object,
   dispatch: PropTypes.func,
   requests: PropTypes.object,
+  rawReviewers: PropTypes.object,
   logs: PropTypes.object,
   history: PropTypes.object,
   location: PropTypes.object,
   privileges: PropTypes.object,
+  user: PropTypes.string,
   params: PropTypes.object
 };
 
 export default withRouter(connect(state => ({
   requests: state.requests,
+  rawReviewers: state.reviewers,
   privileges: state.api.tokens.privileges,
+  user: state.api.tokens.userName,
   logs: state.logs
 }))(ReviewStep));

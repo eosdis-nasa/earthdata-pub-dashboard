@@ -272,6 +272,14 @@ export const updateRequestMetadata = (payload) => ({
   }
 });
 
+export const listRequestReviewers = (id) => ({
+  [CALL_API]: {
+    type: types.REQUEST_REVIEWERS,
+    method: 'GET',
+    id: id,
+    path: `data/submission/getStepReviewDetails/${id}`
+}});
+
 export const getQuestion = (questionId) => ({
   [CALL_API]: {
     type: types.QUESTION,
