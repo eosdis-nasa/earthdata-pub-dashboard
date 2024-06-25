@@ -115,10 +115,19 @@ class Comment extends React.Component {
       const comment = `${datetime} - ${this.state.textRef.current.value}`;
       const reply = `${requestName} - Step: ${stepName}, Comment: ${comment}`;
       const resp = reply.replace(/[\n\t\r\'\"]/g, '\\$&');
-      const payload = { conversation_id: id, text: resp, step_name: step , viewer_users: this.state.commentViewers, viewer_roles: this.state.commentViewerRoles};
-      dispatch(replyConversation(payload));
-      const author = JSON.parse(window.localStorage.getItem('auth-user')).name;
+      // if the user has chosen to specify viewers, ensure that they are one of them
+      const current_user = JSON.parse(window.localStorage.getItem('auth-user'));
+      const viewer_user_list = [...this.state.commentViewers];
       let viewerList = Object.values(this.state.idMap);
+      if (!this.state.commentViewers.includes(current_user.id) && 
+        (this.state.commentViewers.length || this.state.commentViewerRoles.length)){
+          viewer_user_list.push(current_user.id); 
+          viewerList.push(current_user.name);
+        
+      } 
+      const payload = { conversation_id: id, text: resp, step_name: step , viewer_users: viewer_user_list, viewer_roles: this.state.commentViewerRoles};
+      dispatch(replyConversation(payload));
+      const author = current_user.name;
       const viewer_str = viewerList && viewerList.length ? `, Viewers: ${viewerList.join(", ")}` : "";
       document.getElementById('previously-saved').innerHTML += `${datetime} - ${this.state.textRef.current.value}, From: ${author}${viewer_str}<br>`;
       this.state.textRef.current.value = '';

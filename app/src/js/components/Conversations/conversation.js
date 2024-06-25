@@ -54,6 +54,7 @@ const handleRemove = (dispatch, conversationId, noteId, viewerId, viewerType) =>
 }
 
 const Conversation = ({ dispatch, conversation, privileges, match }) => {
+  const current_user_id = JSON.parse(window.localStorage.getItem('auth-user')).id;
   const { conversationId } = match.params;
   const [showSearch, setShowSearch] = useState(false);
   const [showViewerSearch, setShowViewerSearch] = useState(false);
@@ -70,11 +71,17 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const { canReply, canAddUser, canAddGroup, canRemoveUser } = notePrivileges(privileges);
 
   const reply = (dispatch, id) => {
+    // ensure the person adding the comment is a viewer if they've limited the note
+    const user_viewers = [...newCommentViewers];
+    if (!user_viewers.includes(current_user_id) && 
+        (newCommentViewers.length || newCommentViewerRoles.length)){
+          user_viewers.push(current_user_id);         
+      } 
     const resp = encodeURI(textRef.current.value);
     const payload = { 
       conversation_id: id, 
       text: resp,
-      viewer_users: newCommentViewers, 
+      viewer_users: user_viewers, 
       viewer_roles: newCommentViewerRoles
     };
       dispatch(replyConversation(payload));
