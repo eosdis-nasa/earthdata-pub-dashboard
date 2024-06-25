@@ -185,9 +185,13 @@ class Comment extends React.Component {
         break;
       case "role":
         const newRoles = this.state.commentViewerRoles.filter((viewer) => viewer !== viewerId);
-          this.setState({ commentViewerRoles: newRoles })
+        this.setState({ commentViewerRoles: newRoles })
         break;
     }
+
+    const mapCopy = { ...this.state.idMap };
+    delete mapCopy[viewerId];
+    this.setState({idMap: mapCopy});
   };
 
   render() {
