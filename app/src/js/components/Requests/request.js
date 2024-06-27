@@ -39,7 +39,7 @@ import UploadOverview from '../DataUpload/overview';
 class RequestOverview extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { current: {}, names: {}, formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
+    this.state = { current: {}, names: {}, selectedMembers: [], formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
     this.navigateBack = this.navigateBack.bind(this);
     this.applyWorkflow = this.applyWorkflow.bind(this);
     this.delete = this.delete.bind(this);
@@ -55,6 +55,8 @@ class RequestOverview extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleSave = this.handleSave.bind(this);
     this.cloneRequest = this.cloneRequest.bind(this);
     this.cloneRequest2 = this.cloneRequest2.bind(this);
   }
@@ -163,6 +165,17 @@ class RequestOverview extends React.Component {
     await this.props.dispatch(getRequestDetails(requestId));
   }
 
+  handleSelectChange = (selectedMembers) => {
+    this.setState({ selectedMembers});
+    document.querySelector('.save-uwg')?.classList?.remove('hidden');
+  }
+
+  handleSave = () => {
+    const savedMembers = this.state.selectedMembers;
+    console.log('saved Members:', savedMembers)
+    document.querySelector('.save-uwg')?.classList?.add('hidden');
+  }
+
   async delete() {
     const { requestId } = this.props.match.params;
     await this.props.dispatch(withdrawRequest(requestId));
@@ -247,6 +260,48 @@ class RequestOverview extends React.Component {
       </>
     );
   }
+  
+  uwgmemeber = ['member1','member2','member3','member4'];
+
+  AssignUWGmembers(record) {
+    return (
+      <>
+        <br></br>
+        <div className='page__section__header'>
+          <h1 className='heading--small' aria-labelledby='Assign UWG Members for review'>
+            Assign UWG Members for review
+          </h1>
+        </div>
+        <div className='indented__details'>
+          <div className="request-section">
+            <Select
+              id="UWGmembersSelect"
+              options={this.uwgmemeber.map((member) => {
+                return {
+                  value: member,
+                  label: this.toProperCase(member.replace(/_/g, ' '))
+                }
+              })}
+              value={this.state.selectedMembers}
+              onChange={this.handleSelectChange}
+              isSearchable={true}
+              placeholder={'Assign UWG Members'}
+              className='selectButton'
+              aria-label='Assign UWG Members'
+              isMulti
+              />
+          </div>
+          <br></br>
+          <section className='page__section save-uwg hidden'>
+            <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
+              onClick={this.handleSave} aria-label="Assign UWG members">
+              Save
+            </button>
+          </section>
+        </div>
+      </>
+    );
+  }
 
   render() {
     const { requestId } = this.props.match.params;
@@ -265,9 +320,21 @@ class RequestOverview extends React.Component {
     const { canEdit } = formPrivileges(this.props.privileges);
     const { roles } = this.props;
     const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
+    const { users } = this.props;
+    const listusers = users ? Object.keys(users).map(user => users[user].role_id) : [];
     let workflowSave;
     if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
+    }
+    let assignUWGReviewers;
+    let canAssignUWG = false;
+    console.log(listusers,"+++++++++++++++++++++++++++++")
+    console.log(record.data,"++++++++++++")
+    if (role.includes('admin') || role.includes('manager') || role.includes('staff')) {
+      canAssignUWG = true;
+    }
+    if ( canAssignUWG && canWithdraw && canRestore) {
+      assignUWGReviewers = this.AssignUWGmembers(record);
     }
     let canViewUsers = false;
     if (role.includes('admin')) {
@@ -499,6 +566,11 @@ class RequestOverview extends React.Component {
             <section className='page__section'>
               {workflowSave}
             </section>
+            { record?.data?.step_data?.name.includes('uwg_review') && (
+              <section className='page__section'>
+                 {assignUWGReviewers}
+              </section>
+            )}
             <UploadOverview />
             {showTable
               ? <section className='page__section'>
@@ -532,7 +604,8 @@ RequestOverview.propTypes = {
   privileges: PropTypes.object,
   daacs: PropTypes.object,
   steps: PropTypes.object,
-  roles: PropTypes.array
+  roles: PropTypes.array,
+  users: PropTypes.array
 };
 
 RequestOverview.defaultProps = {
@@ -548,4 +621,5 @@ export default withRouter(connect(state => ({
   logs: state.logs,
   privileges: state.api.tokens.privileges,
   roles: state.api.tokens.roles,
+  users: state.users.list.data
 }))(RequestOverview));

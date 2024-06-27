@@ -194,7 +194,7 @@ export const tableColumns = [
   {
     Header: 'Status',
     accessor: (row) => row.status,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.status}</Link> : null,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.step_status_label ?? row.row.original.status}</Link> : null,
     id: 'status_message',
     // width: 170
   },

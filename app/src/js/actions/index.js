@@ -621,6 +621,15 @@ export const getUser = (userId) => ({
   }
 });
 
+export const getUsers = (options) => ({
+  [CALL_API]: {
+    type: types.USERS,
+    method: 'GET',
+    path: 'data/users',
+    qs: Object.assign({ limit: defaultPageLimit }, options)
+  }
+});
+
 export const addUserRole = (payload) => {
   return (dispatch) => {
     dispatch({
