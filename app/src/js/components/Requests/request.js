@@ -11,7 +11,8 @@ import {
   removeUserFromRequest,
   setWorkflowStep,
   copyRequest,
-  metadataMapper
+  metadataMapper,
+  getUsers
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -39,7 +40,7 @@ import UploadOverview from '../DataUpload/overview';
 class RequestOverview extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { current: {}, names: {}, selectedMembers: [], formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
+    this.state = { current: {}, names: [], selectedMembers: [], formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
     this.navigateBack = this.navigateBack.bind(this);
     this.applyWorkflow = this.applyWorkflow.bind(this);
     this.delete = this.delete.bind(this);
@@ -74,6 +75,9 @@ class RequestOverview extends React.Component {
       });
     this.setState({ showSearch: false });
     this.setState({ setShowSearch: false });
+    dispatch(getUsers({})).then((resp) => {
+      this.setState({names: resp.data});
+    });
   }
 
   toProperCase(str) {
@@ -276,10 +280,10 @@ class RequestOverview extends React.Component {
           <div className="request-section">
             <Select
               id="UWGmembersSelect"
-              options={this.uwgmemeber.map((member) => {
+              options={this.state.names.map((elem) => {
                 return {
-                  value: member,
-                  label: this.toProperCase(member.replace(/_/g, ' '))
+                  value: elem.id,
+                  label: elem.name
                 }
               })}
               value={this.state.selectedMembers}
