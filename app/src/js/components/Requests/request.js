@@ -320,14 +320,16 @@ class RequestOverview extends React.Component {
     const { canEdit } = formPrivileges(this.props.privileges);
     const { roles } = this.props;
     const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
+    const { users } = this.props;
+    const listusers = users ? Object.keys(users).map(user => users[user].role_id) : [];
     let workflowSave;
     if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
     }
     let assignUWGReviewers;
     let canAssignUWG = false;
-   // console.log(roles,"+++++++++++++++++++++++++++++")
-   // console.log(record.data,"++++++++++++")
+    console.log(listusers,"+++++++++++++++++++++++++++++")
+    console.log(record.data,"++++++++++++")
     if (role.includes('admin') || role.includes('manager') || role.includes('staff')) {
       canAssignUWG = true;
     }
@@ -602,7 +604,8 @@ RequestOverview.propTypes = {
   privileges: PropTypes.object,
   daacs: PropTypes.object,
   steps: PropTypes.object,
-  roles: PropTypes.array
+  roles: PropTypes.array,
+  users: PropTypes.array
 };
 
 RequestOverview.defaultProps = {
@@ -618,4 +621,5 @@ export default withRouter(connect(state => ({
   logs: state.logs,
   privileges: state.api.tokens.privileges,
   roles: state.api.tokens.roles,
+  users: state.users.list.data
 }))(RequestOverview));
