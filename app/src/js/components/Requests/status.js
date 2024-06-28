@@ -86,8 +86,9 @@ class ActionRequestsOverview extends React.Component {
             match = this.state.filter;
           }
           // Once closing sets records to hidden once more, one can take out else statement.  status on close says ready now.
-          const prod = { value: record[r].form_data?.data_producer_info_name, label: record[r].form_data?.data_producer_info_name };
-          let dataProduct = record[r].form_data?.data_product_name_value;
+          const prod = { value: record[r]?.data_producer_name, label: record[r]?.data_producer_name };
+          let dataProduct = record[r]?.name;
+
           if (dataProduct === undefined) {
             dataProduct = `Request Initialized by ${record[r].initiator.name}`;
           }
@@ -97,7 +98,7 @@ class ActionRequestsOverview extends React.Component {
             }
             return false;
           });
-          if (!isFound && JSON.stringify(prod) !== '{}') {
+          if (!isFound && JSON.stringify(prod) !== '{}' && prod.value !== null) {
             this.state.producers.push(prod);
           }
           if (typeof record[r] === 'object') {
