@@ -11,7 +11,9 @@ import {
   removeUserFromRequest,
   setWorkflowStep,
   copyRequest,
-  metadataMapper
+  metadataMapper,
+  listUsers,
+  setUWGReview
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -67,6 +69,7 @@ class RequestOverview extends React.Component {
     // This causes a repeating query for workflows cluttering up the logs.
     // Commenting out until we add applyWorkflow capability
     // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
+    dispatch(listUsers());
     dispatch(getRequestDetails(requestId))
       .then((value) => {
         const record = this.props.requests.detail;
@@ -170,9 +173,15 @@ class RequestOverview extends React.Component {
     document.querySelector('.save-uwg')?.classList?.remove('hidden');
   }
 
-  handleSave = () => {
+  async handleSave() {
     const savedMembers = this.state.selectedMembers;
-    console.log('saved Members:', savedMembers)
+    const { requestId } = this.props.match.params;
+    const payload = {
+      id: requestId,
+      step_name: this.state.current.value,
+      user_list: [savedMembers]
+    };
+    await this.props.dispatch(setUWGReview(payload));
     document.querySelector('.save-uwg')?.classList?.add('hidden');
   }
 
@@ -260,10 +269,8 @@ class RequestOverview extends React.Component {
       </>
     );
   }
-  
-  uwgmemeber = ['member1','member2','member3','member4'];
 
-  AssignUWGmembers(record) {
+  AssignUWGmembers(record, filteredUsers) {
     return (
       <>
         <br></br>
@@ -276,10 +283,10 @@ class RequestOverview extends React.Component {
           <div className="request-section">
             <Select
               id="UWGmembersSelect"
-              options={this.uwgmemeber.map((member) => {
+              options={ filteredUsers.map((member) => {
                 return {
-                  value: member,
-                  label: this.toProperCase(member.replace(/_/g, ' '))
+                  value: member.name,
+                  label: member.name
                 }
               })}
               value={this.state.selectedMembers}
@@ -321,20 +328,19 @@ class RequestOverview extends React.Component {
     const { roles } = this.props;
     const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
     const { users } = this.props;
-    const listusers = users ? Object.keys(users).map(user => users[user].role_id) : [];
+    const filteredUsers = users.filter(user => user.user_roles.find(role => role.short_name == "uwg_member")
+    )
     let workflowSave;
     if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
     }
     let assignUWGReviewers;
     let canAssignUWG = false;
-    console.log(listusers,"+++++++++++++++++++++++++++++")
-    console.log(record.data,"++++++++++++")
     if (role.includes('admin') || role.includes('manager') || role.includes('staff')) {
       canAssignUWG = true;
     }
     if ( canAssignUWG && canWithdraw && canRestore) {
-      assignUWGReviewers = this.AssignUWGmembers(record);
+      assignUWGReviewers = this.AssignUWGmembers(record, filteredUsers);
     }
     let canViewUsers = false;
     if (role.includes('admin')) {

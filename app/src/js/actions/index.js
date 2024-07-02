@@ -584,6 +584,15 @@ export const listUsers = (options) => ({
   }
 });
 
+export const setUWGReview = (payload) => ({
+  [CALL_API]: {
+    type: types.STEPS,
+    method: 'POST',
+    path: 'data/submission/operation/createStepReviewApproval',
+    body: payload
+  }
+});
+
 export const getOptionsUserGroup = () => ({
   [CALL_API]: {
     type: types.OPTIONS_USERGROUP,
@@ -602,14 +611,6 @@ export const getUser = (userId) => ({
   }
 });
 
-export const getUsers = (options) => ({
-  [CALL_API]: {
-    type: types.USERS,
-    method: 'GET',
-    path: 'data/users',
-    qs: Object.assign({ limit: defaultPageLimit }, options)
-  }
-});
 
 export const addUserRole = (payload) => {
   return (dispatch) => {
