@@ -103,6 +103,5 @@ export default createReducer(initialState, {
   },
   [SET_TOKEN]: (state, action) => {
     set(state, 'tokens.token', action.token);
-    set(state, 'authenticated', true);
   }
 });
