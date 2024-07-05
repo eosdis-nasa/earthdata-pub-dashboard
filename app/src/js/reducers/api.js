@@ -10,7 +10,8 @@ import {
   FETCH_TOKEN,
   FETCH_TOKEN_INFLIGHT,
   FETCH_TOKEN_ERROR,
-  SET_TOKEN
+  SET_TOKEN,
+  SET_AUTHENTICATED
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 
@@ -103,5 +104,8 @@ export default createReducer(initialState, {
   },
   [SET_TOKEN]: (state, action) => {
     set(state, 'tokens.token', action.token);
+  },
+  [SET_AUTHENTICATED]: (state, auth) => {
+    set(state, 'authenticated', auth);
   }
 });

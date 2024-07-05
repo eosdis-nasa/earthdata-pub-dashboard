@@ -1082,4 +1082,4 @@ export const verify = (topsToken, token) => ({
   }
 });
 
-export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });
+export const setAuthenticatedState = (authenticated) => ({ type: types.SET_AUTHENTICATED, authenticated });
