@@ -17,7 +17,6 @@ import { userPrivileges } from '../../utils/privileges';
 
 function onLoad (reactFlowInstance) {
   reactFlowInstance.fitView();
-  // console.log('flow loaded:', reactFlowInstance);
 }
 
 class Workflows extends React.Component {

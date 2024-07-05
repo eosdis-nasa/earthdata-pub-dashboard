@@ -223,7 +223,6 @@ class Home extends React.Component {
         }
       }
     }
-    console.log('this.state.', list)
     Object.defineProperty(newList, 'data', {
       value: tmp,
       writable: true,
