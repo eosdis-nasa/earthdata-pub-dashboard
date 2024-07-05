@@ -1081,5 +1081,3 @@ export const verify = (topsToken, token) => ({
     body: { tops_token: topsToken, auth_token: `${token}` }
   }
 });
-
-export const setAuthenticatedState = (authenticated) => ({ type: types.SET_AUTHENTICATED, authenticated });
