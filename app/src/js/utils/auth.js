@@ -4,7 +4,7 @@ import { window } from './browser';
 export const saveToken = function ({ token, user }) {
   if (window.localStorage && typeof window.localStorage.setItem === 'function' && token !== undefined && token !== null && token !== 'undefined') {
     window.localStorage.setItem('auth-token', token);
-    window.localStorage.setItem('auth-user', JSON.stringify(user));
+    window.localStorage.setItem('auth-user', JSON.stringify({...user, ...{authenticated: true}}));
   }
 };
 export const loadToken = function () {

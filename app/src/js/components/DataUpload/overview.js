@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _config from '../../config';
-import { loadToken, saveToken } from '../../utils/auth';
+import { loadToken } from '../../utils/auth';
 import Loading from '../LoadingIndicator/loading-indicator';
 import localUpload from 'edpub-data-upload-utility';
 import { listFileUploadsBySubmission, listFileDownloadsByKey, refreshToken } from '../../actions';
@@ -228,7 +228,7 @@ class UploadOverview extends React.Component {
     const { dispatch } = this.props;
     e.preventDefault();
     this.setState({file: e.target.files[0]})
-    dispatch(refreshToken())
+    dispatch(refreshToken());
   }
   
 
