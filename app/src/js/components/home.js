@@ -206,7 +206,6 @@ class Home extends React.Component {
             }
             return false;
           });
-          console.log('JSON.stringify(prod)', JSON.stringify(prod))
           if (!isFound && JSON.stringify(prod) !== '{}' && prod.value !== null) {
             this.state.producers.push(prod);
           }
