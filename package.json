@@ -38,8 +38,7 @@
     "stop-dashboard": "npm run stop",
     "start": "docker-compose -f ./docker-compose.yml up -d",
     "stop": "docker-compose -f ./docker-compose.yml down",
-    "view-logs": "docker-compose -f ./docker-compose.yml up",
-    "update-upload": "cd ../earthdata-pub-upload && git pull origin && cd ../earthdata-pub-dashboard && rm -rf node_modules/edpub-data-upload-utility && npm i edpub-data-upload-utility"
+    "view-logs": "docker-compose -f ./docker-compose.yml up"
   },
   "ava": {
     "babel": {
@@ -139,6 +138,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@edpub/upload-utility": "1.0.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
@@ -153,7 +153,6 @@
     "connected-react-router": "^6.6.1",
     "crypto-browserify": "^3.12.0",
     "deepmerge": "^4.2.2",
-    "edpub-data-upload-utility": "file:../earthdata-pub-upload",
     "global": "^4.3.1",
     "hash-wasm": "4.9.0",
     "history": "^4.10.1",
