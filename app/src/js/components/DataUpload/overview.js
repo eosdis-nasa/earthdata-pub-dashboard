@@ -228,9 +228,8 @@ class UploadOverview extends React.Component {
     const { dispatch } = this.props;
     e.preventDefault();
     this.setState({file: e.target.files[0]})
-    dispatch(refreshToken()).then(
-      dispatch(setAuthenticatedState(true))
-    );
+    await dispatch(refreshToken())
+    await dispatch(setAuthenticatedState(true));
   }
   
 
