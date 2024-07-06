@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import Loading from '../LoadingIndicator/loading-indicator';
-import localUpload from 'edpub-data-upload-utility';
+import localUpload from '@edpub/upload-utility';
 import { listFileUploadsBySubmission, listFileDownloadsByKey, refreshToken } from '../../actions';
 import { shortDateShortTimeYearFirstJustValue, storage } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';

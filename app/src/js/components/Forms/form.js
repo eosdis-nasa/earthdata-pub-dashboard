@@ -22,7 +22,7 @@ import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 import Comments from '../Comments/comments';
 import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
 import { loadToken } from '../../utils/auth';
-import localUpload from 'edpub-data-upload-utility';
+import localUpload from '@edpub/upload-utility';
 
 const metaAccessors = [
   {
