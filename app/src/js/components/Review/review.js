@@ -71,7 +71,6 @@ class ReviewStep extends React.Component {
   }
 
   inReviewers(){
-    console.log(this.props.rawReviewers.data);
     const reviewers = this.props.rawReviewers.data
       .filter(reviewer => this.props.requests.detail.data.step_data.name === reviewer.step_name);
     return reviewers.some(reviewer => reviewer.name === this.props.user) || reviewers.length === 0;
