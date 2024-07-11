@@ -967,6 +967,78 @@ export const addUsersToConversation = (payload) => {
   };
 };
 
+export const addUserToNote = (payload, conversationId) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.NOTE_ADD_VIEWER,
+        method: 'POST',
+        path: 'notification/add_viewers',
+        body: payload
+      }
+    })
+      .then(() => {
+        setTimeout(() => {
+          dispatch(getConversation(conversationId));
+        }, 1000);
+      });
+  };
+};
+
+export const removeUserFromNote = (payload, conversationId) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.NOTE_REMOVE_VIEWER,
+        method: 'POST',
+        path: 'notification/remove_viewer',
+        body: payload
+      }
+    })
+      .then(() => {
+        setTimeout(() => {
+          dispatch(getConversation(conversationId));
+        }, 1000);
+      });
+  };
+};
+
+export const addRoleToNote = (payload, conversationId) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.NOTE_ADD_VIEWER_ROLE,
+        method: 'POST',
+        path: 'notification/add_viewer_roles',
+        body: payload
+      }
+    })
+      .then(() => {
+        setTimeout(() => {
+          dispatch(getConversation(conversationId));
+        }, 1000);
+      });
+  };
+};
+
+export const removeRoleFromNote = (payload, conversationId) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.NOTE_REMOVE_VIEWER_ROLE,
+        method: 'POST',
+        path: 'notification/remove_viewer_role',
+        body: payload
+      }
+    })
+      .then(() => {
+        setTimeout(() => {
+          dispatch(getConversation(conversationId));
+        }, 1000);
+      });
+  };
+};
+
 export const updateSearchModal = (path, query) => ({
   [CALL_API]: {
     type: types.SEARCH_MODAL,
@@ -1009,5 +1081,3 @@ export const verify = (topsToken, token) => ({
     body: { tops_token: topsToken, auth_token: `${token}` }
   }
 });
-
-export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });

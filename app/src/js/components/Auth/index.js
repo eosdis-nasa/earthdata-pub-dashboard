@@ -13,6 +13,7 @@ import Modal from 'react-bootstrap/Modal';
 import QRCode from 'react-qr-code';
 import config from '../../config';
 import ourConfigureStore from '../../store/configureStore';
+import { saveToken, deleteToken } from '../../utils/auth';
 
 class Auth extends React.Component {
   constructor (props) {
@@ -34,11 +35,8 @@ class Auth extends React.Component {
         if (error && !config.environment.match(/LOCALHOST/g)) {
           console.log(`An error has occurred: ${error}.`);
         } else {
-          const new_user = { ...tokens.user };
-          window.localStorage.removeItem('auth-token');
-          window.localStorage.removeItem('auth-user');
-          window.localStorage.setItem('auth-token', tokens.token);
-          window.localStorage.setItem('auth-user', JSON.stringify({...new_user, ...{authenticated: true}}))
+          deleteToken();
+          saveToken({ token: tokens.token, user: tokens.user });
           this.setState({ body: ''});
           if (!inflight && code) {
             window.location.href = config.basepath;

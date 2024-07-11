@@ -3,18 +3,21 @@ export const notePrivileges = (privileges) => {
     return {
       canReply: true,
       canAddUser: true,
+      canRemoveUser: true,
       canAddGroup: true
     };
   } else if (privileges.NOTE) {
     return {
       canReply: privileges.NOTE.includes('REPLY'),
       canAddUser: privileges.NOTE.includes('ADDUSER'),
+      canRemoveUser: privileges.NOTE.includes('REMOVEUSER'),
       canAddGroup: privileges.NOTE.includes('ADDGROUP')
     };
   }
   return {
     canReply: false,
     canAddUser: false,
+    canRemoveUser: false,
     canAddGroup: false
   };
 };
