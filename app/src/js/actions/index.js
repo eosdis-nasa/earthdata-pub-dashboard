@@ -247,6 +247,24 @@ export const copyRequest = (payload) => ({
   }
 });
 
+export const createStepReviewApproval = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/submission/operation/createStepReviewApproval',
+    body: payload
+  }
+});
+
+export const deleteStepReviewApproval = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/submission/operation/deleteStepReviewApproval',
+    body: payload
+  }
+});
+
 export const reviewRequest = (id, approve) => {
   return (dispatch) => {
     dispatch({
@@ -620,6 +638,15 @@ export const getUser = (userId) => ({
     path: `data/user/${userId}`
   }
 });
+
+export const getUsers = () => ({
+  [CALL_API]: {
+    type: types.USER,
+    method: 'GET',
+    path: 'data/users'
+  }
+});
+
 
 export const addUserRole = (payload) => {
   return (dispatch) => {

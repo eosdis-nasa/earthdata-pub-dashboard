@@ -9,7 +9,7 @@ import {
   listRequestReviewers
 } from '../../actions';
 import { requestPrivileges } from '../../utils/privileges';
-import Reviewers from './reviewers';
+//import Reviewers from './reviewers';
 
 class ReviewStep extends React.Component {
   constructor() {
@@ -94,10 +94,10 @@ class ReviewStep extends React.Component {
     }
     return (
       <div className='page__component'>
-        <Reviewers 
+        {/* <Reviewers 
           stepName={stepName} 
           rawReviewers={this.props.rawReviewers.data}
-        />
+        /> */}
         <section className='page_section'>
           {reviewable && reviewReady && typeof requestId !== 'undefined' && (
             <div className='flex__row reject-approve'>
