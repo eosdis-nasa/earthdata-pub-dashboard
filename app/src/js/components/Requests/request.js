@@ -11,9 +11,7 @@ import {
   removeUserFromRequest,
   setWorkflowStep,
   copyRequest,
-  metadataMapper,
-  listUsers,
-  setUWGReview
+  metadataMapper
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -41,7 +39,7 @@ import UploadOverview from '../DataUpload/overview';
 class RequestOverview extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { current: {}, names: {}, selectedMembers: [], formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
+    this.state = { current: {}, names: {}, formIdForClone: '19025579-99ca-4344-8610-704dae626343' };
     this.navigateBack = this.navigateBack.bind(this);
     this.applyWorkflow = this.applyWorkflow.bind(this);
     this.delete = this.delete.bind(this);
@@ -57,8 +55,6 @@ class RequestOverview extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
-    this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.handleSave = this.handleSave.bind(this);
     this.cloneRequest = this.cloneRequest.bind(this);
     this.cloneRequest2 = this.cloneRequest2.bind(this);
   }
@@ -68,8 +64,7 @@ class RequestOverview extends React.Component {
     const { requestId } = this.props.match.params;
     // This causes a repeating query for workflows cluttering up the logs.
     // Commenting out until we add applyWorkflow capability
-    // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
-    dispatch(listUsers());
+    // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);    
     dispatch(getRequestDetails(requestId))
       .then((value) => {
         const record = this.props.requests.detail;
@@ -168,23 +163,6 @@ class RequestOverview extends React.Component {
     await this.props.dispatch(getRequestDetails(requestId));
   }
 
-  handleSelectChange = (selectedMembers) => {
-    this.setState({ selectedMembers});
-    document.querySelector('.save-uwg')?.classList?.remove('hidden');
-  }
-
-  async handleSave() {
-    const savedMembers = this.state.selectedMembers;
-    const { requestId } = this.props.match.params;
-    const payload = {
-      id: requestId,
-      step_name: this.state.current.value,
-      user_list: [savedMembers]
-    };
-    await this.props.dispatch(setUWGReview(payload));
-    document.querySelector('.save-uwg')?.classList?.add('hidden');
-  }
-
   async delete() {
     const { requestId } = this.props.match.params;
     await this.props.dispatch(withdrawRequest(requestId));
@@ -270,46 +248,6 @@ class RequestOverview extends React.Component {
     );
   }
 
-  AssignUWGmembers(record, filteredUsers) {
-    return (
-      <>
-        <br></br>
-        <div className='page__section__header'>
-          <h1 className='heading--small' aria-labelledby='Assign UWG Members for review'>
-            Assign UWG Members for review
-          </h1>
-        </div>
-        <div className='indented__details'>
-          <div className="request-section">
-            <Select
-              id="UWGmembersSelect"
-              options={ filteredUsers.map((member) => {
-                return {
-                  value: member.name,
-                  label: member.name
-                }
-              })}
-              value={this.state.selectedMembers}
-              onChange={this.handleSelectChange}
-              isSearchable={true}
-              placeholder={'Assign UWG Members'}
-              className='selectButton'
-              aria-label='Assign UWG Members'
-              isMulti
-              />
-          </div>
-          <br></br>
-          <section className='page__section save-uwg hidden'>
-            <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
-              onClick={this.handleSave} aria-label="Assign UWG members">
-              Save
-            </button>
-          </section>
-        </div>
-      </>
-    );
-  }
-
   render() {
     const { requestId } = this.props.match.params;
     const record = this.props.requests.detail;
@@ -327,20 +265,10 @@ class RequestOverview extends React.Component {
     const { canEdit } = formPrivileges(this.props.privileges);
     const { roles } = this.props;
     const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
-    const { users } = this.props;
-    const filteredUsers = users.filter(user => user.user_roles.find(role => role.short_name == "uwg_member")
     )
     let workflowSave;
     if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
-    }
-    let assignUWGReviewers;
-    let canAssignUWG = false;
-    if (role.includes('admin') || role.includes('manager') || role.includes('staff')) {
-      canAssignUWG = true;
-    }
-    if ( canAssignUWG && canWithdraw && canRestore) {
-      assignUWGReviewers = this.AssignUWGmembers(record, filteredUsers);
     }
     let canViewUsers = false;
     if (role.includes('admin')) {
@@ -572,11 +500,6 @@ class RequestOverview extends React.Component {
             <section className='page__section'>
               {workflowSave}
             </section>
-            { record?.data?.step_data?.name.includes('uwg_review') && (
-              <section className='page__section'>
-                 {assignUWGReviewers}
-              </section>
-            )}
             <UploadOverview />
             {showTable
               ? <section className='page__section'>
@@ -610,8 +533,7 @@ RequestOverview.propTypes = {
   privileges: PropTypes.object,
   daacs: PropTypes.object,
   steps: PropTypes.object,
-  roles: PropTypes.array,
-  users: PropTypes.array
+  roles: PropTypes.array
 };
 
 RequestOverview.defaultProps = {
@@ -626,6 +548,5 @@ export default withRouter(connect(state => ({
   workflowOptions: workflowOptionNames(state),
   logs: state.logs,
   privileges: state.api.tokens.privileges,
-  roles: state.api.tokens.roles,
-  users: state.users.list.data
+  roles: state.api.tokens.roles
 }))(RequestOverview));
