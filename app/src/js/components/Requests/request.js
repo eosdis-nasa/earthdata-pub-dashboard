@@ -64,7 +64,7 @@ class RequestOverview extends React.Component {
     const { requestId } = this.props.match.params;
     // This causes a repeating query for workflows cluttering up the logs.
     // Commenting out until we add applyWorkflow capability
-    // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);    
+    // this.cancelInterval = interval(this.queryWorkflows, updateInterval, true);
     dispatch(getRequestDetails(requestId))
       .then((value) => {
         const record = this.props.requests.detail;
@@ -265,7 +265,6 @@ class RequestOverview extends React.Component {
     const { canEdit } = formPrivileges(this.props.privileges);
     const { roles } = this.props;
     const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
-    )
     let workflowSave;
     if (canWithdraw && canRestore) {
       workflowSave = this.renderWorkflowSave(record);
@@ -548,5 +547,5 @@ export default withRouter(connect(state => ({
   workflowOptions: workflowOptionNames(state),
   logs: state.logs,
   privileges: state.api.tokens.privileges,
-  roles: state.api.tokens.roles
+  roles: state.api.tokens.roles,
 }))(RequestOverview));
