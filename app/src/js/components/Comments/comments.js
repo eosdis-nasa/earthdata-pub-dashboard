@@ -246,11 +246,12 @@ class Comment extends React.Component {
         if (this.props.requests.detail.data.step_name === `${formName}_form`) {
           sameFormAsStep = true;
           canReview = false;
-        } else if (this.props.requests.detail.data.step_name.match(/form_review/g)) {
+        } else if (this.props.requests.detail.data.step_name.match(/form_(.*_)?review/g)) {
           if (canReview) {
             reviewable = true;
           }
-          if (this.props.requests.detail.data.step_name === `${formName}_form_review`) {
+          const regexStr = new RegExp(`${formName}_form_(.*_)?review`, 'g');
+          if (this.props.requests.detail.data.step_name.match(regexStr)) {
             sameFormAsStep = true;
           }
         } else if (window.location.href.match(/approval/g)) {
