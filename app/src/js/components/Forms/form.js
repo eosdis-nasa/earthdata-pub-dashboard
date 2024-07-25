@@ -619,24 +619,24 @@ class FormOverview extends React.Component {
             : null}
         </section>
         {canReview ? 
-        <div className="review-section" style={{ marginTop: '10px', float: 'right', width: '30%' }}>
+        <div className="review-section" style={{ marginTop: '10px', float: 'right', fontSize: '90%' }}>
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <table className='review-table' style={{ borderCollapse: 'collapse', width: '100%' }}>
               <thead>
-                <tr>
-                  <th style={{ textAlign: 'left' }}>Reviewer</th>
-                  <th style={{ textAlign: 'left' }}>Approval Status</th>
-                  <th style={{ textAlign: 'center' }}>Delete Reviewer</th>
+                <tr style={{ textAlign: 'left' }}>
+                  <th style={{padding: '0 1em 0 0'}}>Reviewer</th>
+                  <th style={{padding: '0 1em 0 0'}}>Approval Status</th>
+                  <th>Delete Reviewer</th>
                 </tr>
               </thead>
               <tbody>
                 <tr><td colSpan={3}><hr style={{ width: '100%', border: '1px solid #ccc', margin: '0' }} /></td></tr>
                 { this.state.filteredReviewers.length > 0 ? (
                   this.state.filteredReviewers.map((review, index) => (
-                    <tr key={index}>
-                      <td style={{ textAlign: 'left' }}>{review.name}</td>
-                      <td style={{ textAlign: 'left' }}>{review.user_review_status && review.user_review_status === 'review_required'? 'Review Required':this.capitalizeFirstLetter(review.user_review_status)}</td>
-                      <td style={{ textAlign: 'center' }}>
+                    <tr key={index} style={{textAlign: 'left', textWrap: 'pretty'}}>
+                      <td style={{padding: '0 1em 0 0'}}>{review.name}</td>
+                      <td style={{padding: '0 1em 0 0'}}>{review.user_review_status && review.user_review_status === 'review_required'? 'Review Required':this.capitalizeFirstLetter(review.user_review_status)}</td>
+                      <td style={{textAlign: 'center'}}>
                         <button
                           className={'button--red button--remove button button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
                           style={{ marginTop: '5px' }}
@@ -650,7 +650,7 @@ class FormOverview extends React.Component {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={3} style={{ textAlign: 'center', marginTop: '15px' }}>No Reviewer Assigned</td>
+                    <td colSpan={3} style={{ textAlign: 'center', padding: ' 1em 0 0 0' }}>No Reviewer Assigned</td>
                   </tr>
                 )}
               </tbody>
