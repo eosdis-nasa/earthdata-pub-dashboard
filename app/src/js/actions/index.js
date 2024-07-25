@@ -639,11 +639,11 @@ export const getUser = (userId) => ({
   }
 });
 
-export const getUsers = () => ({
+export const getUsers = (role_id) => ({
   [CALL_API]: {
     type: types.USER,
     method: 'GET',
-    path: 'data/users'
+    path: role_id ? `data/users?role_id=${role_id}` : 'data/users'  
   }
 });
 

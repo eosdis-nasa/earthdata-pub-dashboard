@@ -76,10 +76,14 @@ class FormOverview extends React.Component {
     const { canInitialize } = requestPrivileges(this.props.privileges);
     await dispatch(getRequest(requestId));
     let userReviewList = await dispatch(listRequestReviewers(requestId));
-    let allU = await dispatch(getUsers());
+    let allU;
+    if (this.props.requests.detail.data.step_name.includes('uwg')) {
+      allU = await dispatch(getUsers('19ac227b-e96c-46fa-a378-cf82c461b669'));
+    }else{
+      allU = await dispatch(getUsers());
+    }
     const dataFilter = this.props.requests.detail.data.step_name;
     const filteredData = userReviewList.data.filter(item => item.step_name === dataFilter);
-
     this.setState({filteredReviewers: filteredData, allUsers: allU});
     await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
     await this.getUploadedFiles(requestId);
@@ -612,6 +616,7 @@ class FormOverview extends React.Component {
               </button>
             : null}
         </section>
+        {canReview ? 
         <div className="review-section" style={{ marginTop: '10px', float: 'right', width: '30%' }}>
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <table className='review-table' style={{ borderCollapse: 'collapse', width: '100%' }}>
@@ -666,7 +671,7 @@ class FormOverview extends React.Component {
                 </button>
               </div>
             </div>
-        </div>
+        </div> : ''}
         <div style={{ clear: 'both' }}></div>
         <section className='page__section'>
           {errors.length ? <ErrorReport report={errors} truncate={true} /> : null}
