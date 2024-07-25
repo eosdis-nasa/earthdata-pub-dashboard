@@ -6,7 +6,13 @@ import { connect, useDispatch } from 'react-redux';
 import {
   getConversation,
   replyConversation,
-  addUsersToConversation
+  addUsersToConversation,
+  addUserToNote,
+  removeUserFromNote,
+  addRoleToNote,
+  removeRoleFromNote,
+  getUser,
+  getRole
 } from '../../actions';
 import { notePrivileges } from '../../utils/privileges';
 import { lastUpdated } from '../../utils/format';
@@ -15,13 +21,6 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 
 const textRef = React.createRef();
-
-const reply = (dispatch, id) => {
-  const resp = encodeURI(textRef.current.value);
-  const payload = { conversation_id: id, text: resp };
-    dispatch(replyConversation(payload));
-  textRef.current.value = '';
-};
 
 const getConversations = (dispatch, conversationId, lvl) => {
   if (lvl) {
@@ -34,16 +33,65 @@ const getConversations = (dispatch, conversationId, lvl) => {
   dispatch(getConversation(conversationId, lvl));
 };
 
+const handleRemove = (dispatch, conversationId, noteId, viewerId, viewerType) => {
+  let payload;
+  switch(viewerType){
+    case "user":
+      payload = {
+        "note_id": noteId,
+        "viewer_id": viewerId, 
+      }
+      dispatch(removeUserFromNote(payload, conversationId));
+      break;
+    case "role":
+      payload = {
+        "note_id": noteId,
+        "viewer_role": viewerId, 
+      }
+      dispatch(removeRoleFromNote(payload, conversationId));
+      break;
+  }
+}
+
 const Conversation = ({ dispatch, conversation, privileges, match }) => {
+  const current_user_id = JSON.parse(window.localStorage.getItem('auth-user')).id;
   const { conversationId } = match.params;
   const [showSearch, setShowSearch] = useState(false);
+  const [showViewerSearch, setShowViewerSearch] = useState(false);
+  const [searchType, setSearchType] = useState('user');
+  const [newCommentViewers, setNewCommentViewers] = useState([]);
+  const [newCommentViewerRoles, setNewCommentViewerRoles] = useState([]); 
+  const [idMap, setIdMap] = useState({});
   useEffect(() => {
     dispatch(getConversation(conversationId));
   }, []);
   const { data, inflight, meta } = conversation;
   const { subject, notes, participants } = data;
   const { queriedAt } = meta;
-  const { canReply, canAddUser, canAddGroup } = notePrivileges(privileges);
+  const { canReply, canAddUser, canAddGroup, canRemoveUser } = notePrivileges(privileges);
+
+  const reply = (dispatch, id) => {
+    // ensure the person adding the comment is a viewer if they've limited the note
+    const user_viewers = [...newCommentViewers];
+    if (!user_viewers.includes(current_user_id) && 
+        (newCommentViewers.length || newCommentViewerRoles.length)){
+          user_viewers.push(current_user_id);         
+      } 
+    const resp = encodeURI(textRef.current.value);
+    const payload = { 
+      conversation_id: id, 
+      text: resp,
+      viewer_users: user_viewers, 
+      viewer_roles: newCommentViewerRoles
+    };
+      dispatch(replyConversation(payload));
+    textRef.current.value = '';
+    setNewCommentViewers([]);
+    setNewCommentViewerRoles([]);
+    setIdMap([]);
+
+  };
+
   const cancelCallback = () => setShowSearch(false);
   const submitCallback = (id) => {
     const params = {
@@ -57,6 +105,63 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     entity: 'user',
     submit: submitCallback,
     cancel: cancelCallback
+  };
+  const cancelViewerCallback = () => setShowViewerSearch(false);
+
+  const openViewerSearch = (searchEntity) => {
+    setSearchType(searchEntity);
+    setShowViewerSearch(true);
+  }
+
+  const submitViewerCallback = (id) => {
+    if (!newCommentViewers.includes(id)){
+      dispatch(getUser(id)).then( (user) =>{
+        let mapCopy = { ...idMap }; 
+        mapCopy[id] = user.data.name;
+        setIdMap(mapCopy);
+        setNewCommentViewers([...newCommentViewers, id]);
+      })
+    }
+
+    setShowViewerSearch(false);
+  };
+
+  const submitRoleCallback = (id) => {
+    if (!newCommentViewerRoles.includes(id)){
+      dispatch(getRole(id)).then( (role) =>{
+        let mapCopy = { ...idMap }; 
+        mapCopy[id] = role.data.long_name;
+        setIdMap(mapCopy);
+        setNewCommentViewerRoles([...newCommentViewerRoles, id]);
+      })
+    }
+    
+    setShowViewerSearch(false);
+  };
+  const viewerSearchOptions = {
+    user: {
+      entity: 'user',
+      submit: submitViewerCallback,
+      cancel: cancelViewerCallback
+    },
+    role: {
+      entity: 'role',
+      submit: submitRoleCallback,
+      cancel: cancelViewerCallback
+    }
+  };
+
+  const removeViewer = (viewerId, viewerType) => {
+    switch(viewerType){
+      case "user":
+          const newViewers = newCommentViewers.filter((viewer) => viewer !== viewerId);
+          setNewCommentViewers(newViewers);
+        break;
+      case "role":
+        const newRoles = newCommentViewerRoles.filter((viewer) => viewer !== viewerId);
+          setNewCommentViewerRoles(newRoles);
+        break;
+    }
   };
   const breadcrumbConfig = [
     {
@@ -103,6 +208,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
           </div>
         </section>
         { showSearch && <SearchModal { ...searchOptions }/> }
+        { showViewerSearch && <SearchModal {...viewerSearchOptions[searchType]} />}
         { inflight && <LoadingOverlay /> }
         { notes &&
           <section className='page__section flex__row'>
@@ -124,6 +230,65 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                         ref={textRef}
                         aria-label="Type your reply"
                         title="Type your reply"></textarea>
+                        <p>Comment Visibility:</p>
+                        { newCommentViewers && newCommentViewers.map((viewer) => {
+                          return (
+                            <div key={viewer} className='flex__row sm-border'>
+                              <div className='flex__item--w-25'>
+                                {idMap[viewer]}
+                              </div>
+                              <div className='flex__item--w-15'>
+                                {canRemoveUser &&
+                                  <button
+                                    className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                                    onClick={(e) => { e.preventDefault(); removeViewer(viewer, 'user'); }}
+                                    >
+                                    Remove
+                                  </button>
+                                }
+                              </div>
+                            </div>
+                          )}
+                        )}
+                        { newCommentViewerRoles && newCommentViewerRoles.map((viewer) => {
+                          return (
+                            <div key={viewer} className='flex__row sm-border'>
+                              <div className='flex__item--w-25'>
+                                {idMap[viewer]}
+                              </div>
+                              <div className='flex__item--w-15'>
+                                {canRemoveUser &&
+                                  <button
+                                    className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                                    onClick={(e) => { e.preventDefault(); removeViewer(viewer, 'role') }}
+                                    >
+                                    Remove
+                                  </button>
+                                }
+                              </div>
+                            </div>
+                          )}
+                        )}
+                      { canAddUser &&
+                        <div className='flex__row'>
+                          <div className='flex__item--spacing'>
+                            <button type='button'
+                              className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+                              onClick={() => openViewerSearch('user')}
+                            >
+                              Add Viewer
+                            </button>
+                          </div>
+                          <div className='flex__item--spacing'>
+                            <button type='button'
+                              className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+                              onClick={() => openViewerSearch('role')}
+                              >
+                              Add Viewer Role
+                            </button>
+                          </div>
+                        </div>
+                      }
                       <div>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
@@ -135,7 +300,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                 </div>
                 {
                   notes.map((note, key) => {
-                    return (<Note note={note} key={key} />);
+                    return (<Note dispatch={dispatch} conversationId={conversationId} note={note} privileges={privileges} key={key} />);
                   })
                 }
               </div>
@@ -176,20 +341,126 @@ Conversation.propTypes = {
   match: PropTypes.object
 };
 
-const Note = ({ note }) => {
+const Note = ({ dispatch, note, conversationId, privileges }) => {
+  const noteId  = note.id;
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchType, setSearchType] = useState('user');
+  const { canAddUser, canRemoveUser } = notePrivileges(privileges);
+  const cancelCallback = () => setShowSearch(false);
+  const viewerSubmitCallback = (id) => {
+    const params = {
+      note_id: noteId,
+      viewer_ids: [id]
+    };
+    dispatch(addUserToNote(params, conversationId));
+    setShowSearch(false);
+  };
+  const roleSubmitCallback = (id) => {
+    const params = {
+      note_id: noteId,
+      viewer_roles: [id]
+    };
+    dispatch(addRoleToNote(params, conversationId));
+    setShowSearch(false);
+  };
+  const searchOptions = {
+    user: {
+      entity: 'user',
+      submit: viewerSubmitCallback,
+      cancel: cancelCallback
+    },
+    role: {
+      entity: 'role',
+      submit: roleSubmitCallback,
+      cancel: cancelCallback
+    }
+  };
   return (
     <div className='flex__row--border'>
       <div className='flex__item--w-15'>
         <h3>{ note.from.name }</h3>
         {lastUpdated(note.sent, 'Sent')}
+        <br/>
+        {note.viewers.users || note.viewers.roles ? <h3>Note Visibility</h3> : null}
+        <div className='flex__column'>
+          {
+            note.viewers.users &&
+            note.viewers.users.map((user) => {
+              return (
+                <div key={user.id} className='flex__row sm-border'>
+                  <div className='flex__item--w-15'>
+                    {user.name}
+                  </div>
+                  <div className='flex__item--w-15'>
+                    {canRemoveUser &&
+                      <button
+                        className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                        onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, user.id, 'user'); }}
+                        >
+                        Remove
+                      </button>
+                    }
+                  </div>
+                </div>
+
+              )
+            })
+          }   
+          {
+            note.viewers.roles &&
+            note.viewers.roles.map((role) => {
+              return (
+                <div key={role.id} className='flex__row sm-border'>
+                  <div className='flex__item--w-15'>
+                    {role.name}
+                  </div>
+                  <div className='flex__item--w-15'>
+                    {canRemoveUser &&
+                      <button
+                        className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
+                        onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, role.id, 'role'); }}
+                        >
+                        Remove
+                      </button>
+                    }
+                  </div>
+                </div>
+
+              )
+            })
+          }              
+        </div>
+        <div className='flex__item--w-15'>
+          {canAddUser &&
+            <button
+              className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+              onClick={() => {setShowSearch(true); setSearchType('user')}}
+            >
+              Add Viewer&nbsp;&nbsp;
+            </button>
+          }
+          <br /><br />
+          {canAddUser &&
+            <button
+              className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+              onClick={() => {setShowSearch(true); setSearchType('role')}}
+            >
+              Add Viewer Role&nbsp;&nbsp;
+            </button>
+          }
+        </div>
       </div>
+      { showSearch && <SearchModal { ...searchOptions[searchType] }/> }
       <div className='flex__item--grow-1-wrap'style={{whiteSpace: "pre"}}>{ decodeURI(note.text) }</div>
     </div>
   );
 };
 
 Note.propTypes = {
-  note: PropTypes.object
+  dispatch: PropTypes.func,
+  note: PropTypes.object,
+  conversationId: PropTypes.string,
+  privileges: PropTypes.object
 };
 
 export default withRouter(connect(state => ({

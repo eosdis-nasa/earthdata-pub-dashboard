@@ -206,7 +206,6 @@ class Home extends React.Component {
             }
             return false;
           });
-          console.log('JSON.stringify(prod)', JSON.stringify(prod))
           if (!isFound && JSON.stringify(prod) !== '{}' && prod.value !== null) {
             this.state.producers.push(prod);
           }
@@ -224,7 +223,6 @@ class Home extends React.Component {
         }
       }
     }
-    console.log('this.state.', list)
     Object.defineProperty(newList, 'data', {
       value: tmp,
       writable: true,
