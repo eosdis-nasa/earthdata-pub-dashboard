@@ -28,6 +28,7 @@ import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actio
 import { loadToken } from '../../utils/auth';
 import localUpload from '@edpub/upload-utility';
 import Select from 'react-select';
+import review from '../Review/review';
 
 const metaAccessors = [
   {
@@ -593,12 +594,13 @@ class FormOverview extends React.Component {
           }
           sameFormAsStep = true;
           canReview = false;
-        } else if (this.props.requests.detail.data.step_name.match(/form_review/g)) {
+        } else if (this.props.requests.detail.data.step_name.match(/form_(.*_)?review/g)) {
           editable = false;
           if (canReview) {
             reviewable = true;
           }
-          if (this.props.requests.detail.data.step_name === `${formName}_form_review`) {
+          const regexStr = new RegExp(`${formName}_form_(.*_)?review`, 'g');
+          if (this.props.requests.detail.data.step_name.match(regexStr)) {
             sameFormAsStep = true;
           }
         }
