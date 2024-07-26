@@ -536,8 +536,8 @@ class FormOverview extends React.Component {
 
   getReviewerOptions() {
     const existingUserIds = this.state.filteredReviewers.map(user => user.edpuser_id);
-    const filteredUsers = this.state.allUsers.data.filter(user => !existingUserIds.includes(user.id));
-    return filteredUsers.map(user => ({ value: user.id, label: user.name }));
+    const filteredUsers = this.state.allUsers.data?.filter(user => !existingUserIds.includes(user.id));
+    return filteredUsers ? filteredUsers.map(user => ({ value: user.id, label: user.name })) : [];
   }
 
   capitalizeFirstLetter = (string) => {
@@ -581,7 +581,7 @@ class FormOverview extends React.Component {
       if (typeof this.props.requests.detail.data !== 'undefined') {
         const formName = record.data.short_name;
         requestId = this.props.requests.detail.data.id;
-        if (this.props.requests.detail.data.step_name.match(/close/g)) {
+        if (this.props.requests.detail.data.step_name?.match(/close/g)) {
           editable = false;
           sameFormAsStep = false;
           if (!canReview) {
@@ -594,13 +594,13 @@ class FormOverview extends React.Component {
           }
           sameFormAsStep = true;
           canReview = false;
-        } else if (this.props.requests.detail.data.step_name.match(/form_(.*_)?review/g)) {
+        } else if (this.props.requests.detail.data.step_name?.match(/form_(.*_)?review/g)) {
           editable = false;
           if (canReview) {
             reviewable = true;
           }
           const regexStr = new RegExp(`${formName}_form_(.*_)?review`, 'g');
-          if (this.props.requests.detail.data.step_name.match(regexStr)) {
+          if (this.props.requests.detail.data.step_name?.match(regexStr)) {
             sameFormAsStep = true;
           }
         }
