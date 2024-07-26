@@ -7,7 +7,7 @@ import {
   getRequest,
   replyConversation,
   getForm,
-  getConversations,
+  getStepConversation,
   getUser,
   getRole
 } from '../../actions';
@@ -53,12 +53,12 @@ class Comment extends React.Component {
         reviewStepName = '';
       }
       const payload = { conversation_id: this.props.requests.detail.data.conversation_id, level: true, step_name: reviewStepName };
-      await dispatch(getConversations(payload)).then(() => {
-        for (const ea in this.props.conversations.list.data.notes) {
-          const note = this.props.conversations.list.data.notes[ea].text.split('Comment: ')[1];
-          const author = this.props.conversations.list.data.notes[ea].from.name;
-          const viewer_users = this.props.conversations.list.data.notes[ea].viewers.users;
-          const viewer_roles = this.props.conversations.list.data.notes[ea].viewers.roles;
+      await dispatch(getStepConversation(payload)).then(() => {
+        for (const ea in this.props.conversations.conversation.data.notes) {
+          const note = this.props.conversations.conversation.data.notes[ea].text.split('Comment: ')[1];
+          const author = this.props.conversations.conversation.data.notes[ea].from.name;
+          const viewer_users = this.props.conversations.conversation.data.notes[ea].viewers.users;
+          const viewer_roles = this.props.conversations.conversation.data.notes[ea].viewers.roles;
           let viewers = [];
           viewer_users && viewer_users.forEach( function(user){
             viewers.push(user.name)
@@ -246,11 +246,12 @@ class Comment extends React.Component {
         if (this.props.requests.detail.data.step_name === `${formName}_form`) {
           sameFormAsStep = true;
           canReview = false;
-        } else if (this.props.requests.detail.data.step_name.match(/form_review/g)) {
+        } else if (this.props.requests.detail.data.step_name.match(/form_(.*_)?review/g)) {
           if (canReview) {
             reviewable = true;
           }
-          if (this.props.requests.detail.data.step_name === `${formName}_form_review`) {
+          const regexStr = new RegExp(`${formName}_form_(.*_)?review`, 'g');
+          if (this.props.requests.detail.data.step_name.match(regexStr)) {
             sameFormAsStep = true;
           }
         } else if (window.location.href.match(/approval/g)) {
@@ -259,11 +260,11 @@ class Comment extends React.Component {
         }
       }
     }
-    if (!request || request.inflight || !this.props.conversations.list.data.notes) {
+    if (!request || request.inflight || !this.props.conversations.conversation.data.notes) {
       return <Loading />;
     } else {
       if (conversationId === '') {
-        conversationId = this.props.conversations.list.data.id;
+        conversationId = this.props.conversations.conversation.data.id;
       }
       return (
         <section className='page_section'>
