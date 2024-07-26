@@ -232,7 +232,7 @@ class Comment extends React.Component {
             step = this.props.requests.detail.data.step_name;
             stepName = this.getFormalName(step);
           }
-          if (this.props.requests.detail.data.form_data.data_product_name_value) {
+          if (this.props.requests.detail.data.form_data?.data_product_name_value) {
             requestName = this.props.requests.detail.data.form_data.data_product_name_value;
           } else {
             requestName = requestId;
