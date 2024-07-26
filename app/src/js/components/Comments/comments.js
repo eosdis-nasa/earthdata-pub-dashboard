@@ -239,19 +239,19 @@ class Comment extends React.Component {
           }
         }
         conversationId = this.props.requests.detail.data.conversation_id;
-        if (this.props.requests.detail.data.step_name.match(/close/g)) {
+        if (this.props.requests.detail.data.step_name?.match(/close/g)) {
           sameFormAsStep = false;
           canReview = false;
         }
         if (this.props.requests.detail.data.step_name === `${formName}_form`) {
           sameFormAsStep = true;
           canReview = false;
-        } else if (this.props.requests.detail.data.step_name.match(/form_(.*_)?review/g)) {
+        } else if (this.props.requests.detail.data.step_name?.match(/form_(.*_)?review/g)) {
           if (canReview) {
             reviewable = true;
           }
           const regexStr = new RegExp(`${formName}_form_(.*_)?review`, 'g');
-          if (this.props.requests.detail.data.step_name.match(regexStr)) {
+          if (this.props.requests.detail.data.step_name?.match(regexStr)) {
             sameFormAsStep = true;
           }
         } else if (window.location.href.match(/approval/g)) {
