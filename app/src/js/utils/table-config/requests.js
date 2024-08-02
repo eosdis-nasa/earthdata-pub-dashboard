@@ -151,12 +151,14 @@ export const stepLookup = (row) => {
             stepID = row.step_data.data[tmpIDKey];
             // Build url to forms app - after submitted
             if (tmpType.match(/form/g)) {
+              console.log('${_config.formsUrl} 1', _config.formsUrl)
               request = `/form/questions/${row.id}`;
             }
           }
         }
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
+          console.log('${_config.formsUrl}', _config.formsUrl)
           request = `/form/questions/${row.id}`;
         // assign a workflow
         } else if (stepType.match(/action/g)) {
