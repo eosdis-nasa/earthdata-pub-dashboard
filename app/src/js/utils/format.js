@@ -50,6 +50,18 @@ export const shortDateShortTimeYearFirstJustValue = function (datestring) {
   return `${day} ${time}`;
 };
 
+export const calculateStorage = function(n) {
+  const number = +n;
+  if (!n || Number.isNaN(number)) return '--';
+
+  if (number === 0) return n;
+
+  if (number < 1e9) return `${(number / 1e6).toFixed(2)} MB`;
+  if (number < 1e12) return `${(number / 1e9).toFixed(2)} GB`;
+  if (number < 1e15) return `${(number / 1e12).toFixed(2)} TB`;
+  return `${(number / 1e15).toFixed(2)} PB`;
+};
+
 export const parseJson = function (jsonString) {
   const parsed = JSON.parse(jsonString);
   return JSON.stringify(parsed, null, 2);

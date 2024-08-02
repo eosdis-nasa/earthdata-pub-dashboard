@@ -1,0 +1,790 @@
+/* FormQuestions.css */
+
+/* Navbar */
+.questions-component .navbar {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 20px;
+}
+
+/* Button Bar */
+.questions-component .button_bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+
+.questions-component .left_button_bar, .questions-component .right_button_bar {
+  display: flex;
+  align-items: center;
+}
+
+.questions-component .button {
+  margin-right: 10px;
+}
+
+.questions-component .eui-btn--blue {
+  background-color: #2276ac;
+  margin-right: 10px;
+  padding: 0.5em 1em;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid rgba(50, 50, 50, 0.2);
+  color: white;
+  transition: background 0.15s ease-in-out;
+  outline: none;
+  min-height: 45px;
+  font-weight: 400;
+}
+
+.questions-component .eui-btn--blue:hover {
+  background-color: #2c3e50;
+}
+
+.questions-component .eui-btn--green {
+  background-color: #158749;
+  border: none;
+  margin-right: 10px;
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid rgba(50, 50, 50, 0.2);
+  color: white;
+  transition: background 0.15s ease-in-out;
+  outline: none;
+  min-height: 45px;
+  font-weight: 400;
+}
+
+.questions-component .eui-btn--green {
+  background-color: #12713d !important;
+}
+
+.questions-component .eui-btn--red {
+  background-color: #db1400;
+  border: none;
+  margin-right: 10px;
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid rgba(50, 50, 50, 0.2);
+  color: white;
+  transition: background 0.15s ease-in-out;
+  outline: none;
+  min-height: 45px;
+  font-weight: 400;
+}
+
+.eui-btn--red:hover {
+  background-color: #c21200 !important;
+}
+
+/* Form Section */
+.questions-component .form-section {
+  /* margin-bottom: 20px; */
+  /* padding: 20px; */
+  border-radius: 5px;
+}
+
+/* Heading */
+.questions-component .heading {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+/* Form Group */
+.questions-component .form-group-error {
+  margin-bottom: 20px;
+}
+
+/* Inputs */
+.questions-component .form-input-error,
+.questions-component .form-textarea-error,
+.questions-component .form-select-error,
+.questions-component .form-file-error,
+.questions-component .form-checkbox-error,
+.questions-component .form-radio-group-error {
+  border-color: #db1400 !important;
+}
+
+.questions-component .form-input-error:focus,
+.questions-component .form-textarea-error:focus,
+.questions-component .form-select-error:focus,
+.questions-component .form-file-error:focus,
+.questions-component .form-checkbox-error:focus,
+.questions-component .form-radio-group-error:focus {
+  border-color: #007bff;
+}
+
+.questions-component .bbox {
+  margin-bottom: 10px;
+}
+
+/* Alerts */
+.questions-component .eui-banner--danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+/* Required */
+.questions-component .required {
+  color: red;
+  margin-left: 5px;
+}
+
+/* Table */
+.questions-component .table-div {
+  margin-top: 20px;
+}
+
+.questions-component .table_required {
+  color: red;
+  margin-bottom: 10px;
+}
+
+/* Additional styles */
+.questions-component .hidden {
+  display: none;
+}
+
+.questions-component .date_formats {
+  color: gray;
+  font-size: 0.9em;
+}
+
+.questions-component .date_formats_required {
+  font-weight: bold;
+}
+
+/* Custom link style */
+.questions-component .eui-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.questions-component h3 {
+  font-size: 1.4em;
+  margin: 0.5em 0;
+  font-weight: 500;
+  line-height: 1.2;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  text-align: left;
+  color: #2c3e50;
+}
+
+.questions-component .eui-link:hover {
+  text-decoration: underline;
+}
+
+.questions-component .section_required {
+  color: red;
+}
+
+/* Center container in the screen */
+.questions-component .container {
+  margin: auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 1200px) {
+  .questions-component .container {
+    max-width: 75%;
+  }
+}
+
+/* Styles for screens with a width between 768px and 1024px */
+@media (min-width: 1200px) {
+  .questions-component .container {
+    max-width: 55%;
+  }
+}
+
+.questions-component .form-control {
+  width: 100%;
+  display: block;
+  font-weight: 400;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+/* Form Control Styles */
+.questions-component .form-control-questions {
+  margin-bottom: 10px;
+  width: 100%;
+  display: block;
+  font-weight: 400;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.questions-component .form-control-questions:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Section Heading Styles */
+.questions-component .section-heading {
+  font-size: 1.75em;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #cbcbcb;
+  padding-bottom: 0.2em;
+  font-weight: normal;
+}
+
+/* Field Label Styles */
+.questions-component .field-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Field Help Text */
+.questions-component .field-help-text {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.875em;
+  color: #6c757d;
+}
+
+.questions-component .checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.radio-group{
+  display: flex;
+}
+.questions-component .checkbox-item {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.questions-component .form-checkbox {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.questions-component .form-checkbox-error {
+  border: 1px solid red;
+}
+
+.questions-component .checkbox-item label {
+  margin-left: 5px;
+}
+
+.questions-component .form-section-error {
+  border: 1px solid red;
+  padding: 10px;
+}
+
+/* Placeholder styling */
+.questions-component ::placeholder {
+  color: #DB1400;
+  opacity: 1; /* Firefox */
+}
+
+/* WebKit browsers (Safari, Chrome) */
+.questions-component input::placeholder,
+.questions-component textarea::placeholder {
+  color: #DB1400;
+  opacity: 1; /* Override default opacity */
+}
+
+/* Mozilla Firefox 19+ */
+.questions-component input::-moz-placeholder,
+.questions-component textarea::-moz-placeholder {
+  color: #DB1400;
+  opacity: 1; /* Override default opacity */
+}
+
+/* Internet Explorer 10+ */
+.questions-component input:-ms-input-placeholder,
+.questions-component textarea:-ms-input-placeholder {
+  color: #DB1400;
+}
+
+/* Microsoft Edge */
+.questions-component input::-ms-input-placeholder,
+.questions-component textarea::-ms-input-placeholder {
+  color: #DB1400;
+}
+
+/* .questions-component .form-section {
+  margin-bottom: 20px;
+} */
+
+.questions-component .question_size {
+  display: flex;
+  flex-direction: column;
+}
+
+.questions-component .table-div {
+  margin-top: 20px;
+}
+
+.questions-component .checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.questions-component .bbox-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.questions-component .bbox-input {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.questions-component .bbox-input label {
+  margin-right: 5px;
+}
+
+.questions-component .bbox {
+  width: 100px;
+}
+
+.questions-component .heading {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.questions-component .question_size {
+  display: flex;
+  flex-direction: column;
+}
+
+.questions-component .table-div {
+  margin-top: 20px;
+}
+
+.questions-component .table_required {
+  color: red;
+}
+
+.questions-component .row-align {
+  padding: 0px;
+}
+
+.tableDynamic {
+  margin-bottom: 10px !important;
+  width: initial !important;
+  display: initial !important;
+  font-weight: initial !important;
+  color: #495057 !important;
+  background-color: #fff !important;
+  background-clip: padding-box !important;
+  font-size: 1rem !important;
+  line-height: 1 !important;
+
+}
+
+.questions-component input {
+  border-radius: 5px !important;
+  border-style: solid !important;
+  border-width: 1px !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  padding-top: 8px !important;
+  padding-bottom: 5px !important;
+  border-color: #b2b2b2 !important;
+}
+
+.questions-component textarea {
+  border-radius: 5px !important;
+  border-style: solid !important;
+  border-width: 1px !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  padding-top: 8px !important;
+  padding-bottom: 5px !important;
+  border-color: #b2b2b2 !important;
+  margin-bottom: 0px !important;
+}
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.radio-item input {
+  margin-right: 5px;
+}
+
+.questions-component .react-datepicker-wrapper{
+  width: 100%;
+}
+
+.questions-component .sticky-navbar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #ebebeb;
+  padding: 10px 0;
+  border: 1px solid #a9a9a9;
+}
+
+.questions-component .sticky-navbar .button_bar {
+  max-width: 1280px; 
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.questions-component .button-group {
+  display: flex;
+}
+
+.questions-component th{
+  text-align: left;
+}
+.questions-component .button-group .btn {
+  margin: 2px 0;
+}
+
+.questions-component .button-group .btn-secondary{
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+  margin: 5px;
+}
+
+
+.questions-component .scroll-to-top {
+  position: fixed;
+  bottom: 70px;
+  right: 50px;
+  z-index: 1000;
+}
+
+.questions-component .scroll-to-top button {
+  background-color: #333;
+  color: white;
+  border: none;
+  outline: none;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.questions-component .scroll-to-top button:hover {
+  background-color: #555;
+}
+
+.questions-component .react-datepicker__calendar-icon {
+  right: 0.2rem;
+  margin-top: 5px !important;
+}
+
+.questions-component .uploaded-files-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.questions-component .uploaded-files-header {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.questions-component .uploaded-files-row:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.questions-component .uploaded-files-row:hover {
+  background-color: #f1f1f1;
+}
+
+.questions-component .uploaded-files-table th,
+.questions-component .uploaded-files-table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.questions-component .uploaded-files-table th {
+  background-color: #2276ac;
+  color: white;
+}
+
+
+.questions-component .validation{
+  border: 0px solid #e4b9b9;
+  text-align: left;
+  border-top: 3px solid #e4b9b9;
+  background-color: #f2dede;
+  color: #963b3b;
+  padding: 0.75em 1em;
+  width: 99%;
+  border-radius: 6px;
+}
+
+.questions-component .eui-label {
+  margin-top: 10px;
+}
+
+.questions-component .form-group-error .form-control:focus .radio-group-error{
+  box-shadow: 0 0 0 0.2rem rgba(227, 52, 47, 0.25);
+}
+
+.questions-component .form-group-error .required {
+  color: #e3342f;
+  font-weight: bold;
+}
+
+.questions-component .alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+  text-align: center;
+}
+
+.questions-component .alert-dismissible .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.75rem 1.25rem;
+  color: inherit;
+}
+
+.questions-component .alert-success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+  text-align: center;
+}
+
+.questions-component .validation-message {
+  color: #e3342f;
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+}
+
+.questions-component .section-heading {
+  font-size: 1.5em;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.questions-component .sub-section-heading {
+  font-size: 1.2em;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.questions-component .form-section {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+}
+
+.questions-component .form-section:last-child {
+  border-bottom: none;
+}
+
+.questions-component .form-group-error {
+  margin-bottom: 20px;
+}
+
+.questions-component .question_section {
+  margin-top: 20px;
+}
+
+.questions-component .date_formats {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.questions-component .date_formats_required {
+  color: #d9534f;
+}
+
+.questions-component .section_required {
+  color: #d9534f;
+  font-size: 0.9em;
+}
+
+.questions-component .checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.questions-component .checkbox-item {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.questions-component h2 {
+  border-bottom: 1px solid #cbcbcb;
+  padding-bottom: 0.2em;
+  font-size: 1.6em;
+  font-weight: normal;
+  font-family: Avenir,Helvetica,Arial,sans-serif;
+  text-align: left;
+  color: #2c3e50;
+}
+
+.questions-component .sticky-alert {
+  position: sticky;
+  top: 60px;
+  z-index: 1000;
+}
+
+.radio-group-error {
+  border: 1px solid;
+  border-color: #db1400 !important;
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.questions-component .button:disabled {
+  background-color: #c0c0c0;
+  border-color: #c0c0c0;
+  cursor: not-allowed;
+  color: #fff;
+}
+
+.questions-component .upload-container {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.questions-component .upload-container.drag-over {
+  border-color: #000;
+}
+
+.questions-component .upload-input {
+  display: none;
+}
+
+.questions-component .upload-status {
+  margin-top: 10px;
+}
+
+.questions-component .upload-button {
+  background-color: #2276ac;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.questions-component .upload-button:hover {
+  background-color: #0056b3;
+}
+
+.questions-component .upload-button:disabled {
+  background-color: #c0c0c0;
+  cursor: not-allowed;
+}
+
+.questions-component .modal-content {
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.questions-component .custom-modal-header{
+  border-bottom: 1px solid hsl(0, 93%, 47%);
+  padding-bottom: 10px;
+}
+
+.questions-component .modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.questions-component .modal-body {
+  padding: 20px;
+  font-size: 1rem;
+}
+
+.questions-component .modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.questions-component .modal-footer .btn {
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-left: 10px;
+}
+
+.questions-component .modal-footer .btn-primary {
+  background-color: #ac2229;
+  border: none;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.questions-component .modal-footer .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.questions-component .modal-footer .btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.questions-component .modal-footer .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.questions-component .form-control:disabled, .form-control[readonly] {
+  background-color: #e9ecef;
+  opacity: 1;
+}
+
+.questions-component .react-datepicker__header h2{
+  border-bottom: 1px solid #cbcbcb;
+  font-size: 1.6em;
+  font-weight: normal;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  color: #2c3e50;
+  text-align: center;
+}
