@@ -77,7 +77,7 @@ const ConnectedFormQuestions = withRouter(connect()(FormQuestions2));
 const App = () => (
   <Router>
     <Switch>
-      <Route path="/form/questions/:id" component={ConnectedFormQuestions} />
+      <Route path="/questions/:id" component={ConnectedFormQuestions} />
     </Switch>
   </Router>
 );
