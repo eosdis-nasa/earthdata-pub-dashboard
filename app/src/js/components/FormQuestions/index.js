@@ -52,7 +52,7 @@ class FormQuestions2 extends React.Component {
             <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
               <Switch>
                 <Route
-                  path='/form/questions/:id'
+                  path='/questions/:id'
                   render={(props) => <FormQuestions {...props} formData={formData} requestData={requestData}/>}
                 />
               </Switch>
