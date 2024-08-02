@@ -10,7 +10,7 @@ module.exports = defineConfig({
     user_id: '1b10a09d-d342-4eee-a9eb-c99acd2dde17',
     api_test: 'http://localhost:8080/docs',
     api_reseed: 'http://localhost:8080/reseed',
-    forms_root: 'http://localhost:8081',
+    forms_root: 'http://localhost:3000',
     token_storage_variable: 'auth-token',
     login_modal_selector: 'div.modal-content',
     login_label: 'Login',

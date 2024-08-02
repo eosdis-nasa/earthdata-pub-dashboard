@@ -8,7 +8,7 @@ const config = {
     }
   },
   apiRoot: process.env.APIROOT || 'http://localhost:8080/api',
-  formsUrl: process.env.FORMS_URL || 'http://localhost:8081',
+  formsUrl: process.env.FORMS_URL || 'http://localhost:3000/',
   overviewUrl: process.env.OVERVIEW_URL || '/',
   initiateRequestSelectDaac: process.env.INTITIATE_REQUEST_SELECT_DAAC_URL || '/daacs/selection',
   basepath: process.env.BASEPATH || '/',
