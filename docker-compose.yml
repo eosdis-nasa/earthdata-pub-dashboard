@@ -11,7 +11,7 @@ services:
       - ./:/dashboard:cached
     environment:
       - APIROOT=http://localhost:8080/api
-      - FORMS_URL=http://localhost:3000
+      - FORMS_URL=http://localhost:8080
       - OVERVIEW_URL=/
       - DAAC_NAME=local
       - STAGE=LOCALHOST-Development
