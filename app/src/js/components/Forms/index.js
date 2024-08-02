@@ -15,6 +15,7 @@ class Forms extends React.Component {
 
   render () {
     const { pathname } = this.props.location;
+    console.log('pathname', pathname)
     const showSidebar = pathname !== '/forms/add';
     return (
       <div className='page__forms'>

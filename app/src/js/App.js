@@ -51,7 +51,7 @@ const MainRoutes = () => {
         <Route path='/error' component={Error} />
         <Route path='/404' component={NotFound} />
         <Route path='/requests' component={Requests} />
-        <Route path='/forms' component={Forms} />
+        <Route path='/forms' component={FormRequest} />
         <Route path="/daac/selection" component={FormRequest} />
         <Route path="/questions" component={FormQuestions} />
         <Route path='/users' component={Users} />

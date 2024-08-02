@@ -554,6 +554,7 @@ class FormOverview extends React.Component {
     let requestId = this.props.location.search.split('=')[1];
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
+    console.log('${_config.formsUrl} 3', _config.formsUrl)
     let thisFormUrl = `${_config.formsUrl}/questions/${requestId}`;
     if (formId !== '') {
       thisFormUrl += `/${formId}`;
