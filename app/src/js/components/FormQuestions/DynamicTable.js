@@ -4,19 +4,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 const DynamicTable = ({ controlId, values, handleFieldChange, addRow, removeRow, moveUpDown }) => {
+
   return (
-    <Table bordered responsive>
-      <thead>
+    <Table bordered responsive hover className="mt-3">
+      <thead className="custom-table-header">
         <tr>
           <th>First Name</th>
           <th>Middle Initial</th>
           <th>Last Name or Group</th>
           <th style={{ width: '120px', textAlign: 'center' }}>
             <Button
-              variant="outline-primary"
+              variant="secondary"
               size="sm"
               aria-label="add row button"
               onClick={() => addRow(controlId)}
+              className="action-button add-row"
             >
               <FontAwesomeIcon icon={faPlus} />
             </Button>
@@ -61,6 +63,7 @@ const DynamicTable = ({ controlId, values, handleFieldChange, addRow, removeRow,
                     size="sm"
                     aria-label="remove row button"
                     onClick={() => removeRow(controlId, index)}
+                    className="action-button"
                   >
                     <FontAwesomeIcon icon={faTrashAlt} />
                   </Button>
@@ -70,6 +73,7 @@ const DynamicTable = ({ controlId, values, handleFieldChange, addRow, removeRow,
                       size="sm"
                       aria-label="move up button"
                       onClick={() => moveUpDown(controlId, index, 'up')}
+                      className="action-button"
                     >
                       <FontAwesomeIcon icon={faArrowUp} />
                     </Button>
@@ -80,6 +84,7 @@ const DynamicTable = ({ controlId, values, handleFieldChange, addRow, removeRow,
                       size="sm"
                       aria-label="move down button"
                       onClick={() => moveUpDown(controlId, index, 'down')}
+                      className="action-button"
                     >
                       <FontAwesomeIcon icon={faArrowDown} />
                     </Button>

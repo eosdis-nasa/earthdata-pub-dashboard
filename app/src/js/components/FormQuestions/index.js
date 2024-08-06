@@ -49,7 +49,7 @@ class FormQuestions2 extends React.Component {
         </div>
         <div className='page__content'>
           <div className='wrapper__sidebar'>
-            <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
+            <div className={showSidebar ? 'page__content--shortened padding-zero' : 'page__content'}>
               <Switch>
                 <Route
                   path='/form/questions/:id'

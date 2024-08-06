@@ -270,25 +270,28 @@ class Home extends React.Component {
                   ) : null}
                   <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                 </div>
-                <List
-                  list={list}
-                  tableColumns={tableColumns}
-                  query={query}
-                  rowId='id'
-                  filterIdx='name'
-                  filterPlaceholder='Search Requests'
-                >
-                  <Select
-                    id="producerSelect"
-                    options={this.state.producers}
-                    onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
-                    isSearchable={true}
-                    placeholder='Select Data Producer'
-                    className='selectButton'
-                    aria-label='Select Data Producer'
-                    isMulti={true}
-                  />
-                </List>
+                {!list
+                  ? <Loading />: 
+                  <List
+                    list={list}
+                    tableColumns={tableColumns}
+                    query={query}
+                    rowId='id'
+                    filterIdx='name'
+                    filterPlaceholder='Search Requests'
+                    >
+                    <Select
+                      id="producerSelect"
+                      options={this.state.producers}
+                      onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
+                      isSearchable={true}
+                      placeholder='Select Data Producer'
+                      className='selectButton'
+                      aria-label='Select Data Producer'
+                      isMulti={true}
+                    />
+                  </List>
+                }
               </div>
             </section>
           </div>
