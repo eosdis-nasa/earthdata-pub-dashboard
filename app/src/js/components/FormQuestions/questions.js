@@ -34,14 +34,12 @@ const FormQuestions = ({
   const [values, setValues] = useState({});
   const [questions, setQuestions] = useState([]);
   const [daacInfo, setDaacData] = useState({});
-  const [contactFields, setContactFields] = useState([]);
   const [valueHistory, setValueHistory] = useState([{}]);
   const [valueHistoryUndoIdx, setValueHistoryUndoIdx] = useState(0);
   const [alertVariant, setAlertVariant] = useState('success');
   const [alertMessage, setAlertMessage] = useState('');
   const [dismissCountDown, setDismissCountDown] = useState(0);
   const [uploadFile, setUploadFile] = useState(null);
-  const [uploadQuestionId, setUploadQuestionId] = useState("");
   const [uploadStatusMsg, setUploadStatusMsg] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fakeTable, setFakeTable] = useState([{}]);
@@ -64,13 +62,17 @@ const FormQuestions = ({
   ]);
   const [timer, setTimer] = useState(null);
   const [logs, setLogs] = useState({});
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
-  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false); // State to track checkbox status
+  const [showModal, setShowModal] = useState(false); 
+  const [checkboxStatus, setCheckboxStatus] = useState({
+    sameAsPrimaryDataProducer: false,
+    sameAsPrimaryLongTermSupport: false,
+    sameAsPrimaryDataAccession: false
+  });
 
   const formRef = useRef(null);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const textareaRef = useRef(null); // Define the textarea ref here
+  const textareaRef = useRef(null);
   const dee = [{"key":"ef229725-1cad-485e-a72b-a276d2ca3175/7e11241c-6f7e-408c-aac9-a718cc2ca38b/971bff66-6d6e-4f59-a100-fe75d6519804/2.txt","size":81,"lastModified":"2024-07-17T17:16:51.000Z","file_name":"2.txt","sha256Checksum":"4tcuX4gClsavyCL1x97VvwaGIloqarATuy/8R5cy06U="},{"key":"ef229725-1cad-485e-a72b-a276d2ca3175/7e11241c-6f7e-408c-aac9-a718cc2ca38b/971bff66-6d6e-4f59-a100-fe75d6519804/3.txt","size":81,"lastModified":"2024-07-17T17:19:34.000Z","file_name":"3.txt","sha256Checksum":"4tcuX4gClsavyCL1x97VvwaGIloqarATuy/8R5cy06U="},{"key":"ef229725-1cad-485e-a72b-a276d2ca3175/7e11241c-6f7e-408c-aac9-a718cc2ca38b/971bff66-6d6e-4f59-a100-fe75d6519804/test.txt","size":53,"lastModified":"2024-07-17T17:07:06.000Z","file_name":"test.txt","sha256Checksum":"fttht8edofrijAMnBPJsZOHPnf+8hK6elL4ZiSaJZSA="}];
   const history = useHistory();
   const logAction = (action) => {
@@ -97,21 +99,25 @@ const FormQuestions = ({
         });
       });
   
-      // Prefill values if they exist in requestData.form_data
       if (requestData && requestData.form_data) {
         Object.keys(requestData.form_data).forEach(key => {
           if (initialValues.hasOwnProperty(key)) {
             initialValues[key] = requestData.form_data[key];
           } else {
-            if (key === 'same_as_poc_name_data_producer_info_name' && requestData.form_data[key]) {
+            if (key === 'same_as_poc_name_data_producer_info_name') {
               initialValues[key] = requestData.form_data[key];
-              setIsCheckboxChecked(true);
+              setCheckboxStatus((prev) => ({ ...prev, sameAsPrimaryDataProducer: requestData.form_data[key] }));
+            }else if(key === 'same_as_long_term_support_poc_name_poc_name'){
+              initialValues[key] = requestData.form_data[key];
+              setCheckboxStatus((prev) => ({ ...prev, sameAsPrimaryDataAccession: requestData.form_data[key] }));
+            }else if(key === 'same_as_long_term_support_poc_name_data_producer_info_name'){
+              initialValues[key] = requestData.form_data[key];
+              setCheckboxStatus((prev) => ({ ...prev, sameAsPrimaryLongTermSupport: requestData.form_data[key] }));
             }
           }
         });
       }
 
-      // Initialize dynamic tables with a default row if not already initialized
       formData.sections.forEach((section) => {
         section.questions.forEach((question) => {
           question.inputs.forEach((input) => {
@@ -137,24 +143,23 @@ const FormQuestions = ({
   }, [formData, requestData]);
   
   useEffect(() => {
-    if (isCheckboxChecked) {
-      ['poc_name', 'poc_organization', 'poc_department', 'poc_email', 'poc_orcid'].forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-          field.blur();
-          field.disabled = true;
-        }
-      });
-    } else {
-      ['poc_name', 'poc_organization', 'poc_department', 'poc_email', 'poc_orcid'].forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-          field.disabled = false;
-        }
-      });
-    }
-  }, [isCheckboxChecked]);
-  
+    ['poc_name', 'poc_organization', 'poc_department', 'poc_email', 'poc_orcid'].forEach(fieldId => {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        field.disabled = checkboxStatus.sameAsPrimaryDataProducer;
+      }
+    });
+
+    ['long_term_support_poc_name', 'long_term_support_poc_organization', 'long_term_support_poc_department', 'long_term_support_poc_email', 'long_term_support_poc_orcid'].forEach(fieldId => {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        field.disabled = checkboxStatus.sameAsPrimaryLongTermSupport || checkboxStatus.sameAsPrimaryDataAccession;
+      
+      }
+    });
+
+  }, [checkboxStatus]);
+
   useEffect(() => {
     if (dismissCountDown > 0) {
       const intervalId = setInterval(() => {
@@ -165,7 +170,6 @@ const FormQuestions = ({
     }
   }, [dismissCountDown]);
 
-  // Add an effect to call saveFile('draft') every 10 minutes
   useEffect(() => {
     const intervalId = setInterval(() => {
       saveFile('draft');
@@ -191,7 +195,7 @@ const FormQuestions = ({
     return result;
   };
 
-  const validateField = (controlId, value) => {
+  const validateField = (controlId, value, long_name) => {
     let errorMessage = '';
     const input = questions.flatMap(section => section.questions)
                             .flatMap(question => question.inputs)
@@ -199,29 +203,26 @@ const FormQuestions = ({
   
     if (input) {
       const fieldRequired = isFieldRequired(input);
+
       if (fieldRequired && (!value || value === "") && input.type !== 'bbox') {
-        errorMessage = `${input.label || controlId} is required`;
+        errorMessage = `${long_name ? long_name + ' - ' : ''}${input.label || long_name} is required`;
       } else if (input.type === 'number' && isNaN(value)) {
-        errorMessage = `${input.label || controlId} must be a valid number`;
+        errorMessage = `${input.label || long_name} must be a valid number`;
       } else if (input.type === 'email' && !/\S+@\S+\.\S+/.test(value)) {
-        errorMessage = `${input.label || controlId} must be a valid email address`;
+        errorMessage = `${input.label || long_name} must be a valid email address`;
       } else if (input.type === 'datetimePicker' && isNaN(new Date(value).getTime())) {
-        errorMessage = `${input.label || controlId} must be a valid date and time`;
+        errorMessage = `${input.label || long_name} must be a valid date and time`;
       } else if (input.type === 'select' && !input.options.includes(value)) {
-        errorMessage = `${input.label || controlId} must be a valid option`;
+        errorMessage = `${input.label || long_name} must be a valid option`;
       } else if (input.type === 'radio' && value && !input.enums.includes(value)) {
-        errorMessage = `${input.label || controlId} must be a valid option`;
+        errorMessage = `${long_name ? long_name + ' - ' : ''}${input.label || long_name} must be a valid option`;
       } else if (input.type === 'table') {
-        const val =  Array.isArray(value)  && value.every(obj => 
-          Object.values(obj).every(value => value === "")
-        );
-        val ? errorMessage = `${input.label || controlId} is required`:'';
+        const result = value.some(producer => areProducerFieldsEmpty(producer));
+        result || value.length == 0 ? errorMessage = `${input.label || long_name} both First Name and Last Name are required`:'';
       } else if (input.type === 'bbox') {
-        console.log('controlId', controlId)
         const directions = ['north', 'east', 'south', 'west'];
         const lst = []
         for (let direction of directions) {
-          console.log('direction', direction)
           const bboxError = getBboxError(controlId, direction, input);
           if (bboxError) {
             errorMessage = bboxError;
@@ -246,7 +247,6 @@ const FormQuestions = ({
     let label = `${direction.substring(0, 1).toUpperCase()}`;
 
     if (values[`${control_id}_${direction}`]) {
-      console.log('getBboxError', control_id, direction, input)
 
       if (isNaN(values[`${control_id}_${direction}`])) {
         return "Must be a number";
@@ -288,22 +288,26 @@ const FormQuestions = ({
     }
     return !values[`${control_id}_${direction}`] && input.required ? `Spatial Information - Data Product Horizontal Spatial Coverage - ${label}:  is required`: undefined;
   };
+
+  const areProducerFieldsEmpty = (producer) => {
+    return producer.producer_first_name === "" || producer.producer_last_name_or_organization === "";
+  }
   
   const validateFields = (checkAllFields = true, jsonObj) => {
     const newValidationErrors = {};
     questions.forEach((section) => {
       section.questions.forEach((question) => {
         question.inputs.forEach((input) => {
-          const value = jsonObj[input.control_id];
+          const value = jsonObj.data && jsonObj.data[input.control_id];
           if (checkAllFields || value) {
             if (input.type === 'bbox') {   
-                const errorMessage = validateField(input.control_id, 'direction');
-                 console.log('lst', errorMessage)
+                const errorMessage = validateField(input.control_id, 'direction', question.long_name);
                  for (const element of errorMessage) {
                   newValidationErrors[element.controlId] = element.errorMessage;
                 }
-            } else {
-              const [errorMessage, fieldId] = validateField(input.control_id, value);
+            } 
+            else {
+              const [errorMessage, fieldId] = validateField(input.control_id, value, question.long_name);
               if (errorMessage) {
                 newValidationErrors[fieldId] = errorMessage;
               }
@@ -316,45 +320,25 @@ const FormQuestions = ({
     setValues((prev) => ({ ...prev, validation_errors: newValidationErrors }));
     return Object.keys(newValidationErrors).length === 0;
   };
-  
-  const validateFilledFields = () => {
-    const newValidationErrors = {};
-    questions.forEach((section) => {
-      section.questions.forEach((question) => {
-        question.inputs.forEach((input) => {
-          const value = values[input.control_id];
-          if (value !== undefined && value !== '') {
-            const errorMessage = validateField(input.control_id, value);
-            if (errorMessage) {
-              newValidationErrors[input.control_id] = errorMessage;
-            }
-          }
-        });
-      });
-    });
-    setValues((prev) => ({ ...prev, validation_errors: newValidationErrors }));
-    return Object.keys(newValidationErrors).length === 0;
-  };
     
   const handleFieldChange = (controlId, value) => {
     setValues((prevValues) => {
       const newValues = { ...prevValues, [controlId]: value };
-  
-      // Propagate changes if "Same as Data Producer" is checked
-      if (values['same_as_poc_name_data_producer_info_name']) {
-        const dataProducerFields = ['name', 'organization', 'department', 'email', 'orcid'];
-        dataProducerFields.forEach(field => {
-          if (controlId.startsWith('data_producer_info_')) {
-            const updatedField = controlId.replace('data_producer_info_', 'poc_');
-            newValues[updatedField] = value;
-          }
-        });
+
+      if (checkboxStatus.sameAsPrimaryDataProducer && controlId.startsWith('data_producer_info_')) {
+        const updatedField = controlId.replace('data_producer_info_', 'poc_');
+        newValues[updatedField] = value;
       }
-  
+
+      if (checkboxStatus.sameAsPrimaryLongTermSupport && controlId.startsWith('data_producer_info_')) {
+        const updatedField = controlId.replace('data_producer_info_', 'long_term_support_poc_');
+        newValues[updatedField] = value;
+      }
+
       saveToHistory(newValues);
       return newValues;
     });
-  
+
     if (!value || value === '' && values.validation_errors[controlId]) {
       handleInvalid({ target: { name: controlId, validationMessage: `${controlId} is required` } });
     } else {
@@ -365,16 +349,15 @@ const FormQuestions = ({
   const handleTableFieldChange = (controlId, rowIndex, key, value) => {
     setValues(prevValues => {
       const updatedTable = [...(prevValues[controlId] || [])];
-      const updatedRow = { ...updatedTable[rowIndex] }; // Deep copy of the specific row
-      updatedRow[key] = value; // Update the value
-      updatedTable[rowIndex] = updatedRow; // Update the table with the modified row
+      const updatedRow = { ...updatedTable[rowIndex] };
+      updatedRow[key] = value;
+      updatedTable[rowIndex] = updatedRow;
       return {
         ...prevValues,
         [controlId]: updatedTable,
       };
     });
   };
-  
   
   const handleInvalid = (evt) => {
     const { name, validationMessage } = evt.target;
@@ -402,9 +385,8 @@ const FormQuestions = ({
     }
   };
 
-  const getErrorMessage = (input, question) => {
-    const value = question && question.long_name && question.long_name.length > 0 ? question.long_name +' - ': ''
-    return values.validation_errors && values.validation_errors[input.control_id] ? value + values.validation_errors[input.control_id] : '';
+  const getErrorMessage = (input, question, sectionHeading) => {
+    return values.validation_errors && values.validation_errors[input.control_id] ? sectionHeading+' - ' + values.validation_errors[input.control_id] : '';
   };
   
   const isError = (input) => values.validation_errors && values.validation_errors[input.control_id];
@@ -427,6 +409,24 @@ const FormQuestions = ({
   };
   
 
+  const filterEmptyObjects = (array) => {
+    return array.filter(obj => {
+      if (!obj || typeof obj !== 'object') {
+        return false;
+      }
+  
+      const keys = Object.keys(obj);
+      if (keys.length < 2) {
+        return true; // keep the object if it has less than 2 keys
+      }
+  
+      const firstKey = keys[0];
+      const lastKey = keys[keys.length - 1];
+  
+      return obj[firstKey] !== "" || obj[lastKey] !== "";
+    });
+  };
+
   const saveFile = async (type) => {
     const fieldValues = { ...values };
     let jsonObject = {
@@ -438,12 +438,14 @@ const FormQuestions = ({
       daac_id: daacInfo.daac_id 
     };
   
-    // Remove fields with empty strings and build the data object
     Object.keys(fieldValues).forEach(key => {
-      if (fieldValues[key] !== "") {
+      if (Array.isArray(fieldValues[key])) {
+        jsonObject.data[key] = filterEmptyObjects(fieldValues[key]);
+      } else if (fieldValues[key] !== "") {
         jsonObject.data[key] = fieldValues[key];
       }
-    });
+    });    
+
   
     jsonObject.log = logs;
     
@@ -634,7 +636,6 @@ const FormQuestions = ({
   const handleUpload = () => {
     if (uploadFile) {
       setUploadStatusMsg('Uploading...');
-      // Simulate file upload
       setTimeout(() => {
         setUploadStatusMsg('Upload complete');
         setUploadedFiles([...uploadedFiles, {
@@ -651,13 +652,13 @@ const FormQuestions = ({
   const handleCloseModal = () => setShowModal(false);
   const handleRedirect = () => window.location.href = '/requests';
 
-  const checkBoxChecked = (e) => {
-    const checked = e.target.checked;
-    setIsCheckboxChecked(checked);
-  
-    if (checked) {
-      setValues((prevValues) => {
-        const newValues = {
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;    
+
+    //if (checked) {
+      if (name === 'sameAsPrimaryDataProducer') {
+        setCheckboxStatus((prev) => ({ ...prev, [name]: checked }));
+        setValues((prevValues) => ({
           ...prevValues,
           same_as_poc_name_data_producer_info_name: checked,
           poc_name: prevValues.data_producer_info_name,
@@ -665,18 +666,35 @@ const FormQuestions = ({
           poc_department: prevValues.data_producer_info_department,
           poc_email: prevValues.data_producer_info_email,
           poc_orcid: prevValues.data_producer_info_orcid,
-        };
-        saveToHistory(newValues);
-        return newValues;
-      });
-    } else {
-      setValues((prevValues) => ({
-        ...prevValues,
-        same_as_poc_name_data_producer_info_name: checked,
-      }));
-    }
+        }));
+      } else if (name === 'sameAsPrimaryLongTermSupport') {
+        setCheckboxStatus((prev) => ({ ...prev, [name]: checked, sameAsPrimaryDataAccession: checked ? false: prev.sameAsPrimaryDataAccession }));
+        setValues((prevValues) => ({
+          ...prevValues,
+          same_as_long_term_support_poc_name_data_producer_info_name: checked, 
+          same_as_long_term_support_poc_name_poc_name: checked ? false : prevValues.same_as_long_term_support_poc_name_poc_name,
+          long_term_support_poc_name: prevValues.data_producer_info_name,
+          long_term_support_poc_organization: prevValues.data_producer_info_organization,
+          long_term_support_poc_department: prevValues.data_producer_info_department,
+          long_term_support_poc_email: prevValues.data_producer_info_email,
+          long_term_support_poc_orcid: prevValues.data_producer_info_orcid,
+        }));
+      } else if (name === 'sameAsPrimaryDataAccession') {
+        setCheckboxStatus((prev) => ({ ...prev, [name]: checked, sameAsPrimaryLongTermSupport: checked ? false: prev.sameAsPrimaryLongTermSupport }));
+        setValues((prevValues) => ({
+          ...prevValues,
+          same_as_long_term_support_poc_name_data_producer_info_name: checked ? false : prevValues.same_as_long_term_support_poc_name_data_producer_info_name, 
+          same_as_long_term_support_poc_name_poc_name: checked,
+          long_term_support_poc_name: prevValues.poc_name,
+          long_term_support_poc_organization: prevValues.poc_organization,
+          long_term_support_poc_department: prevValues.poc_department,
+          long_term_support_poc_email: prevValues.poc_email,
+          long_term_support_poc_orcid: prevValues.poc_orcid,
+        }));
+      }
+    //}
   };
-  
+
   return (
     !requestData ? (<Loading/>) : (
       <div role="main" className='questions-component'>
@@ -736,34 +754,76 @@ const FormQuestions = ({
                             <span className="col text-right section_required" style={{ display: question.required ? 'block' : 'none' }}>required</span>
                           </h3>
                           <p className="text-muted" style={{ display: question.help !== 'undefined' ? 'block' : 'none' }} dangerouslySetInnerHTML={{ __html: question.help }}/>
-                          {question.long_name === 'Data Accession Point of Contact'? <label className="checkbox-item">{'Same as Primary Data Producer '} <input
-                                      type="checkbox"
-                                      onChange={checkBoxChecked}
-                                      checked={isCheckboxChecked}
-                                    /> <span className="checkmark"></span></label>:''}
+                          <div className="checkbox-group">
+                            {question.long_name === 'Data Accession Point of Contact' && (
+                              <label className="checkbox-item">
+                                Same as Primary Data Producer
+                                <input
+                                  type="checkbox"
+                                  name="sameAsPrimaryDataProducer"
+                                  checked={checkboxStatus.sameAsPrimaryDataProducer}
+                                  onChange={handleCheckboxChange}
+                                />
+                                <span className="checkmark"></span>
+                              </label>
+                            )}
+                            {question.long_name === 'Long-term Support Point of Contact' && (
+                              <>
+                                {
+                                  <>
+                                    <label className="checkbox-item">
+                                      Same as Primary Data Producer
+                                      <input
+                                        type="checkbox"
+                                        name="sameAsPrimaryLongTermSupport"
+                                        checked={checkboxStatus.sameAsPrimaryLongTermSupport}
+                                        //disabled ={checkboxStatus.sameAsPrimaryDataAccession}
+                                        onChange={handleCheckboxChange}
+                                      />
+                                      <span className="checkmark"></span>
+                                    </label>
+                                    <label className="checkbox-item">
+                                      Same as Primary Data Accession
+                                      <input
+                                        type="checkbox"
+                                        name="sameAsPrimaryDataAccession"
+                                        checked={checkboxStatus.sameAsPrimaryDataAccession}
+                                        onChange={handleCheckboxChange}
+                                       // disabled ={checkboxStatus.sameAsPrimaryLongTermSupport}
+                                      />
+                                      <span className="checkmark"></span>
+                                    </label>
+                                  </>
+                                }
+                              </>
+                            )}
+                            {question.inputs.map((input, c_key) => (
+                              <label key={input.control_id} className="checkbox-item" style={{ display: input.type === 'checkbox' ? 'flex' : 'none', alignItems: 'center', marginRight: '15px' }}>
+                                <input
+                                  type="checkbox"
+                                  className={`form-checkbox ${isError(input) ? 'form-checkbox-error' : ''}`}
+                                  id={input.control_id}
+                                  name={input.control_id}
+                                  value={values[input.control_id] || ''}
+                                  checked={!!values[input.control_id]} 
+                                  uncheckedvalue="false"
+                                  aria-label={input.label}
+                                  disabled={disabled || Boolean(getAttribute('disabled', question.inputs[c_key]))}
+                                  onChange={(e) => handleFieldChange(input.control_id, e.target.checked)}
+                                />
+                                <label htmlFor={input.control_id} style={{ marginLeft: '5px' }}>{input.label}</label>
+                                <span className="checkmark"></span>
+                                <span className="required" style={{ display: input.required || checkRequiredIf(input) ? 'block' : 'none' }}>required</span>
+                                {getErrorMessage(input, question, section.heading) && (
+                                            <div className="validation">{getErrorMessage(input, question, section.heading)}</div>
+                                          )}
+                              </label>
+                            ))
+                            }
+                          
+                          </div>
                           <Row className='row-align'>
                             <Col lg={question.size || 16} className="question_size">
-                              <div className="checkbox-group">
-                                {question.inputs.map((input, c_key) => (
-                                  <label key={input.control_id} className="checkbox-item" style={{ display: input.type === 'checkbox' ? 'flex' : 'none', alignItems: 'center', marginRight: '15px' }}>
-                                    <input
-                                      type="checkbox"
-                                      className={`form-checkbox ${isError(input) ? 'form-checkbox-error' : ''}`}
-                                      id={input.control_id}
-                                      name={input.control_id}
-                                      value={values[input.control_id] || ''}
-                                      checked={!!values[input.control_id]} // Ensuring a boolean value
-                                      uncheckedvalue="false"
-                                      aria-label={input.label}
-                                      disabled={disabled || Boolean(getAttribute('disabled', question.inputs[c_key]))}
-                                      onChange={(e) => handleFieldChange(input.control_id, e.target.checked)}
-                                    />
-                                    <label htmlFor={input.control_id} style={{ marginLeft: '5px' }}>{input.label}</label>
-                                    <span className="checkmark"></span>
-                                    <span className="required" style={{ display: input.required || checkRequiredIf(input) ? 'block' : 'none' }}>required</span>
-                                  </label>
-                                ))}
-                              </div>        
                               {question.inputs.map((input, c_key) => (
                                 <span key={c_key}>
                                   {input.type !== 'checkbox' && (
@@ -814,10 +874,10 @@ const FormQuestions = ({
                                                 size="lg"
                                                 aria-label={input.control_id}
                                                 disabled={
-                                                  disabled || Boolean(getAttribute('disabled', question.inputs[c_key])) || (isCheckboxChecked && input.control_id.startsWith('poc_'))
+                                                  disabled || Boolean(getAttribute('disabled', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
                                                 }
                                                 readOnly={
-                                                  readonly || Boolean(getAttribute('readonly', question.inputs[c_key])) || (isCheckboxChecked && input.control_id.startsWith('poc_'))
+                                                  readonly || Boolean(getAttribute('readonly', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
                                                 }
                                                 pattern={getAttribute('pattern', question.inputs[c_key])}
                                                 maxLength={getAttribute('maxlength', question.inputs[c_key])}
@@ -828,7 +888,7 @@ const FormQuestions = ({
                                                 onChange={(e) => handleFieldChange(input.control_id, e.target.value)}
                                               />
                                               <p id={`${input.control_id}_invalid`} className="eui-banner--danger hidden form-control validation">
-                                                {getErrorMessage(input, question)}
+                                                {getErrorMessage(input, question, section.heading)}
                                               </p>
                                             </>
                                           )}
@@ -842,10 +902,10 @@ const FormQuestions = ({
                                               size="lg"
                                               aria-label={input.control_id}
                                               disabled={
-                                                disabled || Boolean(getAttribute('disabled', question.inputs[c_key])) || (isCheckboxChecked && input.control_id.startsWith('poc_'))
+                                                disabled || Boolean(getAttribute('disabled', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
                                               }
                                               readOnly={
-                                                readonly || Boolean(getAttribute('readonly', question.inputs[c_key])) || (isCheckboxChecked && input.control_id.startsWith('poc_'))
+                                                readonly || Boolean(getAttribute('readonly', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
                                               }
                                               maxLength={getAttribute('maxlength', question.inputs[c_key])}
                                               placeholder={input.required || checkRequiredIf(input) ? 'required' : ''}
@@ -855,7 +915,7 @@ const FormQuestions = ({
                                           {input.type === 'textarea' && (
                                             <FormControl
                                               as="textarea"
-                                              ref={textareaRef} // Attach the ref here
+                                              ref={textareaRef}
                                               className={`${isError(input) ? 'form-textarea-error' : ''}`}
                                               id={input.control_id}
                                               name={input.control_id}
@@ -863,38 +923,38 @@ const FormQuestions = ({
                                               size="lg"
                                               aria-label={input.control_id}
                                               disabled={
-                                                disabled || Boolean(getAttribute('disabled', question.inputs[c_key])) || (isCheckboxChecked && input.control_id.startsWith('poc_'))
+                                                disabled || Boolean(getAttribute('disabled', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
                                               }
                                               readOnly={
-                                                readonly || Boolean(getAttribute('readonly', question.inputs[c_key])) || (isCheckboxChecked && input.control_id.startsWith('poc_'))
+                                                readonly || Boolean(getAttribute('readonly', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
                                               }
                                               cols={getAttribute('cols', question.inputs[c_key])}
                                               rows={getAttribute('rows', question.inputs[c_key])}
                                               maxLength={getAttribute('maxlength', question.inputs[c_key])}
                                               minLength={getAttribute('minlength', question.inputs[c_key])}
                                               placeholder={input.required || checkRequiredIf(input) ? 'required' : ''}
-                                              style={{ overflow: 'hidden' }}  // Ensure no scrollbar is shown
+                                              style={{ overflow: 'hidden' }}
                                               onChange={(e) => {
                                                 handleFieldChange(input.control_id, e.target.value);
-                                                resize(e.target); // Call resize function on change
+                                                resize(e.target);
                                               }}
-                                              onInput={(e) => resize(e.target)} // Ensure resize is called on input
+                                              onInput={(e) => resize(e.target)}
                                             />
                                           )}
-                                         {input.type === 'number' && (
-                                          <FormControl
+                                          {input.type === 'number' && (
+                                            <FormControl
                                               className={`${isError(input) ? 'form-input-error' : ''}`}
-                                                                                      type="number" // Use type="text" to prevent browser's built-in number input controls
+                                              type="number"
                                               id={input.control_id}
                                               name={input.control_id}
                                               value={values[input.control_id] || ''}
                                               size="lg"
                                               aria-label={input.control_id}
                                               disabled={
-                                                disabled || Boolean(getAttribute('disabled', question.inputs[c_key])) || (isCheckboxChecked && input.control_id.startsWith('poc_'))
+                                                disabled || Boolean(getAttribute('disabled', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
                                               }
                                               readOnly={
-                                                readonly || Boolean(getAttribute('readonly', question.inputs[c_key])) || (isCheckboxChecked && input.control_id.startsWith('poc_'))
+                                                readonly || Boolean(getAttribute('readonly', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
                                               }
                                               max={getAttribute('max', question.inputs[c_key])}
                                               min={getAttribute('min', question.inputs[c_key])}
@@ -1031,12 +1091,12 @@ const FormQuestions = ({
                                                   addRow={addRow}
                                                   removeRow={removeRow}
                                                   moveUpDown={moveUpDown}
-                                                  readonly={false} // Pass readonly prop to DynamicTable
+                                                  readonly={false} 
                                                 />
                                               </div>
                                             )}
                                             <p id={`${input.control_id}_invalid`} className="eui-banner--danger hidden form-control validation">
-                                              {getErrorMessage(input, question)}
+                                              {getErrorMessage(input, question, section.heading)}
                                             </p>
                                           </div>
                                           <div
@@ -1097,7 +1157,7 @@ const FormQuestions = ({
                                           </div>
                                           <p id={`${input.control_id}_invalid`} className="eui-banner--danger hidden form-control validation"></p>
                                           {getErrorMessage(input) && (
-                                            <div className="validation">{getErrorMessage(input, question)}</div>
+                                            <div className="validation">{getErrorMessage(input, question, section.heading)}</div>
                                           )}
                                         </>
                                       )}
