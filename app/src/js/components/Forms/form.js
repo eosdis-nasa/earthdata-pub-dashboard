@@ -6,7 +6,11 @@ import { withRouter } from 'react-router-dom';
 import {
   getForm,
   getRequest,
-  copyRequest
+  copyRequest,
+  listRequestReviewers,
+  getUsers,
+  deleteStepReviewApproval,
+  createStepReviewApproval
 } from '../../actions';
 import { get } from 'object-path';
 import {
@@ -23,6 +27,8 @@ import Comments from '../Comments/comments';
 import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
 import { loadToken } from '../../utils/auth';
 import localUpload from '@edpub/upload-utility';
+import Select from 'react-select';
+import review from '../Review/review';
 
 const metaAccessors = [
   {
@@ -57,7 +63,7 @@ class FormOverview extends React.Component {
     this.cloneRequest = this.cloneRequest.bind(this);
     this.printForm = this.printForm.bind(this);
     this.displayName = strings.form;
-    this.state = { clone: false };
+    this.state = { clone: false, filteredReviewers: [], allUsers: [], isAddReviewerDisabled: false, selectedReviewers: [], loading: false};
   }
 
   async componentDidMount () {
@@ -70,6 +76,16 @@ class FormOverview extends React.Component {
     }
     const { canInitialize } = requestPrivileges(this.props.privileges);
     await dispatch(getRequest(requestId));
+    let userReviewList = await dispatch(listRequestReviewers(requestId));
+    let allU;
+    if (this.props.requests.detail.data.step_name.includes('uwg')) {
+      allU = await dispatch(getUsers('19ac227b-e96c-46fa-a378-cf82c461b669'));
+    }else{
+      allU = await dispatch(getUsers());
+    }
+    const dataFilter = this.props.requests.detail.data.step_name;
+    const filteredData = userReviewList.data.filter(item => item.step_name === dataFilter);
+    this.setState({filteredReviewers: filteredData, allUsers: allU});
     await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
     await this.getUploadedFiles(requestId);
 
@@ -478,6 +494,56 @@ class FormOverview extends React.Component {
     }
   }
 
+  async handleDelete(review) {
+    this.setState({isAddReviewerDisabled: true, loading: true}); 
+    const payload = {
+      'id': review.submission_id,
+      'step_name': review.step_name,
+      'user_list': [review.edpuser_id]
+    }
+    await this.props.dispatch(deleteStepReviewApproval(payload));
+    
+    let reviewersList = await this.props.dispatch(listRequestReviewers(review.submission_id));
+    const dataFilter = this.props.requests.detail.data.step_name;
+    const filteredData = reviewersList.data.filter(item => item.step_name === dataFilter);
+
+    this.setState({filteredReviewers: filteredData});
+    this.setState({isAddReviewerDisabled: false, loading: false});
+  }
+
+  async handleAddReviewer() {
+    this.setState({isAddReviewerDisabled: true, loading: true});
+    const reviewerValues = this.state.selectedReviewers.map(reviewer => reviewer.value);  
+    const payload = {
+      'id': this.props.location.search.split('=')[1],
+      'step_name': this.props.requests.detail.data.step_name,
+      'user_list': reviewerValues
+    }
+    await this.props.dispatch(createStepReviewApproval(payload));
+
+    let reviewersList = await this.props.dispatch(listRequestReviewers(this.props.location.search.split('=')[1]));
+    const dataFilter = this.props.requests.detail.data.step_name;
+    const filteredData = reviewersList.data.filter(item => item.step_name === dataFilter);
+
+    this.setState({filteredReviewers: filteredData});
+    this.setState({ selectedReviewers: [] });
+    this.setState({isAddReviewerDisabled: false, loading: false});
+  }
+
+  handleSelectChange = (selectedReviewers) => {
+    this.setState({ selectedReviewers });
+  }
+
+  getReviewerOptions() {
+    const existingUserIds = this.state.filteredReviewers.map(user => user.edpuser_id);
+    const filteredUsers = this.state.allUsers.data?.filter(user => !existingUserIds.includes(user.id));
+    return filteredUsers ? filteredUsers.map(user => ({ value: user.id, label: user.name })) : [];
+  }
+
+  capitalizeFirstLetter = (string) => {
+    return string && string.length > 0? string.charAt(0).toUpperCase() + string.slice(1):"";
+  }
+
   render () {
     let editable = false;
     let reviewable = false;
@@ -497,6 +563,9 @@ class FormOverview extends React.Component {
     } else if (record.error) {
       return <ErrorReport report={record.error} truncate={true} />;
     }
+    if(this.state.loading){
+      return <Loading />;
+    }
     const form = record.data;
     const errors = this.errors();
     const sections = form.sections;
@@ -512,7 +581,7 @@ class FormOverview extends React.Component {
       if (typeof this.props.requests.detail.data !== 'undefined') {
         const formName = record.data.short_name;
         requestId = this.props.requests.detail.data.id;
-        if (this.props.requests.detail.data.step_name.match(/close/g)) {
+        if (this.props.requests.detail.data.step_name?.match(/close/g)) {
           editable = false;
           sameFormAsStep = false;
           if (!canReview) {
@@ -525,12 +594,13 @@ class FormOverview extends React.Component {
           }
           sameFormAsStep = true;
           canReview = false;
-        } else if (this.props.requests.detail.data.step_name.match(/form_review/g)) {
+        } else if (this.props.requests.detail.data.step_name?.match(/form_(.*_)?review/g)) {
           editable = false;
           if (canReview) {
             reviewable = true;
           }
-          if (this.props.requests.detail.data.step_name === `${formName}_form_review`) {
+          const regexStr = new RegExp(`${formName}_form_(.*_)?review`, 'g');
+          if (this.props.requests.detail.data.step_name?.match(regexStr)) {
             sameFormAsStep = true;
           }
         }
@@ -548,7 +618,63 @@ class FormOverview extends React.Component {
               </button>
             : null}
         </section>
-
+        {canReview ? 
+        <div className="review-section" style={{ marginTop: '10px', float: 'right', fontSize: '90%' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <table className='review-table' style={{ borderCollapse: 'collapse', width: '100%' }}>
+              <thead>
+                <tr style={{ textAlign: 'left' }}>
+                  <th style={{padding: '0 1em 0 0'}}>Reviewer</th>
+                  <th style={{padding: '0 1em 0 0'}}>Approval Status</th>
+                  <th>Delete Reviewer</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colSpan={3}><hr style={{ width: '100%', border: '1px solid #ccc', margin: '0' }} /></td></tr>
+                { this.state.filteredReviewers.length > 0 ? (
+                  this.state.filteredReviewers.map((review, index) => (
+                    <tr key={index} style={{textAlign: 'left', textWrap: 'pretty'}}>
+                      <td style={{padding: '0 1em 0 0'}}>{review.name}</td>
+                      <td style={{padding: '0 1em 0 0'}}>{review.user_review_status && review.user_review_status === 'review_required'? 'Review Required':this.capitalizeFirstLetter(review.user_review_status)}</td>
+                      <td style={{textAlign: 'center'}}>
+                        <button
+                          className={'button--red button--remove button button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
+                          style={{ marginTop: '5px' }}
+                          onClick={() => this.handleDelete(review)}
+                          disabled={this.state.isAddReviewerDisabled}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={3} style={{ textAlign: 'center', padding: ' 1em 0 0 0' }}>No Reviewer Assigned</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+              <hr style={{ width: '100%', margin: '10px 0' }} />
+              <Select
+                isMulti
+                options={this.getReviewerOptions()}
+                value={this.state.selectedReviewers}
+                onChange={this.handleSelectChange}
+                placeholder="Select Reviewers..."
+              />
+              <div style={{ textAlign: 'right', 'margin-top': '5px'}}>
+                <button
+                  className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+                  onClick={() => this.handleAddReviewer()}
+                  disabled={this.state.isAddReviewerDisabled || (this.state.selectedReviewers && this.state.selectedReviewers.length === 0)}
+                >
+                  Add Reviewer(s)
+                </button>
+              </div>
+            </div>
+        </div> : ''}
+        <div style={{ clear: 'both' }}></div>
         <section className='page__section'>
           {errors.length ? <ErrorReport report={errors} truncate={true} /> : null}
           <div className='heading__wrapper--border'>

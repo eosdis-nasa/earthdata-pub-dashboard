@@ -114,7 +114,7 @@ class Workflows extends React.Component {
     let reactFlowStyle = {};
     if (record.data) {
       const box = document.querySelector('.page__content--shortened');
-      const sidebar = document.querySelector('div.sidebar').offsetWidth;
+      const sidebar = document.querySelector('div.sidebar')?.offsetWidth;
       if (box !== null) {
         const width = box.offsetWidth;
         reactFlowStyle = {
