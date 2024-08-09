@@ -43,6 +43,7 @@ const FormQuestions = ({
   const [uploadStatusMsg, setUploadStatusMsg] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fakeTable, setFakeTable] = useState([{}]);
+  const [validationAttempted, setValidationAttempted] = useState(false);
   const [uploadFields, setUploadFields] = useState([
     {
       key: 'file_name',
@@ -200,7 +201,7 @@ const FormQuestions = ({
     const input = questions.flatMap(section => section.questions)
                             .flatMap(question => question.inputs)
                             .find(input => input.control_id === controlId);
-  
+
     if (input) {
       const fieldRequired = isFieldRequired(input);
 
@@ -295,6 +296,8 @@ const FormQuestions = ({
   
   const validateFields = (checkAllFields = true, jsonObj) => {
     const newValidationErrors = {};
+    const input2 = questions.flatMap(section => section.questions).find(question => question.long_name === 'Data Format' && question.inputs.filter(input => input.label !== 'Other' && values[input.control_id]).length === 0)
+    if(input2) newValidationErrors['data_format_other_info'] = 'Data Format section is required';
     questions.forEach((section) => {
       section.questions.forEach((question) => {
         question.inputs.forEach((input) => {
@@ -394,6 +397,7 @@ const FormQuestions = ({
   const submitForm = (e) => {
     e.preventDefault();
     logAction('Submit');
+    setValidationAttempted(true);
     saveFile("submit");
   };
 
@@ -452,6 +456,7 @@ const FormQuestions = ({
     console.log('jsonObject', jsonObject);
 
     if(type === 'continueEditing'){
+      setValidationAttempted(true);
       validateFields(true, jsonObject);
       await dispatch(saveForm(jsonObject));
       setAlertVariant('success');
@@ -461,6 +466,8 @@ const FormQuestions = ({
     }
 
     if(type === 'draft'){
+      setValidationAttempted(false);
+      validateFields(true, jsonObject);
       validateFields(false, jsonObject);
       await dispatch(saveForm(jsonObject));
       return;
@@ -797,7 +804,8 @@ const FormQuestions = ({
                                 }
                               </>
                             )}
-                            {question.inputs.map((input, c_key) => (
+                            <div className={`radio-group ${validationAttempted && question.long_name === 'Data Format' && question.inputs.filter(input => values[input.control_id]).length === 0 ? 'radio-group-error' : ''}`}>
+                                {question.inputs.map((input, c_key) => (
                               <label key={input.control_id} className="checkbox-item" style={{ display: input.type === 'checkbox' ? 'flex' : 'none', alignItems: 'center', marginRight: '15px' }}>
                                 <input
                                   type="checkbox"
@@ -818,9 +826,9 @@ const FormQuestions = ({
                                             <div className="validation">{getErrorMessage(input, question, section.heading)}</div>
                                           )}
                               </label>
-                            ))
-                            }
-                          
+                              ))
+                              }
+                            </div>
                           </div>
                           <Row className='row-align'>
                             <Col lg={question.size || 16} className="question_size">
