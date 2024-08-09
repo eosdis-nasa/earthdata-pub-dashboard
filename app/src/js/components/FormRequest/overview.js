@@ -35,7 +35,7 @@ const FormsOverview = ({ forms }) => {
   const submitForm = (e) => {
     e.preventDefault();
     const { basepath } = _config;
-    const urlReturn = `${basepath}/requests`;
+    const urlReturn = `${basepath}requests`;
     dispatch(initialize(selectedDaac.id, { 'daac_id': selectedDaac.id }));
     window.location.href = urlReturn;
   };
@@ -43,7 +43,7 @@ const FormsOverview = ({ forms }) => {
   const cancelForm = (e) => {
     e.preventDefault();
     const { basepath } = _config;
-    const urlReturn = `${basepath}/requests`;
+    const urlReturn = `${basepath}requests`;
     setSelected(null);
     setSelectedDaac({});
     window.location.href = urlReturn;
