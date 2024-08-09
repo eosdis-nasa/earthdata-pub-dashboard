@@ -114,6 +114,8 @@ const FormQuestions = ({
             }else if(key === 'same_as_long_term_support_poc_name_data_producer_info_name'){
               initialValues[key] = requestData.form_data[key];
               setCheckboxStatus((prev) => ({ ...prev, sameAsPrimaryLongTermSupport: requestData.form_data[key] }));
+            }else if(key && typeof requestData.form_data[key] !== 'object' ){
+              initialValues[key] = requestData.form_data[key];
             }
           }
         });
@@ -712,6 +714,7 @@ const FormQuestions = ({
     }
 };
 
+console.log('values', values)
   return (
     !requestData ? (<Loading/>) : (
       <div role="main" className='questions-component'>
