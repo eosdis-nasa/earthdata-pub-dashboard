@@ -150,15 +150,13 @@ const FormQuestions = ({
         field.disabled = checkboxStatus.sameAsPrimaryDataProducer;
       }
     });
-
+  
     ['long_term_support_poc_name', 'long_term_support_poc_organization', 'long_term_support_poc_department', 'long_term_support_poc_email', 'long_term_support_poc_orcid'].forEach(fieldId => {
       const field = document.getElementById(fieldId);
       if (field) {
         field.disabled = checkboxStatus.sameAsPrimaryLongTermSupport || checkboxStatus.sameAsPrimaryDataAccession;
-      
       }
     });
-
   }, [checkboxStatus]);
 
   useEffect(() => {
@@ -326,28 +324,34 @@ const FormQuestions = ({
     
   const handleFieldChange = (controlId, value) => {
     setValues((prevValues) => {
-      const newValues = { ...prevValues, [controlId]: value };
+        const newValues = { ...prevValues, [controlId]: value };
 
-      if (checkboxStatus.sameAsPrimaryDataProducer && controlId.startsWith('data_producer_info_')) {
-        const updatedField = controlId.replace('data_producer_info_', 'poc_');
-        newValues[updatedField] = value;
-      }
+        if (checkboxStatus.sameAsPrimaryDataProducer && controlId.startsWith('data_producer_info_')) {
+            const updatedField = controlId.replace('data_producer_info_', 'poc_');
+            newValues[updatedField] = value;
+        }
 
-      if (checkboxStatus.sameAsPrimaryLongTermSupport && controlId.startsWith('data_producer_info_')) {
-        const updatedField = controlId.replace('data_producer_info_', 'long_term_support_poc_');
-        newValues[updatedField] = value;
-      }
+        if (checkboxStatus.sameAsPrimaryLongTermSupport && controlId.startsWith('data_producer_info_')) {
+            const updatedField = controlId.replace('data_producer_info_', 'long_term_support_poc_');
+            newValues[updatedField] = value;
+        }
 
-      saveToHistory(newValues);
-      return newValues;
+        if (checkboxStatus.sameAsPrimaryDataAccession && controlId.startsWith('poc_')) {
+            const updatedField = controlId.replace('poc_', 'long_term_support_poc_');
+            newValues[updatedField] = value;
+        }
+
+        saveToHistory(newValues);
+        return newValues;
     });
 
     if (!value || value === '' && values.validation_errors[controlId]) {
-      handleInvalid({ target: { name: controlId, validationMessage: `${controlId} is required` } });
+        handleInvalid({ target: { name: controlId, validationMessage: `${controlId} is required` } });
     } else {
-      handleInvalid({ target: { name: controlId, validationMessage: '' } });
+        handleInvalid({ target: { name: controlId, validationMessage: '' } });
     }
-  };
+};
+
 
   const handleTableFieldChange = (controlId, rowIndex, key, value) => {
     setValues(prevValues => {
@@ -604,7 +608,6 @@ const FormQuestions = ({
     return maxlength ? maxlength - (value ? value.length : 0) : undefined;
   };
 
-  const isFormFilled = Object.values(values).some(value => value !== '');
 
   const handleFileDrop = (e) => {
     e.preventDefault();
@@ -660,47 +663,54 @@ const FormQuestions = ({
   const handleRedirect = () => window.location.href = '/requests';
 
   const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;    
+    const { name, checked } = e.target;
 
-    //if (checked) {
-      if (name === 'sameAsPrimaryDataProducer') {
+    if (name === 'sameAsPrimaryDataProducer') {
         setCheckboxStatus((prev) => ({ ...prev, [name]: checked }));
-        setValues((prevValues) => ({
-          ...prevValues,
-          same_as_poc_name_data_producer_info_name: checked,
-          poc_name: prevValues.data_producer_info_name,
-          poc_organization: prevValues.data_producer_info_organization,
-          poc_department: prevValues.data_producer_info_department,
-          poc_email: prevValues.data_producer_info_email,
-          poc_orcid: prevValues.data_producer_info_orcid,
+            setValues((prevValues) => ({
+                ...prevValues,
+                same_as_poc_name_data_producer_info_name: checked,
+                poc_name: prevValues.data_producer_info_name,
+                poc_organization: prevValues.data_producer_info_organization,
+                poc_department: prevValues.data_producer_info_department,
+                poc_email: prevValues.data_producer_info_email,
+                poc_orcid: prevValues.data_producer_info_orcid,
+            }));
+        
+    } else if (name === 'sameAsPrimaryLongTermSupport') {
+        setCheckboxStatus((prev) => ({
+            ...prev,
+            [name]: checked,
+            sameAsPrimaryDataAccession: checked ? false : prev.sameAsPrimaryDataAccession,
         }));
-      } else if (name === 'sameAsPrimaryLongTermSupport') {
-        setCheckboxStatus((prev) => ({ ...prev, [name]: checked, sameAsPrimaryDataAccession: checked ? false: prev.sameAsPrimaryDataAccession }));
-        setValues((prevValues) => ({
-          ...prevValues,
-          same_as_long_term_support_poc_name_data_producer_info_name: checked, 
-          same_as_long_term_support_poc_name_poc_name: checked ? false : prevValues.same_as_long_term_support_poc_name_poc_name,
-          long_term_support_poc_name: prevValues.data_producer_info_name,
-          long_term_support_poc_organization: prevValues.data_producer_info_organization,
-          long_term_support_poc_department: prevValues.data_producer_info_department,
-          long_term_support_poc_email: prevValues.data_producer_info_email,
-          long_term_support_poc_orcid: prevValues.data_producer_info_orcid,
+            setValues((prevValues) => ({
+                ...prevValues,
+                same_as_long_term_support_poc_name_data_producer_info_name: checked,
+                same_as_long_term_support_poc_name_poc_name: checked ? false : prevValues.same_as_long_term_support_poc_name_poc_name,
+                long_term_support_poc_name: prevValues.data_producer_info_name,
+                long_term_support_poc_organization: prevValues.data_producer_info_organization,
+                long_term_support_poc_department: prevValues.data_producer_info_department,
+                long_term_support_poc_email: prevValues.data_producer_info_email,
+                long_term_support_poc_orcid: prevValues.data_producer_info_orcid,
+            }));
+    } else if (name === 'sameAsPrimaryDataAccession') {
+        setCheckboxStatus((prev) => ({
+            ...prev,
+            [name]: checked,
+            sameAsPrimaryLongTermSupport: checked ? false : prev.sameAsPrimaryLongTermSupport,
         }));
-      } else if (name === 'sameAsPrimaryDataAccession') {
-        setCheckboxStatus((prev) => ({ ...prev, [name]: checked, sameAsPrimaryLongTermSupport: checked ? false: prev.sameAsPrimaryLongTermSupport }));
-        setValues((prevValues) => ({
-          ...prevValues,
-          same_as_long_term_support_poc_name_data_producer_info_name: checked ? false : prevValues.same_as_long_term_support_poc_name_data_producer_info_name, 
-          same_as_long_term_support_poc_name_poc_name: checked,
-          long_term_support_poc_name: prevValues.poc_name,
-          long_term_support_poc_organization: prevValues.poc_organization,
-          long_term_support_poc_department: prevValues.poc_department,
-          long_term_support_poc_email: prevValues.poc_email,
-          long_term_support_poc_orcid: prevValues.poc_orcid,
-        }));
-      }
-    //}
-  };
+            setValues((prevValues) => ({
+                ...prevValues,
+                same_as_long_term_support_poc_name_data_producer_info_name: checked ? false : prevValues.same_as_long_term_support_poc_name_data_producer_info_name,
+                same_as_long_term_support_poc_name_poc_name: checked,
+                long_term_support_poc_name: prevValues.poc_name,
+                long_term_support_poc_organization: prevValues.poc_organization,
+                long_term_support_poc_department: prevValues.poc_department,
+                long_term_support_poc_email: prevValues.poc_email,
+                long_term_support_poc_orcid: prevValues.poc_orcid,
+            }));
+    }
+};
 
   return (
     !requestData ? (<Loading/>) : (
@@ -874,26 +884,34 @@ const FormQuestions = ({
                                           {input.type === 'text' && (
                                             <>
                                               <FormControl
-                                                className={`${isError(input) ? 'form-input-error' : ''}`}
-                                                type="text"
-                                                id={input.control_id}
-                                                name={input.control_id}
-                                                value={values[input.control_id] || ''}
-                                                size="lg"
-                                                aria-label={input.control_id}
-                                                disabled={
-                                                  disabled || Boolean(getAttribute('disabled', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
-                                                }
-                                                readOnly={
-                                                  readonly || Boolean(getAttribute('readonly', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
-                                                }
-                                                pattern={getAttribute('pattern', question.inputs[c_key])}
-                                                maxLength={getAttribute('maxlength', question.inputs[c_key])}
-                                                minLength={getAttribute('minlength', question.inputs[c_key])}
-                                                max={getAttribute('max', question.inputs[c_key])}
-                                                min={getAttribute('min', question.inputs[c_key])}
-                                                placeholder={input.required || checkRequiredIf(input) ? 'required' : ''}
-                                                onChange={(e) => handleFieldChange(input.control_id, e.target.value)}
+                                                  className={`${isError(input) ? 'form-input-error' : ''}`}
+                                                  type="text"
+                                                  id={input.control_id}
+                                                  name={input.control_id}
+                                                  value={values[input.control_id] || ''}
+                                                  size="lg"
+                                                  aria-label={input.control_id}
+                                                  disabled={
+                                                      disabled ||
+                                                      Boolean(getAttribute('disabled', question.inputs[c_key])) ||
+                                                      (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) ||
+                                                      (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_')) ||
+                                                      (checkboxStatus.sameAsPrimaryDataAccession && input.control_id.startsWith('long_term_support_poc_'))
+                                                  }
+                                                  readOnly={
+                                                      readonly ||
+                                                      Boolean(getAttribute('readonly', question.inputs[c_key])) ||
+                                                      (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) ||
+                                                      (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_')) ||
+                                                      (checkboxStatus.sameAsPrimaryDataAccession && input.control_id.startsWith('long_term_support_poc_'))
+                                                  }
+                                                  pattern={getAttribute('pattern', question.inputs[c_key])}
+                                                  maxLength={getAttribute('maxlength', question.inputs[c_key])}
+                                                  minLength={getAttribute('minlength', question.inputs[c_key])}
+                                                  max={getAttribute('max', question.inputs[c_key])}
+                                                  min={getAttribute('min', question.inputs[c_key])}
+                                                  placeholder={input.required || checkRequiredIf(input) ? 'required' : ''}
+                                                  onChange={(e) => handleFieldChange(input.control_id, e.target.value)}
                                               />
                                               <p id={`${input.control_id}_invalid`} className="eui-banner--danger hidden form-control validation">
                                                 {getErrorMessage(input, question, section.heading)}
@@ -910,11 +928,19 @@ const FormQuestions = ({
                                               size="lg"
                                               aria-label={input.control_id}
                                               disabled={
-                                                disabled || Boolean(getAttribute('disabled', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
-                                              }
+                                                disabled ||
+                                                Boolean(getAttribute('disabled', question.inputs[c_key])) ||
+                                                (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) ||
+                                                (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_')) ||
+                                                (checkboxStatus.sameAsPrimaryDataAccession && input.control_id.startsWith('long_term_support_poc_'))
+                                            }
                                               readOnly={
-                                                readonly || Boolean(getAttribute('readonly', question.inputs[c_key])) || (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) || (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_'))
-                                              }
+                                                readonly ||
+                                                Boolean(getAttribute('readonly', question.inputs[c_key])) ||
+                                                (checkboxStatus.sameAsPrimaryDataProducer && input.control_id.startsWith('poc_')) ||
+                                                (checkboxStatus.sameAsPrimaryLongTermSupport && input.control_id.startsWith('long_term_support_poc_')) ||
+                                                (checkboxStatus.sameAsPrimaryDataAccession && input.control_id.startsWith('long_term_support_poc_'))
+                                            }
                                               maxLength={getAttribute('maxlength', question.inputs[c_key])}
                                               placeholder={input.required || checkRequiredIf(input) ? 'required' : ''}
                                               onChange={(e) => handleFieldChange(input.control_id, e.target.value)}
