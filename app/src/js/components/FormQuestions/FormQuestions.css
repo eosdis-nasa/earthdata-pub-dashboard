@@ -879,45 +879,7 @@
   margin-left: 10px;
 }
 
-.questions-component .modal-footer .btn-primary {
-  background-color: #ac2229;
-  border: none;
-  color: white;
-  transition: background-color 0.3s;
-}
 
-.questions-component .modal-footer .btn-primary:hover {
-  background-color: #0056b3;
-}
-
-.questions-component .modal-footer .btn-secondary {
-  background-color: #6c757d;
-  border: none;
-  color: white;
-  transition: background-color 0.3s;
-}
-
-.questions-component .modal-footer .btn-secondary:hover {
-  background-color: #5a6268;
-}
-
-.questions-component .form-control:disabled, .form-control[readonly] {
-  background-color: #e9ecef;
-  opacity: 1;
-}
-
-.questions-component .react-datepicker__header h2{
-  border-bottom: 1px solid #cbcbcb;
-  font-size: 1.6em;
-  font-weight: normal;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  color: #2c3e50;
-  text-align: center;
-}
-
-.questions-component .table-required{
-  float: right;
-}
 
 .custom-table-header {
   background-color: #2276ac;
@@ -972,4 +934,67 @@
 
 .padding-zero {
   padding: 0;
+}
+
+.custom-modal .modal-header {
+  display: flex;
+  -webkit-box-align: start;
+  align-items: flex-start;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+  padding: 1rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: calc(.3rem - 1px);
+  border-top-right-radius: calc(.3rem - 1px);
+  background-color: #ebebeb;
+}
+
+.custom-modal .modal-title {
+  color: #323232; 
+  font-weight: bold;
+  font-weight: 500;
+}
+
+.custom-modal .modal-body {
+  font-size: 16px; 
+  color: #333;
+}
+
+.custom-modal .modal-footer {
+ 
+  flex-wrap: wrap;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  justify-content: flex-end;
+  border-top: 1px solid #dee2e6;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: rgb(222, 226, 230);
+  border-bottom-right-radius: calc(.3rem - 1px);
+  border-bottom-left-radius: calc(.3rem - 1px);
+}
+
+.custom-modal .btn-primary {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+  font-size: .875rem;
+  border-radius: 5px;
+  padding: 10px 20px;
+}
+
+.custom-modal .btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+  font-size: .875rem;
+  border-radius: 5px;
+  padding: 10px 20px;
+}
+
+.custom-modal .btn-secondary:hover {
+  color: #fff;
+  background-color: #5a6268;
+  border-color: #545b62;
 }

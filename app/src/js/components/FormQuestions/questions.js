@@ -473,7 +473,6 @@ const FormQuestions = ({
 
     if(type === 'draft'){
       setValidationAttempted(false);
-      validateFields(true, jsonObject);
       validateFields(false, jsonObject);
       await dispatch(saveForm(jsonObject));
       return;
@@ -1213,22 +1212,23 @@ const FormQuestions = ({
           </Container>
         </Form>
         <ScrollToTop />
-        <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Confirmation</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Your request has been saved. Do you want to be redirected to Earthdata Pub Dashboard Requests Page?
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              NO
-            </Button>
-            <Button variant="primary" onClick={handleRedirect}>
-              YES
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <Modal show={showModal} onHide={handleCloseModal} className="custom-modal">
+  <Modal.Header closeButton>
+    <Modal.Title>Confirmation</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    Your request has been saved. Do you want to be redirected to Earthdata Pub Dashboard Requests Page?
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={handleCloseModal}>
+      NO
+    </Button>
+    <Button variant="primary" onClick={handleRedirect}>
+      YES
+    </Button>
+  </Modal.Footer>
+</Modal>
+
       </div>
     )
   );
