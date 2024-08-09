@@ -714,7 +714,6 @@ const FormQuestions = ({
     }
 };
 
-console.log('values', values)
   return (
     !requestData ? (<Loading/>) : (
       <div role="main" className='questions-component'>
