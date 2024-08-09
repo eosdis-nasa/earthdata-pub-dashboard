@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { listDaacs, initialize } from '../../actions';
 import { Form, FormGroup, FormLabel, Button, Table } from 'react-bootstrap';
-import config from '../../config';
+import _config from '../../config';
 
 const FormsOverview = ({ forms }) => {
   const [daacs, setDaacs] = useState([]);
@@ -34,14 +34,16 @@ const FormsOverview = ({ forms }) => {
 
   const submitForm = (e) => {
     e.preventDefault();
-    const urlReturn = '/requests';
+    const { basepath } = _config;
+    const urlReturn = `${basepath}/requests`;
     dispatch(initialize(selectedDaac.id, { 'daac_id': selectedDaac.id }));
     window.location.href = urlReturn;
   };
 
   const cancelForm = (e) => {
     e.preventDefault();
-    const urlReturn = '/requests';
+    const { basepath } = _config;
+    const urlReturn = `${basepath}/requests`;
     setSelected(null);
     setSelectedDaac({});
     window.location.href = urlReturn;
