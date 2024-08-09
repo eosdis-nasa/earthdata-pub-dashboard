@@ -31,7 +31,7 @@ const FormQuestions = ({
   formData,
   requestData
 }) => {
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState({ validation_errors: {} });
   const [questions, setQuestions] = useState([]);
   const [daacInfo, setDaacData] = useState({});
   const [valueHistory, setValueHistory] = useState([{}]);
@@ -326,33 +326,33 @@ const FormQuestions = ({
     
   const handleFieldChange = (controlId, value) => {
     setValues((prevValues) => {
-        const newValues = { ...prevValues, [controlId]: value };
-
-        if (checkboxStatus.sameAsPrimaryDataProducer && controlId.startsWith('data_producer_info_')) {
-            const updatedField = controlId.replace('data_producer_info_', 'poc_');
-            newValues[updatedField] = value;
-        }
-
-        if (checkboxStatus.sameAsPrimaryLongTermSupport && controlId.startsWith('data_producer_info_')) {
-            const updatedField = controlId.replace('data_producer_info_', 'long_term_support_poc_');
-            newValues[updatedField] = value;
-        }
-
-        if (checkboxStatus.sameAsPrimaryDataAccession && controlId.startsWith('poc_')) {
-            const updatedField = controlId.replace('poc_', 'long_term_support_poc_');
-            newValues[updatedField] = value;
-        }
-
-        saveToHistory(newValues);
-        return newValues;
+      const newValues = { ...prevValues, [controlId]: value, validation_errors: { ...prevValues.validation_errors } };
+  
+      if (checkboxStatus.sameAsPrimaryDataProducer && controlId.startsWith('data_producer_info_')) {
+        const updatedField = controlId.replace('data_producer_info_', 'poc_');
+        newValues[updatedField] = value;
+      }
+  
+      if (checkboxStatus.sameAsPrimaryLongTermSupport && controlId.startsWith('data_producer_info_')) {
+        const updatedField = controlId.replace('data_producer_info_', 'long_term_support_poc_');
+        newValues[updatedField] = value;
+      }
+  
+      if (checkboxStatus.sameAsPrimaryDataAccession && controlId.startsWith('poc_')) {
+        const updatedField = controlId.replace('poc_', 'long_term_support_poc_');
+        newValues[updatedField] = value;
+      }
+  
+      saveToHistory(newValues);
+      return newValues;
     });
-
+  
     if (!value || value === '' && values.validation_errors[controlId]) {
-        handleInvalid({ target: { name: controlId, validationMessage: `${controlId} is required` } });
+      handleInvalid({ target: { name: controlId, validationMessage: `${controlId} is required` } });
     } else {
-        handleInvalid({ target: { name: controlId, validationMessage: '' } });
+      handleInvalid({ target: { name: controlId, validationMessage: '' } });
     }
-};
+  };
 
 
   const handleTableFieldChange = (controlId, rowIndex, key, value) => {
@@ -502,22 +502,28 @@ const FormQuestions = ({
 
   const saveToHistory = (newValues) => {
     const history = valueHistory.slice(0, valueHistoryUndoIdx + 1);
-    setValueHistory([...history, newValues]);
+    setValueHistory([...history, { ...newValues, validation_errors: newValues.validation_errors || {} }]);
     setValueHistoryUndoIdx(history.length);
   };
-
+  
   const redoToPreviousState = () => {
     if (valueHistoryUndoIdx < valueHistory.length - 1) {
       setValueHistoryUndoIdx(valueHistoryUndoIdx + 1);
-      setValues(valueHistory[valueHistoryUndoIdx + 1]);
+      setValues((prevValues) => ({
+        ...valueHistory[valueHistoryUndoIdx + 1],
+        validation_errors: valueHistory[valueHistoryUndoIdx + 1].validation_errors || {},
+      }));
     }
     logAction('Redo');
   };
-
+  
   const undoToPreviousState = () => {
     if (valueHistoryUndoIdx > 0) {
       setValueHistoryUndoIdx(valueHistoryUndoIdx - 1);
-      setValues(valueHistory[valueHistoryUndoIdx - 1]);
+      setValues((prevValues) => ({
+        ...valueHistory[valueHistoryUndoIdx - 1],
+        validation_errors: valueHistory[valueHistoryUndoIdx - 1].validation_errors || {},
+      }));
     }
     logAction('Undo');
   };
