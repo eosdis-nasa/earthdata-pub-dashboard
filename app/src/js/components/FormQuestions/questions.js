@@ -401,6 +401,10 @@ const FormQuestions = ({
   
   const isError = (input) => values.validation_errors && values.validation_errors[input.control_id];
   
+  const { basepath } = _config;
+
+  const urlReturn = `${basepath}requests`;
+
   const submitForm = (e) => {
     e.preventDefault();
     logAction('Submit');
@@ -409,8 +413,6 @@ const FormQuestions = ({
   };
 
   const cancelForm = () => {
-    const { basepath } = _config;
-    const urlReturn = `${basepath}requests`;
     window.location.href = urlReturn;
   };
 
@@ -504,7 +506,7 @@ const FormQuestions = ({
     if(type === 'submit'){
       if (validateFields(true, jsonObject)) {
         await dispatch(submitFilledForm(jsonObject));
-        window.location.href = '/requests';
+        window.location.href = urlReturn;
       } else {
         setAlertVariant('danger');
         setAlertMessage('You have errors to correct before you can submit your request. You can save your request as a draft and come back.');
@@ -691,7 +693,10 @@ const FormQuestions = ({
   };
 
   const handleCloseModal = () => setShowModal(false);
-  const handleRedirect = () => window.location.href = '/requests';
+  const handleRedirect = () => {
+    window.location.href = urlReturn;
+  }
+
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
