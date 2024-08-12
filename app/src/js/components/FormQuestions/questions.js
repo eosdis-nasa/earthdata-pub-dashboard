@@ -16,6 +16,7 @@ import {
 } from '../../utils/format';
 import { saveForm, submitFilledForm } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
+import _config from '../../config';
 
 const FormQuestions = ({
   cancelLabel = "Cancel",
@@ -408,7 +409,9 @@ const FormQuestions = ({
   };
 
   const cancelForm = () => {
-    window.location.href = '/requests';
+    const { basepath } = _config;
+    const urlReturn = `${basepath}requests`;
+    window.location.href = urlReturn;
   };
 
   const draftFile = (e) => {
@@ -437,6 +440,25 @@ const FormQuestions = ({
     });
   };
 
+  const processAndStringifyValues = (jsonObject) => {
+    const result = {};
+
+    for (const key in jsonObject) {
+        if (jsonObject.hasOwnProperty(key)) {
+            const value = jsonObject[key];
+            
+            // Skip keys with `false` values
+            if (value !== false) {
+                // Convert the value to a string
+                result[key] = String(value);
+            }
+        }
+    }
+    return result;
+  }
+    
+
+
   const saveFile = async (type) => {
     const fieldValues = { ...values };
     let jsonObject = {
@@ -456,8 +478,10 @@ const FormQuestions = ({
       }
     });    
 
-  
+    const processedData = processAndStringifyValues(jsonObject.data);
     jsonObject.log = logs;
+    jsonObject.data = processedData
+    
     
     console.log('jsonObject', jsonObject);
 
