@@ -998,3 +998,8 @@
   background-color: #5a6268;
   border-color: #545b62;
 }
+
+.form-control:disabled, .form-control[readonly] {
+  background-color: #e9ecef;
+  opacity: 1;
+}

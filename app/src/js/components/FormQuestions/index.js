@@ -74,12 +74,12 @@ FormQuestions2.propTypes = {
 
 const ConnectedFormQuestions = withRouter(connect()(FormQuestions2));
 
-const App = () => (
-  <Router>
-    <Switch>
-      <Route path="/form/questions/:id" component={ConnectedFormQuestions} />
-    </Switch>
-  </Router>
-);
+// const App = () => (
+//   <Router>
+//     <Switch>
+//       <Route path="/form/questions/:id" component={ConnectedFormQuestions} />
+//     </Switch>
+//   </Router>
+// );
 
-export default App;
+export default ConnectedFormQuestions;

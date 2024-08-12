@@ -53,7 +53,7 @@ const MainRoutes = () => {
         <Route path='/requests' component={Requests} />
         <Route path='/forms' component={Forms} />
         <Route path="/daac/selection" component={FormRequest} />
-        <Route path="/form/questions" component={FormQuestions} />
+        <Route path="/form/questions/:id" component={FormQuestions} />
         <Route path='/questions' component={Questions} />
         <Route path='/users' component={Users} />
         <Route path='/groups' component={Groups} />
