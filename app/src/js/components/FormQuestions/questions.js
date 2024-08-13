@@ -5,7 +5,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRedo, faUndo, faPlus, faTrashAlt, faArrowUp, faArrowDown, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import { validate as validateFile } from '@edpub/upload-utility';
 import { useDispatch } from 'react-redux';
 import './FormQuestions.css';
 import DynamicTable from './DynamicTable';
@@ -14,9 +13,10 @@ import {
   shortDateShortTimeYearFirstJustValue,
   calculateStorage
 } from '../../utils/format';
-import { saveForm, submitFilledForm } from '../../actions';
+import { saveForm, submitFilledForm, setTokenState } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
+import localUpload from '@edpub/upload-utility';
 
 const FormQuestions = ({
   cancelLabel = "Cancel",
@@ -89,7 +89,7 @@ const FormQuestions = ({
   
   useEffect(() => {
     setUploadedFiles(dee);
-    
+    console.log('requestData', requestData)
     if (formData) {
       setQuestions(formData.sections);
       const initialValues = {};
@@ -641,6 +641,23 @@ const FormQuestions = ({
     return maxlength ? maxlength - (value ? value.length : 0) : undefined;
   };
 
+  const validateFile = (file) => {
+    let valid = false;
+    let msg = '';
+    if (file.name.match(/\.([^.]+)$/) !== null) {
+      var ext = file.name.match(/\.([^.]+)$/)[1];
+      if (ext.match(/exe/gi)) {
+        msg = 'exe is an invalid file type.';
+        resetUploads(msg, 'Please select a different file.');
+      } else {
+        valid = true;
+      }
+    } else {
+      msg = 'The file must have an extension.';
+      resetUploads(msg, 'Please select a different file.');
+    }
+    return valid;
+  };
 
   const handleFileDrop = (e) => {
     e.preventDefault();
@@ -668,29 +685,84 @@ const FormQuestions = ({
     e.stopPropagation();
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
     if (file) {
       setUploadFile(file);
       setUploadStatusMsg(`Selected file: ${file.name}`);
+    } else {
+      setUploadStatusMsg('No file selected');
     }
   };
 
-  const handleUpload = () => {
-    if (uploadFile) {
+  const refreshAuth = async () => {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('auth-token')}`
+      }
+    };
+    await fetch(`${apiRoot}token/refresh`, options)
+    .then(r => r.json())
+    .then(( { token }) => {
+      localStorage.setItem('auth-token', token);
+      dispatch(setTokenState(token));
+    });
+  }
+
+  const { apiRoot } = _config;
+
+  const handleUpload = async (event) => {
+   
+    let alertMsg = '';
+    let statusMsg = '';
+    if (validateFile(uploadFile)) {
       setUploadStatusMsg('Uploading...');
-      setTimeout(() => {
-        setUploadStatusMsg('Upload complete');
-        setUploadedFiles([...uploadedFiles, {
-          file_name: uploadFile.name,
-          size: uploadFile.size,
-          lastModified: uploadFile.lastModified,
-          sha256Checksum: 'mockChecksum'
-        }]);
-        setUploadFile(null);
-      }, 1000);
+  
+      const upload = new localUpload();
+      const requestId = daacInfo.id; 
+      try {
+        await refreshAuth(); // Function to refresh authentication token if needed
+  
+        let payload = {
+          fileObj: uploadFile,
+          authToken: localStorage.getItem('auth-token'),
+        };
+  
+        if (requestId) {
+          payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
+          payload['submissionId'] = requestId;
+        }
+        
+        console.log('payload', payload);
+
+        const resp = await upload.uploadFile(payload);
+        const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
+  
+        if (error) {
+          alertMsg = `An error has occurred on uploadFile: ${error}.`;
+          statusMsg = 'Select a file';
+          console.error(alertMsg);
+          resetUploads(alertMsg, statusMsg);
+        } else {
+          alertMsg = '';
+          statusMsg = 'Upload Complete';
+          resetUploads(alertMsg, statusMsg);
+          updateUploadStatusWithTimeout('Select another file', 1000);
+  
+          if (requestId) {
+           // fetchUploadedFiles(); // Function to refresh the list of uploaded files
+          }
+        }
+      } catch (error) {
+        console.error(`try catch error: ${error.stack}`);
+        alertMsg = 'An error has occurred during the upload.';
+        statusMsg = 'Select a file';
+        resetUploads(alertMsg, statusMsg);
+      }
     }
   };
+  
 
   const handleCloseModal = () => setShowModal(false);
   const handleRedirect = () => {
