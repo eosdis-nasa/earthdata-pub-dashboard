@@ -751,6 +751,7 @@ const FormQuestions = ({
         const resp = await upload.uploadFile(payload, updateProgress);
         const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
   
+        console.log('resp', resp)
         if (error) {
           alertMsg = `An error has occurred on uploadFile: ${error}.`;
           statusMsg = 'Select a file';
@@ -763,7 +764,7 @@ const FormQuestions = ({
             file_name: uploadFile.name,
             size: uploadFile.size,
             lastModified: uploadFile.lastModified,
-            sha256Checksum: resp.data.sha256Checksum
+            sha256Checksum: 'checksum'
           }]);
           resetUploads(alertMsg, statusMsg);
           updateUploadStatusWithTimeout('Select another file', 1000);
