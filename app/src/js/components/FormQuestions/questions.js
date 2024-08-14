@@ -13,7 +13,7 @@ import {
   shortDateShortTimeYearFirstJustValue,
   calculateStorage
 } from '../../utils/format';
-import { saveForm, submitFilledForm, setTokenState } from '../../actions';
+import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import localUpload from '@edpub/upload-utility';
@@ -78,7 +78,6 @@ const FormQuestions = ({
   const { id } = useParams();
   const dispatch = useDispatch();
   const textareaRef = useRef(null);
-  const dee = [{"key":"ef229725-1cad-485e-a72b-a276d2ca3175/7e11241c-6f7e-408c-aac9-a718cc2ca38b/971bff66-6d6e-4f59-a100-fe75d6519804/2.txt","size":81,"lastModified":"2024-07-17T17:16:51.000Z","file_name":"2.txt","sha256Checksum":"4tcuX4gClsavyCL1x97VvwaGIloqarATuy/8R5cy06U="},{"key":"ef229725-1cad-485e-a72b-a276d2ca3175/7e11241c-6f7e-408c-aac9-a718cc2ca38b/971bff66-6d6e-4f59-a100-fe75d6519804/3.txt","size":81,"lastModified":"2024-07-17T17:19:34.000Z","file_name":"3.txt","sha256Checksum":"4tcuX4gClsavyCL1x97VvwaGIloqarATuy/8R5cy06U="},{"key":"ef229725-1cad-485e-a72b-a276d2ca3175/7e11241c-6f7e-408c-aac9-a718cc2ca38b/971bff66-6d6e-4f59-a100-fe75d6519804/test.txt","size":53,"lastModified":"2024-07-17T17:07:06.000Z","file_name":"test.txt","sha256Checksum":"fttht8edofrijAMnBPJsZOHPnf+8hK6elL4ZiSaJZSA="}];
   const history = useHistory();
   const logAction = (action) => {
     setLogs((prevLogs) => ({
@@ -91,7 +90,49 @@ const FormQuestions = ({
   };
   
   useEffect(() => {
-    setUploadedFiles(dee);
+    const fetchFileUploads = async () => {
+      if (requestData  && requestData.id) {
+        try {
+          const resp = await dispatch(listFileUploadsBySubmission(requestData.id));
+          
+          if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
+            return;
+          }
+          
+          const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
+          if (error) {
+            if (!error.match(/not authorized/gi) && !error.match(/not implemented/gi)) {
+              const str = `An error has occurred while getting the list of files: ${error}.`;
+              console.log(str);
+              return;
+            } else {
+              return;
+            }
+          }
+  
+          const files = resp.data;
+  
+          // Sort files by lastModified date, most recent first
+          files.sort((a, b) => {
+            const keyA = new Date(a.lastModified);
+            const keyB = new Date(b.lastModified);
+            return keyB - keyA;
+          });
+  
+          // Set the files in state
+          setUploadedFiles(files); 
+
+        } catch (error) {
+          console.error('Failed to fetch file uploads:', error);
+        }
+      }
+    };
+  
+    fetchFileUploads();
+  }, [uploadedFiles]);
+  
+  useEffect(() => {
+    
     console.log('requestData', requestData)
     if (formData) {
       setQuestions(formData.sections);
@@ -764,7 +805,6 @@ const FormQuestions = ({
             file_name: uploadFile.name,
             size: uploadFile.size,
             lastModified: uploadFile.lastModified,
-            sha256Checksum: 'checksum'
           }]);
           resetUploads(alertMsg, statusMsg);
           //updateUploadStatusWithTimeout('Select another file', 1000);
