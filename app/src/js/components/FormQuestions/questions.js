@@ -45,6 +45,9 @@ const FormQuestions = ({
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fakeTable, setFakeTable] = useState([{}]);
   const [validationAttempted, setValidationAttempted] = useState(false);
+  const [progressValue, setProgressValue] = useState(0);
+  const [showProgressBar, setShowProgressBar] = useState(false);
+  const [uploadFileName, setUploadFileName] = useState('');
   const [uploadFields, setUploadFields] = useState([
     {
       key: 'file_name',
@@ -712,21 +715,24 @@ const FormQuestions = ({
 
   const { apiRoot } = _config;
 
-  const handleUpload = async (event) => {
-    this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: uploadFile ? uploadFile.name: '' });
-
-    // Define the callback function to update progress value in state
+  const handleUpload = async () => {
+    setUploadStatusMsg('Uploading...');
+    setShowProgressBar(true);
+    setProgressValue(0);
+  
     const updateProgress = (progress, fileObj) => {
-      this.setState({ progressValue: Math.min(progress, 100), uploadFileName: uploadFile ? uploadFile.name: '' });
+      console.log('progress', progress);
+      console.log('fileobj', fileObj);
+      setProgressValue(Math.min(progress, 100));
+      setUploadFileName(fileObj ? fileObj.name : '');    
     };
 
     let alertMsg = '';
     let statusMsg = '';
     if (validateFile(uploadFile)) {
-      setUploadStatusMsg('Uploading...');
-  
       const upload = new localUpload();
-      const requestId = daacInfo.id; 
+      const requestId = daacInfo.id;
+  
       try {
         await refreshAuth(); // Function to refresh authentication token if needed
   
@@ -741,7 +747,7 @@ const FormQuestions = ({
         }
         
         console.log('payload', payload);
-
+  
         const resp = await upload.uploadFile(payload, updateProgress);
         const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
   
@@ -753,12 +759,14 @@ const FormQuestions = ({
         } else {
           alertMsg = '';
           statusMsg = 'Upload Complete';
+          setUploadedFiles([...uploadedFiles, {
+            file_name: uploadFile.name,
+            size: uploadFile.size,
+            lastModified: uploadFile.lastModified,
+            sha256Checksum: resp.data.sha256Checksum
+          }]);
           resetUploads(alertMsg, statusMsg);
           updateUploadStatusWithTimeout('Select another file', 1000);
-  
-          if (requestId) {
-           // fetchUploadedFiles(); // Function to refresh the list of uploaded files
-          }
         }
       } catch (error) {
         console.error(`try catch error: ${error.stack}`);
@@ -768,6 +776,7 @@ const FormQuestions = ({
       }
     }
   };
+  
   
 
   const handleCloseModal = () => setShowModal(false);
