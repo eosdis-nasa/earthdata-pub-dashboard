@@ -734,7 +734,7 @@ const FormQuestions = ({
       const requestId = daacInfo.id;
   
       try {
-        await refreshAuth(); // Function to refresh authentication token if needed
+        //await refreshAuth(); // Function to refresh authentication token if needed
   
         let payload = {
           fileObj: uploadFile,
@@ -767,7 +767,7 @@ const FormQuestions = ({
             sha256Checksum: 'checksum'
           }]);
           resetUploads(alertMsg, statusMsg);
-          updateUploadStatusWithTimeout('Select another file', 1000);
+          //updateUploadStatusWithTimeout('Select another file', 1000);
         }
       } catch (error) {
         console.error(`try catch error: ${error.stack}`);
