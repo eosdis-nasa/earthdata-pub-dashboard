@@ -48,6 +48,8 @@ const FormQuestions = ({
   const [progressValue, setProgressValue] = useState(0);
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [uploadFileName, setUploadFileName] = useState('');
+  const [uploadFileFlag, setUploadFileFlag] = useState(false);
+
   const [uploadFields, setUploadFields] = useState([
     {
       key: 'file_name',
@@ -91,7 +93,7 @@ const FormQuestions = ({
   
   const fetchFileUploads = async () => {
     console.log('called');
-    if (requestData  && requestData.id) {
+    if (requestData  && requestData.id && uploadFileFlag) {
       try {
         const resp = await dispatch(listFileUploadsBySubmission(requestData.id));
         
@@ -126,11 +128,12 @@ const FormQuestions = ({
         console.error('Failed to fetch file uploads:', error);
       }
     }
+    setUploadFileFlag(false);
   };
 
   useEffect(() => {
     fetchFileUploads();
-  }, [requestData]);
+  }, [requestData, uploadFileFlag]);
   
   useEffect(() => {
     console.log('requestData', requestData)
@@ -801,11 +804,7 @@ const FormQuestions = ({
         } else {
           alertMsg = '';
           statusMsg = 'Upload Complete';
-          setUploadedFiles([...uploadedFiles, {
-            file_name: uploadFile.name,
-            size: uploadFile.size,
-            lastModified: uploadFile.lastModified,
-          }]);
+          setUploadFileFlag(true);
           resetUploads(alertMsg, statusMsg);
           //updateUploadStatusWithTimeout('Select another file', 1000);
         }
