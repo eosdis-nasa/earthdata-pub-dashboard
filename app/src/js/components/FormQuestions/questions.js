@@ -89,50 +89,50 @@ const FormQuestions = ({
     }));
   };
   
-  useEffect(() => {
-    const fetchFileUploads = async () => {
-      if (requestData  && requestData.id) {
-        try {
-          const resp = await dispatch(listFileUploadsBySubmission(requestData.id));
-          
-          if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
+  const fetchFileUploads = async () => {
+    if (requestData  && requestData.id) {
+      try {
+        const resp = await dispatch(listFileUploadsBySubmission(requestData.id));
+        
+        if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
+          return;
+        }
+        
+        const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
+        if (error) {
+          if (!error.match(/not authorized/gi) && !error.match(/not implemented/gi)) {
+            const str = `An error has occurred while getting the list of files: ${error}.`;
+            console.log(str);
+            return;
+          } else {
             return;
           }
-          
-          const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
-          if (error) {
-            if (!error.match(/not authorized/gi) && !error.match(/not implemented/gi)) {
-              const str = `An error has occurred while getting the list of files: ${error}.`;
-              console.log(str);
-              return;
-            } else {
-              return;
-            }
-          }
-  
-          const files = resp.data;
-  
-          // Sort files by lastModified date, most recent first
-          files.sort((a, b) => {
-            const keyA = new Date(a.lastModified);
-            const keyB = new Date(b.lastModified);
-            return keyB - keyA;
-          });
-  
-          // Set the files in state
-          setUploadedFiles(files); 
-
-        } catch (error) {
-          console.error('Failed to fetch file uploads:', error);
         }
+
+        const files = resp.data;
+
+        // Sort files by lastModified date, most recent first
+        files.sort((a, b) => {
+          const keyA = new Date(a.lastModified);
+          const keyB = new Date(b.lastModified);
+          return keyB - keyA;
+        });
+
+        // Set the files in state
+        setUploadedFiles(files); 
+
+      } catch (error) {
+        console.error('Failed to fetch file uploads:', error);
       }
-    };
-  
+    }
+  };
+
+  useEffect(() => {
     fetchFileUploads();
   }, [uploadedFiles]);
   
   useEffect(() => {
-    
+    fetchFileUploads();
     console.log('requestData', requestData)
     if (formData) {
       setQuestions(formData.sections);
