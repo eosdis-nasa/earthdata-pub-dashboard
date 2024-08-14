@@ -49,7 +49,6 @@ const FormQuestions = ({
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [uploadFileName, setUploadFileName] = useState('');
   const [uploadFileFlag, setUploadFileFlag] = useState(false);
-
   const [uploadFields, setUploadFields] = useState([
     {
       key: 'file_name',
