@@ -713,7 +713,13 @@ const FormQuestions = ({
   const { apiRoot } = _config;
 
   const handleUpload = async (event) => {
-   
+    this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: uploadFile ? uploadFile.name: '' });
+
+    // Define the callback function to update progress value in state
+    const updateProgress = (progress, fileObj) => {
+      this.setState({ progressValue: Math.min(progress, 100), uploadFileName: uploadFile ? uploadFile.name: '' });
+    };
+
     let alertMsg = '';
     let statusMsg = '';
     if (validateFile(uploadFile)) {
@@ -736,7 +742,7 @@ const FormQuestions = ({
         
         console.log('payload', payload);
 
-        const resp = await upload.uploadFile(payload);
+        const resp = await upload.uploadFile(payload, updateProgress);
         const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
   
         if (error) {
