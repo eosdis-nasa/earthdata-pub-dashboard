@@ -90,6 +90,7 @@ const FormQuestions = ({
   };
   
   const fetchFileUploads = async () => {
+    console.log('called');
     if (requestData  && requestData.id) {
       try {
         const resp = await dispatch(listFileUploadsBySubmission(requestData.id));
@@ -129,10 +130,9 @@ const FormQuestions = ({
 
   useEffect(() => {
     fetchFileUploads();
-  }, [uploadedFiles]);
+  }, [requestData]);
   
   useEffect(() => {
-    fetchFileUploads();
     console.log('requestData', requestData)
     if (formData) {
       setQuestions(formData.sections);
