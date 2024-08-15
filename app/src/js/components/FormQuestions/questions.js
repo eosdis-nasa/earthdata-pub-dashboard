@@ -790,10 +790,10 @@ const FormQuestions = ({
         }
         
         console.log('payload', payload);
-  
+        setUploadFile(null);
         const resp = await upload.uploadFile(payload, updateProgress);
         const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
-  
+        
         console.log('resp', resp)
         if (error) {
           alertMsg = `An error has occurred on uploadFile: ${error}.`;
@@ -1314,10 +1314,11 @@ const FormQuestions = ({
                                               <p>Drag & drop a file here, or click to select a file</p>
                                             </div>
                                             <p className="upload-status">{uploadStatusMsg}</p>
-                                            <Button className="upload-button mt-2" onClick={handleUpload} disabled={!uploadFile}>
-                                              Upload
-                                            </Button>
+                                            
                                           </div>
+                                          <Button style={{ display: input.type === 'file' ? 'block' : 'none' }} className="upload-button mt-2" onClick={handleUpload} disabled={!uploadFile}>
+                                            Upload
+                                          </Button>
                                           <div
                                             style={{ display: input.type === 'file' ? 'block' : 'none' }}
                                             className="table-div w-100"
