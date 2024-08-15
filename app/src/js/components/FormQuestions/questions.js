@@ -92,7 +92,7 @@ const FormQuestions = ({
   
   const fetchFileUploads = async () => {
     console.log('called');
-    if (requestData  && requestData.id && uploadFileFlag) {
+    if (requestData  && requestData.id) {
       try {
         const resp = await dispatch(listFileUploadsBySubmission(requestData.id));
         
