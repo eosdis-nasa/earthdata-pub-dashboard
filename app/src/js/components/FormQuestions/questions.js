@@ -826,53 +826,103 @@ const FormQuestions = ({
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
-
+  
     if (name === 'sameAsPrimaryDataProducer') {
-        setCheckboxStatus((prev) => ({ ...prev, [name]: checked }));
-            setValues((prevValues) => ({
-                ...prevValues,
-                same_as_poc_name_data_producer_info_name: checked,
-                poc_name: prevValues.data_producer_info_name,
-                poc_organization: prevValues.data_producer_info_organization,
-                poc_department: prevValues.data_producer_info_department,
-                poc_email: prevValues.data_producer_info_email,
-                poc_orcid: prevValues.data_producer_info_orcid,
-            }));
-        
+      setCheckboxStatus((prev) => ({ ...prev, [name]: checked }));
+  
+      setValues((prevValues) => {
+        const updatedValues = {
+          ...prevValues,
+          same_as_poc_name_data_producer_info_name: checked,
+          poc_name: prevValues.data_producer_info_name,
+          poc_organization: prevValues.data_producer_info_organization,
+          poc_department: prevValues.data_producer_info_department,
+          poc_email: prevValues.data_producer_info_email,
+          poc_orcid: prevValues.data_producer_info_orcid,
+        };
+  
+        // Clear previous validation errors for dependent fields
+        const newValidationErrors = { ...prevValues.validation_errors };
+        ['poc_name', 'poc_organization', 'poc_department', 'poc_email', 'poc_orcid'].forEach((field) => {
+          delete newValidationErrors[field];
+        });
+  
+        // Propagate errors from primary data producer to dependent fields
+        if (prevValues.validation_errors['data_producer_info_name']) {
+          newValidationErrors['poc_name'] = prevValues.validation_errors['data_producer_info_name'];
+        }
+  
+        return { ...updatedValues, validation_errors: newValidationErrors };
+      });
+  
     } else if (name === 'sameAsPrimaryLongTermSupport') {
-        setCheckboxStatus((prev) => ({
-            ...prev,
-            [name]: checked,
-            sameAsPrimaryDataAccession: checked ? false : prev.sameAsPrimaryDataAccession,
-        }));
-            setValues((prevValues) => ({
-                ...prevValues,
-                same_as_long_term_support_poc_name_data_producer_info_name: checked,
-                same_as_long_term_support_poc_name_poc_name: checked ? false : prevValues.same_as_long_term_support_poc_name_poc_name,
-                long_term_support_poc_name: prevValues.data_producer_info_name,
-                long_term_support_poc_organization: prevValues.data_producer_info_organization,
-                long_term_support_poc_department: prevValues.data_producer_info_department,
-                long_term_support_poc_email: prevValues.data_producer_info_email,
-                long_term_support_poc_orcid: prevValues.data_producer_info_orcid,
-            }));
+      setCheckboxStatus((prev) => ({
+        ...prev,
+        [name]: checked,
+        sameAsPrimaryDataAccession: checked ? false : prev.sameAsPrimaryDataAccession,
+      }));
+  
+      setValues((prevValues) => {
+        const updatedValues = {
+          ...prevValues,
+          same_as_long_term_support_poc_name_data_producer_info_name: checked,
+          same_as_long_term_support_poc_name_poc_name: checked ? false : prevValues.same_as_long_term_support_poc_name_poc_name,
+          long_term_support_poc_name: prevValues.data_producer_info_name,
+          long_term_support_poc_organization: prevValues.data_producer_info_organization,
+          long_term_support_poc_department: prevValues.data_producer_info_department,
+          long_term_support_poc_email: prevValues.data_producer_info_email,
+          long_term_support_poc_orcid: prevValues.data_producer_info_orcid,
+        };
+  
+        // Clear previous validation errors for dependent fields
+        const newValidationErrors = { ...prevValues.validation_errors };
+        ['long_term_support_poc_name', 'long_term_support_poc_organization', 'long_term_support_poc_department', 'long_term_support_poc_email', 'long_term_support_poc_orcid'].forEach((field) => {
+          delete newValidationErrors[field];
+        });
+  
+        // Propagate errors from primary data producer to dependent fields
+        if (prevValues.validation_errors['data_producer_info_name']) {
+          newValidationErrors['long_term_support_poc_name'] = prevValues.validation_errors['data_producer_info_name'];
+        }
+  
+        return { ...updatedValues, validation_errors: newValidationErrors };
+      });
+  
     } else if (name === 'sameAsPrimaryDataAccession') {
-        setCheckboxStatus((prev) => ({
-            ...prev,
-            [name]: checked,
-            sameAsPrimaryLongTermSupport: checked ? false : prev.sameAsPrimaryLongTermSupport,
-        }));
-            setValues((prevValues) => ({
-                ...prevValues,
-                same_as_long_term_support_poc_name_data_producer_info_name: checked ? false : prevValues.same_as_long_term_support_poc_name_data_producer_info_name,
-                same_as_long_term_support_poc_name_poc_name: checked,
-                long_term_support_poc_name: prevValues.poc_name,
-                long_term_support_poc_organization: prevValues.poc_organization,
-                long_term_support_poc_department: prevValues.poc_department,
-                long_term_support_poc_email: prevValues.poc_email,
-                long_term_support_poc_orcid: prevValues.poc_orcid,
-            }));
+      setCheckboxStatus((prev) => ({
+        ...prev,
+        [name]: checked,
+        sameAsPrimaryLongTermSupport: checked ? false : prev.sameAsPrimaryLongTermSupport,
+      }));
+  
+      setValues((prevValues) => {
+        const updatedValues = {
+          ...prevValues,
+          same_as_long_term_support_poc_name_data_producer_info_name: checked ? false : prevValues.same_as_long_term_support_poc_name_data_producer_info_name,
+          same_as_long_term_support_poc_name_poc_name: checked,
+          long_term_support_poc_name: prevValues.poc_name,
+          long_term_support_poc_organization: prevValues.poc_organization,
+          long_term_support_poc_department: prevValues.poc_department,
+          long_term_support_poc_email: prevValues.poc_email,
+          long_term_support_poc_orcid: prevValues.poc_orcid,
+        };
+  
+        // Clear previous validation errors for dependent fields
+        const newValidationErrors = { ...prevValues.validation_errors };
+        ['long_term_support_poc_name', 'long_term_support_poc_organization', 'long_term_support_poc_department', 'long_term_support_poc_email', 'long_term_support_poc_orcid'].forEach((field) => {
+          delete newValidationErrors[field];
+        });
+  
+        // Propagate errors from `poc_name` to `long_term_support_poc_name`
+        if (prevValues.validation_errors['poc_name']) {
+          newValidationErrors['long_term_support_poc_name'] = prevValues.validation_errors['poc_name'];
+        }
+  
+        return { ...updatedValues, validation_errors: newValidationErrors };
+      });
     }
-};
+  };
+  
 
   return (
     !requestData ? (<Loading/>) : (
