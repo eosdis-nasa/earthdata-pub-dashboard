@@ -224,7 +224,7 @@ const FormQuestions = ({
     }, 600000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [values]);
 
   const allowOnlyNumbers = (event) => {
     const charCode = event.which ? event.which : event.keyCode;
@@ -1171,7 +1171,7 @@ const FormQuestions = ({
                                               timeFormat="HH:mm"
                                               timeIntervals={1}
                                               timeCaption="time"
-                                              dateFormat="MMMM d, yyyy h:mm aa"
+                                              dateFormat="yyyy-MM-dd h:mm aa"
                                               placeholderText="required"
                                               icon={
                                                 <svg

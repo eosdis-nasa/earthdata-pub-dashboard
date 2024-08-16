@@ -936,6 +936,10 @@
   padding: 0;
 }
 
+.questions-component .react-datepicker__current-month{
+  padding-left: 40px;
+}
+
 .custom-modal .modal-header {
   display: flex;
   -webkit-box-align: start;
