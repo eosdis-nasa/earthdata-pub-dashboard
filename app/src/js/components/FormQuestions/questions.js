@@ -269,9 +269,10 @@ const FormQuestions = ({
       } else if (input.type === 'radio' && value && !input.enums.includes(value)) {
         errorMessage = `${long_name ? long_name + ' - ' : ''}${input.label || long_name} must be a valid option`;
       } else if (input.type === 'table') {
-        if(value && value.length>0){
+        if(value && value.length > 0){
           value = value.filter(obj => Object.keys(obj).length !== 0);
         }
+        console.log('testing:-> ', input, long_name)
         const result = value && value.some(producer => areProducerFieldsEmpty(producer));
         result ||  value && value.length == 0 ? errorMessage = `${input.label || long_name} both First Name and Last Name are required`:'';
       } else if (input.type === 'bbox') {
@@ -364,7 +365,10 @@ const FormQuestions = ({
                 }
             }
             else if(input.type === 'file') {
-            let flag;
+              if(uploadedFiles && uploadedFiles.length > 0){
+                return;
+              }
+              let flag;
               question.inputs.forEach((input) => {
                 if(jsonObj.data[input.control_id]){
                   flag = true
