@@ -365,20 +365,21 @@ const FormQuestions = ({
                 }
             }
             else if(input.type === 'file') {
-              if(uploadedFiles && uploadedFiles.length > 0){
-                return;
-              }
-              let flag;
-              question.inputs.forEach((input) => {
-                if(jsonObj.data[input.control_id]){
-                  flag = true
-                  return
+              console.log('uploadedFiles', uploadedFiles)
+              if(uploadedFiles && uploadedFiles.length === 0){
+                let flag;
+                question.inputs.forEach((input) => {
+                  if(jsonObj.data[input.control_id]){
+                    flag = true
+                    return
+                  }
+                })
+                const [errorMessage, fieldId] = validateField(input.control_id, flag, question.long_name, question);
+                if (errorMessage) {
+                  newValidationErrors[fieldId] = errorMessage;
                 }
-              })
-              const [errorMessage, fieldId] = validateField(input.control_id, flag, question.long_name, question);
-              if (errorMessage) {
-                newValidationErrors[fieldId] = errorMessage;
               }
+              
             }
             else {
               const [errorMessage, fieldId] = validateField(input.control_id, value, question.long_name, question);
