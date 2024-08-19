@@ -220,7 +220,7 @@ const FormQuestions = ({
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      saveFile('draft');
+      saveFile('draft', false);
     }, 600000);
 
     return () => clearInterval(intervalId);
@@ -233,26 +233,30 @@ const FormQuestions = ({
     }
   };
 
-  const isFieldRequired = (input) => {
+  const isFieldRequired = (input, parent) => {
+    if(input.type == 'file'){
+      return parent.required
+    }
     if (input.required_if && (input.required_if).length === 0) {
       return input.required || false;
     }
     const result = input.required_if.some(condition => {
       return values[condition.field] === (condition.value === "true" ? true : condition.value === "false" ? false : condition.value);
     });
+
     return result;
   };
 
-  const validateField = (controlId, value, long_name) => {
+  const validateField = (controlId, value, long_name, parent) => {
     let errorMessage = '';
     const input = questions.flatMap(section => section.questions)
                             .flatMap(question => question.inputs)
                             .find(input => input.control_id === controlId);
 
     if (input) {
-      const fieldRequired = isFieldRequired(input);
+      const fieldRequired = isFieldRequired(input, parent);
 
-      if (fieldRequired && (!value || value === "") && input.type !== 'bbox') {
+      if (fieldRequired && (!value || value === "") && input.type !== 'bbox' & input.type !== 'table') {
         errorMessage = `${long_name ? long_name + ' - ' : ''}${input.label || long_name} is required`;
       } else if (input.type === 'number' && isNaN(value)) {
         errorMessage = `${input.label || long_name} must be a valid number`;
@@ -265,8 +269,11 @@ const FormQuestions = ({
       } else if (input.type === 'radio' && value && !input.enums.includes(value)) {
         errorMessage = `${long_name ? long_name + ' - ' : ''}${input.label || long_name} must be a valid option`;
       } else if (input.type === 'table') {
-        const result = value.some(producer => areProducerFieldsEmpty(producer));
-        result || value.length == 0 ? errorMessage = `${input.label || long_name} both First Name and Last Name are required`:'';
+        if(value && value.length>0){
+          value = value.filter(obj => Object.keys(obj).length !== 0);
+        }
+        const result = value && value.some(producer => areProducerFieldsEmpty(producer));
+        result ||  value && value.length == 0 ? errorMessage = `${input.label || long_name} both First Name and Last Name are required`:'';
       } else if (input.type === 'bbox') {
         const directions = ['north', 'east', 'south', 'west'];
         const lst = []
@@ -279,7 +286,7 @@ const FormQuestions = ({
           }
         }
         return lst
-      }
+      } 
       if (controlId === 'product_temporal_coverage_end') {
         const startDate = new Date(values['product_temporal_coverage_start']);
         const endDate = new Date(value);
@@ -351,13 +358,26 @@ const FormQuestions = ({
           const value = jsonObj.data && jsonObj.data[input.control_id];
           if (checkAllFields || value) {
             if (input.type === 'bbox') {   
-                const errorMessage = validateField(input.control_id, 'direction', question.long_name);
+                const errorMessage = validateField(input.control_id, 'direction', question.long_name,'');
                  for (const element of errorMessage) {
                   newValidationErrors[element.controlId] = element.errorMessage;
                 }
-            } 
+            }
+            else if(input.type === 'file') {
+            let flag;
+              question.inputs.forEach((input) => {
+                if(jsonObj.data[input.control_id]){
+                  flag = true
+                  return
+                }
+              })
+              const [errorMessage, fieldId] = validateField(input.control_id, flag, question.long_name, question);
+              if (errorMessage) {
+                newValidationErrors[fieldId] = errorMessage;
+              }
+            }
             else {
-              const [errorMessage, fieldId] = validateField(input.control_id, value, question.long_name);
+              const [errorMessage, fieldId] = validateField(input.control_id, value, question.long_name, question);
               if (errorMessage) {
                 newValidationErrors[fieldId] = errorMessage;
               }
@@ -366,8 +386,19 @@ const FormQuestions = ({
         });
       });
     });
-    console.log('newValidationErrors', newValidationErrors)
-    setValues((prev) => ({ ...prev, validation_errors: newValidationErrors }));
+    setValues((prev) => {
+      const isEmpty = Object.entries(newValidationErrors).length === 0;
+
+      // Construct the updated object dynamically
+      const updatedValues = { ...prev };
+      
+      if (!isEmpty) {
+        updatedValues.validation_errors = newValidationErrors;
+      }
+
+      return updatedValues;
+    });
+    
     return Object.keys(newValidationErrors).length === 0;
   };
     
@@ -408,7 +439,7 @@ const FormQuestions = ({
       const updatedRow = { ...updatedTable[rowIndex] };
       updatedRow[key] = value;
       updatedTable[rowIndex] = updatedRow;
-      return {
+            return {
         ...prevValues,
         [controlId]: updatedTable,
       };
@@ -455,7 +486,7 @@ const FormQuestions = ({
     e.preventDefault();
     logAction('Submit');
     setValidationAttempted(true);
-    saveFile("submit");
+    saveFile("submit", false);
   };
 
   const cancelForm = () => {
@@ -465,11 +496,10 @@ const FormQuestions = ({
   const draftFile = (e) => {
     e.preventDefault();
     logAction('Save as draft');
-    saveFile("draft");
-    setShowModal(true); 
+    saveFile("draft", true);
+  
   };
   
-
   const filterEmptyObjects = (array) => {
     return array.filter(obj => {
       if (!obj || typeof obj !== 'object') {
@@ -494,20 +524,19 @@ const FormQuestions = ({
     for (const key in jsonObject) {
         if (jsonObject.hasOwnProperty(key)) {
             const value = jsonObject[key];
-            
             // Skip keys with `false` values
-            if (value !== false) {
+            if (value !== false && !Array.isArray(value)) {
                 // Convert the value to a string
                 result[key] = String(value);
+            } else if(Array.isArray(value)) {
+              result[key] =  value;
             }
         }
     }
     return result;
   }
     
-
-
-  const saveFile = async (type) => {
+  const saveFile = async (type, modelStatus) => {
     const fieldValues = { ...values };
     let jsonObject = {
       data: {},
@@ -536,6 +565,9 @@ const FormQuestions = ({
     if(type === 'continueEditing'){
       setValidationAttempted(true);
       validateFields(true, jsonObject);
+      if(jsonObject.data && jsonObject.data.validation_errors){
+        delete jsonObject.data.validation_errors;
+      }
       await dispatch(saveForm(jsonObject));
       setAlertVariant('success');
       setAlertMessage('Your request has been saved.');
@@ -543,14 +575,38 @@ const FormQuestions = ({
       return;
     }
 
-    if(type === 'draft'){
+    if (type === 'draft') {
       setValidationAttempted(false);
       validateFields(false, jsonObject);
-      await dispatch(saveForm(jsonObject));
-      return;
+      setAlertVariant('success');
+      setAlertMessage('Saving the form as draft');
+      setDismissCountDown(1);
+      try {
+        if(jsonObject.data && jsonObject.data.validation_errors){
+          delete jsonObject.data.validation_errors;
+        }
+        
+        const resp = await dispatch(saveForm(jsonObject));
+        const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
+        if (error) {
+          setAlertVariant('danger');
+          setAlertMessage('Failed to Save the form as draft');
+          console.error('Failed to Save the form as draft:', error);
+          setDismissCountDown(5);
+        }
+        else if(resp && resp.data && modelStatus){
+          setShowModal(true); 
+        }
+      } catch (error) {
+          console.error('Failed to Save the form as draft:', error);
+        }
     }
+    
     if(type === 'submit'){
       if (validateFields(true, jsonObject)) {
+        if(jsonObject.data && jsonObject.data.validation_errors){
+          delete jsonObject.data.validation_errors;
+        }
         await dispatch(submitFilledForm(jsonObject));
         window.location.href = urlReturn;
       } else {
@@ -815,14 +871,12 @@ const FormQuestions = ({
       }
     }
   };
-  
-  
 
   const handleCloseModal = () => setShowModal(false);
+
   const handleRedirect = () => {
     window.location.href = urlReturn;
   }
-
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -939,7 +993,7 @@ const FormQuestions = ({
                 </Button>
               </div>
               <div align="right" className="right_button_bar" style={{ display: readonly ? 'none' : 'block' }}>
-                <Button className="eui-btn--blue" disabled={Object.keys(values).length === 0} onClick={() => { logAction('Save and continue editing'); saveFile("continueEditing") }} aria-label="save button">
+                <Button className="eui-btn--blue" disabled={Object.keys(values).length === 0} onClick={() => { logAction('Save and continue editing'); saveFile("continueEditing", false) }} aria-label="save button">
                   {saveLabel}
                 </Button>
                 <Button className="eui-btn--blue" disabled={Object.keys(values).length === 0} onClick={draftFile} aria-label="draft button">
