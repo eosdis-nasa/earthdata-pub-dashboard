@@ -256,15 +256,15 @@ const FormQuestions = ({
 
       if (fieldRequired && (!value || value === "") && input.type !== 'bbox' & input.type !== 'table') {
         errorMessage = `${long_name ? long_name + ' - ' : ''}${input.label || long_name} is required`;
-      } else if (input.type === 'number' && isNaN(value)) {
+      } else if (fieldRequired && input.type === 'number' && isNaN(value)) {
         errorMessage = `${input.label || long_name} must be a valid number`;
-      } else if (input.type === 'email' && !/\S+@\S+\.\S+/.test(value)) {
+      } else if (fieldRequired && input.type === 'email' && !/\S+@\S+\.\S+/.test(value)) {
         errorMessage = `${input.label || long_name} must be a valid email address`;
-      } else if (input.type === 'datetimePicker' && isNaN(new Date(value).getTime())) {
+      } else if (fieldRequired && input.type === 'datetimePicker' && isNaN(new Date(value).getTime())) {
         errorMessage = `${input.label || long_name} must be a valid date and time`;
-      } else if (input.type === 'select' && !input.options.includes(value)) {
+      } else if (fieldRequired && input.type === 'select' && !input.options.includes(value)) {
         errorMessage = `${input.label || long_name} must be a valid option`;
-      } else if (input.type === 'radio' && value && !input.enums.includes(value)) {
+      } else if (fieldRequired && input.type === 'radio' && value && !input.enums.includes(value)) {
         errorMessage = `${long_name ? long_name + ' - ' : ''}${input.label || long_name} must be a valid option`;
       } else if (input.type === 'table') {
         if(value && value.length > 0){
@@ -398,7 +398,7 @@ const FormQuestions = ({
       if (!isEmpty) {
         updatedValues.validation_errors = newValidationErrors;
       }
-
+      console.log('Validation Errors', newValidationErrors)
       return updatedValues;
     });
     
@@ -589,7 +589,7 @@ const FormQuestions = ({
     if(type === 'continueEditing'){
       setValidationAttempted(true);
       validateFields(true, jsonObject);
-      if(jsonObject.data && jsonObject.data.validation_errors){
+            if(jsonObject.data && jsonObject.data.validation_errors){
         delete jsonObject.data.validation_errors;
       }
       await dispatch(saveForm(jsonObject));
