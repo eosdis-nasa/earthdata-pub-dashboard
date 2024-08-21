@@ -1391,7 +1391,7 @@ const FormQuestions = ({
                                               ))}
                                              {['north', 'east', 'south', 'west'].map((direction) => (
                                                 values.validation_errors[`${input.control_id}_${direction}`] && (
-                                                  <div className="validation" key={`${input.control_id}_${direction}`}>
+                                                  <div className="validation bbox-validation" key={`${input.control_id}_${direction}`}>
                                                     {values.validation_errors[`${input.control_id}_${direction}`]}
                                                   </div>
                                                 )

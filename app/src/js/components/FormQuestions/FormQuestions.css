@@ -931,6 +931,11 @@
   width: 97.5%;
 }
 
+.questions-component .bbox-validation {
+  margin-bottom: 3px;
+  width: 97.5%;
+}
+
 .table tbody td {
   text-align: center;
   vertical-align: middle;
