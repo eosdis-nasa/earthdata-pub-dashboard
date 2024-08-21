@@ -91,7 +91,6 @@ const FormQuestions = ({
   };
   
   const fetchFileUploads = async () => {
-    console.log('called');
     if (requestData  && requestData.id) {
       try {
         const resp = await dispatch(listFileUploadsBySubmission(requestData.id));
@@ -104,7 +103,6 @@ const FormQuestions = ({
         if (error) {
           if (!error.match(/not authorized/gi) && !error.match(/not implemented/gi)) {
             const str = `An error has occurred while getting the list of files: ${error}.`;
-            console.log(str);
             return;
           } else {
             return;
@@ -235,7 +233,7 @@ const FormQuestions = ({
 
   const isFieldRequired = (input, parent) => {
     if(input.type == 'file'){
-      return parent.required
+    return parent.required
     }
     if (input.required_if && (input.required_if).length === 0) {
       return input.required || false;
@@ -272,9 +270,10 @@ const FormQuestions = ({
         if(value && value.length > 0){
           value = value.filter(obj => Object.keys(obj).length !== 0);
         }
-        console.log('testing:-> ', input, long_name)
         const result = value && value.some(producer => areProducerFieldsEmpty(producer));
-        result ||  value && value.length == 0 ? errorMessage = `${input.label || long_name} both First Name and Last Name are required`:'';
+        if (result || (value && value.length === 0)) {
+          errorMessage = `${(input.label && input.label !== "undefined") ? input.label : long_name} both First Name and Last Name are required`;
+        }        
       } else if (input.type === 'bbox') {
         const directions = ['north', 'east', 'south', 'west'];
         const lst = []
@@ -365,7 +364,6 @@ const FormQuestions = ({
                 }
             }
             else if(input.type === 'file') {
-              console.log('uploadedFiles', uploadedFiles)
               if(uploadedFiles && uploadedFiles.length === 0){
                 let flag;
                 question.inputs.forEach((input) => {
@@ -408,11 +406,12 @@ const FormQuestions = ({
   };
     
   const handleFieldChange = (controlId, value) => {
+    console.log('controlId',controlId )
     setValues((prevValues) => {
       const newValues = { ...prevValues, [controlId]: value, validation_errors: { ...prevValues.validation_errors } };
   
       if (checkboxStatus.sameAsPrimaryDataProducer && controlId.startsWith('data_producer_info_')) {
-        const updatedField = controlId.replace('data_producer_info_', 'poc_');
+        const updatedField = controlId.replace('data_producer_info_', 'poc_');      
         newValues[updatedField] = value;
       }
   
@@ -430,6 +429,26 @@ const FormQuestions = ({
       return newValues;
     });
   
+    if (checkboxStatus.sameAsPrimaryDataProducer && controlId.startsWith('data_producer_info_')) {
+      const updatedField = controlId.replace('data_producer_info_', 'poc_');
+      delete values.validation_errors[updatedField];
+    }
+
+    if (checkboxStatus.sameAsPrimaryLongTermSupport && controlId.startsWith('data_producer_info_')) {
+      const updatedField = controlId.replace('data_producer_info_', 'long_term_support_poc_');
+      delete values.validation_errors[updatedField];
+    }
+
+    if (checkboxStatus.sameAsPrimaryDataAccession && controlId.startsWith('poc_')) {
+      const updatedField = controlId.replace('poc_', 'long_term_support_poc_');
+      delete values.validation_errors[updatedField];
+    }
+
+    if(controlId.startsWith('example_file')){
+      // not good but I have hardcoded. Need to find workaround!!
+      delete values.validation_errors['example_files'];
+    }
+
     if (!value || value === '' && values.validation_errors[controlId]) {
       handleInvalid({ target: { name: controlId, validationMessage: `${controlId} is required` } });
     } else {
@@ -449,6 +468,8 @@ const FormQuestions = ({
         [controlId]: updatedTable,
       };
     });
+    
+    handleInvalid({ target: { name: controlId, validationMessage: '' } });
   };
   
   const handleInvalid = (evt) => {
@@ -565,8 +586,6 @@ const FormQuestions = ({
     jsonObject.data = processedData
     
     
-    console.log('jsonObject', jsonObject);
-
     if(type === 'continueEditing'){
       setValidationAttempted(true);
       validateFields(true, jsonObject);
@@ -577,6 +596,7 @@ const FormQuestions = ({
       setAlertVariant('success');
       setAlertMessage('Your request has been saved.');
       setDismissCountDown(10);
+      console.log('continueEditing', jsonObject);
       return;
     }
 
@@ -605,6 +625,8 @@ const FormQuestions = ({
       } catch (error) {
           console.error('Failed to Save the form as draft:', error);
         }
+        console.log('draft', jsonObject);
+        return;
     }
     
     if(type === 'submit'){
@@ -613,6 +635,7 @@ const FormQuestions = ({
           delete jsonObject.data.validation_errors;
         }
         await dispatch(submitFilledForm(jsonObject));
+        console.log('submit', jsonObject);
         window.location.href = urlReturn;
       } else {
         setAlertVariant('danger');
@@ -825,8 +848,6 @@ const FormQuestions = ({
     setProgressValue(0);
   
     const updateProgress = (progress, fileObj) => {
-      console.log('progress', progress);
-      console.log('fileobj', fileObj);
       setProgressValue(Math.min(progress, 100));
       setUploadFileName(fileObj ? fileObj.name : '');    
     };
@@ -850,12 +871,10 @@ const FormQuestions = ({
           payload['submissionId'] = requestId;
         }
         
-        console.log('payload', payload);
         setUploadFile(null);
         const resp = await upload.uploadFile(payload, updateProgress);
         const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
         
-        console.log('resp', resp)
         if (error) {
           alertMsg = `An error has occurred on uploadFile: ${error}.`;
           statusMsg = 'Select a file';
