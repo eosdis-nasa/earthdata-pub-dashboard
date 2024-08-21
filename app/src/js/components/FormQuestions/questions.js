@@ -1482,7 +1482,7 @@ const FormQuestions = ({
                                           </div>
                                           <p id={`${input.control_id}_invalid`} className="eui-banner--danger hidden form-control validation"></p>
                                           {getErrorMessage(input) && (
-                                            <div className="validation">{getErrorMessage(input, question, section.heading)}</div>
+                                            <div className="validation table-validation">{getErrorMessage(input, question, section.heading)}</div>
                                           )}
                                         </>
                                       )}

@@ -242,7 +242,7 @@
 }
 
 .questions-component .form-control {
-  width: 100%;
+  width: 98.5%;
   display: block;
   font-weight: 400;
   color: #495057;
@@ -795,7 +795,7 @@
   border-color: #db1400 !important;
   padding: 10px;
   border-radius: 5px;
-  width: 100%;
+  /*width: 100%;*/
 }
 
 .questions-component .button:disabled {
@@ -925,6 +925,10 @@
 
 .questions-component .table tbody tr:hover {
   background-color: #dee2e6;
+}
+
+.questions-component .table-validation {
+  width: 97.5%;
 }
 
 .table tbody td {
