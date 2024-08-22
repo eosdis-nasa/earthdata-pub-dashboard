@@ -151,16 +151,6 @@ class WorkflowsOverview extends React.Component {
 
     let tableColumns = [];
     if (typeof requestId !== 'undefined') {
-      for (const ea in workflows.list.data) {
-        if (workflows.list.data[ea].short_name.match(/assign_a_workflow/g)) {
-          const cls = `select_${workflows.list.data[ea].short_name}`;
-          setTimeout(() => {
-            if (typeof document.getElementsByClassName(cls)[0] !== 'undefined') {
-              document.getElementsByClassName(cls)[0].style.visibility = 'hidden';
-            }
-          }, 500);
-        }
-      }
       tableColumns = selectInput.concat(defaultTableColumns);
       const selectTr = document.getElementsByClassName('table__sort')[0];
       // This makes the select column header appear unclickable (although it is)
