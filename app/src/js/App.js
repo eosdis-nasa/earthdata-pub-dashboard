@@ -30,7 +30,8 @@ import Rules from './components/Rules';
 import Modules from './components/Modules';
 import TestApi from './components/testApi';
 import Upload from './components/DataUpload';
-
+import FormRequest from './components/FormRequest';
+import FormQuestions from './components/FormQuestions';
 import config from './config';
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
 dom.watch();
@@ -51,6 +52,8 @@ const MainRoutes = () => {
         <Route path='/404' component={NotFound} />
         <Route path='/requests' component={Requests} />
         <Route path='/forms' component={Forms} />
+        <Route path="/daac/selection" component={FormRequest} />
+        <Route path="/form/questions/:id" component={FormQuestions} />
         <Route path='/questions' component={Questions} />
         <Route path='/users' component={Users} />
         <Route path='/groups' component={Groups} />

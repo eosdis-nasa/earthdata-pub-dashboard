@@ -260,28 +260,38 @@ class Home extends React.Component {
               <div className='row'>
                 <div className='heading__wrapper--border'>
                   <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
-                  { canInitialize ? <a className='button button--small button--green button--add-small form-group__element--right new-request-button' href={selectDaac} aria-label="Create new request">New Request</a> : null }
+                  { canInitialize ? (
+                    <Link
+                      to='/daac/selection'
+                      className='button button--small button--green button--add-small form-group__element--right new-request-button'
+                      aria-label='Create new request'>
+                      New Request
+                    </Link>
+                  ) : null}
                   <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                 </div>
-                <List
-                  list={list}
-                  tableColumns={tableColumns}
-                  query={query}
-                  rowId='id'
-                  filterIdx='name'
-                  filterPlaceholder='Search Requests'
-                >
-                  <Select
-                    id="producerSelect"
-                    options={this.state.producers}
-                    onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
-                    isSearchable={true}
-                    placeholder='Select Data Producer'
-                    className='selectButton'
-                    aria-label='Select Data Producer'
-                    isMulti={true}
-                  />
-                </List>
+                {!list
+                  ? <Loading />: 
+                  <List
+                    list={list}
+                    tableColumns={tableColumns}
+                    query={query}
+                    rowId='id'
+                    filterIdx='name'
+                    filterPlaceholder='Search Requests'
+                    >
+                    <Select
+                      id="producerSelect"
+                      options={this.state.producers}
+                      onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
+                      isSearchable={true}
+                      placeholder='Select Data Producer'
+                      className='selectButton'
+                      aria-label='Select Data Producer'
+                      isMulti={true}
+                    />
+                  </List>
+                }
               </div>
             </section>
           </div>

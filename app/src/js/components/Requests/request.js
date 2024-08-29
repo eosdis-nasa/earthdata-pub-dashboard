@@ -368,7 +368,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Daac',
-        accessor: row => row.daac_name && canEdit ? <a href={`${_config.formsUrl}/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{row.daac_name}</a> : row.daac_name ? row.daac_name : row.daac_id,
+        accessor: row => row.daac_name && canEdit ? <a href={`/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{row.daac_name}</a> : row.daac_name ? row.daac_name : row.daac_id,
         classList: 'hidden'
       },
       {
