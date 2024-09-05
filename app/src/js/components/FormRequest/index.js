@@ -28,6 +28,7 @@ class FormRequest extends React.Component {
             <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
               <Switch>
                 <Route exact path='/daac/selection' component={FormsOverview} />
+                <Route exact path='/daac/selection/:daacid' component={FormsOverview} />
                 <Route path='/daac/selection/id/:formId' component={FormOverview} />
                 <Route path='/questions/:id' component={FormsOverview} />
               </Switch>

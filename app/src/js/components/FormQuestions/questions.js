@@ -17,6 +17,7 @@ import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission 
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import localUpload from '@edpub/upload-utility';
+import { format } from "date-fns";
 
 const FormQuestions = ({
   cancelLabel = 'Cancel',
@@ -72,6 +73,7 @@ const FormQuestions = ({
   const [timer, setTimer] = useState(null);
   const [logs, setLogs] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const [checkboxStatus, setCheckboxStatus] = useState({
     sameAsPrimaryDataProducer: false,
     sameAsPrimaryLongTermSupport: false,
@@ -670,7 +672,7 @@ const FormQuestions = ({
   };
 
   const cancelForm = () => {
-    window.location.href = urlReturn;
+    setShowCancelModal(true); 
   };
 
   const draftFile = (e) => {
@@ -1295,7 +1297,7 @@ const FormQuestions = ({
             <span
               id="daac_name"
               className="question_section w-100"
-              onClick={() => history.push('/daac/selection/')}
+              onClick={() => history.push('/daac/selection/'+daacInfo.daac_id)}
             >
               <span
                 className="eui-link"
@@ -1880,7 +1882,7 @@ const FormQuestions = ({
                                                 : null
                                             }
                                             onChange={(date) =>
-                                              handleFieldChange(input.control_id, date)
+                                              handleFieldChange(input.control_id, format(date, "yyyy-MM-dd hh:mm aa zzz"))
                                             }
                                             showTimeSelect
                                             timeFormat="HH:mm"
@@ -2250,7 +2252,7 @@ const FormQuestions = ({
       <ScrollToTop />
       <Modal show={showModal} onHide={handleCloseModal} className="custom-modal">
         <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
+          <Modal.Title>Save As Draft Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Your request has been saved. Do you want to be redirected to Earthdata Pub Dashboard
@@ -2265,6 +2267,22 @@ const FormQuestions = ({
           </Button>
         </Modal.Footer>
       </Modal>
+      <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)} className="custom-modal">
+      <Modal.Header closeButton>
+        <Modal.Title>Cancel Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure you want to cancel?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
+          No, Continue Editing
+        </Button>
+        <Button variant="primary" onClick={() => window.location.href = urlReturn}>
+          Yes, Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
     </div>
   );
 };
