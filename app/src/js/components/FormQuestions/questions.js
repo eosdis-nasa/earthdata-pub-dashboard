@@ -1376,7 +1376,7 @@ const FormQuestions = ({
                           </span>
                           <span
                             className="col text-right section_required"
-                            style={{ display: question.required ? 'block' : 'none' }}
+                            style={{ display: question.required ? 'inline' : 'none', marginLeft: '5px' }}
                           >
                             required
                           </span>
@@ -1882,7 +1882,7 @@ const FormQuestions = ({
                                                 : null
                                             }
                                             onChange={(date) =>
-                                              handleFieldChange(input.control_id, format(date, "yyyy-MM-dd hh:mm aa zzz"))
+                                              handleFieldChange(input.control_id, date ? format(date, "yyyy-MM-dd hh:mm aa zzz"): format(new Date(), "yyyy-MM-dd hh:mm aa zzz"))
                                             }
                                             showTimeSelect
                                             timeFormat="HH:mm"

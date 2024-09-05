@@ -209,10 +209,6 @@
   text-decoration: underline;
 }
 
-.questions-component .section_required {
-  color: red;
-}
-
 /* Center container in the screen */
 .questions-component .container {
   margin: auto;
@@ -761,7 +757,12 @@
 
 .questions-component .section_required {
   color: #d9534f;
-  font-size: 0.9em;
+  font-size: 1.25rem;
+}
+
+.questions-component .section_required_radio_file {
+  display: inline !important;
+  margin-left: 5px;
 }
 
 .questions-component .checkbox-group {
