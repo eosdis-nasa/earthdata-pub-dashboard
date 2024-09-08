@@ -15,7 +15,7 @@ import ErrorReport from '../../components/Errors/report';
 import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 import { trigger } from '../../actions/events';
-import { getPrivilegesByType, requestPrivileges } from '../privileges';
+import { getPrivilegesByType, requestPrivileges, daacPrivileges } from '../privileges';
 
 export const getPrivileges = (step) => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
@@ -23,6 +23,7 @@ export const getPrivileges = (step) => {
     const roles = user.user_roles;
     const privileges = user.user_privileges;
     const privilegesByType = getPrivilegesByType(privileges, step);
+    const {canRead: daacRead} = daacPrivileges(privilegesByType)
 
     const allPrivs = {
       isManager: privileges.find(o => o.match(/ADMIN/g))
@@ -42,6 +43,7 @@ export const getPrivileges = (step) => {
         ? privileges.find(o => o.match(/ADMIN/g))
         : privileges.find(o => o.match(/FORM_UPDATE/g)),
       ...requestPrivileges(privilegesByType, step),
+      canReadDaac: daacRead
     };
     return allPrivs;
   }
@@ -50,7 +52,9 @@ export const getPrivileges = (step) => {
 export const newLink = (request, formalName) => {
   const allPrivs = getPrivileges();
   let disabled = false;
-  if (typeof allPrivs !== 'undefined' && allPrivs.canUpdateForm) {
+  if (request == '') {
+    disabled = true;
+  } else if (typeof allPrivs !== 'undefined' && allPrivs.canUpdateForm) {
     disabled = false;
   } else {
     disabled = true;
@@ -130,7 +134,9 @@ export const stepLookup = (row) => {
   let stepID = '';
   let stepType = '';
   let stepIDKey = '';
+  let stepDaacOnly = false;
   let tmpType = '';
+  const allPrivs = getPrivileges();
   const formalName = getFormalName(stepName);
   for (const i in row?.step_data) {
     if (typeof row.step_data[i] !== 'undefined') {
@@ -139,6 +145,7 @@ export const stepLookup = (row) => {
         stepType = row.step_data.type;
         stepIDKey = `${stepType}_id`;
         stepID = row.step_data[stepIDKey];
+        stepDaacOnly = row.step_data.daac_only
         const { basepath } = _config;
         if (row.step_data.type.match(/close/g)) {
           return 'Completed';
@@ -158,7 +165,10 @@ export const stepLookup = (row) => {
         }
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
-          request = `${basepath}form/questions/${row.id}`;
+          if  ( !stepDaacOnly || (typeof allPrivs !== 'undefined' && stepDaacOnly && allPrivs.canReadDaac)){
+            request = `${basepath}form/questions/${row.id}`;
+          } 
+          
         // assign a workflow
         } else if (stepType.match(/action/g)) {
           request = `/workflows?requestId=${row.id}`;
