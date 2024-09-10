@@ -51,7 +51,8 @@ const FormQuestions = ({
   const [uploadFileName, setUploadFileName] = useState('');
   const [uploadFileFlag, setUploadFileFlag] = useState(false);
   const [uploadFailed, setUploadFailed] = useState(false);
-     
+  const [uploadFiles, setUploadFiles] = useState([]); // For multiple file uploads
+  const [currentFileIndex, setCurrentFileIndex] = useState(0); // Track which file is being uploaded
   const [uploadFields, setUploadFields] = useState([
     {
       key: 'file_name',
@@ -1000,14 +1001,15 @@ const FormQuestions = ({
   };
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setUploadFile(file);
-      setUploadStatusMsg(`Selected file: ${file.name}`);
+    const files = event.target.files;
+    if (files.length) {
+      setUploadFiles([...uploadFiles, ...Array.from(files)]); // Update state with selected files
+      setUploadStatusMsg(`${files.length} file(s) selected`);
     } else {
-      setUploadStatusMsg('No file selected');
+      setUploadStatusMsg('No files selected');
     }
   };
+  
 
   // const refreshAuth = async () => {
   //   const options = {
@@ -1029,61 +1031,53 @@ const FormQuestions = ({
     setUploadStatusMsg('Uploading...');
     setShowProgressBar(true);
     setProgressValue(0);
-
-    const updateProgress = (progress, fileObj) => {
-      console.log('progress', progress);
-      setProgressValue(Math.min(progress, 100));
-      setUploadFileName(fileObj ? fileObj.name : '');
-    };
-
-    let alertMsg = '';
-    let statusMsg = '';
-    if (validateFile(uploadFile)) {
-      const upload = new localUpload();
-      const requestId = daacInfo.id;
-
-      try {
-        //await refreshAuth(); // Function to refresh authentication token if needed
-
-        let payload = {
-          fileObj: uploadFile,
-          authToken: localStorage.getItem('auth-token'),
+    
+    const uploadFileSequentially = async (file, index) => {
+      return new Promise((resolve, reject) => {
+        const updateProgress = (progress, fileObj) => {
+          setProgressValue(Math.min(progress, 100)); // Update progress for the current file
+          setUploadFileName(fileObj ? fileObj.name : '');
         };
-
-        if (requestId) {
-          payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
-          payload['submissionId'] = requestId;
-        }
-
-        setUploadFile(null);
-        const resp = await upload.uploadFile(payload, updateProgress);
-        const error =
-          resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
-
-        if (error) {
-          alertMsg = `An error has occurred on uploadFile: ${error}.`;
-          statusMsg = 'Select a file';
-          console.error(alertMsg);
-          resetUploads(alertMsg, statusMsg);
-          setUploadFailed(true);
-        } else {
-          alertMsg = '';
-          statusMsg = 'Upload Complete';
-          setUploadFileFlag(true);
-          resetUploads(alertMsg, statusMsg);
-          setUploadFileName('');
-          setProgressValue(0);
-          setShowProgressBar(false);
-          //updateUploadStatusWithTimeout('Select another file', 1000);
-        }
+  
+        const payload = {
+          fileObj: file,
+          authToken: localStorage.getItem('auth-token'),
+          apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
+          submissionId: daacInfo.id, // Assuming submission ID is available
+        };
+  
+        const upload = new localUpload();
+        upload.uploadFile(payload, updateProgress).then((resp) => {
+          const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
+          if (error) {
+            console.error(`Error uploading file ${file.name}: ${error}`);
+            reject(error);
+          } else {
+            resolve();
+          }
+        }).catch((err) => {
+          console.error(`Error uploading file ${file.name}: ${err}`);
+          reject(err);
+        });
+      });
+    };
+  
+    for (let i = 0; i < uploadFiles.length; i++) {
+      try {
+        await uploadFileSequentially(uploadFiles[i], i);
+        setCurrentFileIndex(i + 1); // Move to next file
       } catch (error) {
-        console.error(`try catch error: ${error.stack}`);
-        alertMsg = 'An error has occurred during the upload.';
-        statusMsg = 'Select a file';
-        resetUploads(alertMsg, statusMsg);
+        setUploadFailed(true); // Handle error in uploading
+        break;
       }
     }
+  
+    setUploadStatusMsg('Upload Complete');
+    setProgressValue(0);
+    setShowProgressBar(false);
+    setUploadFileFlag(true); // Trigger file list refresh after upload
   };
+  
 
   const handleCloseModal = () => setShowModal(false);
 
@@ -2190,6 +2184,7 @@ const FormQuestions = ({
                                             id="file-upload-input"
                                             className="upload-input"
                                             onChange={handleFileChange}
+                                            multiple 
                                           />
                                           <div className="upload-container">
                                             <p>Drag & drop a file here, or click to select a file</p>
@@ -2198,7 +2193,7 @@ const FormQuestions = ({
                                           {showProgressBar && progressValue > 0 && 
                                             <div style={progressBarStyle}>
                                               <div style={progressBarFillStyle}>
-                                                <span style={numberDisplayStyle}>{false ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={''}></span></span>: `${progressValue}%`}</span>
+                                                <span style={numberDisplayStyle}>{uploadFailed  ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={''}></span></span>: `${progressValue}%`+':'+`${uploadFiles[currentFileIndex]?.name}`}</span>
                                               </div>
                                             </div>
                                           }
