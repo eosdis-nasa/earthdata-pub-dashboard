@@ -2195,6 +2195,13 @@ const FormQuestions = ({
                                           </div>
                                           <p className="upload-status">{uploadStatusMsg}</p>
                                         </div>
+                                          {showProgressBar && progressValue > 0 && 
+                                            <div style={progressBarStyle}>
+                                              <div style={progressBarFillStyle}>
+                                                <span style={numberDisplayStyle}>{false ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={''}></span></span>: `${progressValue}%`}</span>
+                                              </div>
+                                            </div>
+                                          }
                                         <Button
                                           style={{
                                             display: input.type === 'file' ? 'block' : 'none',
@@ -2211,13 +2218,6 @@ const FormQuestions = ({
                                           }}
                                           className="table-div w-100"
                                         >
-                                          {showProgressBar && progressValue > 0 && 
-                                            <div style={progressBarStyle}>
-                                              <div style={progressBarFillStyle}>
-                                                <span style={numberDisplayStyle}>{false ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={''}></span></span>: `${progressValue}%`}</span>
-                                              </div>
-                                            </div>
-                                            }
                                           <br />
                                           <p>Files Previously Uploaded</p>
                                           <Table bordered responsive className="uploaded-files-table">
