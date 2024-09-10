@@ -1034,12 +1034,18 @@ const FormQuestions = ({
 
   const { apiRoot } = _config;
 
+  const [uploadResults, setUploadResults] = useState({ success: [], failed: [] });
+  const [showUploadSummaryModal, setShowUploadSummaryModal] = useState(false);
+  
   const handleUpload = async () => {
     setUploadStatusMsg('Uploading...');
     setShowProgressBar(true);
     setProgressValue(0);
-    
-    const uploadFileSequentially = async (file, index) => {
+  
+    let successFiles = [];
+    let failedFiles = [];
+  
+    const uploadFileSequentially = async (file) => {
       return new Promise((resolve, reject) => {
         const updateProgress = (progress, fileObj) => {
           setProgressValue(Math.min(progress, 100)); // Update progress for the current file
@@ -1058,32 +1064,41 @@ const FormQuestions = ({
           const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
           if (error) {
             console.error(`Error uploading file ${file.name}: ${error}`);
-            reject(error);
+            reject(file.name);
           } else {
-            resolve();
+            resolve(file.name);
           }
         }).catch((err) => {
           console.error(`Error uploading file ${file.name}: ${err}`);
-          reject(err);
+          reject(file.name);
         });
       });
     };
   
     for (let i = 0; i < uploadFiles.length; i++) {
       try {
-        await uploadFileSequentially(uploadFiles[i], i);
-        setCurrentFileIndex(i + 1); // Move to next file
-      } catch (error) {
-        setUploadFailed(true); // Handle error in uploading
-        break;
+        const uploadedFile = await uploadFileSequentially(uploadFiles[i]);
+        successFiles.push(uploadedFile);
+      } catch (fileName) {
+        failedFiles.push(fileName);
       }
     }
   
+    // Update the upload result state with file names
+    setUploadResults({ success: successFiles, failed: failedFiles });
+    
     setUploadStatusMsg('Upload Complete');
     setProgressValue(0);
     setShowProgressBar(false);
-    setUploadFileFlag(true); // Trigger file list refresh after upload
+    setUploadFileFlag(true);
+    
+    // Show the summary modal after uploads
+    setShowUploadSummaryModal(true);
   };
+  
+  // Close upload summary modal
+  const handleCloseUploadSummaryModal = () => setShowUploadSummaryModal(false);
+  
   
 
   const handleCloseModal = () => setShowModal(false);
@@ -2321,6 +2336,40 @@ const FormQuestions = ({
         </Button>
       </Modal.Footer>
     </Modal>
+
+    <Modal show={showUploadSummaryModal} onHide={handleCloseUploadSummaryModal} className="custom-modal">
+    <Modal.Header closeButton>
+      <Modal.Title>Upload Summary</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+      <h5>Successful Uploads</h5>
+      {uploadResults.success.length > 0 ? (
+        <ul>
+          {uploadResults.success.map((fileName, index) => (
+            <li key={index}>{fileName}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No files were uploaded successfully.</p>
+      )}
+      
+      <h5>Failed Uploads</h5>
+      {uploadResults.failed.length > 0 ? (
+        <ul>
+          {uploadResults.failed.map((fileName, index) => (
+            <li key={index}>{fileName}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No files failed to upload.</p>
+      )}
+    </Modal.Body>
+    <Modal.Footer>
+      <Button variant="primary" onClick={handleCloseUploadSummaryModal}>
+        Close
+      </Button>
+    </Modal.Footer>
+  </Modal>
     </div>
   );
 };
