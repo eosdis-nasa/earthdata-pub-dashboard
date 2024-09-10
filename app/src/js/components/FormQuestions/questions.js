@@ -452,7 +452,8 @@ const FormQuestions = ({
   const progressBarStyle = {
     width: '100%',
     backgroundColor: uploadFailed ? '#db1400' : 'white',
-    height: '30px' // Set the height of the progress bar
+    height: '30px', // Set the height of the progress bar
+    marginBottom: '5px'
   };
 
   const progressBarFillStyle = {
@@ -2194,7 +2195,6 @@ const FormQuestions = ({
                                             <p>Drag & drop a file here, or click to select a file</p>
                                           </div>
                                           <p className="upload-status">{uploadStatusMsg}</p>
-                                        </div>
                                           {showProgressBar && progressValue > 0 && 
                                             <div style={progressBarStyle}>
                                               <div style={progressBarFillStyle}>
@@ -2202,6 +2202,8 @@ const FormQuestions = ({
                                               </div>
                                             </div>
                                           }
+                                        </div>
+                                          
                                         <Button
                                           style={{
                                             display: input.type === 'file' ? 'block' : 'none',
