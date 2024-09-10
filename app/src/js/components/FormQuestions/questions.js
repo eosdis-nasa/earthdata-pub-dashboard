@@ -18,6 +18,8 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import localUpload from '@edpub/upload-utility';
 import { format } from "date-fns";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const FormQuestions = ({
   cancelLabel = 'Cancel',
@@ -1037,19 +1039,23 @@ const FormQuestions = ({
   const [uploadResults, setUploadResults] = useState({ success: [], failed: [] });
   const [showUploadSummaryModal, setShowUploadSummaryModal] = useState(false);
   
+  const [uploadProgress, setUploadProgress] = useState({});
+
+  // Function to handle multiple uploads concurrently
   const handleUpload = async () => {
     setUploadStatusMsg('Uploading...');
     setShowProgressBar(true);
-    setProgressValue(0);
   
-    let successFiles = [];
-    let failedFiles = [];
+    const successFiles = [];
+    const failedFiles = [];
   
-    const uploadFileSequentially = async (file) => {
+    const uploadFileAsync = async (file) => {
       return new Promise((resolve, reject) => {
         const updateProgress = (progress, fileObj) => {
-          setProgressValue(Math.min(progress, 100)); // Update progress for the current file
-          setUploadFileName(fileObj ? fileObj.name : '');
+          setUploadProgress((prev) => ({
+            ...prev,
+            [fileObj.name]: Math.min(progress, 100),
+          }));
         };
   
         const payload = {
@@ -1075,32 +1081,29 @@ const FormQuestions = ({
       });
     };
   
-    for (let i = 0; i < uploadFiles.length; i++) {
-      try {
-        const uploadedFile = await uploadFileSequentially(uploadFiles[i]);
-        successFiles.push(uploadedFile);
-      } catch (fileName) {
-        failedFiles.push(fileName);
-      }
-    }
+    const uploadPromises = uploadFiles.map((file) => 
+      uploadFileAsync(file)
+        .then((fileName) => successFiles.push(fileName))
+        .catch((fileName) => failedFiles.push(fileName))
+    );
   
-    // Update the upload result state with file names
+    await Promise.all(uploadPromises);
+  
     setUploadResults({ success: successFiles, failed: failedFiles });
-    
     setUploadStatusMsg('Upload Complete');
-    setProgressValue(0);
     setShowProgressBar(false);
     setUploadFileFlag(true);
-    
-    // Show the summary modal after uploads
     setShowUploadSummaryModal(true);
+  };
+  
+  // Toggle the visibility of the progress bars
+  const toggleProgressBars = () => {
+    setProgressBarsVisible(!progressBarsVisible);
   };
   
   // Close upload summary modal
   const handleCloseUploadSummaryModal = () => setShowUploadSummaryModal(false);
   
-  
-
   const handleCloseModal = () => setShowModal(false);
 
   const handleRedirect = () => {
@@ -2201,24 +2204,50 @@ const FormQuestions = ({
                                             document.getElementById('file-upload-input').click()
                                           }
                                         >
-                                          <input
-                                            type="file"
-                                            id="file-upload-input"
-                                            className="upload-input"
-                                            onChange={handleFileChange}
-                                            multiple 
-                                          />
+                                         
                                           <div className="upload-container">
-                                            <p>Drag & drop a file here, or click to select a file</p>
-                                          </div>
-                                          <p className="upload-status">{uploadFiles[currentFileIndex]?.name? uploadStatusMsg +':'+`${uploadFiles[currentFileIndex]?.name}`: uploadStatusMsg}</p>
-                                          {showProgressBar && progressValue > 0 && 
-                                            <div style={progressBarStyle}>
-                                              <div style={progressBarFillStyle}>
-                                                <span style={numberDisplayStyle}>{uploadFailed  ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={''}></span></span>: `${progressValue}%`}</span>
-                                              </div>
+                                            <p>Drag & drop files here, or click to select files</p>
+                                            <input type="file" id="file-upload-input" className="upload-input" onChange={handleFileChange} multiple />
+
+                                            <div className="d-flex align-items-center">
+                                              <Button className="upload-button mt-2" onClick={handleUpload} disabled={uploadFiles.length === 0}>
+                                                Upload
+                                              </Button>
+
+                                              {/* Toggle icon to show/hide progress bars */}
+                                              <FontAwesomeIcon
+                                                icon={progressBarsVisible ? faEyeSlash : faEye}
+                                                className="ml-2"
+                                                style={{ cursor: 'pointer', marginLeft: '10px' }}
+                                                onClick={toggleProgressBars}
+                                                title={progressBarsVisible ? 'Hide Progress' : 'Show Progress'}
+                                              />
                                             </div>
-                                          }
+
+                                            {/* Progress bars are only shown when progressBarsVisible is true */}
+                                            {progressBarsVisible && uploadFiles.length > 0 && (
+                                              <div>
+                                                {uploadFiles.map((file, index) => (
+                                                  <div key={index}>
+                                                    <p>{file.name}</p>
+                                                    <div style={{ width: '100%', backgroundColor: '#f1f1f1', height: '30px', marginBottom: '5px' }}>
+                                                      <div style={{
+                                                        width: `${uploadProgress[file.name] || 0}%`,
+                                                        backgroundColor: '#2275aa',
+                                                        height: '100%',
+                                                        textAlign: 'center',
+                                                        lineHeight: '30px',
+                                                        color: 'white',
+                                                      }}>
+                                                        {uploadProgress[file.name] ? `${uploadProgress[file.name]}%` : '0%'}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            )}
+                                          </div>
+
                                         </div>
                                           
                                         <Button
