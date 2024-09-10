@@ -978,10 +978,15 @@ const FormQuestions = ({
     e.preventDefault();
     e.stopPropagation();
 
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      setUploadFile(file);
-      setUploadStatusMsg(`Selected file: ${file.name}`);
+    const files = e.dataTransfer.files;
+    if (files.length) {
+      console.log('files', files)
+
+      setUploadFiles([...uploadFiles, ...Array.from(files)]); // Update state with selected files
+      setUploadFile(files);
+      setUploadStatusMsg(`${files.length} file(s) selected`);
+    } else {
+      setUploadStatusMsg('No files selected');
     }
   };
 
@@ -1003,7 +1008,9 @@ const FormQuestions = ({
   const handleFileChange = (event) => {
     const files = event.target.files;
     if (files.length) {
+      console.log('files', files)
       setUploadFiles([...uploadFiles, ...Array.from(files)]); // Update state with selected files
+      setUploadFile(files);
       setUploadStatusMsg(`${files.length} file(s) selected`);
     } else {
       setUploadStatusMsg('No files selected');
@@ -2189,7 +2196,7 @@ const FormQuestions = ({
                                           <div className="upload-container">
                                             <p>Drag & drop a file here, or click to select a file</p>
                                           </div>
-                                          <p className="upload-status">{uploadStatusMsg+':'+`${uploadFiles[currentFileIndex]?.name}`}</p>
+                                          <p className="upload-status">{uploadFiles[currentFileIndex]?.name? uploadStatusMsg +':'+`${uploadFiles[currentFileIndex]?.name}`: uploadStatusMsg}</p>
                                           {showProgressBar && progressValue > 0 && 
                                             <div style={progressBarStyle}>
                                               <div style={progressBarFillStyle}>
