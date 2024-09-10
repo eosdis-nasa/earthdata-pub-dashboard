@@ -2189,11 +2189,11 @@ const FormQuestions = ({
                                           <div className="upload-container">
                                             <p>Drag & drop a file here, or click to select a file</p>
                                           </div>
-                                          <p className="upload-status">{uploadStatusMsg}</p>
+                                          <p className="upload-status">{uploadStatusMsg+':'+`${uploadFiles[currentFileIndex]?.name}`}</p>
                                           {showProgressBar && progressValue > 0 && 
                                             <div style={progressBarStyle}>
                                               <div style={progressBarFillStyle}>
-                                                <span style={numberDisplayStyle}>{uploadFailed  ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={''}></span></span>: `${progressValue}%`+':'+`${uploadFiles[currentFileIndex]?.name}`}</span>
+                                                <span style={numberDisplayStyle}>{uploadFailed  ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={''}></span></span>: `${progressValue}%`}</span>
                                               </div>
                                             </div>
                                           }
