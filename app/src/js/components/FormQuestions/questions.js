@@ -18,7 +18,6 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import localUpload from '@edpub/upload-utility';
 import { format } from "date-fns";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const FormQuestions = ({
@@ -1038,7 +1037,7 @@ const FormQuestions = ({
 
   const [uploadResults, setUploadResults] = useState({ success: [], failed: [] });
   const [showUploadSummaryModal, setShowUploadSummaryModal] = useState(false);
-  
+  const [progressBarsVisible, setProgressBarsVisible] = useState(false); 
   const [uploadProgress, setUploadProgress] = useState({});
 
   // Function to handle multiple uploads concurrently
@@ -2209,11 +2208,23 @@ const FormQuestions = ({
                                             <p>Drag & drop files here, or click to select files</p>
                                             <input type="file" id="file-upload-input" className="upload-input" onChange={handleFileChange} multiple />
 
-                                            <div className="d-flex align-items-center">
-                                              <Button className="upload-button mt-2" onClick={handleUpload} disabled={uploadFiles.length === 0}>
-                                                Upload
-                                              </Button>
+                                            
+                                          </div>
 
+                                        </div>
+                                        <div  style={{
+                                            display: input.type === 'file' ? 'block' : 'none',
+                                          }}>
+                                        <Button
+                                          className="upload-button mt-2"
+                                          onClick={handleUpload}
+                                          disabled={uploadFiles.length === 0}
+                                        >
+                                          Upload
+                                        </Button>
+                                       
+                                        <span className="d-flex align-items-center">
+                                              
                                               {/* Toggle icon to show/hide progress bars */}
                                               <FontAwesomeIcon
                                                 icon={progressBarsVisible ? faEyeSlash : faEye}
@@ -2222,44 +2233,31 @@ const FormQuestions = ({
                                                 onClick={toggleProgressBars}
                                                 title={progressBarsVisible ? 'Hide Progress' : 'Show Progress'}
                                               />
-                                            </div>
+                                            </span>
 
-                                            {/* Progress bars are only shown when progressBarsVisible is true */}
-                                            {progressBarsVisible && uploadFiles.length > 0 && (
-                                              <div>
-                                                {uploadFiles.map((file, index) => (
-                                                  <div key={index}>
-                                                    <p>{file.name}</p>
-                                                    <div style={{ width: '100%', backgroundColor: '#f1f1f1', height: '30px', marginBottom: '5px' }}>
-                                                      <div style={{
-                                                        width: `${uploadProgress[file.name] || 0}%`,
-                                                        backgroundColor: '#2275aa',
-                                                        height: '100%',
-                                                        textAlign: 'center',
-                                                        lineHeight: '30px',
-                                                        color: 'white',
-                                                      }}>
-                                                        {uploadProgress[file.name] ? `${uploadProgress[file.name]}%` : '0%'}
+                                              {/* Progress bars are only shown when progressBarsVisible is true */}
+                                              {progressBarsVisible && uploadFiles.length > 0 && (
+                                                <div>
+                                                  {uploadFiles.map((file, index) => (
+                                                    <div key={index}>
+                                                      <p>{file.name}</p>
+                                                      <div style={{ width: '100%', backgroundColor: '#f1f1f1', height: '30px', marginBottom: '5px' }}>
+                                                        <div style={{
+                                                          width: `${uploadProgress[file.name] || 0}%`,
+                                                          backgroundColor: '#2275aa',
+                                                          height: '100%',
+                                                          textAlign: 'center',
+                                                          lineHeight: '30px',
+                                                          color: 'white',
+                                                        }}>
+                                                          {uploadProgress[file.name] ? `${uploadProgress[file.name]}%` : '0%'}
+                                                        </div>
                                                       </div>
                                                     </div>
-                                                  </div>
-                                                ))}
-                                              </div>
-                                            )}
-                                          </div>
-
+                                                  ))}
+                                                </div>
+                                              )}
                                         </div>
-                                          
-                                        <Button
-                                          style={{
-                                            display: input.type === 'file' ? 'block' : 'none',
-                                          }}
-                                          className="upload-button mt-2"
-                                          onClick={handleUpload}
-                                          disabled={!uploadFile}
-                                        >
-                                          Upload
-                                        </Button>
                                         <div
                                           style={{
                                             display: input.type === 'file' ? 'block' : 'none',
