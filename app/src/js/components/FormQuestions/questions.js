@@ -50,6 +50,8 @@ const FormQuestions = ({
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [uploadFileName, setUploadFileName] = useState('');
   const [uploadFileFlag, setUploadFileFlag] = useState(false);
+  const [uploadFailed, setUploadFailed] = useState(false);
+     
   const [uploadFields, setUploadFields] = useState([
     {
       key: 'file_name',
@@ -445,6 +447,26 @@ const FormQuestions = ({
       producer.producer_first_name === '' ||
       producer.producer_last_name_or_organization === ''
     );
+  };
+
+  const progressBarStyle = {
+    width: '100%',
+    backgroundColor: uploadFailed ? '#db1400' : 'white',
+    height: '30px' // Set the height of the progress bar
+  };
+
+  const progressBarFillStyle = {
+    height: '100%',
+    backgroundColor: uploadFailed ? '#db1400' : '#2275aa', // Set default fill color to blue
+    textAlign: 'center',
+    lineHeight: '30px', 
+    color: 'white', 
+    fontSize: '20px', 
+    width: uploadFailed ? '100%' : `${progressValue}%` // Set width based on progress value
+  };
+
+  const numberDisplayStyle = {
+    fontSize: '20px' 
   };
 
   const validateFields = (checkAllFields = true, jsonObj) => {
@@ -1008,6 +1030,7 @@ const FormQuestions = ({
     setProgressValue(0);
 
     const updateProgress = (progress, fileObj) => {
+      console.log('progress', progress);
       setProgressValue(Math.min(progress, 100));
       setUploadFileName(fileObj ? fileObj.name : '');
     };
@@ -1041,11 +1064,15 @@ const FormQuestions = ({
           statusMsg = 'Select a file';
           console.error(alertMsg);
           resetUploads(alertMsg, statusMsg);
+          setUploadFailed(true);
         } else {
           alertMsg = '';
           statusMsg = 'Upload Complete';
           setUploadFileFlag(true);
           resetUploads(alertMsg, statusMsg);
+          setUploadFileName('');
+          setProgressValue(0);
+          setShowProgressBar(false);
           //updateUploadStatusWithTimeout('Select another file', 1000);
         }
       } catch (error) {
@@ -2184,6 +2211,13 @@ const FormQuestions = ({
                                           }}
                                           className="table-div w-100"
                                         >
+                                          {showProgressBar && progressValue > 0 && 
+                                            <div style={progressBarStyle}>
+                                              <div style={progressBarFillStyle}>
+                                                <span style={numberDisplayStyle}>{false ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={''}></span></span>: `${progressValue}%`}</span>
+                                              </div>
+                                            </div>
+                                            }
                                           <br />
                                           <p>Files Previously Uploaded</p>
                                           <Table bordered responsive className="uploaded-files-table">
