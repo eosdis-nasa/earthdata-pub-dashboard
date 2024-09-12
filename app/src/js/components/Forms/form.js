@@ -737,7 +737,7 @@ class FormOverview extends React.Component {
             The selected reviewers have been notified via email.
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleCloseModal}>
+            <Button variant="primary" onClick={this.handleCloseModal}>
               Close
             </Button>
           </Modal.Footer>
