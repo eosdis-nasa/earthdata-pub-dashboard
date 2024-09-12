@@ -146,6 +146,14 @@ const FormQuestions = ({
 
   useEffect(() => {
     if (formData) {
+      if (formData.error){
+        setAlertVariant('danger');
+        setAlertMessage(
+          'Unable to fetch form data. If you believe this is an error please contact the EDPub team.'
+        );
+        setDismissCountDown(10);
+        return;
+      }
       setQuestions(formData.sections);
       const initialValues = {};
       formData.sections.forEach((section) => {
@@ -1287,7 +1295,7 @@ const FormQuestions = ({
           <h3
             id="daac_selection"
             style={{
-              display: daacInfo && daacInfo.daac_name !== '' ? 'block' : 'none',
+              display: daacInfo && daacInfo.daac_name && daacInfo.daac_name !== '' ? 'block' : 'none',
               textAlign: 'left',
             }}
           >
