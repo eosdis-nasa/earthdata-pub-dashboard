@@ -2207,8 +2207,11 @@ const FormQuestions = ({
                                           <div className="upload-container">
                                             <p>Drag & drop files here, or click to select files</p>
                                             <input type="file" id="file-upload-input" className="upload-input" onChange={handleFileChange} multiple />
-
-                                            
+                                            {uploadFiles.length > 0 && (
+                                              <p>
+                                                <strong>{uploadFiles.length} file(s) selected. Click on upload</strong>
+                                              </p>
+                                            )}                                            
                                           </div>
 
                                         </div>
@@ -2231,7 +2234,7 @@ const FormQuestions = ({
                                                 className="ml-2"
                                                 style={{ cursor: 'pointer', marginLeft: '10px' }}
                                                 onClick={toggleProgressBars}
-                                                title={progressBarsVisible ? 'Hide Progress' : 'Show Progress'}
+                                                title={progressBarsVisible ? 'Hide Download Progress' : 'Show Download Progress'}
                                               />
                                             </span>
 
