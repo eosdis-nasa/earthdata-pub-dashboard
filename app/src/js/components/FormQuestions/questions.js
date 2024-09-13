@@ -1320,13 +1320,10 @@ const FormQuestions = ({
             DAAC Selected:{' '}
             <span
               id="daac_name"
-              className="question_section w-100"
-              onClick={() => history.push('/daac/selection/'+daacInfo.daac_id)}
             >
               <span
                 className="eui-link"
                 id="daac_name_link"
-                title="go to the EDPub Group Selection"
               >
                 {daacInfo.daac_name}
               </span>
