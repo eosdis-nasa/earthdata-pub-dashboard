@@ -773,7 +773,6 @@ const FormQuestions = ({
       setAlertVariant('success');
       setAlertMessage('Your request has been saved.');
       setDismissCountDown(10);
-      console.log('continueEditing', jsonObject);
       return;
     }
 
@@ -802,7 +801,6 @@ const FormQuestions = ({
       } catch (error) {
         console.error('Failed to Save the form as draft:', error);
       }
-      console.log('draft', jsonObject);
       return;
     }
 
@@ -812,7 +810,6 @@ const FormQuestions = ({
           delete jsonObject.data.validation_errors;
         }
         await dispatch(submitFilledForm(jsonObject));
-        console.log('submit', jsonObject);
         window.location.href = urlReturn;
       } else {
         setAlertVariant('danger');
@@ -1031,7 +1028,6 @@ const FormQuestions = ({
     setProgressValue(0);
 
     const updateProgress = (progress, fileObj) => {
-      console.log('progress', progress);
       setProgressValue(Math.min(progress, 100));
       setUploadFileName(fileObj ? fileObj.name : '');
     };
