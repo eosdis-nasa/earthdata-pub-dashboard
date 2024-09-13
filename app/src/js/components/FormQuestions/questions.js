@@ -1319,14 +1319,9 @@ const FormQuestions = ({
           >
             DAAC Selected:{' '}
             <span
-              id="daac_name"
+              className="daac_name"
             >
-              <span
-                className="eui-link"
-                id="daac_name_link"
-              >
-                {daacInfo.daac_name}
-              </span>
+            {daacInfo.daac_name}
             </span>
           </h3>
           <section>
