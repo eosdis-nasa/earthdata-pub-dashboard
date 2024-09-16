@@ -1008,7 +1008,6 @@ const FormQuestions = ({
   const handleFileChange = (event) => {
     const files = event.target.files;
     if (files.length) {
-      console.log('files', files)
       setUploadFiles([...uploadFiles, ...Array.from(files)]); // Update state with selected files
       setUploadFile(files);
       setUploadStatusMsg(`${files.length} file(s) selected`);
@@ -1097,6 +1096,8 @@ const FormQuestions = ({
     setShowProgressBar(false);
     setUploadFileFlag(true);
     setShowUploadSummaryModal(true);
+    setUploadFiles([]); 
+    setUploadStatusMsg('No files selected');
   };
   
   // Toggle the visibility of the progress bars
