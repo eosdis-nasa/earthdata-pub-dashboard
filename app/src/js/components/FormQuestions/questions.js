@@ -4,7 +4,7 @@ import { Button, Form, Container, Row, Col, FormGroup, FormControl, Alert, Spinn
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRedo, faUndo, faPlus, faTrashAlt, faArrowUp, faArrowDown, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { faRedo, faUndo, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 import './FormQuestions.css';
 import DynamicTable from './DynamicTable';
@@ -18,7 +18,6 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import localUpload from '@edpub/upload-utility';
 import { format } from "date-fns";
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const FormQuestions = ({
   cancelLabel = 'Cancel',
@@ -1044,13 +1043,14 @@ const FormQuestions = ({
   const handleUpload = async () => {
     setUploadStatusMsg('Uploading...');
     setShowProgressBar(true);
-  
+    setProgressBarsVisible(true);
     const successFiles = [];
     const failedFiles = [];
   
     const uploadFileAsync = async (file) => {
       return new Promise((resolve, reject) => {
         const updateProgress = (progress, fileObj) => {
+          console.log('updateProgress', updateProgress)
           setUploadProgress((prev) => ({
             ...prev,
             [fileObj.name]: Math.min(progress, 100),
@@ -1069,6 +1069,10 @@ const FormQuestions = ({
           const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
           if (error) {
             console.error(`Error uploading file ${file.name}: ${error}`);
+            setUploadProgress((prev) => ({
+              ...prev,
+              [file.name]: 'Failed',
+            }));
             reject(file.name);
           } else {
             resolve(file.name);
@@ -2231,10 +2235,11 @@ const FormQuestions = ({
                                               {/* Toggle icon to show/hide progress bars */}
                                               <FontAwesomeIcon
                                                 icon={progressBarsVisible ? faEyeSlash : faEye}
+                                                style={{ cursor: 'pointer', marginLeft: '10px', fontSize: '20px' }}
                                                 className="ml-2"
-                                                style={{ cursor: 'pointer', marginLeft: '10px' }}
                                                 onClick={toggleProgressBars}
                                                 title={progressBarsVisible ? 'Hide Download Progress' : 'Show Download Progress'}
+                                
                                               />
                                             </span>
 
@@ -2244,7 +2249,7 @@ const FormQuestions = ({
                                                   {uploadFiles.map((file, index) => (
                                                     <div key={index}>
                                                       <p>{file.name}</p>
-                                                      <div style={{ width: '100%', backgroundColor: '#f1f1f1', height: '30px', marginBottom: '5px' }}>
+                                                      <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
                                                         <div style={{
                                                           width: `${uploadProgress[file.name] || 0}%`,
                                                           backgroundColor: '#2275aa',
@@ -2253,7 +2258,7 @@ const FormQuestions = ({
                                                           lineHeight: '30px',
                                                           color: 'white',
                                                         }}>
-                                                          {uploadProgress[file.name] ? `${uploadProgress[file.name]}%` : '0%'}
+                                                          {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '0%'}
                                                         </div>
                                                       </div>
                                                     </div>
