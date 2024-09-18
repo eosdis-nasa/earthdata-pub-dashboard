@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useParams } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { listDaacs, initialize } from '../../actions';
 import { Form, FormGroup, FormLabel, Button, Table } from 'react-bootstrap';
 import _config from '../../config';
 
 const FormsOverview = ({ forms }) => {
+  const { daacid } = useParams(); 
   const [daacs, setDaacs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,13 +17,17 @@ const FormsOverview = ({ forms }) => {
     dispatch(listDaacs())
       .then((data) => {
         setDaacs(data.data);
+        if(daacid) {
+          const obj = (data.data).find(item => item.id === daacid);
+          if(obj) setSelectedValues(obj.url, obj.id, obj.short_name, obj.long_name, obj.description);
+        }
         setLoading(false);
       })
       .catch((err) => {
         setError(err.message);
         setLoading(false);
       });
-  }, [dispatch]);
+  }, [dispatch, daacid]);
 
   const [selected, setSelected] = useState(null);
   const [selectedDaac, setSelectedDaac] = useState({});

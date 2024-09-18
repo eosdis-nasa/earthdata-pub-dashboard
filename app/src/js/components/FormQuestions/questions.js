@@ -17,6 +17,7 @@ import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission 
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import localUpload from '@edpub/upload-utility';
+import { format } from "date-fns";
 
 const FormQuestions = ({
   cancelLabel = 'Cancel',
@@ -49,6 +50,8 @@ const FormQuestions = ({
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [uploadFileName, setUploadFileName] = useState('');
   const [uploadFileFlag, setUploadFileFlag] = useState(false);
+  const [uploadFailed, setUploadFailed] = useState(false);
+     
   const [uploadFields, setUploadFields] = useState([
     {
       key: 'file_name',
@@ -72,6 +75,7 @@ const FormQuestions = ({
   const [timer, setTimer] = useState(null);
   const [logs, setLogs] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const [checkboxStatus, setCheckboxStatus] = useState({
     sameAsPrimaryDataProducer: false,
     sameAsPrimaryLongTermSupport: false,
@@ -445,6 +449,27 @@ const FormQuestions = ({
     );
   };
 
+  const progressBarStyle = {
+    width: '100%',
+    backgroundColor: uploadFailed ? '#db1400' : 'white',
+    height: '30px', // Set the height of the progress bar
+    marginBottom: '5px'
+  };
+
+  const progressBarFillStyle = {
+    height: '100%',
+    backgroundColor: uploadFailed ? '#db1400' : '#2275aa', // Set default fill color to blue
+    textAlign: 'center',
+    lineHeight: '30px', 
+    color: 'white', 
+    fontSize: '20px', 
+    width: uploadFailed ? '100%' : `${progressValue}%` // Set width based on progress value
+  };
+
+  const numberDisplayStyle = {
+    fontSize: '20px' 
+  };
+
   const validateFields = (checkAllFields = true, jsonObj) => {
     const newValidationErrors = {};
     const input2 = questions
@@ -670,7 +695,7 @@ const FormQuestions = ({
   };
 
   const cancelForm = () => {
-    window.location.href = urlReturn;
+    setShowCancelModal(true); 
   };
 
   const draftFile = (e) => {
@@ -748,7 +773,6 @@ const FormQuestions = ({
       setAlertVariant('success');
       setAlertMessage('Your request has been saved.');
       setDismissCountDown(10);
-      console.log('continueEditing', jsonObject);
       return;
     }
 
@@ -777,7 +801,6 @@ const FormQuestions = ({
       } catch (error) {
         console.error('Failed to Save the form as draft:', error);
       }
-      console.log('draft', jsonObject);
       return;
     }
 
@@ -787,7 +810,6 @@ const FormQuestions = ({
           delete jsonObject.data.validation_errors;
         }
         await dispatch(submitFilledForm(jsonObject));
-        console.log('submit', jsonObject);
         window.location.href = urlReturn;
       } else {
         setAlertVariant('danger');
@@ -1039,11 +1061,15 @@ const FormQuestions = ({
           statusMsg = 'Select a file';
           console.error(alertMsg);
           resetUploads(alertMsg, statusMsg);
+          setUploadFailed(true);
         } else {
           alertMsg = '';
           statusMsg = 'Upload Complete';
           setUploadFileFlag(true);
           resetUploads(alertMsg, statusMsg);
+          setUploadFileName('');
+          setProgressValue(0);
+          setShowProgressBar(false);
           //updateUploadStatusWithTimeout('Select another file', 1000);
         }
       } catch (error) {
@@ -1293,17 +1319,9 @@ const FormQuestions = ({
           >
             DAAC Selected:{' '}
             <span
-              id="daac_name"
-              className="question_section w-100"
-              onClick={() => history.push('/daac/selection/')}
+              className="daac_name"
             >
-              <span
-                className="eui-link"
-                id="daac_name_link"
-                title="go to the EDPub Group Selection"
-              >
-                {daacInfo.daac_name}
-              </span>
+            {daacInfo.daac_name}
             </span>
           </h3>
           <section>
@@ -1374,7 +1392,7 @@ const FormQuestions = ({
                           </span>
                           <span
                             className="col text-right section_required"
-                            style={{ display: question.required ? 'block' : 'none' }}
+                            style={{ display: question.required ? 'inline' : 'none', marginLeft: '5px' }}
                           >
                             required
                           </span>
@@ -1880,7 +1898,7 @@ const FormQuestions = ({
                                                 : null
                                             }
                                             onChange={(date) =>
-                                              handleFieldChange(input.control_id, date)
+                                              handleFieldChange(input.control_id, date ? format(date, "yyyy-MM-dd hh:mm aa zzz"): format(new Date(), "yyyy-MM-dd hh:mm aa zzz"))
                                             }
                                             showTimeSelect
                                             timeFormat="HH:mm"
@@ -2165,7 +2183,15 @@ const FormQuestions = ({
                                             <p>Drag & drop a file here, or click to select a file</p>
                                           </div>
                                           <p className="upload-status">{uploadStatusMsg}</p>
+                                          {showProgressBar && progressValue > 0 && 
+                                            <div style={progressBarStyle}>
+                                              <div style={progressBarFillStyle}>
+                                                <span style={numberDisplayStyle}>{false ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={''}></span></span>: `${progressValue}%`}</span>
+                                              </div>
+                                            </div>
+                                          }
                                         </div>
+                                          
                                         <Button
                                           style={{
                                             display: input.type === 'file' ? 'block' : 'none',
@@ -2250,7 +2276,7 @@ const FormQuestions = ({
       <ScrollToTop />
       <Modal show={showModal} onHide={handleCloseModal} className="custom-modal">
         <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
+          <Modal.Title>Save As Draft Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Your request has been saved. Do you want to be redirected to Earthdata Pub Dashboard
@@ -2265,6 +2291,22 @@ const FormQuestions = ({
           </Button>
         </Modal.Footer>
       </Modal>
+      <Modal show={showCancelModal} onHide={() => setShowCancelModal(false)} className="custom-modal">
+      <Modal.Header closeButton>
+        <Modal.Title>Cancel Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure you want to cancel?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
+          No, Continue Editing
+        </Button>
+        <Button variant="primary" onClick={() => window.location.href = urlReturn}>
+          Yes, Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
     </div>
   );
 };
