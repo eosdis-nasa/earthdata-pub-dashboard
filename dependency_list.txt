@@ -37,6 +37,7 @@ earthdata-pub-dashboard@1.0.17 /home/5kb/git/earthdatapub/dashboard
 ├── cypress-failed-log@2.10.0
 ├── cypress-localstorage-commands@1.7.0
 ├── cypress@12.17.4
+├── date-fns@3.6.0
 ├── deepmerge@4.3.1
 ├── enzyme@3.11.0
 ├── eslint-config-standard@17.0.0

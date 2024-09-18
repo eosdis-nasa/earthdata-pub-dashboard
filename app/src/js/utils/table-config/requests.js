@@ -139,6 +139,7 @@ export const stepLookup = (row) => {
         stepType = row.step_data.type;
         stepIDKey = `${stepType}_id`;
         stepID = row.step_data[stepIDKey];
+        const { basepath } = _config;
         if (row.step_data.type.match(/close/g)) {
           return 'Completed';
         }
@@ -151,13 +152,13 @@ export const stepLookup = (row) => {
             stepID = row.step_data.data[tmpIDKey];
             // Build url to forms app - after submitted
             if (tmpType.match(/form/g)) {
-              request = `${_config.formsUrl}/questions/${row.id}`;
+              request = `${basepath}form/questions/${row.id}`;
             }
           }
         }
         // Build url to forms app if not submitted
         if (stepType.match(/form/g)) {
-          request = `${_config.formsUrl}/questions/${row.id}`;
+          request = `${basepath}form/questions/${row.id}`;
         // assign a workflow
         } else if (stepType.match(/action/g)) {
           request = `/workflows?requestId=${row.id}`;
