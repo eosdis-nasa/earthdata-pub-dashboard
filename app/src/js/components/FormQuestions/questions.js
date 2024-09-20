@@ -2226,7 +2226,7 @@ const FormQuestions = ({
                                         <Button
                                           className="upload-button mt-2"
                                           onClick={handleUpload}
-                                          disabled={uploadFiles.length === 0}
+                                          disabled={uploadFiles.length === 0 || showProgressBar}
                                         >
                                           Upload
                                         </Button>
