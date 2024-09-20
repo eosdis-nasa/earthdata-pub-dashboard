@@ -44,15 +44,12 @@ const FormQuestions = ({
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadStatusMsg, setUploadStatusMsg] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [fakeTable, setFakeTable] = useState([{}]);
   const [validationAttempted, setValidationAttempted] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
   const [showProgressBar, setShowProgressBar] = useState(false);
-  const [uploadFileName, setUploadFileName] = useState('');
   const [uploadFileFlag, setUploadFileFlag] = useState(false);
   const [uploadFailed, setUploadFailed] = useState(false);
-  const [uploadFiles, setUploadFiles] = useState([]); // For multiple file uploads
-  const [currentFileIndex, setCurrentFileIndex] = useState(0); // Track which file is being uploaded
+  const [uploadFiles, setUploadFiles] = useState([]); 
   const [uploadFields, setUploadFields] = useState([
     {
       key: 'file_name',
@@ -985,8 +982,6 @@ const FormQuestions = ({
 
     const files = e.dataTransfer.files;
     if (files.length) {
-      console.log('files', files)
-
       setUploadFiles([...uploadFiles, ...Array.from(files)]); // Update state with selected files
       setUploadFile(files);
       setUploadStatusMsg(`${files.length} file(s) selected`);
@@ -1065,7 +1060,7 @@ const FormQuestions = ({
           fileObj: file,
           authToken: localStorage.getItem('auth-token'),
           apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
-          submissionId: daacInfo.id, // Assuming submission ID is available
+          submissionId: daacInfo.id, 
         };
   
         const upload = new localUpload();
@@ -2230,7 +2225,6 @@ const FormQuestions = ({
                                        
                                         <span className="d-flex align-items-center">
                                               
-                                              {/* Toggle icon to show/hide progress bars */}
                                               <FontAwesomeIcon
                                                 icon={progressBarsVisible ? faEyeSlash : faEye}
                                                 style={{ cursor: 'pointer', marginLeft: '10px', fontSize: '20px' }}
@@ -2241,7 +2235,6 @@ const FormQuestions = ({
                                               />
                                             </span>
 
-                                              {/* Progress bars are only shown when progressBarsVisible is true */}
                                               {progressBarsVisible && uploadFiles.length > 0 && (
                                                 <div>
                                                   {uploadFiles.map((file, index) => (
