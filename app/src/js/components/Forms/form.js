@@ -29,6 +29,7 @@ import { loadToken } from '../../utils/auth';
 import localUpload from '@edpub/upload-utility';
 import Select from 'react-select';
 import review from '../Review/review';
+import { Modal, Button } from 'react-bootstrap';
 
 const metaAccessors = [
   {
@@ -63,9 +64,8 @@ class FormOverview extends React.Component {
     this.cloneRequest = this.cloneRequest.bind(this);
     this.printForm = this.printForm.bind(this);
     this.displayName = strings.form;
-    this.state = { clone: false, filteredReviewers: [], allUsers: [], isAddReviewerDisabled: false, selectedReviewers: [], loading: false};
+    this.state = { clone: false, filteredReviewers: [], allUsers: [], isAddReviewerDisabled: false, selectedReviewers: [], loading: false, showModal: false};
   }
-
   async componentDidMount () {
     const requestId = this.props.location.search.split('=')[1];
     const { formId } = this.props.match.params;
@@ -511,6 +511,14 @@ class FormOverview extends React.Component {
     this.setState({isAddReviewerDisabled: false, loading: false});
   }
 
+   handleCloseModal = () => {
+    this.setState({ showModal: false });
+  };
+
+  handleShowModal = () => {
+    this.setState({ showModal: true });
+  };
+
   async handleAddReviewer() {
     this.setState({isAddReviewerDisabled: true, loading: true});
     const reviewerValues = this.state.selectedReviewers.map(reviewer => reviewer.value);  
@@ -528,6 +536,7 @@ class FormOverview extends React.Component {
     this.setState({filteredReviewers: filteredData});
     this.setState({ selectedReviewers: [] });
     this.setState({isAddReviewerDisabled: false, loading: false});
+    this.handleShowModal();
   }
 
   handleSelectChange = (selectedReviewers) => {
@@ -720,6 +729,19 @@ class FormOverview extends React.Component {
               : null
             }
         </section>
+        <Modal show={this.state.showModal} onHide={this.handleCloseModal} className="custom-modal">
+          <Modal.Header closeButton>
+            <Modal.Title>Reviewers Notified</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            The selected reviewers have been notified via email.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.handleCloseModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }

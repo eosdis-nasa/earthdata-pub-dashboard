@@ -151,6 +151,14 @@ const FormQuestions = ({
 
   useEffect(() => {
     if (formData) {
+      if (formData.error){
+        setAlertVariant('danger');
+        setAlertMessage(
+          'Unable to fetch form data. If you believe this is an error please contact the EDPub team.'
+        );
+        setDismissCountDown(10);
+        return;
+      }
       setQuestions(formData.sections);
       const initialValues = {};
       formData.sections.forEach((section) => {
@@ -774,7 +782,6 @@ const FormQuestions = ({
       setAlertVariant('success');
       setAlertMessage('Your request has been saved.');
       setDismissCountDown(10);
-      console.log('continueEditing', jsonObject);
       return;
     }
 
@@ -803,7 +810,6 @@ const FormQuestions = ({
       } catch (error) {
         console.error('Failed to Save the form as draft:', error);
       }
-      console.log('draft', jsonObject);
       return;
     }
 
@@ -813,7 +819,6 @@ const FormQuestions = ({
           delete jsonObject.data.validation_errors;
         }
         await dispatch(submitFilledForm(jsonObject));
-        console.log('submit', jsonObject);
         window.location.href = urlReturn;
       } else {
         setAlertVariant('danger');
@@ -1340,23 +1345,15 @@ const FormQuestions = ({
           <h3
             id="daac_selection"
             style={{
-              display: daacInfo && daacInfo.daac_name !== '' ? 'block' : 'none',
+              display: daacInfo && daacInfo.daac_name && daacInfo.daac_name !== '' ? 'block' : 'none',
               textAlign: 'left',
             }}
           >
             DAAC Selected:{' '}
             <span
-              id="daac_name"
-              className="question_section w-100"
-              onClick={() => history.push('/daac/selection/'+daacInfo.daac_id)}
+              className="daac_name"
             >
-              <span
-                className="eui-link"
-                id="daac_name_link"
-                title="go to the EDPub Group Selection"
-              >
-                {daacInfo.daac_name}
-              </span>
+            {daacInfo.daac_name}
             </span>
           </h3>
           <section>

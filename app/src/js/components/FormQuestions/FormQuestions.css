@@ -883,7 +883,9 @@
   margin-left: 10px;
 }
 
-
+.questions-component .daac_name {
+  color: #007bff;
+}
 
 .custom-table-header {
   background-color: #2276ac;
