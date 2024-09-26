@@ -1441,7 +1441,7 @@ const FormQuestions = ({
                                   <span className="checkmark"></span>
                                 </label>
                                 <label className="checkbox-item">
-                                  Same as Primary Data Accession
+                                  Same as Data Accession Point of Contact
                                   <input
                                     type="checkbox"
                                     name="sameAsPrimaryDataAccession"
