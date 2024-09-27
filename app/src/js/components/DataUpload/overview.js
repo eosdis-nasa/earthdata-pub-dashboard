@@ -159,11 +159,6 @@ class UploadOverview extends React.Component {
   }
 
   async uploadFile(){
-    let category = document.querySelector('input[name="category"]:checked')?.value;
-    if (typeof category === 'undefined'){
-      this.setState({ statusMsg: 'You  must select a document type before uploading the file'});
-      return
-    }
     const file = this.state.file
     if (this.validateFile(file)) {
       this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: file ? file.name: '' });
@@ -178,18 +173,22 @@ class UploadOverview extends React.Component {
       const { groupId } = this.props.match.params;
       const { apiRoot } = _config;
 
+      let category = document.querySelector('input[name="category"]:checked')?.value;
+      if (requestId !== '' && requestId != undefined && requestId !== null && typeof category === 'undefined'){
+        this.setState({ statusMsg: 'You  must select a document type before uploading the file'});
+        return
+      }
+
       try {
         let payload = {
           fileObj: file,
-          authToken: loadToken().token,
-          endpointParams: {
-            file_category: category
-          }
+          authToken: loadToken().token
         }
         let prefix = ''
         if (requestId !== '' && requestId != undefined && requestId !== null) {
           payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
           payload['submissionId'] = requestId
+          payload['endpointParams'] = { file_category: category };
         } else if (groupId !== '' && groupId != undefined && groupId !== null) {
           if (document.getElementById('prefix') && document.getElementById('prefix') !== null) {
             prefix = document.getElementById('prefix').value
@@ -208,7 +207,9 @@ class UploadOverview extends React.Component {
           console.log(`An error has occurred on uploadFile: ${error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
           this.setState({ uploadFailed: true, error: error});
-          document.querySelector('input[name="category"]:checked').checked = false;
+          if (typeof category !== 'undefined') {
+            document.querySelector('input[name="category"]:checked').checked = false;
+          }
         } else {
           this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
           this.resetInputWithTimeout('Select another file', 1000)
@@ -216,13 +217,17 @@ class UploadOverview extends React.Component {
             (groupId == '' || groupId === undefined || groupId === null)) {
             this.getFileList()
           }
-          document.querySelector('input[name="category"]:checked').checked = false;
+          if (typeof category !== 'undefined') {
+            document.querySelector('input[name="category"]:checked').checked = false;
+          }
         }
       } catch (error) {
         this.setState({ uploadFailed: true });
         console.log(`try catch error: ${error.stack}`);
         this.resetInputWithTimeout('Select a file', 1000)
-        document.querySelector('input[name="category"]:checked').checked = false;
+        if (typeof category !== 'undefined') {
+          document.querySelector('input[name="category"]:checked').checked = false;
+        }
       }
     }
   }
