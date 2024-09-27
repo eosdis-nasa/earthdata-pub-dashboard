@@ -182,6 +182,9 @@ class UploadOverview extends React.Component {
         let payload = {
           fileObj: file,
           authToken: loadToken().token,
+          endpointParams: {
+            file_category: category
+          }
         }
         let prefix = ''
         if (requestId !== '' && requestId != undefined && requestId !== null) {
