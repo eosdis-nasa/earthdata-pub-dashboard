@@ -322,6 +322,8 @@ class UploadOverview extends React.Component {
                   </div>
                 </div>}
               <div>
+              {requestId !== undefined ?
+                <>
                 <p>File Category:</p>
                 <div>
                   <label style={{
@@ -344,6 +346,8 @@ class UploadOverview extends React.Component {
                   </label>
                 </div>
                 <br />
+                </>: null
+              }
               </div>
               <label htmlFor='hiddenFileInput' style={{ marginBottom: '1rem', fontSize: 'unset' }}>{`${this.state.statusMsg}`}
                 <input
