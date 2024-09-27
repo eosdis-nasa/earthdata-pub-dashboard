@@ -208,6 +208,7 @@ class UploadOverview extends React.Component {
           console.log(`An error has occurred on uploadFile: ${error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
           this.setState({ uploadFailed: true, error: error});
+          document.querySelector('input[name="category"]:checked').checked = false;
         } else {
           this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
           this.resetInputWithTimeout('Select another file', 1000)
@@ -215,11 +216,13 @@ class UploadOverview extends React.Component {
             (groupId == '' || groupId === undefined || groupId === null)) {
             this.getFileList()
           }
+          document.querySelector('input[name="category"]:checked').checked = false;
         }
       } catch (error) {
         this.setState({ uploadFailed: true });
         console.log(`try catch error: ${error.stack}`);
         this.resetInputWithTimeout('Select a file', 1000)
+        document.querySelector('input[name="category"]:checked').checked = false;
       }
     }
   }
