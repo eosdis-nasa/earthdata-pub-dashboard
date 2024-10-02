@@ -91,8 +91,7 @@ export const login = (redirect) => {
       }
     })
       .then(({ data }) => {
-        console.log('data', data)
-        //window.location.href = data.redirect;
+        window.location.href = data.redirect;
       });
   };
 };

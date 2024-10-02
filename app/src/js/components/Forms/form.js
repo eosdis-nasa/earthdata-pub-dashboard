@@ -64,7 +64,16 @@ class FormOverview extends React.Component {
     this.cloneRequest = this.cloneRequest.bind(this);
     this.printForm = this.printForm.bind(this);
     this.displayName = strings.form;
-    this.state = { clone: false, filteredReviewers: [], allUsers: [], isAddReviewerDisabled: false, selectedReviewers: [], loading: false, showModal: false};
+    this.state = {
+      clone: false,
+      filteredReviewers: [],
+      allUsers: [],
+      isAddReviewerDisabled: false,
+      selectedReviewers: [],
+      loading: false,
+      showErrorModal: false, 
+      errorMessage: '', 
+    };
   }
   async componentDidMount () {
     const requestId = this.props.location.search.split('=')[1];
@@ -78,28 +87,32 @@ class FormOverview extends React.Component {
     await dispatch(getRequest(requestId));
     let userReviewList = await dispatch(listRequestReviewers(requestId));
     let allU;
-    if (this.props.requests.detail.data.step_name.includes('uwg')) {
-      allU = await dispatch(getUsers('19ac227b-e96c-46fa-a378-cf82c461b669'));
+    if(this.props.requests.detail.data.body){
+      this.setState({ showErrorModal: true, errorMessage: 'Error fetching form data, please check on the Form/Request ID.'});
     }else{
-      allU = await dispatch(getUsers());
-    }
-    const dataFilter = this.props.requests.detail.data.step_name;
-    const filteredData = userReviewList.data.filter(item => item.step_name === dataFilter);
-    this.setState({filteredReviewers: filteredData, allUsers: allU});
-    await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
-    await this.getUploadedFiles(requestId);
-
-    if (canInitialize && !isHidden) {
-      const { history } = this.props;
-      if (history.location.state !== undefined && history.location.state.clone) {
-        this.setState({ clone: true });
+      if (this.props.requests.detail.data.step_name.includes('uwg')) {
+        allU = await dispatch(getUsers('19ac227b-e96c-46fa-a378-cf82c461b669'));
+      }else{
+        allU = await dispatch(getUsers());
       }
-    }
-    if (localStorage.getItem('print') !== null) {
-      const backHref = localStorage.getItem('print');
-      localStorage.removeItem('print');
-      await this.printForm();
-      window.location.href = `${window.location.origin}/${backHref}`;
+      const dataFilter = this.props.requests.detail.data.step_name;
+      const filteredData = userReviewList.data.filter(item => item.step_name === dataFilter);
+      this.setState({filteredReviewers: filteredData, allUsers: allU});
+      await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
+      await this.getUploadedFiles(requestId);
+  
+      if (canInitialize && !isHidden) {
+        const { history } = this.props;
+        if (history.location.state !== undefined && history.location.state.clone) {
+          this.setState({ clone: true });
+        }
+      }
+      if (localStorage.getItem('print') !== null) {
+        const backHref = localStorage.getItem('print');
+        localStorage.removeItem('print');
+        await this.printForm();
+        window.location.href = `${window.location.origin}/${backHref}`;
+      }
     }
   }
 
@@ -512,7 +525,7 @@ class FormOverview extends React.Component {
   }
 
    handleCloseModal = () => {
-    this.setState({ showModal: false });
+    this.setState({ showModal: false, showErrorModal: false });
   };
 
   handleShowModal = () => {
@@ -567,8 +580,29 @@ class FormOverview extends React.Component {
     if (formId !== '') {
       thisFormUrl += `/${formId}`;
     }
+
     if (!record || (record.inflight && !record.data)) {
-      return <Loading />;
+      return (
+        <>
+          {this.state.showErrorModal ? (
+            <Modal show={this.state.showErrorModal} onHide={this.handleCloseModal} className="custom-modal">
+              <Modal.Header closeButton>
+                <Modal.Title>Form Data Unavailable</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                {this.state.errorMessage}
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="primary" onClick={this.handleCloseModal}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          ) : (
+            <Loading />
+          )}
+        </>
+      );      
     } else if (record.error) {
       return <ErrorReport report={record.error} truncate={true} />;
     }
