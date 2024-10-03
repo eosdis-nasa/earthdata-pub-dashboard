@@ -76,6 +76,19 @@ const MainRoutes = ({ activeRoute }) => {
 
   const matchedRoute = routes.find(route => activeRoute.startsWith(route.path));
 
+  const cleanUpPath = (path) => {
+    // Split the path into segments by '/'
+    const segments = path.split('/');
+
+    // Filter out consecutive repeated segments
+    const cleanedSegments = segments.filter((segment, index, array) => 
+        segment && (index === 0 || segment !== array[index - 1])
+    );
+
+    // Join the cleaned segments back into a path
+    return `/${cleanedSegments.join('/')}`;
+  };
+  
   console.log('matchedRoute', matchedRoute, activeRoute)
   // Handle redirection initially
   useEffect(() => {
@@ -86,7 +99,7 @@ const MainRoutes = ({ activeRoute }) => {
       if (history.location.pathname !== activeRoute) {
         console.log('use effect history.location.pathname', history.location.pathname);
         console.log('use effect activeRoute', activeRoute);
-        history.push(activeRoute);
+        history.push(cleanUpPath(activeRoute));
       }
       setRedirected(true);
       localStorage.removeItem('redirectAfterLogin');

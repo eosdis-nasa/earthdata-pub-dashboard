@@ -51,7 +51,7 @@ class Auth extends React.Component {
     const { inflight, tokens } = api;
     const { code, state, redirect } = queryParams;
     if (this.store.getState().api.authenticated) {
-      redirectWithToken(redirect, tokens.token);
+      redirectWithToken(redirect || 'dashboard', tokens.token);
     } else if (!inflight && code) {
       const { data } = await dispatch(mfaTokenFetch(code, state))
       const { token, user } = data;
@@ -67,7 +67,7 @@ class Auth extends React.Component {
   clickLogin () {
     const { dispatch, queryParams } = this.props;
     const { redirect } = queryParams;
-    dispatch(login(redirect));
+    dispatch(login(redirect || 'dashboard'));
   }
 
   renderQrCode (secretCode, username, issuer) {
