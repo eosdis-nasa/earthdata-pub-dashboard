@@ -388,21 +388,37 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
             note.viewers.users.map((user) => {
               return (
                 <div key={user.id} className='flex__row sm-border'>
-                  <div className='flex__item--w-15'>
-                    {user.name}
-                  </div>
-                  <div className='flex__item--w-15'>
-                    {canRemoveUser &&
-                      <button
-                        className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
-                        onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, user.id, 'user'); }}
-                        >
-                        Remove
-                      </button>
-                    }
-                  </div>
-                </div>
+                  <div className='flex__item--w-15' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '190px' }}>
+                      <style>
+                        {`                   
+                          .flex__item--w-15 .button--remove {
+                            color: white;
+                          }
+                          
+                          .flex__item--w-15 .button--remove:hover::before {
+                            color: white;
+                            background-color: #2c3e50;
+                            visibility: visible;
+                          }
 
+                          .flex__item--w-15 .button--remove:hover {
+                            background-color: #2c3e50;
+                          }
+                        `}
+                      </style>
+                      <span style={{ width: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={user.name}>
+                        {user.name} 
+                      </span>
+                      {canRemoveUser && (
+                        <button
+                          className='button button--remove'
+                          onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, user.id, 'user'); }}
+                          style={{ marginLeft: '2px', padding: '0px 10px 20px 25px'}}
+                        >
+                        </button>
+                      )}
+                    </div>
+                </div>
               )
             })
           }   
@@ -411,21 +427,23 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
             note.viewers.roles.map((role) => {
               return (
                 <div key={role.id} className='flex__row sm-border'>
-                  <div className='flex__item--w-15'>
-                    {role.name}
-                  </div>
-                  <div className='flex__item--w-15'>
-                    {canRemoveUser &&
-                      <button
-                        className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
-                        onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, role.id, 'role'); }}
-                        >
-                        Remove
-                      </button>
-                    }
-                  </div>
+                <div className='flex__item--w-15' style={{ display: 'flex', justifyContent: 'space-between', width: '190px' }}>
+                  <span style={{ width: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={role.name} >
+                    {role.name} 
+                  </span>
+                  {canRemoveUser && (
+                    <button
+                      className='button button--remove'
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleRemove(dispatch, conversationId, note.id, role.id, 'role');
+                      }}
+                      style={{ marginLeft: '2px', padding: '0px 10px 20px 25px'}}
+                    >          
+                    </button>
+                  )}
                 </div>
-
+              </div>             
               )
             })
           }              
@@ -451,7 +469,7 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
         </div>
       </div>
       { showSearch && <SearchModal { ...searchOptions[searchType] }/> }
-      <div className='flex__item--grow-1-wrap'style={{whiteSpace: "pre"}}>{ decodeURI(note.text) }</div>
+      <div className='flex__item--grow-1-wrap'style={{whiteSpace: "pre-wrap", overflowWrap: "break-word"}}>{ decodeURI(note.text) }</div>
     </div>
   );
 };

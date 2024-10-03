@@ -220,6 +220,24 @@ export const listRequests = (options) => ({
   }
 });
 
+export const saveForm = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/submission/operation/save',
+    body: payload
+  }
+});
+
+export const submitFilledForm = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/submission/operation/submit',
+    body: payload
+  }
+});
+
 export const listInactiveRequests = (options) => ({
   [CALL_API]: {
     type: types.REQUESTS,
@@ -774,6 +792,16 @@ export const createGroup = (groupId, payload) => ({
   }
 });
 
+export const initialize = (id, payload) => ({
+  [CALL_API]: {
+    type: types.REQUEST,
+    daac_id: id,
+    method: 'POST',
+    path: 'data/submission/operation/initialize',
+    body: payload
+  }
+})
+
 export const updateGroup = (groupId, payload) => ({
   [CALL_API]: {
     type: types.UPDATE_GROUP,
@@ -1108,3 +1136,5 @@ export const verify = (topsToken, token) => ({
     body: { tops_token: topsToken, auth_token: `${token}` }
   }
 });
+
+export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });

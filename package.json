@@ -139,6 +139,7 @@
   },
   "dependencies": {
     "@edpub/upload-utility": "1.0.0",
+    "@floating-ui/utils": "^0.2.5",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
@@ -152,6 +153,7 @@
     "compare-versions": "^4.1.1",
     "connected-react-router": "^6.6.1",
     "crypto-browserify": "^3.12.0",
+    "date-fns": "^3.6.0",
     "deepmerge": "^4.2.2",
     "global": "^4.3.1",
     "hash-wasm": "4.9.0",
@@ -178,6 +180,7 @@
     "react-ace": "^9.5.0",
     "react-bootstrap": "^2.0.2",
     "react-collapsible": "^2.8.1",
+    "react-datepicker": "^7.3.0",
     "react-datetime-picker": "^3.4.3",
     "react-dom": "^17.0.2",
     "react-qr-code": "^2.0.12",
@@ -198,6 +201,7 @@
     "style-loader": "^3.3.1"
   },
   "overrides": {
-    "yaml": "2.2.2"
+    "yaml": "2.2.2",
+    "elliptic": "6.5.7"
   }
 }
