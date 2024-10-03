@@ -85,8 +85,8 @@ const MainRoutes = ({ activeRoute }) => {
         segments.splice(1, 1); // Remove the 'dashboard' segment
     }
 
-    // Join the cleaned segments back into a path
-    return `/${segments.join('/')}`;
+    // Join the cleaned segments back into a path, without leading '/'
+    return segments.slice(1).join('/');
   };
   
   console.log('matchedRoute', matchedRoute, activeRoute)
