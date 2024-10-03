@@ -209,7 +209,7 @@ class UploadOverview extends React.Component {
           }
         } else {
           this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
-          this.resetInputWithTimeout('Select another file', 1000)
+          this.resetInputWithTimeout('Select a file', 1000)
           if ((requestId !== '' && requestId != undefined && requestId !== null) &&
             (groupId == '' || groupId === undefined || groupId === null)) {
             this.getFileList()
