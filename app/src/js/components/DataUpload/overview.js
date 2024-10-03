@@ -68,6 +68,7 @@ class UploadOverview extends React.Component {
     if (requestId !== '' && requestId != undefined && requestId !== null) {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
+          resp = []
           if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
             return
           }
@@ -159,6 +160,10 @@ class UploadOverview extends React.Component {
     return valid;
   }
 
+  resetRadioState() {
+    this.setCategoryType(undefined);
+  }
+
   async uploadFile(){
     const file = this.state.file
     if (this.validateFile(file)) {
@@ -174,7 +179,7 @@ class UploadOverview extends React.Component {
       const { groupId } = this.props.match.params;
       const { apiRoot } = _config;
 
-      let category = document.querySelector('input[name="category"]:checked')?.value;
+      let category = this.state.categoryType;
       try {
         let payload = {
           fileObj: file,
@@ -204,8 +209,7 @@ class UploadOverview extends React.Component {
           this.resetInputWithTimeout('Select a file', 1000)
           this.setState({ uploadFailed: true, error: error});
           if (typeof category !== 'undefined') {
-            document.querySelector('input[name="category"]:checked').checked = false;
-            this.setCategoryType(undefined);
+            this.resetRadioState();
           }
         } else {
           this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
@@ -215,8 +219,7 @@ class UploadOverview extends React.Component {
             this.getFileList()
           }
           if (typeof category !== 'undefined') {
-            document.querySelector('input[name="category"]:checked').checked = false;
-            this.setCategoryType(undefined);
+            this.resetRadioState();
           }
         }
       } catch (error) {
@@ -224,8 +227,7 @@ class UploadOverview extends React.Component {
         console.log(`try catch error: ${error.stack}`);
         this.resetInputWithTimeout('Select a file', 1000)
         if (typeof category !== 'undefined') {
-          document.querySelector('input[name="category"]:checked').checked = false;
-          this.setCategoryType(undefined);
+          this.resetRadioState();
         }
       }
     }
@@ -337,8 +339,8 @@ class UploadOverview extends React.Component {
                     alignItems: 'center',
                     marginRight: '15px',
                   }}>
-                    <input type="radio" id="documentation_category" name="category" value="documentation" onClick={() => this.setCategoryType("documentation")}/>
-                    <label style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="documentation">Documentation</label>
+                    <input type="radio" id="documentation_category" onChange={() => this.setCategoryType("documentation")} checked={this.state.categoryType === 'documentation'}/>
+                    <label style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="documentation_category">Documentation</label>
                   </label>
                   <label
                     style={{
@@ -347,8 +349,8 @@ class UploadOverview extends React.Component {
                       marginRight: '15px',
                     }}
                   >
-                    <input type="radio" id="sample_category" name="category" value="sample" onClick={() => this.setCategoryType("sample")}/>
-                    <label style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="sample">Sample Files</label>
+                    <input type="radio" id="sample_category" onChange={() => this.setCategoryType("sample")} checked={this.state.categoryType === 'sample'}/>
+                    <label style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="sample_category">Sample Files</label>
                   </label>
                 </div>
                 <br />
