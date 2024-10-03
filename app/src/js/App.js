@@ -80,13 +80,13 @@ const MainRoutes = ({ activeRoute }) => {
     // Split the path into segments by '/'
     const segments = path.split('/');
 
-    // Filter out consecutive repeated segments
-    const cleanedSegments = segments.filter((segment, index, array) => 
-        segment && (index === 0 || segment !== array[index - 1])
-    );
+    // Check if the first segment is 'dashboard', if so, remove it
+    if (segments[1] === 'dashboard') {
+        segments.splice(1, 1); // Remove the 'dashboard' segment
+    }
 
     // Join the cleaned segments back into a path
-    return `/${cleanedSegments.join('/')}`;
+    return `/${segments.join('/')}`;
   };
   
   console.log('matchedRoute', matchedRoute, activeRoute)
