@@ -66,7 +66,6 @@ class Auth extends React.Component {
 
   clickLogin () {
     const { dispatch, queryParams } = this.props;
-    queryParams.redirect = 'workflow';
     const { redirect } = queryParams;
     dispatch(login(redirect || 'dashboard'));
   }
