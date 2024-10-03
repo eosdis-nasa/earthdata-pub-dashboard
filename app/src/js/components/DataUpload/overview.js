@@ -68,7 +68,6 @@ class UploadOverview extends React.Component {
     if (requestId !== '' && requestId != undefined && requestId !== null) {
       dispatch(listFileUploadsBySubmission(requestId))
         .then((resp) => {
-          resp = []
           if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
             return
           }
