@@ -338,7 +338,7 @@ class UploadOverview extends React.Component {
                     marginRight: '15px',
                   }}>
                     <input type="radio" id="documentation_category" name="category" value="documentation" onClick={() => this.setCategoryType("documentation")}/>
-                    <label className="diff" style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="documentation">Documentation</label>
+                    <label style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="documentation">Documentation</label>
                   </label>
                   <label
                     style={{
@@ -348,7 +348,7 @@ class UploadOverview extends React.Component {
                     }}
                   >
                     <input type="radio" id="sample_category" name="category" value="sample" onClick={() => this.setCategoryType("sample")}/>
-                    <label className="diff" style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="sample">Sample Files</label>
+                    <label style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="sample">Sample Files</label>
                   </label>
                 </div>
                 <br />
