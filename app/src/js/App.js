@@ -94,12 +94,12 @@ const MainRoutes = ({ activeRoute }) => {
   useEffect(() => {
     if (matchedRoute && !redirected) {
           console.log('use effect');
-
+      history.push(history.location.pathname);
       // Redirect only if necessary, and activeRoute isn't already the current location
       if (history.location.pathname !== activeRoute) {
         console.log('use effect history.location.pathname', history.location.pathname);
         console.log('use effect activeRoute', activeRoute);
-        history.push(cleanUpPath(activeRoute));
+        //history.push(cleanUpPath(activeRoute));
       }
       setRedirected(true);
       localStorage.removeItem('redirectAfterLogin');
