@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import ourConfigureStore, { history } from './store/configureStore';
-import { Route, Redirect, Switch, useHistory, useLocation } from 'react-router-dom';
+import { Route, Redirect, Switch, useHistory } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 
 //  Fontawesome Icons Library
@@ -46,7 +46,6 @@ import { useState, useEffect } from 'react';
 
 const MainRoutes = ({ activeRoute }) => {
   const history = useHistory();  // Use history for programmatic navigation
-  const location = useLocation();  // To track current path
   const [redirected, setRedirected] = useState(false); // State to track if redirection has occurred
 
   // Define your routes in an array
@@ -72,32 +71,13 @@ const MainRoutes = ({ activeRoute }) => {
   ];
 
   // Find the route that matches the activeRoute
-
   const matchedRoute = routes.find(route => activeRoute.startsWith(route.path));
 
-  const cleanUpPath = (path) => {
-    // Split the path into segments by '/'
-    const segments = path.split('/');
-
-    // Check if the first segment is 'dashboard', if so, remove it
-    if (segments[1] === 'dashboard') {
-        segments.splice(1, 1); // Remove the 'dashboard' segment
-    }
-
-    // Join the cleaned segments back into a path, without leading '/'
-    return segments.slice(1).join('/');
-  };
-  
-  console.log('matchedRoute', matchedRoute)
-  console.log('activeRoute', activeRoute)
   // Handle redirection initially
   useEffect(() => {
     if (matchedRoute && !redirected) {
-          console.log('use effect');
       // Redirect only if necessary, and activeRoute isn't already the current location
       if (history.location.pathname !== activeRoute) {
-        console.log('use effect history.location.pathname', history.location.pathname);
-        console.log('use effect activeRoute', activeRoute);
         history.push(activeRoute);
       }
       setRedirected(true);
@@ -107,9 +87,7 @@ const MainRoutes = ({ activeRoute }) => {
 
   return (
     <Main path='/'>
-
       <Switch>
-        {/* Render the routes as usual */}
         {routes.map(route => (
           <Route
             key={route.path}
@@ -118,8 +96,6 @@ const MainRoutes = ({ activeRoute }) => {
             component={route.component}
           />
         ))}
-
-        {/* Fallback to error if no route matches */}
         <Route component={Error} />
       </Switch>
     </Main>
@@ -141,8 +117,6 @@ class App extends Component {
 
   render () {
     return (
-    // <ErrorBoundary> // Add after troublshooting other errors
-    // Routes
     <div className="routes">
     <Provider store={this.store}>
       <ConnectedRouter history={history}>

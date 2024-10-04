@@ -76,7 +76,6 @@ class Home extends React.Component {
 
       // Only update state if the component is still mounted
       if (this._isMounted) {
-        console.log('home mounted')
         this.setState({ originalList, list: originalList });
       }
     } catch (error) {
@@ -85,7 +84,6 @@ class Home extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log('home un-mounted')
     clearInterval(this.state.intervalId); // Clear the interval
     this._isMounted = false; // Mark component as unmounted
   }
