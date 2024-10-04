@@ -154,7 +154,7 @@ class App extends Component {
             path='/' 
             render={(props) => {
               if (this.isLoggedIn()) {
-                const redirect = localStorage.getItem('redirectAfterLogin') || location.pathname || '/';
+                const redirect = localStorage.getItem('redirectAfterLogin') ||  history.location.pathname || '/';
                 return <MainRoutes activeRoute={redirect} />;
               } else {
                 // Store the intended URL in localStorage before redirecting to auth
