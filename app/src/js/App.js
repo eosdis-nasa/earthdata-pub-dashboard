@@ -72,7 +72,6 @@ const MainRoutes = ({ activeRoute }) => {
   ];
 
   // Find the route that matches the activeRoute
-  console.log('activeRoute', activeRoute, location)
 
   const matchedRoute = routes.find(route => activeRoute.startsWith(route.path));
 
@@ -89,17 +88,17 @@ const MainRoutes = ({ activeRoute }) => {
     return segments.slice(1).join('/');
   };
   
-  console.log('matchedRoute', matchedRoute, activeRoute)
+  console.log('matchedRoute', matchedRoute)
+  console.log('activeRoute', activeRoute)
   // Handle redirection initially
   useEffect(() => {
     if (matchedRoute && !redirected) {
           console.log('use effect');
-      history.push(history.location.pathname);
       // Redirect only if necessary, and activeRoute isn't already the current location
       if (history.location.pathname !== activeRoute) {
         console.log('use effect history.location.pathname', history.location.pathname);
         console.log('use effect activeRoute', activeRoute);
-        //history.push(cleanUpPath(activeRoute));
+        history.push(activeRoute);
       }
       setRedirected(true);
       localStorage.removeItem('redirectAfterLogin');
@@ -159,7 +158,11 @@ class App extends Component {
                 return <MainRoutes activeRoute={redirect} />;
               } else {
                 // Store the intended URL in localStorage before redirecting to auth
-                localStorage.setItem('redirectAfterLogin', props.location.pathname);
+                const { pathname, search } = props.location;
+                // Check if search is not empty or null, then ppend it to pathname
+                const fullPath = search && search !== "" ? `${pathname}${search}` : pathname;
+                // Store the full path in localStorage
+                localStorage.setItem('redirectAfterLogin', fullPath);
                 return <Redirect to='/auth' />;
               }
             }} 
