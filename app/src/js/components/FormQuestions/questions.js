@@ -43,7 +43,7 @@ const FormQuestions = ({
   const [dismissCountDown, setDismissCountDown] = useState(0);
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadStatusMsg, setUploadStatusMsg] = useState('');
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState({});
   const [fakeTable, setFakeTable] = useState([{}]);
   const [validationAttempted, setValidationAttempted] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
@@ -135,8 +135,18 @@ const FormQuestions = ({
           return keyB - keyA;
         });
 
+        // Filter into categories for display
+        const categoryFiles = {};
+        files.forEach((f) => {
+          if (f.category in categoryFiles){
+            categoryFiles[f.category].push(f);
+          } else {
+            categoryFiles[f.category] = [f]
+          }
+        })
+
         // Set the files in state
-        setUploadedFiles(files);
+        setUploadedFiles(categoryFiles);
       } catch (error) {
         console.error('Failed to fetch file uploads:', error);
       }
@@ -507,7 +517,10 @@ const FormQuestions = ({
                 newValidationErrors[element.controlId] = element.errorMessage;
               }
             } else if (input.type === 'file') {
-              if (uploadedFiles && uploadedFiles.length === 0) {
+              if (uploadedFiles && typeof category_map[input.control_id] !== 'undefined' &&
+                (!(category_map[input.control_id] in uploadedFiles) ||
+                (category_map[input.control_id] in uploadedFiles &&
+                uploadedFiles[category_map[input.control_id]].length === 0))) {
                 let flag;
                 question.inputs.forEach((input) => {
                   if (jsonObj.data[input.control_id]) {
@@ -1030,7 +1043,12 @@ const FormQuestions = ({
 
   const { apiRoot } = _config;
 
-  const handleUpload = async () => {
+  const category_map = {
+    "data_product_documentation": "documentation",
+    "example_files": "sample"
+  };
+
+  const handleUpload = async (control_id) => {
     setUploadStatusMsg('Uploading...');
     setShowProgressBar(true);
     setProgressValue(0);
@@ -1046,12 +1064,16 @@ const FormQuestions = ({
       const upload = new localUpload();
       const requestId = daacInfo.id;
 
+      let uploadCategory = typeof category_map[control_id] !== 'undefined' ? category_map[control_id] : "";
       try {
         //await refreshAuth(); // Function to refresh authentication token if needed
 
         let payload = {
           fileObj: uploadFile,
           authToken: localStorage.getItem('auth-token'),
+          endpointParams: {
+            file_category: uploadCategory
+          }
         };
 
         if (requestId) {
@@ -1441,7 +1463,7 @@ const FormQuestions = ({
                                   <span className="checkmark"></span>
                                 </label>
                                 <label className="checkbox-item">
-                                  Same as Primary Data Accession
+                                  Same as Data Accession Point of Contact
                                   <input
                                     type="checkbox"
                                     name="sameAsPrimaryDataAccession"
@@ -2205,7 +2227,7 @@ const FormQuestions = ({
                                             display: input.type === 'file' ? 'block' : 'none',
                                           }}
                                           className="upload-button mt-2"
-                                          onClick={handleUpload}
+                                          onClick={(e) => handleUpload(input.control_id)}
                                           disabled={!uploadFile}
                                         >
                                           Upload
@@ -2227,8 +2249,11 @@ const FormQuestions = ({
                                               </tr>
                                             </thead>
                                             <tbody>
-                                              {uploadedFiles.length > 0 ? (
-                                                uploadedFiles.map((file, index) => (
+                                              {Object.keys(uploadedFiles).length > 0 && 
+                                              typeof category_map[input.control_id] !== 'undefined' &&
+                                              category_map[input.control_id] in uploadedFiles &&
+                                              uploadedFiles[category_map[input.control_id]].length > 0 ? (
+                                                uploadedFiles[category_map[input.control_id]].map((file, index) => (
                                                   <tr
                                                     key={index}
                                                     className="uploaded-files-row"

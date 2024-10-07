@@ -47,7 +47,9 @@ class Comment extends React.Component {
     await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
     let reviewStepName = `${this.props.forms.map[formId].data.short_name}_form_review`;
     if (this.props.requests.detail.data.conversation_id) {
-      if (typeof this.props.forms.map[formId].data.short_name === 'undefined' && typeof step !== 'undefined') {
+      if ( typeof this.props.requests.detail.data.step_name !== 'undefined' && typeof step === 'undefined'){
+        reviewStepName = this.props.requests.detail.data.step_name;
+      } else if (typeof this.props.forms.map[formId].data.short_name === 'undefined' && typeof step !== 'undefined') {
         reviewStepName = step;
       } else if (typeof this.props.forms.map[formId].data.short_name === 'undefined') {
         reviewStepName = '';
