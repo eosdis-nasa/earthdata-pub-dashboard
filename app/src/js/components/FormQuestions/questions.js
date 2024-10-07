@@ -988,6 +988,7 @@ const FormQuestions = ({
       msg = 'The file must have an extension.';
       resetUploads(msg, 'Please select a different file.');
     }
+    console.log('valid', valid)
     return valid;
   };
 
@@ -1169,11 +1170,16 @@ const FormQuestions = ({
       });
     };
 
-    const uploadPromises = uploadFiles.map((file) => 
-      uploadFileAsync(file)
-        .then((fileName) => successFiles.push(fileName))
-        .catch((fileName) => failedFiles.push(fileName))
-    );
+    const uploadPromises = uploadFiles.map((file) => {
+      if (validateFile(file)) { 
+        return uploadFileAsync(file)
+          .then((fileName) => successFiles.push(fileName))
+          .catch((fileName) => failedFiles.push(fileName));
+      } else {
+        failedFiles.push(file.name); 
+        return Promise.resolve(); 
+      }
+    });    
 
     await Promise.all(uploadPromises);
 
@@ -2314,7 +2320,7 @@ const FormQuestions = ({
                                             style={{ cursor: 'pointer', marginLeft: '10px', fontSize: '20px' }}
                                             className="ml-2"
                                             onClick={toggleProgressBars}
-                                            title={progressBarsVisible ? 'Hide Download Progress' : 'Show Download Progress'}
+                                            title={progressBarsVisible ? 'Hide Upload Progress' : 'Show Upload Progress'}
 
                                           />
                                         </span>
@@ -2417,6 +2423,39 @@ const FormQuestions = ({
         </Container>
       </Form>
       <ScrollToTop />
+      <Modal show={showUploadSummaryModal} onHide={handleCloseUploadSummaryModal} className="custom-modal">
+        <Modal.Header closeButton>
+          <Modal.Title>Upload Summary</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h5>Successful Uploads</h5>
+          {uploadResults.success.length > 0 ? (
+            <ul>
+              {uploadResults.success.map((fileName, index) => (
+                <li key={index}>{fileName}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No files were uploaded successfully.</p>
+          )}
+
+          <h5>Failed Uploads</h5>
+          {uploadResults.failed.length > 0 ? (
+            <ul>
+              {uploadResults.failed.map((fileName, index) => (
+                <li key={index}>{fileName}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No files failed to upload.</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleCloseUploadSummaryModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Modal show={showModal} onHide={handleCloseModal} className="custom-modal">
         <Modal.Header closeButton>
           <Modal.Title>Save As Draft Confirmation</Modal.Title>
