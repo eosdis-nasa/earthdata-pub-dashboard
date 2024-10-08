@@ -1130,10 +1130,8 @@ const FormQuestions = ({
     const failedFiles = [];
 
     const uploadFileAsync = async (file) => {
-      console.log('control_id', control_id);
       return new Promise((resolve, reject) => {
         const updateProgress = (progress, fileObj) => {
-          console.log('updateProgress', updateProgress)
           setUploadProgress((prev) => ({
             ...prev,
             [fileObj.name]: Math.min(progress, 100),
@@ -2307,45 +2305,45 @@ const FormQuestions = ({
                                         <div  style={{
                                             display: input.type === 'file' ? 'block' : 'none',
                                           }}>
-                                        <Button
-                                          className="upload-button mt-2"
-                                          onClick={(e) => handleUpload(input.control_id)}
-                                          disabled={uploadFiles.length === 0 || showProgressBar}
-                                        >
+                                          <Button
+                                            className="upload-button mt-2"
+                                            onClick={(e) => handleUpload(input.control_id)}
+                                            disabled={uploadFiles.length === 0 || showProgressBar}
+                                          >
                                           Upload
-                                        </Button>
-                                        <span className="d-flex align-items-center">
-                                          <FontAwesomeIcon
-                                            icon={progressBarsVisible ? faEyeSlash : faEye}
-                                            style={{ cursor: 'pointer', marginLeft: '10px', fontSize: '20px' }}
-                                            className="ml-2"
-                                            onClick={toggleProgressBars}
-                                            title={progressBarsVisible ? 'Hide Upload Progress' : 'Show Upload Progress'}
+                                          </Button>
+                                          <span className="d-flex align-items-center">
+                                            <FontAwesomeIcon
+                                              icon={progressBarsVisible ? faEyeSlash : faEye}
+                                              style={{ cursor: 'pointer', marginLeft: '10px', fontSize: '20px' }}
+                                              className="ml-2"
+                                              onClick={toggleProgressBars}
+                                              title={progressBarsVisible ? 'Hide Upload Progress' : 'Show Upload Progress'}
 
-                                          />
-                                        </span>
+                                            />
+                                          </span>
 
-                                        {progressBarsVisible && uploadFiles.length > 0 && (
-                                          <div>
-                                            {uploadFiles.map((file, index) => (
-                                              <div key={index}>
-                                                <p>{file.name}</p>
-                                                <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
-                                                  <div style={{
-                                                    width: `${uploadProgress[file.name] || 0}%`,
-                                                    backgroundColor: '#2275aa',
-                                                    height: '100%',
-                                                    textAlign: 'center',
-                                                    lineHeight: '30px',
-                                                    color: 'white',
-                                                  }}>
-                                                    {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '0%'}
+                                          {progressBarsVisible && uploadFiles.length > 0 && (
+                                            <div>
+                                              {uploadFiles.map((file, index) => (
+                                                <div key={index}>
+                                                  <p>{file.name}</p>
+                                                  <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
+                                                    <div style={{
+                                                      width: `${uploadProgress[file.name] || 0}%`,
+                                                      backgroundColor: '#2275aa',
+                                                      height: '100%',
+                                                      textAlign: 'center',
+                                                      lineHeight: '30px',
+                                                      color: 'white',
+                                                    }}>
+                                                      {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '0%'}
+                                                    </div>
                                                   </div>
                                                 </div>
-                                              </div>
-                                            ))}
-                                          </div>
-                                        )}
+                                              ))}
+                                            </div>
+                                          )}
                                         </div>
                                         
                                         <div
