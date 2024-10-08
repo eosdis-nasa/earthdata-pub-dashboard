@@ -51,6 +51,7 @@ const FormQuestions = ({
   const [uploadFileFlag, setUploadFileFlag] = useState(false);
   const [uploadFailed, setUploadFailed] = useState(false);
   const [uploadFiles, setUploadFiles] = useState([]);
+  const [fileControlId, setfileControlId] = useState('');
 
   const [uploadFields, setUploadFields] = useState([
     {
@@ -1021,10 +1022,11 @@ const FormQuestions = ({
     e.stopPropagation();
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event, id) => {
+    setfileControlId(id);
     const files = event.target.files;
     if (files.length) {
-      setUploadFiles([...uploadFiles, ...Array.from(files)]); // Update state with selected files
+      setUploadFiles(Array.from(files)); 
       setUploadFile(files);
       setUploadStatusMsg(`${files.length} file(s) selected`);
     } else {
@@ -1331,7 +1333,7 @@ const FormQuestions = ({
       });
     }
   };
-
+  console.log('fileControlId', fileControlId)
   return !requestData ? (
     <Loading />
   ) : (
@@ -2281,19 +2283,20 @@ const FormQuestions = ({
                                         </div>
                                         <div
                                           className="mt-3"
+                                          controlId={input.control_id}
                                           style={{ display: input.type === 'file' ? 'block' : 'none' }}
                                           onDragOver={handleDragOver}
                                           onDragEnter={handleDragEnter}
                                           onDragLeave={handleDragLeave}
                                           onDrop={handleFileDrop}
                                           onClick={() =>
-                                            document.getElementById('file-upload-input').click()
+                                            document.getElementById(`${input.control_id}_file-upload-input`).click()
                                           }
                                         >
                                           <div className="upload-container">
                                             <p>Drag & drop files here, or click to select files</p>
-                                            <input type="file" id="file-upload-input" className="upload-input" onChange={handleFileChange} multiple />
-                                            {uploadFiles.length > 0 && (
+                                            <input type="file" id={`${input.control_id}_file-upload-input`} className="upload-input"  onChange={(e) => handleFileChange(e, input.control_id)} multiple />
+                                            {uploadFiles.length > 0 && `${fileControlId}_file-upload-input` === `${input.control_id}_file-upload-input` && (
                                               <p>
                                                 <strong>{uploadFiles.length} file(s) selected. Click on upload</strong>
                                               </p>
@@ -2308,7 +2311,7 @@ const FormQuestions = ({
                                           <Button
                                             className="upload-button mt-2"
                                             onClick={(e) => handleUpload(input.control_id)}
-                                            disabled={uploadFiles.length === 0 || showProgressBar}
+                                            disabled={uploadFiles.length === 0 || showProgressBar || `${fileControlId}_file-upload-input` !== `${input.control_id}_file-upload-input`}
                                           >
                                           Upload
                                           </Button>
@@ -2319,11 +2322,10 @@ const FormQuestions = ({
                                               className="ml-2"
                                               onClick={toggleProgressBars}
                                               title={progressBarsVisible ? 'Hide Upload Progress' : 'Show Upload Progress'}
-
                                             />
                                           </span>
 
-                                          {progressBarsVisible && uploadFiles.length > 0 && (
+                                          {progressBarsVisible && uploadFiles.length > 0 && `${fileControlId}_file-upload-input` === `${input.control_id}_file-upload-input` && (
                                             <div>
                                               {uploadFiles.map((file, index) => (
                                                 <div key={index}>
