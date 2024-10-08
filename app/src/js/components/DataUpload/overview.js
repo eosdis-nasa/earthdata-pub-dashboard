@@ -268,6 +268,7 @@ class UploadOverview extends React.Component {
       uploadFiles: [],
       uploadResults: { success: successFiles, failed: failedFiles }
     });
+    this.getFileList()
   }
   
   handleCloseUploadSummaryModal() {
