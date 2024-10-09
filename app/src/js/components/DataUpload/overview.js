@@ -361,7 +361,6 @@ class UploadOverview extends React.Component {
       e.stopPropagation();
 
       var files = e.dataTransfer.files;
-      console.log('files', files)
       if (files.length) {
         this.setState((prevState) => ({
           uploadFiles: prevState.uploadFiles.concat(Array.from(files)) 
@@ -387,7 +386,6 @@ class UploadOverview extends React.Component {
   async handleChange(e) {
     //const { dispatch } = this.props;
     e.preventDefault();
-    console.log('check', e.target)
     this.setState((prevState) => ({
       uploadFiles: prevState.uploadFiles.concat(Array.from(e.target.files)) 
   }));
@@ -451,9 +449,7 @@ class UploadOverview extends React.Component {
     ];
     const { requestId } = this.props.match.params;
     const { groupId } = this.props.match.params;
-    console.log('groupId', groupId)
-    console.log('this.state.categoryType', this.state.categoryType)
-    console.log('this.state.showProgressBar', this.state.showProgressBar)
+
     return (
       <>
         <br></br>

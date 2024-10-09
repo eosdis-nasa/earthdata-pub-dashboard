@@ -872,11 +872,13 @@ const FormQuestions = ({
 
   const undoToPreviousState = () => {
     if (valueHistoryUndoIdx > 0) {
-      setValueHistoryUndoIdx(valueHistoryUndoIdx - 1);
-      setValues((prevValues) => ({
-        ...valueHistory[valueHistoryUndoIdx - 1],
-        validation_errors: valueHistory[valueHistoryUndoIdx - 1].validation_errors || {},
-      }));
+      const previousState = valueHistory[valueHistoryUndoIdx - 1]; 
+        setValueHistoryUndoIdx(valueHistoryUndoIdx - 1);
+        setValues((prevValues) => ({
+            ...prevValues, 
+            ...previousState, 
+            validation_errors: previousState.validation_errors || {}, 
+        }));
     }
     logAction('Undo');
   };
@@ -989,12 +991,10 @@ const FormQuestions = ({
       msg = 'The file must have an extension.';
       resetUploads(msg, 'Please select a different file.');
     }
-    console.log('valid', valid)
     return valid;
   };
 
   const handleFileDrop = (e, id) => {
-    console.log('in file', id)
     setfileControlId(id);
     e.preventDefault();
     e.stopPropagation();
@@ -1029,7 +1029,6 @@ const FormQuestions = ({
   };
 
   const handleFileChange = (event, id) => {
-    console.log('in file', event.target)
     setfileControlId(id);
     const files = event.target.files;
     if (files.length) {
@@ -1344,7 +1343,7 @@ const FormQuestions = ({
       });
     }
   };
-  console.log('fileControlId', fileControlId)
+
   return !requestData ? (
     <Loading />
   ) : (
