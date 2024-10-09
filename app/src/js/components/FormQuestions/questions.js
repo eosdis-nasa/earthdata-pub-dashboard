@@ -871,11 +871,13 @@ const FormQuestions = ({
 
   const undoToPreviousState = () => {
     if (valueHistoryUndoIdx > 0) {
-      setValueHistoryUndoIdx(valueHistoryUndoIdx - 1);
-      setValues((prevValues) => ({
-        ...valueHistory[valueHistoryUndoIdx - 1],
-        validation_errors: valueHistory[valueHistoryUndoIdx - 1].validation_errors || {},
-      }));
+        const previousState = valueHistory[valueHistoryUndoIdx - 1]; 
+        setValueHistoryUndoIdx(valueHistoryUndoIdx - 1);
+        setValues((prevValues) => ({
+            ...prevValues, 
+            ...previousState, 
+            validation_errors: previousState.validation_errors || {}, 
+        }));
     }
     logAction('Undo');
   };
