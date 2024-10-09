@@ -202,6 +202,8 @@ class UploadOverview extends React.Component {
         this.setState({ statusMsg: 'Uploading', uploadFailed: false });
         const resp = await upload.uploadFile(payload, updateProgress);
 
+        this.setState({showProgressBar: false, progressValue: 0, uploadFileName: ''})
+
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
         if (error) {
           console.log(`An error has occurred on uploadFile: ${error}.`);
@@ -211,7 +213,7 @@ class UploadOverview extends React.Component {
             this.resetRadioState();
           }
         } else {
-          this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
+          this.setState({ statusMsg: 'Upload Complete' });
           this.resetInputWithTimeout('Select a file', 1000)
           if ((requestId !== '' && requestId != undefined && requestId !== null) &&
             (groupId == '' || groupId === undefined || groupId === null)) {
@@ -365,7 +367,7 @@ class UploadOverview extends React.Component {
                   ref={this.state.hiddenFileInput}
                   id="hiddenFileInput" />
               </label>
-              <button onClick={(e) => this.handleClick(e)} className={`button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${this.state.categoryType ? 'button--submit' : 'button--secondary button--disabled'}`}>Upload File</button>
+              <button onClick={(e) => this.handleClick(e)} className={`button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${!this.state.showProgressBar && (this.state.categoryType  || requestId === undefined) ? 'button--submit' : 'button--secondary button--disabled'}`}>Upload File</button>
             </div>
             {this.state.saved && requestId !== undefined && groupId === undefined
               ?
