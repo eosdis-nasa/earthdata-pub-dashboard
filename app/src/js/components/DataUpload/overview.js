@@ -51,7 +51,7 @@ class UploadOverview extends React.Component {
     this.resetInputWithTimeout = this.resetInputWithTimeout.bind(this);
     this.handleCloseUploadSummaryModal = this.handleCloseUploadSummaryModal.bind(this);
     this.toggleProgressBars = this.toggleProgressBars.bind(this);
-
+    this.handleFileDrop = this.handleFileDrop.bind(this);
   }
   
   keyLookup(e, fileName) {
@@ -356,10 +356,41 @@ class UploadOverview extends React.Component {
     }
   }
 
+  async handleFileDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var files = e.dataTransfer.files;
+      console.log('files', files)
+      if (files.length) {
+        this.setState((prevState) => ({
+          uploadFiles: prevState.uploadFiles.concat(Array.from(files)) 
+      }));
+      }
+  }
+
+  handleDragOver(e) {
+      e.preventDefault();
+      e.stopPropagation();
+  }
+
+  handleDragEnter(e) {
+      e.preventDefault();
+      e.stopPropagation();
+  }
+
+  handleDragLeave(e) {
+      e.preventDefault();
+      e.stopPropagation();
+  }
+
   async handleChange(e) {
     //const { dispatch } = this.props;
     e.preventDefault();
-    this.setState({ uploadFiles: Array.from(e.target.files) });
+    console.log('check', e.target)
+    this.setState((prevState) => ({
+      uploadFiles: prevState.uploadFiles.concat(Array.from(e.target.files)) 
+  }));
    // dispatch(refreshToken());
   }
   
@@ -478,6 +509,10 @@ class UploadOverview extends React.Component {
               </div>
                 <div 
                   className="mt-3 questions-component"
+                  onDragOver={this.handleDragOver}
+                  onDragEnter={this.handleDragEnter}
+                  onDragLeave={this.handleDragLeave}
+                  onDrop={this.handleFileDrop}
                   onClick={() =>
                     document.getElementById('file-upload-input').click()
                   }
@@ -498,17 +533,16 @@ class UploadOverview extends React.Component {
                   )}                                            
                 </div>
               </div>
-              <button onClick={(e) => this.handleClick(e)} className={`upload-button mt-2 button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${(this.state.categoryType || groupId) && !this.state.showProgressBar? 'button--submit' : 'button--secondary button--disabled'}`}>{this.state.uploadStatusMsg === ''? 'Upload': 'Uploading...'}</button>
-              <span className="d-flex align-items-center">
+              <button onClick={(e) => this.handleClick(e)} className={`upload-button upload-button-category mt-2 button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${(this.state.categoryType || groupId) && !this.state.showProgressBar? 'button--submit' : 'button--secondary button--disabled'}`}>{this.state.uploadStatusMsg === ''? 'Upload': 'Uploading...'}</button>
+              {this.state.showProgressBar && <span className="d-flex align-items-center">
                 <FontAwesomeIcon
                   icon={progressBarsVisible ? faEyeSlash : faEye}
                   style={{ cursor: 'pointer', marginLeft: '10px', fontSize: '20px' }}
                   className="ml-2"
                   onClick={this.toggleProgressBars}
                   title={progressBarsVisible ? 'Hide Upload Progress' : 'Show Upload Progress'}
-
                 />
-              </span>
+              </span>}
 
               {progressBarsVisible && this.state.uploadFiles.length > 0 && (
                 <div>

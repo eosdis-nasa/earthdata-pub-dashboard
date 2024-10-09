@@ -808,6 +808,10 @@
   color: #fff;
 }
 
+.upload-button-category{
+  margin-top: 10px;
+}
+
 .questions-component .upload-container {
   border: 2px dashed #ccc;
   padding: 20px;

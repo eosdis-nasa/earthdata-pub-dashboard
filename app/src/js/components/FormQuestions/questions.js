@@ -993,13 +993,19 @@ const FormQuestions = ({
     return valid;
   };
 
-  const handleFileDrop = (e) => {
+  const handleFileDrop = (e, id) => {
+    console.log('in file', id)
+    setfileControlId(id);
     e.preventDefault();
     e.stopPropagation();
 
     const files = e.dataTransfer.files;
     if (files.length) {
-      setUploadFiles([...uploadFiles, ...Array.from(files)]); // Update state with selected files
+      if(fileControlId === id){
+        setUploadFiles([...uploadFiles, ...Array.from(files)]); 
+      }else{
+        setUploadFiles(Array.from(files)); 
+      }
       setUploadFile(files);
       setUploadStatusMsg(`${files.length} file(s) selected`);
     } else {
@@ -1023,10 +1029,15 @@ const FormQuestions = ({
   };
 
   const handleFileChange = (event, id) => {
+    console.log('in file', event.target)
     setfileControlId(id);
     const files = event.target.files;
     if (files.length) {
-      setUploadFiles(Array.from(files)); 
+      if(fileControlId === id){
+        setUploadFiles([...uploadFiles, ...Array.from(files)]);
+      }else{
+        setUploadFiles(Array.from(files)); 
+      }
       setUploadFile(files);
       setUploadStatusMsg(`${files.length} file(s) selected`);
     } else {
@@ -2288,7 +2299,7 @@ const FormQuestions = ({
                                           onDragOver={handleDragOver}
                                           onDragEnter={handleDragEnter}
                                           onDragLeave={handleDragLeave}
-                                          onDrop={handleFileDrop}
+                                          onDrop={(e) => handleFileDrop(e, input.control_id)}
                                           onClick={() =>
                                             document.getElementById(`${input.control_id}_file-upload-input`).click()
                                           }
@@ -2315,6 +2326,7 @@ const FormQuestions = ({
                                           >
                                           Upload
                                           </Button>
+                                          {showProgressBar && 
                                           <span className="d-flex align-items-center">
                                             <FontAwesomeIcon
                                               icon={progressBarsVisible ? faEyeSlash : faEye}
@@ -2323,7 +2335,7 @@ const FormQuestions = ({
                                               onClick={toggleProgressBars}
                                               title={progressBarsVisible ? 'Hide Upload Progress' : 'Show Upload Progress'}
                                             />
-                                          </span>
+                                          </span>}
 
                                           {progressBarsVisible && uploadFiles.length > 0 && `${fileControlId}_file-upload-input` === `${input.control_id}_file-upload-input` && (
                                             <div>
