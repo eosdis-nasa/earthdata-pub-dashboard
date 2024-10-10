@@ -199,21 +199,16 @@ class Comment extends React.Component {
   render() {
     let reviewable = false;
     let sameFormAsStep = false;
-    const search = this.props.location.search.split('=');
-    let requestId = '';
-    if (search[1] !== undefined) {
-      requestId = search[1].replace(/&step/g, '');
-    }
-    let step = search[2];
+    let request = this.props.requests.detail.data;
+    let requestId = request ? request.id : '';
+    let step = request?.step_name;
     let stepName = this.getFormalName(step);
     let { canReview } = requestPrivileges(this.props.privileges, step);
     const { canAddUser, canRemoveUser } = notePrivileges(this.props.privileges);
-    let request = '';
     let conversationId = '';
     let requestName = '';
     const formId = this.props.match.params.formId;
-    let formName = '';
-    request = this.props.requests.detail.data;
+    let formName = '';    
     const searchOptions = {
       user: {
         entity: 'user',
@@ -230,10 +225,6 @@ class Comment extends React.Component {
       if (this.props.forms.map !== undefined && this.props.forms.map[formId] !== undefined && this.props.forms.map[formId].data !== undefined) {
         formName = this.props.forms.map[formId].data.short_name;
         if (this.props.requests.detail.data.forms !== null) {
-          if (step === undefined) {
-            step = this.props.requests.detail.data.step_name;
-            stepName = this.getFormalName(step);
-          }
           if (this.props.requests.detail.data.form_data?.data_product_name_value) {
             requestName = this.props.requests.detail.data.form_data.data_product_name_value;
           } else {
@@ -241,19 +232,19 @@ class Comment extends React.Component {
           }
         }
         conversationId = this.props.requests.detail.data.conversation_id;
-        if (this.props.requests.detail.data.step_name?.match(/close/g)) {
+        if (step?.match(/close/g)) {
           sameFormAsStep = false;
           canReview = false;
         }
-        if (this.props.requests.detail.data.step_name === `${formName}_form`) {
+        if (step === `${formName}_form`) {
           sameFormAsStep = true;
           canReview = false;
-        } else if (this.props.requests.detail.data.step_name?.match(/form_(.*_)?review/g)) {
+        } else if (step?.match(/form_(.*_)?review/g)) {
           if (canReview) {
             reviewable = true;
           }
           const regexStr = new RegExp(`${formName}_form_(.*_)?review`, 'g');
-          if (this.props.requests.detail.data.step_name?.match(regexStr)) {
+          if (step?.match(regexStr)) {
             sameFormAsStep = true;
           }
         } else if (window.location.href.match(/approval/g)) {
