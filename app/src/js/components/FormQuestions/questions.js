@@ -129,7 +129,6 @@ const FormQuestions = ({
 
         const files = resp.data;
 
-        // Sort files by lastModified date, most recent first
         files.sort((a, b) => {
           const keyA = new Date(a.lastModified);
           const keyB = new Date(b.lastModified);
@@ -471,7 +470,7 @@ const FormQuestions = ({
   const progressBarStyle = {
     width: '100%',
     backgroundColor: uploadFailed ? '#db1400' : 'white',
-    height: '30px', // Set the height of the progress bar
+    height: '30px',
     marginBottom: '5px'
   };
 
@@ -734,7 +733,7 @@ const FormQuestions = ({
 
       const keys = Object.keys(obj);
       if (keys.length < 2) {
-        return true; // keep the object if it has less than 2 keys
+        return true;
       }
 
       const firstKey = keys[0];
@@ -1044,20 +1043,6 @@ const FormQuestions = ({
     }
   };
 
-  // const refreshAuth = async () => {
-  //   const options = {
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem('auth-token')}`,
-  //     },
-  //   };
-  //   await fetch(`${apiRoot}token/refresh`, options)
-  //     .then((r) => r.json())
-  //     .then(({ token }) => {
-  //       localStorage.setItem('auth-token', token);
-  //       dispatch(setTokenState(token));
-  //     });
-  // };
-
   const { apiRoot } = _config;
   const [uploadResults, setUploadResults] = useState({ success: [], failed: [] });
   const [showUploadSummaryModal, setShowUploadSummaryModal] = useState(false);
@@ -1068,71 +1053,6 @@ const FormQuestions = ({
     "data_product_documentation": "documentation",
     "example_files": "sample"
   };
-
-  // const handleUpload = async (control_id) => {
-  //   setUploadStatusMsg('Uploading...');
-  //   setShowProgressBar(true);
-  //   setProgressBarsVisible(true);
-
-  //   const updateProgress = (progress, fileObj) => {
-  //     setProgressValue(Math.min(progress, 100));
-  //     setUploadFileName(fileObj ? fileObj.name : '');
-  //   };
-
-  //   let alertMsg = '';
-  //   let statusMsg = '';
-  //   if (validateFile(uploadFile)) {
-  //     const upload = new localUpload();
-  //     const requestId = daacInfo.id;
-
-  //     let uploadCategory = typeof category_map[control_id] !== 'undefined' ? category_map[control_id] : "";
-  //     try {
-  //       //await refreshAuth(); // Function to refresh authentication token if needed
-
-  //       const payload = {
-  //         fileObj: file,
-  //         authToken: localStorage.getItem('auth-token'),
-  //         apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
-  //         submissionId: daacInfo.id, 
-  //         endpointParams: {
-  //           file_category: uploadCategory
-  //         }
-  //       };
-
-  //       if (requestId) {
-  //         payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
-  //         payload['submissionId'] = requestId;
-  //       }
-
-  //       setUploadFile(null);
-  //       const resp = await upload.uploadFile(payload, updateProgress);
-  //       const error =
-  //         resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
-
-  //       if (error) {
-  //         alertMsg = `An error has occurred on uploadFile: ${error}.`;
-  //         statusMsg = 'Select a file';
-  //         console.error(alertMsg);
-  //         resetUploads(alertMsg, statusMsg);
-  //         setUploadFailed(true);
-  //       } else {
-  //         alertMsg = '';
-  //         statusMsg = 'Upload Complete';
-  //         setUploadFileFlag(true);
-  //         resetUploads(alertMsg, statusMsg);
-  //         setUploadFileName('');
-  //         setProgressValue(0);
-  //         setShowProgressBar(false);
-  //         //updateUploadStatusWithTimeout('Select another file', 1000);
-  //       }
-  //     } catch (error) {
-  //       console.error(`try catch error: ${error.stack}`);
-  //       alertMsg = 'An error has occurred during the upload.';
-  //       statusMsg = 'Select a file';
-  //       resetUploads(alertMsg, statusMsg);
-  //     }
-  //   }
-  // };
 
   const handleUpload = async (control_id) => {
     setUploadStatusMsg('Uploading...');
@@ -1202,12 +1122,10 @@ const FormQuestions = ({
     setUploadStatusMsg('No files selected');
   };
 
-  // Toggle the visibility of the progress bars
   const toggleProgressBars = () => {
     setProgressBarsVisible(!progressBarsVisible);
   };
 
-  // Close upload summary modal
   const handleCloseUploadSummaryModal = () => setShowUploadSummaryModal(false);
 
   const handleCloseModal = () => setShowModal(false);
@@ -1556,7 +1474,6 @@ const FormQuestions = ({
                                     type="checkbox"
                                     name="sameAsPrimaryLongTermSupport"
                                     checked={checkboxStatus.sameAsPrimaryLongTermSupport}
-                                    //disabled ={checkboxStatus.sameAsPrimaryDataAccession}
                                     onChange={handleCheckboxChange}
                                   />
                                   <span className="checkmark"></span>
@@ -1568,7 +1485,6 @@ const FormQuestions = ({
                                     name="sameAsPrimaryDataAccession"
                                     checked={checkboxStatus.sameAsPrimaryDataAccession}
                                     onChange={handleCheckboxChange}
-                                    // disabled ={checkboxStatus.sameAsPrimaryLongTermSupport}
                                   />
                                   <span className="checkmark"></span>
                                 </label>

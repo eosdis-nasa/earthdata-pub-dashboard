@@ -279,75 +279,6 @@ class UploadOverview extends React.Component {
     this.setState({ progressBarsVisible: !this.state.progressBarsVisible });
   };
 
-  // async uploadFile() {
-  //   const file = this.state.file
-  //   if (this.validateFile(file)) {
-  //     this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: file ? file.name: '' });
-
-  //     // Define the callback function to update progress value in state
-  //     const updateProgress = (progress, fileObj) => {
-  //       this.setState({ progressValue: Math.min(progress, 100), uploadFileName: fileObj ? fileObj.name: '' });
-  //     };
-
-  //     const upload = new localUpload();
-  //     const { requestId } = this.props.match.params;
-  //     const { groupId } = this.props.match.params;
-  //     const { apiRoot } = _config;
-
-  //     let category = this.state.categoryType;
-  //     try {
-  //       let payload = {
-  //         fileObj: file,
-  //         authToken: loadToken().token
-  //       }
-  //       let prefix = ''
-  //       if (requestId !== '' && requestId != undefined && requestId !== null) {
-  //         payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
-  //         payload['submissionId'] = requestId
-  //         payload['endpointParams'] = { file_category: category };
-  //       } else if (groupId !== '' && groupId != undefined && groupId !== null) {
-  //         if (document.getElementById('prefix') && document.getElementById('prefix') !== null) {
-  //           prefix = document.getElementById('prefix').value
-  //         }
-  //         payload['apiEndpoint'] = `${apiRoot}data/upload/getGroupUploadUrl`;
-  //         payload['endpointParams'] = {
-  //           prefix: prefix,
-  //           group_id: groupId
-  //         }
-  //       }
-  //       this.setState({ statusMsg: 'Uploading', uploadFailed: false });
-  //       const resp = await upload.uploadFile(payload, updateProgress);
-
-  //       let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
-  //       if (error) {
-  //         console.log(`An error has occurred on uploadFile: ${error}.`);
-  //         this.resetInputWithTimeout('Select a file', 1000)
-  //         this.setState({ uploadFailed: true, error: error});
-  //         if (typeof category !== 'undefined') {
-  //           this.resetRadioState();
-  //         }
-  //       } else {
-  //         this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
-  //         this.resetInputWithTimeout('Select a file', 1000)
-  //         if ((requestId !== '' && requestId != undefined && requestId !== null) &&
-  //           (groupId == '' || groupId === undefined || groupId === null)) {
-  //           this.getFileList()
-  //         }
-  //         if (typeof category !== 'undefined') {
-  //           this.resetRadioState();
-  //         }
-  //       }
-  //     } catch (error) {
-  //       this.setState({ uploadFailed: true });
-  //       console.log(`try catch error: ${error.stack}`);
-  //       this.resetInputWithTimeout('Select a file', 1000)
-  //       if (typeof category !== 'undefined') {
-  //         this.resetRadioState();
-  //       }
-  //     }
-  //   }
-  // }
-
   async componentDidUpdate(prevProps){
     if (prevProps.tokens.inflight !== this.props.tokens.inflight) {
       if (!this.props.tokens.inflight) {
@@ -384,12 +315,10 @@ class UploadOverview extends React.Component {
   }
 
   async handleChange(e) {
-    //const { dispatch } = this.props;
     e.preventDefault();
     this.setState((prevState) => ({
       uploadFiles: prevState.uploadFiles.concat(Array.from(e.target.files)) 
   }));
-   // dispatch(refreshToken());
   }
   
   async setCategoryType(e) {
