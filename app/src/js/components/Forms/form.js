@@ -28,8 +28,11 @@ import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actio
 import { loadToken } from '../../utils/auth';
 import localUpload from '@edpub/upload-utility';
 import Select from 'react-select';
-import review from '../Review/review';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap'; 
+
+const { basepath } = _config;
+
+const urlReturn = `${basepath}requests`;
 
 const metaAccessors = [
   {
@@ -524,8 +527,12 @@ class FormOverview extends React.Component {
     this.setState({isAddReviewerDisabled: false, loading: false});
   }
 
-   handleCloseModal = () => {
-    this.setState({ showModal: false, showErrorModal: false });
+  handleCloseModal = () => {
+    if(this.state.showErrorModal){
+      this.setState({ showErrorModal: false });
+      window.location.href = urlReturn;
+    }
+    this.setState({ showModal: false});
   };
 
   handleShowModal = () => {

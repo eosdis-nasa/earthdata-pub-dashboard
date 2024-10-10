@@ -7,9 +7,12 @@ import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import Loading from '../LoadingIndicator/loading-indicator';
 import localUpload from '@edpub/upload-utility';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { listFileUploadsBySubmission, listFileDownloadsByKey, refreshToken } from '../../actions';
 import { shortDateShortTimeYearFirstJustValue, storage } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
+import { Modal, Button } from 'react-bootstrap';
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -30,7 +33,15 @@ class UploadOverview extends React.Component {
       uploadFileName: '',
       error: '',
       file: null,
-      categoryType: null
+      categoryType: null,
+      uploadFiles: [],
+      uploadStatusMsg: '',
+      showProgressBar: false,
+      uploadFileFlag: false,
+      showUploadSummaryModal: false,
+      uploadResults: {},
+      uploadProgress: {},
+      progressBarsVisible: false
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -38,6 +49,9 @@ class UploadOverview extends React.Component {
     this.validateFile = this.validateFile.bind(this);
     this.keyLookup = this.keyLookup.bind(this);
     this.resetInputWithTimeout = this.resetInputWithTimeout.bind(this);
+    this.handleCloseUploadSummaryModal = this.handleCloseUploadSummaryModal.bind(this);
+    this.toggleProgressBars = this.toggleProgressBars.bind(this);
+    this.handleFileDrop = this.handleFileDrop.bind(this);
   }
   
   keyLookup(e, fileName) {
@@ -129,7 +143,8 @@ class UploadOverview extends React.Component {
 
   handleClick(e) {
     e.preventDefault();
-    this.resetInputWithTimeout(undefined, 0)
+    this.resetInputWithTimeout(undefined, 0);
+    this.handleUpload();
     this.state.hiddenFileInput?.current?.click();
   };
 
@@ -163,96 +178,156 @@ class UploadOverview extends React.Component {
     this.setCategoryType(undefined);
   }
 
-  async uploadFile(){
-    const file = this.state.file
-    if (this.validateFile(file)) {
-      this.setState({ statusMsg: 'Uploading', showProgressBar: true, progressValue: 0, uploadFileName: file ? file.name: '' });
-
-      // Define the callback function to update progress value in state
-      const updateProgress = (progress, fileObj) => {
-        this.setState({ progressValue: Math.min(progress, 100), uploadFileName: fileObj ? fileObj.name: '' });
-      };
-
-      const upload = new localUpload();
-      const { requestId } = this.props.match.params;
-      const { groupId } = this.props.match.params;
-      const { apiRoot } = _config;
-
-      let category = this.state.categoryType;
-      try {
+  async handleUpload() {
+    this.setState({
+      uploadStatusMsg: 'Uploading...',
+      showProgressBar: true,
+      progressBarsVisible: true
+    });
+  
+    const successFiles = [];
+    const failedFiles = [];
+    const { requestId } = this.props.match.params;
+    const { groupId } = this.props.match.params;
+    const { apiRoot } = _config;
+    const category = this.state.categoryType;
+  
+    const uploadFileAsync = (file) => {
+      return new Promise((resolve, reject) => {
+        // Update progress function
+        const updateProgress = (progress, fileObj) => {
+          this.setState((prevState) => ({
+            uploadProgress: {
+              ...prevState.uploadProgress,
+              [fileObj.name]: Math.min(progress, 100),
+            }
+          }));
+        };
+  
         let payload = {
           fileObj: file,
-          authToken: loadToken().token
-        }
-        let prefix = ''
-        if (requestId !== '' && requestId != undefined && requestId !== null) {
+          authToken: loadToken().token,
+        };
+  
+        if (requestId) {
           payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
-          payload['submissionId'] = requestId
+          payload['submissionId'] = requestId;
           payload['endpointParams'] = { file_category: category };
-        } else if (groupId !== '' && groupId != undefined && groupId !== null) {
-          if (document.getElementById('prefix') && document.getElementById('prefix') !== null) {
-            prefix = document.getElementById('prefix').value
-          }
+        } else if (groupId) {
+          const prefixElement = document.getElementById('prefix');
+          const prefix = prefixElement ? prefixElement.value : '';
           payload['apiEndpoint'] = `${apiRoot}data/upload/getGroupUploadUrl`;
           payload['endpointParams'] = {
             prefix: prefix,
             group_id: groupId
-          }
+          };
         }
-        this.setState({ statusMsg: 'Uploading', uploadFailed: false });
-        const resp = await upload.uploadFile(payload, updateProgress);
-
-        let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
-        if (error) {
-          console.log(`An error has occurred on uploadFile: ${error}.`);
-          this.resetInputWithTimeout('Select a file', 1000)
-          this.setState({ uploadFailed: true, error: error});
-          if (typeof category !== 'undefined') {
-            this.resetRadioState();
-          }
-        } else {
-          this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
-          this.resetInputWithTimeout('Select a file', 1000)
-          if ((requestId !== '' && requestId != undefined && requestId !== null) &&
-            (groupId == '' || groupId === undefined || groupId === null)) {
-            this.getFileList()
-          }
-          if (typeof category !== 'undefined') {
-            this.resetRadioState();
-          }
-        }
-      } catch (error) {
-        this.setState({ uploadFailed: true });
-        console.log(`try catch error: ${error.stack}`);
-        this.resetInputWithTimeout('Select a file', 1000)
-        if (typeof category !== 'undefined') {
-          this.resetRadioState();
-        }
+  
+        const upload = new localUpload();
+        upload.uploadFile(payload, updateProgress)
+          .then((resp) => {
+            const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
+            if (error) {
+              console.error(`Error uploading file ${file.name}: ${error}`);
+              this.setState((prevState) => ({
+                uploadProgress: {
+                  ...prevState.uploadProgress,
+                  [file.name]: 'Failed',
+                }
+              }));
+              reject(file.name);
+            } else {
+              resolve(file.name);
+            }
+          })
+          .catch((err) => {
+            console.error(`Error uploading file ${file.name}: ${err}`);
+            reject(file.name);
+          });
+      });
+    };
+  
+    const uploadPromises = this.state.uploadFiles.map((file) => {
+      if (this.validateFile(file)) {
+        return uploadFileAsync(file)
+          .then((fileName) => successFiles.push(fileName))
+          .catch((fileName) => failedFiles.push(fileName));
+      } else {
+        failedFiles.push(file.name);
+        return Promise.resolve();
       }
-    }
+    });
+  
+    await Promise.all(uploadPromises);
+  
+    this.setState({
+      uploadStatusMsg: '',
+      showProgressBar: false,
+      uploadFileFlag: true,
+      showUploadSummaryModal: true,
+      uploadFiles: [],
+      uploadResults: { success: successFiles, failed: failedFiles }
+    });
+    this.getFileList()
   }
+  
+  handleCloseUploadSummaryModal() {
+    this.setState({ showUploadSummaryModal: false });
+  }
+
+  toggleProgressBars = () => {
+    this.setState({ progressBarsVisible: !this.state.progressBarsVisible });
+  };
 
   async componentDidUpdate(prevProps){
     if (prevProps.tokens.inflight !== this.props.tokens.inflight) {
       if (!this.props.tokens.inflight) {
-        await this.uploadFile()
+        await this.handleUpload()
       }
     }
   }
 
-  async handleChange(e) {
-    const { dispatch } = this.props;
-    e.preventDefault();
-    this.setState({file: e.target.files[0]})
-    dispatch(refreshToken());
+  async handleFileDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var files = e.dataTransfer.files;
+      if (files.length) {
+        this.setState((prevState) => ({
+          uploadFiles: prevState.uploadFiles.concat(Array.from(files)) 
+      }));
+      }
   }
 
+  handleDragOver(e) {
+      e.preventDefault();
+      e.stopPropagation();
+  }
+
+  handleDragEnter(e) {
+      e.preventDefault();
+      e.stopPropagation();
+  }
+
+  handleDragLeave(e) {
+      e.preventDefault();
+      e.stopPropagation();
+  }
+
+  async handleChange(e) {
+    e.preventDefault();
+    this.setState((prevState) => ({
+      uploadFiles: prevState.uploadFiles.concat(Array.from(e.target.files)) 
+  }));
+  }
+  
   async setCategoryType(e) {
     this.setState({categoryType: e});
   }
   
 
   render() {
+    const { showUploadSummaryModal, uploadResults, uploadProgress, progressBarsVisible } = this.state;
     const progressBarStyle = {
       width: '100%',
       backgroundColor: this.state.uploadFailed ? '#db1400' : 'white',
@@ -303,6 +378,7 @@ class UploadOverview extends React.Component {
     ];
     const { requestId } = this.props.match.params;
     const { groupId } = this.props.match.params;
+
     return (
       <>
         <br></br>
@@ -356,16 +432,64 @@ class UploadOverview extends React.Component {
                 </>: null
               }
               </div>
-              <label htmlFor='hiddenFileInput' style={{ marginBottom: '1rem', fontSize: 'unset' }}>{`${this.state.statusMsg}`}
-                <input
-                  onChange={(e) => this.handleChange(e)}
-                  type="file"
-                  multiple={false}
-                  style={{ display: 'none' }}
-                  ref={this.state.hiddenFileInput}
-                  id="hiddenFileInput" />
-              </label>
-              <button onClick={(e) => this.handleClick(e)} className={`button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${this.state.categoryType ? 'button--submit' : 'button--secondary button--disabled'}`}>Upload File</button>
+                <div 
+                  className="mt-3 questions-component"
+                  onDragOver={this.handleDragOver}
+                  onDragEnter={this.handleDragEnter}
+                  onDragLeave={this.handleDragLeave}
+                  onDrop={this.handleFileDrop}
+                  onClick={() =>
+                    document.getElementById('file-upload-input').click()
+                  }
+                >
+                <div className="upload-container">
+                  <p>Drag & drop files here, or click to select files</p>
+                  <input 
+                    type="file" 
+                    id="file-upload-input" 
+                    className="upload-input" 
+                    onChange={(e) => this.handleChange(e)} 
+                    multiple 
+                  />
+                  {this.state.uploadFiles.length > 0 && (
+                    <p>
+                      <strong>{this.state.uploadFiles.length} file(s) selected. Click on upload</strong>
+                    </p>
+                  )}                                            
+                </div>
+              </div>
+              <button onClick={(e) => this.handleClick(e)} className={`upload-button upload-button-category mt-2 button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${(this.state.categoryType || groupId) && !this.state.showProgressBar? 'button--submit' : 'button--secondary button--disabled'}`}>{this.state.uploadStatusMsg === ''? 'Upload': 'Uploading...'}</button>
+              {this.state.showProgressBar && <span className="d-flex align-items-center">
+                <FontAwesomeIcon
+                  icon={progressBarsVisible ? faEyeSlash : faEye}
+                  style={{ cursor: 'pointer', marginLeft: '10px', fontSize: '20px' }}
+                  className="ml-2"
+                  onClick={this.toggleProgressBars}
+                  title={progressBarsVisible ? 'Hide Upload Progress' : 'Show Upload Progress'}
+                />
+              </span>}
+
+              {progressBarsVisible && this.state.uploadFiles.length > 0 && (
+                <div>
+                  {this.state.uploadFiles.map((file, index) => (
+                    <div key={index}>
+                      <p>{file.name}</p>
+                      <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
+                        <div style={{
+                          width: `${uploadProgress[file.name] || 0}%`,
+                          backgroundColor: '#2275aa',
+                          height: '100%',
+                          textAlign: 'center',
+                          lineHeight: '30px',
+                          color: 'white',
+                        }}>
+                          {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '0%'}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             {this.state.saved && requestId !== undefined && groupId === undefined
               ?
@@ -386,6 +510,41 @@ class UploadOverview extends React.Component {
             {!this.state.loaded && groupId === undefined ? <Loading /> : null}
             <span>{this.state.saved ? this.state.saved : null}</span>
           </div>
+          <Modal show={showUploadSummaryModal} onHide={this.handleCloseUploadSummaryModal} className="custom-modal">
+          <Modal.Header closeButton>
+            <Modal.Title>Upload Summary</Modal.Title>
+          </Modal.Header>
+          
+          <Modal.Body>
+            <h5>Successful Uploads</h5>
+            {uploadResults.success && uploadResults.success.length > 0 ? (
+              <ul aria-live="polite">
+                {uploadResults.success.map((fileName, index) => (
+                  <li key={index}>{fileName}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No files were uploaded successfully.</p>
+            )}
+
+            <h5>Failed Uploads</h5>
+            {uploadResults.failed && uploadResults.failed.length > 0 ? (
+              <ul aria-live="polite">
+                {uploadResults.failed.map((fileName, index) => (
+                  <li key={index}>{fileName}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No files failed to upload.</p>
+            )}
+          </Modal.Body>
+          
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.handleCloseUploadSummaryModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
         </div>
       </>
     );
