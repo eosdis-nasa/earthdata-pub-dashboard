@@ -37,13 +37,18 @@ const FormsOverview = ({ forms }) => {
     setSelected(long_name);
   };
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
     const { basepath } = _config;
     const urlReturn = `${basepath}requests`;
-    dispatch(initialize(selectedDaac.id, { 'daac_id': selectedDaac.id }));
-    window.location.href = urlReturn;
-  };
+  
+    try {
+      await dispatch(initialize(selectedDaac.id, { 'daac_id': selectedDaac.id }));
+      window.location.href = urlReturn;
+    } catch (error) {
+      console.error('Error during form submission:', error);
+    }
+  };  
 
   const cancelForm = (e) => {
     e.preventDefault();
