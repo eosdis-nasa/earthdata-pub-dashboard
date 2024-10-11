@@ -9,6 +9,7 @@ export const getPrivileges = () => {
   if (user != null) {
     const privileges = user.user_privileges;
     const allPrivs = {
+      admin: privileges.find(o => o.match(/ADMIN/g)),
       canCreate: privileges.find(o => o.match(/QUESTION_CREATE/g)),
       canRead: privileges.find(o => o.match(/QUESTION_READ/g)),
       canEdit: privileges.find(o => o.match(/QUESTION_UPDATE/g)),
@@ -52,7 +53,7 @@ export const tableColumns = [
 ];
 
 const allPrivs = getPrivileges();
-if (typeof allPrivs !== 'undefined' && allPrivs.canDelete && allPrivs.canEdit && allPrivs.canCreate) {
+if (typeof allPrivs !== 'undefined' && (allPrivs.admin || allPrivs.canEdit) ) {
   tableColumns.push(
     {
       Header: 'Options',
