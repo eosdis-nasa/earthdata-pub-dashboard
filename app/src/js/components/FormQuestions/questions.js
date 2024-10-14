@@ -1264,7 +1264,6 @@ const FormQuestions = ({
     }
   };
 
-  console.log('uploadProgress', uploadProgress)
   return !requestData ? (
     <Loading />
   ) : (
