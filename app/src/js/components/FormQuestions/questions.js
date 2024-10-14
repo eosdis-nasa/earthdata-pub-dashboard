@@ -1116,6 +1116,8 @@ const FormQuestions = ({
     setUploadResults({ success: successFiles, failed: failedFiles });
     setUploadStatusMsg('Upload Complete');
     setShowProgressBar(false);
+    setProgressBarsVisible(false);
+    setUploadProgress({});
     setUploadFileFlag(true);
     setShowUploadSummaryModal(true);
     setUploadFiles([]); 
@@ -1262,6 +1264,7 @@ const FormQuestions = ({
     }
   };
 
+  console.log('uploadProgress', uploadProgress)
   return !requestData ? (
     <Loading />
   ) : (
@@ -2266,7 +2269,7 @@ const FormQuestions = ({
                                                       lineHeight: '30px',
                                                       color: 'white',
                                                     }}>
-                                                      {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '0%'}
+                                                      {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '89%'}
                                                     </div>
                                                   </div>
                                                 </div>
