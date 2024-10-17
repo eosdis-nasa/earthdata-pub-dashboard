@@ -1,5 +1,5 @@
 'use strict';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
@@ -19,8 +19,8 @@ import { lastUpdated } from '../../utils/format';
 import SearchModal from '../SearchModal';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
-
-const textRef = React.createRef();
+import TextEditor from '../TextEditor/textEditor';
+import DOMPurify from 'dompurify';
 
 const getConversations = (dispatch, conversationId, lvl) => {
   if (lvl) {
@@ -77,15 +77,14 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
         (newCommentViewers.length || newCommentViewerRoles.length)){
           user_viewers.push(current_user_id);         
       } 
-    const resp = encodeURI(textRef.current.value);
+    const resp = editorRef.current
     const payload = { 
       conversation_id: id, 
       text: resp,
       viewer_users: user_viewers, 
       viewer_roles: newCommentViewerRoles
     };
-      dispatch(replyConversation(payload));
-    textRef.current.value = '';
+    dispatch(replyConversation(payload));
     setNewCommentViewers([]);
     setNewCommentViewerRoles([]);
     setIdMap([]);
@@ -163,6 +162,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
         break;
     }
   };
+
   const breadcrumbConfig = [
     {
       label: 'Dashboard Home',
@@ -177,6 +177,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       active: true
     }
   ];
+
+  const editorRef = useRef();
 
   return (
     <div className='page__content--shortened'>
@@ -224,12 +226,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
 
                   </div>
                   {canReply &&
-                    <form className='flex__column flex__item--grow-1'
-                      onSubmit={(e) => { e.preventDefault(); reply(dispatch, conversationId); }}>
-                      <textarea placeholder='Type your reply'
-                        ref={textRef}
-                        aria-label="Type your reply"
-                        title="Type your reply"></textarea>
+                    <div className='flex__column flex__item--grow-1'>
+                        <TextEditor editorRef={editorRef} />
                         <p>Comment Visibility:</p>
                         { newCommentViewers && newCommentViewers.map((viewer) => {
                           return (
@@ -291,11 +289,12 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                       }
                       <div>
                         <button type='submit'
-                          className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
+                          className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+                          onClick={(e) => { e.preventDefault(); reply(dispatch, conversationId); }}>
                           Send Reply
                         </button>
                       </div>
-                    </form>
+                    </div>
                   }
                 </div>
                 {
@@ -375,6 +374,9 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
       cancel: cancelCallback
     }
   };
+  const createMarkup = (dirty) => {
+    return { __html: DOMPurify.sanitize(dirty) };
+  }
   return (
     <div className='flex__row--border'>
       <div className='flex__item--w-15'>
@@ -469,7 +471,7 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
         </div>
       </div>
       { showSearch && <SearchModal { ...searchOptions[searchType] }/> }
-      <div className='flex__item--grow-1-wrap'style={{whiteSpace: "pre-wrap", overflowWrap: "break-word"}}>{ decodeURI(note.text) }</div>
+      <div className='flex__item--grow-1-wrap'style={{whiteSpace: "pre-wrap", overflowWrap: "break-word"}} dangerouslySetInnerHTML={createMarkup(note.text)} />
     </div>
   );
 };

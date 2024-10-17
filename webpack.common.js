@@ -30,7 +30,8 @@ const CommonConfig = {
     alias: {
       Fonts: path.join(__dirname, 'app/src/assets/fonts'),
       Images: path.join(__dirname, 'app/src/assets/images'),
-      zlib: 'browserify-zlib'
+      zlib: 'browserify-zlib',
+      "react/jsx-runtime": "react/jsx-runtime.js",
     },
     fallback: {
       // console: true,
