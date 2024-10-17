@@ -197,6 +197,21 @@ export const questionPrivileges = (privileges) => {
   };
 };
 
+export const daacPrivileges = (privileges) => {
+  if (privileges.ADMIN) {
+    return {
+      canRead: true,
+    };
+  } else if (privileges.DAAC) {
+    return {
+      canRead: privileges.DAAC.includes('READ'),
+    };
+  }
+  return {
+    canRead: false
+  };
+};
+
 /**
  * given an array of privileges (strings), return an object with keys as the type of privilege and values as an array of actions
  * 

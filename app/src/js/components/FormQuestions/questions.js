@@ -150,6 +150,14 @@ const FormQuestions = ({
 
   useEffect(() => {
     if (formData) {
+      if (formData.error){
+        setAlertVariant('danger');
+        setAlertMessage(
+          'Unable to fetch form data. If you believe this is an error please contact the EDPub team.'
+        );
+        setDismissCountDown(10);
+        return;
+      }
       setQuestions(formData.sections);
       const initialValues = {};
       formData.sections.forEach((section) => {
@@ -1313,7 +1321,7 @@ const FormQuestions = ({
           <h3
             id="daac_selection"
             style={{
-              display: daacInfo && daacInfo.daac_name !== '' ? 'block' : 'none',
+              display: daacInfo && daacInfo.daac_name && daacInfo.daac_name !== '' ? 'block' : 'none',
               textAlign: 'left',
             }}
           >
@@ -1433,7 +1441,7 @@ const FormQuestions = ({
                                   <span className="checkmark"></span>
                                 </label>
                                 <label className="checkbox-item">
-                                  Same as Primary Data Accession
+                                  Same as Data Accession Point of Contact
                                   <input
                                     type="checkbox"
                                     name="sameAsPrimaryDataAccession"
