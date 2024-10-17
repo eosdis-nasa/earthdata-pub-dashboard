@@ -29,7 +29,8 @@ class UploadOverview extends React.Component {
       uploadFailed: false,
       uploadFileName: '',
       error: '',
-      file: null
+      file: null,
+      categoryType: null
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -158,6 +159,10 @@ class UploadOverview extends React.Component {
     return valid;
   }
 
+  resetRadioState() {
+    this.setCategoryType(undefined);
+  }
+
   async uploadFile(){
     const file = this.state.file
     if (this.validateFile(file)) {
@@ -173,15 +178,17 @@ class UploadOverview extends React.Component {
       const { groupId } = this.props.match.params;
       const { apiRoot } = _config;
 
+      let category = this.state.categoryType;
       try {
         let payload = {
           fileObj: file,
-          authToken: loadToken().token,
+          authToken: loadToken().token
         }
         let prefix = ''
         if (requestId !== '' && requestId != undefined && requestId !== null) {
           payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
           payload['submissionId'] = requestId
+          payload['endpointParams'] = { file_category: category };
         } else if (groupId !== '' && groupId != undefined && groupId !== null) {
           if (document.getElementById('prefix') && document.getElementById('prefix') !== null) {
             prefix = document.getElementById('prefix').value
@@ -200,18 +207,27 @@ class UploadOverview extends React.Component {
           console.log(`An error has occurred on uploadFile: ${error}.`);
           this.resetInputWithTimeout('Select a file', 1000)
           this.setState({ uploadFailed: true, error: error});
+          if (typeof category !== 'undefined') {
+            this.resetRadioState();
+          }
         } else {
           this.setState({ statusMsg: 'Upload Complete', progressValue: 0, uploadFileName: '' });
-          this.resetInputWithTimeout('Select another file', 1000)
+          this.resetInputWithTimeout('Select a file', 1000)
           if ((requestId !== '' && requestId != undefined && requestId !== null) &&
             (groupId == '' || groupId === undefined || groupId === null)) {
             this.getFileList()
+          }
+          if (typeof category !== 'undefined') {
+            this.resetRadioState();
           }
         }
       } catch (error) {
         this.setState({ uploadFailed: true });
         console.log(`try catch error: ${error.stack}`);
         this.resetInputWithTimeout('Select a file', 1000)
+        if (typeof category !== 'undefined') {
+          this.resetRadioState();
+        }
       }
     }
   }
@@ -229,6 +245,10 @@ class UploadOverview extends React.Component {
     e.preventDefault();
     this.setState({file: e.target.files[0]})
     dispatch(refreshToken());
+  }
+
+  async setCategoryType(e) {
+    this.setState({categoryType: e});
   }
   
 
@@ -266,14 +286,19 @@ class UploadOverview extends React.Component {
         width: '100px'
       },
       {
+        Header: 'Category',
+        accessor: row => row.category.charAt(0).toUpperCase() + row.category.substring(1).toLowerCase(),
+        id: 'category',
+      },
+      {
         Header: 'sha256Checksum',
         accessor: row => row.sha256Checksum,
         id: 'sha256Checksum'
       },
       {
         Header: 'Last Modified',
-        accessor: row => shortDateShortTimeYearFirstJustValue(row.last_modified),
-        id: 'last_modified'
+        accessor: row => shortDateShortTimeYearFirstJustValue(row.lastModified),
+        id: 'lastModified'
       }
     ];
     const { requestId } = this.props.match.params;
@@ -297,14 +322,40 @@ class UploadOverview extends React.Component {
                 </>
                 : null
               }
-               <span style={{ paddingBottom: '1rem' }}>{this.state.statusMsg === 'Uploading' && this.state.progressValue == 0 ? <Loading /> : this.state.uploadFileName}</span>
-              
               {this.state.showProgressBar && this.state.progressValue > 0 && 
                 <div style={progressBarStyle}>
                   <div style={progressBarFillStyle}>
                     <span style={numberDisplayStyle}>{this.state.uploadFailed ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={this.state.error}></span></span>: `${this.state.progressValue}%`}</span>
                   </div>
                 </div>}
+              <div>
+              {requestId !== undefined ?
+                <>
+                <p style={{fontWeight: '600'}}>Select File Category:</p>
+                <div>
+                  <label style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginRight: '15px',
+                  }}>
+                    <input type="radio" id="documentation_category" onChange={() => this.setCategoryType("documentation")} checked={this.state.categoryType === 'documentation'}/>
+                    <label style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="documentation_category">Documentation</label>
+                  </label>
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginRight: '15px',
+                    }}
+                  >
+                    <input type="radio" id="sample_category" onChange={() => this.setCategoryType("sample")} checked={this.state.categoryType === 'sample'}/>
+                    <label style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="sample_category">Sample Files</label>
+                  </label>
+                </div>
+                <br />
+                </>: null
+              }
+              </div>
               <label htmlFor='hiddenFileInput' style={{ marginBottom: '1rem', fontSize: 'unset' }}>{`${this.state.statusMsg}`}
                 <input
                   onChange={(e) => this.handleChange(e)}
@@ -314,7 +365,7 @@ class UploadOverview extends React.Component {
                   ref={this.state.hiddenFileInput}
                   id="hiddenFileInput" />
               </label>
-              <button onClick={(e) => this.handleClick(e)} className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}>Upload File</button>
+              <button onClick={(e) => this.handleClick(e)} className={`button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${this.state.categoryType ? 'button--submit' : 'button--secondary button--disabled'}`}>Upload File</button>
             </div>
             {this.state.saved && requestId !== undefined && groupId === undefined
               ?

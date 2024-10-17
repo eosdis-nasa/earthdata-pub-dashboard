@@ -72,7 +72,7 @@ const FileUploader = ({ requestId, store, refreshFileList }) => {
           alertMsg = '';
           statusMsg = 'Upload Complete';
           resetUploads(alertMsg, statusMsg);
-          setTimeout(() => setUploadStatusMsg('Select another file'), 1000);
+          setTimeout(() => setUploadStatusMsg('Select a file'), 1000);
 
           if (requestId) {
             refreshFileList();
