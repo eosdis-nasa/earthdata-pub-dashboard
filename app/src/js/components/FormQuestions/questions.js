@@ -2268,7 +2268,7 @@ const FormQuestions = ({
                                                       lineHeight: '30px',
                                                       color: 'white',
                                                     }}>
-                                                      {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '89%'}
+                                                      {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '0%'}
                                                     </div>
                                                   </div>
                                                 </div>
