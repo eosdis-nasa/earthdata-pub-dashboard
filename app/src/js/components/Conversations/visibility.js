@@ -1,5 +1,5 @@
 'use strict';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useImperativeHandle } from 'react';
 import SearchModal from '../SearchModal';
 import { notePrivileges } from '../../utils/privileges';
 import {
@@ -164,12 +164,20 @@ export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privile
     )
 }
 
-export const NewNoteVisibility = ({ dispatch, privileges, conversationId }) => {
+export const NewNoteVisibility = ({ dispatch, privileges, conversationId, visibilityRef }) => {
     const [showViewerSearch, setShowViewerSearch] = useState(false);
     const [searchType, setSearchType] = useState('user');
     const [newCommentViewers, setNewCommentViewers] = useState([]);
     const [newCommentViewerRoles, setNewCommentViewerRoles] = useState([]);
     const [idMap, setIdMap] = useState({});
+    useImperativeHandle(visibilityRef, () => ({
+        getVisibility: () => ({viewer_users: newCommentViewers, viewer_roles: newCommentViewerRoles}),
+        resetIdMap: () => {
+            setIdMap([]);
+            setNewCommentViewers([]);
+            setNewCommentViewerRoles([]);
+        }
+      }));
     useEffect(() => {
         dispatch(getConversation(conversationId));
     }, []);

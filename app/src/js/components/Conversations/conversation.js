@@ -1,5 +1,5 @@
 'use strict';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -35,9 +35,6 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const current_user_id = JSON.parse(window.localStorage.getItem('auth-user')).id;
   const { conversationId } = match.params;
   const [showSearch, setShowSearch] = useState(false);
-  const [newCommentViewers, setNewCommentViewers] = useState([]);
-  const [newCommentViewerRoles, setNewCommentViewerRoles] = useState([]); 
-  // const [idMap, setIdMap] = useState({});
   useEffect(() => {
     dispatch(getConversation(conversationId));
   }, []);
@@ -45,26 +42,28 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const { subject, notes, participants } = data;
   const { queriedAt } = meta;
   const { canReply, canAddUser } = notePrivileges(privileges);
+  const visibilityRef = useRef();
+
+  const handleVisibilityReset = () => {
+      visibilityRef?.current?.resetIdMap();
+  };
 
   const reply = (dispatch, id) => {
+    const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility()
     // ensure the person adding the comment is a viewer if they've limited the note
-    const user_viewers = [...newCommentViewers];
-    if (!user_viewers.includes(current_user_id) && 
-        (newCommentViewers.length || newCommentViewerRoles.length)){
-          user_viewers.push(current_user_id);         
-      } 
+    if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)){
+      viewer_users.push(current_user_id);
+    }
     const resp = encodeURI(textRef.current.value);
     const payload = { 
       conversation_id: id, 
       text: resp,
-      viewer_users: user_viewers, 
-      viewer_roles: newCommentViewerRoles
+      viewer_users,
+      viewer_roles
     };
       dispatch(replyConversation(payload));
     textRef.current.value = '';
-    setNewCommentViewers([]);
-    setNewCommentViewerRoles([]);
-    // setIdMap([]);
+    handleVisibilityReset();
 
   };
 
@@ -148,7 +147,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                         ref={textRef}
                         aria-label="Type your reply"
                         title="Type your reply"></textarea>
-                      <NewNoteVisibility dispatch={dispatch} privileges={privileges} conversationId={conversationId} />
+                      <NewNoteVisibility dispatch={dispatch} privileges={privileges} conversationId={conversationId} visibilityRef={visibilityRef}/>
                       <div>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
