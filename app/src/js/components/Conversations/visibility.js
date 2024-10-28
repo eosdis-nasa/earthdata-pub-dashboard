@@ -16,11 +16,11 @@ export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privile
     const noteId = note.id;
 
     const [searchType, setSearchType] = useState('user');
-    const { canAddUser, canRemoveUser } = notePrivileges(privileges);
     const [showSearch, setShowSearch] = useState(false);
+    const { canAddUser, canRemoveUser } = notePrivileges(privileges);
 
     const cancelCallback = () => setShowSearch(false);
-    const viewerSubmitCallback = (id) => {
+    const submitCallback = (id) => {
         const params = {
             note_id: noteId,
             viewer_ids: [id]
@@ -41,7 +41,7 @@ export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privile
     const searchOptions = {
         user: {
             entity: 'user',
-            submit: viewerSubmitCallback,
+            submit: submitCallback,
             cancel: cancelCallback
         },
         role: {
@@ -165,8 +165,8 @@ export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privile
 }
 
 export const NewNoteVisibility = ({ dispatch, privileges, conversationId, visibilityRef }) => {
-    const [showViewerSearch, setShowViewerSearch] = useState(false);
     const [searchType, setSearchType] = useState('user');
+    const [showSearch, setShowSearch] = useState(false);
     const [newCommentViewers, setNewCommentViewers] = useState([]);
     const [newCommentViewerRoles, setNewCommentViewerRoles] = useState([]);
     const [idMap, setIdMap] = useState({});
@@ -185,12 +185,12 @@ export const NewNoteVisibility = ({ dispatch, privileges, conversationId, visibi
 
     const openViewerSearch = (searchEntity) => {
         setSearchType(searchEntity);
-        setShowViewerSearch(true);
+        setShowSearch(true);
     }
 
-    const cancelViewerCallback = () => setShowViewerSearch(false);
+    const cancelCallback = () => setShowSearch(false);
 
-    const submitViewerCallback = (id) => {
+    const submitCallback = (id) => {
         if (!newCommentViewers.includes(id)) {
             dispatch(getUser(id)).then((user) => {
                 let mapCopy = { ...idMap };
@@ -200,7 +200,7 @@ export const NewNoteVisibility = ({ dispatch, privileges, conversationId, visibi
             })
         }
 
-        setShowViewerSearch(false);
+        setShowSearch(false);
     };
 
     const submitRoleCallback = (id) => {
@@ -213,19 +213,19 @@ export const NewNoteVisibility = ({ dispatch, privileges, conversationId, visibi
             })
         }
 
-        setShowViewerSearch(false);
+        setShowSearch(false);
     };
 
-    const viewerSearchOptions = {
+    const searchOptions = {
         user: {
             entity: 'user',
-            submit: submitViewerCallback,
-            cancel: cancelViewerCallback
+            submit: submitCallback,
+            cancel: cancelCallback
         },
         role: {
             entity: 'role',
             submit: submitRoleCallback,
-            cancel: cancelViewerCallback
+            cancel: cancelCallback
         }
     };
 
@@ -309,7 +309,7 @@ export const NewNoteVisibility = ({ dispatch, privileges, conversationId, visibi
                     </div>
                 </div>
             }
-            {showViewerSearch && <SearchModal {...viewerSearchOptions[searchType]} />}
+            {showSearch && <SearchModal {...searchOptions[searchType]} />}
         </div>
     )
 }
