@@ -201,7 +201,6 @@
     "style-loader": "^3.3.1"
   },
   "overrides": {
-    "yaml": "2.2.2",
-    "elliptic": "6.5.7"
+    "yaml": "2.2.2"
   }
 }
