@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //import Sidebar from './components/Sidebar/sidebar';
+import { Button, Modal } from 'react-bootstrap';
 import FormQuestions from './questions';
 import { getRequest, getForm } from '../../actions'; // Adjust the import path as necessary
 
@@ -13,7 +14,9 @@ class FormQuestions2 extends React.Component {
     this.state = {
       header: 'Data Request', // Default header
       formData: null, // State to store form data
-      requestData: null
+      requestData: null,
+      showErrorModal: false, 
+      errorMessage: '' 
     };
   }
 
@@ -32,12 +35,20 @@ class FormQuestions2 extends React.Component {
       this.setState({ requestData, formData, header: formData.long_name || 'Data Request' });
     } catch (error) {
       console.error('Error fetching data:', error);
+      this.setState({
+        showErrorModal: true, 
+        errorMessage: 'An error occurred while fetching requested data.' 
+      });
     }
   }
 
+  handleCloseModal = () => {
+    this.setState({ showErrorModal: false });
+  };
+
   render() {
     const { pathname } = this.props.location;
-    const { requestData, header, formData } = this.state;
+    const { requestData, header, formData, showErrorModal, errorMessage } = this.state;
     const showSidebar = pathname !== '/forms/add';
 
     return (
@@ -59,6 +70,19 @@ class FormQuestions2 extends React.Component {
             </div>
           </div>
         </div>
+        {showErrorModal && (
+          <Modal show={showErrorModal} onHide={this.handleCloseModal} className="custom-modal">
+            <Modal.Header closeButton>
+              <Modal.Title>Error</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{errorMessage}</Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={this.handleCloseModal}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
       </div>
     );
   }

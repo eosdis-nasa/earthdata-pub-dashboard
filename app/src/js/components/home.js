@@ -21,7 +21,7 @@ import Loading from '../components/LoadingIndicator/loading-indicator';
 class Home extends React.Component {
   constructor (props) {
     super(props);
-    this.state = { producers: [], originalList: {}, list: {} };
+    this.state = { producers: [], originalList: {}, list: {}, intervalId: null };
     this.displayName = 'Home';
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
@@ -39,37 +39,53 @@ class Home extends React.Component {
   }
 
   async componentDidMount() {
+    this._isMounted = true; // Set mounted flag
+
     await this.updateList();
-  
+
     let elapsedTime = 0; // Track elapsed time
-  
     const intervalId = setInterval(async () => {
       elapsedTime += 30000; // Increment elapsed time by 30 seconds
       const { list } = this.props.requests;
       const hasActionId = list.data.some(item => item.step_data && item.step_data.action_id);
-      
+
       if (!hasActionId || elapsedTime > 2 * 60000) {
         clearInterval(intervalId);
       } else {
-        await this.updateList();
+        // Only set state if the component is still mounted
+        if (this._isMounted) {
+          await this.updateList();
+        }
       }
     }, 30000); // Check every 30 seconds
-  
-    this.setState({ intervalId });
+
+    // Only set intervalId if the component is still mounted
+    if (this._isMounted) {
+      this.setState({ intervalId });
+    }
   }
   
   async updateList() {
     const { dispatch } = this.props;
-    await dispatch(listRequests());
-    const { requests } = this.props;
-    const { list } = requests;
-    const originalList = this.filter(list);
-    this.setState({ originalList, list: originalList });
+
+    try {
+      await dispatch(listRequests());
+      const { requests } = this.props;
+      const { list } = requests;
+      const originalList = this.filter(list);
+
+      // Only update state if the component is still mounted
+      if (this._isMounted) {
+        this.setState({ originalList, list: originalList });
+      }
+    } catch (error) {
+      console.error('Error updating the list:', error);
+    }
   }
-  
 
   componentWillUnmount() {
-    clearInterval(this.state.intervalId);
+    clearInterval(this.state.intervalId); // Clear the interval
+    this._isMounted = false; // Mark component as unmounted
   }
   
   generateQuery() {
