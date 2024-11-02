@@ -15,6 +15,9 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import Note from './note';
 import { NewNoteVisibility } from './visibility';
+import UploadOverview from '../DataUpload/customUpload';
+import { Attachment } from './attachment';
+
 
 const textRef = React.createRef();
 
@@ -148,7 +151,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                         aria-label="Type your reply"
                         title="Type your reply"></textarea>
                       <NewNoteVisibility dispatch={dispatch} privileges={privileges} conversationId={conversationId} visibilityRef={visibilityRef}/>
-                      <div>
+                      <div style={{textAlign: "right"}}>
+                        <UploadOverview customComponent={Attachment}/>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                           Send Reply
