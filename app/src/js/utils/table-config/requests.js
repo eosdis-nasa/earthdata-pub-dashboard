@@ -239,6 +239,12 @@ export const tableColumns = [
     accessor: row => stepLookup(row),
     id: 'next_action',
     // width: 170
+  },
+  {
+    Header: 'ID',
+    accessor: (row) => row.step_name === 'token_generated' ? row.id : null,
+    id: 'id',
+    // width: 170
   }
 ];
 

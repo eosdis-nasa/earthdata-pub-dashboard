@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import withQueryParams from 'react-router-query-params';
-import { listRequests } from '../actions';
+import { listRequests, initialize, reviewRequest, getRequest } from '../actions';
 import {
   nullValue,
 } from '../utils/format';
@@ -13,18 +13,29 @@ import {
   tableColumns
 } from '../utils/table-config/requests';
 import { overviewUrl, formsUrl, initiateRequestSelectDaac } from '../config';
+import _config from '../config';
 import Select from 'react-select';
 import { strings } from './locale';
 import { requestPrivileges } from '../utils/privileges';
 import Loading from '../components/LoadingIndicator/loading-indicator';
+import { Modal, Button } from 'react-bootstrap';
+import { faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 class Home extends React.Component {
   constructor (props) {
     super(props);
-    this.state = { producers: [], originalList: {}, list: {}, intervalId: null };
+    this.state = { producers: [], originalList: {}, list: {}, intervalId: null, isDropdownOpen: false,  isModalOpen: false, tokenValue: '', tokenError:''};
     this.displayName = 'Home';
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleSelection = this.handleSelection.bind(this);
+    this.handleOutsideClick = this.handleOutsideClick.bind(this);
+    this.handleTokenChange = this.handleTokenChange.bind(this);
+    this.submitToken = this.submitToken.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   getView () {
@@ -99,6 +110,78 @@ class Home extends React.Component {
 
   isExternalLink (link) {
     return link && link.match('https?://');
+  }
+
+  toggleDropdown(event) {
+    event.stopPropagation(); 
+
+    const { isDropdownOpen } = this.state;
+    if (!isDropdownOpen) {
+      document.addEventListener('click', this.handleOutsideClick);
+    } else {
+      document.removeEventListener('click', this.handleOutsideClick);
+    }
+
+    this.setState({ isDropdownOpen: !isDropdownOpen });
+  }
+
+  handleOutsideClick() {
+    if(this._isMounted){
+      this.setState({ isDropdownOpen: false });
+      document.removeEventListener('click', this.handleOutsideClick);
+    }
+  }
+
+  handleTokenChange(event) {
+    this.setState({ tokenValue: event.target.value });
+  }
+  
+  async submitToken() {
+    const { basepath } = _config;
+    const urlReturn = `${basepath}requests`;
+    const { tokenValue } = this.state;
+    const { dispatch } = this.props;  
+  
+      // Log token submission
+      console.log('Token submitted:', tokenValue);
+  
+      const result = await dispatch(getRequest(tokenValue));
+      console.log('result', result);
+
+      if(result && result.data && !result.data.statusCode){
+        // Await dispatch and handle result
+        await dispatch(reviewRequest(result.id, true));
+        // need to update this later once we have the requirements
+        await dispatch(listRequests());
+        this.setState({ isModalOpen: false, tokenValue: '' });
+        window.location.href = urlReturn;
+        this.setState({ tokenError: 'valid' });
+      }else{
+        this.setState({ tokenError: 'ERROR' });
+      }
+      
+  }
+  
+  closeModal() {
+    this.setState({ isModalOpen: false, tokenValue: '', tokenError:'' });
+  }
+  
+  async handleSelection(e, req) {
+    const { dispatch } = this.props;  
+    e.preventDefault();
+    const { basepath } = _config;
+    const urlReturn = `${basepath}requests`;
+
+    this.setState({ isDropdownOpen: false });
+    if(req === 'DAR'){
+      //this needs to be changed later - unknown daac
+      await dispatch(initialize("1c36f0b9-b7fd-481b-9cab-3bc3cea35414", { 'daac_id': "1c36f0b9-b7fd-481b-9cab-3bc3cea35414" }));
+      window.location.href = urlReturn;
+    }else if(req === 'DPR'){
+      this.setState({ isModalOpen: true });
+    }
+   
+    //this.props.history.push(path);  // Redirect based on selection
   }
 
   renderOverview () {
@@ -277,12 +360,25 @@ class Home extends React.Component {
                 <div className='heading__wrapper--border'>
                   <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
                   { canInitialize ? (
-                    <Link
-                      to='/daac/selection'
+                    <div className='dropdown-container'>
+                    <button
+                      onClick={this.toggleDropdown}
                       className='button button--small button--green button--add-small form-group__element--right new-request-button'
                       aria-label='Create new request'>
                       New Request
-                    </Link>
+                    </button>
+              
+                    {this.state.isDropdownOpen && (
+                      <div className="dropdown-menu">
+                        <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
+                        Data Accession Request
+                        </button>
+                        <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
+                        Data Publication Request
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   ) : null}
                   <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                 </div>
@@ -310,7 +406,36 @@ class Home extends React.Component {
                 }
               </div>
             </section>
-          </div>
+          </div> 
+
+        {<Modal show={this.state.isModalOpen} onHide={this.closeModal} className="custom-modal">
+          <Modal.Header closeButton>
+            <Modal.Title>Enter Token</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter token"
+              value={this.state.tokenValue}
+              onChange={this.handleTokenChange}
+            />
+            <span
+              className="error-modal"
+              style={{ color: this.state.tokenError && this.state.tokenError !== 'ERROR' ? 'green' : 'red' }}
+            >
+              {this.state.tokenError === 'ERROR' ? (
+                <FontAwesomeIcon icon={faTimes} />
+              ) : this.state.tokenError ? (
+                <FontAwesomeIcon icon={faCheck} />
+              ) : null}
+            </span>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.submitToken}>Submit</Button>
+            <Button variant="secondary" onClick={this.closeModal}>Close</Button>
+          </Modal.Footer>
+        </Modal>}       
         </div>
       );
     }

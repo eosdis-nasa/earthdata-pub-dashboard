@@ -15,6 +15,9 @@ import {
   // clearStatusesFilter,
   // listWorkflows,
   // getOptionsRequestName,
+  initialize, 
+  reviewRequest, 
+  getRequest 
 } from '../../actions';
 // import { get } from 'object-path';
 import {
@@ -39,6 +42,9 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 // import pageSizeOptions from '../../utils/page-size';
 import { requestPrivileges } from '../../utils/privileges';
 import Loading from '../LoadingIndicator/loading-indicator';
+import { Modal, Button } from 'react-bootstrap';
+import { faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const breadcrumbConfig = [
   {
@@ -62,6 +68,83 @@ class RequestsOverview extends React.Component {
     this.state = { producers: [], originalList: {}, list: {} };
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleSelection = this.handleSelection.bind(this);
+    this.handleOutsideClick = this.handleOutsideClick.bind(this);
+    this.handleTokenChange = this.handleTokenChange.bind(this);
+    this.submitToken = this.submitToken.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+  }
+
+  toggleDropdown(event) {
+    event.stopPropagation(); 
+    const { isDropdownOpen } = this.state;
+    if (!isDropdownOpen) {
+      document.addEventListener('click', this.handleOutsideClick);
+    } else {
+      document.removeEventListener('click', this.handleOutsideClick);
+    }
+
+    this.setState({ isDropdownOpen: !isDropdownOpen });
+  }
+
+  handleOutsideClick() {
+    if(this._isMounted){
+      this.setState({ isDropdownOpen: false });
+      document.removeEventListener('click', this.handleOutsideClick);
+    }
+  }
+
+  handleTokenChange(event) {
+    this.setState({ tokenValue: event.target.value });
+  }
+  
+  async submitToken() {
+    const { basepath } = _config;
+    const urlReturn = `${basepath}requests`;
+    const { tokenValue } = this.state;
+    const { dispatch } = this.props;  
+  
+      // Log token submission
+      console.log('Token submitted:', tokenValue);
+  
+      const result = await dispatch(getRequest(tokenValue));
+
+      if(result && result.data && !result.data.statusCode){
+        // Await dispatch and handle result
+        await dispatch(reviewRequest(result.id, true));
+            
+        // Need to be updated later
+        await dispatch(listRequests());
+        this.setState({ isModalOpen: false, tokenValue: '' });
+        window.location.href = urlReturn;
+        this.setState({ tokenError: 'valid' });
+      }else{
+        this.setState({ tokenError: 'ERROR' });
+      }
+      
+  }
+  
+  closeModal() {
+    this.setState({ isModalOpen: false, tokenValue: '', tokenError:'' });
+  }
+  
+  async handleSelection(e, req) {
+    const { dispatch } = this.props;  
+    e.preventDefault();
+    const { basepath } = _config;
+    const urlReturn = `${basepath}requests`;
+
+    this.setState({ isDropdownOpen: false });
+    if(req === 'DAR'){
+      //this needs to be changed later unknown daac
+      await dispatch(initialize("1c36f0b9-b7fd-481b-9cab-3bc3cea35414", { 'daac_id': "1c36f0b9-b7fd-481b-9cab-3bc3cea35414" }));
+      window.location.href = urlReturn;
+    }else if(req === 'DPR'){
+      this.setState({ isModalOpen: true });
+    }
+   
+    //this.props.history.push(path);  // Redirect based on selection
   }
 
   async componentDidMount() {
@@ -193,12 +276,25 @@ class RequestsOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
             {canInitialize ? (
-                    <Link
-                      to='/daac/selection'
+                    <div className='dropdown-container'>
+                    <button
+                      onClick={this.toggleDropdown}
                       className='button button--small button--green button--add-small form-group__element--right new-request-button'
                       aria-label='Create new request'>
                       New Request
-                    </Link>
+                    </button>
+              
+                    {this.state.isDropdownOpen && (
+                      <div className="dropdown-menu">
+                        <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
+                        Data Accession Request
+                        </button>
+                        <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
+                        Data Publication Request
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   ) : null}
           </div>
           {!list
@@ -224,6 +320,34 @@ class RequestsOverview extends React.Component {
               </List>
           }
         </section>
+        {<Modal show={this.state.isModalOpen} onHide={this.closeModal} className="custom-modal">
+          <Modal.Header closeButton>
+            <Modal.Title>Enter Token</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter token"
+              value={this.state.tokenValue}
+              onChange={this.handleTokenChange}
+            />
+            <span
+              className="error-modal"
+              style={{ color: this.state.tokenError && this.state.tokenError !== 'ERROR' ? 'green' : 'red' }}
+            >
+              {this.state.tokenError === 'ERROR' ? (
+                <FontAwesomeIcon icon={faTimes} />
+              ) : this.state.tokenError ? (
+                <FontAwesomeIcon icon={faCheck} />
+              ) : null}
+            </span>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.submitToken}>Submit</Button>
+            <Button variant="secondary" onClick={this.closeModal}>Close</Button>
+          </Modal.Footer>
+        </Modal>}
       </div>
       );
     }
