@@ -43,8 +43,8 @@ class QuestionsOverview extends React.Component {
   render () {
     const { questions } = this.props;
     let { list } = questions;
-    const { canCreate, canEdit, canDelete } = questionPrivileges(this.props.privileges);
-    if ((questions && questions.list.data.constructor.name !== 'Array') || (!canCreate || !canEdit || !canDelete)) {
+    const { canCreate } = questionPrivileges(this.props.privileges);
+    if ((questions && questions.list.data.constructor.name !== 'Array')) {
       list = { data: [], meta: '', count: 0 };
     }
     const query = this.generateQuery();
