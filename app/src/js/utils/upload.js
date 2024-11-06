@@ -1,5 +1,8 @@
 'use strict';
 import localUpload from '@edpub/upload-utility';
+import { loadToken } from '../utils/auth';
+import _config from '../config';
+
 export const handleUpload = async ({ files, categoryType, groupId, requestId}) => {
     //TODO- Ideally this should be a standardized upload method which can be used by all upload
     // components rather than having x number of components and repeated methods
@@ -18,7 +21,7 @@ export const handleUpload = async ({ files, categoryType, groupId, requestId}) =
         //     }
         //   }));
         };
-  
+
         let payload = {
           fileObj: file,
           authToken: loadToken().token,
@@ -64,9 +67,18 @@ export const handleUpload = async ({ files, categoryType, groupId, requestId}) =
           });
       });
     };
+
+    const validateFile = (file) =>{
+      let valid = false;
+      if (file.name.match(/\.([^\.]+)$/) !== null) {
+        var ext = file.name.match(/\.([^\.]+)$/)[1];
+        if (!ext.match(/exe/gi)) valid = true;
+      }
+      return valid;
+    }
   
     const uploadPromises = files.map(async (file) => {
-      if (this.validateFile(file)) {
+      if (validateFile(file)) {
         return uploadFileAsync(file)
           .then((fileName) => successFiles.push(fileName))
           .catch((fileName) => failedFiles.push(fileName));

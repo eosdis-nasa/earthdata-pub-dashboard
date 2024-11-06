@@ -2,6 +2,7 @@
 import React, { useState, useImperativeHandle } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
+import { handleUpload } from '../../utils/upload';
 
 export const Attachment = () => {
 
@@ -10,6 +11,10 @@ export const Attachment = () => {
     const handleChange = async (e) => {
         e.preventDefault();
         uploadedFiles = uploadedFiles.concat(Array.from(e.target.files));
+        await handleUpload({
+            files: uploadedFiles,
+            requestId: 'test-id'
+        });
     };
 
     const clickFileTypeInput = () => {
