@@ -381,10 +381,10 @@ class UploadOverview extends React.Component {
     ];
     const { requestId } = this.props.match.params;
     const { groupId } = this.props.match.params;
-    const { customComponent } = this.props;
+    const { customComponent, customRequestId } = this.props;
 
     return (
-      (customComponent ? <>{customComponent()}</> : 
+      (customComponent ? <>{customComponent({customRequestId})}</> :
       <>
         <br></br>
         <div className='page__component'>

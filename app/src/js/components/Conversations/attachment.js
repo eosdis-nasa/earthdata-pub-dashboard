@@ -1,10 +1,10 @@
 'use strict';
-import React, { useState, useImperativeHandle } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
 import { handleUpload } from '../../utils/upload';
 
-export const Attachment = () => {
+export const Attachment = ({customRequestId}) => {
 
     let uploadedFiles = [];
 
@@ -13,7 +13,7 @@ export const Attachment = () => {
         uploadedFiles = uploadedFiles.concat(Array.from(e.target.files));
         await handleUpload({
             files: uploadedFiles,
-            requestId: 'test-id'
+            requestId: customRequestId
         });
     };
 
@@ -30,7 +30,7 @@ export const Attachment = () => {
         style={{display: "none"}}
         multiple 
         />
-        <button className="button button--attachment" onClick={clickFileTypeInput}
+        <button type="button" className="button button--attachment" onClick={clickFileTypeInput}
         style={{backgroundColor: "#158749", color: "white", padding: "8px" }}>
             <FontAwesomeIcon icon={faPaperclip} />
         </button>

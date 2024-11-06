@@ -152,7 +152,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                         title="Type your reply"></textarea>
                       <NewNoteVisibility dispatch={dispatch} privileges={privileges} conversationId={conversationId} visibilityRef={visibilityRef}/>
                       <div style={{textAlign: "right"}}>
-                        <UploadOverview customComponent={Attachment}/>
+                        <UploadOverview customComponent={Attachment} customRequestId={subject.match(/Request ID (.*)/)[1]}/>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                           Send Reply
