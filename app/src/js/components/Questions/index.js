@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'object-path';
 import { connect } from 'react-redux';
@@ -17,7 +17,10 @@ const Questions = ({
 }) => {
   const { pathname } = location;
   const count = get(stats, 'count.data.questions.count');
-  dispatch(listQuestions());
+  useEffect(() => {
+    dispatch(listQuestions());
+  }, []);
+  
 
   return (
     <div className='page__questions'>

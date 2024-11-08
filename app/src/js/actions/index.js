@@ -341,7 +341,7 @@ export const listQuestions = (options) => {
 
 export const updateQuestion = (payload) => ({
   [CALL_API]: {
-    type: types.QUESTIONS,
+    type: types.QUESTION,
     method: 'POST',
     path: `data/question/${payload.id}`,
     json: payload
@@ -350,7 +350,7 @@ export const updateQuestion = (payload) => ({
 
 export const addQuestion = (payload) => ({
   [CALL_API]: {
-    type: types.QUESTIONS,
+    type: types.QUESTION,
     method: 'POST',
     path: 'data/questions',
     json: payload
