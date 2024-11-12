@@ -1,8 +1,8 @@
 'use strict';
 import React from 'react';
 
-export const CustomUpload = ({customComponent, customRequestId}) => {
+export const CustomUpload = ({customComponent, customRequestId, uploadedFilesRef, setUploadedFiles}) => {
   return (
-    <>{customComponent({customRequestId})}</>
+    <>{customComponent({customRequestId, uploadedFilesRef, setUploadedFiles})}</>
   );
 };

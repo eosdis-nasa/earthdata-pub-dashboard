@@ -4,33 +4,31 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperclip, faFile, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { handleUpload } from '../../utils/upload';
 
-export const DisplayAttachmentButton = ({fileName}) => {
+export const DisplayAttachmentButton = ({fileName, removeFileHandler}) => {
     return (
-        <button className='attachment-display-button'>
+        <button type="button" className='attachment-display-button'>
             <FontAwesomeIcon icon={faFile}  style={{paddingRight: "10px"}}/>
             {fileName}
-            <FontAwesomeIcon icon={faTimesCircle} style={{paddingLeft: "10px"}}/>
+            <FontAwesomeIcon icon={faTimesCircle} style={{paddingLeft: "10px"}} onClick={(e) => {removeFileHandler(fileName)}}/>
         </button>
     );
 }
 
-export const AddAttachmentButton = ({customRequestId, uploadedFilesRef}) => {
+export const AddAttachmentButton = ({customRequestId, uploadedFilesRef, setUploadedFiles}) => {
     useImperativeHandle(uploadedFilesRef, () => ({
-        getUploadedFiles: () => uploadedFiles,
-        removeFile: (fileName) => {
-            console.log('file to remove', fileName);
-        }}
-    ));
+        getUploadedFiles: () => uploadedFiles
+    }));
 
-    let uploadedFiles = [];
+    let uploadedFiles = new Set([]);
 
     const handleChange = async (e) => {
         e.preventDefault();
-        uploadedFiles = uploadedFiles.concat(Array.from(e.target.files));
-        await handleUpload({
+        uploadedFiles = new Set([...uploadedFiles, ...Array.from(e.target.files)]);
+        const resp = await handleUpload({
             files: uploadedFiles,
             requestId: customRequestId
         });
+        setUploadedFiles((currentState) => new Set([...currentState, ...resp.failed]));
     };
 
     const clickFileTypeInput = () => {

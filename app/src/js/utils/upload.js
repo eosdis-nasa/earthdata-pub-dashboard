@@ -77,7 +77,7 @@ export const handleUpload = async ({ files, categoryType, groupId, requestId}) =
       return valid;
     }
   
-    const uploadPromises = files.map(async (file) => {
+    const uploadPromises = [...files].map(async (file) => {
       if (validateFile(file)) {
         return uploadFileAsync(file)
           .then((fileName) => successFiles.push(fileName))

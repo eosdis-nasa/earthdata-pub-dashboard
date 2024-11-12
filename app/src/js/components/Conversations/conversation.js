@@ -38,6 +38,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const current_user_id = JSON.parse(window.localStorage.getItem('auth-user')).id;
   const { conversationId } = match.params;
   const [showSearch, setShowSearch] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   useEffect(() => {
     dispatch(getConversation(conversationId));
   }, []);
@@ -52,9 +53,11 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       visibilityRef?.current?.resetIdMap();
   };
 
-  const handleRemoveAttachment = ({fileName}) => {
-    uploadedFilesRef?.current?.removeFile(fileName);
-  }
+  const handleRemoveFile = (fileName) => {
+    //Have to ensure a rerender with the state update
+    uploadedFiles.delete(fileName);
+    setUploadedFiles(new Set([...uploadedFiles]));
+  };
 
   const reply = (dispatch, id) => {
     const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility()
@@ -67,9 +70,10 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       conversation_id: id, 
       text: resp,
       viewer_users,
-      viewer_roles
+      viewer_roles,
+      attachments: [...uploadedFiles]
     };
-      dispatch(replyConversation(payload));
+    dispatch(replyConversation(payload));
     textRef.current.value = '';
     handleVisibilityReset();
 
@@ -158,14 +162,16 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                       <NewNoteVisibility dispatch={dispatch} privileges={privileges} conversationId={conversationId} visibilityRef={visibilityRef}/>
                       <div>
                       {
-                        console.log(uploadedFilesRef?.current?.getUploadedFiles())
-                          // uploadedFiles.map((elem) =>
-                          //     <DisplayAttachmentButton fileName="Test.png"/>
-                          // )
+                          [...uploadedFiles].map((fileName) =>
+                              <DisplayAttachmentButton key={fileName} fileName={fileName} removeFileHandler={handleRemoveFile}/>
+                          )
                       }
                       </div>
                       <div style={{textAlign: "right"}}>
-                        <CustomUpload customComponent={AddAttachmentButton} customRequestId={subject.match(/Request ID (.*)/)[1]} uploadedFilesRef={uploadedFilesRef} />
+                        <CustomUpload customComponent={AddAttachmentButton}
+                        customRequestId={subject.match(/Request ID (.*)/)[1]}
+                        uploadedFilesRef={uploadedFilesRef}
+                        setUploadedFiles={setUploadedFiles}/>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                           Send Reply
