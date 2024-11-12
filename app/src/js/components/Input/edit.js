@@ -126,7 +126,7 @@ class Questions extends React.Component {
                 {(canEdit && canCreate)
                   ? <section className='page__section'>
                   <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
-                  to={'/input'} id='cancelButton' aria-label="cancel question editing">
+                  to={'/inputs'} id='cancelButton' aria-label="cancel question editing">
                       Cancel
                   </Link>
                   <button className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
