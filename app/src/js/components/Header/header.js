@@ -15,7 +15,9 @@ const paths = [
   ['Users', '/users', 'USER'],
   ['Groups', '/groups', 'GROUP'],
   ['Roles', '/roles', 'ROLE'],
-  ['Conversations', '/conversations', 'CONVERSATION']
+  ['Conversations', '/conversations', 'CONVERSATION'],
+  ['Inputs', '/inputs', 'INPUTS'],
+  ['Forms', '/forms', 'FORMS']
 ];
 
 class Header extends React.Component {
@@ -59,8 +61,14 @@ class Header extends React.Component {
     const { authenticated } = this.props.api;
     const { privileges, user, userId } = this.props;
     const activePaths = paths.filter(path => {
+      if (path[2] === 'FORMS') {
+        return privileges.ADMIN;
+      }
+      if (path[2] === 'INPUTS') {
+        return privileges.ADMIN;
+      }
       return (!!privileges[path[2]] || privileges.ADMIN) || path[2].match(/CONVERSATION/g);
-    });
+    });  
     return (
       <div className='header' aria-label="Header">
         <div className='row'>
