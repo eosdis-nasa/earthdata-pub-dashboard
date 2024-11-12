@@ -173,6 +173,25 @@ export const formPrivileges = (privileges) => {
   };
 };
 
+//Need an update after review
+export const formPrivilegesCU = (privileges) => {
+  if (privileges.ADMIN) {
+    return {
+      canCreate: true,
+      canEdit: true,
+    };
+  } else if (privileges.FORM) {
+    return {
+      canCreate: privileges.FORM.includes('CREATE'),
+      canEdit: privileges.FORM.includes('UPDATE'),
+    };
+  }
+  return {
+    canCreate: false,
+    canEdit: false,
+  };
+};
+
 export const questionPrivileges = (privileges) => {
   if (privileges.ADMIN) {
     return {
