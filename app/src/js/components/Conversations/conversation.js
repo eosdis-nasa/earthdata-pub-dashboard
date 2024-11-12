@@ -16,7 +16,7 @@ import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import Note from './note';
 import { NewNoteVisibility } from './visibility';
 import UploadOverview from '../DataUpload/customUpload';
-import { Attachment } from './attachment';
+import { AddAttachmentButton } from './attachment';
 
 
 const textRef = React.createRef();
@@ -152,7 +152,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                         title="Type your reply"></textarea>
                       <NewNoteVisibility dispatch={dispatch} privileges={privileges} conversationId={conversationId} visibilityRef={visibilityRef}/>
                       <div style={{textAlign: "right"}}>
-                        <UploadOverview customComponent={Attachment} customRequestId={subject.match(/Request ID (.*)/)[1]}/>
+                        <UploadOverview customComponent={AddAttachmentButton} customRequestId={subject.match(/Request ID (.*)/)[1]}/>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                           Send Reply
