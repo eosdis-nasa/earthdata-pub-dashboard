@@ -15,8 +15,8 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import Note from './note';
 import { NewNoteVisibility } from './visibility';
-import { UploadOverview, CustomUpload } from '../DataUpload/customUpload';
-import { AddAttachmentButton } from './attachment';
+import { CustomUpload } from '../DataUpload/customUpload';
+import { AddAttachmentButton, DisplayAttachmentButton } from './attachment';
 
 
 const textRef = React.createRef();
@@ -46,10 +46,15 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const { queriedAt } = meta;
   const { canReply, canAddUser } = notePrivileges(privileges);
   const visibilityRef = useRef();
+  const uploadedFilesRef = useRef();
 
   const handleVisibilityReset = () => {
       visibilityRef?.current?.resetIdMap();
   };
+
+  const handleRemoveAttachment = ({fileName}) => {
+    uploadedFilesRef?.current?.removeFile(fileName);
+  }
 
   const reply = (dispatch, id) => {
     const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility()
@@ -151,8 +156,16 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                         aria-label="Type your reply"
                         title="Type your reply"></textarea>
                       <NewNoteVisibility dispatch={dispatch} privileges={privileges} conversationId={conversationId} visibilityRef={visibilityRef}/>
+                      <div>
+                      {
+                        console.log(uploadedFilesRef?.current?.getUploadedFiles())
+                          // uploadedFiles.map((elem) =>
+                          //     <DisplayAttachmentButton fileName="Test.png"/>
+                          // )
+                      }
+                      </div>
                       <div style={{textAlign: "right"}}>
-                        <CustomUpload customComponent={AddAttachmentButton} customRequestId={subject.match(/Request ID (.*)/)[1]}/>
+                        <CustomUpload customComponent={AddAttachmentButton} customRequestId={subject.match(/Request ID (.*)/)[1]} uploadedFilesRef={uploadedFilesRef} />
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                           Send Reply

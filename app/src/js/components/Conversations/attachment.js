@@ -1,5 +1,5 @@
 'use strict';
-import React from 'react';
+import React, { useImperativeHandle } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperclip, faFile, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { handleUpload } from '../../utils/upload';
@@ -14,7 +14,13 @@ export const DisplayAttachmentButton = ({fileName}) => {
     );
 }
 
-export const AddAttachmentButton = ({customRequestId}) => {
+export const AddAttachmentButton = ({customRequestId, uploadedFilesRef}) => {
+    useImperativeHandle(uploadedFilesRef, () => ({
+        getUploadedFiles: () => uploadedFiles,
+        removeFile: (fileName) => {
+            console.log('file to remove', fileName);
+        }}
+    ));
 
     let uploadedFiles = [];
 
@@ -33,16 +39,6 @@ export const AddAttachmentButton = ({customRequestId}) => {
 
     return (
         <>
-        <div style={{display: "flex", textAlign: "left"}}>
-        <div style={{width: "95%"}}>
-        {console.log(uploadedFiles)}
-        {
-            uploadedFiles.map((elem) =>
-                <DisplayAttachmentButton fileName="Test.png"/>
-            )
-        }
-        </div>
-        <div style={{width: "5%"}}>
         <input 
         id="hiddenFileInputType"
         type="file" 
@@ -54,8 +50,6 @@ export const AddAttachmentButton = ({customRequestId}) => {
         style={{backgroundColor: "#158749", color: "white", padding: "8px" }}>
             <FontAwesomeIcon icon={faPaperclip} />
         </button>
-        </div>
-        </div>
         </>
 
     );
