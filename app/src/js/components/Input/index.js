@@ -8,7 +8,7 @@ import { listInputs } from '../../actions';
 import InputsOverview from './overview';
 import EditInput from './edit';
 
-const Questions = ({
+const Inputs = ({
   dispatch,
   location,
   params,
@@ -45,7 +45,7 @@ const Questions = ({
   );
 };
 
-Questions.propTypes = {
+Inputs.propTypes = {
   location: PropTypes.object,
   params: PropTypes.object,
   dispatch: PropTypes.func,
@@ -54,4 +54,4 @@ Questions.propTypes = {
 
 export default withRouter(connect(state => ({
   stats: state.stats
-}))(Questions));
+}))(Inputs));
