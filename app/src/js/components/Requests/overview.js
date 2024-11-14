@@ -111,18 +111,18 @@ class RequestsOverview extends React.Component {
       const result = await dispatch(getRequest(tokenValue));
 
       if(result && result.data && !result.data.statusCode){
-        // Await dispatch and handle result
-        await dispatch(reviewRequest(result.id, true));
-            
-        // Need to be updated later
-        await dispatch(listRequests());
+        if(result.data.step_name === 'token_generated'){
+          // Await dispatch and handle result
+          await dispatch(reviewRequest(result.id, true));
+          // need to update this later once we have the requirements
+          await dispatch(listRequests());
+        }
         this.setState({ isModalOpen: false, tokenValue: '' });
         window.location.href = urlReturn;
         this.setState({ tokenError: 'valid' });
       }else{
         this.setState({ tokenError: 'ERROR' });
-      }
-      
+      }  
   }
   
   closeModal() {

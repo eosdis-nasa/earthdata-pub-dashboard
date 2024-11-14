@@ -149,17 +149,18 @@ class Home extends React.Component {
       console.log('result', result);
 
       if(result && result.data && !result.data.statusCode){
-        // Await dispatch and handle result
-        await dispatch(reviewRequest(result.id, true));
-        // need to update this later once we have the requirements
-        await dispatch(listRequests());
+        if(result.data.step_name === 'token_generated'){
+          // Await dispatch and handle result
+          await dispatch(reviewRequest(result.id, true));
+          // need to update this later once we have the requirements
+          await dispatch(listRequests());
+        }
         this.setState({ isModalOpen: false, tokenValue: '' });
         window.location.href = urlReturn;
         this.setState({ tokenError: 'valid' });
       }else{
         this.setState({ tokenError: 'ERROR' });
       }
-      
   }
   
   closeModal() {
