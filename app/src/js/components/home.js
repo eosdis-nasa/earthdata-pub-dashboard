@@ -26,15 +26,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class Home extends React.Component {
   constructor (props) {
     super(props);
-    this.state = { producers: [], originalList: {}, list: {}, intervalId: null, isDropdownOpen: false,  isModalOpen: false, codeValue: '', codeError:''};
+    this.state = { producers: [], originalList: {}, list: {}, intervalId: null, isDropdownOpen: false,  isModalOpen: false, tokenValue: '', tokenError:''};
     this.displayName = 'Home';
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
     this.toggleDropdown = this.toggleDropdown.bind(this);
     this.handleSelection = this.handleSelection.bind(this);
     this.handleOutsideClick = this.handleOutsideClick.bind(this);
-    this.handleCodeChange = this.handleCodeChange.bind(this);
-    this.submitCode = this.submitCode.bind(this);
+    this.handleTokenChange = this.handleTokenChange.bind(this);
+    this.submitToken = this.submitToken.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
 
@@ -132,38 +132,38 @@ class Home extends React.Component {
     }
   }
 
-  handleCodeChange(event) {
-    this.setState({ codeValue: event.target.value });
+  handleTokenChange(event) {
+    this.setState({ tokenValue: event.target.value });
   }
   
-  async submitCode() {
+  async submitToken() {
     const { basepath } = _config;
     const urlReturn = `${basepath}requests`;
-    const { codeValue } = this.state;
+    const { tokenValue } = this.state;
     const { dispatch } = this.props;  
   
-      // Log publication code submission
-      console.log('Publication code submitted:', codeValue);
+      // Log token submission
+      console.log('Token submitted:', tokenValue);
   
-      const result = await dispatch(getRequest(codeValue));
+      const result = await dispatch(getRequest(tokenValue));
       console.log('result', result);
 
       if(result && result.data && !result.data.statusCode){
         // Await dispatch and handle result
         await dispatch(reviewRequest(result.id, true));
-        // TODO - need to update this later once we have the requirements
+        // need to update this later once we have the requirements
         await dispatch(listRequests());
-        this.setState({ isModalOpen: false, codeValue: '' });
+        this.setState({ isModalOpen: false, tokenValue: '' });
         window.location.href = urlReturn;
-        this.setState({ codeError: 'valid' });
+        this.setState({ tokenError: 'valid' });
       }else{
-        this.setState({ codeError: 'ERROR' });
+        this.setState({ tokenError: 'ERROR' });
       }
       
   }
   
   closeModal() {
-    this.setState({ isModalOpen: false, codeValue: '', codeError:'' });
+    this.setState({ isModalOpen: false, tokenValue: '', tokenError:'' });
   }
   
   async handleSelection(e, req) {
@@ -174,7 +174,7 @@ class Home extends React.Component {
 
     this.setState({ isDropdownOpen: false });
     if(req === 'DAR'){
-      // TODO - this needs to be changed later - unknown daac
+      //this needs to be changed later - unknown daac
       await dispatch(initialize("1c36f0b9-b7fd-481b-9cab-3bc3cea35414", { 'daac_id': "1c36f0b9-b7fd-481b-9cab-3bc3cea35414" }));
       window.location.href = urlReturn;
     }else if(req === 'DPR'){
@@ -410,29 +410,29 @@ class Home extends React.Component {
 
         {<Modal show={this.state.isModalOpen} onHide={this.closeModal} className="custom-modal">
           <Modal.Header closeButton>
-            <Modal.Title>Enter Publication Code</Modal.Title>
+            <Modal.Title>Enter Token</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <input
               type="text"
               className="form-control"
-              placeholder="Enter publication code"
-              value={this.state.codeValue}
-              onChange={this.handleCodeChange}
+              placeholder="Enter token"
+              value={this.state.tokenValue}
+              onChange={this.handleTokenChange}
             />
             <span
               className="error-modal"
-              style={{ color: this.state.codeError && this.state.codeError !== 'ERROR' ? 'green' : 'red' }}
+              style={{ color: this.state.tokenError && this.state.tokenError !== 'ERROR' ? 'green' : 'red' }}
             >
-              {this.state.codeError === 'ERROR' ? (
+              {this.state.tokenError === 'ERROR' ? (
                 <FontAwesomeIcon icon={faTimes} />
-              ) : this.state.codeError ? (
+              ) : this.state.tokenError ? (
                 <FontAwesomeIcon icon={faCheck} />
               ) : null}
             </span>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={this.submitCode}>Submit</Button>
+            <Button variant="primary" onClick={this.submitToken}>Submit</Button>
             <Button variant="secondary" onClick={this.closeModal}>Close</Button>
           </Modal.Footer>
         </Modal>}       
