@@ -71,8 +71,8 @@ class RequestsOverview extends React.Component {
     this.toggleDropdown = this.toggleDropdown.bind(this);
     this.handleSelection = this.handleSelection.bind(this);
     this.handleOutsideClick = this.handleOutsideClick.bind(this);
-    this.handleTokenChange = this.handleTokenChange.bind(this);
-    this.submitToken = this.submitToken.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
+    this.submitCode = this.submitCode.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
 
@@ -95,20 +95,20 @@ class RequestsOverview extends React.Component {
     }
   }
 
-  handleTokenChange(event) {
-    this.setState({ tokenValue: event.target.value });
+  handleCodeChange(event) {
+    this.setState({ codeValue: event.target.value });
   }
   
-  async submitToken() {
+  async submitCode() {
     const { basepath } = _config;
     const urlReturn = `${basepath}requests`;
-    const { tokenValue } = this.state;
+    const { codeValue } = this.state;
     const { dispatch } = this.props;  
   
-      // Log token submission
-      console.log('Token submitted:', tokenValue);
+      // Log publication code submission
+      console.log('Publication code submitted:', codeValue);
   
-      const result = await dispatch(getRequest(tokenValue));
+      const result = await dispatch(getRequest(codeValue));
 
       if(result && result.data && !result.data.statusCode){
         // Await dispatch and handle result
@@ -116,17 +116,17 @@ class RequestsOverview extends React.Component {
             
         // Need to be updated later
         await dispatch(listRequests());
-        this.setState({ isModalOpen: false, tokenValue: '' });
+        this.setState({ isModalOpen: false, codeValue: '' });
         window.location.href = urlReturn;
-        this.setState({ tokenError: 'valid' });
+        this.setState({ codeError: 'valid' });
       }else{
-        this.setState({ tokenError: 'ERROR' });
+        this.setState({ codeError: 'ERROR' });
       }
       
   }
   
   closeModal() {
-    this.setState({ isModalOpen: false, tokenValue: '', tokenError:'' });
+    this.setState({ isModalOpen: false, codeValue: '', codeError:'' });
   }
   
   async handleSelection(e, req) {
@@ -322,29 +322,29 @@ class RequestsOverview extends React.Component {
         </section>
         {<Modal show={this.state.isModalOpen} onHide={this.closeModal} className="custom-modal">
           <Modal.Header closeButton>
-            <Modal.Title>Enter Token</Modal.Title>
+            <Modal.Title>Enter Publication Code</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <input
               type="text"
               className="form-control"
-              placeholder="Enter token"
-              value={this.state.tokenValue}
-              onChange={this.handleTokenChange}
+              placeholder="Enter publication code"
+              value={this.state.codeValue}
+              onChange={this.handleCodeChange}
             />
             <span
               className="error-modal"
-              style={{ color: this.state.tokenError && this.state.tokenError !== 'ERROR' ? 'green' : 'red' }}
+              style={{ color: this.state.codeError && this.state.codeError !== 'ERROR' ? 'green' : 'red' }}
             >
-              {this.state.tokenError === 'ERROR' ? (
+              {this.state.codeError === 'ERROR' ? (
                 <FontAwesomeIcon icon={faTimes} />
-              ) : this.state.tokenError ? (
+              ) : this.state.codeError ? (
                 <FontAwesomeIcon icon={faCheck} />
               ) : null}
             </span>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={this.submitToken}>Submit</Button>
+            <Button variant="primary" onClick={this.submitCode}>Submit</Button>
             <Button variant="secondary" onClick={this.closeModal}>Close</Button>
           </Modal.Footer>
         </Modal>}
