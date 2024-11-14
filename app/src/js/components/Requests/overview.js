@@ -114,7 +114,7 @@ class RequestsOverview extends React.Component {
         // Await dispatch and handle result
         await dispatch(reviewRequest(result.id, true));
             
-        // Need to be updated later
+        // TODO - Need to be updated later
         await dispatch(listRequests());
         this.setState({ isModalOpen: false, codeValue: '' });
         window.location.href = urlReturn;
@@ -137,7 +137,7 @@ class RequestsOverview extends React.Component {
 
     this.setState({ isDropdownOpen: false });
     if(req === 'DAR'){
-      //this needs to be changed later unknown daac
+      // TODO - this needs to be changed later unknown daac
       await dispatch(initialize("1c36f0b9-b7fd-481b-9cab-3bc3cea35414", { 'daac_id': "1c36f0b9-b7fd-481b-9cab-3bc3cea35414" }));
       window.location.href = urlReturn;
     }else if(req === 'DPR'){
