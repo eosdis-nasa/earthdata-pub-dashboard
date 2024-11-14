@@ -14,7 +14,7 @@ export const DisplayAttachmentButton = ({fileName, removeFileHandler}) => {
     );
 }
 
-export const AddAttachmentButton = ({customRequestId, uploadedFilesRef, setUploadedFiles}) => {
+export const AddAttachmentButton = ({conversationId, uploadedFilesRef, setUploadedFiles}) => {
     useImperativeHandle(uploadedFilesRef, () => ({
         getUploadedFiles: () => uploadedFiles
     }));
@@ -26,7 +26,7 @@ export const AddAttachmentButton = ({customRequestId, uploadedFilesRef, setUploa
         uploadedFiles = new Set([...uploadedFiles, ...Array.from(e.target.files)]);
         const resp = await handleUpload({
             files: uploadedFiles,
-            requestId: customRequestId
+            conversationId
         });
         setUploadedFiles((currentState) => new Set([...currentState, ...resp.failed]));
     };

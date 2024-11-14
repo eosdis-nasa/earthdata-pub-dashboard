@@ -169,7 +169,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                       </div>
                       <div style={{textAlign: "right"}}>
                         <CustomUpload customComponent={AddAttachmentButton}
-                        customRequestId={subject.match(/Request ID (.*)/)[1]}
+                        conversationId={conversationId}
                         uploadedFilesRef={uploadedFilesRef}
                         setUploadedFiles={setUploadedFiles}/>
                         <button type='submit'

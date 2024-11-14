@@ -3,7 +3,7 @@ import localUpload from '@edpub/upload-utility';
 import { loadToken } from '../utils/auth';
 import _config from '../config';
 
-export const handleUpload = async ({ files, categoryType, groupId, requestId}) => {
+export const handleUpload = async ({ files, categoryType, groupId, conversationId}) => {
     //TODO- Ideally this should be a standardized upload method which can be used by all upload
     // components rather than having x number of components and repeated methods
     const successFiles = [];
@@ -26,7 +26,7 @@ export const handleUpload = async ({ files, categoryType, groupId, requestId}) =
           fileObj: file,
           authToken: loadToken().token,
           apiEndpoint: `${apiRoot}data/upload/getAttachmentUploadUrl`,
-          submissionId: requestId
+          endpointParams: { conversation_id: conversationId }
         };
   
         // if (requestId) {
