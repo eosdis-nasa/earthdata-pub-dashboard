@@ -18,6 +18,7 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { questionPrivileges } from '../../utils/privileges';
 import Select from 'react-select';
+import './Questions.css';
 
 const Questions = ({ dispatch, match, questions, privileges }) => {
   const { questionId } = match.params;
@@ -95,6 +96,17 @@ useEffect(() => {
     requiredCheckbox.checked = required;
   }
 }, [required]);
+
+useEffect(() => {
+  if (dismissCountDown > 0) {
+    window.scrollTo(0,0);
+    const intervalId = setInterval(() => {
+      setDismissCountDown((prevCount) => prevCount - 1);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }
+}, [dismissCountDown]);
 
 const breadcrumbConfig = [
   {
