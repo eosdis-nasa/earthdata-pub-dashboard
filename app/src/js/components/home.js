@@ -159,7 +159,7 @@ class Home extends React.Component {
       console.log('result', result);
 
       if(result && result.data && !result.data.statusCode){
-        if(result.data.step_name === 'token_generated'){
+        if(result.data.step_name === 'code_generated'){
             // Await dispatch and handle result
             await dispatch(reviewRequest(result.id, true));
             // TODO - Needs to be updated during E2E integration

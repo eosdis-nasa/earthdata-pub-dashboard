@@ -118,7 +118,7 @@ class RequestsOverview extends React.Component {
       const result = await dispatch(getRequest(codeValue));
 
       if(result && result.data && !result.data.statusCode){
-        if(result.data.step_name === 'token_generated'){
+        if(result.data.step_name === 'code_generated'){
             // Await dispatch and handle result
             await dispatch(reviewRequest(result.id, true));
                 
