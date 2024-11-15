@@ -38,12 +38,10 @@ class EditForm extends React.Component {
   };
 
   validateForm = () => {
-    const { longname, shortname, description, version } = this.state;
+    const { shortname, version } = this.state;
     const errors = {};
 
-    if (!longname) errors.longname = 'Long Name is required';
     if (!shortname) errors.shortname = 'Short Name is required';
-    if (!description) errors.description = 'Description is required';
     if (!version) errors.version = 'Version is required';
 
     this.setState({ errors });
@@ -152,8 +150,7 @@ class EditForm extends React.Component {
                 name="longname"
                 value={longname}
                 onChange={this.handleChange}
-                placeholder={errors.longname ? errors.longname : 'Enter long name'}
-                className={errors.longname ? 'input-error-form' : ''}
+                placeholder={'Enter long name'}
               />
               
               <label className='heading--small' htmlFor="shortname">Short Name</label>
@@ -173,8 +170,7 @@ class EditForm extends React.Component {
                 name="description"
                 value={description}
                 onChange={this.handleChange}
-                placeholder={errors.description ? errors.description : 'Enter description'}
-                className={errors.description ? 'input-error-form' : ''}
+                placeholder={'Enter description'}
               />
               
               <label className='heading--small' htmlFor="version">Version</label>
