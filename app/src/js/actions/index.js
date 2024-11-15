@@ -220,6 +220,32 @@ export const listRequests = (options) => ({
   }
 });
 
+export const getFormDetails = (key) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'GET',
+    path: `data/form/${key}`
+  }
+});
+
+export const addForm = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/forms',
+    body: payload
+  }
+});
+
+export const updateForm = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/updateForm',
+    body: payload
+  }
+});
+
 export const saveForm = (payload) => ({
   [CALL_API]: {
     type: types.REQUESTS,

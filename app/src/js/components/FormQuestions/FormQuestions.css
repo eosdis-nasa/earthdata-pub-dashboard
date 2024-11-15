@@ -1026,3 +1026,13 @@
   background-color: #e9ecef;
   opacity: 1;
 }
+
+
+/* new form validation error*/
+.input-error-form {
+  border: 1px solid red;
+}
+
+.input-error-form::placeholder {
+  color: red;
+}
