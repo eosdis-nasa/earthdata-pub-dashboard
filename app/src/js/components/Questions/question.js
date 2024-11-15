@@ -11,13 +11,16 @@ import ErrorReport from '../Errors/report';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
-function Question ({ title, version, text, help, inputs }) {
+function Question ({ title, version, shortName, text, help, required, daacs, inputs }) {
   return (
     <div>
       <h1>Title: {title}</h1>
       <h2>Version: {version}</h2>
+      <h3>Short Name: {shortName}</h3>
       <h3>Text: {text}</h3>
       <h3>Help: {help}</h3>
+      <h3>Required: {required}</h3>
+      <h3>DAAC IDs: {daacs}</h3>
       <h3>Inputs: </h3>
       <div className='model-builder-array'>
         { inputs.map(input => (
@@ -91,9 +94,12 @@ class QuestionOverview extends React.Component {
               ? <Question
                 id={record.data.id}
                 title={record.data.long_name}
+                shortName = {record.data.short_name}
                 version={record.data.version}
                 text={record.data.text}
                 help={record.data.help}
+                required={record.data.required.toString()}
+                daacs={record.data.daac_ids ? record.data.daac_ids.join(", ") : null}
                 inputs={record.data.inputs ? record.data.inputs : []} />
               : null
           }
@@ -106,8 +112,11 @@ class QuestionOverview extends React.Component {
 Question.propTypes = {
   title: PropTypes.string,
   version: PropTypes.number,
+  shortName: PropTypes.string,
   text: PropTypes.string,
   help: PropTypes.string,
+  required: PropTypes.bool,
+  daacs: PropTypes.array,
   inputs: PropTypes.array
 };
 
