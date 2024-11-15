@@ -157,38 +157,22 @@ export const requestCanReview = (privileges, stepName) => {
 export const formPrivileges = (privileges) => {
   if (privileges.ADMIN) {
     return {
+      canCreate: true,
       canEdit: true,
       canRead: true
     };
   } else if (privileges.FORM) {
     return {
+      canCreate: privileges.FORM.includes('CREATE'),
       canRead: !!privileges.FORM.find(a =>
         a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD'),
       canEdit: privileges.FORM.includes('UPDATE')
     };
   }
   return {
-    canEdit: false,
-    canRead: false
-  };
-};
-
-//Need an update after review
-export const formPrivilegesCU = (privileges) => {
-  if (privileges.ADMIN) {
-    return {
-      canCreate: true,
-      canEdit: true,
-    };
-  } else if (privileges.FORM) {
-    return {
-      canCreate: privileges.FORM.includes('CREATE'),
-      canEdit: privileges.FORM.includes('UPDATE'),
-    };
-  }
-  return {
     canCreate: false,
     canEdit: false,
+    canRead: false
   };
 };
 

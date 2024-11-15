@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { getInput, createInput, updateInput } from '../../actions';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import { formPrivilegesCU } from '../../utils/privileges';
+import { formPrivileges } from '../../utils/privileges';
 
 class Questions extends React.Component {
   constructor() {
@@ -186,7 +186,7 @@ class Questions extends React.Component {
   render() {
     const { data } = this.state;
     const { inputId } = this.props.match.params;
-    const { canCreate, canEdit } = formPrivilegesCU(this.props.privileges);
+    const { canCreate, canEdit } = formPrivileges(this.props.privileges);
 
     const breadcrumbConfig = [
       { label: 'Dashboard Home', href: '/' },

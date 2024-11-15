@@ -5,7 +5,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { listInputs, getInput, listQuestions } from '../../actions';
 import { lastUpdated } from '../../utils/format';
-import { formPrivilegesCU } from '../../utils/privileges';
+import { formPrivileges } from '../../utils/privileges';
 import { tableColumns } from '../../utils/table-config/input';
 import List from '../Table/Table';
 import { strings } from '../locale';
@@ -43,7 +43,7 @@ class InputsOverview extends React.Component {
   render () {
     const { questions } = this.props;
     let { list } = questions;
-    const { canCreate, canEdit } = formPrivilegesCU(this.props.privileges);
+    const { canCreate, canEdit } = formPrivileges(this.props.privileges);
     if ((questions && questions.list.data.constructor.name !== 'Array') || (!canCreate || !canEdit)) {
       list = { data: [], meta: '', count: 0 };
     }
