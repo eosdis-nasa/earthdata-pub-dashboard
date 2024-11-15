@@ -3,13 +3,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
-import { formPrivilegesCU } from '../../utils/privileges';
 import {
-  // getCount,
-  // searchForms,
-  // clearFormsSearch,
-  // filterForms,
-  // clearFormsFilter,
   listForms
 } from '../../actions';
 import { lastUpdated } from '../../utils/format';
@@ -50,12 +44,10 @@ const FormsOverview = ({ forms }) => {
       <section className='page__section'>
         <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_forms} <span className='num--title'>{forms.list.data.length}</span></h2>
-          {true
-              ? <Link
-                className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: '/forms/add' }}
-            >Add Form
-            </Link>
-              : null}
+          <Link
+              className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: '/forms/add' }}
+          >Add Form
+          </Link>
         </div>
         <List
           list={forms.list}

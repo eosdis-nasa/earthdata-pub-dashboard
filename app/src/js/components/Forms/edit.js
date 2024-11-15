@@ -4,14 +4,13 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  listRoles,
-  listGroups,
   getFormDetails,
   addForm,
   updateForm
 } from '../../actions';
 import _config from '../../config';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import { formPrivileges } from '../../utils/privileges';
 const { basepath } = _config;
 const urlReturn = `${basepath}forms`;
 
@@ -24,7 +23,7 @@ class EditForm extends React.Component {
       originalShortname: '',
       description: '',
       version: '',
-      daac_only: false, // Initialize daac_only for the checkbox
+      daac_only: false,
       originalVersion: '',
       errors: {}
     };
@@ -79,24 +78,38 @@ class EditForm extends React.Component {
     const { dispatch } = this.props;
     const { id } = this.props.match.params;
 
-    const result = await dispatch(getFormDetails(id));
-    const record = result && result.data;
-    if (record) {
-      this.setState({
-        longname: record.long_name || '',
-        shortname: record.short_name || '',
-        originalShortname: record.short_name || '',
-        description: record.description || '',
-        version: record.version || '',
-        daac_only: record.daac_only || false,
-        originalVersion: record.version || ''
-      });
+    if (id) {
+      const result = await dispatch(getFormDetails(id));
+      const record = result && result.data;
+      if (record) {
+        this.setState({
+          longname: record.long_name || '',
+          shortname: record.short_name || '',
+          originalShortname: record.short_name || '',
+          description: record.description || '',
+          version: record.version || '',
+          daac_only: record.daac_only || false,
+          originalVersion: record.version || ''
+        });
+      }
     }
   }
 
   render() {
     const { id } = this.props.match.params;
-    const { longname, shortname, originalShortname, description, version, daac_only, originalVersion, errors } = this.state;
+    const { longname, shortname, description, version, daac_only, errors } = this.state;
+    const { canCreate, canEdit } = formPrivileges(this.props.privileges);
+
+    const hasPrivilege = id ? canEdit : canCreate;
+
+    if (!hasPrivilege) {
+      return (
+        <div className="unauthorized">
+          <h1>Unauthorized</h1>
+          <p>You do not have the required privileges to {id ? 'edit this form' : 'create a new form'}.</p>
+        </div>
+      );
+    }
 
     const breadcrumbConfig = [
       {
@@ -187,25 +200,26 @@ class EditForm extends React.Component {
                   className={errors.daac_only ? 'input-error-form' : ''}
                 />
               </div>
-
             </section>
-            <section className='page__section'>
-              <Link
-                className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
-                to={'/forms'}
-                id='cancelButton'
-                aria-label="cancel form editing"
-              >
-                Cancel
-              </Link>
-              <button
-                className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
-                onClick={this.handleSubmit}
-                aria-label="submit your form"
-              >
-                Submit
-              </button>
-            </section>
+            {hasPrivilege && (
+              <section className='page__section'>
+                <Link
+                  className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
+                  to={'/forms'}
+                  id='cancelButton'
+                  aria-label="cancel form editing"
+                >
+                  Cancel
+                </Link>
+                <button
+                  className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
+                  onClick={this.handleSubmit}
+                  aria-label="submit your form"
+                >
+                  Submit
+                </button>
+              </section>
+            )}      
           </div>
         </div>
       </div>
@@ -214,11 +228,13 @@ class EditForm extends React.Component {
 }
 
 EditForm.propTypes = {
+  privileges: PropTypes.object,
   match: PropTypes.object,
   forms: PropTypes.object,
   dispatch: PropTypes.func
 };
 
 export default withRouter(connect(state => ({
-  forms: state.forms
+  forms: state.forms,
+  privileges: state.api.tokens.privileges
 }))(EditForm));
