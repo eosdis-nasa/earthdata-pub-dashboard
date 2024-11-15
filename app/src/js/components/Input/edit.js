@@ -258,6 +258,7 @@ class Questions extends React.Component {
                 name="required"
                 checked={data.required}
                 onChange={this.handleInputChange}
+                style ={{"marginLeft": "5px", "cursor":"pointer"}}
               />
             </label>
           </div>
