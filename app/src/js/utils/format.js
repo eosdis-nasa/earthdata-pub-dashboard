@@ -127,7 +127,7 @@ export const questionLink = function (questionId, questionName) {
 };
 export const inputLink = function (questionId, controlId) {
   if (!questionId) return nullValue;
-  return <Link to={{ pathname: `/inputs/edit/${questionId}/${controlId}` }} aria-label="View your input details">{questionId}</Link>;
+  return <Link to={{ pathname: `/inputs/edit/${questionId}/${controlId}` }} aria-label="View your input details">{controlId}</Link>;
 };
 export const groupLink = function (groupId) {
   if (!groupId) return nullValue;

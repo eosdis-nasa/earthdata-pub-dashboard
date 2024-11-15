@@ -6,17 +6,17 @@ import { Link } from 'react-router-dom';
 
 export const tableColumns = [
   {
-    Header: 'Question ID',
-    accessor: (row) => row.question_id,
-    Cell: row => inputLink(row.row.original.question_id, row.row.original.control_id),
-    id: 'question_id',
-    width: 100
-  },
-  {
     Header: 'Control Id',
     accessor: row => row.control_id,
     id: 'control_id',
+    Cell: row => inputLink(row.row.original.question_id, row.row.original.control_id),
     width: 170
+  },
+  {
+    Header: 'Question ID',
+    accessor: (row) => row.question_id,
+    id: 'question_id',
+    width: 100
   },
   {
     Header: 'Label',
@@ -24,19 +24,19 @@ export const tableColumns = [
     id: 'label',
     width: 70
   },
-  
   {
     Header: 'Enums',
-    accessor: row => (
-      Array.isArray(row.enums)
-        ? row.enums.map((enumObj, index) => (
-            <span key={index}>
-              {enumObj.label}
-              {index < row.enums.length - 1 && ', '}
-            </span>
-          ))
-        : null
-    ),
+    accessor: row => {
+      if (Array.isArray(row.enums)) {
+        return row.enums.map((enumItem, index) => (
+          <span key={index}>
+            {typeof enumItem === 'object' ? JSON.stringify(enumItem) : enumItem}
+            {index < row.enums.length - 1 && ', '}
+          </span>
+        ));
+      }
+      return null; // If enums is not an array, display nothing
+    },
     id: 'enums',
     width: 200
   }

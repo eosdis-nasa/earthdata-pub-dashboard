@@ -42,8 +42,6 @@ class InputsOverview extends React.Component {
 
   render () {
     const { questions } = this.props;
-    console.log('data',this.props.questions);
-
     let { list } = questions;
     const { canCreate, canEdit } = formPrivilegesCU(this.props.privileges);
     if ((questions && questions.list.data.constructor.name !== 'Array') || (!canCreate || !canEdit)) {
