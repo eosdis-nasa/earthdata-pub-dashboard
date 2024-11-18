@@ -14,7 +14,18 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
                 <br />
                 <RenderedNoteVisibility note={note} dispatch={dispatch} conversationId={conversationId} privileges={privileges} />
             </div>
-            <div className='flex__item--grow-1-wrap' style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word" }}>{decodeURI(note.text)}</div>
+            <div className='flex__item--grow-1-wrap'>
+                <div style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word" }}>{decodeURI(note.text)}</div>
+                {note.attachments ? <>
+                    <br/>
+                    <label>Attachments:</label>
+                    <div>
+                    {note.attachments.map((attachment) =>
+                        <div><a>{attachment}</a></div>
+                    )}
+                    </div>
+                </> : null }
+            </div>
         </div>
     );
 };
