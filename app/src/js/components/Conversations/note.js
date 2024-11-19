@@ -31,7 +31,7 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
             </div>
             <div className='flex__item--grow-1-wrap'>
                 <div style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word" }}>{decodeURI(note.text)}</div>
-                {note.attachments ? <>
+                {note?.attachments?.length > 0 ? <>
                     <br/>
                     <label>Attachments:</label>
                     <div>

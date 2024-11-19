@@ -28,7 +28,7 @@ export const AddAttachmentButton = ({conversationId, uploadedFilesRef, setUpload
             files: uploadedFiles,
             conversationId
         });
-        setUploadedFiles((currentState) => new Set([...currentState, ...resp.failed]));
+        setUploadedFiles((currentState) => new Set([...currentState, ...resp.success]));
     };
 
     const clickFileTypeInput = () => {
