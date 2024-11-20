@@ -14,12 +14,6 @@ export const handleUpload = async ({ files, categoryType, groupId, conversationI
       return new Promise((resolve, reject) => {
         // Update progress function
         const updateProgress = (progress, fileObj) => {
-        //   this.setState((prevState) => ({
-        //     uploadProgress: {
-        //       ...prevState.uploadProgress,
-        //       [fileObj.name]: Math.min(progress, 100),
-        //     }
-        //   }));
         };
 
         let payload = {
@@ -29,33 +23,12 @@ export const handleUpload = async ({ files, categoryType, groupId, conversationI
           endpointParams: { conversation_id: conversationId }
         };
   
-        // if (requestId) {
-        //     payload = {...payload, ...{
-        //         apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
-        //         submissionId: requestId,
-        //         endpointParams: { file_category: categoryType }
-        //     }}
-        // } else if (groupId) {
-        //   const prefixElement = document.getElementById('prefix');
-        //   const prefix = prefixElement ? prefixElement.value : '';
-        //     payload = {...payload, ...{
-        //         apiEndpoint: `${apiRoot}data/upload/getGroupUploadUrl`,
-        //         endpointParams: {prefix, groupId}
-        //     }}
-        // }
-  
         const upload = new localUpload();
         upload.uploadFile(payload, updateProgress)
           .then((resp) => {
             const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
             if (error) {
               console.error(`Error uploading file ${file.name}: ${error}`);
-            //   this.setState((prevState) => ({
-            //     uploadProgress: {
-            //       ...prevState.uploadProgress,
-            //       [file.name]: 'Failed',
-            //     }
-            //   }));
               reject(file.name);
             } else {
               resolve(file.name);
