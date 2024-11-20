@@ -50,7 +50,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const uploadedFilesRef = useRef();
 
   const handleVisibilityReset = () => {
-      visibilityRef?.current?.resetIdMap();
+    visibilityRef?.current?.resetIdMap();
   };
 
   const handleRemoveFile = (fileName) => {
@@ -76,7 +76,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     dispatch(replyConversation(payload));
     textRef.current.value = '';
     handleVisibilityReset();
-
+    setUploadedFiles([]);
   };
 
   const cancelCallback = () => setShowSearch(false);
