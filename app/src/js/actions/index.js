@@ -393,7 +393,7 @@ export const createInput = (payload) => ({
   [CALL_API]: {
     type: types.INPUTS,
     method: 'POST',
-    path: `data/input/create`,
+    path: `data/inputs`,
     json: payload
   }
 });
@@ -402,7 +402,7 @@ export const updateInput = (payload) => ({
   [CALL_API]: {
     type: types.INPUTS,
     method: 'POST',
-    path: `data/input/update`,
+    path: `data/input/${payload.question_id}/${payload.control_id}`,
     json: payload
   }
 });
