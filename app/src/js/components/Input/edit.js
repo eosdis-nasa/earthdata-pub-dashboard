@@ -193,7 +193,18 @@ class Questions extends React.Component {
       { label: 'Inputs', href: '/inputs' },
       { label: inputId ? 'Edit Input' : 'Add Input', active: true },
     ];
-                  
+    
+    const hasPrivilege = inputId ? canEdit : canCreate;
+
+    if (!hasPrivilege) {
+      return (
+        <div className="unauthorized">
+          <h1>Unauthorized</h1>
+          <p>You do not have the required privileges to {inputId ? 'edit this Input' : 'create a new Input'}.</p>
+        </div>
+      );
+    }
+
     return (
       <div className="page__component">
         <section className="page__section page__section__controls">
