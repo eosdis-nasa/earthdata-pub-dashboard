@@ -65,7 +65,7 @@ class EditForm extends React.Component {
       original_version: originalVersion
     };
     if (id) {
-      await dispatch(updateForm(formData));
+      await dispatch(updateForm(formData, id));
     } else {
       await dispatch(addForm(formData));
     }

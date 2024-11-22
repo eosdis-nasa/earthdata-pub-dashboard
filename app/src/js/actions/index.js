@@ -237,11 +237,11 @@ export const addForm = (payload) => ({
   }
 });
 
-export const updateForm = (payload) => ({
+export const updateForm = (payload, key) => ({
   [CALL_API]: {
     type: types.REQUESTS,
     method: 'POST',
-    path: 'data/updateForm',
+    path: `data/form/${key}`,
     body: payload
   }
 });
