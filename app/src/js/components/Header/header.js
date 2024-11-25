@@ -59,14 +59,8 @@ class Header extends React.Component {
     const { authenticated } = this.props.api;
     const { privileges, user, userId } = this.props;
     const activePaths = paths.filter(path => {
-      if (path[2] === 'FORMS') {
-        return privileges.ADMIN;
-      }
-      if (path[2] === 'INPUTS') {
-        return privileges.ADMIN;
-      }
       return (!!privileges[path[2]] || privileges.ADMIN) || path[2].match(/CONVERSATION/g);
-    });  
+    });
     return (
       <div className='header' aria-label="Header">
         <div className='row'>
