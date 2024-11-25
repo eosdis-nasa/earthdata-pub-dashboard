@@ -15,9 +15,7 @@ const paths = [
   ['Users', '/users', 'USER'],
   ['Groups', '/groups', 'GROUP'],
   ['Roles', '/roles', 'ROLE'],
-  ['Conversations', '/conversations', 'CONVERSATION'],
-  ['Inputs', '/inputs', 'INPUTS'],
-  ['Forms', '/forms', 'FORMS']
+  ['Conversations', '/conversations', 'CONVERSATION']
 ];
 
 class Header extends React.Component {
