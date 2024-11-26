@@ -24,10 +24,18 @@ class Steps extends React.Component {
     };
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { dispatch } = this.props;
     const { stepId } = this.props.match.params;
-    stepId ? dispatch(getStep(stepId)) : null;
+    if (stepId) {
+      const { data } = await dispatch(getStep(stepId));
+      this.setState({
+        stepName: data.step_name,
+        stepStatusLabel: data.step_status_label || '',
+        stepType: data.type,
+        typeID: data.action_id || data.service_id || data.form_id || ''
+      });
+    }
   }
 
   render () {
@@ -64,10 +72,6 @@ class Steps extends React.Component {
       }, '500');
     }
 
-    const handleCancel = async () => {
-
-    }
-
     return (
             <div className='page__component'>
                 <section className='page__section page__section__controls'>
@@ -75,7 +79,7 @@ class Steps extends React.Component {
                 </section>
                 <div className='heading__wrapper--border'>
                   <h1 className='heading--large heading--shared-content with-description'>
-                      {record.data ? (record.data.long_name ? record.data.long_name : 'Add Step') : '...'}
+                      {record.data ? (record.data.step_id ? 'Edit Step' : 'Add Step') : '...'}
                   </h1>
                 </div>
                 <section className='page__section page__section__controls step-section'>
@@ -102,9 +106,10 @@ class Steps extends React.Component {
                       options={stepTypeEnum.map((type) => ({value: type, label: type}))}
                       onChange={e => {this.setState({stepType: e.value})}}
                       isSearchable={true}
-                      placeholder='Select Step Type'
+                      placeholder={this.state.stepType || 'Select Step Type'}
                       className='selectButton stepTypeSelect'
                       aria-label='select-step-type-dropdown'
+                      value={this.state.stepType}
                     />
                   </div>
                   {['action', 'form', 'service'].includes(this.state.stepType) ?

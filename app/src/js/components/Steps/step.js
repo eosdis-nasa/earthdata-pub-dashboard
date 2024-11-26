@@ -71,7 +71,7 @@ class StepOverview extends React.Component {
           { record.error
             ? <ErrorReport report={record.error} />
             : record.data
-              ? console.log(record) && <Step
+              ? <Step
                 step_id={record.data.step_id}
                 step_name={record.data.step_name}
                 step_status_label={record.data.step_status_label}

@@ -1142,7 +1142,7 @@ export const getStep = (stepId) => ({
     type: types.STEP,
     method: 'GET',
     id: stepId,
-    path: `data/step/${stepId}`
+    path: `data/steps/${stepId}`
   }
 });
 
@@ -1164,7 +1164,7 @@ export const updateStep = (payload) => ({
   [CALL_API]: {
     type: types.STEP,
     method: 'POST',
-    path: `data/step/${payload.id}`,
+    path: `data/steps/${payload.id}`,
     json: payload
   }
 });
