@@ -21,6 +21,7 @@ import Requests from './components/Requests';
 import Users from './components/Users';
 import Groups from './components/Groups';
 import Forms from './components/Forms';
+import Input  from './components/Input';
 import Sections from './components/Sections';
 import Questions from './components/Questions';
 import Workflows from './components/Workflows';
@@ -56,6 +57,7 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/404', component: NotFound },
     { path: '/requests', component: Requests },
     { path: '/forms', component: Forms },
+    { path: '/inputs', component: Input },
     { path: '/sections', component: Sections },
     { path: '/daac/selection', component: FormRequest },
     { path: '/form/questions/:id', component: FormQuestions },

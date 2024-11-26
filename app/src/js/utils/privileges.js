@@ -157,6 +157,7 @@ export const requestCanReview = (privileges, stepName) => {
 export const formPrivileges = (privileges) => {
   if (privileges.ADMIN) {
     return {
+      canCreate: true,
       canEdit: true,
       canRead: true
     };
@@ -169,6 +170,7 @@ export const formPrivileges = (privileges) => {
     };
   }
   return {
+    canCreate: false,
     canEdit: false,
     canRead: false
   };
