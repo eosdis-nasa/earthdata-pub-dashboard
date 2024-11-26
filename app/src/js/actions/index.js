@@ -1231,7 +1231,7 @@ export const updateStep = (payload) => ({
   [CALL_API]: {
     type: types.STEP,
     method: 'POST',
-    path: `data/steps/${payload.id}`,
+    path: `data/steps/${payload.step_id}`,
     json: payload
   }
 });
