@@ -4,7 +4,7 @@ import { Button, Form, Container, Row, Col, FormGroup, FormControl, Alert, Spinn
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRedo, faUndo, faPlus, faTrashAlt, faArrowUp, faArrowDown, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { faRedo, faUndo, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 import './FormQuestions.css';
 import DynamicTable from './DynamicTable';
@@ -44,14 +44,15 @@ const FormQuestions = ({
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadStatusMsg, setUploadStatusMsg] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState({});
-  const [fakeTable, setFakeTable] = useState([{}]);
   const [validationAttempted, setValidationAttempted] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [uploadFileName, setUploadFileName] = useState('');
   const [uploadFileFlag, setUploadFileFlag] = useState(false);
   const [uploadFailed, setUploadFailed] = useState(false);
-     
+  const [uploadFiles, setUploadFiles] = useState([]);
+  const [fileControlId, setfileControlId] = useState('');
+
   const [uploadFields, setUploadFields] = useState([
     {
       key: 'file_name',
@@ -128,7 +129,6 @@ const FormQuestions = ({
 
         const files = resp.data;
 
-        // Sort files by lastModified date, most recent first
         files.sort((a, b) => {
           const keyA = new Date(a.lastModified);
           const keyB = new Date(b.lastModified);
@@ -470,7 +470,7 @@ const FormQuestions = ({
   const progressBarStyle = {
     width: '100%',
     backgroundColor: uploadFailed ? '#db1400' : 'white',
-    height: '30px', // Set the height of the progress bar
+    height: '30px',
     marginBottom: '5px'
   };
 
@@ -733,7 +733,7 @@ const FormQuestions = ({
 
       const keys = Object.keys(obj);
       if (keys.length < 2) {
-        return true; // keep the object if it has less than 2 keys
+        return true;
       }
 
       const firstKey = keys[0];
@@ -871,11 +871,13 @@ const FormQuestions = ({
 
   const undoToPreviousState = () => {
     if (valueHistoryUndoIdx > 0) {
-      setValueHistoryUndoIdx(valueHistoryUndoIdx - 1);
-      setValues((prevValues) => ({
-        ...valueHistory[valueHistoryUndoIdx - 1],
-        validation_errors: valueHistory[valueHistoryUndoIdx - 1].validation_errors || {},
-      }));
+      const previousState = valueHistory[valueHistoryUndoIdx - 1]; 
+        setValueHistoryUndoIdx(valueHistoryUndoIdx - 1);
+        setValues((prevValues) => ({
+            ...prevValues, 
+            ...previousState, 
+            validation_errors: previousState.validation_errors || {}, 
+        }));
     }
     logAction('Undo');
   };
@@ -991,14 +993,22 @@ const FormQuestions = ({
     return valid;
   };
 
-  const handleFileDrop = (e) => {
+  const handleFileDrop = (e, id) => {
+    setfileControlId(id);
     e.preventDefault();
     e.stopPropagation();
 
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      setUploadFile(file);
-      setUploadStatusMsg(`Selected file: ${file.name}`);
+    const files = e.dataTransfer.files;
+    if (files.length) {
+      if(fileControlId === id){
+        setUploadFiles([...uploadFiles, ...Array.from(files)]); 
+      }else{
+        setUploadFiles(Array.from(files)); 
+      }
+      setUploadFile(files);
+      setUploadStatusMsg(`${files.length} file(s) selected`);
+    } else {
+      setUploadStatusMsg('No files selected');
     }
   };
 
@@ -1017,31 +1027,27 @@ const FormQuestions = ({
     e.stopPropagation();
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setUploadFile(file);
-      setUploadStatusMsg(`Selected file: ${file.name}`);
+  const handleFileChange = (event, id) => {
+    setfileControlId(id);
+    const files = event.target.files;
+    if (files.length) {
+      if(fileControlId === id){
+        setUploadFiles([...uploadFiles, ...Array.from(files)]);
+      }else{
+        setUploadFiles(Array.from(files)); 
+      }
+      setUploadFile(files);
+      setUploadStatusMsg(`${files.length} file(s) selected`);
     } else {
-      setUploadStatusMsg('No file selected');
+      setUploadStatusMsg('No files selected');
     }
   };
 
-  // const refreshAuth = async () => {
-  //   const options = {
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem('auth-token')}`,
-  //     },
-  //   };
-  //   await fetch(`${apiRoot}token/refresh`, options)
-  //     .then((r) => r.json())
-  //     .then(({ token }) => {
-  //       localStorage.setItem('auth-token', token);
-  //       dispatch(setTokenState(token));
-  //     });
-  // };
-
   const { apiRoot } = _config;
+  const [uploadResults, setUploadResults] = useState({ success: [], failed: [] });
+  const [showUploadSummaryModal, setShowUploadSummaryModal] = useState(false);
+  const [progressBarsVisible, setProgressBarsVisible] = useState(false); 
+  const [uploadProgress, setUploadProgress] = useState({});
 
   const category_map = {
     "data_product_documentation": "documentation",
@@ -1051,65 +1057,78 @@ const FormQuestions = ({
   const handleUpload = async (control_id) => {
     setUploadStatusMsg('Uploading...');
     setShowProgressBar(true);
-    setProgressValue(0);
+    setProgressBarsVisible(true);
+    const successFiles = [];
+    const failedFiles = [];
 
-    const updateProgress = (progress, fileObj) => {
-      setProgressValue(Math.min(progress, 100));
-      setUploadFileName(fileObj ? fileObj.name : '');
-    };
-
-    let alertMsg = '';
-    let statusMsg = '';
-    if (validateFile(uploadFile)) {
-      const upload = new localUpload();
-      const requestId = daacInfo.id;
-
-      let uploadCategory = typeof category_map[control_id] !== 'undefined' ? category_map[control_id] : "";
-      try {
-        //await refreshAuth(); // Function to refresh authentication token if needed
-
-        let payload = {
-          fileObj: uploadFile,
+    const uploadFileAsync = async (file) => {
+      return new Promise((resolve, reject) => {
+        const updateProgress = (progress, fileObj) => {
+          setUploadProgress((prev) => ({
+            ...prev,
+            [fileObj.name]: Math.min(progress, 100),
+          }));
+        };
+        let uploadCategory = typeof category_map[control_id] !== 'undefined' ? category_map[control_id] : "";
+        const payload = {
+          fileObj: file,
           authToken: localStorage.getItem('auth-token'),
+          apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
+          submissionId: daacInfo.id, 
           endpointParams: {
             file_category: uploadCategory
           }
         };
 
-        if (requestId) {
-          payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
-          payload['submissionId'] = requestId;
-        }
+        const upload = new localUpload();
+        upload.uploadFile(payload, updateProgress).then((resp) => {
+          const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
+          if (error) {
+            console.error(`Error uploading file ${file.name}: ${error}`);
+            setUploadProgress((prev) => ({
+              ...prev,
+              [file.name]: 'Failed',
+            }));
+            reject(file.name);
+          } else {
+            resolve(file.name);
+          }
+        }).catch((err) => {
+          console.error(`Error uploading file ${file.name}: ${err}`);
+          reject(file.name);
+        });
+      });
+    };
 
-        setUploadFile(null);
-        const resp = await upload.uploadFile(payload, updateProgress);
-        const error =
-          resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
-
-        if (error) {
-          alertMsg = `An error has occurred on uploadFile: ${error}.`;
-          statusMsg = 'Select a file';
-          console.error(alertMsg);
-          resetUploads(alertMsg, statusMsg);
-          setUploadFailed(true);
-        } else {
-          alertMsg = '';
-          statusMsg = 'Upload Complete';
-          setUploadFileFlag(true);
-          resetUploads(alertMsg, statusMsg);
-          setUploadFileName('');
-          setProgressValue(0);
-          setShowProgressBar(false);
-          //updateUploadStatusWithTimeout('Select another file', 1000);
-        }
-      } catch (error) {
-        console.error(`try catch error: ${error.stack}`);
-        alertMsg = 'An error has occurred during the upload.';
-        statusMsg = 'Select a file';
-        resetUploads(alertMsg, statusMsg);
+    const uploadPromises = uploadFiles.map((file) => {
+      if (validateFile(file)) { 
+        return uploadFileAsync(file)
+          .then((fileName) => successFiles.push(fileName))
+          .catch((fileName) => failedFiles.push(fileName));
+      } else {
+        failedFiles.push(file.name); 
+        return Promise.resolve(); 
       }
-    }
+    });    
+
+    await Promise.all(uploadPromises);
+
+    setUploadResults({ success: successFiles, failed: failedFiles });
+    setUploadStatusMsg('Upload Complete');
+    setShowProgressBar(false);
+    setProgressBarsVisible(false);
+    setUploadProgress({});
+    setUploadFileFlag(true);
+    setShowUploadSummaryModal(true);
+    setUploadFiles([]); 
+    setUploadStatusMsg('No files selected');
   };
+
+  const toggleProgressBars = () => {
+    setProgressBarsVisible(!progressBarsVisible);
+  };
+
+  const handleCloseUploadSummaryModal = () => setShowUploadSummaryModal(false);
 
   const handleCloseModal = () => setShowModal(false);
 
@@ -1457,7 +1476,6 @@ const FormQuestions = ({
                                     type="checkbox"
                                     name="sameAsPrimaryLongTermSupport"
                                     checked={checkboxStatus.sameAsPrimaryLongTermSupport}
-                                    //disabled ={checkboxStatus.sameAsPrimaryDataAccession}
                                     onChange={handleCheckboxChange}
                                   />
                                   <span className="checkmark"></span>
@@ -1469,7 +1487,6 @@ const FormQuestions = ({
                                     name="sameAsPrimaryDataAccession"
                                     checked={checkboxStatus.sameAsPrimaryDataAccession}
                                     onChange={handleCheckboxChange}
-                                    // disabled ={checkboxStatus.sameAsPrimaryLongTermSupport}
                                   />
                                   <span className="checkmark"></span>
                                 </label>
@@ -2194,44 +2211,72 @@ const FormQuestions = ({
                                         </div>
                                         <div
                                           className="mt-3"
+                                          controlId={input.control_id}
                                           style={{ display: input.type === 'file' ? 'block' : 'none' }}
                                           onDragOver={handleDragOver}
                                           onDragEnter={handleDragEnter}
                                           onDragLeave={handleDragLeave}
-                                          onDrop={handleFileDrop}
+                                          onDrop={(e) => handleFileDrop(e, input.control_id)}
                                           onClick={() =>
-                                            document.getElementById('file-upload-input').click()
+                                            document.getElementById(`${input.control_id}_file-upload-input`).click()
                                           }
                                         >
-                                          <input
-                                            type="file"
-                                            id="file-upload-input"
-                                            className="upload-input"
-                                            onChange={handleFileChange}
-                                          />
                                           <div className="upload-container">
-                                            <p>Drag & drop a file here, or click to select a file</p>
+                                            <p>Drag & drop files here, or click to select files</p>
+                                            <input type="file" id={`${input.control_id}_file-upload-input`} className="upload-input"  onChange={(e) => handleFileChange(e, input.control_id)} multiple />
+                                            {uploadFiles.length > 0 && `${fileControlId}_file-upload-input` === `${input.control_id}_file-upload-input` && (
+                                              <p>
+                                                <strong>{uploadFiles.length} file(s) selected. Click on upload</strong>
+                                              </p>
+                                            )}                                            
                                           </div>
-                                          <p className="upload-status">{uploadStatusMsg}</p>
-                                          {showProgressBar && progressValue > 0 && 
-                                            <div style={progressBarStyle}>
-                                              <div style={progressBarFillStyle}>
-                                                <span style={numberDisplayStyle}>{false ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={''}></span></span>: `${progressValue}%`}</span>
-                                              </div>
-                                            </div>
-                                          }
+                                         
                                         </div>
                                           
-                                        <Button
-                                          style={{
+                                        <div  style={{
                                             display: input.type === 'file' ? 'block' : 'none',
-                                          }}
-                                          className="upload-button mt-2"
-                                          onClick={(e) => handleUpload(input.control_id)}
-                                          disabled={!uploadFile}
-                                        >
+                                          }}>
+                                          <Button
+                                            className="upload-button mt-2"
+                                            onClick={(e) => handleUpload(input.control_id)}
+                                            disabled={uploadFiles.length === 0 || showProgressBar || `${fileControlId}_file-upload-input` !== `${input.control_id}_file-upload-input`}
+                                          >
                                           Upload
-                                        </Button>
+                                          </Button>
+                                          {showProgressBar && 
+                                          <span className="d-flex align-items-center">
+                                            <FontAwesomeIcon
+                                              icon={progressBarsVisible ? faEyeSlash : faEye}
+                                              style={{ cursor: 'pointer', marginLeft: '10px', fontSize: '20px' }}
+                                              className="ml-2"
+                                              onClick={toggleProgressBars}
+                                              title={progressBarsVisible ? 'Hide Upload Progress' : 'Show Upload Progress'}
+                                            />
+                                          </span>}
+
+                                          {progressBarsVisible && uploadFiles.length > 0 && `${fileControlId}_file-upload-input` === `${input.control_id}_file-upload-input` && (
+                                            <div>
+                                              {uploadFiles.map((file, index) => (
+                                                <div key={index}>
+                                                  <p>{file.name}</p>
+                                                  <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
+                                                    <div style={{
+                                                      width: `${uploadProgress[file.name] || 0}%`,
+                                                      backgroundColor: '#2275aa',
+                                                      height: '100%',
+                                                      textAlign: 'center',
+                                                      lineHeight: '30px',
+                                                      color: 'white',
+                                                    }}>
+                                                      {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '0%'}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              ))}
+                                            </div>
+                                          )}
+                                        </div>
+                                        
                                         <div
                                           style={{
                                             display: input.type === 'file' ? 'block' : 'none',
@@ -2307,6 +2352,39 @@ const FormQuestions = ({
         </Container>
       </Form>
       <ScrollToTop />
+      <Modal show={showUploadSummaryModal} onHide={handleCloseUploadSummaryModal} className="custom-modal">
+        <Modal.Header closeButton>
+          <Modal.Title>Upload Summary</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h5>Successful Uploads</h5>
+          {uploadResults.success.length > 0 ? (
+            <ul>
+              {uploadResults.success.map((fileName, index) => (
+                <li key={index}>{fileName}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No files were uploaded successfully.</p>
+          )}
+
+          <h5>Failed Uploads</h5>
+          {uploadResults.failed.length > 0 ? (
+            <ul>
+              {uploadResults.failed.map((fileName, index) => (
+                <li key={index}>{fileName}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No files failed to upload.</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleCloseUploadSummaryModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Modal show={showModal} onHide={handleCloseModal} className="custom-modal">
         <Modal.Header closeButton>
           <Modal.Title>Save As Draft Confirmation</Modal.Title>

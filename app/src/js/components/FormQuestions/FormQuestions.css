@@ -808,6 +808,10 @@
   color: #fff;
 }
 
+.upload-button-category{
+  margin-top: 10px;
+}
+
 .questions-component .upload-container {
   border: 2px dashed #ccc;
   padding: 20px;
@@ -834,6 +838,7 @@
   padding: 10px 20px;
   border-radius: 4px;
   font-size: 16px;
+  margin-top: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -1020,4 +1025,14 @@
 .form-control:disabled, .form-control[readonly] {
   background-color: #e9ecef;
   opacity: 1;
+}
+
+
+/* new form validation error*/
+.input-error-form {
+  border: 1px solid red;
+}
+
+.input-error-form::placeholder {
+  color: red;
 }

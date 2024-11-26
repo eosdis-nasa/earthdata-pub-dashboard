@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import FormsOverview from './overview';
 import FormOverview from './form';
 import { strings } from '../locale';
+import EditForms from './edit';
 
 class Forms extends React.Component {
   constructor () {
@@ -15,7 +16,7 @@ class Forms extends React.Component {
 
   render () {
     const { pathname } = this.props.location;
-    const showSidebar = pathname !== '/forms/add';
+    const showSidebar = pathname !== '/formss/add';
     return (
       <div className='page__forms'>
         <div className='content__header'>
@@ -35,6 +36,8 @@ class Forms extends React.Component {
               <Switch>
                 <Route exact path='/forms' component={FormsOverview} />
                 <Route path='/forms/id/:formId' component={FormOverview} />
+                <Route path='/forms/add' component={EditForms} />
+                <Route path='/forms/edit/:id' component={EditForms} />
               </Switch>
             </div>
           </div>

@@ -220,6 +220,32 @@ export const listRequests = (options) => ({
   }
 });
 
+export const getFormDetails = (key) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'GET',
+    path: `data/form/${key}`
+  }
+});
+
+export const addForm = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: 'data/forms',
+    body: payload
+  }
+});
+
+export const updateForm = (payload, key) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'POST',
+    path: `data/form/${key}`,
+    body: payload
+  }
+});
+
 export const saveForm = (payload) => ({
   [CALL_API]: {
     type: types.REQUESTS,
@@ -341,7 +367,7 @@ export const listQuestions = (options) => {
 
 export const updateQuestion = (payload) => ({
   [CALL_API]: {
-    type: types.QUESTIONS,
+    type: types.QUESTION,
     method: 'POST',
     path: `data/question/${payload.id}`,
     json: payload
@@ -350,7 +376,7 @@ export const updateQuestion = (payload) => ({
 
 export const addQuestion = (payload) => ({
   [CALL_API]: {
-    type: types.QUESTIONS,
+    type: types.QUESTION,
     method: 'POST',
     path: 'data/questions',
     json: payload
@@ -362,6 +388,47 @@ export const updateInputs = (questionId, payload) => ({
     type: types.INPUTS,
     method: 'POST',
     path: `data/question/${questionId}/inputs`,
+    json: payload
+  }
+});
+
+export const listInputs = (options) => {
+  return (dispatch, getState) => {
+    return dispatch({
+      [CALL_API]: {
+        type: types.QUESTIONS,
+        method: 'GET',
+        id: null,
+        url: new URL('data/inputs/', root).href,
+        qs: Object.assign({ per_page: defaultPageLimit }, options)
+      }
+    });
+  };
+};
+
+export const getInput = (questionId, controlId) => ({
+  [CALL_API]: {
+    type: types.QUESTION,
+    method: 'GET',
+    id: questionId,
+    path: `data/input/${questionId}/${controlId}`
+  }
+});
+
+export const createInput = (payload) => ({
+  [CALL_API]: {
+    type: types.INPUTS,
+    method: 'POST',
+    path: `data/inputs`,
+    json: payload
+  }
+});
+
+export const updateInput = (payload) => ({
+  [CALL_API]: {
+    type: types.INPUTS,
+    method: 'POST',
+    path: `data/input/${payload.question_id}/${payload.control_id}`,
     json: payload
   }
 });
