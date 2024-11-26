@@ -292,6 +292,9 @@ export const CLEAR_FORMS_SEARCH = 'CLEAR_FORMS_SEARCH';
 export const FILTER_FORMS = 'FILTER_FORMS';
 export const CLEAR_FORMS_FILTER = 'CLEAR_FORMS_FILTER';
 
+// Sections
+export const SECTION = 'SECTION';
+
 // Questions
 export const QUESTION = 'QUESTION';
 export const QUESTION_INFLIGHT = 'QUESTION_INFLIGHT';
