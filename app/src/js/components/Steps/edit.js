@@ -65,9 +65,11 @@ class Steps extends React.Component {
         step_status_label: this.state.stepStatusLabel,
         type: this.state.stepType
       };
-      if (stepId) payload.step_id = stepId;
       Array('action', 'form', 'service').includes(this.state.stepType) ? payload[`${this.state.stepType}_id`] = this.state.typeID : null;
-      dispatch(addStep(payload));
+      if (stepId) {
+        payload.step_id = stepId;
+        dispatch(updateStep(payload));
+      } else { dispatch(addStep(payload)); }
       setTimeout(() => {
         history.push('/steps');
       }, '500');
