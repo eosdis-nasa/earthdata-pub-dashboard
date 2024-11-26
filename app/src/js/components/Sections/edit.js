@@ -98,7 +98,7 @@ class Sections extends Component {
       if (!formId.trim() || !heading.trim() || !listOrder.trim() || isNaN(listOrder)) {
         this.setState({
           alertVariant: 'danger',
-          alertMessage: 'All fields are required, and List Order must be an integer.',
+          alertMessage: 'Form ID, Heading and List Order(must be an integer) are required.',
         });
         return false;
       }
@@ -273,13 +273,15 @@ class Sections extends Component {
                   >
                   Cancel
                 </Link>
-                { canCreate || canEdit && <button
-                  className="button button--submit"
-                  onClick={this.handleSubmit}
-                  aria-label="Submit Section"
-                >
-                  Submit
-                </button>}
+                {(canCreate || canEdit) && (
+                  <button
+                    className="button button--submit"
+                    onClick={this.handleSubmit}
+                    aria-label="Submit Section"
+                  >
+                    Submit
+                  </button>
+                )}
               </section>
             </div>
           )}
