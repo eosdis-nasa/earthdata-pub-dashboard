@@ -169,7 +169,7 @@ class Sections extends Component {
     const breadcrumbConfig = [
       { label: 'Dashboard Home', href: '/' },
       { label: 'Sections', href: '/sections' },
-      { label: this.props.match.params.id ? 'Edit Section' : 'Add Section', active: true },
+      { label: this.props.match.params.id ? this.props.match.params.id : 'Add Section', active: true },
     ];
 
     const { canCreate, canEdit } = formPrivileges(this.props.privileges);
