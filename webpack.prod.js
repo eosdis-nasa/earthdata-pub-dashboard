@@ -16,8 +16,7 @@ const MainConfig = merge.smartStrategy({
   output: {
     filename: '[name].[contenthash].bundle.js',
     chunkFilename: '[name].[contenthash].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath : '/'  // Ensure this path is correct based on where you will serve your assets in production
+    path: path.resolve(__dirname, 'dist')
   },
   optimization: {
     nodeEnv: 'production',
