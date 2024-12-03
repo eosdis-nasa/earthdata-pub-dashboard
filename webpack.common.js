@@ -116,16 +116,6 @@ const CommonConfig = {
         }
       },
       {
-        test: /\.(jpe?g|png|gif|ico|svg)(\?[a-z0-9=.]+)?$/, // images/graphics
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: '[path][name].[hash].[ext]',
-            outputPath: 'images/'
-          }
-        }
-      },
-      {
         test: /font-awesome\.config\.js/,
         use: [
           {

@@ -1,8 +1,7 @@
 const path = require('path');
-const webpack = require('webpack');
-const merge = require('webpack-merge');
+const  merge = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const TerserJsPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin'); // Corrected name for webpack 5
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const pkg = require('./package.json');
 
@@ -24,11 +23,20 @@ const MainConfig = merge.smartStrategy({
     concatenateModules: true,
     chunkIds: 'deterministic',
     minimizer: [
-      new TerserJsPlugin({ // These properties are valid: object { test?, include?, exclude?, terserOptions?, extractComments?, parallel?, minify? }
-        // cache: true,
+      new TerserPlugin({ // Use the correct plugin name
         parallel: true,
-        // sourceMap: true,
-        include: /\.js$/
+        include: /\.js$/,
+        terserOptions: {
+          compress: {
+            comparisons: false,
+            drop_console: true, // Optionally remove console logs
+          },
+          mangle: true,
+          output: {
+            comments: false, // Remove comments
+          },
+        },
+        extractComments: false,
       }),
     ],
     splitChunks: {
@@ -37,7 +45,7 @@ const MainConfig = merge.smartStrategy({
           name: 'vendor',
           test: /[\\/]node_modules[\\/]/,
           chunks: 'all',
-          maxSize: 500000
+          maxSize: 500000 // Ensures splitting for large bundles
         },
         styles: {
           name: 'styles',
@@ -46,19 +54,22 @@ const MainConfig = merge.smartStrategy({
         }
       }
     },
-    runtimeChunk: true,
-    sideEffects: true
+    runtimeChunk: 'single', // Optimizes the runtime build to a single chunk
+    sideEffects: true // Enables tree shaking
   },
   module: {
     rules: [
       {
         test: /\.(css|scss)$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource', // Proper handling of static assets
       }
     ]
   },
   plugins: [
-    // new webpack.HashedModuleIdsPlugin(),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash:8]-' + pkg.version + '.css',
