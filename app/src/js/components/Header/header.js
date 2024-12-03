@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { logout, getApiVersion } from '../../actions';
 import { nav, overviewUrl, helpPageDefault} from '../../config';
 import mainLogo from '../../../assets/images/nasa-logo.svg';
+import mainLogo2 from '../../../assets/images/nasa-logo.png';
 
 const paths = [
   ['Requests', '/requests', 'REQUEST'],
