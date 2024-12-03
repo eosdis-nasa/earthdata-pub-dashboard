@@ -56,16 +56,11 @@ const MainConfig = merge.smartStrategy({
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
-        test: /\.png$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              outputPath: 'images/', // Defines the path for output images
-              name: '[name].[ext]',  // Maintains the original file name
-            }
-          }
-        ]
+        test: /\.png$/, // Regex for .png files
+        type: 'asset/resource', // Asset module type for files
+        generator: {
+          filename: 'images/[hash][ext][query]' // Output path for images
+        }
       }
     ]
   },
