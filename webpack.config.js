@@ -54,6 +54,18 @@ const MainConfig = merge.smartStrategy({
       {
         test: /\.(css|scss)$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.png$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'images/', // Defines the path for output images
+              name: '[name].[ext]',  // Maintains the original file name
+            }
+          }
+        ]
       }
     ]
   },
