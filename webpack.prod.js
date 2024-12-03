@@ -16,7 +16,8 @@ const MainConfig = merge.smartStrategy({
   output: {
     filename: '[name].[contenthash].bundle.js',
     chunkFilename: '[name].[contenthash].bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    publicPath :'https://pub.sit.earthdata.nasa.gov/'
   },
   optimization: {
     nodeEnv: 'production',
