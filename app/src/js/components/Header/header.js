@@ -8,6 +8,7 @@ import { logout, getApiVersion } from '../../actions';
 import { nav, overviewUrl, helpPageDefault} from '../../config';
 import mainLogo from '../../../assets/images/nasa-logo.svg';
 import mainLogo2 from '../../../assets/images/nasa-logo.png';
+import mainLogo3 from '../../../assets/images/brand-nasa.svg';
 
 const paths = [
   ['Requests', '/requests', 'REQUEST'],
@@ -67,6 +68,8 @@ class Header extends React.Component {
         <div className='row'>
           <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={mainLogo} /><div>SVG</div></Link></h1>
           <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={mainLogo2} /><div>PNG</div></Link></h1>
+          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={mainLogo3} /><div>SVG 2</div></Link></h1>
+
           <nav role="navigation">
             { !this.props.minimal
               ? <><ul className="default_header">
