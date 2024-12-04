@@ -1204,4 +1204,45 @@ export const verify = (topsToken, token) => ({
   }
 });
 
+export const getStep = (stepId) => ({
+  [CALL_API]: {
+    type: types.STEP,
+    method: 'GET',
+    id: stepId,
+    path: `data/steps/${stepId}`
+  }
+});
+
+export const listSteps = (options) => {
+  return (dispatch, getState) => {
+    return dispatch({
+      [CALL_API]: {
+        type: types.STEPS,
+        method: 'GET',
+        id: null,
+        url: new URL('data/steps', root).href,
+        qs: Object.assign({ per_page: defaultPageLimit }, options)
+      }
+    });
+  };
+};
+
+export const updateStep = (payload) => ({
+  [CALL_API]: {
+    type: types.STEP,
+    method: 'POST',
+    path: `data/steps/${payload.step_id}`,
+    json: payload
+  }
+});
+
+export const addStep = (payload) => ({
+  [CALL_API]: {
+    type: types.STEP,
+    method: 'POST',
+    path: 'data/steps',
+    json: payload
+  }
+});
+
 export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });

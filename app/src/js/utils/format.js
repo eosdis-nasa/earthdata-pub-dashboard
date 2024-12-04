@@ -161,6 +161,10 @@ export const messageLink = function (message) {
   if (!message) return nullValue;
   return <Link to={`/messages/id/${message}`} aria-label="View your message details">{message}</Link>;
 };
+export const stepLink = function (stepId, stepName) {
+  if (!stepId) return nullValue;
+  return <Link to={{ pathname: `/steps/id/${stepId}` }} aria-label="View your step details">{stepName}</Link>;
+};
 export const bool = function (bool) {
   return bool ? 'Yes' : 'No';
 };
