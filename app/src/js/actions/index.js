@@ -691,6 +691,46 @@ export const getForm = (formId, daacId) => ({
   }
 });
 
+export const listSections = (options) => {
+  return (dispatch, getState) => {
+    return dispatch({
+      [CALL_API]: {
+        type: types.SECTION,
+        method: 'GET',
+        id: null,
+        url: new URL('data/sections', root).href,
+        qs: Object.assign({ per_page: defaultPageLimit }, options)
+      }
+    });
+  };
+};
+
+export const getSection = (key) => ({
+  [CALL_API]: {
+    type: types.SECTION,
+    method: 'GET',
+    path: `data/sections/${key}`
+  }
+});
+
+export const addSection = (payload) => ({
+  [CALL_API]: {
+    type: types.SECTION,
+    method: 'POST',
+    path: 'data/sections',
+    body: payload
+  }
+});
+
+export const updateSection = (payload, key) => ({
+  [CALL_API]: {
+    type: types.SECTION,
+    method: 'POST',
+    path: `data/sections/${key}`,
+    body: payload
+  }
+});
+
 export const searchForms = (prefix) => ({ type: types.SEARCH_FORMS, prefix });
 export const clearFormsSearch = () => ({ type: types.CLEAR_FORMS_SEARCH });
 export const filterForms = (param) => ({ type: types.FILTER_FORMS, param });

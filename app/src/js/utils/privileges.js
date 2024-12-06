@@ -163,10 +163,10 @@ export const formPrivileges = (privileges) => {
     };
   } else if (privileges.FORM) {
     return {
-      canCreate: privileges.FORM.includes('CREATE'),
       canRead: !!privileges.FORM.find(a =>
-        a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD'),
-      canEdit: privileges.FORM.includes('UPDATE')
+        a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD' || a === 'FORM_READ'),
+      canEdit: privileges.FORM.includes('UPDATE'),
+      canCreate: privileges.FORM.includes('CREATE'),
     };
   }
   return {
