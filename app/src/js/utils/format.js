@@ -125,6 +125,10 @@ export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;
   return <Link to={{ pathname: `/questions/id/${questionId}` }} aria-label="View your question details">{questionName}</Link>;
 };
+export const inputLink = function (questionId, controlId) {
+  if (!questionId) return nullValue;
+  return <Link to={{ pathname: `/inputs/edit/${questionId}/${controlId}` }} aria-label="View your input details">{controlId}</Link>;
+};
 export const groupLink = function (groupId) {
   if (!groupId) return nullValue;
   return <Link to={`/groups/id/${groupId}`} aria-label="View your group details">{groupId}</Link>;
@@ -156,6 +160,10 @@ export const conversationLink = function (conversationId) {
 export const messageLink = function (message) {
   if (!message) return nullValue;
   return <Link to={`/messages/id/${message}`} aria-label="View your message details">{message}</Link>;
+};
+export const stepLink = function (stepId, stepName) {
+  if (!stepId) return nullValue;
+  return <Link to={{ pathname: `/steps/id/${stepId}` }} aria-label="View your step details">{stepName}</Link>;
 };
 export const bool = function (bool) {
   return bool ? 'Yes' : 'No';

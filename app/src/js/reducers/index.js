@@ -23,6 +23,7 @@ import searchModal from './search-modal';
 import earthdatapubInstance from './earthdatapub-instance';
 import dataUpload from './data-upload';
 import reviewers from './reviewers.js';
+import steps from './steps';
 
 const def = (state = {}, action) => state;
 
@@ -50,7 +51,8 @@ export const reducers = {
   roles,
   conversations,
   searchModal,
-  dataUpload
+  dataUpload,
+  steps
 };
 
 export const createRootReducer = (history) => combineReducers({

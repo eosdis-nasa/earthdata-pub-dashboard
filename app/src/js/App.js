@@ -21,6 +21,7 @@ import Requests from './components/Requests';
 import Users from './components/Users';
 import Groups from './components/Groups';
 import Forms from './components/Forms';
+import Input  from './components/Input';
 import Questions from './components/Questions';
 import Workflows from './components/Workflows';
 import Metrics from './components/Metrics';
@@ -32,6 +33,7 @@ import TestApi from './components/testApi';
 import Upload from './components/DataUpload';
 import FormRequest from './components/FormRequest';
 import FormQuestions from './components/FormQuestions';
+import Steps from './components/Steps';
 import config from './config';
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
 dom.watch();
@@ -55,6 +57,7 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/404', component: NotFound },
     { path: '/requests', component: Requests },
     { path: '/forms', component: Forms },
+    { path: '/inputs', component: Input },
     { path: '/daac/selection', component: FormRequest },
     { path: '/form/questions/:id', component: FormQuestions },
     { path: '/questions', component: Questions },
@@ -68,6 +71,7 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/modules', component: Modules },
     { path: '/upload', component: Upload },
     { path: '/test-api', component: TestApi },
+    { path: '/steps', component: Steps }
   ];
 
   // Find the route that matches the activeRoute

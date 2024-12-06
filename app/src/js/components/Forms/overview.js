@@ -1,14 +1,9 @@
 'use strict';
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import {
-  // getCount,
-  // searchForms,
-  // clearFormsSearch,
-  // filterForms,
-  // clearFormsFilter,
   listForms
 } from '../../actions';
 import { lastUpdated } from '../../utils/format';
@@ -16,6 +11,7 @@ import { tableColumns } from '../../utils/table-config/forms';
 import List from '../Table/Table';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import { formPrivileges } from '../../utils/privileges';
 
 const breadcrumbConfig = [
   {
@@ -28,13 +24,14 @@ const breadcrumbConfig = [
   }
 ];
 
-const FormsOverview = ({ forms }) => {
+const FormsOverview = ({ forms, privileges }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(listForms());
   }, [forms.searchString, dispatch]);
   const { queriedAt } = forms.list.meta;
-  
+  const { canCreate, canRead } = formPrivileges(privileges);
+
   return (
     <div className='page__component'>
       <section className='page__section page__section__controls'>
@@ -49,8 +46,12 @@ const FormsOverview = ({ forms }) => {
       <section className='page__section'>
         <div className='heading__wrapper--border'>
           <h2 className='heading--medium heading--shared-content with-description'>{strings.all_forms} <span className='num--title'>{forms.list.data.length}</span></h2>
+          {canCreate && <Link
+              className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: '/forms/add' }}
+          >Add Form
+          </Link>}
         </div>
-        <List
+        {canRead && <List
           list={forms.list}
           dispatch={dispatch}
           action={listForms}
@@ -60,7 +61,7 @@ const FormsOverview = ({ forms }) => {
           filterIdx='short_name'
           filterPlaceholder='Search Forms'
         >
-        </List>
+        </List>}
       </section>
     </div>
   );
@@ -70,7 +71,8 @@ FormsOverview.propTypes = {
   forms: PropTypes.object,
   stats: PropTypes.object,
   dispatch: PropTypes.func,
-  config: PropTypes.object
+  config: PropTypes.object,
+  privileges: PropTypes.object
 };
 
 export { FormsOverview };
@@ -78,5 +80,6 @@ export { FormsOverview };
 export default withRouter(connect(state => ({
   stats: state.stats,
   forms: state.forms,
-  config: state.config
+  config: state.config,
+  privileges: state.api.tokens.privileges
 }))(FormsOverview));
