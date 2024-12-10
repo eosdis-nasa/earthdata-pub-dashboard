@@ -1106,7 +1106,7 @@ export const replyConversation = (payload) => {
       .then(() => {
         setTimeout(() => {
           dispatch(getConversation(payload.conversation_id));
-        }, 10000);
+        }, 3000);
       });
   };
 };
