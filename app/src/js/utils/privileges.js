@@ -44,7 +44,7 @@ export const userPrivileges = (privileges) => {
       canAddPermission: privileges.USER.includes('ADDPERMISSION'),
       canCreate: privileges.USER.includes('CREATE'),
       canDelete: privileges.USER.includes('DELETE'),
-      canUpdateWorkflow: privileges.USER.includes('WORKFLOW_UPDATE')
+      canUpdateWorkflow: false
     };
   }
   return {
@@ -164,7 +164,7 @@ export const formPrivileges = (privileges) => {
   } else if (privileges.FORM) {
     return {
       canRead: !!privileges.FORM.find(a =>
-        a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD' || a === 'FORM_READ'),
+        a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD'),
       canEdit: privileges.FORM.includes('UPDATE'),
       canCreate: privileges.FORM.includes('CREATE'),
     };
