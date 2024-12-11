@@ -1076,7 +1076,7 @@ export const getNoteById = (noteId) => ({
   }
 });
 
-export const getNoteAll = () => ({
+export const getNoteAll = (options) => ({
   [CALL_API]: {
     type: types.NOTE,
     method: 'GET',
