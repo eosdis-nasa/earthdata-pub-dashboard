@@ -1076,12 +1076,12 @@ export const getNoteById = (noteId) => ({
   }
 });
 
-export const getNoteAll = (options) => ({
+export const getNoteAll = (conversationId) => ({
   [CALL_API]: {
     type: types.NOTE,
     method: 'GET',
-    path: 'data/notes',
-    qs: Object.assign({ per_page: defaultPageLimit }, options)
+    conversation_id: conversationId,
+    path: `data/notes/${conversationId}`
   }
 });
 
