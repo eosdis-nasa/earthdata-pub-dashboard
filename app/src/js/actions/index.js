@@ -1069,7 +1069,7 @@ export const getConversation = (conversationId, level = false) => ({
 
 export const getNoteById = (noteId) => ({
   [CALL_API]: {
-    type: types.CONVERSATION,
+    type: types.NOTE,
     method: 'GET',
     id: noteId,
     path: `data/note/${noteId}`
@@ -1078,7 +1078,7 @@ export const getNoteById = (noteId) => ({
 
 export const getNoteAll = (conversationId) => ({
   [CALL_API]: {
-    type: types.CONVERSATION,
+    type: types.NOTE,
     method: 'GET',
     conversation_id: conversationId,
     path: `data/notes/${conversationId}`
