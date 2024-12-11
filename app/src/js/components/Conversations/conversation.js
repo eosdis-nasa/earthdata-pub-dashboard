@@ -109,26 +109,18 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
         return false;
     });
 
-    // Output mismatched entries
     console.log("Mismatched Entries:", mismatchedEntries);
 
     async function checkAttachments() {
       const intervalId = setInterval(async () => {
-        if (convDetails.data.notes && convDetails.data.notes[0] && convDetails.data.notes[0].id) {
-          const getAttachmentCount = await dispatch(getNoteById(convDetails.data.notes[0].id));
-          console.log('getAttachmentCount', getAttachmentCount);
-          
-          if (getAttachmentCount.data.attachments.length !== convDetails.data.notes[0].attachments.length) {
+        if(mismatchedEntries && mismatchedEntries.length>0){
             await dispatch(getConversation(conversationId));
+            console.log('calling the api again')
           } else {
             clearInterval(intervalId); 
             console.log('Condition met, stopped polling.');
-          }
-        } else {
-          clearInterval(intervalId); 
-          //console.error('No Note data.');
-        }
-      }, 3000000); 
+          } 
+      }, 5000); 
     }
     
     checkAttachments();
