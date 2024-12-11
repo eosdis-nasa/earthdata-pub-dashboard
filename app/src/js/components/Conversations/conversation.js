@@ -7,7 +7,8 @@ import {
   getConversation,
   replyConversation,
   addUsersToConversation,
-  getNoteById
+  getNoteById,
+  getNoteAll
 } from '../../actions';
 import { notePrivileges } from '../../utils/privileges';
 import { lastUpdated } from '../../utils/format';
@@ -32,7 +33,6 @@ const getConversations = (dispatch, conversationId, lvl) => {
   }
   dispatch(getConversation(conversationId, lvl));
 };
-
 
 
 const Conversation = ({ dispatch, conversation, privileges, match }) => {
@@ -86,6 +86,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     //     await dispatch(getConversation(conversationId));
     //   }
     // }
+    console.log('getNoteAll', dispatch(getNoteAll));
 
     async function checkAttachments() {
       const intervalId = setInterval(async () => {
@@ -93,7 +94,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
           const getAttachmentCount = await dispatch(getNoteById(convDetails.data.notes[0].id));
           console.log('getAttachmentCount', getAttachmentCount);
           
-          if (getAttachmentCount.attachments.length !== convDetails.data.notes[0].attachments.length) {
+          if (getAttachmentCount.data.attachments.length !== convDetails.data.notes[0].attachments.length) {
             await dispatch(getConversation(conversationId));
           } else {
             clearInterval(intervalId); 
@@ -103,7 +104,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
           clearInterval(intervalId); 
           //console.error('No Note data.');
         }
-      }, 3000); // Execute every 3 seconds
+      }, 3000000); 
     }
     
     checkAttachments();

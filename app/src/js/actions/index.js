@@ -1076,6 +1076,15 @@ export const getNoteById = (noteId) => ({
   }
 });
 
+export const getNoteAll = (noteId) => ({
+  [CALL_API]: {
+    type: types.NOTE,
+    method: 'GET',
+    id: noteId,
+    path: `data/notes`
+  }
+});
+
 export const listConversations = (options) => ({
   [CALL_API]: {
     type: types.CONVERSATIONS,
