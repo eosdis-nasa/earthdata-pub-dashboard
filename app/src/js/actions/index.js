@@ -1080,7 +1080,7 @@ export const getNoteAll = () => ({
   [CALL_API]: {
     type: types.NOTE,
     method: 'GET',
-    path: `data/notes`
+    path: 'data/notes'
   }
 });
 

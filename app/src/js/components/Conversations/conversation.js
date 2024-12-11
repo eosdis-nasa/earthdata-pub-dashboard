@@ -86,7 +86,31 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     //     await dispatch(getConversation(conversationId));
     //   }
     // }
-    console.log('getNoteAll', dispatch(getNoteAll()));
+    const noteAll = await dispatch(getNoteAll());
+    console.log('noteALL', noteAll)
+    let filteredData = [];
+    if(noteAll && noteAll.data){
+      filteredData = noteAll.data.filter(item => item.conversation_id === conversationId);
+      console.log('filteredData', filteredData)
+    }
+
+    // Find mismatches where attachment lengths do not match
+    const mismatchedEntries = filteredData.filter(dataItem => {
+        const matchingNote = convDetails.data.notes.find(noteItem => noteItem.id === dataItem.id);
+
+        // Ensure matchingNote exists and compare attachment lengths
+        if (matchingNote) {
+            const dataAttachmentsLength = dataItem.attachments ? dataItem.attachments.length : 0;
+            const noteAttachmentsLength = matchingNote.attachments ? matchingNote.attachments.length : 0;
+            return dataAttachmentsLength !== noteAttachmentsLength;
+        }
+
+        // If no matching note is found, return false
+        return false;
+    });
+
+    // Output mismatched entries
+    console.log("Mismatched Entries:", mismatchedEntries);
 
     async function checkAttachments() {
       const intervalId = setInterval(async () => {
