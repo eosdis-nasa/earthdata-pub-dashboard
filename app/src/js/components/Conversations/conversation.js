@@ -86,7 +86,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     //     await dispatch(getConversation(conversationId));
     //   }
     // }
-    console.log('getNoteAll', dispatch(getNoteAll));
+    console.log('getNoteAll', dispatch(getNoteAll()));
 
     async function checkAttachments() {
       const intervalId = setInterval(async () => {

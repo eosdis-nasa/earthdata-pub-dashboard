@@ -1076,11 +1076,10 @@ export const getNoteById = (noteId) => ({
   }
 });
 
-export const getNoteAll = (noteId) => ({
+export const getNoteAll = () => ({
   [CALL_API]: {
     type: types.NOTE,
     method: 'GET',
-    id: noteId,
     path: `data/notes`
   }
 });
