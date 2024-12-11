@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import {
   getConversation,
   replyConversation,
-  addUsersToConversation
+  addUsersToConversation,
+  getNoteById
 } from '../../actions';
 import { notePrivileges } from '../../utils/privileges';
 import { lastUpdated } from '../../utils/format';
@@ -74,7 +75,39 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       attachments: [...uploadedFiles]
     };
     await dispatch(replyConversation(payload));
-    await dispatch(getConversation(conversationId));
+
+    const convDetails =  await dispatch(getConversation(conversationId));
+    console.log('convDetails', convDetails)
+    
+    // if(convDetails.data.notes && convDetails.data.notes[0] && convDetails.data.notes[0].id){
+    //   const getAttachmentCount = await dispatch(getNoteById(convDetails.data.notes[0].id));
+    //   console.log('getAttachmentCount', getAttachmentCount);
+    //   if(getAttachmentCount.attachments.length !== convDetails.data.notes[0].attachments.length){
+    //     await dispatch(getConversation(conversationId));
+    //   }
+    // }
+
+    async function checkAttachments() {
+      const intervalId = setInterval(async () => {
+        if (convDetails.data.notes && convDetails.data.notes[0] && convDetails.data.notes[0].id) {
+          const getAttachmentCount = await dispatch(getNoteById(convDetails.data.notes[0].id));
+          console.log('getAttachmentCount', getAttachmentCount);
+          
+          if (getAttachmentCount.attachments.length !== convDetails.data.notes[0].attachments.length) {
+            await dispatch(getConversation(conversationId));
+          } else {
+            clearInterval(intervalId); 
+            console.log('Condition met, stopped polling.');
+          }
+        } else {
+          clearInterval(intervalId); 
+          //console.error('No Note data.');
+        }
+      }, 3000); // Execute every 3 seconds
+    }
+    
+    checkAttachments();
+    
     textRef.current.value = '';
     handleVisibilityReset();
     setUploadedFiles([]);

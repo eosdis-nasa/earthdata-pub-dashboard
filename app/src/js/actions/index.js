@@ -1067,6 +1067,15 @@ export const getConversation = (conversationId, level = false) => ({
   }
 });
 
+export const getNoteById = (noteId) => ({
+  [CALL_API]: {
+    type: types.NOTE,
+    method: 'GET',
+    id: noteId,
+    path: `data/note/${noteId}`
+  }
+});
+
 export const listConversations = (options) => ({
   [CALL_API]: {
     type: types.CONVERSATIONS,
@@ -1106,7 +1115,7 @@ export const replyConversation = (payload) => {
       .then(() => {
         setTimeout(() => {
           dispatch(getConversation(payload.conversation_id));
-        }, 10000);
+        }, 2000);
       });
   };
 };
