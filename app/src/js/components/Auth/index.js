@@ -14,6 +14,8 @@ import QRCode from 'react-qr-code';
 import config from '../../config';
 import ourConfigureStore from '../../store/configureStore';
 import { saveToken, deleteToken } from '../../utils/auth';
+// unused import but this adds nasa png image to the build as we use png image for email notification
+import nasaLogo from '../../../assets/images/nasa-logo.png';
 
 class Auth extends React.Component {
   constructor (props) {

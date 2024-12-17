@@ -59,7 +59,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     setUploadedFiles(new Set([...uploadedFiles]));
   };
 
-  const reply = (dispatch, id) => {
+  const reply = async(dispatch, id) => {
     const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility()
     // ensure the person adding the comment is a viewer if they've limited the note
     if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)){
@@ -73,7 +73,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       viewer_roles,
       attachments: [...uploadedFiles]
     };
-    dispatch(replyConversation(payload));
+    await dispatch(replyConversation(payload));
+    await dispatch(getConversation(conversationId));
     textRef.current.value = '';
     handleVisibilityReset();
     setUploadedFiles([]);
