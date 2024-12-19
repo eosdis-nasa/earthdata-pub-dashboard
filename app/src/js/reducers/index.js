@@ -11,6 +11,7 @@ import modules from './modules.js';
 import model from './model';
 import forms from './forms';
 import questions from './questions';
+import sections from './sections.js';
 import users from './users';
 import groups from './groups';
 import logs from './logs';
@@ -23,6 +24,7 @@ import searchModal from './search-modal';
 import earthdatapubInstance from './earthdatapub-instance';
 import dataUpload from './data-upload';
 import reviewers from './reviewers.js';
+import steps from './steps';
 
 const def = (state = {}, action) => state;
 
@@ -40,6 +42,7 @@ export const reducers = {
   model,
   modules,
   forms,
+  sections,
   questions,
   users,
   groups,
@@ -50,7 +53,8 @@ export const reducers = {
   roles,
   conversations,
   searchModal,
-  dataUpload
+  dataUpload,
+  steps
 };
 
 export const createRootReducer = (history) => combineReducers({

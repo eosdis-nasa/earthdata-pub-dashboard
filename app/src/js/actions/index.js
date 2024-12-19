@@ -691,6 +691,46 @@ export const getForm = (formId, daacId) => ({
   }
 });
 
+export const listSections = (options) => {
+  return (dispatch, getState) => {
+    return dispatch({
+      [CALL_API]: {
+        type: types.SECTION,
+        method: 'GET',
+        id: null,
+        url: new URL('data/sections', root).href,
+        qs: Object.assign({ per_page: defaultPageLimit }, options)
+      }
+    });
+  };
+};
+
+export const getSection = (key) => ({
+  [CALL_API]: {
+    type: types.SECTION,
+    method: 'GET',
+    path: `data/sections/${key}`
+  }
+});
+
+export const addSection = (payload) => ({
+  [CALL_API]: {
+    type: types.SECTION,
+    method: 'POST',
+    path: 'data/sections',
+    body: payload
+  }
+});
+
+export const updateSection = (payload, key) => ({
+  [CALL_API]: {
+    type: types.SECTION,
+    method: 'POST',
+    path: `data/sections/${key}`,
+    body: payload
+  }
+});
+
 export const searchForms = (prefix) => ({ type: types.SEARCH_FORMS, prefix });
 export const clearFormsSearch = () => ({ type: types.CLEAR_FORMS_SEARCH });
 export const filterForms = (param) => ({ type: types.FILTER_FORMS, param });
@@ -1066,7 +1106,7 @@ export const replyConversation = (payload) => {
       .then(() => {
         setTimeout(() => {
           dispatch(getConversation(payload.conversation_id));
-        }, 1000);
+        }, 2000);
       });
   };
 };
@@ -1201,6 +1241,47 @@ export const verify = (topsToken, token) => ({
     method: 'POST',
     path: 'data/mfa/verify',
     body: { tops_token: topsToken, auth_token: `${token}` }
+  }
+});
+
+export const getStep = (stepId) => ({
+  [CALL_API]: {
+    type: types.STEP,
+    method: 'GET',
+    id: stepId,
+    path: `data/steps/${stepId}`
+  }
+});
+
+export const listSteps = (options) => {
+  return (dispatch, getState) => {
+    return dispatch({
+      [CALL_API]: {
+        type: types.STEPS,
+        method: 'GET',
+        id: null,
+        url: new URL('data/steps', root).href,
+        qs: Object.assign({ per_page: defaultPageLimit }, options)
+      }
+    });
+  };
+};
+
+export const updateStep = (payload) => ({
+  [CALL_API]: {
+    type: types.STEP,
+    method: 'POST',
+    path: `data/steps/${payload.step_id}`,
+    json: payload
+  }
+});
+
+export const addStep = (payload) => ({
+  [CALL_API]: {
+    type: types.STEP,
+    method: 'POST',
+    path: 'data/steps',
+    json: payload
   }
 });
 

@@ -135,15 +135,7 @@ const AddUser = ({ dispatch, match, groups, roles, privileges, newUserStatus }) 
           </div>
         </section>
         { showSearch && <SearchModal { ...searchOptions }/> }
-        {// TODO - Prettify this page and make it functional. Need to build json to send here on front end to send
-         // JSON will follow the below format where role_id and group_id are optional parameters:
-        // {
-        // "email": email_value,
-        // "name": name_value,
-        // "username": username_value,
-        // "role_id": role_id,
-        // "group_id": group_id
-        // }
+        {
             <div className='page__content'>
               <section className='page__section page__section__controls user-section'>
                 <div className='heading__wrapper--border'>
