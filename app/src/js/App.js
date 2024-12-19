@@ -34,6 +34,7 @@ import TestApi from './components/testApi';
 import Upload from './components/DataUpload';
 import FormRequest from './components/FormRequest';
 import FormQuestions from './components/FormQuestions';
+import Download from './components/DataDownload';
 import Steps from './components/Steps';
 import config from './config';
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
@@ -73,7 +74,8 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/modules', component: Modules },
     { path: '/upload', component: Upload },
     { path: '/test-api', component: TestApi },
-    { path: '/steps', component: Steps }
+    { path: '/steps', component: Steps },
+    { path: '/download', component: Download }
   ];
 
   // Find the route that matches the activeRoute
