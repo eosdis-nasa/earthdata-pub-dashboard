@@ -86,7 +86,7 @@ const MainRoutes = ({ activeRoute }) => {
       if (history.location.pathname !== activeRoute) {
         history.push(activeRoute);
       }
-      setRedirected(true);
+     // setRedirected(true);
       localStorage.removeItem('redirectAfterLogin');
     }
   }, [activeRoute, matchedRoute, history, redirected]);
