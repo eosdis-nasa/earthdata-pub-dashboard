@@ -7,41 +7,60 @@ import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import localUpload from '@edpub/upload-utility';
 
-
 class DownloadOverview extends React.Component {
-
     render() {
         const download = new localUpload();
 
         const handleDownload = (s3BucketUrl) => {
             const { apiRoot } = _config;
-            download.downloadFile(`attachments/${s3BucketUrl}`, `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
-                let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
-                if (error) {
-                console.log(`An error has occurred: ${error}.`);
-                }
-            })
+
+            download
+                .downloadFile(
+                    `attachments/${s3BucketUrl}`,
+                    `${apiRoot}data/upload/downloadUrl`,
+                    loadToken().token
+                )
+                .then((resp) => {
+                    let error =
+                        resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
+
+                    if (error) {
+                        console.error(`An error has occurred: ${error}.`);
+                    } else {
+                        console.log('Download completed successfully.');
+                        // Close the tab after successful download
+                        window.close();
+                    }
+                })
+                .catch((err) => {
+                    console.error('Error during file download:', err);
+                });
         };
-        const s3BucketUrl = this.props.location && this.props.location.search.replace('?', '');
-        handleDownload(s3BucketUrl)
-        console.log('this.props',s3BucketUrl )
-        return (
-            <div>Deepak</div>
-        )
+
+        const s3BucketUrl = this.props.location?.search.replace('?', '');
+
+        if (s3BucketUrl) {
+            handleDownload(s3BucketUrl);
+        } else {
+            console.error('No S3 bucket URL found in query parameters.');
+        }
+        return <div>Downloading...</div>;
     }
 }
 
 DownloadOverview.propTypes = {
-  stats: PropTypes.object,
-  dispatch: PropTypes.func,
-  config: PropTypes.object,
-  logs: PropTypes.object,
-  tokens: PropTypes.object
+    stats: PropTypes.object,
+    dispatch: PropTypes.func,
+    config: PropTypes.object,
+    logs: PropTypes.object,
+    tokens: PropTypes.object
 };
 
-export default withRouter(connect(state => ({
-  stats: state.stats,
-  config: state.config,
-  logs: state.logs,
-  tokens: state.api.tokens
-}))(DownloadOverview));
+export default withRouter(
+    connect((state) => ({
+        stats: state.stats,
+        config: state.config,
+        logs: state.logs,
+        tokens: state.api.tokens
+    }))(DownloadOverview)
+);
