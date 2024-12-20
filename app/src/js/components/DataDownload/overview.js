@@ -13,17 +13,18 @@ class DownloadOverview extends React.Component {
     render() {
         const download = new localUpload();
 
-        const handleDownload = () => {
+        const handleDownload = (s3BucketUrl) => {
             const { apiRoot } = _config;
-            download.downloadFile(`attachments/d0f6dee8-cd60-49b8-bf84-a6bdb3a7526f/file-11.pdf`, `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
+            download.downloadFile(`attachments/${s3BucketUrl}`, `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
                 let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
                 if (error) {
                 console.log(`An error has occurred: ${error}.`);
                 }
             })
         };
-
-        console.log('this.props', handleDownload())
+        const s3BucketUrl = this.props.location && this.props.location.search.replace('?', '');
+        handleDownload(s3BucketUrl)
+        console.log('this.props',s3BucketUrl )
         return (
             <div>Deepak</div>
         )
