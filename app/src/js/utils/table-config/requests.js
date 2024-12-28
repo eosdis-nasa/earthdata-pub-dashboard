@@ -54,7 +54,7 @@ export const newLink = (request, formalName) => {
   let disabled = false;
   if (request == '') {
     disabled = true;
-  } else if (typeof allPrivs !== 'undefined' && allPrivs.canUpdateForm) {
+  } else if (typeof allPrivs !== 'undefined' && allPrivs.canRead) {
     disabled = false;
   } else {
     disabled = true;
