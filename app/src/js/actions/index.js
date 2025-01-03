@@ -1286,3 +1286,12 @@ export const addStep = (payload) => ({
 });
 
 export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });
+
+export const assignDaacs = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUEST,
+    method: 'POST',
+    path: '/api/data/submission/operation/assignDaacs',
+    body: payload
+  }
+});

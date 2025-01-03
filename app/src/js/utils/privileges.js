@@ -103,7 +103,8 @@ export const requestPrivileges = (privileges, stepName) => {
       canWithdraw: true,
       canRestore: true,
       canAddUser: true,
-      canRemoveUser: true
+      canRemoveUser: true,
+      canAssignDaac: true
     };
   } else if (privileges.REQUEST) {
     return {
@@ -123,6 +124,7 @@ export const requestPrivileges = (privileges, stepName) => {
         a === 'DAACREAD' || a === 'ADMINREAD'),
       canAddUser: privileges.REQUEST.includes('ADDUSER'),
       canRemoveUser: privileges.REQUEST.includes('REMOVEUSER'),
+      canAssignDaac: privileges.REQUEST.includes('ASSIGNDAAC')
     };
   }
   return {
@@ -138,7 +140,8 @@ export const requestPrivileges = (privileges, stepName) => {
     canWithdraw: false,
     canRestore: false,
     canAddUser: false,
-    canRemoveUser: false
+    canRemoveUser: false,
+    canAssignDaac: false
   };
 };
 
