@@ -16,7 +16,7 @@ class DownloadOverview extends React.Component {
 
             download
                 .downloadFile(
-                    `attachments/${s3BucketUrl}`,
+                    `attachments/${decodeURIComponent(s3BucketUrl)}`,
                     `${apiRoot}data/upload/downloadUrl`,
                     loadToken().token
                 )
