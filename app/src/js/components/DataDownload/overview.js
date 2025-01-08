@@ -8,6 +8,25 @@ import { loadToken } from '../../utils/auth';
 import localUpload from '@edpub/upload-utility';
 
 class DownloadOverview extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            dots: '.',
+        };
+    }
+
+    componentDidMount() {
+        this.dotInterval = setInterval(() => {
+            this.setState((prevState) => ({
+                dots: prevState.dots.length < 3 ? prevState.dots + '.' : '.',
+            }));
+        }, 500); 
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.dotInterval); 
+    }
+
     render() {
         const download = new localUpload();
 
@@ -38,13 +57,27 @@ class DownloadOverview extends React.Component {
         };
 
         const s3BucketUrl = this.props.location?.search.replace('?', '');
+        const { dots } = this.state;
 
         if (s3BucketUrl) {
             handleDownload(s3BucketUrl);
         } else {
             console.error('No S3 bucket URL found in query parameters.');
         }
-        return <div>Downloading...</div>;
+        
+        return (
+            <h1
+                className="heading--shared-content"
+                style={{
+                    fontWeight: 600,
+                    fontSize: '2em',
+                    display: 'flex',
+                    alignItems: 'center',
+                }}
+            >
+                Downloading {dots}
+            </h1>
+        );
     }
 }
 

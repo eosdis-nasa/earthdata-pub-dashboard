@@ -19,7 +19,7 @@ class Download extends React.Component {
       <div className='page__users'>
         <div className='content__header'>
           <div className='row'>
-            <h1 className='heading--xlarge heading--shared-content'>Download</h1>
+            <h1 className='heading--xlarge heading--shared-content'>Attachment Download</h1>
           </div>
         </div>
         <div className='page__content'>
