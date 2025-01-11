@@ -202,6 +202,15 @@ export const listFileDownloadsByKey = (key) => ({
   }
 });
 
+export const getUploadStep = (uploadStepId) => ({
+  [CALL_API]: {
+    type: types.UPLOAD_STEP,
+    method: 'GET',
+    id: uploadStepId,
+    path: `data/upload/uploadStep/${uploadStepId}`,
+  }
+});
+
 export const getContributers = (payload) => ({
   [CALL_API]: {
     type: types.USERS,
