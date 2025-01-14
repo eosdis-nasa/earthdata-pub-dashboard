@@ -1,0 +1,163 @@
+.start-node, .end-node {
+    height: 64px;
+    width: 64px;
+    border-radius: 50%;
+    line-height: 64px;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .start-node {
+    background-color: #338aff;
+  }
+  
+  .end-node {
+    background-color: #666;
+  }
+  
+  .other-node {
+    display: flex;
+    justify-content: space-between; /* Ensures text and button are spaced apart */
+    align-items: center; /* Aligns text and button vertically */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    word-wrap: break-word;
+    max-width: 600px; /* Optional: Limit the maximum width */
+    white-space: nowrap; /* Prevent text from breaking into multiple lines */
+    overflow: hidden; /* Ensures text does not overflow */
+    text-overflow: ellipsis; /* Adds ellipsis (...) if text overflows */
+  }
+  
+  .delete-button {
+    padding: 5px;
+    position: absolute;
+    top: 8px; /* Adjust the distance from the top */
+    right: 8px; /* Adjust the distance from the right */
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 10px; /* Reduced the font size */
+    width: 20px; /* Reduced the button width */
+    height: 20px; /* Reduced the button height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Node Text */
+.node-text {
+    flex: 1; /* Makes the text take up the remaining space */
+    margin-right: 25px; /* Adds space between text and button */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .delete-button:hover {
+    background: red;
+  }
+  
+  .flow-container {
+    position: relative; /* Ensures child elements are positioned relative to this container */
+    padding: 20px;
+    border: 1px solid #ccc; /* Optional: for visualization */
+    border-radius: 5px;
+  }
+  .controls-container {
+    display: flex;
+    flex-direction: row; /* Align items horizontally */
+    justify-content: flex-end; /* Push items to the right */
+    align-items: center; /* Align items vertically */
+    gap: 10px; /* Add spacing between items */
+    width: auto;
+  }
+  .dropdown-container {
+    width: 250px; /* Fixed width for the dropdown */
+  }
+  .add-node-button,
+  .save-flow-button {
+    padding: 10px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-node-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .save-flow-button {
+    background-color: #28a745;
+  }
+  
+  .add-node-button:hover:not(:disabled),
+  .save-flow-button:hover {
+    opacity: 0.9;
+  }
+
+
+  /* Init Node */
+.init-node {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  /* Close Node */
+  .close-node {
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  
+  /* Buttons */
+  .add-node-button,
+  .save-flow-button {
+    margin: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  
+  .save-flow-button {
+    background-color: #28a745;
+    color: white;
+  }
+  
+
+  /* General Node Styling */
+.node {
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-align: center;
+    word-wrap: break-word;
+    font-size: 14px;
+    max-width: 700px; /* Optional: Set a max width to prevent overly large nodes */
+    white-space: pre-wrap; /* Ensure multiline text wraps */
+  }
+  
+/* Node Content */
+.node-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+
+  
