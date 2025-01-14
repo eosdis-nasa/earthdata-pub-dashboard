@@ -14,21 +14,20 @@ const CloseNodeDisplay = () => {
 };
 
 const OtherNodeDisplay = () => {
-    const node = useContext(NodeContext);
-    const { removeNode } = useAction();
-  
-    return (
-      <div className="node other-node">
-        <div className="node-content">
-          <span className="node-text">{node.name}</span>
-          <button className="delete-button" onClick={() => removeNode(node)}>
-            ✖
-          </button>
-        </div>
+  const node = useContext(NodeContext);
+  const { removeNode } = useAction();
+
+  return (
+    <div className="node other-node">
+      <div className="node-content">
+        <span className="node-text">{node.name}</span>
+        <button className="delete-button" onClick={() => removeNode(node)}>
+          ✖
+        </button>
       </div>
-    );
-  };
-  
+    </div>
+  );
+};
 
 const registerNodes = [
   {
@@ -53,7 +52,7 @@ const registerNodes = [
 const Demo = ({ initialFlowData, initialNodeOptions }) => {
   const [nodes, setNodes] = useState([]);
   const [nodeOptions, setNodeOptions] = useState([]);
-  const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedNodes, setSelectedNodes] = useState([]);
 
   // Initialize nodes and dropdown options
   useEffect(() => {
@@ -103,22 +102,22 @@ const Demo = ({ initialFlowData, initialNodeOptions }) => {
     setNodeOptions(availableOptions);
   }, [nodes, initialNodeOptions]);
 
-  // Add a new node
-  const handleAddNode = () => {
-    if (!selectedNode) return;
+  // Add multiple nodes
+  const handleAddNodes = () => {
+    if (!selectedNodes.length) return;
 
-    const newNode = {
-      id: selectedNode.step_id,
+    const newNodes = selectedNodes.map((selected) => ({
+      id: selected.step_id,
       type: 'node',
-      name: selectedNode.step_name,
-    };
+      name: selected.step_name,
+    }));
 
     setNodes((prevNodes) => {
       const closeIndex = prevNodes.findIndex((node) => node.type === 'close');
-      return [...prevNodes.slice(0, closeIndex), newNode, ...prevNodes.slice(closeIndex)];
+      return [...prevNodes.slice(0, closeIndex), ...newNodes, ...prevNodes.slice(closeIndex)];
     });
 
-    setSelectedNode(null);
+    setSelectedNodes([]);
   };
 
   // Remove a node
@@ -150,22 +149,23 @@ const Demo = ({ initialFlowData, initialNodeOptions }) => {
       <div className="controls-container">
         <div className="dropdown-container">
           <Select
+            isMulti
             options={nodeOptions.map((option) => ({
               value: option.step_id,
               label: option.step_name,
               ...option,
             }))}
-            value={selectedNode}
-            onChange={setSelectedNode}
-            placeholder="Select a node to add"
+            value={selectedNodes}
+            onChange={setSelectedNodes}
+            placeholder="Select nodes to add"
           />
         </div>
         <button
           className="add-node-button"
-          onClick={handleAddNode}
-          disabled={!selectedNode}
+          onClick={handleAddNodes}
+          disabled={!selectedNodes.length}
         >
-          Add Node
+          Add Nodes
         </button>
         <button className="save-flow-button" onClick={handleSaveFlow}>
           Save Flow
