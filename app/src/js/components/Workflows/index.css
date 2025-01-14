@@ -58,13 +58,84 @@
   .delete-button:hover {
     background: red;
   }
-  
   .flow-container {
-    position: relative; /* Ensures child elements are positioned relative to this container */
-    padding: 20px;
-    border: 1px solid #ccc; /* Optional: for visualization */
-    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+  
+  .flow-builder-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .node-wrapper {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  
+  .node {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .init-node {
+    background-color: #4caf50;
+  }
+  
+  .close-node {
+    background-color: #f44336;
+  }
+  
+  .other-node {
+    background-color: #2196f3;
+  }
+  
+  .edge-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50px;
+  }
+  
+  .edge-line {
+    width: 2px;
+    height: 100%;
+    background-color: #ccc;
+    position: absolute;
+  }
+  
+  .insert-button {
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    cursor: pointer;
+  }
+  
+  .insert-button:hover {
+    background-color: #2275AA;
+  }
+  
+  .dropdown-container {
+    margin-top: 10px;
+    width: 500px;
+    text-align: center;
+    z-index: 10;
+  }
+  
+  
   .controls-container {
     display: flex;
     flex-direction: row; /* Align items horizontally */
@@ -73,15 +144,12 @@
     gap: 10px; /* Add spacing between items */
     width: auto;
   }
-  .dropdown-container {
-    width: 250px; /* Fixed width for the dropdown */
-  }
   .add-node-button,
   .save-flow-button {
     padding: 10px;
     font-size: 14px;
     color: #fff;
-    background-color: #007bff;
+    background-color: #2275AA;
     border: none;
     border-radius: 5px;
     cursor: pointer;
