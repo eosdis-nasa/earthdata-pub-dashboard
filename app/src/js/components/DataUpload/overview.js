@@ -9,7 +9,7 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import localUpload from '@edpub/upload-utility';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { listFileUploadsBySubmission, listFileDownloadsByKey, refreshToken } from '../../actions';
+import { listFileUploadsBySubmission, listFileDownloadsByKey, listFileUploadsBySubmissionStep, refreshToken } from '../../actions';
 import { shortDateShortTimeYearFirstJustValue, storage } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
 import { Modal, Button } from 'react-bootstrap';
@@ -83,7 +83,7 @@ class UploadOverview extends React.Component {
     const { dispatch } = this.props;
     const { requestId } = this.props.match.params;
     if (requestId !== '' && requestId != undefined && requestId !== null) {
-      dispatch(listFileUploadsBySubmission(requestId))
+      dispatch(this.props.uploadDestination ? listFileUploadsBySubmissionStep(requestId) : listFileUploadsBySubmission(requestId))
         .then((resp) => {
           if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
             return

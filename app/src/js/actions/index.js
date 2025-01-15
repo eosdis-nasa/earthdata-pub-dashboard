@@ -193,6 +193,15 @@ export const listFileUploadsBySubmission = (submissionId) => ({
   }
 });
 
+export const listFileUploadsBySubmissionStep = (submissionId) => ({
+  [CALL_API]: {
+    type: types.UPLOAD,
+    method: 'GET',
+    id: submissionId,
+    path: `data/upload/listStepUploads/${submissionId}`
+  }
+});
+
 export const listFileDownloadsByKey = (key) => ({
   [CALL_API]: {
     type: types.UPLOAD,
