@@ -824,6 +824,9 @@ a:active {
   padding: .25em .5em .25em .5em;
   border-bottom: 1px solid $lightest-grey;
 }
+.sm-padding {
+  padding: .25em .5em .25em .5em;
+}
 .text__green {
   color: darken($light-green, 5%);
   height: 1em;
@@ -1301,4 +1304,8 @@ div.selectButton div input {
 }
 div.selectButton div div span {
   width: 0;
+}
+
+.note-options:hover {
+  text-decoration: underline;
 }

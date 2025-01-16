@@ -1105,7 +1105,7 @@ export const replyConversation = (payload) => {
     })
       .then(() => {
         setTimeout(() => {
-          dispatch(getConversation(payload.conversation_id));
+          dispatch(getConversation(payload.conversation_id, true));
         }, 2000);
       });
   };
@@ -1123,7 +1123,7 @@ export const addUsersToConversation = (payload) => {
     })
       .then(() => {
         setTimeout(() => {
-          dispatch(getConversation(payload.conversation_id));
+          dispatch(getConversation(payload.conversation_id, true));
         }, 1000);
       });
   };
@@ -1141,7 +1141,7 @@ export const addUserToNote = (payload, conversationId) => {
     })
       .then(() => {
         setTimeout(() => {
-          dispatch(getConversation(conversationId));
+          dispatch(getConversation(conversationId, true));
         }, 1000);
       });
   };
@@ -1159,7 +1159,7 @@ export const removeUserFromNote = (payload, conversationId) => {
     })
       .then(() => {
         setTimeout(() => {
-          dispatch(getConversation(conversationId));
+          dispatch(getConversation(conversationId, true));
         }, 1000);
       });
   };
@@ -1177,7 +1177,7 @@ export const addRoleToNote = (payload, conversationId) => {
     })
       .then(() => {
         setTimeout(() => {
-          dispatch(getConversation(conversationId));
+          dispatch(getConversation(conversationId, true));
         }, 1000);
       });
   };
@@ -1195,7 +1195,7 @@ export const removeRoleFromNote = (payload, conversationId) => {
     })
       .then(() => {
         setTimeout(() => {
-          dispatch(getConversation(conversationId));
+          dispatch(getConversation(conversationId, true));
         }, 1000);
       });
   };

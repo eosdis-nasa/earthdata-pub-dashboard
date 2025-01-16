@@ -17,30 +17,21 @@ import Note from './note';
 import { NewNoteVisibility } from './visibility';
 import { CustomUpload } from '../DataUpload/customUpload';
 import { AddAttachmentButton, DisplayAttachmentButton } from './attachment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {  faSortAmountDown, faSortAmountUp } from '@fortawesome/free-solid-svg-icons';
 
 
 const textRef = React.createRef();
-
-const getConversations = (dispatch, conversationId, lvl) => {
-  if (lvl) {
-    document.getElementById('all_button').classList.add('active');
-    document.getElementById('users_only_button').classList.remove('active');
-  } else {
-    document.getElementById('all_button').classList.remove('active');
-    document.getElementById('users_only_button').classList.add('active');
-  }
-  dispatch(getConversation(conversationId, lvl));
-};
-
-
 
 const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const current_user_id = JSON.parse(window.localStorage.getItem('auth-user')).id;
   const { conversationId } = match.params;
   const [showSearch, setShowSearch] = useState(false);
+  const [sortLabel, setSortLabel] = useState('Newest First ');
+  const [newestFirstFlag, setNewestFirstFlag] = useState(true);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   useEffect(() => {
-    dispatch(getConversation(conversationId));
+    dispatch(getConversation(conversationId, true));
   }, []);
   const { data, inflight, meta } = conversation;
   const { subject, notes, participants } = data;
@@ -110,55 +101,52 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     }
   ];
 
+  const toggleOldestFirst = () => {
+    setSortLabel('Oldest First ');
+    setNewestFirstFlag(false);
+  };
+
+  const toggleNewestFirst = () => {
+    setSortLabel('Newest First ');
+    setNewestFirstFlag(true);
+  };
+
   return (
     <div className='page__content--shortened'>
       <div className='page__component'>
         <section className='page__section page__section__controls'>
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
-        <section className='page__section page__section__header-wrapper'>
+        <section className='page__section page__section__header-wrapper' style={{display: "flex"}}>
           <div className='page__section__header'>
             <h1 className='heading--large heading--shared-content with-description '>
               Conversation: {subject}
             </h1>
             {lastUpdated(queriedAt)}
           </div>
-          <div className="filter_buttons_div">
-            <label>Filter: </label>
-            <button id='all_button'
-                className={'form-group__element--right' + (status === 'inflight' ? ' button--disabled' : '')}
-                aria-label='Get all conversation detail'
-                onClick={(e) => { e.preventDefault(); getConversations(dispatch, conversationId, true); }}
-              >All
-            </button>
-            <button id='users_only_button'
-                className={'active form-group__element--right' + (status === 'inflight' ? ' button--disabled' : '')}
-                aria-label='Get user conversation detail'
-                onClick={(e) => { e.preventDefault(); getConversations(dispatch, conversationId, false); }}
-              >User Comments Only
-            </button>
-          </div>
         </section>
+        <div style={{textAlign: "right"}}>
+          <label onClick={() => sortLabel === 'Newest First ' ? toggleOldestFirst() : toggleNewestFirst()}>
+            {sortLabel}
+            <FontAwesomeIcon icon={faSortAmountDown} hidden={newestFirstFlag}/>
+            <FontAwesomeIcon icon={faSortAmountUp} hidden={!newestFirstFlag}/>
+          </label>
+        </div>
         {showSearch && <SearchModal {...searchOptions} />}
         { inflight && <LoadingOverlay /> }
         { notes &&
-          <section className='page__section flex__row'>
+          <section className='page__section'>
             <section className='page__section flex__item--grow-1'>
-              <div className='heading__wrapper--border'>
-                <h2 className='heading--medium heading--shared-content with-description'>
-                  Notes <span className='num--title'>{notes.length}</span>
-                </h2>
-              </div>
-              <div className='flex__column--reverse'>
-                <div className='flex__row--border'>
-                  <div className='flex__item--w-15'/>
+              <div className={`flex__column${!newestFirstFlag && '--reverse'}`}>
+                <div className='flex__row'>
                   {canReply &&
                     <form className='flex__column flex__item--grow-1'
-                      onSubmit={(e) => { e.preventDefault(); reply(dispatch, conversationId); }}>
-                      <textarea placeholder='Type your reply'
+                      onSubmit={(e) => { e.preventDefault(); reply(dispatch, conversationId); }}
+                      style={{marginTop: "25px", marginBottom: "25px"}}>
+                      <textarea placeholder='Type your message.'
                         ref={textRef}
-                        aria-label="Type your reply"
-                        title="Type your reply"></textarea>
+                        aria-label="Type your message"
+                        title="Type your message"></textarea>
                       <NewNoteVisibility dispatch={dispatch} privileges={privileges} conversationId={conversationId} visibilityRef={visibilityRef}/>
                       <div>
                       {
@@ -174,7 +162,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                         setUploadedFiles={setUploadedFiles}/>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
-                          Send Reply
+                          Send
                         </button>
                       </div>
                     </form>
@@ -184,28 +172,6 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                   notes.map((note, key) => {
                     return (<Note dispatch={dispatch} conversationId={conversationId} note={note} privileges={privileges} key={key} />);
                   })
-                }
-              </div>
-            </section>
-            <section className='page__section flex__item--w-17 flex__item-end'>
-              <div className='heading__wrapper--border'>
-                <h2 className='heading--medium heading--shared-content with-description'>
-                  Participants <span className='num--title'>{participants.length}</span>
-                </h2>
-              </div>
-              <div className='flex__column'>
-                {
-                  participants.map((user, key) => {
-                    return <div className='sm-border' key={key}>{user.name}</div>;
-                  })
-                }
-                {canAddUser &&
-                  <div className='flex__item--spacing'>
-                    <button className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
-                      onClick={() => setShowSearch(true)}>
-                      Add Users
-                    </button>
-                  </div>
                 }
               </div>
             </section>
