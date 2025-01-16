@@ -53,13 +53,12 @@ const registerNodes = [
   },
 ];
 
-// Utility function to format names
 const formatName = (name) =>
   name
     .replace(/_/g, " ") // Replace underscores with spaces
     .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize the first letter of each word
 
-const Demo = ({ initialFlowData, initialNodeOptions }) => {
+const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
   const [nodes, setNodes] = useState([]);
   const [nodeOptions, setNodeOptions] = useState([]);
   const [selectedNodes, setSelectedNodes] = useState([]);
@@ -67,6 +66,18 @@ const Demo = ({ initialFlowData, initialNodeOptions }) => {
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
   const [selectedNodeIndex, setSelectedNodeIndex] = useState(null);
 
+  // Metadata fields
+  const [metadata, setMetadata] = useState({
+    short_name: "",
+    version: "",
+    long_name: "",
+    description: "",
+  });
+
+  useEffect(() => {
+    handleSaveFlow();
+  }, [nodes, metadata]);
+  
   useEffect(() => {
     if (initialFlowData) {
       const buildNodes = () => {
@@ -78,8 +89,7 @@ const Demo = ({ initialFlowData, initialNodeOptions }) => {
           if (!currentNode) break;
 
           generatedNodes.push({
-            step_id: currentNode.step_id,
-            type: currentNode.type,
+            ...currentNode,
             name: formatName(currentStep),
           });
 
@@ -90,8 +100,7 @@ const Demo = ({ initialFlowData, initialNodeOptions }) => {
           const closeNode = initialFlowData["close"];
           if (closeNode) {
             generatedNodes.push({
-              step_id: closeNode.step_id,
-              type: "close",
+              ...closeNode,
               name: formatName("close"),
             });
           }
@@ -121,16 +130,12 @@ const Demo = ({ initialFlowData, initialNodeOptions }) => {
 
   const handleAddNodesAtPosition = () => {
     if (!selectedNodes.length || selectedNodeIndex === null) return;
-  
+
     const newNodes = selectedNodes.map((selected) => {
-      // Retrieve the full node details from initialNodeOptions
       const fullNodeDetails = initialNodeOptions.find(
         (option) => option.step_id === selected.step_id
       );
-  
-      console.log('fullNodeDetails',fullNodeDetails)
 
-      // Return the full node object with formatted name
       return {
         ...fullNodeDetails,
         name: formatName(fullNodeDetails.step_name),
@@ -142,92 +147,128 @@ const Demo = ({ initialFlowData, initialNodeOptions }) => {
       newNodesList.splice(selectedNodeIndex, 0, ...newNodes);
       return newNodesList;
     });
-    console.log('newNodes',nodes)
 
     setSelectedNodes([]);
     setPopupPosition({ top: 0, left: 0 });
     setDropdownVisible(false);
   };
-  
+
   const handleSaveFlow = () => {
-    console.log('nodes inside', nodes)
     const flow = {};
-  
-    // Handle default nodes if initialFlowData is null
-    const defaultNodes = {
-      init: initialNodeOptions.find((node) => node.step_name === "init"),
-      close: initialNodeOptions.find((node) => node.step_name === "close"),
-    };
-  
-    console.log('initialNodeOptions', initialNodeOptions);
 
     nodes.forEach((node, index) => {
       const nextNode = nodes[index + 1];
       const prevNode = nodes[index - 1];
-  console.log('node.name', node.name)
-      // Match the node from initialFlowData or fallback to defaultNodes
-      const nodeFromData =
-        (initialFlowData &&
-          initialFlowData[node.name.toLowerCase().replace(/ /g, "_")]) ||
-        (initialNodeOptions &&
-          initialNodeOptions.find((nodes) => nodes.step_name === (node.name).toLowerCase().replace(/ /g, "_"))) ||
-        defaultNodes[node.name.toLowerCase().replace(/ /g, "_")] ||
+
+      const nodeData =
+        initialFlowData?.[node.name.toLowerCase().replace(/ /g, "_")] ||
+        initialNodeOptions.find(
+          (option) =>
+            option.step_name === node.name.toLowerCase().replace(/ /g, "_")
+        ) ||
         {};
- 
-      const nodeData = { ...nodeFromData };
-  
-      // Replace `data` with `prev_step` if `data` exists
-      if (nodeData.data) {
-        nodeData.prev_step = { ...nodeData.data };
-        delete nodeData.data;
+
+      const fullNode = { ...nodeData };
+
+      if (fullNode.data) {
+        fullNode.prev_step = { ...fullNode.data };
+        delete fullNode.data;
       }
-  
-      // Update `next_step_name` and `prev_step_name`
-      nodeData.next_step_name = nextNode ? nextNode.name.toLowerCase().replace(/ /g, "_") : null;
-      nodeData.prev_step_name = prevNode ? prevNode.name.toLowerCase().replace(/ /g, "_") : null;
-  
-      // Remove any keys with null values
-      Object.keys(nodeData).forEach((key) => {
-        if (nodeData[key] === null) {
-          delete nodeData[key];
+
+      fullNode.next_step_name = nextNode
+        ? nextNode.name.toLowerCase().replace(/ /g, "_")
+        : null;
+      fullNode.prev_step_name = prevNode
+        ? prevNode.name.toLowerCase().replace(/ /g, "_")
+        : null;
+
+      Object.keys(fullNode).forEach((key) => {
+        if (fullNode[key] === null) {
+          delete fullNode[key];
         }
       });
-  
-      flow[node.name.toLowerCase().replace(/ /g, "_")] = nodeData;
+
+      flow[node.name.toLowerCase().replace(/ /g, "_")] = fullNode;
     });
-  
-    console.log(JSON.stringify({ steps: flow }, null, 2));
-  };
-  
 
-  const handleRemoveNode = (nodeToRemove) => {
-    setNodes((prevNodes) => prevNodes.filter((node) => node.step_id !== nodeToRemove.step_id));
-    const removedOption = initialNodeOptions.find(
-      (option) => option.step_name === nodeToRemove.name.toLowerCase().replace(/ /g, "_")
-    );
-    if (removedOption) {
-      setNodeOptions((prevOptions) => [...prevOptions, removedOption]);
-    }
-  };
+    const finalOutput = {
+      ...metadata,
+      steps: flow,
+    };
 
+    console.log(JSON.stringify(finalOutput, null, 2));
+    onSaveFlow(JSON.stringify(finalOutput, null, 2));
+  };
 
   return (
     <div className="flow-container">
+      {!initialFlowData && (
+        <div className="metadata-form">
+          <h3>Please fill the below details</h3>
+          <label>
+            Short Name:
+            <input
+              type="text"
+              value={metadata.short_name}
+              onChange={(e) =>
+                setMetadata({ ...metadata, short_name: e.target.value })
+              }
+            />
+          </label>
+          <label>
+            Version:
+            <input
+              type="number"
+              value={metadata.version}
+              onChange={(e) =>
+                setMetadata({ ...metadata, version: e.target.value })
+              }
+            />
+          </label>
+          <label>
+            Long Name:
+            <input
+              type="text"
+              value={metadata.long_name}
+              onChange={(e) =>
+                setMetadata({ ...metadata, long_name: e.target.value })
+              }
+            />
+          </label>
+          <label>
+            Description:
+            <textarea
+              value={metadata.description}
+              onChange={(e) =>
+                setMetadata({ ...metadata, description: e.target.value })
+              }
+            />
+          </label>
+        </div>
+      )}
+
       <div className="controls-container">
         <button className="save-flow-button" onClick={handleSaveFlow}>
           Save Flow
         </button>
       </div>
+
       <div className="flow-builder-vertical">
         {nodes.map((node, index) => (
-          <React.Fragment key={node.id}>
+          <React.Fragment key={node.step_id}>
             <div className={`node-wrapper ${node.type}-wrapper`}>
               <div className={`node ${node.type}-node`}>
-                <div className={node.type !== "init" && node.type !== "close" ?"node-text":""}>{node.name}</div>
+                <div className={node.type !== "init" && node.type !== "close" ? "node-text" : ""}>
+                  {node.name}
+                </div>
                 {node.type !== "init" && node.type !== "close" && (
                   <button
                     className="delete-button"
-                    onClick={() => handleRemoveNode(node)}
+                    onClick={() =>
+                      setNodes((prev) =>
+                        prev.filter((n) => n.step_id !== node.step_id)
+                      )
+                    }
                   >
                     ✖
                   </button>
@@ -256,6 +297,7 @@ const Demo = ({ initialFlowData, initialNodeOptions }) => {
           </React.Fragment>
         ))}
       </div>
+
       {dropdownVisible && (
         <div
           className="popup-container"
@@ -263,11 +305,6 @@ const Demo = ({ initialFlowData, initialNodeOptions }) => {
             position: "absolute",
             top: popupPosition.top,
             left: popupPosition.left,
-            zIndex: 1000,
-            backgroundColor: "#fff",
-            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-            padding: "10px",
-            borderRadius: "5px",
           }}
         >
           <Select
@@ -279,22 +316,17 @@ const Demo = ({ initialFlowData, initialNodeOptions }) => {
             }))}
             value={selectedNodes}
             onChange={setSelectedNodes}
-            placeholder="Select nodes to add"
           />
           <div className="popup-actions">
             <button
               className="add-node-button"
               onClick={handleAddNodesAtPosition}
-              disabled={!selectedNodes.length || selectedNodeIndex === null}
             >
               Add Nodes
             </button>
             <button
-              className="node close-node"
-              onClick={() => {
-                setPopupPosition({ top: 0, left: 0 });
-                setDropdownVisible(false);
-              }}
+              className="cancel-button"
+              onClick={() => setDropdownVisible(false)}
             >
               Cancel
             </button>
