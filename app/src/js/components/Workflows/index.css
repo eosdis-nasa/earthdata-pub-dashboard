@@ -17,47 +17,50 @@
   
   .other-node {
     display: flex;
-    justify-content: space-between; /* Ensures text and button are spaced apart */
-    align-items: center; /* Aligns text and button vertically */
+    justify-content: space-between; 
+    align-items: center; 
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 8px 12px;
     font-size: 14px;
     word-wrap: break-word;
-    max-width: 600px; /* Optional: Limit the maximum width */
-    white-space: nowrap; /* Prevent text from breaking into multiple lines */
-    overflow: hidden; /* Ensures text does not overflow */
-    text-overflow: ellipsis; /* Adds ellipsis (...) if text overflows */
+    max-width: 600px; 
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
   }
   
   .delete-button {
     padding: 5px;
     position: absolute;
-    top: 8px; /* Adjust the distance from the top */
-    right: 8px; /* Adjust the distance from the right */
+    top: 4px; 
+    right: 4px; 
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 10px; /* Reduced the font size */
-    width: 20px; /* Reduced the button width */
-    height: 20px; /* Reduced the button height */
+    font-size: 10px;
+    width: 20px; 
+    height: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: red;
+    color: white;
   }
   
-  /* Node Text */
-.node-text {
-    flex: 1; /* Makes the text take up the remaining space */
-    margin-right: 25px; /* Adds space between text and button */
+  .node-text {
+    flex: 1; 
+    margin-right: 20px; 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .delete-button:hover {
-    background: red;
+    background: white;
+    color: red;
   }
+
   .flow-container {
     display: flex;
     flex-direction: column;
@@ -71,7 +74,6 @@
   }
   
   .node-wrapper {
-    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -84,6 +86,12 @@
     text-align: center;
   }
   
+  .form-node, 
+  .review-node, 
+  .action-node {
+    color: white;
+    background-color: #2275AA;
+  }
   .init-node {
     background-color: #4caf50;
   }
@@ -112,7 +120,6 @@
   }
   
   .insert-button {
-    color: white;
     border: none;
     border-radius: 50%;
     width: 30px;
@@ -126,6 +133,7 @@
   
   .insert-button:hover {
     background-color: #2275AA;
+    color: white;
   }
   
   .dropdown-container {
@@ -135,13 +143,12 @@
     z-index: 10;
   }
   
-  
   .controls-container {
     display: flex;
-    flex-direction: row; /* Align items horizontally */
-    justify-content: flex-end; /* Push items to the right */
-    align-items: center; /* Align items vertically */
-    gap: 10px; /* Add spacing between items */
+    flex-direction: row; 
+    justify-content: flex-end; 
+    align-items: center; 
+    gap: 10px; 
     width: auto;
   }
   .add-node-button,
@@ -169,9 +176,7 @@
     opacity: 0.9;
   }
 
-
-  /* Init Node */
-.init-node {
+  .init-node {
     background-color: #4caf50;
     color: white;
     border-radius: 5px;
@@ -179,7 +184,6 @@
     text-align: center;
   }
   
-  /* Close Node */
   .close-node {
     background-color: #f44336;
     color: white;
@@ -188,8 +192,6 @@
     text-align: center;
   }
   
-  
-  /* Buttons */
   .add-node-button,
   .save-flow-button {
     margin: 5px;
@@ -206,9 +208,7 @@
     color: white;
   }
   
-
-  /* General Node Styling */
-.node {
+  .node {
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -216,16 +216,49 @@
     text-align: center;
     word-wrap: break-word;
     font-size: 14px;
-    max-width: 700px; /* Optional: Set a max width to prevent overly large nodes */
-    white-space: pre-wrap; /* Ensure multiline text wraps */
+    max-width: 700px;
+    white-space: pre-wrap; 
   }
   
-/* Node Content */
-.node-content {
+  .node-content {
     display: flex;
     justify-content: space-between;
     width: 100%;
   }
   
-
+  .flow-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
   
+  .metadata-form {
+    margin-bottom: 20px;
+  }
+  
+  .metadata-form label {
+    display: block;
+  }
+  
+  .metadata-form input,
+  .metadata-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .controls-container {
+    margin-bottom: 20px;
+  }
+  
+  .flow-builder-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .popup-actions {
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+    z-index: 1001;
+  }

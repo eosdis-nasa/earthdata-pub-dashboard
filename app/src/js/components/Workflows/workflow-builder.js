@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import FlowBuilder, { NodeContext, useAction } from "react-flow-builder";
 import Select from "react-select";
 import "./index.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const InitNodeDisplay = () => {
   const node = useContext(NodeContext);
@@ -12,46 +14,6 @@ const CloseNodeDisplay = () => {
   const node = useContext(NodeContext);
   return <div className="node close-node">{node.name}</div>;
 };
-
-const OtherNodeDisplay = () => {
-  const node = useContext(NodeContext);
-  const { removeNode } = useAction();
-
-  return (
-    <div className="node other-node">
-      <div className="node-content">
-        <span className="node-text">{node.name}</span>
-        <button
-          className="delete-button"
-          onClick={() => removeNode(node)}
-          title="Remove Node"
-        >
-          ✖
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const registerNodes = [
-  {
-    type: "init",
-    name: "init",
-    displayComponent: InitNodeDisplay,
-    isStart: true,
-  },
-  {
-    type: "close",
-    name: "close",
-    displayComponent: CloseNodeDisplay,
-    isEnd: true,
-  },
-  {
-    type: "node",
-    name: "Other Node",
-    displayComponent: OtherNodeDisplay,
-  },
-];
 
 const formatName = (name) =>
   name
@@ -80,12 +42,19 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
   
   useEffect(() => {
     if (initialFlowData) {
+      setMetadata({
+        short_name: initialFlowData.short_name || "",
+        version: initialFlowData.version || "",
+        long_name: initialFlowData.long_name || "",
+        description: initialFlowData.description || "",
+        id: initialFlowData.id || "",
+      });
       const buildNodes = () => {
         const generatedNodes = [];
         let currentStep = "init";
-
+        const initialFlowDataSteps = initialFlowData.steps;
         while (currentStep && currentStep !== "close") {
-          const currentNode = initialFlowData[currentStep];
+          const currentNode = initialFlowDataSteps[currentStep];
           if (!currentNode) break;
 
           generatedNodes.push({
@@ -97,7 +66,7 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
         }
 
         if (currentStep === "close") {
-          const closeNode = initialFlowData["close"];
+          const closeNode = initialFlowDataSteps["close"];
           if (closeNode) {
             generatedNodes.push({
               ...closeNode,
@@ -161,7 +130,7 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
       const prevNode = nodes[index - 1];
 
       const nodeData =
-        initialFlowData?.[node.name.toLowerCase().replace(/ /g, "_")] ||
+      initialFlowData?.steps?.[node.name.toLowerCase().replace(/ /g, "_")] ||
         initialNodeOptions.find(
           (option) =>
             option.step_name === node.name.toLowerCase().replace(/ /g, "_")
@@ -195,18 +164,14 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
       ...metadata,
       steps: flow,
     };
-
-    console.log(JSON.stringify(finalOutput, null, 2));
     onSaveFlow(JSON.stringify(finalOutput, null, 2));
   };
 
   return (
     <div className="flow-container">
-      {!initialFlowData && (
+      { 
         <div className="metadata-form">
-          <h3>Please fill the below details</h3>
-          <label>
-            Short Name:
+          <label className='heading--small' htmlFor="Short Name">Short Name</label>
             <input
               type="text"
               value={metadata.short_name}
@@ -214,9 +179,7 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
                 setMetadata({ ...metadata, short_name: e.target.value })
               }
             />
-          </label>
-          <label>
-            Version:
+          <label className='heading--small'>Version </label>
             <input
               type="number"
               value={metadata.version}
@@ -224,9 +187,8 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
                 setMetadata({ ...metadata, version: e.target.value })
               }
             />
-          </label>
-          <label>
-            Long Name:
+         
+          <label className='heading--small'>Long Name</label>
             <input
               type="text"
               value={metadata.long_name}
@@ -234,24 +196,16 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
                 setMetadata({ ...metadata, long_name: e.target.value })
               }
             />
-          </label>
-          <label>
-            Description:
+          
+          <label className='heading--small'>Description</label>
             <textarea
               value={metadata.description}
               onChange={(e) =>
                 setMetadata({ ...metadata, description: e.target.value })
               }
             />
-          </label>
         </div>
-      )}
-
-      <div className="controls-container">
-        <button className="save-flow-button" onClick={handleSaveFlow}>
-          Save Flow
-        </button>
-      </div>
+      }
 
       <div className="flow-builder-vertical">
         {nodes.map((node, index) => (
@@ -270,7 +224,7 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
                       )
                     }
                   >
-                    ✖
+                  <FontAwesomeIcon icon={faTimes} size="1x"/>
                   </button>
                 )}
               </div>
@@ -283,14 +237,14 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
                   onClick={(e) => {
                     const rect = e.target.getBoundingClientRect();
                     setPopupPosition({
-                      top: rect.top + window.scrollY + 30,
-                      left: rect.left + window.scrollX - 50,
+                      top: rect.top + window.scrollY - 10,
+                      left: rect.left + window.scrollX,
                     });
                     setDropdownVisible(true);
                     setSelectedNodeIndex(index + 1);
                   }}
                 >
-                  ➕
+                <FontAwesomeIcon icon={faPlus} />
                 </button>
               </div>
             )}
@@ -304,7 +258,7 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
           style={{
             position: "absolute",
             top: popupPosition.top,
-            left: popupPosition.left,
+            left: 210 + popupPosition.left,
           }}
         >
           <Select
@@ -325,7 +279,7 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
               Add Nodes
             </button>
             <button
-              className="cancel-button"
+              className="node close-node"
               onClick={() => setDropdownVisible(false)}
             >
               Cancel
