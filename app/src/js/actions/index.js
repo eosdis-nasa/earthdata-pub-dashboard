@@ -300,6 +300,15 @@ export const setWorkflowStep = (payload) => ({
   }
 });
 
+export const promoteStep = (payload) => ({
+  [CALL_API]: {
+    type: types.STEPS,
+    method: 'POST',
+    path: 'data/submission/operation/promoteStep',
+    body: payload
+  }
+});
+
 export const copyRequest = (payload) => ({
   [CALL_API]: {
     type: types.REQUESTS,
