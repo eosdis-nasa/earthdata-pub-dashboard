@@ -54,5 +54,7 @@ export const configureRequest = (params = {}) => {
   };
   config = Object.assign({}, defaultRequestConfig, config);
 
+  console.log('config', config);
+  
   return config;
 };
