@@ -193,7 +193,7 @@ export const stepLookup = (row) => {
           if (stepName.match(/assign_a_workflow/g)){
             request = `/workflows?requestId=${row.id}`;
           } else if (stepName.match(/daac_assignment/g)) {
-            request = `${basepath}daac/assignment/${row.id}`;
+            request = `/daac/assignment/${row.id}`;
           }
         }
         break;
