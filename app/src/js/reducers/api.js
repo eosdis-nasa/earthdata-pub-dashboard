@@ -18,7 +18,7 @@ function getExpiration (token) {
   const decoded = jwt.decode(token);
   if (decoded && decoded.exp) {
     console.log('decoded', decoded)
-    return decoded.exp - 3560;
+    return decoded.exp - 3530;
   }
   return 0;
 }

@@ -22,6 +22,7 @@ export const getErrorMessage = (response) => {
 
 export const addRequestAuthorization = (config, state) => {
   const token = getProperty(state, 'api.tokens.token');
+  console.log('token', token);
   if (token) {
     config.headers = Object.assign({}, config.headers, {
       Authorization: `Bearer ${token}`
