@@ -32,9 +32,11 @@ class TimeoutWarning extends React.Component {
 
   setWarningTimeout () {
     const tokens = this.props.api.tokens;
+    console.log('setWarningTimeout', tokens)
     if (tokens.token && !tokens.inflight) {
       const currentTime = Math.floor(Date.now() / 1000);
       const sessionLength = tokens.expiration - currentTime;
+      console.log('sessionLength', sessionLength)
       const warningTime = (sessionLength - 30) * 1000;
       this.timeout = setTimeout(this.startCountdown.bind(this), warningTime);
     }
@@ -49,6 +51,7 @@ class TimeoutWarning extends React.Component {
   updateRemaining () {
     const currentTime = Math.floor(Date.now() / 1000);
     const remaining = parseInt(this.props.api.tokens.expiration - currentTime);
+    console.log('remaining', remaining)
     if (remaining < 0) {
       this.logoutNow();
     } else {

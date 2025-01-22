@@ -17,7 +17,8 @@ import { createReducer } from '@reduxjs/toolkit';
 function getExpiration (token) {
   const decoded = jwt.decode(token);
   if (decoded && decoded.exp) {
-    return decoded.exp;
+    console.log('decoded', decoded)
+    return decoded.exp - 3560;
   }
   return 0;
 }
@@ -43,6 +44,7 @@ function reducePrivileges (user) {
 export const initialState = (() => {
   const { token, user } = loadToken();
   const expiration = token ? getExpiration(token) : 0;
+  console.log('expiration', expiration);
   const currentTime = Math.floor(Date.now() / 1000);
   const expired = expiration < currentTime;
   return {
