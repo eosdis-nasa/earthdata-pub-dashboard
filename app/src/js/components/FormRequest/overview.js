@@ -2,24 +2,25 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter, useParams } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
-import { listDaacs, initialize } from '../../actions';
+import { listDaacs, assignDaacs, getRequest } from '../../actions';
 import { Form, FormGroup, FormLabel, Button, Table } from 'react-bootstrap';
 import _config from '../../config';
 
-const FormsOverview = ({ forms }) => {
-  const { daacid } = useParams(); 
+const FormsOverview = ({ forms, requests }) => {
+  const { requestId } = useParams(); 
   const [daacs, setDaacs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selected, setSelected] = useState([]);
+  const [selectedDaacs, setSelectedDaacs] = useState({});
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(listDaacs())
       .then((data) => {
         setDaacs(data.data);
-        if(daacid) {
-          const obj = (data.data).find(item => item.id === daacid);
-          if(obj) setSelectedValues(obj.url, obj.id, obj.short_name, obj.long_name, obj.description);
+        if (requestId){
+          dispatch(getRequest(requestId))
         }
         setLoading(false);
       })
@@ -27,26 +28,43 @@ const FormsOverview = ({ forms }) => {
         setError(err.message);
         setLoading(false);
       });
-  }, [dispatch, daacid]);
+  }, [dispatch, requestId]);
 
-  const [selected, setSelected] = useState(null);
-  const [selectedDaac, setSelectedDaac] = useState({});
+  useEffect(() => {
+    if (requests.detail.data?.assigned_daacs){
+      const assignedDaacs = requests.detail.data.assigned_daacs.map((entry) => entry.daac_id);
+      setSelected(assignedDaacs);
+    }
+  }, [dispatch, requests]);
 
   const setSelectedValues = (url, id, short_name, long_name, description) => {
-    setSelectedDaac({ url, id, short_name, long_name, description });
-    setSelected(long_name);
+    let selectedDaacCopy = { ...selectedDaacs };
+    let selectedCopy;
+    if (selected.includes(id)) {
+      selectedCopy = selected.filter((daacId) => id !== daacId);
+      delete selectedDaacCopy[id];
+
+    } else {
+      selectedCopy = [...selected, id];
+      selectedDaacCopy[id] = { url, id, short_name, long_name, description }
+    }
+    
+    setSelectedDaacs(selectedDaacCopy);
+    setSelected(selectedCopy);
   };
 
   const submitForm = async (e) => {
     e.preventDefault();
     const { basepath } = _config;
     const urlReturn = `${basepath}requests`;
-  
-    try {
-      await dispatch(initialize(selectedDaac.id, { 'daac_id': selectedDaac.id }));
-      window.location.href = urlReturn;
-    } catch (error) {
-      console.error('Error during form submission:', error);
+
+    if (requestId){
+      try {
+        await dispatch(assignDaacs({'id': requestId, 'daacs': selected}))
+        window.location.href = urlReturn;
+      } catch (error) {
+        console.error('Error during daac assignment:', error);
+      }
     }
   };  
 
@@ -54,8 +72,8 @@ const FormsOverview = ({ forms }) => {
     e.preventDefault();
     const { basepath } = _config;
     const urlReturn = `${basepath}requests`;
-    setSelected(null);
-    setSelectedDaac({});
+    setSelected([]);
+    setSelectedDaacs({});
     window.location.href = urlReturn;
   };
 
@@ -178,9 +196,9 @@ const FormsOverview = ({ forms }) => {
       <div style={responsiveStyles.container}>
         <Form name="daacs_form" onSubmit={submitForm} id="daac-selection" style={responsiveStyles.container}>
           <FormGroup name="form-group" id="form-group">
-            <FormLabel>Select a DAAC</FormLabel>
+            <FormLabel>DAAC Assignment</FormLabel>
             <div className="mt-3 disabled-daacs" style={infoSectionStyles}>
-              Some DAACs are not selectable on the form because they are not yet using Earthdata Pub for data publication. To publish data with one of those DAACs, please contact them directly. DAAC websites can be found in the <a href="/data_publication_guidelines#daacs" alt="go to NASA Daac Section" title="go NASA Daac Section">NASA DAACs</a> section of Earthdata Pub.
+              Select on or more DAACs to assign to this Data Accession Request Form. DAAC websites can be found in the <a href="/data_publication_guidelines#daacs" alt="go to NASA Daac Section" title="go NASA Daac Section">NASA DAACs</a> section of Earthdata Pub.
             </div>
             <Table striped hover className="mt-3" style={responsiveStyles.table}>
               <thead>
@@ -195,15 +213,14 @@ const FormsOverview = ({ forms }) => {
                   <tr key={index}>
                     <td style={item.hidden ? disabledTdStyles : tdStyles}>
                       <input
-                        type="radio"
+                        type="checkbox"
                         name="daac"
                         id={`${item.id}`}
                         value={item.long_name}
-                        onClick={() => setSelectedValues(item.url, item.id, item.short_name, item.long_name, item.description)}
-                        checked={selected === item.long_name}
+                        checked={selected.includes(item.id)}
                         disabled={item.hidden}
                         style={radioInputStyles}
-                        onChange={() => setSelected(item.long_name)}
+                        onChange={() => setSelectedValues(item.url, item.id, item.short_name, item.long_name, item.description)}
                       />
                     </td>
                     <td style={item.hidden ? tdDaacnameDisabledTdStyles : tdDaacnameStyles}>{item.short_name}</td>
@@ -213,19 +230,22 @@ const FormsOverview = ({ forms }) => {
               </tbody>
             </Table>
             <div className="info-section mt-3" style={infoSectionStyles}>
-              {selected && selected !== 'Unknown DAAC' && (
-                <div>
-                  <strong>{selected}</strong>
-                  <div id="selected_description">{selectedDaac.description}</div>
-                </div>
-              )}
-              {selected && (
-                <div className="mt-3 link-to-daac">
-                  For more information, visit{' '}
-                  <a href={selectedDaac.url} id="selected_daac_link" target="_blank" aria-label="Link to selected DAAC">
-                    <span id="selected_daac">{selectedDaac.short_name}</span>'s website
-                  </a>
-                </div>
+              {selectedDaacs && Object.keys(selectedDaacs).length > 0 && (
+                Object.keys(selectedDaacs).map((element) => 
+                  <div key={selectedDaacs[element].id}>
+                    <strong>{selectedDaacs[element].long_name}</strong>
+                    <div id="selected_description">{selectedDaacs[element].description}</div>
+                    {selectedDaacs[element].long_name !== 'Example DAAC'  && (
+                      <div className="mt-3 link-to-daac">
+                        For more information, visit{' '}
+                        <a href={selectedDaacs[element].url} id="selected_daac_link" target="_blank" aria-label="Link to selected DAAC">
+                          <span id="selected_daac">{selectedDaacs[element].short_name}</span>'s website
+                        </a>
+                      </div>
+                    )}
+                    <br/>
+                  </div>
+                )
               )}
               {selected && (
                 <div className="button_bar mt-3 d-flex justify-content-between" style={responsiveStyles.buttonBar}>
@@ -244,6 +264,7 @@ const FormsOverview = ({ forms }) => {
 FormsOverview.propTypes = {
   forms: PropTypes.object,
   stats: PropTypes.object,
+  requests: PropTypes.object,
   dispatch: PropTypes.func,
   config: PropTypes.object,
 };
@@ -253,5 +274,6 @@ export { FormsOverview };
 export default withRouter(connect(state => ({
   stats: state.stats,
   forms: state.forms,
+  requests: state.requests,
   config: state.config,
 }))(FormsOverview));
