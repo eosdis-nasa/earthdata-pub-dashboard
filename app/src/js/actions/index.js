@@ -73,7 +73,7 @@ export const refreshToken = () => {
         method: 'GET',
         id: null,
         path: 'token/refresh',
-        qs: { refresh: true }
+        qs: { refresh: false }
       }
     });
   };
