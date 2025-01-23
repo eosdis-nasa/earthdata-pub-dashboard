@@ -1,5 +1,5 @@
 'use strict';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -15,16 +15,17 @@ class DownloadOverview extends React.Component {
             alertMessage: '',
             alertVariant: 'danger',
             dismissCountDown: 0,
-            downloadAttempted: false 
+            downloadAttempted: false,
+            permanentMessage: 'Download in progress. This tab will close once the download is complete.'
         };
     }
 
     handleDownload = (s3BucketUrl) => {
         if (this.state.downloadAttempted) {
-            return; // Avoid duplicate API calls
+            return;
         }
 
-        this.setState({ downloadAttempted: true }); 
+        this.setState({ downloadAttempted: true });
 
         const { apiRoot } = _config;
         const download = new localUpload();
@@ -36,25 +37,31 @@ class DownloadOverview extends React.Component {
                 loadToken().token
             )
             .then((resp) => {
-                let error =
-                    resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
+                let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
 
                 if (error) {
                     console.error(`An error has occurred: ${error}.`);
                     this.showAlert(`Error: ${error}`, 'danger');
+                    this.setState({ permanentMessage: `Error: ${error}` });
                 } else {
                     console.log('Download completed successfully.');
-                    window.close();
+                    if (window.opener && !window.opener.closed) {
+                        window.close();
+                    } else {
+                        console.log("This tab was not opened via JavaScript, so it cannot be closed automatically.");
+                    }                    
                 }
             })
             .catch((err) => {
                 console.error('Error during file download:', err);
                 this.showAlert('An error occurred during file download.', 'danger');
+                this.setState({ permanentMessage: 'An error occurred during file download.' });
             });
     };
 
     showAlert = (message, variant) => {
         this.setState({ alertMessage: message, alertVariant: variant, dismissCountDown: 20 });
+
         // Automatically hide the alert after 20 seconds
         setTimeout(() => {
             this.setState({ dismissCountDown: 0 });
@@ -68,15 +75,15 @@ class DownloadOverview extends React.Component {
         } else if (!s3BucketUrl) {
             console.error('No S3 bucket URL found in query parameters.');
             this.showAlert('No S3 bucket URL found.', 'danger');
+            this.setState({ permanentMessage: 'No S3 bucket URL found.' }); 
         }
     }
 
     render() {
-        const { alertMessage, alertVariant, dismissCountDown } = this.state;
+        const { alertMessage, alertVariant, dismissCountDown, permanentMessage } = this.state;
 
         return (
             <div>
-                {/* Error or Success Alert */}
                 {dismissCountDown > 0 && (
                     <Alert
                         className="sticky-alert"
@@ -98,7 +105,7 @@ class DownloadOverview extends React.Component {
                         alignItems: 'center',
                     }}
                 >
-                    {dismissCountDown > 0 ? alertMessage : 'Download in progress. This tab will close once the download is complete.'}
+                    {permanentMessage}
                 </h1>
             </div>
         );
