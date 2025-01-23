@@ -1,82 +1,106 @@
 'use strict';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import localUpload from '@edpub/upload-utility';
+import { Alert } from 'react-bootstrap';
 
 class DownloadOverview extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            dots: '.',
+            alertMessage: '',
+            alertVariant: 'danger',
+            dismissCountDown: 0,
+            downloadAttempted: false 
         };
     }
 
-    componentDidMount() {
-        this.dotInterval = setInterval(() => {
-            this.setState((prevState) => ({
-                dots: prevState.dots.length < 3 ? prevState.dots + '.' : '.',
-            }));
-        }, 500); 
-    }
+    handleDownload = (s3BucketUrl) => {
+        if (this.state.downloadAttempted) {
+            return; // Avoid duplicate API calls
+        }
 
-    componentWillUnmount() {
-        clearInterval(this.dotInterval); 
+        this.setState({ downloadAttempted: true }); 
+
+        const { apiRoot } = _config;
+        const download = new localUpload();
+
+        download
+            .downloadFile(
+                `attachments/${decodeURIComponent(s3BucketUrl)}`,
+                `${apiRoot}data/upload/downloadUrl`,
+                loadToken().token
+            )
+            .then((resp) => {
+                let error =
+                    resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
+
+                if (error) {
+                    console.error(`An error has occurred: ${error}.`);
+                    this.showAlert(`Error: ${error}`, 'danger');
+                } else {
+                    console.log('Download completed successfully.');
+                    window.close();
+                }
+            })
+            .catch((err) => {
+                console.error('Error during file download:', err);
+                this.showAlert('An error occurred during file download.', 'danger');
+            });
+    };
+
+    showAlert = (message, variant) => {
+        this.setState({ alertMessage: message, alertVariant: variant, dismissCountDown: 20 });
+        // Automatically hide the alert after 20 seconds
+        setTimeout(() => {
+            this.setState({ dismissCountDown: 0 });
+        }, 20000);
+    };
+
+    componentDidMount() {
+        const s3BucketUrl = this.props.location?.search.replace('?', '');
+        if (s3BucketUrl && !this.state.downloadAttempted) {
+            this.handleDownload(s3BucketUrl);
+        } else if (!s3BucketUrl) {
+            console.error('No S3 bucket URL found in query parameters.');
+            this.showAlert('No S3 bucket URL found.', 'danger');
+        }
     }
 
     render() {
-        const download = new localUpload();
+        const { alertMessage, alertVariant, dismissCountDown } = this.state;
 
-        const handleDownload = (s3BucketUrl) => {
-            const { apiRoot } = _config;
-
-            download
-                .downloadFile(
-                    `attachments/${decodeURIComponent(s3BucketUrl)}`,
-                    `${apiRoot}data/upload/downloadUrl`,
-                    loadToken().token
-                )
-                .then((resp) => {
-                    let error =
-                        resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
-
-                    if (error) {
-                        console.error(`An error has occurred: ${error}.`);
-                    } else {
-                        console.log('Download completed successfully.');
-                        // Close the tab after successful download
-                        window.close();
-                    }
-                })
-                .catch((err) => {
-                    console.error('Error during file download:', err);
-                });
-        };
-
-        const s3BucketUrl = this.props.location?.search.replace('?', '');
-        const { dots } = this.state;
-
-        if (s3BucketUrl) {
-            handleDownload(s3BucketUrl);
-        } else {
-            console.error('No S3 bucket URL found in query parameters.');
-        }
-        
         return (
-            <h1
-                className="heading--shared-content"
-                style={{
-                    fontWeight: 600,
-                    fontSize: '2em',
-                    display: 'flex',
-                    alignItems: 'center',
-                }}
-            >
-                Downloading {dots}
-            </h1>
+            <div>
+                {/* Error or Success Alert */}
+                {dismissCountDown > 0 && (
+                    <Alert
+                        className="sticky-alert"
+                        show={dismissCountDown > 0}
+                        variant={alertVariant}
+                        dismissible
+                        onClose={() => this.setState({ dismissCountDown: 0 })}
+                    >
+                        {alertMessage}
+                    </Alert>
+                )}
+
+                <h1
+                    className="heading--shared-content"
+                    style={{
+                        fontWeight: 600,
+                        fontSize: '2em',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                >
+                    {dismissCountDown > 0 ? alertMessage : 'Download in progress. This tab will close once the download is complete.'}
+                </h1>
+            </div>
         );
     }
 }
