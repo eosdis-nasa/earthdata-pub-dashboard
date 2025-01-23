@@ -41,8 +41,8 @@ class DownloadOverview extends React.Component {
 
                 if (error) {
                     console.error(`An error has occurred: ${error}.`);
-                    this.showAlert(`Error: ${error}`, 'danger');
-                    this.setState({ permanentMessage: `Error: ${error}` });
+                    this.showAlert(`${error}`, 'danger');
+                    this.setState({ permanentMessage: `${error}` });
                 } else {
                     console.log('Download completed successfully.');
                     window.close();                         
