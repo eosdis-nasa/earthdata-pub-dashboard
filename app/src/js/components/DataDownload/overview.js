@@ -45,11 +45,7 @@ class DownloadOverview extends React.Component {
                     this.setState({ permanentMessage: `Error: ${error}` });
                 } else {
                     console.log('Download completed successfully.');
-                    if (window.opener && !window.opener.closed) {
-                        window.close();
-                    } else {
-                        console.log("This tab was not opened via JavaScript, so it cannot be closed automatically.");
-                    }                    
+                    window.close();                         
                 }
             })
             .catch((err) => {
