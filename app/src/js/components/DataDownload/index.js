@@ -14,7 +14,6 @@ class Download extends React.Component {
   }
 
   render () {
-    console.log('deepak')
     return (
       <div className='page__users'>
         <div className='content__header'>
