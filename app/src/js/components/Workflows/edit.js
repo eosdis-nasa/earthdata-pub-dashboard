@@ -40,7 +40,6 @@ class Workflows extends React.Component {
   }
 
   handleSaveFlow(flowData) {
-    console.log('flow data', flowData);
     this.setState({ flowData });
   }
 
