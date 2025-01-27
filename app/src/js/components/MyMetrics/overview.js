@@ -124,10 +124,10 @@ const MetricOverview = ({ privileges, dispatch, requests }) => {
         Object.keys(requestMappingStacked[daac]).forEach(step => {
             formattedRequestMappingStacked[daac][step] = Array.from(requestMappingStacked[daac][step]);
         });
-    });
+  });
 
-// Time Taken for Close Requests
-const closeRequests = requestData
+  // Time Taken for Close Requests
+  const closeRequests = requestData
     .filter(req => req.step_name === "close")
     .map(req => {
         const createdAt = new Date(req.created_at);
@@ -152,105 +152,99 @@ const closeRequests = requestData
         };
     });
 
-setCloseRequests(closeRequests);
-
-
-
-    setChartsData({
-        daacData: Object.values(daacCounts),
-        statusData: Object.values(stepNameCounts),
-        stackedData: Object.values(stackedData),
-        daacColors,
-        stepNameColors,
-        requestMappingDaac: formattedRequestMappingDaac,
-        requestMappingStep: formattedRequestMappingStep,
-        requestMappingStacked: formattedRequestMappingStacked
-    });
+  setCloseRequests(closeRequests);
+  setChartsData({
+      daacData: Object.values(daacCounts),
+      statusData: Object.values(stepNameCounts),
+      stackedData: Object.values(stackedData),
+      daacColors,
+      stepNameColors,
+      requestMappingDaac: formattedRequestMappingDaac,
+      requestMappingStep: formattedRequestMappingStep,
+      requestMappingStacked: formattedRequestMappingStacked
+  });
 }, [requests.list]);
 
 
-  const toggleView = (type) => {
-    setViewMode(prev => ({ ...prev, [type]: prev[type] === 'chart' ? 'table' : 'chart' }));
-  };
+const toggleView = (type) => {
+  setViewMode(prev => ({ ...prev, [type]: prev[type] === 'chart' ? 'table' : 'chart' }));
+};
 
-  return (
-    <div className='page__component'>
-      <section className='page__section page__section__controls'>
-        <Breadcrumbs config={[{ label: 'Dashboard Home', href: '/' }, { label: 'My Metrics', active: true }]} />
-      </section>
+return (
+  <div className='page__component'>
+    <section className='page__section page__section__controls'>
+      <Breadcrumbs config={[{ label: 'Dashboard Home', href: '/' }, { label: 'My Metrics', active: true }]} />
+    </section>
 
-      <div className="total-count">
-      Total requests submitted across all DAACs:
-        <span className="count-number">
-          {chartsData.daacData.reduce((sum, d) => sum + d.count, 0)}
-        </span>
-      </div>
+    <div className="total-count">
+    Total requests submitted across all DAACs:
+      <span className="count-number">
+        {chartsData.daacData.reduce((sum, d) => sum + d.count, 0)}
+      </span>
+    </div>
 
+    {/* Count per DAAC */}
+    <div className="chart-box">
+      <h3 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "#007acc", textAlign: "center" }}>
+      TOTAL REQUESTS SUBMITTED PER DAAC
+      </h3>
+      <p style={{ textAlign: "center", fontSize: "0.9rem", color: "#555" }}>
+        Breakdown of the total count per DAAC.
+      </p>
+      <div className="toggle-container">
+        <button onClick={() => toggleView('daac')} className="toggle-switch">
+            {viewMode.daac === 'chart' ? (
+                <FontAwesomeIcon icon={faTable} title="Switch to Table View" className="toggle-icon" />
+            ) : (
+                <FontAwesomeIcon icon={faChartBar} title="Switch to Chart View" className="toggle-icon" />
+            )}
+        </button>
+    </div>
 
-      {/* Count per DAAC */}
-      <div className="chart-box">
-        <h3 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "#007acc", textAlign: "center" }}>
-        TOTAL REQUESTS SUBMITTED PER DAAC
-        </h3>
-        <p style={{ textAlign: "center", fontSize: "0.9rem", color: "#555" }}>
-          Breakdown of the total count per DAAC.
-        </p>
-        <div className="toggle-container">
-          <button onClick={() => toggleView('daac')} className="toggle-switch">
-              {viewMode.daac === 'chart' ? (
-                  <FontAwesomeIcon icon={faTable} title="Switch to Table View" className="toggle-icon" />
-              ) : (
-                  <FontAwesomeIcon icon={faChartBar} title="Switch to Chart View" className="toggle-icon" />
-              )}
-          </button>
-        </div>
-
-
-  {viewMode.daac === 'chart' ? (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={chartsData.daacData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="daac_name" />
-        <YAxis />
-        <Tooltip />
-        <Bar dataKey="count">
-          <LabelList dataKey="count" position="top" />
+    {viewMode.daac === 'chart' ? (
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={chartsData.daacData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="daac_name" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="count">
+            <LabelList dataKey="count" position="top" />
+            {chartsData.daacData.map((entry) => (
+              <Cell key={entry.daac_name} fill={chartsData.daacColors[entry.daac_name]} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+      ) : (
+      <table className="styled-table">
+      <thead>
+          <tr>
+              <th>DAAC Name</th>
+              <th>Request IDs</th>
+          </tr>
+      </thead>
+      <tbody>
           {chartsData.daacData.map((entry) => (
-            <Cell key={entry.daac_name} fill={chartsData.daacColors[entry.daac_name]} />
+              <tr key={entry.daac_name}>
+                  <td>{entry.daac_name}</td>
+                  <td>
+                      {chartsData.requestMappingDaac[entry.daac_name]?.length > 0 ? (
+                          chartsData.requestMappingDaac[entry.daac_name].map((id) => (
+                              <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
+                                  {id}
+                              </Link>
+                          ))
+                      ) : (
+                          <span style={{ color: 'red' }}>No Requests</span>
+                      )}
+                  </td>
+              </tr>
           ))}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
-  ) : (
-    <table className="styled-table">
-    <thead>
-        <tr>
-            <th>DAAC Name</th>
-            <th>Request IDs</th>
-        </tr>
-    </thead>
-    <tbody>
-        {chartsData.daacData.map((entry) => (
-            <tr key={entry.daac_name}>
-                <td>{entry.daac_name}</td>
-                <td>
-                    {chartsData.requestMappingDaac[entry.daac_name]?.length > 0 ? (
-                        chartsData.requestMappingDaac[entry.daac_name].map((id) => (
-                            <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
-                                {id}
-                            </Link>
-                        ))
-                    ) : (
-                        <span style={{ color: 'red' }}>No Requests</span>
-                    )}
-                </td>
-            </tr>
-        ))}
-    </tbody>
-</table>
-
-  )}
-</div>
+      </tbody>
+      </table>
+      )}
+    </div>
 
       {/* Count per Step Name */}
       <div className="chart-box">
@@ -269,54 +263,51 @@ setCloseRequests(closeRequests);
             )}
           </button>
         </div>
-
-
   
-  {viewMode.step === 'chart' ? (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={chartsData.statusData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="step_name" />
-        <YAxis />
-        <Tooltip />
-        <Bar dataKey="count">
-          <LabelList dataKey="count" position="top" />
-          {chartsData.statusData.map((entry) => (
-            <Cell key={entry.step_name} fill={chartsData.stepNameColors[entry.step_name]} />
-          ))}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
-  ) : (
-    <table className="styled-table">
-    <thead>
-        <tr>
-            <th>Step Name</th>
-            <th>Request IDs</th>
-        </tr>
-    </thead>
-    <tbody>
-        {chartsData.statusData.map((entry) => (
-            <tr key={entry.step_name}>
-                <td>{entry.step_name}</td>
-                <td>
-                    {chartsData.requestMappingStep[entry.step_name]?.length > 0 ? (
-                        chartsData.requestMappingStep[entry.step_name].map((id) => (
-                            <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
-                                {id}
-                            </Link>
-                        ))
-                    ) : (
-                        <span style={{ color: 'red' }}>No Requests</span>
-                    )}
-                </td>
-            </tr>
-        ))}
-    </tbody>
-</table>
-
-  )}
-</div>
+        {viewMode.step === 'chart' ? (
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={chartsData.statusData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="step_name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="count">
+                <LabelList dataKey="count" position="top" />
+                {chartsData.statusData.map((entry) => (
+                  <Cell key={entry.step_name} fill={chartsData.stepNameColors[entry.step_name]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <table className="styled-table">
+            <thead>
+                <tr>
+                    <th>Step Name</th>
+                    <th>Request IDs</th>
+                </tr>
+            </thead>
+            <tbody>
+                {chartsData.statusData.map((entry) => (
+                    <tr key={entry.step_name}>
+                        <td>{entry.step_name}</td>
+                        <td>
+                            {chartsData.requestMappingStep[entry.step_name]?.length > 0 ? (
+                                chartsData.requestMappingStep[entry.step_name].map((id) => (
+                                    <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
+                                        {id}
+                                    </Link>
+                                ))
+                            ) : (
+                                <span style={{ color: 'red' }}>No Requests</span>
+                            )}
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+          </table>
+        )}
+      </div>
 
       {/* Stacked Bar Chart */}
       <div className="chart-box">
