@@ -26,6 +26,7 @@ import Sections from './components/Sections';
 import Questions from './components/Questions';
 import Workflows from './components/Workflows';
 import Metrics from './components/Metrics';
+import MyMetrics from './components/MyMetrics';
 import Roles from './components/Roles';
 import Conversations from './components/Conversations';
 import Rules from './components/Rules';
@@ -67,6 +68,7 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/groups', component: Groups },
     { path: '/workflows', component: Workflows },
     { path: '/metrics', component: Metrics },
+    { path: '/mymetrics', component: MyMetrics },
     { path: '/roles', component: Roles },
     { path: '/conversations/', component: Conversations },
     { path: '/rules', component: Rules },
