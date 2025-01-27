@@ -13,26 +13,34 @@ import config from '../../config';
 import Loading from '../LoadingIndicator/loading-indicator';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import ErrorReport from '../Errors/report';
+import Demo from './workflow-builder';
+import { listSteps } from '../../actions';
 
 class Workflows extends React.Component {
   constructor () {
     super();
-    this.state = { view: 'json', data: '' };
+    this.state = { view: 'flow', data: '', flowData: null };
     this.refName = React.createRef();
     this.sectionRefName = React.createRef();
     this.renderWorkflowJson = this.renderWorkflowJson.bind(this);
     this.renderJson = this.renderJson.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSaveFlow = this.handleSaveFlow.bind(this);
   }
 
   componentDidMount () {
     const { dispatch } = this.props;
     const { workflowId } = this.props.match.params;
     workflowId ? dispatch(getWorkflow(workflowId)) : null;
+    dispatch(listSteps());
   }
 
   cancelWorkflow () {
     this.props.history.goBack();
+  }
+
+  handleSaveFlow(flowData) {
+    this.setState({ flowData });
   }
 
   renderWorkflowJson (name, data, refName) {
@@ -55,12 +63,21 @@ class Workflows extends React.Component {
 
   async handleSubmit () {
     const { dispatch, match: { params: { workflowId } } } = this.props;
-    const workflow_aceEditorData = JSON.parse(this.refName.current.editor.getValue());
+    const { flowData } = this.state;
+    const workflow_aceEditorData = JSON.parse(flowData) || JSON.parse(this.refName.current.editor.getValue());
     this.setState({ data: workflow_aceEditorData });
-    const payload = Object.assign({}, workflow_aceEditorData);
-    workflowId ? await dispatch(updateWorkflow(payload)) : await dispatch(addWorkflow(payload));
-    // Adding workflows in not the api.  Cannot execute addWorkflow until it's there.
-    this.props.history.push(`/workflows/id/${workflow_aceEditorData.id}`);
+    const payload = { ...workflow_aceEditorData };
+
+    let wfResponse;
+    if (workflowId) {
+      await dispatch(updateWorkflow(payload));
+    } else {
+      wfResponse = await dispatch(addWorkflow(payload));
+    }
+    
+    // Redirect to the new workflow's ID if available, otherwise fallback
+    const newWorkflowId = wfResponse?.data?.id || workflow_aceEditorData.id;
+    this.props.history.push(`/workflows/id/${newWorkflowId}`);    
   }
 
   getRandom () {
@@ -84,7 +101,8 @@ class Workflows extends React.Component {
         active: true
       }
     ];
-
+  
+  const stepsList = this.props.steps?.list?.data || null;
     return (
             <div className='page__component'>
                 <section className='page__section page__section__controls'>
@@ -105,9 +123,11 @@ class Workflows extends React.Component {
                                     <div className='tab--wrapper'>
                                         <button className={'button--tab ' + (this.state.view === 'json' ? 'button--active' : '')}
                                                 onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>Workflow JSON</button>
+                                        <button className={'button--tab ' + (this.state.view === 'flow' ? 'button--active' : '')}
+                                                onClick={() => this.state.view !== 'flow' && this.setState({ view: 'flow' })}>Workflow Builder</button>
                                     </div>
                                     <div>
-                                        {this.renderJson((this.state.data ? this.state.data : record.data), this.refName)}
+                                    {this.state.view === 'json' ? this.renderJson((this.state.data ? this.state.data : record.data), this.refName):<Demo initialFlowData={record.data && record.data.steps? record.data:null} initialNodeOptions={stepsList}  onSaveFlow={this.handleSaveFlow}/>}
                                     </div>
                                 </div>
                           : null
@@ -146,8 +166,10 @@ Workflows.propTypes = {
   workflows: PropTypes.object,
   dispatch: PropTypes.func,
   history: PropTypes.object,
+  steps: PropTypes.object,
 };
 
 export default withRouter(connect(state => ({
-  workflows: state.workflows
+  workflows: state.workflows,
+  steps: state.steps
 }))(Workflows));
