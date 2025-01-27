@@ -75,51 +75,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       attachments: [...uploadedFiles]
     };
     await dispatch(replyConversation(payload));
-
-    const convDetails =  await dispatch(getConversation(conversationId));
-    console.log('convDetails', convDetails)
-    
-    // if(convDetails.data.notes && convDetails.data.notes[0] && convDetails.data.notes[0].id){
-    //   const getAttachmentCount = await dispatch(getNoteById(convDetails.data.notes[0].id));
-    //   console.log('getAttachmentCount', getAttachmentCount);
-    //   if(getAttachmentCount.attachments.length !== convDetails.data.notes[0].attachments.length){
-    //     await dispatch(getConversation(conversationId));
-    //   }
-    // }
-    const noteAll = await dispatch(getNoteAll(conversationId));
-    console.log('noteALL', noteAll)
-
-    // Find mismatches where attachment lengths do not match
-    const mismatchedEntries = noteAll.data.filter(dataItem => {
-        const matchingNote = convDetails.data.notes.find(noteItem => noteItem.id === dataItem.id);
-
-        // Ensure matchingNote exists and compare attachment lengths
-        if (matchingNote) {
-            const dataAttachmentsLength = dataItem.attachments ? dataItem.attachments.length : 0;
-            const noteAttachmentsLength = matchingNote.attachments ? matchingNote.attachments.length : 0;
-            return dataAttachmentsLength !== noteAttachmentsLength;
-        }
-
-        // If no matching note is found, return false
-        return false;
-    });
-
-    console.log("Mismatched Entries:", mismatchedEntries);
-
-    async function checkAttachments() {
-      const intervalId = setInterval(async () => {
-        if(mismatchedEntries && mismatchedEntries.length>0){
-            await dispatch(getConversation(conversationId));
-            console.log('calling the api again')
-          } else {
-            clearInterval(intervalId); 
-            console.log('Condition met, stopped polling.');
-          } 
-      }, 5000); 
-    }
-    
-    checkAttachments();
-    
+    await dispatch(getConversation(conversationId));
     textRef.current.value = '';
     handleVisibilityReset();
     setUploadedFiles([]);

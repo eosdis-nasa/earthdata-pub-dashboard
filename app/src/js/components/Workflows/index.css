@@ -1,0 +1,264 @@
+.start-node, .end-node {
+    height: 64px;
+    width: 64px;
+    border-radius: 50%;
+    line-height: 64px;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .start-node {
+    background-color: #338aff;
+  }
+  
+  .end-node {
+    background-color: #666;
+  }
+  
+  .other-node {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    word-wrap: break-word;
+    max-width: 600px; 
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+  }
+  
+  .delete-button {
+    padding: 5px;
+    position: absolute;
+    top: 4px; 
+    right: 4px; 
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 10px;
+    width: 20px; 
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: red;
+    color: white;
+  }
+  
+  .node-text {
+    flex: 1; 
+    margin-right: 20px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .delete-button:hover {
+    background: white;
+    color: red;
+  }
+
+  .flow-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .flow-builder-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .node-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  
+  .node {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .form-node, 
+  .review-node, 
+  .action-node {
+    color: white;
+    background-color: #2275AA;
+  }
+  .init-node {
+    background-color: #4caf50;
+  }
+  
+  .close-node {
+    background-color: #f44336;
+  }
+  
+  .other-node {
+    background-color: #2196f3;
+  }
+  
+  .edge-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50px;
+  }
+  
+  .edge-line {
+    width: 2px;
+    height: 100%;
+    background-color: #ccc;
+    position: absolute;
+  }
+  
+  .insert-button {
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    cursor: pointer;
+  }
+  
+  .insert-button:hover {
+    background-color: #2275AA;
+    color: white;
+  }
+  
+  .dropdown-container {
+    margin-top: 10px;
+    width: 500px;
+    text-align: center;
+    z-index: 10;
+  }
+  
+  .controls-container {
+    display: flex;
+    flex-direction: row; 
+    justify-content: flex-end; 
+    align-items: center; 
+    gap: 10px; 
+    width: auto;
+  }
+  .add-node-button,
+  .save-flow-button {
+    padding: 10px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #2275AA;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-node-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .save-flow-button {
+    background-color: #28a745;
+  }
+  
+  .add-node-button:hover:not(:disabled),
+  .save-flow-button:hover {
+    opacity: 0.9;
+  }
+
+  .init-node {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .close-node {
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .add-node-button,
+  .save-flow-button {
+    margin: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  
+  .save-flow-button {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .node {
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-align: center;
+    word-wrap: break-word;
+    font-size: 14px;
+    max-width: 700px;
+    white-space: pre-wrap; 
+  }
+  
+  .node-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .flow-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  
+  .metadata-form {
+    margin-bottom: 20px;
+  }
+  
+  .metadata-form label {
+    display: block;
+  }
+  
+  .metadata-form input,
+  .metadata-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .controls-container {
+    margin-bottom: 20px;
+  }
+  
+  .flow-builder-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .popup-actions {
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+    z-index: 1001;
+  }
