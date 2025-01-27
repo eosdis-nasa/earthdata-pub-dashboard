@@ -54,7 +54,7 @@ export const newLink = (request, formalName) => {
   let disabled = false;
   if (request == '') {
     disabled = true;
-  } else if (typeof allPrivs !== 'undefined' && allPrivs.canUpdateForm) {
+  } else if (typeof allPrivs !== 'undefined' && allPrivs.canSubmit) {
     disabled = false;
   } else {
     disabled = true;
@@ -87,6 +87,25 @@ export const assignWorkflow = (request, formalName) => {
   } else {
     return <Link className={'button button--medium button--green form-group__element--left button--no-icon assign-workflow'}
                to={`${request}`} name={'assignButton'} aria-label={formalName || 'assign workflow'}>{formalName}</Link>;
+  }
+};
+
+export const assignDaacs = (request, formalName) => {
+  const allPrivs = getPrivileges();
+  let disabled = false;
+  if (typeof allPrivs !== 'undefined' && ( typeof allPrivs.isAdmin !== 'undefined' || allPrivs.canAssignDaac === true)) {
+    disabled = false;
+  } else {
+    disabled = true;
+  }
+  const isDetailPage = location.href.match(/id/g);
+  if (isDetailPage === null && disabled) {
+    return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
+  } else if (disabled) {
+    return formalName;
+  } else {
+    return <Link className={'button button--medium button--green form-group__element--left button--no-icon assign-workflow'}
+               to={`${request}`} name={'assignButton'} aria-label={formalName || 'DAAC assignment'}>{formalName}</Link>;
   }
 };
 
@@ -171,9 +190,13 @@ export const stepLookup = (row) => {
             request = `${basepath}form/questions/${row.id}`;
           } 
           
-        // assign a workflow
+        // handle actions
         } else if (stepType.match(/action/g)) {
-          request = `/workflows?requestId=${row.id}`;
+          if (stepName.match(/assign_a_workflow/g)){
+            request = `/workflows?requestId=${row.id}`;
+          } else if (stepName.match(/daac_assignment/g)) {
+            request = `/daac/assignment/${row.id}`;
+          }
         }
         break;
       }
@@ -181,6 +204,8 @@ export const stepLookup = (row) => {
   }
   if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
+  } else if (stepType.match(/action/g) && stepName.match(/daac_assignment/g)) {
+    return assignDaacs(request, formalName);
   } else if (stepType.match(/action/g) ||  stepType.match(/upload/g)) {
     return existingLink(row, undefined, formalName, stepName, stepType);
   } else if (stepType.match(/review/g) || stepType.match(/service/g)) {

@@ -15,9 +15,7 @@ import {
   // clearStatusesFilter,
   // listWorkflows,
   // getOptionsRequestName,
-  initialize, 
-  reviewRequest, 
-  getRequest 
+  initialize,
 } from '../../actions';
 // import { get } from 'object-path';
 import {
@@ -105,49 +103,34 @@ class RequestsOverview extends React.Component {
     this.setState({ codeValue: event.target.value });
   }
   
-  // TODO - This portion of the code will need to be updated during E2E integration
   async submitCode() {
-    const { basepath } = _config;
-    const urlReturn = `${basepath}requests`;
     const { codeValue } = this.state;
     const { dispatch } = this.props;  
   
       // Log publication code submission
       console.log('Publication code submitted:', codeValue);
-  
-      const result = await dispatch(getRequest(codeValue));
+      const result = await dispatch(initialize({ 'code': codeValue }));
 
-      if(result && result.data && !result.data.statusCode){
-        if(result.data.step_name === 'code_generated'){
-            // Await dispatch and handle result
-            await dispatch(reviewRequest(result.id, true));
-                
-            // TODO - Needs to be updated during E2E integration
-            await dispatch(listRequests());
-        }
+      if(result && result.data && !result.data.error){
         this.setState({ isModalOpen: false, codeValue: '' });
-        window.location.href = urlReturn;
-        this.setState({ codeError: 'valid' });
+        await this.updateList();
       }else{
-        this.setState({ codeError: 'ERROR' });
+        this.setState({ codeError: result.data.error });
       }
   }
   
   closeModal() {
     this.setState({ isModalOpen: false, codeValue: '', codeError:'' });
   }
-  
+
   async handleSelection(e, req) {
     const { dispatch } = this.props;  
     e.preventDefault();
-    const { basepath } = _config;
-    const urlReturn = `${basepath}requests`;
 
     this.setState({ isDropdownOpen: false });
     if(req === 'DAR'){
-      // TODO - Needs to be updated during E2E integration
-      await dispatch(initialize("1c36f0b9-b7fd-481b-9cab-3bc3cea35413", { 'daac_id': "1c36f0b9-b7fd-481b-9cab-3bc3cea35413" }));
-      window.location.href = urlReturn;
+      await dispatch(initialize());
+      await this.updateList();
     }else if(req === 'DPR'){
       this.setState({ isModalOpen: true });
     }
@@ -342,9 +325,9 @@ class RequestsOverview extends React.Component {
             />
             <span
               className="error-modal"
-              style={{ color: this.state.codeError && this.state.codeError !== 'ERROR' ? 'green' : 'red' }}
+              style={{ color: this.state.codeError && this.state.codeError === '' ? 'green' : 'red' }}
             >
-              {this.state.codeError === 'ERROR' ? (
+              {this.state.codeError !== '' ? (
                 <FontAwesomeIcon icon={faTimes} />
               ) : this.state.codeError ? (
                 <FontAwesomeIcon icon={faCheck} />
@@ -352,7 +335,12 @@ class RequestsOverview extends React.Component {
             </span>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={this.submitCode}>Submit</Button>
+            <Button 
+              variant="primary"
+              onClick={this.submitCode}
+              disabled= { this.state.codeValue.trim() === '' ? true : false }>
+              Submit
+            </Button>
             <Button variant="secondary" onClick={this.closeModal}>Close</Button>
           </Modal.Footer>
         </Modal>}

@@ -926,10 +926,9 @@ export const createGroup = (groupId, payload) => ({
   }
 });
 
-export const initialize = (id, payload) => ({
+export const initialize = (payload) => ({
   [CALL_API]: {
     type: types.REQUEST,
-    daac_id: id,
     method: 'POST',
     path: 'data/submission/operation/initialize',
     body: payload
@@ -1313,3 +1312,12 @@ export const addStep = (payload) => ({
 });
 
 export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });
+
+export const assignDaacs = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUEST,
+    method: 'POST',
+    path: '/api/data/submission/operation/assignDaacs',
+    body: payload
+  }
+});
