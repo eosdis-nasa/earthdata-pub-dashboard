@@ -193,12 +193,30 @@ export const listFileUploadsBySubmission = (submissionId) => ({
   }
 });
 
+export const listFileUploadsBySubmissionStep = (submissionId) => ({
+  [CALL_API]: {
+    type: types.UPLOAD,
+    method: 'GET',
+    id: submissionId,
+    path: `data/upload/listStepUploads/${submissionId}`
+  }
+});
+
 export const listFileDownloadsByKey = (key) => ({
   [CALL_API]: {
     type: types.UPLOAD,
     method: 'GET',
     id: key,
     path: `data/upload/downloadUrl/${key}`
+  }
+});
+
+export const getUploadStep = (uploadStepId) => ({
+  [CALL_API]: {
+    type: types.UPLOAD_STEP,
+    method: 'GET',
+    id: uploadStepId,
+    path: `data/upload/uploadStep/${uploadStepId}`,
   }
 });
 
@@ -278,6 +296,15 @@ export const setWorkflowStep = (payload) => ({
     type: types.STEPS,
     method: 'POST',
     path: 'data/submission/operation/changeStep',
+    body: payload
+  }
+});
+
+export const promoteStep = (payload) => ({
+  [CALL_API]: {
+    type: types.STEPS,
+    method: 'POST',
+    path: 'data/submission/operation/promoteStep',
     body: payload
   }
 });

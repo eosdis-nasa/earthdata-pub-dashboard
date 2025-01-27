@@ -123,7 +123,9 @@ export const existingLink = (row, formId, formalName, step, stepType) => {
   } else if (disabled) {
     return formalName;
   } else {
-    if (typeof formId === 'undefined' || stepType === 'service') {
+    if (stepType === 'upload') {
+      return <Link to={`/upload/${row.id}?uploadStepId=${row.step_data.upload_step_id}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+    } else if (typeof formId === 'undefined' || stepType === 'service') {
         if (row.step_data && row.step_data.action_id) {
         return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
       }
@@ -204,8 +206,8 @@ export const stepLookup = (row) => {
     return assignWorkflow(request, formalName);
   } else if (stepType.match(/action/g) && stepName.match(/daac_assignment/g)) {
     return assignDaacs(request, formalName);
-  } else if (stepType.match(/action/g)) {
-    return existingLink(row, undefined, formalName, stepName);
+  } else if (stepType.match(/action/g) ||  stepType.match(/upload/g)) {
+    return existingLink(row, undefined, formalName, stepName, stepType);
   } else if (stepType.match(/review/g) || stepType.match(/service/g)) {
     return existingLink(row, stepID, formalName, stepName, stepType);
   } else {
