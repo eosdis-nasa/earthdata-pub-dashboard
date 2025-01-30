@@ -11,16 +11,13 @@ import ErrorReport from '../Errors/report';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
-function Question ({ title, version, shortName, text, help, required, daacs, inputs }) {
+function Question ({ title, version, text, help, inputs }) {
   return (
     <div>
       <h1>Title: {title}</h1>
       <h2>Version: {version}</h2>
-      <h3>Short Name: {shortName}</h3>
       <h3>Text: {text}</h3>
       <h3>Help: {help}</h3>
-      <h3>Required: {required}</h3>
-      <h3>DAAC IDs: {daacs}</h3>
       <h3>Inputs: </h3>
       <div className='model-builder-array'>
         { inputs.map(input => (
@@ -44,7 +41,7 @@ function Input ({ id, label, type }) {
   );
 }
 
-class QuestionOverview extends React.Component {
+class InputOverview extends React.Component {
   constructor () {
     super();
     this.navigateBack = this.navigateBack.bind(this);
@@ -60,7 +57,7 @@ class QuestionOverview extends React.Component {
 
   navigateBack () {
     const { history } = this.props;
-    history.push('/questions');
+    history.push('/inputs');
   }
 
   render () {
@@ -72,8 +69,8 @@ class QuestionOverview extends React.Component {
         href: '/'
       },
       {
-        label: 'Questions',
-        href: '/questions'
+        label: 'Inputs',
+        href: '/inputs'
       },
       {
         label: questionId,
@@ -94,12 +91,9 @@ class QuestionOverview extends React.Component {
               ? <Question
                 id={record.data.id}
                 title={record.data.long_name}
-                shortName = {record.data.short_name}
                 version={record.data.version}
                 text={record.data.text}
                 help={record.data.help}
-                required={record.data.required.toString()}
-                daacs={record.data.daac_ids ? record.data.daac_ids.join(", ") : null}
                 inputs={record.data.inputs ? record.data.inputs : []} />
               : null
           }
@@ -112,11 +106,8 @@ class QuestionOverview extends React.Component {
 Question.propTypes = {
   title: PropTypes.string,
   version: PropTypes.number,
-  shortName: PropTypes.string,
   text: PropTypes.string,
   help: PropTypes.string,
-  required: PropTypes.bool,
-  daacs: PropTypes.array,
   inputs: PropTypes.array
 };
 
@@ -126,7 +117,7 @@ Input.propTypes = {
   type: PropTypes.string
 };
 
-QuestionOverview.propTypes = {
+InputOverview.propTypes = {
   match: PropTypes.object,
   dispatch: PropTypes.func,
   questions: PropTypes.object,
@@ -135,13 +126,13 @@ QuestionOverview.propTypes = {
   skipReloadOnMount: PropTypes.bool
 };
 
-QuestionOverview.defaultProps = {
+InputOverview.defaultProps = {
   skipReloadOnMount: false
 };
 
-export { QuestionOverview };
+export { InputOverview };
 
 export default withRouter(connect(state => ({
   questions: state.questions,
   logs: state.logs
-}))(QuestionOverview));
+}))(InputOverview));

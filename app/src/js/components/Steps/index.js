@@ -1,32 +1,29 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'object-path';
 import { connect } from 'react-redux';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from '../Sidebar/sidebar';
-import { listQuestions } from '../../actions';
-import QuestionOverview from './question';
-import QuestionsOverview from './overview';
-import EditQuestion from './edit';
+import { listSteps } from '../../actions';
+import StepOverview from './step';
+import StepsOverview from './overview';
+import EditStep from './edit';
 
-const Questions = ({
+const Steps = ({
   dispatch,
   location,
   params,
   stats
 }) => {
   const { pathname } = location;
-  const count = get(stats, 'count.data.questions.count');
-  useEffect(() => {
-    dispatch(listQuestions());
-  }, []);
-  
+  const count = get(stats, 'count.data.steps.count');
+  dispatch(listSteps());
 
   return (
-    <div className='page__questions'>
+    <div className='page__steps'>
       <div className='content__header'>
         <div className='row'>
-          <h1 className='heading--xlarge heading--shared-content'>Questions</h1>
+          <h1 className='heading--xlarge heading--shared-content'>Steps</h1>
         </div>
       </div>
       <div className='page__content'>
@@ -38,10 +35,10 @@ const Questions = ({
           />
           <div className='page__content--shortened'>
             <Switch>
-              <Route exact path='/questions' component={QuestionsOverview} />
-              <Route path='/questions/id/:questionId' component={QuestionOverview} />
-              <Route path='/questions/edit/:questionId' component={EditQuestion} />
-              <Route path='/questions/add' component={EditQuestion} />
+              <Route exact path='/steps' component={StepsOverview} />
+              <Route path='/steps/id/:stepId' component={StepOverview} />
+              <Route path='/steps/edit/:stepId' component={EditStep} />
+              <Route path='/steps/add' component={EditStep} />
             </Switch>
           </div>
         </div>
@@ -50,7 +47,7 @@ const Questions = ({
   );
 };
 
-Questions.propTypes = {
+Steps.propTypes = {
   location: PropTypes.object,
   params: PropTypes.object,
   dispatch: PropTypes.func,
@@ -59,4 +56,4 @@ Questions.propTypes = {
 
 export default withRouter(connect(state => ({
   stats: state.stats
-}))(Questions));
+}))(Steps));
