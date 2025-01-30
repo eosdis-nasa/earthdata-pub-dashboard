@@ -22,6 +22,7 @@ import Users from './components/Users';
 import Groups from './components/Groups';
 import Forms from './components/Forms';
 import Input  from './components/Input';
+import Sections from './components/Sections';
 import Questions from './components/Questions';
 import Workflows from './components/Workflows';
 import Metrics from './components/Metrics';
@@ -33,6 +34,7 @@ import TestApi from './components/testApi';
 import Upload from './components/DataUpload';
 import FormRequest from './components/FormRequest';
 import FormQuestions from './components/FormQuestions';
+import Download from './components/DataDownload';
 import Steps from './components/Steps';
 import config from './config';
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
@@ -58,6 +60,7 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/requests', component: Requests },
     { path: '/forms', component: Forms },
     { path: '/inputs', component: Input },
+    { path: '/sections', component: Sections },
     { path: '/daac/selection', component: FormRequest },
     { path: '/form/questions/:id', component: FormQuestions },
     { path: '/questions', component: Questions },
@@ -71,7 +74,8 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/modules', component: Modules },
     { path: '/upload', component: Upload },
     { path: '/test-api', component: TestApi },
-    { path: '/steps', component: Steps }
+    { path: '/steps', component: Steps },
+    { path: '/download', component: Download }
   ];
 
   // Find the route that matches the activeRoute
@@ -84,7 +88,7 @@ const MainRoutes = ({ activeRoute }) => {
       if (history.location.pathname !== activeRoute) {
         history.push(activeRoute);
       }
-      setRedirected(true);
+     // setRedirected(true);
       localStorage.removeItem('redirectAfterLogin');
     }
   }, [activeRoute, matchedRoute, history, redirected]);

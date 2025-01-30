@@ -11,6 +11,7 @@ import modules from './modules.js';
 import model from './model';
 import forms from './forms';
 import questions from './questions';
+import sections from './sections.js';
 import users from './users';
 import groups from './groups';
 import logs from './logs';
@@ -41,6 +42,7 @@ export const reducers = {
   model,
   modules,
   forms,
+  sections,
   questions,
   users,
   groups,
