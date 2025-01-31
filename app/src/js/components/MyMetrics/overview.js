@@ -13,8 +13,29 @@ import './chart.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTable, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
-const DAAC_COLORS = ['#007acc', '#f39c12', '#2ecc71', '#e74c3c', '#9b59b6', '#34495e', '#ff5733', '#33FF57', '#FF33A8'];
-const STATUS_COLORS = ['#ff6347', '#4682b4', '#32cd32', '#ffd700', '#8a2be2', '#ff69b4', '#7fffd4', '#dc143c', '#00ced1'];
+const DAAC_COLORS = [
+  '#d88c9a',
+  '#a3c4bc',
+  '#9a8c98',
+  '#f2d7b6',
+  '#c3aed6',
+  '#adc178',
+  '#ffb3c6',
+  '#a8dadc',
+  '#e5c3a6'
+];
+
+const STATUS_COLORS = [
+  '#d8a7f9',
+  '#ffb6c1',
+  '#87ceeb',
+  '#ff9a8b',
+  '#f4d35e',
+  '#90be6d',
+  '#cfac8e',
+  '#ffcab1',
+  '#7ea8be'
+];
 
 const MetricOverview = ({ privileges, dispatch, requests }) => {
   useEffect(() => {
@@ -33,7 +54,7 @@ const MetricOverview = ({ privileges, dispatch, requests }) => {
     requestMapping: {},
     closeRequests: []
   });
-  const [activeDaac, setActiveDaac] = useState(null);
+  
   const [closeRequests, setCloseRequests] = useState([]);
   useEffect(() => {
     if (!requests.list || !requests.list.data) return;
@@ -165,9 +186,45 @@ const MetricOverview = ({ privileges, dispatch, requests }) => {
   });
 }, [requests.list]);
 
-
 const toggleView = (type) => {
   setViewMode(prev => ({ ...prev, [type]: prev[type] === 'chart' ? 'table' : 'chart' }));
+};
+
+const CustomTick = (props) => {
+  const { x, y, payload } = props;
+  const truncatedValue = payload.value.length > 15 ? `${payload.value.substring(0, 15)}...` : payload.value;
+
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <title>{payload.value}</title>
+      <text x={0} y={0} dy={10} textAnchor="middle" fontSize="12">
+        {truncatedValue}
+      </text>
+    </g>
+  );
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip" style={{
+        backgroundColor: "white",
+        padding: "10px",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+        boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)"
+      }}>
+        <p style={{ fontWeight: "bold", fontSize: "16px", marginBottom: "5px" }}>{label}</p>
+      
+        {payload.map((entry, index) => (
+          <p key={index} style={{ color: entry.color, margin: "2px 0", fontSize: "12px" }}>
+            {entry.name}: {entry.value}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
 };
 
 return (
@@ -185,72 +242,75 @@ return (
 
     {/* Count per DAAC */}
     <div className="chart-box">
-      <h3 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "#007acc", textAlign: "center" }}>
-      TOTAL REQUESTS SUBMITTED PER DAAC
-      </h3>
+      <h2 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "black", textAlign: "center" }}>
+        TOTAL REQUESTS SUBMITTED PER DAAC
+      </h2>
       <p style={{ textAlign: "center", fontSize: "0.9rem", color: "#555" }}>
         Breakdown of the total count per DAAC.
       </p>
+
       <div className="toggle-container">
         <button onClick={() => toggleView('daac')} className="toggle-switch">
-            {viewMode.daac === 'chart' ? (
-                <FontAwesomeIcon icon={faTable} title="Switch to Table View" className="toggle-icon" />
-            ) : (
-                <FontAwesomeIcon icon={faChartBar} title="Switch to Chart View" className="toggle-icon" />
-            )}
+          {viewMode.daac === 'chart' ? (
+            <FontAwesomeIcon icon={faTable} title="Switch to Table View" className="toggle-icon" />
+          ) : (
+            <FontAwesomeIcon icon={faChartBar} title="Switch to Chart View" className="toggle-icon" />
+          )}
         </button>
-    </div>
+      </div>
 
-    {viewMode.daac === 'chart' ? (
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={chartsData.daacData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="daac_name" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="count">
-            <LabelList dataKey="count" position="top" />
-            {chartsData.daacData.map((entry) => (
-              <Cell key={entry.daac_name} fill={chartsData.daacColors[entry.daac_name]} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-      ) : (
-      <table className="styled-table">
-      <thead>
-          <tr>
+      {chartsData.daacData.length === 0 ? (
+        <div className="no-data">No Data Available</div>
+        ) : viewMode.daac === 'chart' ? (
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={chartsData.daacData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="daac_name" tick={<CustomTick />} interval={0} />
+            <YAxis />
+            <Tooltip content={<CustomTooltip />} />
+            <Bar dataKey="count">
+              <LabelList dataKey="count" position="top" />
+              {chartsData.daacData.map((entry) => (
+                <Cell key={entry.daac_name} fill={chartsData.daacColors[entry.daac_name]} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+        ) : (
+        <table className="styled-table">
+          <thead>
+            <tr>
               <th>DAAC Name</th>
               <th>Request IDs</th>
-          </tr>
-      </thead>
-      <tbody>
-          {chartsData.daacData.map((entry) => (
+            </tr>
+          </thead>
+          <tbody>
+            {chartsData.daacData.map((entry) => (
               <tr key={entry.daac_name}>
-                  <td>{entry.daac_name}</td>
-                  <td>
-                      {chartsData.requestMappingDaac[entry.daac_name]?.length > 0 ? (
-                          chartsData.requestMappingDaac[entry.daac_name].map((id) => (
-                              <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
-                                  {id}
-                              </Link>
-                          ))
-                      ) : (
-                          <span style={{ color: 'red' }}>No Requests</span>
-                      )}
-                  </td>
+                <td>{entry.daac_name}</td>
+                <td>
+                  {chartsData.requestMappingDaac[entry.daac_name]?.length > 0 ? (
+                    chartsData.requestMappingDaac[entry.daac_name].map((id) => (
+                      <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
+                        {id}
+                      </Link>
+                    ))
+                  ) : (
+                    <span style={{ color: 'red' }}>No Requests</span>
+                  )}
+                </td>
               </tr>
-          ))}
-      </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
 
       {/* Count per Step Name */}
       <div className="chart-box">
-        <h3 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "#ff6347", textAlign: "center" }}>
+        <h2 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "black", textAlign: "center" }}>
           TOTAL REQUESTS COUNT PER STEP NAME
-        </h3>
+        </h2>
         <p style={{ textAlign: "center", fontSize: "0.9rem", color: "#555" }}>
         Breakdown of the total count per Step Name.
         </p>
@@ -264,56 +324,58 @@ return (
           </button>
         </div>
   
-        {viewMode.step === 'chart' ? (
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartsData.statusData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="step_name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="count">
-                <LabelList dataKey="count" position="top" />
-                {chartsData.statusData.map((entry) => (
-                  <Cell key={entry.step_name} fill={chartsData.stepNameColors[entry.step_name]} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        ) : (
-          <table className="styled-table">
-            <thead>
+        {chartsData.statusData.length === 0 ? (
+            <div className="no-data">No Data Available</div>
+          ) : viewMode.step === 'chart' ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={chartsData.statusData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="step_name" tick={<CustomTick />} interval={0} />
+                <YAxis />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="count">
+                  <LabelList dataKey="count" position="top" />
+                  {chartsData.statusData.map((entry) => (
+                    <Cell key={entry.step_name} fill={chartsData.stepNameColors[entry.step_name]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <table className="styled-table">
+              <thead>
                 <tr>
-                    <th>Step Name</th>
-                    <th>Request IDs</th>
+                  <th>Step Name</th>
+                  <th>Request IDs</th>
                 </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
                 {chartsData.statusData.map((entry) => (
-                    <tr key={entry.step_name}>
-                        <td>{entry.step_name}</td>
-                        <td>
-                            {chartsData.requestMappingStep[entry.step_name]?.length > 0 ? (
-                                chartsData.requestMappingStep[entry.step_name].map((id) => (
-                                    <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
-                                        {id}
-                                    </Link>
-                                ))
-                            ) : (
-                                <span style={{ color: 'red' }}>No Requests</span>
-                            )}
-                        </td>
-                    </tr>
+                  <tr key={entry.step_name}>
+                    <td>{entry.step_name}</td>
+                    <td>
+                      {chartsData.requestMappingStep[entry.step_name]?.length > 0 ? (
+                        chartsData.requestMappingStep[entry.step_name].map((id) => (
+                          <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
+                            {id}
+                          </Link>
+                        ))
+                      ) : (
+                        <span style={{ color: 'red' }}>No Requests</span>
+                      )}
+                    </td>
+                  </tr>
                 ))}
-            </tbody>
-          </table>
-        )}
+              </tbody>
+            </table>
+          )}
       </div>
 
       {/* Stacked Bar Chart */}
       <div className="chart-box">
-        <h3 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "#32cd32", textAlign: "center" }}>
+        <h2 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "black", textAlign: "center" }}>
           TOTAL STEP NAME COUNT PER DAAC
-        </h3>
+        </h2>
         <p style={{ textAlign: "center", fontSize: "0.9rem", color: "#555" }}>
           Stacked bar chart shows the count of step name per DAAC.
         </p>
@@ -328,104 +390,107 @@ return (
           </button>
         </div>
 
-
-        {viewMode.stacked === 'chart' ? (
-          <ResponsiveContainer width="100%" height={350}>
-          <BarChart 
-            data={chartsData.stackedData} 
-            onMouseMove={(e) => setHoveredStep(e?.activeLabel)}
-            onMouseLeave={() => setHoveredStep(null)}
-          >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="daac_name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-            {Object.keys(chartsData.stackedData[0] || {}).map((stepName) => {
-              if (stepName !== "daac_name") {
-                return (
-                  <Bar 
-                    key={stepName} 
-                    dataKey={stepName} 
-                    stackId="a"
-                    fill={chartsData.stepNameColors[stepName]} 
-                  />
-                );
-              }
-              return null;
-            })}
-            </BarChart>
-          </ResponsiveContainer>
-        ) : (
-          <table className="styled-table">
-          <thead>
-              <tr>
+        {chartsData.stackedData.length === 0 ? (
+            <div className="no-data">No Data Available</div>
+          ) : viewMode.stacked === 'chart' ? (
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart 
+                data={chartsData.stackedData} 
+                onMouseMove={(e) => setHoveredStep(e?.activeLabel)}
+                onMouseLeave={() => setHoveredStep(null)}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="daac_name" tick={<CustomTick />} interval={0}/>
+                <YAxis />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend />
+                {Object.keys(chartsData.stackedData[0] || {}).map((stepName) => {
+                  if (stepName !== "daac_name") {
+                    return (
+                      <Bar 
+                        key={stepName} 
+                        dataKey={stepName} 
+                        stackId="a"
+                        fill={chartsData.stepNameColors[stepName]} 
+                      />
+                    );
+                  }
+                  return null;
+                })}
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <table className="styled-table">
+              <thead>
+                <tr>
                   <th>DAAC Name</th>
                   <th>Step Name</th>
                   <th>Request IDs</th>
-              </tr>
-          </thead>
-          <tbody>
-              {chartsData.stackedData.map(daac => (
-                  Object.keys(daac).map(step => (
-                      step !== "daac_name" && daac[step] > 0 && (
-                          <tr key={`${daac.daac_name}-${step}`}>
-                              <td>{daac.daac_name}</td>
-                              <td>{step}</td>
-                              <td>
-                                  {chartsData.requestMappingStacked[daac.daac_name]?.[step]?.length > 0 ? (
-                                      chartsData.requestMappingStacked[daac.daac_name][step].map(id => (
-                                          <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
-                                              {id}
-                                          </Link>
-                                      ))
-                                  ) : (
-                                      <span style={{ color: 'red' }}>No Requests</span>
-                                  )}
-                              </td>
-                          </tr>
-                      )
-                  ))
-              ))}
-          </tbody>
-      </table>
-      
-        )}
+                </tr>
+              </thead>
+              <tbody>
+                {chartsData.stackedData.map(daac =>
+                  Object.keys(daac)
+                    .filter(step => step !== "daac_name" && daac[step] > 0)
+                    .map(step => (
+                      <tr key={`${daac.daac_name}-${step}`}>
+                        <td>{daac.daac_name}</td>
+                        <td>{step}</td>
+                        <td>
+                          {chartsData.requestMappingStacked[daac.daac_name]?.[step]?.length > 0 ? (
+                            chartsData.requestMappingStacked[daac.daac_name][step].map(id => (
+                              <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
+                                {id}
+                              </Link>
+                            ))
+                          ) : (
+                            <span style={{ color: 'red' }}>No Requests</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                )}
+              </tbody>
+            </table>
+          )}
       </div>
 
       {/* Table for Step "Close" Requests */}
       <div className="chart-box">
-        <h3 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "#a33b61", textAlign: "center" }}>
+        <h2 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "black", textAlign: "center" }}>
           TOTAL TIME FOR CLOSE REQUESTS
-        </h3>
-    <table className="request-table">
-        <thead>
-            <tr>
+        </h2>
+        {closeRequests.length === 0 ? (
+          <div className="no-data">No Close Requests Data</div>
+        ) : (
+          <table className="request-table">
+            <thead>
+              <tr>
                 <th>Request ID</th>
-                <th>DAAC Name</th> {/* Added DAAC Name Column */}
+                <th>DAAC Name</th>
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Total Time</th>
-            </tr>
-        </thead>
-        <tbody>
-            {closeRequests.map((req) => (
+              </tr>
+            </thead>
+            <tbody>
+              {closeRequests.map((req) => (
                 <tr key={req.id}>
-                    <td>
-                        <Link to={{ pathname: `/requests/id/${req.id}` }} aria-label="View your request details">
-                            {req.id}
-                        </Link>
-                    </td>
-                    <td>{req.daacName}</td> {/* Added DAAC Name Here */}
-                    <td>{req.startTime}</td>
-                    <td>{req.endTime}</td>
-                    <td>{req.timeTaken}</td>
+                  <td>
+                    <Link to={`/requests/id/${req.id}`} aria-label="View your request details">
+                      {req.id}
+                    </Link>
+                  </td>
+                  <td>{req.daacName}</td>
+                  <td>{req.startTime}</td>
+                  <td>{req.endTime}</td>
+                  <td>{req.timeTaken}</td>
                 </tr>
-            ))}
-        </tbody>
-    </table>
-</div>
-
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 };
