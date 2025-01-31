@@ -54,7 +54,8 @@ const MetricOverview = ({ privileges, dispatch, requests }) => {
     requestMapping: {},
     closeRequests: []
   });
-  
+  const ROW_INCREMENT = 5;
+
   const [closeRequests, setCloseRequests] = useState([]);
   useEffect(() => {
     if (!requests.list || !requests.list.data) return;
@@ -186,8 +187,34 @@ const MetricOverview = ({ privileges, dispatch, requests }) => {
   });
 }, [requests.list]);
 
+const [visibleRows, setVisibleRows] = useState({
+  daac: ROW_INCREMENT,
+  step: ROW_INCREMENT,
+  stacked: ROW_INCREMENT,
+  close: ROW_INCREMENT,
+});
+
+
 const toggleView = (type) => {
   setViewMode(prev => ({ ...prev, [type]: prev[type] === 'chart' ? 'table' : 'chart' }));
+
+  if (viewMode[type] === 'chart') {
+    setVisibleRows(prev => ({ ...prev, [type]: ROW_INCREMENT }));
+  }
+};
+
+const handleShowMore = (table) => {
+  setVisibleRows(prev => ({
+    ...prev,
+    [table]: prev[table] + ROW_INCREMENT,
+  }));
+};
+
+const handleShowLess = (table) => {
+  setVisibleRows(prev => ({
+    ...prev,
+    [table]: Math.max(ROW_INCREMENT, prev[table] - ROW_INCREMENT),
+  }));
 };
 
 const CustomTick = (props) => {
@@ -266,7 +293,7 @@ return (
           <BarChart data={chartsData.daacData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="daac_name" tick={<CustomTick />} interval={0} />
-            <YAxis />
+            <YAxis allowDecimals={false}/>
             <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="count">
               <LabelList dataKey="count" position="top" />
@@ -277,32 +304,50 @@ return (
           </BarChart>
         </ResponsiveContainer>
         ) : (
-        <table className="styled-table">
-          <thead>
-            <tr>
-              <th>DAAC Name</th>
-              <th>Request IDs</th>
-            </tr>
-          </thead>
-          <tbody>
-            {chartsData.daacData.map((entry) => (
-              <tr key={entry.daac_name}>
-                <td>{entry.daac_name}</td>
-                <td>
-                  {chartsData.requestMappingDaac[entry.daac_name]?.length > 0 ? (
-                    chartsData.requestMappingDaac[entry.daac_name].map((id) => (
-                      <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
-                        {id}
-                      </Link>
-                    ))
-                  ) : (
-                    <span style={{ color: 'red' }}>No Requests</span>
-                  )}
-                </td>
+          <>
+          <table className="styled-table">
+            <thead>
+              <tr>
+                <th>DAAC Name</th>
+                <th>Request IDs</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {chartsData.daacData.slice(0, visibleRows.daac).map((entry) => (
+                <tr key={entry.daac_name}>
+                  <td>{entry.daac_name}</td>
+                  <td>
+                    {chartsData.requestMappingDaac[entry.daac_name]?.length > 0 ? (
+                      chartsData.requestMappingDaac[entry.daac_name].map((id) => (
+                        <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
+                          {id}
+                        </Link>
+                      ))
+                    ) : (
+                      <span style={{ color: 'red' }}>No Requests</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Show More & Show Less Buttons */}
+          {chartsData.daacData.length > ROW_INCREMENT && (
+            <div className="button-container">
+              {visibleRows.daac < chartsData.daacData.length && (
+                <button className="show-more-button" onClick={() => handleShowMore('daac')}>
+                  Show More
+                </button>
+              )}
+              {visibleRows.daac > ROW_INCREMENT && (
+                <button className="show-less-button" onClick={() => handleShowLess('daac')}>
+                  Show Less
+                </button>
+              )}
+            </div>
+          )}
+        </>
       )}
     </div>
 
@@ -331,7 +376,7 @@ return (
               <BarChart data={chartsData.statusData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="step_name" tick={<CustomTick />} interval={0} />
-                <YAxis />
+                <YAxis allowDecimals={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Bar dataKey="count">
                   <LabelList dataKey="count" position="top" />
@@ -342,32 +387,50 @@ return (
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <table className="styled-table">
-              <thead>
-                <tr>
-                  <th>Step Name</th>
-                  <th>Request IDs</th>
-                </tr>
-              </thead>
-              <tbody>
-                {chartsData.statusData.map((entry) => (
-                  <tr key={entry.step_name}>
-                    <td>{entry.step_name}</td>
-                    <td>
-                      {chartsData.requestMappingStep[entry.step_name]?.length > 0 ? (
-                        chartsData.requestMappingStep[entry.step_name].map((id) => (
-                          <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
-                            {id}
-                          </Link>
-                        ))
-                      ) : (
-                        <span style={{ color: 'red' }}>No Requests</span>
-                      )}
-                    </td>
+            <>
+              <table className="styled-table">
+                <thead>
+                  <tr>
+                    <th>Step Name</th>
+                    <th>Request IDs</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {chartsData.statusData.slice(0, visibleRows.step).map((entry) => (
+                    <tr key={entry.step_name}>
+                      <td>{entry.step_name}</td>
+                      <td>
+                        {chartsData.requestMappingStep[entry.step_name]?.length > 0 ? (
+                          chartsData.requestMappingStep[entry.step_name].map((id) => (
+                            <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
+                              {id}
+                            </Link>
+                          ))
+                        ) : (
+                          <span style={{ color: 'red' }}>No Requests</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Show More/Less Buttons */}
+              {chartsData.statusData.length > ROW_INCREMENT && (
+                <div className="button-container">
+                  {visibleRows.step < chartsData.statusData.length && (
+                    <button className="show-more-button" onClick={() => handleShowMore('step')}>
+                      Show More
+                    </button>
+                  )}
+                  {visibleRows.step > ROW_INCREMENT && (
+                    <button className="show-less-button" onClick={() => handleShowLess('step')}>
+                      Show Less
+                    </button>
+                  )}
+                </div>
+              )}
+            </>
           )}
       </div>
 
@@ -401,7 +464,7 @@ return (
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="daac_name" tick={<CustomTick />} interval={0}/>
-                <YAxis />
+                <YAxis allowDecimals={false}/>
                 <Tooltip content={<CustomTooltip />} />
                 <Legend />
                 {Object.keys(chartsData.stackedData[0] || {}).map((stepName) => {
@@ -420,25 +483,34 @@ return (
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <table className="styled-table">
-              <thead>
-                <tr>
-                  <th>DAAC Name</th>
-                  <th>Step Name</th>
-                  <th>Request IDs</th>
-                </tr>
-              </thead>
-              <tbody>
-                {chartsData.stackedData.map(daac =>
-                  Object.keys(daac)
-                    .filter(step => step !== "daac_name" && daac[step] > 0)
-                    .map(step => (
-                      <tr key={`${daac.daac_name}-${step}`}>
-                        <td>{daac.daac_name}</td>
-                        <td>{step}</td>
+            <>
+              <table className="styled-table">
+                <thead>
+                  <tr>
+                    <th>DAAC Name</th>
+                    <th>Step Name</th>
+                    <th>Request IDs</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {chartsData.stackedData
+                    .flatMap(daac =>
+                      Object.keys(daac)
+                        .filter(step => step !== "daac_name" && daac[step] > 0)
+                        .map(step => ({
+                          daacName: daac.daac_name,
+                          stepName: step,
+                          requestIds: chartsData.requestMappingStacked[daac.daac_name]?.[step] || []
+                        }))
+                    )
+                    .slice(0, visibleRows.stacked)
+                    .map((entry, index) => (
+                      <tr key={`${entry.daacName}-${entry.stepName}-${index}`}>
+                        <td>{entry.daacName}</td>
+                        <td>{entry.stepName}</td>
                         <td>
-                          {chartsData.requestMappingStacked[daac.daac_name]?.[step]?.length > 0 ? (
-                            chartsData.requestMappingStacked[daac.daac_name][step].map(id => (
+                          {entry.requestIds.length > 0 ? (
+                            entry.requestIds.map(id => (
                               <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
                                 {id}
                               </Link>
@@ -448,11 +520,28 @@ return (
                           )}
                         </td>
                       </tr>
-                    ))
-                )}
-              </tbody>
-            </table>
+                    ))}
+                </tbody>
+              </table>
+
+              {/* Show More/Less Buttons */}
+              {chartsData.stackedData.length > ROW_INCREMENT && (
+                <div className="button-container">
+                  {visibleRows.stacked < chartsData.stackedData.length && (
+                    <button className="show-more-button" onClick={() => handleShowMore('stacked')}>
+                      Show More
+                    </button>
+                  )}
+                  {visibleRows.stacked > ROW_INCREMENT && (
+                    <button className="show-less-button" onClick={() => handleShowLess('stacked')}>
+                      Show Less
+                    </button>
+                  )}
+                </div>
+              )}
+            </>
           )}
+
       </div>
 
       {/* Table for Step "Close" Requests */}
@@ -461,35 +550,55 @@ return (
           TOTAL TIME FOR CLOSE REQUESTS
         </h2>
         {closeRequests.length === 0 ? (
-          <div className="no-data">No Close Requests Data</div>
-        ) : (
-          <table className="request-table">
-            <thead>
-              <tr>
-                <th>Request ID</th>
-                <th>DAAC Name</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Total Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {closeRequests.map((req) => (
-                <tr key={req.id}>
-                  <td>
-                    <Link to={`/requests/id/${req.id}`} aria-label="View your request details">
-                      {req.id}
-                    </Link>
-                  </td>
-                  <td>{req.daacName}</td>
-                  <td>{req.startTime}</td>
-                  <td>{req.endTime}</td>
-                  <td>{req.timeTaken}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+            <div className="no-data">No Close Requests Data</div>
+          ) : (
+            <>
+              <table className="request-table">
+                <thead>
+                  <tr>
+                    <th>Request ID</th>
+                    <th>DAAC Name</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Total Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {closeRequests
+                    .slice(0, visibleRows.close)
+                    .map((req) => (
+                      <tr key={req.id}>
+                        <td>
+                          <Link to={`/requests/id/${req.id}`} aria-label="View your request details">
+                            {req.id}
+                          </Link>
+                        </td>
+                        <td>{req.daacName}</td>
+                        <td>{req.startTime}</td>
+                        <td>{req.endTime}</td>
+                        <td>{req.timeTaken}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+
+              {/* Show More/Less Buttons */}
+              {closeRequests.length > ROW_INCREMENT && (
+                <div className="button-container">
+                  {visibleRows.close < closeRequests.length && (
+                    <button className="show-more-button" onClick={() => handleShowMore('close')}>
+                      Show More
+                    </button>
+                  )}
+                  {visibleRows.close > ROW_INCREMENT && (
+                    <button className="show-less-button" onClick={() => handleShowLess('close')}>
+                      Show Less
+                    </button>
+                  )}
+                </div>
+              )}
+            </>
+          )}
       </div>
     </div>
   );

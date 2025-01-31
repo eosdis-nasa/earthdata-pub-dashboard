@@ -145,3 +145,41 @@ button {
   color: #555;
   padding: 20px;
 }
+
+.show-more-button, .show-less-button {
+  background-color: #007acc; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 5px;
+}
+
+.show-more-button:hover, .show-less-button:hover {
+  background-color: #0056b3; 
+}
+
+.show-more-button:focus, .show-less-button:focus {
+  outline: none;
+}
+
+.show-more-button:disabled, .show-less-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.show-less-button {
+  background-color: #6c757d;
+}
+
+.show-less-button:hover {
+  background-color: #5a6268;
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 10px;
+}
