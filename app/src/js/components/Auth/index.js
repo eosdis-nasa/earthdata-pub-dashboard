@@ -53,7 +53,7 @@ class Auth extends React.Component {
     const { inflight, tokens } = api;
     const { code, state, redirect } = queryParams;
     if (this.store.getState().api.authenticated) {
-      redirectWithToken(redirect || 'dashboard', tokens.token);
+      redirectWithToken();
     } else if (!inflight && code) {
       const { data } = await dispatch(mfaTokenFetch(code, state))
       const { token, user } = data;

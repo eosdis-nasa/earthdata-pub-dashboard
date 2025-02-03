@@ -22,7 +22,6 @@ module.exports = defineConfig({
     email: 'no_email',
     nav_active_class: 'router-link-exact-active.router-link-active',
     overview_root: 'http://localhost:8082',
-    history_tracking_variable: 'forms-arrived-from',
     login_input_name_selector: '#input-name',
     login_input_email_selector: '#input-email',
     login_button_register_selector: '#btn-register',
@@ -59,7 +58,6 @@ module.exports = defineConfig({
       'users listing': '/users',
       'groups listing': '/groups',
       'roles listing': '/roles',
-      'forms listing': '/forms',
       'questions listing': '/questions',
       'conversations listing': '/conversations',
       'modules listing': '/modules',
@@ -77,8 +75,6 @@ module.exports = defineConfig({
         '/workflows?requestId=20e78804-c171-4549-bdab-6c7cf8e0fc72',
       'questions detail': '/questions/id/80ac5f52-9ed9-4139-b5f9-7b4cebb6a8e2',
       'questions add': '/questions/add',
-      'forms detail':
-        '/forms/id/6c544723-241c-4896-a38c-adbc0a364293?requestId=20e78804-c171-4549-bdab-6c7cf8e0fc72',
       'conversations detail':
         '/conversations/id/f0ca6e3d-cb48-4804-8287-377226d675aa',
       'modules detail': '/modules/test',
@@ -87,10 +83,6 @@ module.exports = defineConfig({
       'questions editing': '/questions/edit/80ac5f52-9ed9-4139-b5f9-7b4cebb6a8e2',
       'workflows detail': '/workflows/id/c0b4294f-3713-43ea-89af-83eba9eacff1',
       'workflows editing': '/workflows/edit/c0b4294f-3713-43ea-89af-83eba9eacff1'
-    },
-    forms_pages: {
-      daac_selection_page: '/daacs/selection',
-      questions_page: '/questions/'
     }
   },
   experimentalMemoryManagement: true,
