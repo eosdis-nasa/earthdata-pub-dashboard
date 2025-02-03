@@ -6,10 +6,13 @@ earthdata-pub-dashboard@1.0.17 /home/5kb/git/earthdatapub/dashboard
 ├── @babel/preset-react@7.22.5
 ├── @babel/register@7.22.5
 ├── @cypress/webpack-preprocessor@5.17.1
+├── @emotion/react@11.14.0
+├── @emotion/styled@11.14.0
 ├── @fortawesome/fontawesome-free@5.15.4
 ├── @fortawesome/fontawesome-svg-core@1.2.36
 ├── @fortawesome/free-solid-svg-icons@5.15.4
 ├── @fortawesome/react-fontawesome@0.1.19
+├── @mui/material@6.4.2
 ├── @reduxjs/toolkit@1.9.5
 ├── @rjsf/core@3.2.1
 ├── @webpack-cli/serve@1.7.0

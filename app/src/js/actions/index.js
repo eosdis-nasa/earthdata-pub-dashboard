@@ -1102,12 +1102,7 @@ export const replyConversation = (payload) => {
         path: 'notification/reply',
         body: payload
       }
-    })
-      .then(() => {
-        setTimeout(() => {
-          dispatch(getConversation(payload.conversation_id));
-        }, 2000);
-      });
+    });
   };
 };
 

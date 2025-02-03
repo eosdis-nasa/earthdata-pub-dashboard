@@ -171,7 +171,11 @@ export const NewNoteVisibility = ({ dispatch, privileges, conversationId, visibi
     const [newCommentViewerRoles, setNewCommentViewerRoles] = useState([]);
     const [idMap, setIdMap] = useState({});
     useImperativeHandle(visibilityRef, () => ({
-        getVisibility: () => ({viewer_users: newCommentViewers, viewer_roles: newCommentViewerRoles}),
+        getVisibility: () => ({
+            viewer_users: newCommentViewers,
+            viewer_roles: newCommentViewerRoles,
+            viewer_names: Object.values(idMap)
+        }),
         resetIdMap: () => {
             setIdMap([]);
             setNewCommentViewers([]);
