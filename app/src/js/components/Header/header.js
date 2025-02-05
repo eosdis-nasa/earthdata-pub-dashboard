@@ -68,7 +68,7 @@ class Header extends React.Component {
           <nav role="navigation">
             { !this.props.minimal
               ? <><ul className="default_header">
-                            {activePaths.map(path => <li
+                            { authenticated && activePaths.map(path => <li
                                 key={path[0]}
                                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
                             <li className='rightalign nav__order-8'>

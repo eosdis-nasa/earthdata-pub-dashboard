@@ -37,6 +37,8 @@ import FormQuestions from './components/FormQuestions';
 import Download from './components/DataDownload';
 import Steps from './components/Steps';
 import config from './config';
+import KeywordHandler from './components/Help/help';
+
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
 dom.watch();
 
@@ -112,47 +114,89 @@ const MainRoutes = ({ activeRoute }) => {
 
 // generate the root App Component
 class App extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      currentPath: window.location.pathname,  // Store current path in state
+    };
     this.store = ourConfigureStore({});
     this.isLoggedIn = this.isLoggedIn.bind(this);
   }
 
-  isLoggedIn () {
+  componentDidMount() {
+    // Listen for route changes
+    this.unlisten = history.listen((location) => {
+      this.setState({ currentPath: location.pathname });  // Update state on path change
+      console.log('Route changed to:', location.pathname);
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.unlisten) this.unlisten();  // Clean up listener
+  }
+
+  isLoggedIn() {
     return this.store.getState().api.authenticated;
   }
 
-  render () {
-    return (
-    <div className="routes">
-    <Provider store={this.store}>
-      <ConnectedRouter history={history}>
-        <Switch>
-          <Redirect exact from='/login' to='/auth' />
-          <Route path='/auth' component={Auth} />
+  render() {
+    const { currentPath } = this.state;  // Use the updated path from state
+    const parts = currentPath.split('/').filter(Boolean);
 
-          <Route 
+    const primaryKeywords = ['forms', 'dashboard', 'api', 'auth'];
+    const secondaryKeywords = ['getting_started', 'data_publication_guidelines'];
+
+    const foundPrimaryKeyword = primaryKeywords.find(keyword =>
+      parts.some(part => part.toLowerCase() === keyword.toLowerCase())
+    );
+
+    const foundSecondaryKeyword = !foundPrimaryKeyword
+      ? secondaryKeywords.find(keyword =>
+          parts.some(part => part.toLowerCase() === keyword.toLowerCase())
+        )
+      : null;
+    console.log('parts', parts)
+    console.log('currentPath', currentPath)
+    return (
+      <div className="routes">
+        <Provider store={this.store}>
+          <ConnectedRouter history={history}>
+            <Switch>
+              <Redirect exact from='/login' to='/auth' />
+              <Route path='/auth' component={Auth} />
+
+              {!foundPrimaryKeyword && foundSecondaryKeyword && (
+                <Route
+                  path={`/${foundSecondaryKeyword}`}
+                  render={() => <KeywordHandler keyword={foundSecondaryKeyword} />}
+                />
+              )}
+
+              {!foundPrimaryKeyword && !foundSecondaryKeyword && parts.length === 0 && localStorage.getItem('redirectAfterLogin') === '/' && (
+                <Route path="/" render={() => <KeywordHandler keyword={null} />} />
+              )}
+
+              <Route
             path='/' 
-            render={(props) => {
-              if (this.isLoggedIn()) {
+                render={(props) => {
+                  if (this.isLoggedIn()) {
                 const redirect = localStorage.getItem('redirectAfterLogin') ||  history.location.pathname || '/';
-                return <MainRoutes activeRoute={redirect} />;
-              } else {
+                    return <MainRoutes activeRoute={redirect} />;
+                  } else {
                 // Store the intended URL in localStorage before redirecting to auth
-                const { pathname, search } = props.location;
+                    const { pathname, search } = props.location;
                 // Check if search is not empty or null, then ppend it to pathname
                 const fullPath = search && search !== "" ? `${pathname}${search}` : pathname;
                 // Store the full path in localStorage
-                localStorage.setItem('redirectAfterLogin', fullPath);
+                    localStorage.setItem('redirectAfterLogin', fullPath);
                 return <Redirect to='/auth' />;
-              }
-            }} 
-          />
-        </Switch>
-      </ConnectedRouter>
-    </Provider>
-  </div>
+                  }
+                }}
+              />
+            </Switch>
+          </ConnectedRouter>
+        </Provider>
+      </div>
     );
   }
 }
