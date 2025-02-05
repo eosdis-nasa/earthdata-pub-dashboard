@@ -205,6 +205,6 @@
     "yaml": "2.2.2"
   },
   "resolutions": {
-    "elliptic": "6.6.8"
+    "elliptic": "^6.6.1"
   }
 }
