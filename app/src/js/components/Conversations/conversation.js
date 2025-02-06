@@ -73,13 +73,13 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
             );
   
           if (isMatch) {
-            console.log("✅ Found matching tempNote:", temp);
+            console.log("Found matching tempNote:", temp);
           }
   
           return isMatch; // Ensure we return a boolean for .find()
         });
   
-        console.log("🔹 tempNote Value:", tempNote);
+        console.log("tempNote Value:", tempNote);
   
         // Replace temp note only if all attachments match
         return tempNote ? { ...newNote, isTemp: false } : newNote;
