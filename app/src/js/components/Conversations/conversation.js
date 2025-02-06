@@ -100,7 +100,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   }, [notes]);
   
   
-  const checkForUpdates = (retryCount) => {
+  const checkForUpdates = (retryCount = 0) => {
     if (retryCount >= MAX_RETRIES) {
       console.log("Max retries reached. Stopping update checks.");
       return;
@@ -108,15 +108,18 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   
     let delay = BASE_DELAY * Math.pow(2, retryCount); // Exponential backoff
   
-    setTimeout(async () => {
-      console.log(`Checking for new note, Attempt: ${retryCount + 1}`);
+    console.log(`Checking for new note, Attempt: ${retryCount + 1}, Delay: ${delay}ms`);
   
+    setTimeout(async () => {
       await dispatch(getConversation(conversationId)); // Fetch latest notes
   
-      // If temp note still exists, retry
+      // Check if temp note still exists
       const tempNoteExists = tempNotes.length > 0;
+  
       if (tempNoteExists) {
-        checkForUpdates(retryCount + 1);
+        checkForUpdates(retryCount + 1); // Increment retry count
+      } else {
+        console.log("New note found! Stopping further API calls.");
       }
     }, delay);
   };
@@ -146,7 +149,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       viewers: { roles: [], users: [] }
     };
   
-    console.log("📝 Adding tempNote:", tempNote);
+    console.log("Adding tempNote:", tempNote);
     setTempNotes((prev) => [tempNote, ...prev]); // Store temp note separately
     setDisplayNotes((prev) => [tempNote, ...prev]); // Update displayed notes
   
