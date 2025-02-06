@@ -59,16 +59,21 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   useEffect(() => {
     setDisplayNotes((prevDisplayNotes) => {
       return notes.map((newNote) => {
-        // Find if there's a temp note matching this backend-generated note
+        console.timeLog('notes', notes);
+        // Find the matching temp note
         const tempNote = prevDisplayNotes.find((temp) => 
-          temp.isTemp && temp.text === newNote.text && temp.attachments.length === newNote.attachments.length
+          temp.isTemp && 
+          temp.text === newNote.text && 
+          temp.attachments.length === newNote.attachments?.length && // Ensure attachments fully match
+          temp.attachments.every((att) => newNote.attachments.includes(att)) // Ensure all attachments match
         );
   
-        // If a temp note exists, replace it with the actual one
+        // If temp note exists and all attachments match, replace it with the real one
         return tempNote ? { ...newNote, isTemp: false } : newNote;
       });
     });
-  }, [notes]);  
+  }, [notes]);
+  
 
   const checkForUpdates = () => {
     let delay = 1000 * Math.pow(2, retryCount);
@@ -110,7 +115,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       viewers: { roles: [], users: [] }
     };
     
-  
+    console.log('tempNote', tempNote)
     // Add temp note to display
     setDisplayNotes((prev) => [tempNote, ...prev]);
   
