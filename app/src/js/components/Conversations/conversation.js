@@ -56,12 +56,21 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     visibilityRef?.current?.resetIdMap();
   };
 
+  const [latestNotesLength, setLatestNotesLength] = useState(notes.length);
+
   useEffect(() => {
+    // If notes length hasn't changed, do nothing
+    if (notes.length <= latestNotesLength) {
+      console.log("Skipping update, waiting for new note.");
+      return;
+    }
+  
+    console.log("Updating notes, new length detected:", notes.length);
+  
     setDisplayNotes((prevDisplayNotes) => {
       console.log('notes:', notes);
   
       return notes.map((newNote) => {
-        console.log('Checking newNote:', newNote);
   
         // Find the matching temp note
         const tempNote = prevDisplayNotes.find((temp) => {
@@ -76,7 +85,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
             console.log("Found matching tempNote:", temp);
           }
   
-          return isMatch; // Ensure we return a boolean for .find()
+          return isMatch;
         });
   
         console.log("tempNote Value:", tempNote);
@@ -85,7 +94,11 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
         return tempNote ? { ...newNote, isTemp: false } : newNote;
       });
     });
+  
+    // Update latest length after processing
+    setLatestNotesLength(notes.length);
   }, [notes]);
+  
   
   
   
