@@ -90,7 +90,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     if (isTextMatch && areAttachmentsMatch) {
       console.log("Exact match found. Replacing temp note with backend note and stopping checks.");
       shouldStopRetries = true; // Set stop flag
-      setTempNotes((prevTempNotes) => prevTempNotes.slice(1)); // Remove first temp note
+      setTempNotes([]); // Remove first temp note
       setDisplayNotes([firstNewNote, ...notes.slice(1)]);
       return;
     }
