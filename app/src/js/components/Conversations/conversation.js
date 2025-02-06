@@ -49,36 +49,84 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const visibilityRef = useRef();
   const uploadedFilesRef = useRef();
 
+  const [displayNotes, setDisplayNotes] = useState([]);
+  const [retryCount, setRetryCount] = useState(0);
+  
   const handleVisibilityReset = () => {
     visibilityRef?.current?.resetIdMap();
   };
 
+  useEffect(() => {
+    setDisplayNotes((prevDisplayNotes) => {
+      return notes.map((newNote) => {
+        // Find if there's a temp note matching this backend-generated note
+        const tempNote = prevDisplayNotes.find((temp) => 
+          temp.isTemp && temp.text === newNote.text && temp.attachments.length === newNote.attachments.length
+        );
+  
+        // If a temp note exists, replace it with the actual one
+        return tempNote ? { ...newNote, isTemp: false } : newNote;
+      });
+    });
+  }, [notes]);  
+
+  const checkForUpdates = () => {
+    let delay = 1000 * Math.pow(2, retryCount);
+  
+    setTimeout(async () => {
+      await dispatch(getConversation(conversationId));
+      setRetryCount((prev) => prev + 1);
+  
+      const tempNoteExists = displayNotes.some((note) => note.isTemp);
+      if (tempNoteExists && retryCount < 5) { 
+        checkForUpdates();
+      } else {
+        setRetryCount(0);
+      }
+    }, delay);
+  };
+  
   const handleRemoveFile = (fileName) => {
     //Have to ensure a rerender with the state update
     uploadedFiles.delete(fileName);
     setUploadedFiles(new Set([...uploadedFiles]));
   };
 
-  const reply = async(dispatch, id) => {
-    const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility()
-    // ensure the person adding the comment is a viewer if they've limited the note
-    if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)){
+  const reply = async (dispatch, id) => {
+    const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility();
+    
+    if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)) {
       viewer_users.push(current_user_id);
     }
-    const resp = encodeURI(textRef.current.value);
+  
+    const resp = textRef.current.value;
+    const tempNote = {
+      id: `temp-${Date.now()}`,
+      text: resp,
+      createdAt: new Date().toISOString(),
+      from: { id: current_user_id, name: "You" },
+      attachments: [...uploadedFiles],
+      isTemp: true,
+    };
+  
+    // Add temp note to display
+    setDisplayNotes((prev) => [tempNote, ...prev]);
+  
     const payload = { 
       conversation_id: id, 
-      text: resp,
+      text: encodeURI(resp),
       viewer_users,
       viewer_roles,
       attachments: [...uploadedFiles]
     };
+  
     await dispatch(replyConversation(payload));
-    await dispatch(getConversation(conversationId));
+    checkForUpdates();
     textRef.current.value = '';
     handleVisibilityReset();
     setUploadedFiles([]);
   };
+  
 
   const cancelCallback = () => setShowSearch(false);
   const submitCallback = (id) => {
@@ -182,9 +230,15 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                   }
                 </div>
                 {
-                  notes.map((note, key) => {
-                    return (<Note dispatch={dispatch} conversationId={conversationId} note={note} privileges={privileges} key={key} />);
-                  })
+                  displayNotes.map((note, key) => (
+                    <Note 
+                      key={note.id} 
+                      dispatch={dispatch} 
+                      conversationId={conversationId} 
+                      note={note} 
+                      privileges={privileges} 
+                    />
+                  ))
                 }
               </div>
             </section>

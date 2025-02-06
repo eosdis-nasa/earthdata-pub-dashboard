@@ -6,19 +6,26 @@ import { lastUpdated } from '../../utils/format';
 import { RenderedNoteVisibility } from './visibility';
 import { loadToken } from '../../utils/auth';
 import _config from '../../config';
+import { Tooltip } from '@mui/material'; // Import Tooltip for disabled attachments
 
 const Note = ({ dispatch, note, conversationId, privileges }) => {
 
     const download = new localUpload();
 
-    const handleDownload = ({noteId, attachment}) => {
+    const handleDownload = ({ noteId, attachment }) => {
+        if (!noteId || noteId.startsWith('temp')) return;
+
         const { apiRoot } = _config;
-        download.downloadFile(`attachments/${noteId}/${attachment}`, `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
-            let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+        download.downloadFile(
+            `attachments/${noteId}/${attachment}`, 
+            `${apiRoot}data/upload/downloadUrl`, 
+            loadToken().token
+        ).then((resp) => {
+            let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
             if (error) {
-              console.log(`An error has occurred: ${error}.`);
+                console.log(`An error has occurred: ${error}.`);
             }
-          })
+        });
     };
 
     return (
@@ -30,16 +37,31 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
                 <RenderedNoteVisibility note={note} dispatch={dispatch} conversationId={conversationId} privileges={privileges} />
             </div>
             <div className='flex__item--grow-1-wrap'>
-                <div style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word" }}>{decodeURI(note.text)}</div>
-                {note?.attachments?.length > 0 ? <>
-                    <br/>
-                    <label>Attachments:</label>
-                    <div>
-                    {note.attachments.map((attachment) =>
-                        <div><a onClick={(e) => handleDownload({noteId: note.id, attachment})}>{attachment}</a></div>
-                    )}
-                    </div>
-                </> : null }
+                <div style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word" }}>
+                    {decodeURI(note.text)}
+                </div>
+                {note?.attachments?.length > 0 && (
+                    <>
+                        <br/>
+                        <label>Attachments:</label>
+                        <div>
+                            {note.attachments.map((attachment, idx) => (
+                                <React.Fragment key={idx}>
+                                    {idx > 0 ? ', ' : ' '}
+                                    {note.id && !note.id.startsWith('temp') ? (
+                                        <a onClick={() => handleDownload({ noteId: note.id, attachment })}>
+                                            {attachment}
+                                        </a>
+                                    ) : (
+                                        <Tooltip title='Attachment temporarily unavailable.'>
+                                            <span style={{ cursor: "not-allowed", color: "grey" }}>{attachment}</span>
+                                        </Tooltip>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
