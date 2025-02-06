@@ -99,22 +99,24 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       viewer_users.push(current_user_id);
     }
   
-    const resp = textRef.current.value;
+    const resp = encodeURI(textRef.current.value);
+    
     const tempNote = {
       id: `temp-${Date.now()}`,
       text: resp,
       createdAt: new Date().toISOString(),
-      from: { id: current_user_id, name: "You" },
       attachments: [...uploadedFiles],
       isTemp: true,
+      viewers: { roles: [], users: [] }
     };
+    
   
     // Add temp note to display
     setDisplayNotes((prev) => [tempNote, ...prev]);
   
     const payload = { 
       conversation_id: id, 
-      text: encodeURI(resp),
+      text: resp,
       viewer_users,
       viewer_roles,
       attachments: [...uploadedFiles]
