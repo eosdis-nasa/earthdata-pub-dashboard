@@ -58,28 +58,43 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
 
   useEffect(() => {
     setDisplayNotes((prevDisplayNotes) => {
-      return notes.map((newNote) => {
-        console.log('notes', notes);
-        // Find the matching temp note
-        const tempNote = prevDisplayNotes.find((temp) => 
-          temp.isTemp && 
-          temp.text === newNote.text && 
-          temp.attachments.length === newNote.attachments?.length && // Ensure attachments fully match
-          temp.attachments.every((att) => newNote.attachments.includes(att)) // Ensure all attachments match
-        );
+      console.log('notes:', notes);
   
-        // If temp note exists and all attachments match, replace it with the real one
+      return notes.map((newNote) => {
+        console.log('Checking newNote:', newNote);
+  
+        // Find the matching temp note
+        const tempNote = prevDisplayNotes.find((temp) => {
+          const isMatch = temp.isTemp &&
+            temp.text === newNote.text &&
+            new Set(temp.attachments).size === new Set(newNote.attachments || []).size &&
+            temp.attachments.every(att => 
+              (newNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+            );
+  
+          if (isMatch) {
+            console.log("✅ Found matching tempNote:", temp);
+          }
+  
+          return isMatch; // Ensure we return a boolean for .find()
+        });
+  
+        console.log("🔹 tempNote Value:", tempNote);
+  
+        // Replace temp note only if all attachments match
         return tempNote ? { ...newNote, isTemp: false } : newNote;
       });
     });
   }, [notes]);
   
+  
+  
 
   const checkForUpdates = () => {
-    let delay = 1000 * Math.pow(2, retryCount);
+    let delay = 1000 * Math.pow(2, retryCount); 
   
     setTimeout(async () => {
-      await dispatch(getConversation(conversationId));
+      await dispatch(getConversation(conversationId)); 
       setRetryCount((prev) => prev + 1);
   
       const tempNoteExists = displayNotes.some((note) => note.isTemp);
@@ -136,7 +151,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     handleVisibilityReset();
     setUploadedFiles([]);
   };
-  
+ 
 
   const cancelCallback = () => setShowSearch(false);
   const submitCallback = (id) => {
