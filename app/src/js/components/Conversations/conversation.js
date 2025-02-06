@@ -49,6 +49,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const visibilityRef = useRef();
   const uploadedFilesRef = useRef();
 
+  const [tempNotes, setTempNotes] = useState([]);
   const [displayNotes, setDisplayNotes] = useState([]);
   const [retryCount, setRetryCount] = useState(0);
   
@@ -59,7 +60,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const [latestNotesLength, setLatestNotesLength] = useState(notes.length);
 
   useEffect(() => {
-    // If notes length hasn't changed, do nothing
+    // If notes length hasn't increased, do nothing
     if (notes.length <= latestNotesLength) {
       console.log("Skipping update, waiting for new note.");
       return;
@@ -68,38 +69,37 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     console.log("Updating notes, new length detected:", notes.length);
   
     setDisplayNotes((prevDisplayNotes) => {
-      console.log('notes:', notes);
+      if (tempNotes.length === 0) return notes; // No temp note, return latest notes
   
-      return notes.map((newNote) => {
+      const firstTempNote = tempNotes[0]; // Get the latest temp note
+      const firstNewNote = notes[0]; // Get the latest note from backend
   
-        // Find the matching temp note
-        const tempNote = prevDisplayNotes.find((temp) => {
-          const isMatch = temp.isTemp &&
-            temp.text === newNote.text &&
-            new Set(temp.attachments).size === new Set(newNote.attachments || []).size &&
-            temp.attachments.every(att => 
-              (newNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
-            );
+      console.log('Checking firstNewNote:', firstNewNote);
+      console.log('Comparing with firstTempNote:', firstTempNote);
   
-          if (isMatch) {
-            console.log("Found matching tempNote:", temp);
-          }
+      // Check if the latest backend note matches the temp note
+      const isMatch =
+        firstTempNote.text === firstNewNote.text &&
+        new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
+        firstTempNote.attachments.every(att =>
+          (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+        );
   
-          return isMatch;
-        });
+      if (isMatch) {
+        console.log("Found exact match, replacing temp note with backend note.");
+        setTempNotes((prevTempNotes) => prevTempNotes.slice(1)); // Remove first temp note
+        return [firstNewNote, ...notes.slice(1)]; // Replace first element with updated note
+      }
   
-        console.log("tempNote Value:", tempNote);
+      console.log("No match yet, keeping temp note and retrying API call.");
+      checkForUpdates(); // Continue checking backend for updates
   
-        // Replace temp note only if all attachments match
-        return tempNote ? { ...newNote, isTemp: false } : newNote;
-      });
+      return [firstTempNote, ...notes]; // Keep temp note and latest notes
     });
   
     // Update latest length after processing
     setLatestNotesLength(notes.length);
   }, [notes]);
-  
-  
   
   
 
@@ -127,13 +127,13 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
 
   const reply = async (dispatch, id) => {
     const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility();
-    
+  
     if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)) {
       viewer_users.push(current_user_id);
     }
   
     const resp = encodeURI(textRef.current.value);
-    
+  
     const tempNote = {
       id: `temp-${Date.now()}`,
       text: resp,
@@ -142,9 +142,11 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       isTemp: true,
       viewers: { roles: [], users: [] }
     };
-    
-    console.log('tempNote', tempNote)
-    // Add temp note to display
+  
+    console.log('Adding tempNote:', tempNote);
+  
+    // Store tempNote in state
+    setTempNotes((prev) => [...prev, tempNote]);
     setDisplayNotes((prev) => [tempNote, ...prev]);
   
     const payload = { 
@@ -155,15 +157,17 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       attachments: [...uploadedFiles]
     };
   
-    await dispatch(replyConversation(payload));
+    await dispatch(replyConversation(payload)); // Send to backend
+  
     checkForUpdates();
     if (textRef.current) {
-      textRef.current.value = '';
+      textRef.current.value = ''; // Clear input field
     }
-    
+  
     handleVisibilityReset();
     setUploadedFiles([]);
   };
+  
  
 
   const cancelCallback = () => setShowSearch(false);
