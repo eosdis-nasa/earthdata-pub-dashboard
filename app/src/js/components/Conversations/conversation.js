@@ -59,7 +59,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
 
   const MAX_RETRIES = 5; // Max retries before stopping
   const BASE_DELAY = 1000; // Start with 1 sec delay
-  let shouldStopRetries = false; // Flag to stop retries
+  let shouldStopRetries = false; // Stop flag
+  let currentTimeout = null; // Store timeout ID
 
   useEffect(() => {
     if (notes.length === 0) return;
@@ -99,47 +100,47 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     }
   }, [notes]);
   
+
   const checkForUpdates = (retryCount = 0) => {
     if (retryCount >= MAX_RETRIES || shouldStopRetries) {
       console.log("Max retries reached or stop flag set. Stopping update checks.");
       return;
     }
-  
+
     let delay = BASE_DELAY * Math.pow(2, retryCount); // Exponential backoff
-  
+
     console.log(`Checking for new note, Attempt: ${retryCount + 1}, Delay: ${delay}ms`);
-  
-    const timeoutId = setTimeout(async () => {
+
+    currentTimeout = setTimeout(async () => {
       if (shouldStopRetries) {
-        console.log("Stop flag is set. Clearing timeout.");
-        clearTimeout(timeoutId);
+        console.log("Stop flag is set. Cancelling scheduled retry.");
+        clearTimeout(currentTimeout);
         return;
       }
-  
+
       await dispatch(getConversation(conversationId)); // Fetch latest notes
-  
+
       const firstNewNote = notes[0];
       const firstTempNote = tempNotes[0];
-  
+
       if (firstTempNote && firstNewNote && firstTempNote.text === firstNewNote.text) {
         const areAttachmentsMatch =
           new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
           firstTempNote.attachments.every(att =>
             (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
           );
-  
+
         if (areAttachmentsMatch) {
           console.log("Backend note fully matches temp note! Stopping retries.");
           shouldStopRetries = true; // Set stop flag
-          return; // Stop further retries
+          clearTimeout(currentTimeout); // Cancel any further scheduled retries
+          return;
         }
       }
-  
+
       checkForUpdates(retryCount + 1); // Retry if no match yet
     }, delay);
   };
-  
-  
   
   const handleRemoveFile = (fileName) => {
     //Have to ensure a rerender with the state update
@@ -189,8 +190,6 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     setUploadedFiles([]);
   };
   
- 
-
   const cancelCallback = () => setShowSearch(false);
   const submitCallback = (id) => {
     const params = {
