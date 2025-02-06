@@ -59,7 +59,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   useEffect(() => {
     setDisplayNotes((prevDisplayNotes) => {
       return notes.map((newNote) => {
-        console.timeLog('notes', notes);
+        console.log('notes', notes);
         // Find the matching temp note
         const tempNote = prevDisplayNotes.find((temp) => 
           temp.isTemp && 
