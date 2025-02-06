@@ -59,7 +59,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
 
   const MAX_RETRIES = 5; // Max retries before stopping
   const BASE_DELAY = 1000; // Start with 1 sec delay
-  
+  let shouldStopRetries = false; // Flag to stop retries
+
   useEffect(() => {
     if (notes.length === 0) return;
   
@@ -85,25 +86,22 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
         (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
       );
   
-    if (isTextMatch) {
-      if (areAttachmentsMatch) {
-        console.log("Exact match found. Replacing temp note with backend note and stopping checks.");
-        setTempNotes((prevTempNotes) => prevTempNotes.slice(1)); // Remove first temp note
-        setDisplayNotes([firstNewNote, ...notes.slice(1)]);
-        return;
-      } else {
-        console.log("Text matches but attachments don't. Keeping temp note and checking again.");
-        checkForUpdates(); 
-      }
-    } else {
-      console.log("Text does not match. Keeping temp note.");
+    if (isTextMatch && areAttachmentsMatch) {
+      console.log("Exact match found. Replacing temp note with backend note and stopping checks.");
+      shouldStopRetries = true; // Set stop flag
+      setTempNotes((prevTempNotes) => prevTempNotes.slice(1)); // Remove first temp note
+      setDisplayNotes([firstNewNote, ...notes.slice(1)]);
+      return;
+    }
+  
+    if (!shouldStopRetries) {
+      checkForUpdates(); // Keep checking if attachments are not yet updated
     }
   }, [notes]);
-
   
   const checkForUpdates = (retryCount = 0) => {
-    if (retryCount >= MAX_RETRIES) {
-      console.log("Max retries reached. Stopping update checks.");
+    if (retryCount >= MAX_RETRIES || shouldStopRetries) {
+      console.log("Max retries reached or stop flag set. Stopping update checks.");
       return;
     }
   
@@ -111,34 +109,36 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   
     console.log(`Checking for new note, Attempt: ${retryCount + 1}, Delay: ${delay}ms`);
   
-    setTimeout(async () => {
+    const timeoutId = setTimeout(async () => {
+      if (shouldStopRetries) {
+        console.log("Stop flag is set. Clearing timeout.");
+        clearTimeout(timeoutId);
+        return;
+      }
+  
       await dispatch(getConversation(conversationId)); // Fetch latest notes
   
-      // Check if temp note still exists
-      const tempNoteExists = tempNotes.length > 0;
+      const firstNewNote = notes[0];
+      const firstTempNote = tempNotes[0];
   
-      if (tempNoteExists) {
-        const firstNewNote = notes[0];
-        const firstTempNote = tempNotes[0];
-  
-        const isTextMatch = firstTempNote.text === firstNewNote.text;
+      if (firstTempNote && firstNewNote && firstTempNote.text === firstNewNote.text) {
         const areAttachmentsMatch =
           new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
           firstTempNote.attachments.every(att =>
             (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
           );
   
-        if (isTextMatch && areAttachmentsMatch) {
+        if (areAttachmentsMatch) {
           console.log("Backend note fully matches temp note! Stopping retries.");
-          return;
+          shouldStopRetries = true; // Set stop flag
+          return; // Stop further retries
         }
-  
-        checkForUpdates(retryCount + 1); // Retry if not fully matched
-      } else {
-        console.log("New note found! Stopping further API calls.");
       }
+  
+      checkForUpdates(retryCount + 1); // Retry if no match yet
     }, delay);
   };
+  
   
   
   const handleRemoveFile = (fileName) => {
