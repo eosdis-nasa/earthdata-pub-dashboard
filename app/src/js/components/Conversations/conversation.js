@@ -75,10 +75,10 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       return;
     }
   
-    // Check if text matches
+    // Step 1: Check if text matches
     const isTextMatch = firstTempNote.text === firstNewNote.text;
   
-    // Check if attachments match
+    // Step 2: Check if attachments match
     const areAttachmentsMatch =
       new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
       firstTempNote.attachments.every(att =>
@@ -87,18 +87,19 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   
     if (isTextMatch) {
       if (areAttachmentsMatch) {
-        console.log("Exact match found. Replacing temp note with backend note.");
+        console.log("Exact match found. Replacing temp note with backend note and stopping checks.");
         setTempNotes((prevTempNotes) => prevTempNotes.slice(1)); // Remove first temp note
         setDisplayNotes([firstNewNote, ...notes.slice(1)]);
+        return;
       } else {
         console.log("Text matches but attachments don't. Keeping temp note and checking again.");
-        checkForUpdates(); // Keep checking for updates if attachments are not yet updated
+        checkForUpdates(); 
       }
     } else {
       console.log("Text does not match. Keeping temp note.");
     }
   }, [notes]);
-  
+
   
   const checkForUpdates = (retryCount = 0) => {
     if (retryCount >= MAX_RETRIES) {
@@ -117,7 +118,22 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       const tempNoteExists = tempNotes.length > 0;
   
       if (tempNoteExists) {
-        checkForUpdates(retryCount + 1); // Increment retry count
+        const firstNewNote = notes[0];
+        const firstTempNote = tempNotes[0];
+  
+        const isTextMatch = firstTempNote.text === firstNewNote.text;
+        const areAttachmentsMatch =
+          new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
+          firstTempNote.attachments.every(att =>
+            (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+          );
+  
+        if (isTextMatch && areAttachmentsMatch) {
+          console.log("Backend note fully matches temp note! Stopping retries.");
+          return;
+        }
+  
+        checkForUpdates(retryCount + 1); // Retry if not fully matched
       } else {
         console.log("New note found! Stopping further API calls.");
       }
