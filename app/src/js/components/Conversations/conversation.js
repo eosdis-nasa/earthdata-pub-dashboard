@@ -65,26 +65,26 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   useEffect(() => {
     if (notes.length === 0) return;
     if (shouldStopRetries) return;
-  
-    const firstNewNote = notes.length > 0 ? notes[0] : null;
+
+    const firstNewNote = notes[0]; 
     const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
-  
+
     console.log("Checking latest backend note:", firstNewNote);
     console.log("Comparing with first temp note:", firstTempNote);
-  
-    if (!firstNewNote || !firstTempNote) {
-      console.log("One of the notes is null. Skipping further checks.");
+
+    if (!firstTempNote) {
+      console.log("No temp note found, updating displayNotes directly.");
+      setDisplayNotes(notes);
       return;
     }
-  
+
     const isTextMatch = firstTempNote.text === firstNewNote.text;
-  
-    // Sort and compare attachments
-    const sortedTempAttachments = [...(firstTempNote.attachments || [])].sort();
-    const sortedNewAttachments = [...(firstNewNote.attachments || [])].sort();
-  
-    const areAttachmentsMatch = JSON.stringify(sortedTempAttachments) === JSON.stringify(sortedNewAttachments);
-  
+    const areAttachmentsMatch =
+      new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
+      firstTempNote.attachments.every(att =>
+        (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+      );
+
     if (isTextMatch && areAttachmentsMatch) {
       console.log("Exact match found. Replacing temp note with backend note.");
       setShouldStopRetries(true);
@@ -92,13 +92,12 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       setDisplayNotes([firstNewNote, ...notes.slice(1)]);
       return;
     }
-  
+
     if (isTextMatch && !areAttachmentsMatch) {
       console.log("Text matches, but attachments don’t. Continuing retries...");
       checkForUpdates();
     }
   }, [notes]);
-  
   
 
 
@@ -106,12 +105,14 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const checkForUpdates = async (retryCount = 0) => {
     if (retryCount >= MAX_RETRIES || shouldStopRetries) {
       console.log("Max retries reached or stop flag set. Stopping update checks.");
+      clearTimeout(currentTimeout);  // Clear the timeout if retries should stop
       return;
     }
   
     let delay = BASE_DELAY * Math.pow(2, retryCount);
     console.log(`Checking for new note, Attempt: ${retryCount + 1}, Delay: ${delay}ms`);
   
+    // Clear previous timeout before setting a new one
     if (currentTimeout) {
       clearTimeout(currentTimeout);
     }
@@ -123,45 +124,51 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
         return;
       }
   
-      await dispatch(getConversation(conversationId)); // Fetch latest notes
-      const latestNotes = conversation.notes || []; // Ensure valid notes array
+      // Fetch latest notes from backend
+      await dispatch(getConversation(conversationId));
+      
+      // Ensure we get the most recent notes state
+      const latestNotes = conversation.notes || [];
       const firstNewNote = latestNotes.length > 0 ? latestNotes[0] : null;
       const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
   
       console.log("Checking latest backend note:", firstNewNote);
       console.log("Comparing with first temp note:", firstTempNote);
   
-      if (!firstNewNote || !firstTempNote) {
-        console.log("Either firstNewNote or firstTempNote is missing. Stopping further checks.");
+      if (!firstTempNote) {
+        console.log("No temp note found. Stopping further checks.");
         setShouldStopRetries(true);
         clearTimeout(currentTimeout);
         return;
       }
   
-      // Check if the text matches
+      // Step 1: Check if text matches
       const isTextMatch = firstTempNote.text === firstNewNote.text;
   
-      // Sort and compare attachments
-      const sortedTempAttachments = [...(firstTempNote.attachments || [])].sort();
-      const sortedNewAttachments = [...(firstNewNote.attachments || [])].sort();
-  
-      const areAttachmentsMatch = JSON.stringify(sortedTempAttachments) === JSON.stringify(sortedNewAttachments);
+      // Step 2: Check if attachments match
+      const areAttachmentsMatch =
+        new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
+        firstTempNote.attachments.every(att =>
+          (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+        );
   
       if (isTextMatch && areAttachmentsMatch) {
-        console.log("Exact match found. Replacing temp note with backend note.");
+        console.log("Backend note fully matches temp note! Stopping retries.");
         setShouldStopRetries(true);
-        setTempNotes([]);
+        setTempNotes([]); // Clear temp notes
         setDisplayNotes([firstNewNote, ...latestNotes.slice(1)]);
         clearTimeout(currentTimeout);
         return;
       }
   
-      console.log("Text matches, but attachments don’t. Continuing retries...");
+      // If no match yet, continue checking
       checkForUpdates(retryCount + 1);
+  
     }, delay);
   };
   
-  
+
+
   
   const handleRemoveFile = (fileName) => {
     //Have to ensure a rerender with the state update
