@@ -57,67 +57,70 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     visibilityRef?.current?.resetIdMap();
   };
 
-  const [latestNotesLength, setLatestNotesLength] = useState(notes.length);
-
+  const MAX_RETRIES = 5; // Max retries before stopping
+  const BASE_DELAY = 1000; // Start with 1 sec delay
+  
   useEffect(() => {
-    // If notes length hasn't increased, do nothing
-    if (notes.length <= latestNotesLength) {
-      console.log("Skipping update, waiting for new note.");
+    if (notes.length === 0) return;
+  
+    const firstNewNote = notes[0]; // Latest backend note
+    const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
+  
+    console.log("Checking latest backend note:", firstNewNote);
+    console.log("Comparing with first temp note:", firstTempNote);
+  
+    if (!firstTempNote) {
+      console.log("No temp note found, updating displayNotes directly.");
+      setDisplayNotes(notes);
       return;
     }
   
-    console.log("Updating notes, new length detected:", notes.length);
+    // Check if text matches
+    const isTextMatch = firstTempNote.text === firstNewNote.text;
   
-    setDisplayNotes((prevDisplayNotes) => {
-      if (tempNotes.length === 0) return notes; // No temp note, return latest notes
+    // Check if attachments match
+    const areAttachmentsMatch =
+      new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
+      firstTempNote.attachments.every(att =>
+        (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+      );
   
-      const firstTempNote = tempNotes[0]; // Get the latest temp note
-      const firstNewNote = notes[0]; // Get the latest note from backend
-  
-      console.log('Checking firstNewNote:', firstNewNote);
-      console.log('Comparing with firstTempNote:', firstTempNote);
-  
-      // Check if the latest backend note matches the temp note
-      const isMatch =
-        firstTempNote.text === firstNewNote.text &&
-        new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
-        firstTempNote.attachments.every(att =>
-          (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
-        );
-  
-      if (isMatch) {
-        console.log("Found exact match, replacing temp note with backend note.");
+    if (isTextMatch) {
+      if (areAttachmentsMatch) {
+        console.log("Exact match found. Replacing temp note with backend note.");
         setTempNotes((prevTempNotes) => prevTempNotes.slice(1)); // Remove first temp note
-        return [firstNewNote, ...notes.slice(1)]; // Replace first element with updated note
+        setDisplayNotes([firstNewNote, ...notes.slice(1)]);
+      } else {
+        console.log("Text matches but attachments don't. Keeping temp note and checking again.");
+        checkForUpdates(); // Keep checking for updates if attachments are not yet updated
       }
-  
-      console.log("No match yet, keeping temp note and retrying API call.");
-      checkForUpdates(); // Continue checking backend for updates
-  
-      return [firstTempNote, ...notes]; // Keep temp note and latest notes
-    });
-  
-    // Update latest length after processing
-    setLatestNotesLength(notes.length);
+    } else {
+      console.log("Text does not match. Keeping temp note.");
+    }
   }, [notes]);
   
   
-
-  const checkForUpdates = () => {
-    let delay = 1000 * Math.pow(2, retryCount); 
+  const checkForUpdates = (retryCount) => {
+    if (retryCount >= MAX_RETRIES) {
+      console.log("Max retries reached. Stopping update checks.");
+      return;
+    }
+  
+    let delay = BASE_DELAY * Math.pow(2, retryCount); // Exponential backoff
   
     setTimeout(async () => {
-      await dispatch(getConversation(conversationId)); 
-      setRetryCount((prev) => prev + 1);
+      console.log(`Checking for new note, Attempt: ${retryCount + 1}`);
   
-      const tempNoteExists = displayNotes.some((note) => note.isTemp);
-      if (tempNoteExists && retryCount < 5) { 
-        checkForUpdates();
-      } else {
-        setRetryCount(0);
+      await dispatch(getConversation(conversationId)); // Fetch latest notes
+  
+      // If temp note still exists, retry
+      const tempNoteExists = tempNotes.length > 0;
+      if (tempNoteExists) {
+        checkForUpdates(retryCount + 1);
       }
     }, delay);
   };
+  
   
   const handleRemoveFile = (fileName) => {
     //Have to ensure a rerender with the state update
@@ -127,7 +130,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
 
   const reply = async (dispatch, id) => {
     const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility();
-  
+    
     if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)) {
       viewer_users.push(current_user_id);
     }
@@ -143,11 +146,9 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       viewers: { roles: [], users: [] }
     };
   
-    console.log('Adding tempNote:', tempNote);
-  
-    // Store tempNote in state
-    setTempNotes((prev) => [...prev, tempNote]);
-    setDisplayNotes((prev) => [tempNote, ...prev]);
+    console.log("📝 Adding tempNote:", tempNote);
+    setTempNotes((prev) => [tempNote, ...prev]); // Store temp note separately
+    setDisplayNotes((prev) => [tempNote, ...prev]); // Update displayed notes
   
     const payload = { 
       conversation_id: id, 
@@ -157,13 +158,14 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       attachments: [...uploadedFiles]
     };
   
-    await dispatch(replyConversation(payload)); // Send to backend
+    await dispatch(replyConversation(payload));
   
-    checkForUpdates();
+    // Start checking backend updates
+    checkForUpdates(0); // Pass retry count 0
+  
     if (textRef.current) {
-      textRef.current.value = ''; // Clear input field
+      textRef.current.value = '';
     }
-  
     handleVisibilityReset();
     setUploadedFiles([]);
   };
