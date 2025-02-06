@@ -43,7 +43,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     dispatch(getConversation(conversationId));
   }, []);
   const { data, inflight, meta } = conversation;
-  const { subject, notes, participants } = data;
+  const { subject, notes = [], participants = [] } = data;
   const { queriedAt } = meta;
   const { canReply, canAddUser } = notePrivileges(privileges);
   const visibilityRef = useRef();
@@ -122,7 +122,10 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   
     await dispatch(replyConversation(payload));
     checkForUpdates();
-    textRef.current.value = '';
+    if (textRef.current) {
+      textRef.current.value = '';
+    }
+    
     handleVisibilityReset();
     setUploadedFiles([]);
   };
@@ -229,17 +232,15 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                     </form>
                   }
                 </div>
-                {
-                  displayNotes.map((note, key) => (
-                    <Note 
-                      key={note.id} 
-                      dispatch={dispatch} 
-                      conversationId={conversationId} 
-                      note={note} 
-                      privileges={privileges} 
-                    />
-                  ))
-                }
+                {Array.isArray(displayNotes) && displayNotes.map((note) => (
+                  <Note 
+                    key={note.id} 
+                    dispatch={dispatch} 
+                    conversationId={conversationId} 
+                    note={note} 
+                    privileges={privileges} 
+                  />
+                ))}
               </div>
             </section>
             <section className='page__section flex__item--w-17 flex__item-end'>

@@ -6,7 +6,7 @@ import { lastUpdated } from '../../utils/format';
 import { RenderedNoteVisibility } from './visibility';
 import { loadToken } from '../../utils/auth';
 import _config from '../../config';
-import { Tooltip } from '@mui/material'; // Import Tooltip for disabled attachments
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const Note = ({ dispatch, note, conversationId, privileges }) => {
 
@@ -53,9 +53,12 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
                                             {attachment}
                                         </a>
                                     ) : (
-                                        <Tooltip title='Attachment temporarily unavailable.'>
-                                            <span style={{ cursor: "not-allowed", color: "grey" }}>{attachment}</span>
-                                        </Tooltip>
+                                        <OverlayTrigger
+                                        placement="top"
+                                        overlay={<Tooltip id={`tooltip-${note.id}-${idx}`}>Attachment temporarily unavailable.</Tooltip>}
+                                        >
+                                        <span style={{ cursor: "not-allowed", color: "grey" }}>{attachment}</span>
+                                        </OverlayTrigger>
                                     )}
                                 </React.Fragment>
                             ))}
