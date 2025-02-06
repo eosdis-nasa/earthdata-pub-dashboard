@@ -121,9 +121,21 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       await dispatch(getConversation(conversationId)); // Fetch latest notes
 
       const firstNewNote = notes[0];
-      const firstTempNote = tempNotes[0];
+      const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
 
-      if (firstTempNote && firstNewNote && firstTempNote.text === firstNewNote.text) {
+      console.log("Checking latest backend note:", firstNewNote);
+      console.log("Comparing with first temp note:", firstTempNote);
+
+      // Stop checking if there's no temp note
+      if (!firstTempNote) {
+        console.log("No temp note found. Stopping further checks.");
+        shouldStopRetries = true;
+        clearTimeout(currentTimeout);
+        return;
+      }
+
+      // Check for exact match
+      if (firstTempNote.text === firstNewNote.text) {
         const areAttachmentsMatch =
           new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
           firstTempNote.attachments.every(att =>
@@ -132,15 +144,17 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
 
         if (areAttachmentsMatch) {
           console.log("Backend note fully matches temp note! Stopping retries.");
-          shouldStopRetries = true; // Set stop flag
-          clearTimeout(currentTimeout); // Cancel any further scheduled retries
+          shouldStopRetries = true;
+          clearTimeout(currentTimeout);
           return;
         }
       }
 
-      checkForUpdates(retryCount + 1); // Retry if no match yet
+      // If no match yet, retry
+      checkForUpdates(retryCount + 1);
     }, delay);
   };
+
   
   const handleRemoveFile = (fileName) => {
     //Have to ensure a rerender with the state update
