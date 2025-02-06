@@ -218,7 +218,7 @@ export const daacPrivileges = (privileges) => {
 /**
  * given an array of privileges (strings), return an object with keys as the type of privilege and values as an array of actions
  * 
- * @example given an array of privileges ['USER_READ', 'USER_CREATE', 'GROUP_READ', 'GROUP_CREATE'], will return { USER: ['READ', 'CREATE'], GROUP: ['READ', 'CREATE'] }
+ * @example given an array of privileges ['USER_READ', 'GROUP_READ', 'GROUP_CREATE'], will return { USER: ['READ', 'CREATE'], GROUP: ['READ', 'CREATE'] }
  */
 export const getPrivilegesByType = (privileges) => {
     return privileges.reduce((acc, privilege) => {
