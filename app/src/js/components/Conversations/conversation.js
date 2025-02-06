@@ -52,14 +52,14 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const [tempNotes, setTempNotes] = useState([]);
   const [displayNotes, setDisplayNotes] = useState([]);
   const [retryCount, setRetryCount] = useState(0);
-  
+  const [shouldStopRetries, setShouldStopRetries] = useState(false);
+
   const handleVisibilityReset = () => {
     visibilityRef?.current?.resetIdMap();
   };
 
   const MAX_RETRIES = 5; // Max retries before stopping
   const BASE_DELAY = 1000; // Start with 1 sec delay
-  let shouldStopRetries = false; // Stop flag
   let currentTimeout = null; // Store timeout ID
 
   useEffect(() => {
@@ -101,56 +101,72 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   
 
 
-  const checkForUpdates = (retryCount = 0) => {
+  
+  const checkForUpdates = async (retryCount = 0) => {
     if (retryCount >= MAX_RETRIES || shouldStopRetries) {
       console.log("Max retries reached or stop flag set. Stopping update checks.");
       clearTimeout(currentTimeout);  // Clear the timeout if retries should stop
       return;
     }
-
+  
     let delay = BASE_DELAY * Math.pow(2, retryCount);
     console.log(`Checking for new note, Attempt: ${retryCount + 1}, Delay: ${delay}ms`);
-
+  
+    // Clear previous timeout before setting a new one
+    if (currentTimeout) {
+      clearTimeout(currentTimeout);
+    }
+  
     currentTimeout = setTimeout(async () => {
       if (shouldStopRetries) {
         console.log("Stop flag is set. Cancelling scheduled retry.");
         clearTimeout(currentTimeout);
         return;
       }
-
+  
+      // Fetch latest notes from backend
       await dispatch(getConversation(conversationId));
-
-      const firstNewNote = notes[0];
+      
+      // Ensure we get the most recent notes state
+      const latestNotes = conversation.notes || [];
+      const firstNewNote = latestNotes.length > 0 ? latestNotes[0] : null;
       const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
-
+  
       console.log("Checking latest backend note:", firstNewNote);
       console.log("Comparing with first temp note:", firstTempNote);
-
+  
       if (!firstTempNote) {
         console.log("No temp note found. Stopping further checks.");
-        shouldStopRetries = true;
+        setShouldStopRetries(true);
         clearTimeout(currentTimeout);
         return;
       }
-
-      if (firstTempNote.text === firstNewNote.text) {
-        const areAttachmentsMatch =
-          new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
-          firstTempNote.attachments.every(att =>
-            (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
-          );
-
-        if (areAttachmentsMatch) {
-          console.log("Backend note fully matches temp note! Stopping retries.");
-          shouldStopRetries = true;
-          clearTimeout(currentTimeout);
-          return;
-        }
+  
+      // Step 1: Check if text matches
+      const isTextMatch = firstTempNote.text === firstNewNote.text;
+  
+      // Step 2: Check if attachments match
+      const areAttachmentsMatch =
+        new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
+        firstTempNote.attachments.every(att =>
+          (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+        );
+  
+      if (isTextMatch && areAttachmentsMatch) {
+        console.log("Backend note fully matches temp note! Stopping retries.");
+        setShouldStopRetries(true);
+        setTempNotes([]); // Clear temp notes
+        setDisplayNotes([firstNewNote, ...latestNotes.slice(1)]);
+        clearTimeout(currentTimeout);
+        return;
       }
-
-      checkForUpdates(retryCount + 1); // Recursive call with increased retry count
+  
+      // If no match yet, continue checking
+      checkForUpdates(retryCount + 1);
+  
     }, delay);
   };
+  
 
 
   
