@@ -221,6 +221,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     await dispatch(replyConversation(payload));
 
     setShouldStopRetries(false);
+    await dispatch(getConversation(id));
     checkForUpdates(0);
 
     if (textRef.current) {
