@@ -89,7 +89,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       console.log("Exact match found. Replacing temp note with backend note.");
       setShouldStopRetries(true);
       setTempNotes(prevTempNotes => prevTempNotes.slice(1)); 
-      setDisplayNotes([...notes]);
+      setDisplayNotes([firstNewNote, ...notes.slice(1)]);
       console.log('inside stop', shouldStopRetries);
       clearTimeout(currentTimeout);  // Clear the timeout if retries should stop
       return;
@@ -128,7 +128,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       }
   
       // Fetch latest notes from backend
-      await dispatch(getConversation(conversationId));
+      const notesAPi = await dispatch(getConversation(conversationId));
+      console.log('notesAPi', notesAPi);
       
       // Ensure we get the most recent notes state
       const latestNotes = notes || [];
