@@ -160,7 +160,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
         console.log("Backend note fully matches temp note! Stopping retries.");
         setShouldStopRetries(true);
         setTempNotes([]); // Clear temp notes
-        setDisplayNotes([firstNewNote, ...latestNotes.slice(1)]);
+        setDisplayNotes(notesAPi?.data?.notes);
         clearTimeout(currentTimeout);
         return;
       }
