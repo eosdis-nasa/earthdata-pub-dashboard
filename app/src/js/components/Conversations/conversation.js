@@ -41,8 +41,9 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       document.getElementById('all_button').classList.remove('active');
       document.getElementById('users_only_button').classList.add('active');
     }
+    console.log('getConversation inside get -> ', lvl);
+
     const newData = await dispatch(getConversation(conversationId, lvl));
-    console.log('newData', newData?.data?.notes);
     if(newData?.data?.notes) setDisplayNotes(newData?.data?.notes);
   };
   const { data, inflight, meta } = conversation;
@@ -72,11 +73,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     const firstNewNote = notes[0]; 
     const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
 
-    console.log("Checking latest backend note:", firstNewNote);
-    console.log("Comparing with first temp note:", firstTempNote);
-
     if (!firstTempNote) {
-      console.log("No temp note found, updating displayNotes directly.");
       setDisplayNotes(notes);
       return;
     }
@@ -99,23 +96,19 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     }
 
     if (isTextMatch && !areAttachmentsMatch) {
-      console.log("Text matches, but attachments don’t. Continuing retries...");
       checkForUpdates();
     }
   }, [notes, level]);
   
   
   const checkForUpdates = async (retryCount = 0) => {
-    console.log('shouldStopRetries', shouldStopRetries);
     if (retryCount >= MAX_RETRIES || shouldStopRetries) {
       console.log("Max retries reached or stop flag set. Stopping update checks.");
-      clearTimeout(currentTimeout);  // Clear the timeout if retries should stop
+      clearTimeout(currentTimeout);
       return;
     }
   
-    let delay = BASE_DELAY * Math.pow(2, retryCount);
-    console.log(`Checking for new note, Attempt: ${retryCount + 1}, Delay: ${delay}ms`);
-  
+    let delay = BASE_DELAY * Math.pow(2, retryCount);  
     // Clear previous timeout before setting a new one
     if (currentTimeout) {
       clearTimeout(currentTimeout);
@@ -123,25 +116,20 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   
     currentTimeout = setTimeout(async () => {
       if (shouldStopRetries) {
-        console.log("Stop flag is set. Cancelling scheduled retry.");
         clearTimeout(currentTimeout);
         return;
       }
   
       // Fetch latest notes from backend
+      console.log('getConversation notesapi -> ', level);
       const notesAPi = await dispatch(getConversation(conversationId, level));
-      console.log('notesAPi', notesAPi);
 
       // Ensure we get the most recent notes state
       const latestNotes = notesAPi?.data?.notes?.[0] || null;
       const firstNewNote = latestNotes ? latestNotes : null;
       const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
   
-      console.log("Checking latest backend note:", firstNewNote);
-      console.log("Comparing with first temp note:", firstTempNote);
-  
       if (!firstTempNote) {
-        console.log("No temp note found. Stopping further checks.");
         setShouldStopRetries(true);
         clearTimeout(currentTimeout);
         return;
@@ -203,6 +191,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     await dispatch(replyConversation(payload));
 
     setShouldStopRetries(false);
+    console.log('getConversation reply -> ', level);
+
     await dispatch(getConversation(id, level));
 
     if ([...uploadedFiles].length > 0) {
