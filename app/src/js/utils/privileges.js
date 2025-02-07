@@ -3,22 +3,19 @@ export const notePrivileges = (privileges) => {
     return {
       canReply: true,
       canAddUser: true,
-      canRemoveUser: true,
-      canAddGroup: true
+      canRemoveUser: true
     };
   } else if (privileges.NOTE) {
     return {
       canReply: privileges.NOTE.includes('REPLY'),
       canAddUser: privileges.NOTE.includes('ADDUSER'),
-      canRemoveUser: privileges.NOTE.includes('REMOVEUSER'),
-      canAddGroup: privileges.NOTE.includes('ADDGROUP')
+      canRemoveUser: privileges.NOTE.includes('REMOVEUSER')
     };
   }
   return {
     canReply: false,
     canAddUser: false,
-    canRemoveUser: false,
-    canAddGroup: false
+    canRemoveUser: false
   };
 };
 
@@ -30,7 +27,6 @@ export const userPrivileges = (privileges) => {
       canRemoveRole: true,
       canAddGroup: true,
       canRemoveGroup: true,
-      canAddPermission: true,
       canCreate: true,
       canUpdateWorkflow: true
     };
@@ -41,9 +37,7 @@ export const userPrivileges = (privileges) => {
       canRemoveRole: privileges.USER.includes('REMOVEROLE'),
       canAddGroup: privileges.USER.includes('ADDGROUP'),
       canRemoveGroup: privileges.USER.includes('REMOVEGROUP'),
-      canAddPermission: privileges.USER.includes('ADDPERMISSION'),
-      canCreate: privileges.USER.includes('CREATE'),
-      canDelete: privileges.USER.includes('DELETE'),
+      canCreate: false,
       canUpdateWorkflow: false
     };
   }
@@ -51,9 +45,7 @@ export const userPrivileges = (privileges) => {
     canRead: false,
     canAddRole: false,
     canAddGroup: false,
-    canAddPermission: false,
     canCreate: false,
-    canDelete: false,
     canUpdateWorkflow: false
   };
 };
@@ -61,29 +53,14 @@ export const userPrivileges = (privileges) => {
 export const groupPrivileges = (privileges) => {
   if (privileges.ADMIN) {
     return {
-      canCreate: true,
-      canRead: true,
-      canEdit: true,
-      canDelete: true,
-      canAddPermission: true,
       canUpload: true,
     };
   } else if (privileges.GROUP) {
     return {
-      canCreate: privileges.GROUP.includes('GROUP_CREATE'),
-      canRead: privileges.GROUP.includes('GROUP_READ'),
-      canEdit: privileges.GROUP.includes('GROUP_UPDATE'),
-      canDelete: privileges.GROUP.includes('GROUP_DELETE'),
-      canAddPermission: privileges.GROUP.includes('GROUP_ADDPERMISSION'),
       canUpload: privileges.GROUP.includes('UPLOAD'),
     };
   }
   return {
-    canCreate: false,
-    canRead: false,
-    canEdit: false,
-    canDelete: false,
-    canAddPermission: false,
     canUpload: false
   };
 };
@@ -103,14 +80,14 @@ export const requestPrivileges = (privileges, stepName) => {
   } else if (privileges.REQUEST) {
     return {
       canRead: !!privileges.REQUEST.find(a =>
-        a === 'REQUEST_READ' || a === 'REQUEST_DAACREAD'),
-      canInitialize: privileges.REQUEST.includes('REQUEST_INITIALIZE'),
-      canSubmit: privileges.REQUEST.includes('REQUEST_SUBMIT'),
+        a === 'READ' || a === 'DAACREAD'),
+      canInitialize: privileges.REQUEST.includes('INITIALIZE'),
+      canSubmit: privileges.REQUEST.includes('SUBMIT'),
       canReview: requestCanReview(privileges, stepName),
-      canReassign: privileges.REQUEST.includes('REQUEST_REASSIGN'),
-      canWithdraw: privileges.REQUEST.find(a => a === 'REQUEST_DAACREAD'),
-      canAddUser: privileges.REQUEST.includes('REQUEST_ADDUSER'),
-      canRemoveUser: privileges.REQUEST.includes('REQUEST_REMOVEUSER'),
+      canReassign: privileges.REQUEST.includes('REASSIGN'),
+      canWithdraw: privileges.REQUEST.includes('DAACREAD'),
+      canAddUser: privileges.REQUEST.includes('ADDUSER'),
+      canRemoveUser: privileges.REQUEST.includes('REMOVEUSER'),
     };
   }
   return {
@@ -144,13 +121,6 @@ export const formPrivileges = (privileges) => {
       canEdit: true,
       canRead: true
     };
-  } else if (privileges.FORM) {
-    return {
-      canRead: !!privileges.FORM.find(a =>
-        a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD'),
-      canEdit: privileges.FORM.includes('UPDATE'),
-      canCreate: privileges.FORM.includes('CREATE'),
-    };
   }
   return {
     canCreate: false,
@@ -164,22 +134,13 @@ export const questionPrivileges = (privileges) => {
     return {
       canCreate: true,
       canRead: true,
-      canEdit: true,
-      canDelete: true
-    };
-  } else if (privileges.QUESTION) {
-    return {
-      canCreate: privileges.QUESTION.includes('CREATE'),
-      canRead: privileges.QUESTION.includes('READ'),
-      canEdit: privileges.QUESTION.includes('UPDATE'),
-      canDelete: privileges.QUESTION.includes('DELETE')
+      canEdit: true
     };
   }
   return {
     canCreate: false,
     canRead: false,
-    canEdit: false,
-    canDelete: false
+    canEdit: false
   };
 };
 
