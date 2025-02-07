@@ -21,27 +21,28 @@ import { AddAttachmentButton, DisplayAttachmentButton } from './attachment';
 
 const textRef = React.createRef();
 
-const getConversations = (dispatch, conversationId, lvl) => {
-  if (lvl) {
-    document.getElementById('all_button').classList.add('active');
-    document.getElementById('users_only_button').classList.remove('active');
-  } else {
-    document.getElementById('all_button').classList.remove('active');
-    document.getElementById('users_only_button').classList.add('active');
-  }
-  dispatch(getConversation(conversationId, lvl));
-};
-
-
 
 const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const current_user_id = JSON.parse(window.localStorage.getItem('auth-user')).id;
   const { conversationId } = match.params;
   const [showSearch, setShowSearch] = useState(false);
+  const [level, setLevel] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   useEffect(() => {
     dispatch(getConversation(conversationId));
   }, []);
+  const getConversations = (dispatch, conversationId, lvl) => {
+    if (lvl) {
+      setLevel(lvl);
+      document.getElementById('all_button').classList.add('active');
+      document.getElementById('users_only_button').classList.remove('active');
+    } else {
+      setLevel(false);
+      document.getElementById('all_button').classList.remove('active');
+      document.getElementById('users_only_button').classList.add('active');
+    }
+    dispatch(getConversation(conversationId, lvl));
+  };
   const { data, inflight, meta } = conversation;
   const { subject, notes = [], participants = [] } = data;
   const { queriedAt } = meta;
@@ -99,7 +100,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       console.log("Text matches, but attachments don’t. Continuing retries...");
       checkForUpdates();
     }
-  }, [notes]);
+  }, [notes, level]);
   
 
 
