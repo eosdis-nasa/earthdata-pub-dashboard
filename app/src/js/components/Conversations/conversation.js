@@ -102,10 +102,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       console.log("Text matches, but attachments don’t. Continuing retries...");
       checkForUpdates();
     }
-  }, [notes]);
+  }, [notes, level]);
   
-
-
   
   const checkForUpdates = async (retryCount = 0) => {
     console.log('shouldStopRetries', shouldStopRetries);
