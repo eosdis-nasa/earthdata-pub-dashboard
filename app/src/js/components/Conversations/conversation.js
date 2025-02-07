@@ -131,7 +131,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       }
   
       // Fetch latest notes from backend
-      const notesAPi = await dispatch(getConversation(conversationId));
+      const notesAPi = await dispatch(getConversation(conversationId, level));
       console.log('notesAPi', notesAPi);
 
       // Ensure we get the most recent notes state
