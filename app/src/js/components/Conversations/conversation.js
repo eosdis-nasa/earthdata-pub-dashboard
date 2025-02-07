@@ -31,7 +31,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   useEffect(() => {
     dispatch(getConversation(conversationId));
   }, []);
-  const getConversations = (dispatch, conversationId, lvl) => {
+  const getConversations = async(dispatch, conversationId, lvl) => {
     if (lvl) {
       setLevel(lvl);
       document.getElementById('all_button').classList.add('active');
@@ -41,7 +41,9 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       document.getElementById('all_button').classList.remove('active');
       document.getElementById('users_only_button').classList.add('active');
     }
-    dispatch(getConversation(conversationId, lvl));
+    const newData = await dispatch(getConversation(conversationId, lvl));
+    console.log('newData', newData?.data?.notes);
+    if(newData?.data?.notes) setDisplayNotes(newData);
   };
   const { data, inflight, meta } = conversation;
   const { subject, notes = [], participants = [] } = data;
