@@ -184,7 +184,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     }
 
     const resp = encodeURI(textRef.current.value);
-
+    console.log('uploadedFiles', uploadedFiles);
+    
     if (uploadedFiles.length > 0) {
       // Create Temporary Note
       const tempNote = {
