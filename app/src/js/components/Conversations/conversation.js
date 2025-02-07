@@ -194,9 +194,26 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       viewers: { roles: [], users: [] }
     };
 
-    console.log("Adding tempNote:", tempNote);
-    setTempNotes(prev => [tempNote, ...prev]);
-    setDisplayNotes(prev => [tempNote, ...prev]);
+    if (uploadedFiles.length > 0) {
+      // Create Temporary Note
+      const tempNote = {
+        id: `temp-${Date.now()}`,
+        sent: new Date().toISOString(),
+        text: resp,
+        createdAt: new Date().toISOString(),
+        attachments: [...uploadedFiles],
+        viewers: { roles: [], users: [] },
+        temp: true 
+      };
+      console.log("Adding tempNote:", tempNote);
+      setTempNotes(prev => [tempNote, ...prev]);
+      setDisplayNotes(prev => [tempNote, ...prev]);
+    }else{
+      setTempNotes(prev => [...prev]);
+      setDisplayNotes(prev => [...prev]);
+    }
+
+    
 
     const payload = { 
       conversation_id: id, 
@@ -247,7 +264,6 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       active: true
     }
   ];
-
   return (
     <div className='page__content--shortened'>
       <div className='page__component'>
