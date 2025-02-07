@@ -130,9 +130,9 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       // Fetch latest notes from backend
       const notesAPi = await dispatch(getConversation(conversationId));
       console.log('notesAPi', notesAPi);
-      
+
       // Ensure we get the most recent notes state
-      const latestNotes = notes || [];
+      const latestNotes = notesAPi?.data?.notes?.[0] || null;
       const firstNewNote = latestNotes.length > 0 ? latestNotes[0] : null;
       const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
   
