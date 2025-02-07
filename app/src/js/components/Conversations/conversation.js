@@ -90,6 +90,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       setShouldStopRetries(true);
       setTempNotes(prevTempNotes => prevTempNotes.slice(1)); 
       setDisplayNotes([...notes]);
+      console.log('inside stop', shouldStopRetries);
+      clearTimeout(currentTimeout);  // Clear the timeout if retries should stop
       return;
     }
 
@@ -103,6 +105,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
 
   
   const checkForUpdates = async (retryCount = 0) => {
+    console.log('shouldStopRetries', shouldStopRetries);
     if (retryCount >= MAX_RETRIES || shouldStopRetries) {
       console.log("Max retries reached or stop flag set. Stopping update checks.");
       clearTimeout(currentTimeout);  // Clear the timeout if retries should stop
