@@ -93,50 +93,33 @@ export const requestPrivileges = (privileges, stepName) => {
     return {
       canRead: true,
       canInitialize: true,
-      canResume: true,
       canSubmit: true,
-      canApply: true,
       canReview: true,
       canReassign: true,
-      canLock: true,
-      canUnlock: true,
       canWithdraw: true,
-      canRestore: true,
       canAddUser: true,
       canRemoveUser: true
     };
   } else if (privileges.REQUEST) {
     return {
       canRead: !!privileges.REQUEST.find(a =>
-        a === 'READ' || a === 'DAACREAD' || a === 'ADMINREAD'),
-      canInitialize: privileges.REQUEST.includes('INITIALIZE'),
-      canResume: privileges.REQUEST.includes('RESUME'),
-      canSubmit: privileges.REQUEST.includes('SUBMIT'),
-      canApply: privileges.REQUEST.includes('APPLY'),
+        a === 'REQUEST_READ' || a === 'REQUEST_DAACREAD'),
+      canInitialize: privileges.REQUEST.includes('REQUEST_INITIALIZE'),
+      canSubmit: privileges.REQUEST.includes('REQUEST_SUBMIT'),
       canReview: requestCanReview(privileges, stepName),
-      canReassign: privileges.REQUEST.includes('REASSIGN'),
-      canLock: privileges.REQUEST.includes('LOCK'),
-      canUnlock: privileges.REQUEST.includes('UNLOCK'),
-      canWithdraw: privileges.REQUEST.find(a =>
-        a === 'DAACREAD' || a === 'ADMINREAD'),
-      canRestore: privileges.REQUEST.find(a =>
-        a === 'DAACREAD' || a === 'ADMINREAD'),
-      canAddUser: privileges.REQUEST.includes('ADDUSER'),
-      canRemoveUser: privileges.REQUEST.includes('REMOVEUSER'),
+      canReassign: privileges.REQUEST.includes('REQUEST_REASSIGN'),
+      canWithdraw: privileges.REQUEST.find(a => a === 'REQUEST_DAACREAD'),
+      canAddUser: privileges.REQUEST.includes('REQUEST_ADDUSER'),
+      canRemoveUser: privileges.REQUEST.includes('REQUEST_REMOVEUSER'),
     };
   }
   return {
     canRead: false,
     canInitialize: false,
-    canResume: false,
     canSubmit: false,
-    canApply: false,
     canReview: false,
     canReassign: false,
-    canLock: false,
-    canUnlock: false,
     canWithdraw: false,
-    canRestore: false,
     canAddUser: false,
     canRemoveUser: false
   };

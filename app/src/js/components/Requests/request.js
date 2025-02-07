@@ -261,12 +261,12 @@ class RequestOverview extends React.Component {
       isHidden = record.data.hidden;
     }
     const request = record.data || false;
-    let { canReassign, canWithdraw, canRestore, canAddUser, canRemoveUser, canInitialize } = requestPrivileges(this.props.privileges);
+    let { canReassign, canWithdraw, canAddUser, canRemoveUser, canInitialize } = requestPrivileges(this.props.privileges);
     const { canEdit } = formPrivileges(this.props.privileges);
     const { roles } = this.props;
     const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
     let workflowSave;
-    if (canWithdraw && canRestore) {
+    if (canWithdraw) {
       workflowSave = this.renderWorkflowSave(record);
     }
     let canViewUsers = false;
@@ -330,7 +330,7 @@ class RequestOverview extends React.Component {
       });
     }
 
-    if (canRestore && isHidden) {
+    if (canWithdraw && isHidden) {
       dropdownConfig.push({
         text: 'Restore Request',
         action: this.restore,
@@ -436,7 +436,7 @@ class RequestOverview extends React.Component {
         <section className='page__section'>
           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
           {this.state.showSearch && <SearchModal {...searchOptions} />}
-          {canWithdraw || canRestore || canInitialize ? <AsyncCommands config={dropdownConfig} /> : null}
+          {canWithdraw || canInitialize ? <AsyncCommands config={dropdownConfig} /> : null}
           {request && lastUpdated(request.last_change, 'Updated')}
           <dl className='status--process'>
             <dt>Status:</dt>
