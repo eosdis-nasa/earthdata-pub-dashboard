@@ -299,7 +299,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
             <section className='page__section flex__item--grow-1'>
               <div className='heading__wrapper--border'>
                 <h2 className='heading--medium heading--shared-content with-description'>
-                  Notes <span className='num--title'>{notes.length}</span>
+                  Notes <span className='num--title'>{displayNotes.length}</span>
                 </h2>
               </div>
               <div className='flex__column--reverse'>
