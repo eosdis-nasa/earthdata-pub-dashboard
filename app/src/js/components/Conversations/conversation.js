@@ -150,7 +150,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       }
   
       // Step 1: Check if text matches
-      const isTextMatch = firstTempNote.text === firstNewNote.text;
+      const isTextMatch = firstTempNote.text === firstNewNote?.text;
   
       // Step 2: Check if attachments match
       const areAttachmentsMatch =
