@@ -43,7 +43,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     }
     const newData = await dispatch(getConversation(conversationId, lvl));
     console.log('newData', newData?.data?.notes);
-    if(newData?.data?.notes) setDisplayNotes(newData);
+    if(newData?.data?.notes) setDisplayNotes(newData?.data?.notes);
   };
   const { data, inflight, meta } = conversation;
   const { subject, notes = [], participants = [] } = data;
