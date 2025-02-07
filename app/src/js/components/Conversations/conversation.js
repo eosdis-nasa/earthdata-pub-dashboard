@@ -63,7 +63,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   let currentTimeout = null; // Store timeout ID
 
   useEffect(() => {
-    if (notes.length === 0) return;
+   // if (notes.length === 0) return;
     if (shouldStopRetries) return;
 
     const firstNewNote = notes[0]; 
@@ -190,6 +190,19 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     const resp = encodeURI(textRef.current.value);
     console.log('uploadedFiles', uploadedFiles, ...uploadedFiles);
 
+    const payload = { 
+      conversation_id: id, 
+      text: resp,
+      viewer_users,
+      viewer_roles,
+      attachments: [...uploadedFiles]
+    };
+
+    await dispatch(replyConversation(payload));
+
+    setShouldStopRetries(false);
+    await dispatch(getConversation(id));
+
     if ([...uploadedFiles].length > 0) {
       // Create Temporary Note
       const tempNote = {
@@ -204,26 +217,11 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       console.log("Adding tempNote:", tempNote);
       setTempNotes(prev => [tempNote, ...prev]);
       setDisplayNotes(prev => [tempNote, ...prev]);
+      checkForUpdates(0);
     }else{
       setTempNotes(prev => [...prev]);
       setDisplayNotes(prev => [...prev]);
     }
-
-    
-
-    const payload = { 
-      conversation_id: id, 
-      text: resp,
-      viewer_users,
-      viewer_roles,
-      attachments: [...uploadedFiles]
-    };
-
-    await dispatch(replyConversation(payload));
-
-    setShouldStopRetries(false);
-    await dispatch(getConversation(id));
-    checkForUpdates(0);
 
     if (textRef.current) {
       textRef.current.value = '';
