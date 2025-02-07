@@ -50,7 +50,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const uploadedFilesRef = useRef();
 
   const [tempNotes, setTempNotes] = useState([]);
-  const [displayNotes, setDisplayNotes] = useState([]);
+  const [displayNotes, setDisplayNotes] = useState(data.notes);
   const [retryCount, setRetryCount] = useState(0);
   const [shouldStopRetries, setShouldStopRetries] = useState(false);
 
