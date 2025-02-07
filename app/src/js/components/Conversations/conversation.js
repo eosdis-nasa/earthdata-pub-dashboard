@@ -102,7 +102,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       console.log("Text matches, but attachments don’t. Continuing retries...");
       checkForUpdates();
     }
-  }, [displayNotes, level, notes]);
+  }, [notes]);
   
 
 
