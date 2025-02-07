@@ -69,8 +69,9 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   useEffect(() => {
 
     const fetchNotes = async () => {
-      console.log('after fetchNotes', level);
-      await dispatch(getConversation(conversationId, level));
+      const finalNotes = await dispatch(getConversation(conversationId, level));
+      console.log('after fetchNotes', level, finalNotes);
+      setDisplayNotes(finalNotes?.data?.notes)
     };
     
    // if (notes.length === 0) return;
