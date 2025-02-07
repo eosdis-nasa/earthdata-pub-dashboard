@@ -28,9 +28,9 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [level, setLevel] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  useEffect(() => {
-    dispatch(getConversation(conversationId));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getConversation(conversationId));
+  // }, []);
   const getConversations = async(dispatch, conversationId, lvl) => {
     if (lvl) {
       setLevel(lvl);
