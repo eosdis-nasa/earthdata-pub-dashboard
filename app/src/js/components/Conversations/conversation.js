@@ -66,13 +66,6 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   let currentTimeout = null; // Store timeout ID
 
   useEffect(() => {
-    if (notes.length !== displayNotes.length) {
-      console.log("Notes updated, syncing displayNotes...");
-      setDisplayNotes(notes);
-    }
-  }, [notes]);
-
-  useEffect(() => {
    // if (notes.length === 0) return;
     if (shouldStopRetries) return;
 
@@ -307,6 +300,9 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
               <div className='heading__wrapper--border'>
                 <h2 className='heading--medium heading--shared-content with-description'>
                   Notes <span className='num--title'>{notes.length}</span>
+                </h2>
+                <h2 className='heading--medium heading--shared-content with-description'>
+                  Display <span className='num--title'>{displayNotes?.length ?? 0}</span>
                 </h2>
               </div>
               <div className='flex__column--reverse'>
