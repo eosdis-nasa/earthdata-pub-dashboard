@@ -185,15 +185,6 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
 
     const resp = encodeURI(textRef.current.value);
 
-    const tempNote = {
-      id: `temp-${Date.now()}`,
-      text: resp,
-      createdAt: new Date().toISOString(),
-      attachments: [...uploadedFiles],
-      isTemp: true,
-      viewers: { roles: [], users: [] }
-    };
-
     if (uploadedFiles.length > 0) {
       // Create Temporary Note
       const tempNote = {
@@ -203,7 +194,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
         createdAt: new Date().toISOString(),
         attachments: [...uploadedFiles],
         viewers: { roles: [], users: [] },
-        temp: true 
+        isTemp: true 
       };
       console.log("Adding tempNote:", tempNote);
       setTempNotes(prev => [tempNote, ...prev]);
