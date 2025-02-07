@@ -133,7 +133,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
 
       // Ensure we get the most recent notes state
       const latestNotes = notesAPi?.data?.notes?.[0] || null;
-      const firstNewNote = latestNotes.length > 0 ? latestNotes[0] : null;
+      const firstNewNote = latestNotes ? latestNotes : null;
       const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
   
       console.log("Checking latest backend note:", firstNewNote);
