@@ -153,11 +153,12 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       const isTextMatch = firstTempNote.text === firstNewNote?.text;
   
       // Step 2: Check if attachments match
-      const areAttachmentsMatch =
-        new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
+      const areAttachmentsMatch = firstNewNote?.attachments 
+      ? new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments).size &&
         firstTempNote.attachments.every(att =>
-          (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
-        );
+          firstNewNote.attachments.some(newAtt => newAtt.trim() === att.trim())
+        )
+      : false;    
   
       if (isTextMatch && areAttachmentsMatch) {
         console.log("Backend note fully matches temp note! Stopping retries.");
