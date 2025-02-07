@@ -204,7 +204,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     await dispatch(replyConversation(payload));
 
     setShouldStopRetries(false);
-    await dispatch(getConversation(id));
+    await dispatch(getConversation(id, level));
 
     if ([...uploadedFiles].length > 0) {
       // Create Temporary Note
