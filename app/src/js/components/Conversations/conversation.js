@@ -128,7 +128,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       await dispatch(getConversation(conversationId));
       
       // Ensure we get the most recent notes state
-      const latestNotes = conversation.notes || [];
+      const latestNotes = notes || [];
       const firstNewNote = latestNotes.length > 0 ? latestNotes[0] : null;
       const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
   
