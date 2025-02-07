@@ -89,7 +89,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       console.log("Exact match found. Replacing temp note with backend note.");
       setShouldStopRetries(true);
       setTempNotes(prevTempNotes => prevTempNotes.slice(1)); 
-      setDisplayNotes([firstNewNote, ...notes.slice(1)]);
+      setDisplayNotes([...notes]);
       return;
     }
 
