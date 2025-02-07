@@ -67,6 +67,12 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   let currentTimeout = null; // Store timeout ID
 
   useEffect(() => {
+
+    const fetchNotes = async () => {
+      console.log('after fetchNotes', level);
+      await dispatch(getConversation(conversationId, level));
+    };
+    
    // if (notes.length === 0) return;
     if (shouldStopRetries) return;
 
@@ -92,6 +98,8 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       setDisplayNotes([firstNewNote, ...notes.slice(1)]);
       console.log('inside stop', shouldStopRetries);
       clearTimeout(currentTimeout);  // Clear the timeout if retries should stop
+      console.log('after match', level);
+      fetchNotes();
       return;
     }
 
