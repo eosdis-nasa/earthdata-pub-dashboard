@@ -14,27 +14,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTable, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
 const DAAC_COLORS = [
-  '#d88c9a',
-  '#a3c4bc',
-  '#9a8c98',
-  '#f2d7b6',
-  '#c3aed6',
-  '#adc178',
-  '#ffb3c6',
-  '#a8dadc',
-  '#e5c3a6'
+  '#d88c9a', '#a3c4bc', '#9a8c98', '#f2d7b6', '#c3aed6', '#adc178', '#ffb3c6', '#a8dadc', '#e5c3a6',
+  '#e67e22', '#8e44ad', '#d35400', '#c0392b', '#16a085', '#f39c12', '#2c3e50', '#bdc3c7', '#7f8c8d'
 ];
 
 const STATUS_COLORS = [
-  '#d8a7f9',
-  '#ffb6c1',
-  '#87ceeb',
-  '#ff9a8b',
-  '#f4d35e',
-  '#90be6d',
-  '#cfac8e',
-  '#ffcab1',
-  '#7ea8be'
+  '#d8a7f9', '#ffb6c1', '#87ceeb', '#ff9a8b', '#f4d35e', '#90be6d', '#cfac8e', '#ffcab1', '#7ea8be',
+  '#e6a8ff', '#ffa07a', '#b5e7a0', '#f7cac9', '#ffdd94', '#98ddca', '#ffb3ba', '#c4a7e7', '#b0d7ff'
 ];
 
 const MetricOverview = ({ privileges, dispatch, requests }) => {
