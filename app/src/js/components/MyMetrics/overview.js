@@ -292,9 +292,16 @@ return (
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={chartsData.daacData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="daac_name" tick={<CustomTick />} interval={0} />
+            <XAxis dataKey="daac_name" tick={false} interval={0} />
             <YAxis allowDecimals={false}/>
             <Tooltip content={<CustomTooltip />} />
+            <Legend 
+              payload={chartsData.daacData.map((entry) => ({
+                value: entry.daac_name,
+                type: "square",
+                color: chartsData.daacColors[entry.daac_name]
+              }))}
+            />
             <Bar dataKey="count">
               <LabelList dataKey="count" position="top" />
               {chartsData.daacData.map((entry) => (
@@ -375,9 +382,16 @@ return (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartsData.statusData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="step_name" tick={<CustomTick />} interval={0} />
+                <XAxis dataKey="step_name" tick={false} interval={0} />
                 <YAxis allowDecimals={false} />
                 <Tooltip content={<CustomTooltip />} />
+                <Legend 
+                  payload={chartsData.statusData.map((entry) => ({
+                    value: entry.step_name,
+                    type: "square",
+                    color: chartsData.stepNameColors[entry.step_name]
+                  }))}
+                />
                 <Bar dataKey="count">
                   <LabelList dataKey="count" position="top" />
                   {chartsData.statusData.map((entry) => (
