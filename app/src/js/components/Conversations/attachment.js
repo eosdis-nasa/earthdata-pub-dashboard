@@ -4,15 +4,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperclip, faFile, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { handleUpload } from '../../utils/upload';
 
-export const DisplayAttachmentButton = ({fileName, removeFileHandler}) => {
+export const DisplayAttachmentButton = ({ fileName, removeFileHandler }) => {
+    console.log("Rendering File:", fileName); // Debugging step
     return (
         <button type="button" className='attachment-display-button'>
-            <FontAwesomeIcon icon={faFile}  style={{paddingRight: "10px"}}/>
+            <FontAwesomeIcon icon={faFile} style={{ paddingRight: "10px" }} />
             {fileName}
-            <FontAwesomeIcon icon={faTimesCircle} style={{paddingLeft: "10px"}} onClick={(e) => {removeFileHandler(fileName)}}/>
+            <FontAwesomeIcon icon={faTimesCircle} style={{ paddingLeft: "10px" }} onClick={() => removeFileHandler(fileName)} />
         </button>
     );
-}
+};
+
 
 export const AddAttachmentButton = ({conversationId, uploadedFilesRef, setUploadedFiles}) => {
     useImperativeHandle(uploadedFilesRef, () => ({
@@ -23,13 +25,24 @@ export const AddAttachmentButton = ({conversationId, uploadedFilesRef, setUpload
 
     const handleChange = async (e) => {
         e.preventDefault();
-        uploadedFiles = new Set([...uploadedFiles, ...Array.from(e.target.files)]);
+        uploadedFiles = new Set([
+            ...uploadedFiles,
+            ...Array.from(e.target.files).map(file => file.name)
+        ]);
+        
+        console.log("Before Upload:", [...uploadedFiles]); // Debugging step
+    
         const resp = await handleUpload({
             files: uploadedFiles,
             conversationId
         });
-        setUploadedFiles((currentState) => new Set([...currentState, ...resp.success]));
-    };
+    
+        console.log("After Upload (from API):", resp.success); // Debugging step
+    
+        setUploadedFiles((currentState) =>
+            new Set([...currentState, ...resp.success.map(file => file.name)]) // Ensure filenames only
+        );
+    };    
 
     const clickFileTypeInput = () => {
         document.getElementById('hiddenFileInputType')?.click();
