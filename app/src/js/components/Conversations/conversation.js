@@ -61,111 +61,139 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
     visibilityRef?.current?.resetIdMap();
   };
 
+  const isTimeWithin = (tempSent, newSent) => {
+    if (!tempSent || !newSent) return false;
+
+    const tempDate = new Date(tempSent);
+    const newDate = new Date(newSent);
+
+    return Math.abs(tempDate - newDate) <= 20000;
+  };
+
   const MAX_RETRIES = 7;
-  const RETRY_INTERVALS = [5000, 5000, 10000, 15000, 15000, 15000, 15000];
-  //5,10,20,35,50,65,80
+  const RETRY_INTERVALS = [3000, 5000, 10000, 15000, 15000, 15000, 15000];
+  // Retry at 3s, 10s, 20s, 35s, 50s, 65s, 80s
   let currentTimeout = null; // Store timeout ID
 
   useEffect(() => {
-
     const fetchNotes = async () => {
       const finalNotes = await dispatch(getConversation(conversationId, level));
-      setDisplayNotes(finalNotes?.data?.notes)
+        const updatedNotes = finalNotes?.data?.notes.map(note => ({
+          ...note,
+          isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false
+      }));
+  
+      setDisplayNotes(updatedNotes);
     };
-    
-   // if (notes.length === 0) return;
+  
+
     if (shouldStopRetries) return;
 
-    const firstNewNote = notes[0]; 
+    const firstNewNote = notes[0];
     const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
 
     if (!firstTempNote) {
-      setDisplayNotes(notes);
-      return;
-    }
-
-    const isTextMatch = firstTempNote.text === firstNewNote.text;
-    const areAttachmentsMatch =
-      new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
-      firstTempNote.attachments.every(att =>
-        (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
-      );
-
-    if (isTextMatch && areAttachmentsMatch) {
-      setShouldStopRetries(true);
-      setTempNotes(prevTempNotes => prevTempNotes.slice(1)); 
-      setDisplayNotes([firstNewNote, ...notes.slice(1)]);
-      clearTimeout(currentTimeout);  // Clear the timeout if retries should stop
-      fetchNotes();
-      return;
-    }
-
-    if (isTextMatch && !areAttachmentsMatch) {
-      checkForUpdates();
-    }
-  }, [notes, level]);
-  
-  
-  const checkForUpdates = async (retryCount = 0) => {
-    if (retryCount >= MAX_RETRIES || shouldStopRetries) {
-        clearTimeout(currentTimeout);
+        setDisplayNotes(notes);
         return;
     }
 
-    const delay = RETRY_INTERVALS[retryCount];
-    // Clear previous timeout before setting a new one
-    if (currentTimeout) {
+    const isTextMatch = firstTempNote.text.trim() === firstNewNote.text.trim();
+    const isTimeMatch = isTimeWithin(firstTempNote.sent, firstNewNote.sent);
+    const areAttachmentsMatch =
+        new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments || []).size &&
+        firstTempNote.attachments.every(att =>
+            (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+        );
+
+    if (isTextMatch && isTimeMatch && areAttachmentsMatch) {
+        console.log("Full match found. Replacing temp note.");
+        setShouldStopRetries(true);
+        setTempNotes(prevTempNotes => prevTempNotes.slice(1));
+        setDisplayNotes([firstNewNote, ...notes.slice(1)]);
         clearTimeout(currentTimeout);
+        fetchNotes();
+        return;
     }
 
-    currentTimeout = setTimeout(async () => {
-        if (shouldStopRetries) {
-            clearTimeout(currentTimeout);
-            return;
-        }
+    if (isTextMatch && isTimeMatch && !areAttachmentsMatch) {
+      console.log("Text and time match, but attachments don't. Marking as pending...");
+  
+      setDisplayNotes(prevNotes =>
+          prevNotes.map(note =>
+              note.id === firstNewNote.id 
+                  ? { ...note, isPendingAttachmentMatch: true } 
+                  : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
+          )
+      );
+  
+      // Remove temp note immediately to prevent duplication
+      setTempNotes(prevTempNotes => prevTempNotes.slice(1));
+  
+      checkForUpdates();
+      return;
+    }
+}, [notes, level]);
 
-        // Fetch latest notes from backend
-        const notesAPi = await dispatch(getConversation(conversationId, level));
+  
+const checkForUpdates = async (retryCount = 0) => {
+  if (retryCount >= MAX_RETRIES || shouldStopRetries) {
+      clearTimeout(currentTimeout);
+      return;
+  }
 
-        // Ensure we get the most recent notes state
-        const latestNotes = notesAPi?.data?.notes?.[0] || null;
-        const firstNewNote = latestNotes ? latestNotes : null;
-        const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
+  const delay = RETRY_INTERVALS[retryCount];
+  if (currentTimeout) {
+      clearTimeout(currentTimeout);
+  }
 
-        if (!firstTempNote) {
-            setShouldStopRetries(true);
-            clearTimeout(currentTimeout);
-            return;
-        }
+  currentTimeout = setTimeout(async () => {
+      if (shouldStopRetries) {
+          clearTimeout(currentTimeout);
+          return;
+      }
 
-        // Step 1: Check if text matches
-        const isTextMatch = firstTempNote.text === firstNewNote?.text;
+      const notesAPI = await dispatch(getConversation(conversationId, level));
+      const latestNotes = notesAPI?.data?.notes?.[0] || null;
+      const firstNewNote = latestNotes ? latestNotes : null;
+      const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
 
-        // Step 2: Check if attachments match
-        const areAttachmentsMatch = firstNewNote?.attachments
-            ? new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments).size &&
-              firstTempNote.attachments.every(att =>
-                  firstNewNote.attachments.some(newAtt => newAtt.trim() === att.trim())
-              )
-            : false;
+      if (!firstTempNote) {
+          setShouldStopRetries(true);
+          clearTimeout(currentTimeout);
+          return;
+      }
 
-        if (isTextMatch && areAttachmentsMatch) {
-            setShouldStopRetries(true);
-            setTempNotes([]); // Clear temp notes
-            setDisplayNotes(notesAPi?.data?.notes);
-            clearTimeout(currentTimeout);
-            return;
-        }
+      const isTextMatch = firstTempNote.text === firstNewNote?.text;
+      const areAttachmentsMatch = firstNewNote?.attachments
+          ? new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments).size &&
+            firstTempNote.attachments.every(att =>
+                firstNewNote.attachments.some(newAtt => newAtt.trim() === att.trim())
+            )
+          : false;
 
-        // If no match yet, continue checking
-        checkForUpdates(retryCount + 1);
+      // If attachments now match, remove `isPendingAttachmentMatch`
+      if (isTextMatch && areAttachmentsMatch) {
+        setShouldStopRetries(true);
+        setTempNotes([]);
+        setDisplayNotes(prevNotes =>
+            prevNotes.map(note =>
+                note.id === firstNewNote.id 
+                    ? { ...firstNewNote, isPendingAttachmentMatch: false } 
+                    : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
+            )
+        );
+    
+        clearTimeout(currentTimeout);
+        return;
+      }
 
-    }, delay);
+      // Keep retrying until attachments match
+      checkForUpdates(retryCount + 1);
+  }, delay);
 };
-  
-
 
   
+
   const handleRemoveFile = (fileName) => {
     //Have to ensure a rerender with the state update
     uploadedFiles.delete(fileName);
@@ -174,52 +202,50 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
 
   const reply = async (dispatch, id) => {
     const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility();
-    
+
     if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)) {
-      viewer_users.push(current_user_id);
+        viewer_users.push(current_user_id);
     }
 
     const resp = encodeURI(textRef.current.value);
 
     const payload = { 
-      conversation_id: id, 
-      text: resp,
-      viewer_users,
-      viewer_roles,
-      attachments: [...uploadedFiles]
+        conversation_id: id, 
+        text: resp,
+        viewer_users,
+        viewer_roles,
+        attachments: [...uploadedFiles]
     };
 
     await dispatch(replyConversation(payload));
 
     setShouldStopRetries(false);
 
-    await dispatch(getConversation(id, level));
-
     if ([...uploadedFiles].length > 0) {
-      // Create Temporary Note
-      const tempNote = {
-        id: `temp-${Date.now()}`,
-        sent: new Date().toISOString(),
-        text: resp,
-        createdAt: new Date().toISOString(),
-        attachments: [...uploadedFiles],
-        viewers: { roles: [], users: [] },
-        isTemp: true 
-      };
-      setTempNotes(prev => [tempNote, ...prev]);
-      setDisplayNotes(prev => [tempNote, ...prev]);
-      checkForUpdates(0);
+        const tempNote = {
+            id: `temp-${Date.now()}`,
+            sent: new Date().toISOString(),
+            text: resp,
+            createdAt: new Date().toISOString(),
+            attachments: [...uploadedFiles],
+            viewers: { roles: [], users: [] },
+            isTemp: true 
+        };
+        setTempNotes(prev => [tempNote, ...prev]);
+        setDisplayNotes(prev => [tempNote, ...prev]);
+        checkForUpdates(0);
     }else{
-      setTempNotes(prev => [...prev]);
-      setDisplayNotes(prev => [...prev]);
+        setTempNotes(prev => [...prev]);
+        setDisplayNotes(prev => [...prev]);
     }
 
     if (textRef.current) {
-      textRef.current.value = '';
+        textRef.current.value = '';
     }
     handleVisibilityReset();
     setUploadedFiles([]);
-  };
+};
+
   
   const cancelCallback = () => setShowSearch(false);
   const submitCallback = (id) => {
@@ -288,9 +314,6 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
               <div className='heading__wrapper--border'>
                 <h2 className='heading--medium heading--shared-content with-description'>
                   Notes <span className='num--title'>{notes.length}</span>
-                </h2>
-                <h2 className='heading--medium heading--shared-content with-description'>
-                  Display <span className='num--title'>{displayNotes?.length ?? 0}</span>
                 </h2>
               </div>
               <div className='flex__column--reverse'>
