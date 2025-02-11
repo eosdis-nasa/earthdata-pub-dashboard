@@ -25,6 +25,8 @@ class Home extends React.Component {
     this.displayName = 'Home';
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
+    this._isMounted = false;
+    this.timeoutId = null; 
   }
 
   getView () {
@@ -38,39 +40,37 @@ class Home extends React.Component {
     else return 'all';
   }
 
-  async componentDidMount() {
-    this._isMounted = true; // Set mounted flag
+async componentDidMount() {
+  this._isMounted = true; // Set mounted flag
 
-    await this.updateList();
+  await this.updateList();
 
-    let elapsedTime = 0; // Track elapsed time
-    const intervals = [5000, 10000, 15000, 30000, 60000];
-    let currentIntervalIndex = 0;
+  let elapsedTime = 0;
+  const intervals = [5000, 10000, 15000, 30000, 60000];
+  
+  let currentIntervalIndex = 0;
 
-    const intervalId = async () => {
-      const { list } = this.props.requests;
-      const hasActionId = list.data.some(item => item.step_data && item.step_data.action_id);
+  const intervalId = async () => {
+    if (!this._isMounted) return; // Prevent updates if unmounted
 
-      if (hasActionId && this._isMounted) {
-        await this.updateList();
-      }
+    const { list } = this.props.requests;
+    const hasActionId = list.data.some(item => item.step_data && item.step_data.action_id);
 
-      elapsedTime += intervals[currentIntervalIndex];
-      currentIntervalIndex++;
-
-      if (currentIntervalIndex < intervals.length) {
-        setTimeout(intervalId, intervals[currentIntervalIndex]);
-      }
-    };
-
-    // Start the first interval
-    setTimeout(intervalId, intervals[currentIntervalIndex]);
-
-    // Only set intervalId if the component is still mounted
-    if (this._isMounted) {
-      this.setState({ intervalId });
+    if (hasActionId) {
+      await this.updateList();
     }
-  }
+
+    elapsedTime += intervals[currentIntervalIndex];
+    currentIntervalIndex++;
+
+    if (currentIntervalIndex < intervals.length && this._isMounted) {
+      this.timeoutId = setTimeout(intervalId, intervals[currentIntervalIndex]);
+    }
+  };
+
+  // Start the first interval
+  this.timeoutId = setTimeout(intervalId, intervals[currentIntervalIndex]);
+}
   
   async updateList() {
     const { dispatch } = this.props;
@@ -91,8 +91,10 @@ class Home extends React.Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.state.intervalId); // Clear the interval
-    this._isMounted = false; // Mark component as unmounted
+    this._isMounted = false;
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
   }
   
   generateQuery() {
