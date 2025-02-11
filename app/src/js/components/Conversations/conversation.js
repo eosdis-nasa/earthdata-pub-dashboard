@@ -61,8 +61,9 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
     visibilityRef?.current?.resetIdMap();
   };
 
-  const MAX_RETRIES = 5; // Max retries before stopping
-  const BASE_DELAY = 1000; // Start with 1 sec delay
+  const MAX_RETRIES = 7;
+  const RETRY_INTERVALS = [5000, 5000, 10000, 15000, 15000, 15000, 15000];
+  //5,10,20,35,50,65,80
   let currentTimeout = null; // Store timeout ID
 
   useEffect(() => {
@@ -107,60 +108,60 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
   
   const checkForUpdates = async (retryCount = 0) => {
     if (retryCount >= MAX_RETRIES || shouldStopRetries) {
-      clearTimeout(currentTimeout);
-      return;
+        clearTimeout(currentTimeout);
+        return;
     }
-  
-    let delay = BASE_DELAY * Math.pow(2, retryCount);  
+
+    const delay = RETRY_INTERVALS[retryCount];
     // Clear previous timeout before setting a new one
     if (currentTimeout) {
-      clearTimeout(currentTimeout);
+        clearTimeout(currentTimeout);
     }
-  
-    currentTimeout = setTimeout(async () => {
-      if (shouldStopRetries) {
-        clearTimeout(currentTimeout);
-        return;
-      }
-  
-      // Fetch latest notes from backend
-      const notesAPi = await dispatch(getConversation(conversationId, level));
 
-      // Ensure we get the most recent notes state
-      const latestNotes = notesAPi?.data?.notes?.[0] || null;
-      const firstNewNote = latestNotes ? latestNotes : null;
-      const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
-  
-      if (!firstTempNote) {
-        setShouldStopRetries(true);
-        clearTimeout(currentTimeout);
-        return;
-      }
-  
-      // Step 1: Check if text matches
-      const isTextMatch = firstTempNote.text === firstNewNote?.text;
-  
-      // Step 2: Check if attachments match
-      const areAttachmentsMatch = firstNewNote?.attachments 
-      ? new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments).size &&
-        firstTempNote.attachments.every(att =>
-          firstNewNote.attachments.some(newAtt => newAtt.trim() === att.trim())
-        )
-      : false;    
-  
-      if (isTextMatch && areAttachmentsMatch) {
-        setShouldStopRetries(true);
-        setTempNotes([]); // Clear temp notes
-        setDisplayNotes(notesAPi?.data?.notes);
-        clearTimeout(currentTimeout);
-        return;
-      }
-  
-      // If no match yet, continue checking
-      checkForUpdates(retryCount + 1);
-  
+    currentTimeout = setTimeout(async () => {
+        if (shouldStopRetries) {
+            clearTimeout(currentTimeout);
+            return;
+        }
+
+        // Fetch latest notes from backend
+        const notesAPi = await dispatch(getConversation(conversationId, level));
+
+        // Ensure we get the most recent notes state
+        const latestNotes = notesAPi?.data?.notes?.[0] || null;
+        const firstNewNote = latestNotes ? latestNotes : null;
+        const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
+
+        if (!firstTempNote) {
+            setShouldStopRetries(true);
+            clearTimeout(currentTimeout);
+            return;
+        }
+
+        // Step 1: Check if text matches
+        const isTextMatch = firstTempNote.text === firstNewNote?.text;
+
+        // Step 2: Check if attachments match
+        const areAttachmentsMatch = firstNewNote?.attachments
+            ? new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments).size &&
+              firstTempNote.attachments.every(att =>
+                  firstNewNote.attachments.some(newAtt => newAtt.trim() === att.trim())
+              )
+            : false;
+
+        if (isTextMatch && areAttachmentsMatch) {
+            setShouldStopRetries(true);
+            setTempNotes([]); // Clear temp notes
+            setDisplayNotes(notesAPi?.data?.notes);
+            clearTimeout(currentTimeout);
+            return;
+        }
+
+        // If no match yet, continue checking
+        checkForUpdates(retryCount + 1);
+
     }, delay);
-  };
+};
   
 
 
@@ -216,6 +217,7 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
     if (textRef.current) {
       textRef.current.value = '';
     }
+    handleVisibilityReset();
     setUploadedFiles([]);
   };
   
