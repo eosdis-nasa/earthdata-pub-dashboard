@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import PropTypes from 'prop-types';
 import localUpload from '@edpub/upload-utility';
@@ -9,7 +8,6 @@ import _config from '../../config';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const Note = ({ dispatch, note, conversationId, privileges, user }) => {
-
     const download = new localUpload();
 
     const handleDownload = ({ noteId, attachment }) => {
@@ -39,7 +37,15 @@ const Note = ({ dispatch, note, conversationId, privileges, user }) => {
             <div className='flex__item--grow-1-wrap'>
                 <div style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word" }}>
                     {decodeURI(note.text)}
+                    {note.isPendingAttachmentMatch && (
+                        <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip id={`tooltip-text-${note.id}`}>Attachments are still processing...</Tooltip>}
+                        >
+                        </OverlayTrigger>
+                    )}
                 </div>
+
                 {note?.attachments?.length > 0 && (
                     <>
                         <br/>
@@ -54,10 +60,10 @@ const Note = ({ dispatch, note, conversationId, privileges, user }) => {
                                         </a>
                                     ) : (
                                         <OverlayTrigger
-                                        placement="top"
-                                        overlay={<Tooltip id={`tooltip-${note.id}-${idx}`}>Attachment temporarily unavailable.</Tooltip>}
+                                            placement="top"
+                                            overlay={<Tooltip id={`tooltip-${note.id}-${idx}`}>Attachment temporarily unavailable.</Tooltip>}
                                         >
-                                        <span style={{ cursor: "not-allowed", color: "grey" }}>{attachment}</span>
+                                            <span style={{ cursor: "not-allowed", color: "grey" }}>{attachment}</span>
                                         </OverlayTrigger>
                                     )}
                                 </React.Fragment>
