@@ -105,7 +105,7 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
             (firstNewNote.attachments || []).some(newAtt => newAtt.trim() === att.trim())
         );
 
-    if (isTextMatch && isTimeMatch && areAttachmentsMatch) {
+    if (isTextMatch && areAttachmentsMatch) {
         console.log("Full match found. Replacing temp note.");
         setShouldStopRetries(true);
         setTempNotes(prevTempNotes => prevTempNotes.slice(1));
@@ -115,8 +115,8 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
         return;
     }
 
-    if (isTextMatch && isTimeMatch && !areAttachmentsMatch) {
-      console.log("Text and time match, but attachments don't. Marking as pending...");
+    if (isTextMatch && !areAttachmentsMatch) {
+      console.log("Text match, but attachments don't. Marking as pending...");
   
       setDisplayNotes(prevNotes =>
           prevNotes.map(note =>
