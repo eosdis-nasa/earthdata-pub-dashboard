@@ -16,33 +16,34 @@ export const DisplayAttachmentButton = ({ fileName, removeFileHandler }) => {
 };
 
 
-export const AddAttachmentButton = ({conversationId, uploadedFilesRef, setUploadedFiles}) => {
+export const AddAttachmentButton = ({ conversationId, uploadedFilesRef, setUploadedFiles }) => {
     useImperativeHandle(uploadedFilesRef, () => ({
         getUploadedFiles: () => uploadedFiles
     }));
 
-    let uploadedFiles = new Set([]);
+    let uploadedFiles = new Set();
 
     const handleChange = async (e) => {
         e.preventDefault();
-        uploadedFiles = new Set([
-            ...uploadedFiles,
-            ...Array.from(e.target.files).map(file => file.name)
-        ]);
+        const newFiles = Array.from(e.target.files);
+
+        // Store actual files instead of just names
+        uploadedFiles = new Set([...uploadedFiles, ...newFiles]);
         
-        console.log("Before Upload:", [...uploadedFiles]); // Debugging step
+        console.log("Before Upload:", uploadedFiles); // Debugging step
     
         const resp = await handleUpload({
-            files: uploadedFiles,
+            files: [...uploadedFiles], // Pass actual file objects
             conversationId
         });
-    
+
         console.log("After Upload (from API):", resp.success); // Debugging step
     
-        setUploadedFiles((currentState) =>
-            new Set([...currentState, ...resp.success.map(file => file.name)]) // Ensure filenames only
+        // Store the actual files, not just names
+        setUploadedFiles((currentState) => 
+            new Set([...currentState, ...resp.success]) // Keep full file object
         );
-    };    
+    };
 
     const clickFileTypeInput = () => {
         document.getElementById('hiddenFileInputType')?.click();
@@ -50,18 +51,17 @@ export const AddAttachmentButton = ({conversationId, uploadedFilesRef, setUpload
 
     return (
         <>
-        <input 
-        id="hiddenFileInputType"
-        type="file" 
-        onChange={(e) => handleChange(e)}
-        style={{display: "none"}}
-        multiple 
-        />
-        <button type="button" className="button button--attachment" onClick={clickFileTypeInput}
-        style={{backgroundColor: "#158749", color: "white", padding: "8px" }}>
-            <FontAwesomeIcon icon={faPaperclip} />
-        </button>
+            <input 
+                id="hiddenFileInputType"
+                type="file" 
+                onChange={(e) => handleChange(e)}
+                style={{ display: "none" }}
+                multiple 
+            />
+            <button type="button" className="button button--attachment" onClick={clickFileTypeInput}
+                style={{ backgroundColor: "#158749", color: "white", padding: "8px" }}>
+                <FontAwesomeIcon icon={faPaperclip} />
+            </button>
         </>
-
     );
-}
+};

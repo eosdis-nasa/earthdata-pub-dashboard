@@ -22,7 +22,7 @@ import { AddAttachmentButton, DisplayAttachmentButton } from './attachment';
 const textRef = React.createRef();
 
 
-const Conversation = ({ dispatch, conversation, privileges, match }) => {
+const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
   const current_user_id = JSON.parse(window.localStorage.getItem('auth-user')).id;
   const { conversationId } = match.params;
   const [showSearch, setShowSearch] = useState(false);
@@ -340,6 +340,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                     conversationId={conversationId} 
                     note={note} 
                     privileges={privileges} 
+                    user = {user}
                   />
                 ))}
               </div>
@@ -377,10 +378,12 @@ Conversation.propTypes = {
   dispatch: PropTypes.func,
   conversations: PropTypes.object,
   privileges: PropTypes.object,
-  match: PropTypes.object
+  match: PropTypes.object,
+  user: PropTypes.string
 };
 
 export default withRouter(connect(state => ({
   conversation: state.conversations.conversation,
-  privileges: state.api.tokens.privileges
+  privileges: state.api.tokens.privileges,
+  user: state.api.tokens.userName
 }))(Conversation));

@@ -8,7 +8,7 @@ import { loadToken } from '../../utils/auth';
 import _config from '../../config';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-const Note = ({ dispatch, note, conversationId, privileges }) => {
+const Note = ({ dispatch, note, conversationId, privileges, user }) => {
 
     const download = new localUpload();
 
@@ -31,7 +31,7 @@ const Note = ({ dispatch, note, conversationId, privileges }) => {
     return (
         <div className='flex__row--border'>
             <div className='flex__item--w-15'>
-                <h3>{note.from?.name || "You"}</h3>
+                <h3>{note.from?.name || "You"+ user}</h3>
                 {lastUpdated(note.sent, 'Sent')}
                 <br />
                 <RenderedNoteVisibility note={note} dispatch={dispatch} conversationId={conversationId} privileges={privileges} />
