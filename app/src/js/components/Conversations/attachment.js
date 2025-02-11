@@ -24,7 +24,7 @@ export const AddAttachmentButton = ({ conversationId, uploadedFilesRef, setUploa
     const handleChange = async (e) => {
         e.preventDefault();
         const newFiles = Array.from(e.target.files).map(file => {
-            const sanitizedFile = new File([file], file.name.replace(/,/g, "_"), { type: file.type });
+            const sanitizedFile = new File([file], file.name.replace(/,/g, "-"), { type: file.type });
             return sanitizedFile;
         });
 
