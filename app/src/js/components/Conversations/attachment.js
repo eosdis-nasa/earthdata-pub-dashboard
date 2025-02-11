@@ -15,7 +15,6 @@ export const DisplayAttachmentButton = ({ fileName, removeFileHandler }) => {
     );
 };
 
-
 export const AddAttachmentButton = ({ conversationId, uploadedFilesRef, setUploadedFiles }) => {
     useImperativeHandle(uploadedFilesRef, () => ({
         getUploadedFiles: () => uploadedFiles
@@ -25,20 +24,22 @@ export const AddAttachmentButton = ({ conversationId, uploadedFilesRef, setUploa
 
     const handleChange = async (e) => {
         e.preventDefault();
-        const newFiles = Array.from(e.target.files);
+        const newFiles = Array.from(e.target.files).map(file => {
+            const sanitizedFile = new File([file], file.name.replace(/,/g, "_"), { type: file.type });
+            return sanitizedFile;
+        });
 
-        // Store actual files instead of just names
         uploadedFiles = new Set([...uploadedFiles, ...newFiles]);
-        
+
         console.log("Before Upload:", uploadedFiles); // Debugging step
-    
+
         const resp = await handleUpload({
-            files: [...uploadedFiles], // Pass actual file objects
+            files: [...uploadedFiles],
             conversationId
         });
 
         console.log("After Upload (from API):", resp.success); // Debugging step
-    
+
         // Store the actual files, not just names
         setUploadedFiles((currentState) => 
             new Set([...currentState, ...resp.success]) // Keep full file object
