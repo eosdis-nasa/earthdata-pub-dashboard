@@ -65,23 +65,38 @@ class RequestsOverview extends React.Component {
   }
 
   async componentDidMount() {
+    this._isMounted = true; // Set mounted flag
+
     await this.updateList();
-  
+
     let elapsedTime = 0; // Track elapsed time
-  
-    const intervalId = setInterval(async () => {
-      elapsedTime += 30000; // Increment elapsed time by 30 seconds
+    const intervals = [5000, 10000, 15000, 30000, 60000];
+
+    let currentIntervalIndex = 0;
+
+    const intervalId = async () => {
       const { list } = this.props.requests;
       const hasActionId = list.data.some(item => item.step_data && item.step_data.action_id);
-      
-      if (!hasActionId || elapsedTime > 2 * 60000) {
-        clearInterval(intervalId);
-      } else {
+
+      if (hasActionId && this._isMounted) {
         await this.updateList();
       }
-    }, 30000); // Check every 30 seconds
-  
-    this.setState({ intervalId });
+
+      elapsedTime += intervals[currentIntervalIndex];
+      currentIntervalIndex++;
+
+      if (currentIntervalIndex < intervals.length) {
+        setTimeout(intervalId, intervals[currentIntervalIndex]);
+      }
+    };
+
+    // Start the first interval
+    setTimeout(intervalId, intervals[currentIntervalIndex]);
+
+    // Only set intervalId if the component is still mounted
+    if (this._isMounted) {
+      this.setState({ intervalId });
+    }
   }
   
   async updateList() {
