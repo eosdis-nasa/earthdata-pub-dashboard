@@ -44,17 +44,6 @@ const Note = ({ dispatch, note, conversationId, privileges, user }) => {
                     {decodeURI(note.text)}
                 </div>
 
-                {note.isPendingAttachmentMatch && (
-                    <OverlayTrigger
-                        placement="top"
-                        overlay={<Tooltip id={`tooltip-text-${note.id}`}>Attachments are still processing...</Tooltip>}
-                    >
-                        <span style={{ cursor: "help", marginLeft: "5px", color: "grey" }}>
-                            🕒 Attachments processing...
-                        </span>
-                    </OverlayTrigger>
-                )}
-
                 {note?.attachments?.length > 0 && (
                     <>
                         <br/>
