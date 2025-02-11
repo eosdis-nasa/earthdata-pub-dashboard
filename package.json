@@ -170,7 +170,7 @@
     "lodash.omitby": "^4.6.0",
     "lodash.truncate": "^4.4.2",
     "moment": "^2.29.1",
-    "node-polyfill-webpack-plugin": "^4.1.0",
+    "node-polyfill-webpack-plugin": "^1.1.4",
     "numeral": "^2.0.4",
     "object-path": "^0.11.8",
     "paginator": "^1.0.0",
@@ -192,6 +192,7 @@
     "react-select": "^5.8.0",
     "react-table": "^7.6.0",
     "reactflow": "^11.8.3",
+    "recharts": "^2.15.0",
     "redux": "^4.1.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
@@ -203,8 +204,5 @@
   },
   "overrides": {
     "yaml": "2.2.2"
-  },
-  "resolutions": {
-    "elliptic": "^6.6.1"
   }
 }
