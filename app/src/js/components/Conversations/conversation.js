@@ -77,15 +77,14 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
 
   useEffect(() => {
     const fetchNotes = async () => {
-      const finalNotes = await dispatch(getConversation(conversationId, level));
+        const finalNotes = await dispatch(getConversation(conversationId, level));
         const updatedNotes = finalNotes?.data?.notes.map(note => ({
-          ...note,
-          isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false
-      }));
-  
-      setDisplayNotes(updatedNotes);
+            ...note,
+            isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false
+        }));
+
+        setDisplayNotes(updatedNotes);
     };
-  
 
     if (shouldStopRetries) return;
 
@@ -116,23 +115,21 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
     }
 
     if (isTextMatch && !areAttachmentsMatch) {
-      console.log("Text match, but attachments don't. Marking as pending...");
-  
+      console.log("Text matches but attachments don’t. Marking as pending...");
+
       setDisplayNotes(prevNotes =>
           prevNotes.map(note =>
-              note.id === firstNewNote.id 
-                  ? { ...note, isPendingAttachmentMatch: true } 
+              note.id === firstNewNote.id
+                  ? { ...note, isPendingAttachmentMatch: true }
                   : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
           )
       );
-  
-      // Remove temp note immediately to prevent duplication
-      setTempNotes(prevTempNotes => prevTempNotes.slice(1));
-  
+
       checkForUpdates();
       return;
     }
-}, [notes, level]);
+  }, [notes, level]);
+
 
   
 const checkForUpdates = async (retryCount = 0) => {
