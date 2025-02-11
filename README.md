@@ -34,8 +34,6 @@ To locate environment variables, see webpack.common.js:
 | -------- | ----------- | -------- |
 | APIROOT | the API URL. This must be set by the user. | *<https://pub.earthdata.nasa.gov/api>* |
 | OVERVIEW_URL | URL of the instructional overview of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/>* |
-| FORMS_URL | URL of the questions and answer forms that are outside of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/forms>* |
-| INITIATE_REQUEST_SELECT_DAAC_URL | *<https://pub.earthdata.nasa.gov/forms/daacs/selection>*,
 | AWS_REGION | Region in which Earthdata Pub API is running. | *us-west-2*  |
 | DAAC_NAME    | e.g. LPDAAC, | *Local* |
 | STAGE | e.g. PROD, UAT, | *development* |
@@ -73,8 +71,7 @@ npm run start
 
 ### Dashboard and API
 
-The Dashboard application is dependent on the EDPub [API](https://github.com/eosdis-nasa/earthdata-pub-api)
-and [Forms](https://github.com/eosdis-nasa/earthdata-pub-forms).
+The Dashboard application is dependent on the EDPub [API](https://github.com/eosdis-nasa/earthdata-pub-api).
 Follow instructions in each repo or the [EDPub core](https://github.com/eosdis-nasa/earthdata-pub)
 repo.
 

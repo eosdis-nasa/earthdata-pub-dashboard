@@ -12,7 +12,7 @@ import List from './Table/Table';
 import {
   tableColumns
 } from '../utils/table-config/requests';
-import { overviewUrl, formsUrl, initiateRequestSelectDaac } from '../config';
+import { overviewUrl } from '../config';
 import Select from 'react-select';
 import { strings } from './locale';
 import { requestPrivileges } from '../utils/privileges';
@@ -266,7 +266,6 @@ class Home extends React.Component {
       }
       const query = this.generateQuery();
       const { canInitialize } = requestPrivileges(this.props.privileges);
-      const selectDaac = `${formsUrl}${initiateRequestSelectDaac}`;
       const list = this.state.list;
       return (
         <div className='page__home'>

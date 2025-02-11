@@ -174,7 +174,6 @@ class RequestsOverview extends React.Component {
       }
       const query = this.generateQuery();
       const { canInitialize } = requestPrivileges(this.props.privileges);
-      const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
       const list = this.state.list;
       const { queriedAt } = list.meta;
       const unique = [...new Set(list.data.map(item => item.id))];
