@@ -42,6 +42,7 @@ const Note = ({ dispatch, note, conversationId, privileges, user }) => {
                             placement="top"
                             overlay={<Tooltip id={`tooltip-text-${note.id}`}>Attachments are still processing...</Tooltip>}
                         >
+                            <span style={{ cursor: "not-allowed", color: "grey" }}>{'Attachments'}</span>
                         </OverlayTrigger>
                     )}
                 </div>
