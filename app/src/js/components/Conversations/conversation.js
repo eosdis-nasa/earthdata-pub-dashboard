@@ -92,7 +92,7 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
     const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
 
     if (!firstTempNote) {
-        if (tempNotes.length === 0) fetchNotes();
+        setDisplayNotes(notes);
         return;
     }
 
@@ -116,24 +116,26 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
         );
 
         setTempNotes(prevTempNotes => prevTempNotes.slice(1));
+        setDisplayNotes([firstNewNote, ...notes.slice(1)]);
         clearTimeout(currentTimeout);
+        fetchNotes();
         return;
     }
 
     if (isTextMatch && !areAttachmentsMatch) {
         console.log("Text matches, but attachments are still processing. Marking as pending.");
-        setDisplayNotes(prevNotes =>
-            prevNotes.map(note =>
+      setDisplayNotes(prevNotes =>
+          prevNotes.map(note =>
                 note.id.startsWith('temp') && isTextMatch
-                    ? { ...note, isPendingAttachmentMatch: true }
-                    : note
-            )
-        );
+                  ? { ...note, isPendingAttachmentMatch: true }
+                  : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
+          )
+      );
 
-        checkForUpdates();
-        return;
+      checkForUpdates();
+      return;
     }
-}, [notes, tempNotes.length, level]);
+  }, [notes, level]);
 
 
   
@@ -166,34 +168,33 @@ const checkForUpdates = async (retryCount = 0) => {
       }
 
       const isTextMatch = firstTempNote.text.trim() === firstNewNote?.text?.trim();
-      const areAttachmentsMatch = firstNewNote?.attachments &&
-          new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments).size &&
-          firstTempNote.attachments.every(att =>
-              firstNewNote.attachments.some(newAtt => newAtt.trim() === att.trim())
-          );
+      const areAttachmentsMatch = firstNewNote?.attachments
+          ? new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments).size &&
+            firstTempNote.attachments.every(att =>
+                firstNewNote.attachments.some(newAtt => newAtt.trim() === att.trim())
+            )
+          : false;
 
+      // If attachments now match, remove `isPendingAttachmentMatch`
       if (isTextMatch && areAttachmentsMatch) {
         setShouldStopRetries(true);
         setTempNotes([]);
-
         setDisplayNotes(prevNotes =>
             prevNotes.map(note =>
                 note.id.startsWith('temp') && isTextMatch && areAttachmentsMatch
-                    ? { ...firstNewNote, isPendingAttachmentMatch: false }
-                    : note
+                    ? { ...firstNewNote, isPendingAttachmentMatch: false } 
+                    : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
             )
         );
-
-        setDisplayNotes(prev => [...prev]);  // Ensure UI refresh
+    
         clearTimeout(currentTimeout);
         return;
       }
 
+      // Keep retrying until attachments match
       checkForUpdates(retryCount + 1);
   }, delay);
 };
-
-
 
   
 
