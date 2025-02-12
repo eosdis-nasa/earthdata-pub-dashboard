@@ -52,20 +52,10 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
 
   const [tempNotes, setTempNotes] = useState([]);
   const [displayNotes, setDisplayNotes] = useState(data.notes);
-  const [retryCount, setRetryCount] = useState(0);
   const [shouldStopRetries, setShouldStopRetries] = useState(false);
 
   const handleVisibilityReset = () => {
     visibilityRef?.current?.resetIdMap();
-  };
-
-  const isTimeWithin = (tempSent, newSent) => {
-    if (!tempSent || !newSent) return false;
-
-    const tempDate = new Date(tempSent);
-    const newDate = new Date(newSent);
-
-    return Math.abs(tempDate - newDate) <= 20000;
   };
 
   const MAX_RETRIES = 7;
@@ -215,7 +205,7 @@ const checkForUpdates = async (retryCount = 0) => {
         attachments: [...uploadedFiles]
     };
 
-    await dispatch(replyConversation(payload));
+    await dispatch(replyConversation(payload, level));
 
     setShouldStopRetries(false);
 
