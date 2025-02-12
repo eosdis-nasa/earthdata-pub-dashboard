@@ -143,7 +143,7 @@ class App extends Component {
 
   render() {
     const { currentPath } = this.state;  // Use the updated path from state
-    const parts = currentPath.split('/').filter(Boolean);
+    //const parts = currentPath.split('/').filter(Boolean);
 
     const primaryKeywords = ['forms', 'dashboard', 'api', 'auth'];
     const secondaryKeywords = ['getting_started', 'data_publication_guidelines'];
@@ -160,6 +160,15 @@ class App extends Component {
     console.log('parts', parts)
     console.log('currentPath', currentPath)
     console.log('href',window.location.href);
+
+    const url = window.location.href;
+    const parts = url.split("/").filter((part, index) => index !== 0 && part !== ""); 
+    let pathValue = parts.length > 1 
+    ? (["getting_started", "data_publication_guidelines"].includes(parts[1]) ? parts[1] : false) 
+    : true;
+    console.log(pathValue)
+
+
     return (
       <div className="routes">
         <Provider store={this.store}>
@@ -168,15 +177,15 @@ class App extends Component {
               <Redirect exact from='/login' to='/auth' />
               <Route path='/auth' component={Auth} />
 
-              {!foundPrimaryKeyword && foundSecondaryKeyword && (
+              {/* {!foundPrimaryKeyword && foundSecondaryKeyword && (
                 <Route
                   path={`/${foundSecondaryKeyword}`}
                   render={() => <KeywordHandler keyword={foundSecondaryKeyword} />}
                 />
-              )}
+              )} */}
 
-              {!foundPrimaryKeyword && !foundSecondaryKeyword && parts.length === 0 && currentPath === '/' && (
-                <Route path="/" render={() => <KeywordHandler keyword={null} />} />
+              {pathValue && (
+                <Route path="/" render={() => <KeywordHandler keyword={pathValue} />} />
               )}
 
               <Route
