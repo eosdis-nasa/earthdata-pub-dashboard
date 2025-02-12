@@ -159,6 +159,7 @@ class App extends Component {
       : null;
     console.log('parts', parts)
     console.log('currentPath', currentPath)
+    console.log('href',window.location.href);
     return (
       <div className="routes">
         <Provider store={this.store}>
