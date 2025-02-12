@@ -174,7 +174,7 @@ class App extends Component {
                 />
               )}
 
-              {!foundPrimaryKeyword && !foundSecondaryKeyword && parts.length === 0 && localStorage.getItem('redirectAfterLogin') === '/' && (
+              {!foundPrimaryKeyword && !foundSecondaryKeyword && parts.length === 0 && currentPath === '/' && (
                 <Route path="/" render={() => <KeywordHandler keyword={null} />} />
               )}
 
