@@ -145,19 +145,18 @@ class App extends Component {
     const { currentPath } = this.state;  // Use the updated path from state
     //const parts = currentPath.split('/').filter(Boolean);
 
-    const primaryKeywords = ['forms', 'dashboard', 'api', 'auth'];
-    const secondaryKeywords = ['getting_started', 'data_publication_guidelines'];
+    // const primaryKeywords = ['forms', 'dashboard', 'api', 'auth'];
+    // const secondaryKeywords = ['getting_started', 'data_publication_guidelines'];
 
-    const foundPrimaryKeyword = primaryKeywords.find(keyword =>
-      parts.some(part => part.toLowerCase() === keyword.toLowerCase())
-    );
+    // const foundPrimaryKeyword = primaryKeywords.find(keyword =>
+    //   parts.some(part => part.toLowerCase() === keyword.toLowerCase())
+    // );
 
-    const foundSecondaryKeyword = !foundPrimaryKeyword
-      ? secondaryKeywords.find(keyword =>
-          parts.some(part => part.toLowerCase() === keyword.toLowerCase())
-        )
-      : null;
-    console.log('parts', parts)
+    // const foundSecondaryKeyword = !foundPrimaryKeyword
+    //   ? secondaryKeywords.find(keyword =>
+    //       parts.some(part => part.toLowerCase() === keyword.toLowerCase())
+    //     )
+    //   : null;
     console.log('currentPath', currentPath)
     console.log('href',window.location.href);
 
@@ -165,7 +164,7 @@ class App extends Component {
     const parts = url.split("/").filter((part, index) => index !== 0 && part !== ""); 
     let pathValue = parts.length > 1 
     ? (["getting_started", "data_publication_guidelines"].includes(parts[1]) ? parts[1] : false) 
-    : true;
+    : 'overview';
     console.log(pathValue)
 
 
