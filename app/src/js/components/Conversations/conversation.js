@@ -86,21 +86,13 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
         setDisplayNotes(updatedNotes);
     };
 
-    // If this is the first note and temp exists, show temp until backend responds
-    if (notes.length === 0 && tempNotes.length > 0) {
-        console.log("First note detected. Showing temp note while waiting for backend.");
-        setDisplayNotes(tempNotes);
-        checkForUpdates(0); // Force retries aggressively for large attachments
-        return;
-    }
-
     if (shouldStopRetries) return;
 
-    const firstNewNote = notes[0] || null;
+    const firstNewNote = notes[0];
     const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
 
     if (!firstTempNote) {
-        setDisplayNotes(notes);
+        if (tempNotes.length === 0) fetchNotes();
         return;
     }
 
@@ -113,35 +105,36 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
 
     if (isTextMatch && areAttachmentsMatch) {
         setShouldStopRetries(true);
+
+        // Replace temp note with the actual note (No timestamp match required)
+        setDisplayNotes(prevNotes =>
+            prevNotes.map(note =>
+                note.id.startsWith('temp') && isTextMatch && areAttachmentsMatch
+                    ? { ...firstNewNote, isPendingAttachmentMatch: false }
+                    : note
+            )
+        );
+
         setTempNotes(prevTempNotes => prevTempNotes.slice(1));
-
-        // If this is the first note, replace temp with actual
-        if (notes.length === 1) {
-            setDisplayNotes([firstNewNote]);
-        } else {
-            setDisplayNotes([firstNewNote, ...notes.slice(1)]);
-        }
-
         clearTimeout(currentTimeout);
-        fetchNotes();
         return;
     }
 
     if (isTextMatch && !areAttachmentsMatch) {
         console.log("Text matches, but attachments are still processing. Marking as pending.");
-
         setDisplayNotes(prevNotes =>
             prevNotes.map(note =>
-                note.id === firstNewNote?.id
+                note.id.startsWith('temp') && isTextMatch
                     ? { ...note, isPendingAttachmentMatch: true }
-                    : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
+                    : note
             )
         );
 
-        checkForUpdates(); // Keep retrying until attachments match
+        checkForUpdates();
         return;
     }
-}, [notes, level]);
+}, [notes, tempNotes.length, level]);
+
 
   
 const checkForUpdates = async (retryCount = 0) => {
@@ -172,36 +165,38 @@ const checkForUpdates = async (retryCount = 0) => {
           return;
       }
 
-      const isTextMatch = firstTempNote.text === firstNewNote?.text;
-      const areAttachmentsMatch = firstNewNote?.attachments
-          ? new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments).size &&
-            firstTempNote.attachments.every(att =>
-                firstNewNote.attachments.some(newAtt => newAtt.trim() === att.trim())
-            )
-          : false;
+      const isTextMatch = firstTempNote.text.trim() === firstNewNote?.text?.trim();
+      const areAttachmentsMatch = firstNewNote?.attachments &&
+          new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments).size &&
+          firstTempNote.attachments.every(att =>
+              firstNewNote.attachments.some(newAtt => newAtt.trim() === att.trim())
+          );
 
-      // If attachments now match, remove `isPendingAttachmentMatch`
       if (isTextMatch && areAttachmentsMatch) {
         setShouldStopRetries(true);
         setTempNotes([]);
+
         setDisplayNotes(prevNotes =>
             prevNotes.map(note =>
-                note.id === firstNewNote.id 
-                    ? { ...firstNewNote, isPendingAttachmentMatch: false } 
-                    : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
+                note.id.startsWith('temp') && isTextMatch && areAttachmentsMatch
+                    ? { ...firstNewNote, isPendingAttachmentMatch: false }
+                    : note
             )
         );
-    
+
+        setDisplayNotes(prev => [...prev]);  // Ensure UI refresh
         clearTimeout(currentTimeout);
         return;
       }
 
-      // Keep retrying until attachments match
       checkForUpdates(retryCount + 1);
-    }, delay);
+  }, delay);
 };
 
+
+
   
+
   const handleRemoveFile = (fileName) => {
     //Have to ensure a rerender with the state update
     uploadedFiles.delete(fileName);
