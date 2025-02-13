@@ -15,6 +15,9 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import Note from './note';
 import { NewNoteVisibility } from './visibility';
+import { CustomUpload } from '../DataUpload/customUpload';
+import { AddAttachmentButton, DisplayAttachmentButton } from './attachment';
+
 
 const textRef = React.createRef();
 
@@ -35,6 +38,7 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const current_user_id = JSON.parse(window.localStorage.getItem('auth-user')).id;
   const { conversationId } = match.params;
   const [showSearch, setShowSearch] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   useEffect(() => {
     dispatch(getConversation(conversationId));
   }, []);
@@ -43,12 +47,19 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
   const { queriedAt } = meta;
   const { canReply, canAddUser } = notePrivileges(privileges);
   const visibilityRef = useRef();
+  const uploadedFilesRef = useRef();
 
   const handleVisibilityReset = () => {
-      visibilityRef?.current?.resetIdMap();
+    visibilityRef?.current?.resetIdMap();
   };
 
-  const reply = (dispatch, id) => {
+  const handleRemoveFile = (fileName) => {
+    //Have to ensure a rerender with the state update
+    uploadedFiles.delete(fileName);
+    setUploadedFiles(new Set([...uploadedFiles]));
+  };
+
+  const reply = async(dispatch, id) => {
     const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility()
     // ensure the person adding the comment is a viewer if they've limited the note
     if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)){
@@ -59,12 +70,14 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       conversation_id: id, 
       text: resp,
       viewer_users,
-      viewer_roles
+      viewer_roles,
+      attachments: [...uploadedFiles]
     };
-      dispatch(replyConversation(payload));
+    await dispatch(replyConversation(payload));
+    await dispatch(getConversation(conversationId));
     textRef.current.value = '';
     handleVisibilityReset();
-
+    setUploadedFiles([]);
   };
 
   const cancelCallback = () => setShowSearch(false);
@@ -149,6 +162,17 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                         title="Type your reply"></textarea>
                       <NewNoteVisibility dispatch={dispatch} privileges={privileges} conversationId={conversationId} visibilityRef={visibilityRef}/>
                       <div>
+                      {
+                          [...uploadedFiles].map((fileName) =>
+                              <DisplayAttachmentButton key={fileName} fileName={fileName} removeFileHandler={handleRemoveFile}/>
+                          )
+                      }
+                      </div>
+                      <div style={{textAlign: "right"}}>
+                        <CustomUpload customComponent={AddAttachmentButton}
+                        conversationId={conversationId}
+                        uploadedFilesRef={uploadedFilesRef}
+                        setUploadedFiles={setUploadedFiles}/>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                           Send Reply
