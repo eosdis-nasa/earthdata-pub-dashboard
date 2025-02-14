@@ -24,8 +24,8 @@ _Put an `x` in the boxes that apply_
 
 _Put an `x` in the boxes that apply. You can also fill these out after creating the PR. If you're unsure about any of them, don't hesitate to ask. We're here to help! This is simply a reminder of what we are going to look for before merging your code._
 
-- [ ] I have read the [Contributing Guide](https://github.com/eosdis-nasa/earthdata-pub-api/blob/main/CONTRIBUTING.md)
-- [ ] I have updated the [CHANGELOG](https://github.com/eosdis-nasa/earthdata-pub-api/blob/main/CHANGELOG.md)
+- [ ] I have read the [Contributing Guide](https://github.com/eosdis-nasa/earthdata-pub-dashboard/blob/main/CONTRIBUTING.md)
+- [ ] I have updated the [CHANGELOG](https://github.com/eosdis-nasa/earthdata-pub-dashboard/blob/main/CHANGELOG.md)
 - [ ] Lint and unit tests pass locally with my changes
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] I have added the necessary documentation (if appropriate)
