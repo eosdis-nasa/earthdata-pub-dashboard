@@ -49,13 +49,15 @@ class Sidebar extends React.Component {
                 path === currentPath ? currentPathClass : ''
               ].join(' ');
               const title = base + ' link';
-              return (
-                <li key={base + i}>
-                    <Link className={classes} to={path} title={title} aria-label={d[0]}>
-                        {d[0]}
-                    </Link>
-                </li>
-              );
+              if (!!d[4] === false || (!!d[4] === true && this.props.hasPrivileges)) {
+                return (
+                  <li key={base + i}>
+                      <Link className={classes} to={path} title={title} aria-label={d[0]}>
+                          {d[0]}
+                      </Link>
+                  </li>
+                );
+              }
             }
             )
           }
@@ -118,7 +120,8 @@ Sidebar.propTypes = {
   params: PropTypes.object,
   count: PropTypes.array,
   location: PropTypes.object,
-  match: PropTypes.object
+  match: PropTypes.object,
+  hasPrivileges: PropTypes.bool
 };
 
 export default Sidebar;

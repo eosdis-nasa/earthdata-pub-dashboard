@@ -5,10 +5,11 @@ const routes = [
 ];
 
 const requestRoutes = [
-  ['', '', null, ''],
+  ['', '', null, '', false],
   [strings.all_metrics, '/metrics/', null, 'sidebar__nav--back'],
-  ["DAAC Metrics", '/metrics/daacs', null, 'sidebar__nav--back'],
-  ["User Metrics", '/metrics/users', null, 'sidebar__nav--back'],
+  ['DAAC Metrics', '/metrics/daacs', null, 'sidebar__nav--back', true],
+  ['User Metrics', '/metrics/users', null, 'sidebar__nav--back', true],
+  ['My Metrics', '/metrics/mymetrics', null, 'sidebar__nav--back'],
 ];
 
 const singleRoutes = [
@@ -30,7 +31,8 @@ const handler = {
           return d;
         }
         return empty;
-    })} else {
+      });
+    } else {
       return routes;
     }
   }
