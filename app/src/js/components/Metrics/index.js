@@ -30,7 +30,6 @@ class Metrics extends React.Component {
             <Sidebar
               currentPath={this.props.location.pathname}
               params={this.props.params}
-              hasPrivileges={hasMetricsPrivs}
             />
             <div className='page__content--shortened'>
               <Switch>
