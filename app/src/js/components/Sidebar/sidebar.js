@@ -1,11 +1,12 @@
 'use strict';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { resolve } from 'path';
 import sections from '../../paths';
 import chevronRight from '../../../assets/images/layout/chevron-right-icon.svg';
 import chevronLeft from '../../../assets/images/layout/chevron-left.svg';
+import { connect } from 'react-redux';
 
 const currentPathClass = 'sidebar__nav--selected';
 
@@ -49,13 +50,16 @@ class Sidebar extends React.Component {
                 path === currentPath ? currentPathClass : ''
               ].join(' ');
               const title = base + ' link';
-              return (
-                <li key={base + i}>
-                    <Link className={classes} to={path} title={title} aria-label={d[0]}>
-                        {d[0]}
-                    </Link>
-                </li>
-              );
+              // if d[4] lists a privilege header (REQUEST, METRICS, WORKFLOW etc) check the value of d[5] to ensure they have the right permission for that header
+              if (!!d[4] === false || !!this.props.privileges.ADMIN || (!!d[4] === true && !!d[5] === true && this.props.privileges[d[4]]?.includes(d[5]))) {
+                return (
+                  <li key={base + i}>
+                      <Link className={classes} to={path} title={title} aria-label={d[0]}>
+                          {d[0]}
+                      </Link>
+                  </li>
+                );
+              }
             }
             )
           }
@@ -118,7 +122,10 @@ Sidebar.propTypes = {
   params: PropTypes.object,
   count: PropTypes.array,
   location: PropTypes.object,
-  match: PropTypes.object
+  match: PropTypes.object,
+  privileges: PropTypes.object
 };
 
-export default Sidebar;
+export default withRouter(connect(state => ({
+  privileges: state.api.tokens.privileges
+}))(Sidebar));
