@@ -240,6 +240,16 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+const flattenedData = chartsData.stackedData.flatMap(daac =>
+  Object.keys(daac)
+    .filter(step => step !== "daac_name" && daac[step] > 0)
+    .map(step => ({
+      daacName: daac.daac_name,
+      stepName: step,
+      requestIds: chartsData.requestMappingStacked?.[daac.daac_name]?.[step] || []
+    }))
+);
+
 return (
   <div className='page__component'>
     <section className='page__section page__section__controls'>
@@ -493,17 +503,8 @@ return (
                   </tr>
                 </thead>
                 <tbody>
-                  {chartsData.stackedData
-                    .flatMap(daac =>
-                      Object.keys(daac)
-                        .filter(step => step !== "daac_name" && daac[step] > 0)
-                        .map(step => ({
-                          daacName: daac.daac_name,
-                          stepName: step,
-                          requestIds: chartsData.requestMappingStacked[daac.daac_name]?.[step] || []
-                        }))
-                    )
-                    .slice(0, visibleRows.stacked)
+                  {flattenedData
+                    .slice(0, visibleRows.stacked) // Controls number of rows displayed
                     .map((entry, index) => (
                       <tr key={`${entry.daacName}-${entry.stepName}-${index}`}>
                         <td>{entry.daacName}</td>
@@ -525,9 +526,9 @@ return (
               </table>
 
               {/* Show More/Less Buttons */}
-              {chartsData.stackedData.length > ROW_INCREMENT && (
+              {flattenedData.length > ROW_INCREMENT && (
                 <div className="button-container">
-                  {visibleRows.stacked < chartsData.stackedData.length && (
+                  {visibleRows.stacked < flattenedData.length && (
                     <button className="show-more-button" onClick={() => handleShowMore('stacked')}>
                       Show More
                     </button>
