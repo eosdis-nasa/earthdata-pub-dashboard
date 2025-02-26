@@ -62,26 +62,40 @@ class RequestsOverview extends React.Component {
     this.state = { producers: [], originalList: {}, list: {} };
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
+    this._isMounted = false;
+    this.timeoutId = null; 
   }
 
   async componentDidMount() {
+    this._isMounted = true; // Set mounted flag
+
     await this.updateList();
-  
-    let elapsedTime = 0; // Track elapsed time
-  
-    const intervalId = setInterval(async () => {
-      elapsedTime += 30000; // Increment elapsed time by 30 seconds
+
+    let elapsedTime = 0;
+    const intervals = [5000, 10000, 15000, 30000, 60000];
+
+    let currentIntervalIndex = 0;
+
+    const intervalId = async () => {
+      if (!this._isMounted) return; // Prevent updates if unmounted
+
       const { list } = this.props.requests;
       const hasActionId = list.data.some(item => item.step_data && item.step_data.action_id);
-      
-      if (!hasActionId || elapsedTime > 2 * 60000) {
-        clearInterval(intervalId);
-      } else {
+
+      if (hasActionId) {
         await this.updateList();
       }
-    }, 30000); // Check every 30 seconds
-  
-    this.setState({ intervalId });
+
+      elapsedTime += intervals[currentIntervalIndex];
+      currentIntervalIndex++;
+
+      if (currentIntervalIndex < intervals.length && this._isMounted) {
+        this.timeoutId = setTimeout(intervalId, intervals[currentIntervalIndex]);
+      }
+    };
+
+    // Start the first interval
+    this.timeoutId = setTimeout(intervalId, intervals[currentIntervalIndex]);
   }
   
   async updateList() {
@@ -95,7 +109,10 @@ class RequestsOverview extends React.Component {
   
 
   componentWillUnmount() {
-    clearInterval(this.state.intervalId);
+    this._isMounted = false;
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
   }
 
   generateQuery () {
@@ -174,7 +191,6 @@ class RequestsOverview extends React.Component {
       }
       const query = this.generateQuery();
       const { canInitialize } = requestPrivileges(this.props.privileges);
-      const initiateRequestSelectDaac = `${_config.formsUrl}${_config.initiateRequestSelectDaac}`;
       const list = this.state.list;
       const { queriedAt } = list.meta;
       const unique = [...new Set(list.data.map(item => item.id))];
