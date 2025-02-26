@@ -243,7 +243,7 @@ export const NewNoteVisibility = ({ dispatch, privileges, conversationId, visibi
     };
     return (
         <div>
-            <p>Visibility:</p>
+            {canAddUser && <p>Visibility:</p>}
             {
                 newCommentViewers && newCommentViewers.map((viewer) => {
                     return (

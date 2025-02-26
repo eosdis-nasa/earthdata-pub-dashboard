@@ -9,8 +9,7 @@ export const getPrivileges = () => {
   if (user != null) {
     const privileges = user.user_privileges;
     const allPrivs = {
-      admin: privileges.find(o => o.match(/ADMIN/g)),
-      canUpdateWorkflow: privileges.find(o => o.match(/WORKFLOW_UPDATE/g))
+      admin: privileges.find(o => o.match(/ADMIN/g))
     };
     return allPrivs;
   }
@@ -33,7 +32,7 @@ export const tableColumns = [
 ];
 
 const allPrivs = getPrivileges();
-if (typeof allPrivs !== 'undefined' && (allPrivs.admin || allPrivs.canUpdateWorkflow)) {
+if (typeof allPrivs !== 'undefined' && allPrivs.admin) {
   tableColumns.push(
     {
       Header: 'Options',
