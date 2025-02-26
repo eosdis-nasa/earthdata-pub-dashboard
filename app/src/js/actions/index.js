@@ -1083,7 +1083,7 @@ export const createConversation = (payload) => ({
   }
 });
 
-export const replyConversation = (payload) => {
+export const replyConversation = (payload, level = false) => {
   return (dispatch) => {
     dispatch({
       [CALL_API]: {
@@ -1095,7 +1095,7 @@ export const replyConversation = (payload) => {
     })
       .then(() => {
         setTimeout(() => {
-          dispatch(getConversation(payload.conversation_id));
+          dispatch(getConversation(payload.conversation_id, level));
         }, 2000);
       });
   };
