@@ -12,7 +12,6 @@ const paths = [
   ['Requests', '/requests', 'REQUEST'],
   ['Workflows', '/workflows', 'WORKFLOW'],
   ['Metrics', '/metrics', 'METRICS'],
-  ['My Metrics', '/mymetrics', 'MY METRICS'],
   ['Users', '/users', 'USER'],
   ['Groups', '/groups', 'GROUP'],
   ['Roles', '/roles', 'ROLE'],
@@ -60,7 +59,7 @@ class Header extends React.Component {
     const { authenticated } = this.props.api;
     const { privileges, user, userId } = this.props;
     const activePaths = paths.filter(path => {
-      return (!!privileges[path[2]] || privileges.ADMIN) || path[2].match(/CONVERSATION/g) || path[2].match(/MY METRICS/g);
+      return (!!privileges[path[2]] || privileges.ADMIN) || path[2].match(/CONVERSATION/g) || path[2].match(/METRICS/g);
     });
 
     return (
