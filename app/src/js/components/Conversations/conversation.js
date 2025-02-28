@@ -59,7 +59,7 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
   };
 
   const MAX_RETRIES = 7;
-  // Retry at 3s, 10s, 20s, 35s, 50s, 65s, 80s
+  // Retry at 3rd, 8th, 18th, 33rd, 48th, 63rd, 78th second
   const RETRY_INTERVALS = [3000, 5000, 10000, 15000, 15000, 15000, 15000];
   let currentTimeout = null; // Store timeout ID
 
