@@ -38,7 +38,7 @@ import FormQuestions from './components/FormQuestions';
 import Download from './components/DataDownload';
 import Steps from './components/Steps';
 import config from './config';
-import KeywordHandler from './components/Help/help';
+import OverviewApp from './components/Help/app';
 
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
 dom.watch();
@@ -52,10 +52,9 @@ localStorage.setItem('mobile', check);
 import { useState, useEffect } from 'react';
 
 const MainRoutes = ({ activeRoute }) => {
-  const history = useHistory();  // Use history for programmatic navigation
-  const [redirected, setRedirected] = useState(false); // State to track if redirection has occurred
+  const history = useHistory();
+  const [redirected, setRedirected] = useState(false);
 
-  // Define your routes in an array
   const routes = [
     { path: '/', component: Home, exact: true },
     { path: '/error', component: Error },
@@ -129,7 +128,6 @@ class App extends Component {
     // Listen for route changes
     this.unlisten = history.listen((location) => {
       this.setState({ currentPath: location.pathname });  // Update state on path change
-      console.log('Route changed to:', location.pathname);
     });
   }
 
@@ -142,32 +140,22 @@ class App extends Component {
   }
 
   render() {
-    const { currentPath } = this.state;  // Use the updated path from state
-    //const parts = currentPath.split('/').filter(Boolean);
-
-    // const primaryKeywords = ['forms', 'dashboard', 'api', 'auth'];
-    // const secondaryKeywords = ['getting_started', 'data_publication_guidelines'];
-
-    // const foundPrimaryKeyword = primaryKeywords.find(keyword =>
-    //   parts.some(part => part.toLowerCase() === keyword.toLowerCase())
-    // );
-
-    // const foundSecondaryKeyword = !foundPrimaryKeyword
-    //   ? secondaryKeywords.find(keyword =>
-    //       parts.some(part => part.toLowerCase() === keyword.toLowerCase())
-    //     )
-    //   : null;
-    console.log('currentPath', currentPath)
-    console.log('href',window.location.href);
-
     const url = window.location.href;
     const parts = url.split("/").filter((part, index) => index !== 0 && part !== ""); 
+    
     let pathValue = parts.length > 1 
-    ? (["getting_started", "data_publication_guidelines"].includes(parts[1]) ? parts[1] : false) 
-    : 'overview';
-    console.log(pathValue)
+    ? parts[1] && (["getting_started", "data_publication_guidelines", "help"].some(prefix => parts[1].startsWith(prefix)) ? parts[1] : false) 
+    : 'help';
 
-
+    if (
+      parts[0].includes("localhost") && 
+      (!parts[1] || 
+      (parts[1] !== 'help' && 
+      !["getting_started", "data_publication_guidelines", "dashboard"].some(prefix => parts[1]?.startsWith(prefix))))
+    ) {
+      pathValue = false;
+    }
+    
     return (
       <div className="routes">
         <Provider store={this.store}>
@@ -176,15 +164,8 @@ class App extends Component {
               <Redirect exact from='/login' to='/auth' />
               <Route path='/auth' component={Auth} />
 
-              {/* {!foundPrimaryKeyword && foundSecondaryKeyword && (
-                <Route
-                  path={`/${foundSecondaryKeyword}`}
-                  render={() => <KeywordHandler keyword={foundSecondaryKeyword} />}
-                />
-              )} */}
-
               {pathValue && (
-                <Route path="/" render={() => <KeywordHandler keyword={pathValue} />} />
+                <Route path="/" render={() => <OverviewApp keyword={pathValue}/>} />
               )}
 
               <Route
