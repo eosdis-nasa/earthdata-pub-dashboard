@@ -11,9 +11,9 @@ const Hero = () => {
           Earthdata Pub is the one-stop shop for researchers who want to publish
           their Earth Science data at a NASA Distributed Active Archive Center (DAAC)
         </h1>
-        <Link to="/getting_started">
-          <button className="btn btn-success">Get Started</button>
-        </Link>
+        <button className="btn btn-success" onClick={() => (window.location.href = "/getting_started")}>
+          Get Started
+        </button>
       </div>
 
       <img src={mainLogo} alt="Background Globe" className="hero-globe" />
