@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import mainLogo from "../../../assets/images/earth-blue-overlay-cropped-40.svg";
 import "./overview.css";
 
@@ -15,7 +14,6 @@ const Hero = () => {
           Get Started
         </button>
       </div>
-
       <img src={mainLogo} alt="Background Globe" className="hero-globe" />
     </section>
   );
