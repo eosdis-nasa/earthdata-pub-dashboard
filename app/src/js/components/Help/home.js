@@ -2,16 +2,13 @@ import React, { useState, useEffect } from "react";
 import Paragraph from "./paragraph"; // Paragraph Component
 import List from "./list"; // List Component
 import "./overview.css";
+import HomeData from "./home_data";
 
 const Home = () => {
   const [home, setHome] = useState(null);
 
   useEffect(() => {
-    // Fetch JSON from public/assets/home.json
-    fetch("/home.json")
-      .then((response) => response.json())
-      .then((data) => setHome(data))
-      .catch((error) => console.error("Error loading home.json:", error));
+    setHome(HomeData);
   }, []);
 
   if (!home) {

@@ -4,6 +4,7 @@ import "./overview.css";
 import chevronRight from "../../../assets/images/layout/chevron-right-icon.svg";
 import chevronLeft from "../../../assets/images/layout/chevron-left.svg";
 import Bulb from "../../../assets/images/light-bulb.svg";
+import DataPublicationGuidelineData from "./data_publication_guideline_data";
 
 const DataPublicationGuidelines = () => {
   const [dataPublicationData, setDataPublicationData] = useState(null);
@@ -21,10 +22,7 @@ const DataPublicationGuidelines = () => {
   };
 
   useEffect(() => {
-    fetch("/data_publication_guidelines.json")
-      .then((response) => response.json())
-      .then((data) => setDataPublicationData(data))
-      .catch((error) => console.error("Error loading data_publication_guidelines.json:", error));
+    setDataPublicationData(DataPublicationGuidelineData)
   }, []);
 
   // Function to scroll smoothly to a section

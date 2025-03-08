@@ -5,6 +5,7 @@ import chevronRight from '../../../assets/images/layout/chevron-right-icon.svg';
 import chevronLeft from '../../../assets/images/layout/chevron-left.svg';
 import Bulb from '../../../assets/images/light-bulb.svg';
 import Note from '../../../assets/images/sticky-note.svg';
+import GettingStartedData from "./getting_started_data";
 
 const GettingStarted = () => {
   const [gettingStartedData, setGettingStartedData] = useState(null);
@@ -22,10 +23,7 @@ const GettingStarted = () => {
   };
 
   useEffect(() => {
-    fetch("/getting_started.json")
-      .then((response) => response.json())
-      .then((data) => setGettingStartedData(data))
-      .catch((error) => console.error("Error loading getting_started.json:", error));
+    setGettingStartedData(GettingStartedData);
   }, []);
 
   // Function to scroll smoothly to a section
