@@ -14,6 +14,7 @@ Code to generate and deploy the dashboard for the Earthdata Pub API.
 - [Branching](#branching)
 - [Releasing](#releasing)
 - [Documentation](#documentation)
+- [References](#references)
 
 ## Contributing
 
@@ -45,7 +46,7 @@ To locate environment variables, see webpack.common.js:
 
 ## Installing
 
-The dashboard uses node v18.14.1. To build/run the dashboard on your local
+The dashboard uses node v22.14.0. To build/run the dashboard on your local
 machine, install nvm following the [nvm Install & Update Script](https://github.com/nvm-sh/nvm#install--update-script)
 instructions.
 
@@ -55,7 +56,7 @@ step is to clone the repo!
 ```bash
 git clone https://github.com/eosdis-nasa/earthdata-pub-dashboard.git
 cd api
-nvm install v18.14.1
+nvm install 22.14.0
 nvm use
 npm install
 ```
@@ -267,3 +268,9 @@ See [RELEASE.md](./RELEASE.md).
 - [Usage](./USAGE.md)
 - [Development Guide](./DEVELOPMENT.md)
 - [Technical documentation on tables](./TABLES.md)
+
+## References
+
+- EOSDIS Slack Channel: #earthdatapub
+- EDPub Wiki: [https://wiki.earthdata.nasa.gov/display/EDPUB/Earthdata+Pub+Home](https://wiki.earthdata.nasa.gov/display/EDPUB/Earthdata+Pub+Home)
+- EDPub Roadmap: [https://wiki.earthdata.nasa.gov/display/EDPUB/EDPub+Feature+Roadmap](https://wiki.earthdata.nasa.gov/display/EDPUB/EDPub+Feature+Roadmap)
