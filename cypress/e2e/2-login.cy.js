@@ -19,7 +19,6 @@ before(() => {
 describe('Logging in', () => {
   it(`Login to the dashboard as ${Cypress.env('username')}`, () => {
     cy.removeLocalStorage(`${Cypress.env('token_storage_variable')}`);
-    cy.visit(`${Cypress.env('forms_root')}${Cypress.env('forms_pages').daac_selection_page}`);
     cy.getLocalStorage(`${Cypress.env('token_storage_variable')}`)
       .then($token => {
         if ($token == null) {

@@ -18,24 +18,14 @@ const {
   esRoot,
   showDistributionAPIMetrics,
   apiRoot: root,
-  formsUrl,
   defaultPageLimit,
   minCompatibleApiVersion,
   basepath
 } = _config;
 
-const redirects = {
-  forms: formsUrl
-};
 
-export const redirectWithToken = (redirect, token) => {
-  if (redirects[redirect]) {
-    const redirectUrl = new URL(redirects[redirect]);
-    redirectUrl.searchParams.set('token', token);
-    window.location.href = redirectUrl.href;
-  } else {
+export const redirectWithToken = () => {
     window.location.href = basepath;
-  }
 };
 
 export const fetchToken = (code, state) => {
@@ -49,8 +39,8 @@ export const fetchToken = (code, state) => {
         qs: { code, state }
       }
     })
-      .then(({ data }) => {
-        redirectWithToken(state, data.token);
+      .then(() => {
+        redirectWithToken();
       });
   };
 };
@@ -1119,7 +1109,7 @@ export const createConversation = (payload) => ({
   }
 });
 
-export const replyConversation = (payload) => {
+export const replyConversation = (payload, level = false) => {
   return (dispatch) => {
     dispatch({
       [CALL_API]: {
@@ -1131,7 +1121,7 @@ export const replyConversation = (payload) => {
     })
       .then(() => {
         setTimeout(() => {
-          dispatch(getConversation(payload.conversation_id));
+          dispatch(getConversation(payload.conversation_id, level));
         }, 2000);
       });
   };

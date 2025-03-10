@@ -268,7 +268,7 @@ const inputsAreValid = () => {
     const borderColor = (!failCondition || failCondition === '') && missingReq ? '#DB1400' : '';
     return borderColor;
   };
-  const { canCreate, canEdit, canDelete } = questionPrivileges(privileges);
+  const { canCreate, canEdit } = questionPrivileges(privileges);
   return (
     <div className='page__content'>
       <div className='page__component'>
@@ -352,7 +352,7 @@ const inputsAreValid = () => {
               </section>
           }
           
-        {(canDelete && canEdit && canCreate)
+        {(canEdit && canCreate)
           ? <section className='page__section'>
           <Link className={'button button--cancel button__animation--md button__arrow button__arrow--md button__animation button--secondary'}
           to={'/questions'} id='cancelButton' aria-label="cancel question editing">

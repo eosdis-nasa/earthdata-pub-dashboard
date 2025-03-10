@@ -22,7 +22,7 @@ import ErrorReport from '../Errors/report';
 import Metadata from '../Table/Metadata';
 import ReviewStep from '../Review/review';
 import _config from '../../config';
-import { requestPrivileges, formPrivileges } from '../../utils/privileges';
+import { requestPrivileges } from '../../utils/privileges';
 import Comments from '../Comments/comments';
 import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
 import { loadToken } from '../../utils/auth';
@@ -574,20 +574,13 @@ class FormOverview extends React.Component {
   }
 
   render () {
-    let editable = false;
     let reviewable = false;
-    const { canEdit } = formPrivileges(this.props.privileges);
     const search = new URLSearchParams(this.props.location.search);
     let { canReview } = requestPrivileges(this.props.privileges, search.get('step'));
     let sameFormAsStep = false;
     let requestId = this.props.location.search.split('=')[1];
     const formId = this.props.match.params.formId;
     const record = this.props.forms.map[formId];
-    let thisFormUrl = `${_config.formsUrl}/questions/${requestId}`;
-    if (formId !== '') {
-      thisFormUrl += `/${formId}`;
-    }
-
     if (!record || (record.inflight && !record.data)) {
       return (
         <>
@@ -632,20 +625,15 @@ class FormOverview extends React.Component {
         const formName = record.data.short_name;
         requestId = this.props.requests.detail.data.id;
         if (this.props.requests.detail.data.step_name?.match(/close/g)) {
-          editable = false;
           sameFormAsStep = false;
           if (!canReview) {
             canReview = false;
           }
         }
         if (this.props.requests.detail.data.step_name === `${formName}_form`) {
-          if (canEdit) {
-            editable = true;
-          }
           sameFormAsStep = true;
           canReview = false;
         } else if (this.props.requests.detail.data.step_name?.match(/form_(.*_)?review/g)) {
-          editable = false;
           if (canReview) {
             reviewable = true;
           }
@@ -660,7 +648,6 @@ class FormOverview extends React.Component {
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
           <h1 className='heading--large heading--shared-content with-description'>{form.long_name}</h1>
-          {requestId !== '' && editable && this.hasSavedAnswers() && sameFormAsStep ? <a className='button button--small button--green button--edit form-group__element--right' href={thisFormUrl} aria-label='edit your form'>Edit</a> : null}
           {requestId !== ''
             ? <button onClick={() => { this.printForm(); window.location.reload(); }}
                 className='button button--small button--green button--print form-group__element--right'>

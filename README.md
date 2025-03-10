@@ -14,6 +14,7 @@ Code to generate and deploy the dashboard for the Earthdata Pub API.
 - [Branching](#branching)
 - [Releasing](#releasing)
 - [Documentation](#documentation)
+- [References](#references)
 
 ## Contributing
 
@@ -34,8 +35,6 @@ To locate environment variables, see webpack.common.js:
 | -------- | ----------- | -------- |
 | APIROOT | the API URL. This must be set by the user. | *<https://pub.earthdata.nasa.gov/api>* |
 | OVERVIEW_URL | URL of the instructional overview of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/>* |
-| FORMS_URL | URL of the questions and answer forms that are outside of Earthdata Pub Dashboard | *<https://pub.earthdata.nasa.gov/forms>* |
-| INITIATE_REQUEST_SELECT_DAAC_URL | *<https://pub.earthdata.nasa.gov/forms/daacs/selection>*,
 | AWS_REGION | Region in which Earthdata Pub API is running. | *us-west-2*  |
 | DAAC_NAME    | e.g. LPDAAC, | *Local* |
 | STAGE | e.g. PROD, UAT, | *development* |
@@ -47,7 +46,7 @@ To locate environment variables, see webpack.common.js:
 
 ## Installing
 
-The dashboard uses node v18.14.1. To build/run the dashboard on your local
+The dashboard uses node v22.14.0. To build/run the dashboard on your local
 machine, install nvm following the [nvm Install & Update Script](https://github.com/nvm-sh/nvm#install--update-script)
 instructions.
 
@@ -57,7 +56,7 @@ step is to clone the repo!
 ```bash
 git clone https://github.com/eosdis-nasa/earthdata-pub-dashboard.git
 cd api
-nvm install v18.14.1
+nvm install 22.14.0
 nvm use
 npm install
 ```
@@ -73,8 +72,7 @@ npm run start
 
 ### Dashboard and API
 
-The Dashboard application is dependent on the EDPub [API](https://github.com/eosdis-nasa/earthdata-pub-api)
-and [Forms](https://github.com/eosdis-nasa/earthdata-pub-forms).
+The Dashboard application is dependent on the EDPub [API](https://github.com/eosdis-nasa/earthdata-pub-api).
 Follow instructions in each repo or the [EDPub core](https://github.com/eosdis-nasa/earthdata-pub)
 repo.
 
@@ -270,3 +268,9 @@ See [RELEASE.md](./RELEASE.md).
 - [Usage](./USAGE.md)
 - [Development Guide](./DEVELOPMENT.md)
 - [Technical documentation on tables](./TABLES.md)
+
+## References
+
+- EOSDIS Slack Channel: #earthdatapub
+- EDPub Wiki: [https://wiki.earthdata.nasa.gov/display/EDPUB/Earthdata+Pub+Home](https://wiki.earthdata.nasa.gov/display/EDPUB/Earthdata+Pub+Home)
+- EDPub Roadmap: [https://wiki.earthdata.nasa.gov/display/EDPUB/EDPub+Feature+Roadmap](https://wiki.earthdata.nasa.gov/display/EDPUB/EDPub+Feature+Roadmap)

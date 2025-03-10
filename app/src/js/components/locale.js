@@ -44,6 +44,7 @@ export const strings = new LocalizedStrings({
     conversation_overview: 'Conversations',
     workflow_overview: 'Workflows',
     metric_overview: 'Metrics',
+    my_metrics: 'My Metrics',
     requests_running: 'Requests Running',
     requests_completed: 'Requests Completed',
     requests_failed: 'Requests Failed',
