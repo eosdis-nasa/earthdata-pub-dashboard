@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   dashboard:
-    image: node:18.14.1
+    image: node:22.14.0
     network_mode: "service:shim"
     command:
       bash -c "npm rebuild node-sass && npm run serve"
@@ -11,7 +11,6 @@ services:
       - ./:/dashboard:cached
     environment:
       - APIROOT=http://localhost:8080/api
-      - FORMS_URL=http://localhost:8081
       - OVERVIEW_URL=/
       - DAAC_NAME=local
       - STAGE=LOCALHOST-Development
@@ -21,7 +20,7 @@ services:
       - REQUEST_UNHIDE_BUTTON_VERBAGE=Restore
       - HELP_PAGE_DEFAULT=http://localhost:8082/getting_started
   shim:   # empty container to open ports
-    image: node:18.14.1
+    image: node:22.14.0
     command:
       bash -c "tail -f /dev/null"
     working_dir:

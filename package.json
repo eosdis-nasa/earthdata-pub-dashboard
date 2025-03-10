@@ -16,7 +16,7 @@
   "homepage": "https://github.com/eosdis-nasa/earthdata-pub-dashboard",
   "private": true,
   "engines": {
-    "node": "18.14.1"
+    "node": "22.14.0"
   },
   "scripts": {
     "clean-modules": "rm -rf package-lock.json node_modules/",
@@ -192,6 +192,7 @@
     "react-select": "^5.8.0",
     "react-table": "^7.6.0",
     "reactflow": "^11.8.3",
+    "recharts": "^2.15.0",
     "redux": "^4.1.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",

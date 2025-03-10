@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed funny line from dropdown
 - Added error page form and routes to it if an api return (response.error.code) not 200
 - Update MFA to EDPub custom flow
+- Updated github repo template assets
+- Updated the My Metrics Page to be a subpage of the Metrics Tab
 <!-- Unreleased changes can be added here. -->
 
 ## 1.0.19
