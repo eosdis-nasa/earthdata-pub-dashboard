@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated DAAC Assignment prompt to include additional review question
 - Updated github repo template assets
 - Updated the My Metrics Page to be a subpage of the Metrics Tab
+- Remove DAAC long name from request details page
 <!-- Unreleased changes can be added here. -->
 
 ## 1.0.19
