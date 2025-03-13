@@ -52,9 +52,18 @@ const DynamicTable = ({ controlId, values, handleFieldChange, addRow, removeRow,
                 <FormControl
                   className='tableDynamic'
                   type="text"
-                  name="data_prod_timeline"
-                  value={row.data_product_name|| ''}
+                  name="data_product_name"
+                  value={row.data_product_name || ''}
                   onChange={(e) => handleFieldChange(controlId, index, 'data_product_name', e.target.value)}
+                />
+              </td>
+              <td>
+                <FormControl
+                  className='tableDynamic'
+                  type="text"
+                  name="data_prod_timeline"
+                  value={row.data_prod_timeline || ''}
+                  onChange={(e) => handleFieldChange(controlId, index, 'data_prod_timeline', e.target.value)}
                 />
               </td>
               <td>
@@ -70,16 +79,7 @@ const DynamicTable = ({ controlId, values, handleFieldChange, addRow, removeRow,
                 <FormControl
                   className='tableDynamic'
                   type="text"
-                  name="lastName"
-                  value={row.data_prod_timeline || ''}
-                  onChange={(e) => handleFieldChange(controlId, index, 'data_prod_timeline', e.target.value)}
-                />
-              </td>
-              <td>
-                <FormControl
-                  className='tableDynamic'
-                  type="text"
-                  name="lastName"
+                  name="instrument_collect_data"
                   value={row.instrument_collect_data || ''}
                   onChange={(e) => handleFieldChange(controlId, index, 'instrument_collect_data', e.target.value)}
                 />
@@ -91,6 +91,7 @@ const DynamicTable = ({ controlId, values, handleFieldChange, addRow, removeRow,
                     size="sm"
                     aria-label="remove row button"
                     onClick={() => removeRow(controlId, index)}
+                    disabled={values[controlId].length === 1}
                     className="action-button"
                   >
                     <FontAwesomeIcon icon={faTrashAlt} />
@@ -183,6 +184,7 @@ const DynamicTable = ({ controlId, values, handleFieldChange, addRow, removeRow,
                     size="sm"
                     aria-label="remove row button"
                     onClick={() => removeRow(controlId, index)}
+                    disabled={values[controlId].length === 1}
                     className="action-button"
                   >
                     <FontAwesomeIcon icon={faTrashAlt} />

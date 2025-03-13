@@ -397,14 +397,26 @@ const FormQuestions = ({
         if (value && value.length > 0) {
           value = value.filter((obj) => Object.keys(obj).length !== 0);
         }
-        const result =
+        if(controlId && controlId.startsWith('assignment_')){
+          const result =
+          value && value.some((producer) => areAssignmentFieldsEmpty(producer));
+          if (result || (value && value.length === 0)) {
+          errorMessage = `${
+            input.label && input.label !== 'undefined'
+              ? input.label
+              : long_name
+          } all fields are required`;
+          }
+        }else {
+          const result =
           value && value.some((producer) => areProducerFieldsEmpty(producer));
-        if (result || (value && value.length === 0)) {
+          if (result || (value && value.length === 0)) {
           errorMessage = `${
             input.label && input.label !== 'undefined'
               ? input.label
               : long_name
           } both First Name and Last Name are required`;
+          }
         }
       } else if (input.type === 'bbox') {
         const directions = ['north', 'east', 'south', 'west'];
@@ -489,6 +501,15 @@ const FormQuestions = ({
       producer.producer_last_name_or_organization === ''
     );
   };
+
+  const areAssignmentFieldsEmpty = (producer) => {
+    return (
+      producer.data_product_name === '' ||
+      producer.data_prod_timeline === '' ||
+      producer.data_prod_volume === '' ||
+      producer.instrument_collect_data === ''
+    );
+  }
 
   const progressBarStyle = {
     width: '100%',
@@ -748,11 +769,13 @@ const FormQuestions = ({
     saveFile('draft', true);
   };
 
-  const filterEmptyObjects = (array) => {
+  const filterEmptyObjects = (k, array) => {
     return array.filter((obj) => {
       if (!obj || typeof obj !== 'object') {
         return false;
       }
+
+      if(k.startsWith('assignment_')) return Object.values(obj).some(value => value !== '');
 
       const keys = Object.keys(obj);
       if (keys.length < 2) {
@@ -797,7 +820,7 @@ const FormQuestions = ({
 
     Object.keys(fieldValues).forEach((key) => {
       if (Array.isArray(fieldValues[key])) {
-        jsonObject.data[key] = filterEmptyObjects(fieldValues[key]);
+        jsonObject.data[key] = filterEmptyObjects(key, fieldValues[key]);
       } else if (fieldValues[key] !== '') {
         jsonObject.data[key] = fieldValues[key];
       }
