@@ -14,6 +14,7 @@ Code to generate and deploy the dashboard for the Earthdata Pub API.
 - [Branching](#branching)
 - [Releasing](#releasing)
 - [Documentation](#documentation)
+- [References](#references)
 
 ## Contributing
 
@@ -267,3 +268,9 @@ See [RELEASE.md](./RELEASE.md).
 - [Usage](./USAGE.md)
 - [Development Guide](./DEVELOPMENT.md)
 - [Technical documentation on tables](./TABLES.md)
+
+## References
+
+- EOSDIS Slack Channel: #earthdatapub
+- EDPub Wiki: [https://wiki.earthdata.nasa.gov/display/EDPUB/Earthdata+Pub+Home](https://wiki.earthdata.nasa.gov/display/EDPUB/Earthdata+Pub+Home)
+- EDPub Roadmap: [https://wiki.earthdata.nasa.gov/display/EDPUB/EDPub+Feature+Roadmap](https://wiki.earthdata.nasa.gov/display/EDPUB/EDPub+Feature+Roadmap)

@@ -22,6 +22,8 @@ function getExpiration (token) {
   return 0;
 }
 
+// TODO - Consider removing this function. The main concern here is that it makes searching for privileges more difficult.
+// For example, a search like 'NOTE_ADDUSER' and 'REQUEST_ADDUSER' are now both generalized as ...includes('ADDUSER')
 function reducePrivileges (user) {
   const privileges = user.user_privileges.reduce((acc, privilege) => {
     // Split the privilege into entity and action by the first underscore

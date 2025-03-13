@@ -36,12 +36,8 @@ export const getPrivileges = (step) => {
       isStaff: privileges.find(o => o.match(/ADMIN/g))
         ? privileges.find(o => o.match(/ADMIN/g))
         : roles.find(o => o.short_name.match(/staff/g)),
-      canCreateForm: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : privileges.find(o => o.match(/FORM_CREATE/g)),
-      canUpdateForm: privileges.find(o => o.match(/ADMIN/g))
-        ? privileges.find(o => o.match(/ADMIN/g))
-        : privileges.find(o => o.match(/FORM_UPDATE/g)),
+      canCreateForm: privileges.find(o => o.match(/ADMIN/g)),
+      canUpdateForm: privileges.find(o => o.match(/ADMIN/g)),
       ...requestPrivileges(privilegesByType, step),
       canReadDaac: daacRead
     };
