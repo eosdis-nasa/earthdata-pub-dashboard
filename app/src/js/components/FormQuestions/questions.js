@@ -81,6 +81,7 @@ const FormQuestions = ({
     sameAsPrimaryDataProducer: false,
     sameAsPrimaryLongTermSupport: false,
     sameAsPrimaryDataAccession: false,
+    sameAsPrincipalInvestigator: false,
   });
 
   const formRef = useRef(null);
@@ -204,6 +205,14 @@ const FormQuestions = ({
                 ...prev,
                 sameAsPrimaryLongTermSupport: requestData.form_data[key],
               }));
+            } else if (
+              key === 'assignment_form_same_as_principal_investigator'
+            ) {
+              initialValues[key] = requestData.form_data[key];
+              setCheckboxStatus((prev) => ({
+                ...prev,
+                sameAsPrincipalInvestigator: requestData.form_data[key],
+              }));
             } else if (key && typeof requestData.form_data[key] !== 'object') {
               initialValues[key] = requestData.form_data[key];
             }
@@ -265,6 +274,20 @@ const FormQuestions = ({
           checkboxStatus.sameAsPrimaryLongTermSupport ||
           checkboxStatus.sameAsPrimaryDataAccession;
       }
+    });
+
+    [
+      'assignment_form_data_submission_poc_name',
+      'assignment_form_data_submission_poc_organization',
+      'assignment_form_data_submission_poc_email',
+      'assignment_form_data_submission_poc_orcid',
+    ].forEach((fieldId) => {
+      
+      const field = document.getElementById(fieldId);
+      if (field) {
+        field.disabled = checkboxStatus.sameAsPrincipalInvestigator;
+      }
+      console.log('field', field, checkboxStatus.sameAsPrincipalInvestigator);
     });
   }, [checkboxStatus]);
 
@@ -1138,7 +1161,6 @@ const FormQuestions = ({
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
-
     if (name === 'sameAsPrimaryDataProducer') {
       setCheckboxStatus((prev) => ({ ...prev, [name]: checked }));
 
@@ -1257,6 +1279,38 @@ const FormQuestions = ({
         if (prevValues.validation_errors['poc_name']) {
           newValidationErrors['long_term_support_poc_name'] =
             prevValues.validation_errors['poc_name'];
+        }
+
+        return { ...updatedValues, validation_errors: newValidationErrors };
+      });
+    } else if (name === 'sameAsPrincipalInvestigator') {
+      setCheckboxStatus((prev) => ({ ...prev, [name]: checked }));
+
+      setValues((prevValues) => {
+        const updatedValues = {
+          ...prevValues,
+          assignment_form_same_as_principal_investigator: checked,
+          assignment_form_data_submission_poc_name: prevValues.assignment_form_principal_investigator_fullname,
+          assignment_form_data_submission_poc_organization: prevValues.assignment_form_principal_investigator_organization,
+          assignment_form_data_submission_poc_email: prevValues.assignment_form_principal_investigator_email,
+          assignment_form_data_submission_poc_orcid: prevValues.assignment_form_principal_investigator_orcid,
+        };
+
+        // Clear previous validation errors for dependent fields
+        const newValidationErrors = { ...prevValues.validation_errors };
+        [
+          'assignment_form_data_submission_poc_name',
+          'assignment_form_data_submission_poc_organization',
+          'assignment_form_data_submission_poc_email',
+          'assignment_form_data_submission_poc_orcid',
+        ].forEach((field) => {
+          delete newValidationErrors[field];
+        });
+
+        // Propagate errors from primary data producer to dependent fields
+        if (prevValues.validation_errors['assignment_form_principal_investigator_fullname']) {
+          newValidationErrors['assignment_form_data_submission_poc_name'] =
+            prevValues.validation_errors['assignment_form_principal_investigator_fullname'];
         }
 
         return { ...updatedValues, validation_errors: newValidationErrors };
@@ -1450,7 +1504,7 @@ const FormQuestions = ({
                           className="text-muted"
                           style={{
                             display:
-                              question.help !== 'undefined' ? 'block' : 'none',
+                              question.help !== 'undefined' && question.help !== 'true' ? 'block' : 'none',
                           }}
                           dangerouslySetInnerHTML={{ __html: question.help }}
                         />
@@ -1462,6 +1516,18 @@ const FormQuestions = ({
                                 type="checkbox"
                                 name="sameAsPrimaryDataProducer"
                                 checked={checkboxStatus.sameAsPrimaryDataProducer}
+                                onChange={handleCheckboxChange}
+                              />
+                              <span className="checkmark"></span>
+                            </label>
+                          )}
+                          {question.long_name === 'Data Submission Point of Contact' && (
+                            <label className="checkbox-item">
+                              Same as Principal Investigator
+                              <input
+                                type="checkbox"
+                                name="sameAsPrincipalInvestigator"
+                                checked={checkboxStatus.sameAsPrincipalInvestigator}
                                 onChange={handleCheckboxChange}
                               />
                               <span className="checkmark"></span>
@@ -1657,7 +1723,9 @@ const FormQuestions = ({
                                                 (checkboxStatus.sameAsPrimaryDataAccession &&
                                                   input.control_id.startsWith(
                                                     'long_term_support_poc_'
-                                                  ))
+                                                  )) ||
+                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                  input.control_id.startsWith('assignment_form_data_submission_poc_')) 
                                               }
                                               readOnly={
                                                 readonly ||
@@ -1676,7 +1744,9 @@ const FormQuestions = ({
                                                 (checkboxStatus.sameAsPrimaryDataAccession &&
                                                   input.control_id.startsWith(
                                                     'long_term_support_poc_'
-                                                  ))
+                                                  )) ||
+                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                  input.control_id.startsWith('assignment_form_data_submission_poc_')) 
                                               }
                                               pattern={getAttribute(
                                                 'pattern',
@@ -1752,7 +1822,9 @@ const FormQuestions = ({
                                               (checkboxStatus.sameAsPrimaryDataAccession &&
                                                 input.control_id.startsWith(
                                                   'long_term_support_poc_'
-                                                ))
+                                                )) ||
+                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                  input.control_id.startsWith('assignment_form_data_submission_poc_')) 
                                             }
                                             readOnly={
                                               readonly ||
@@ -1771,7 +1843,9 @@ const FormQuestions = ({
                                               (checkboxStatus.sameAsPrimaryDataAccession &&
                                                 input.control_id.startsWith(
                                                   'long_term_support_poc_'
-                                                ))
+                                                )) ||
+                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                  input.control_id.startsWith('assignment_form_data_submission_poc_')) 
                                             }
                                             maxLength={getAttribute(
                                               'maxlength',
@@ -1817,7 +1891,9 @@ const FormQuestions = ({
                                               (checkboxStatus.sameAsPrimaryLongTermSupport &&
                                                 input.control_id.startsWith(
                                                   'long_term_support_poc_'
-                                                ))
+                                                )) ||
+                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                  input.control_id.startsWith('assignment_form_data_submission_poc_')) 
                                             }
                                             readOnly={
                                               readonly ||
@@ -1832,7 +1908,9 @@ const FormQuestions = ({
                                               (checkboxStatus.sameAsPrimaryLongTermSupport &&
                                                 input.control_id.startsWith(
                                                   'long_term_support_poc_'
-                                                ))
+                                                )) ||
+                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                  input.control_id.startsWith('assignment_form_data_submission_poc_')) 
                                             }
                                             cols={getAttribute(
                                               'cols',
@@ -1892,7 +1970,9 @@ const FormQuestions = ({
                                               (checkboxStatus.sameAsPrimaryLongTermSupport &&
                                                 input.control_id.startsWith(
                                                   'long_term_support_poc_'
-                                                ))
+                                                )) ||
+                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                  input.control_id.startsWith('assignment_form_data_submission_poc_')) 
                                             }
                                             readOnly={
                                               readonly ||
@@ -1907,7 +1987,9 @@ const FormQuestions = ({
                                               (checkboxStatus.sameAsPrimaryLongTermSupport &&
                                                 input.control_id.startsWith(
                                                   'long_term_support_poc_'
-                                                ))
+                                                )) ||
+                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                  input.control_id.startsWith('assignment_form_data_submission_poc_')) 
                                             }
                                             max={getAttribute(
                                               'max',
