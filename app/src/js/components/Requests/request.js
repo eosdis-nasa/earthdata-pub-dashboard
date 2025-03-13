@@ -367,11 +367,6 @@ class RequestOverview extends React.Component {
         accessor: row => row.data_producer_name
       },
       {
-        label: 'Daac',
-        accessor: row => row.daac_name && canEdit ? <a href={`/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{row.daac_name}</a> : row.daac_name ? row.daac_name : row.daac_id,
-        classList: 'hidden'
-      },
-      {
         label: 'Initiator',
         accessor: row => row?.initiator?.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : null
       },
