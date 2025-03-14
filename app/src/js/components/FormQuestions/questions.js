@@ -287,7 +287,6 @@ const FormQuestions = ({
       if (field) {
         field.disabled = checkboxStatus.sameAsPrincipalInvestigator;
       }
-      console.log('field', field, checkboxStatus.sameAsPrincipalInvestigator);
     });
   }, [checkboxStatus]);
 
