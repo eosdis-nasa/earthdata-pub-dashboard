@@ -1096,6 +1096,7 @@ const FormQuestions = ({
 
   const category_map = {
     "data_product_documentation": "documentation",
+    "assignment_form_project_documentation": "documentation",
     "example_files": "sample"
   };
 
