@@ -25,7 +25,7 @@ const DynamicTable = ({ controlId, values, handleFieldChange, addRow, removeRow,
         <th>Name of data product: How do you refer to the data product? </th>
         <th>Data Production Timeline: Include the start date and when do you expect data production to be complete.</th>
         <th>
-        Data Product Volume: What is the estimated or actual total volume of the data product upon completion?{' '}
+        Data Product Volume: What is the estimated or actual total volume of the data product upon completion of production?{' '}
         <OverlayTrigger placement="top" overlay={renderTooltip} delay={{ show: 250, hide: 400 }}>
               <ForwardedFontAwesomeIcon icon={faQuestionCircle} style={{ cursor: 'pointer', marginLeft: '5px' }} />
             </OverlayTrigger>

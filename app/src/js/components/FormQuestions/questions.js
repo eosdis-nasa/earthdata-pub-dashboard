@@ -1585,7 +1585,7 @@ const FormQuestions = ({
                           <div
                             className={`radio-group ${
                               validationAttempted &&
-                              question.long_name === 'Data Format' &&
+                              (question.long_name === 'Data Format' || question.long_name === 'Funding Organization') &&
                               question.inputs.filter(
                                 (input) => values[input.control_id]
                               ).length === 0
@@ -2291,7 +2291,7 @@ const FormQuestions = ({
                                               className="required table-required"
                                               style={{ display: input.required ? 'block' : 'none' }}
                                             >
-                                              required
+                                               At least one row required
                                             </span>
                                           )}
                                           {input.type === 'table' && (
