@@ -113,9 +113,6 @@ export const requestCanReview = (privileges, stepName) => {
   if (stepName && stepName.match(/management_review/g)) {
     return privileges.REQUEST.includes("REVIEW_MANAGER");
   }
-  else if (stepName && stepName.match(/esdis_final_review/g)) {
-    return privileges.REQUEST.includes('REVIEW_ESDIS');
-  }
 
   return privileges.REQUEST.includes("REVIEW");
 }
