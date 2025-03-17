@@ -342,15 +342,6 @@ export const reviewRequest = (id, approve) => {
   };
 };
 
-export const esdisReviewRequest = (id, action) => ({
-  [CALL_API]: {
-    type: types.REQUEST_REVIEW,
-    method: 'POST',
-    path: 'data/submission/operation/review/esdis',
-    body: { id, action }
-  }
-});
-
 export const updateRequestMetadata = (payload) => ({
   [CALL_API]: {
     type: types.REQUEST_UPDATE_METADATA,
