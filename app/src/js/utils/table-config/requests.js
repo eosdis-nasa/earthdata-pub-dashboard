@@ -105,6 +105,24 @@ export const assignDaacs = (request, formalName) => {
   }
 };
 
+export const esdisReviewLink = (row, formalName, step) => {
+  const allPrivs = getPrivileges();
+  let disabled = false;
+  if (typeof allPrivs !== 'undefined' && ( typeof allPrivs.isAdmin !== 'undefined' || allPrivs.canReview === true)) {
+    disabled = false;
+  } else {
+    disabled = true;
+  }
+  const isDetailPage = location.href.match(/id/g);
+  if (isDetailPage === null && disabled) {
+    return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
+  } else if (disabled) {
+    return formalName;
+  } else {
+    return <Link to={`/requests/approval/esdis?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+  }
+};
+
 export const existingLink = (row, formId, formalName, step, stepType) => {
   const allPrivs = getPrivileges(step);
   let disabled = false;
@@ -190,7 +208,7 @@ export const stepLookup = (row) => {
         } else if (stepType.match(/action/g)) {
           if (stepName.match(/assign_a_workflow/g)){
             request = `/workflows?requestId=${row.id}`;
-          } else if (stepName.match(/daac_assignment/g)) {
+          } else if (stepName.match(/daac_assignment(_final)?/g)) {
             request = `/daac/assignment/${row.id}`;
           }
         }
@@ -200,10 +218,12 @@ export const stepLookup = (row) => {
   }
   if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
-  } else if (stepType.match(/action/g) && stepName.match(/daac_assignment/g)) {
+  } else if (stepType.match(/action/g) && stepName.match(/daac_assignment(_final)?/g)) {
     return assignDaacs(request, formalName);
   } else if (stepType.match(/action/g) ||  stepType.match(/upload/g)) {
     return existingLink(row, undefined, formalName, stepName, stepType);
+  } else if (stepType.match(/review/g) && stepName.match(/esdis_final_review/g)) {
+    return esdisReviewLink(row, formalName, stepName);
   } else if (stepType.match(/review/g) || stepType.match(/service/g)) {
     return existingLink(row, stepID, formalName, stepName, stepType);
   } else {
