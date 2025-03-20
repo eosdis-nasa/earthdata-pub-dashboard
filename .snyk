@@ -1,0 +1,10 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.1
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JS-ELLIPTIC-8187303:
+    - '*':
+        reason: Waiting for package maintainers to update (https://github.com/indutny/elliptic/issues/331)
+        expires: 2025-04-18T17:58:48.024Z
+        created: 2025-03-18T17:58:48.026Z
+patch: {}
