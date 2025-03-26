@@ -129,7 +129,9 @@ const GettingStarted = () => {
                     {/* If step has an icon */}
                     {step.icon && (
                       <div className="tip-box d-flex align-items-center p-2 mt-2 icon-div" style={{ backgroundColor: "#f8f9fa", borderRadius: "5px", width: "550px"  }}>
-                        <img src={Bulb} alt="Step Icon" className="me-2" width="20" />
+                        <div className="icon_box_bulb">
+                          <img src={Bulb} alt="Step Icon" className="me-2" width="20" />
+                        </div>
                         <span className="icon-text">{'Tip: '}<small>{step.icon_text}</small></span>
                       </div>
                     )}
@@ -140,7 +142,9 @@ const GettingStarted = () => {
                         <p dangerouslySetInnerHTML={{ __html: p.text }} />
                         {p.icon && (
                           <div className="tip-box d-flex align-items-center p-2 mt-2 icon-div" style={{ backgroundColor: "#f8f9fa", borderRadius: "5px", width: "650px" }}>
-                            <img src={Note} alt="Step Icon" className="me-2" width="20" />
+                            <div className="icon_box">
+                              <img src={Note} alt="Step Icon" className="me-2" width="20" />
+                            </div>
                             <span className="icon-text">{'Note: '}<small>{p.icon_text}</small></span>
                           </div>
                         )}

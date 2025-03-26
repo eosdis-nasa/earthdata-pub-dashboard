@@ -5,6 +5,7 @@ import chevronRight from "../../../assets/images/layout/chevron-right-icon.svg";
 import chevronLeft from "../../../assets/images/layout/chevron-left.svg";
 import Bulb from "../../../assets/images/light-bulb.svg";
 import DataPublicationGuidelineData from "./data_publication_guideline_data";
+import Note from '../../../assets/images/sticky-note.svg';
 
 const DataPublicationGuidelines = () => {
   const [dataPublicationData, setDataPublicationData] = useState(null);
@@ -76,7 +77,7 @@ const DataPublicationGuidelines = () => {
                     <a
                       href={`#${sectionId}`}
                       className="nav-link"
-                      onClick={() => scrollToSection(sectionId)} // When clicked, scroll to section
+                      onClick={() => scrollToSection(sectionId)}
                     >
                       {section.heading ? section.heading.replace(/<[^>]*>/g, "") : `Section ${index + 1}`}
                     </a>
@@ -126,6 +127,15 @@ const DataPublicationGuidelines = () => {
                     <li key={idx} dangerouslySetInnerHTML={{ __html: item }} />
                   ))}
                 </ul>
+              )}
+
+              {section.icon && (
+                <div className="tip-box d-flex align-items-center p-2 mt-2 icon-div" style={{ backgroundColor: "#f8f9fa", borderRadius: "5px", width: "97%" }}>
+                  <div className="icon_box"> 
+                  <img src={Note} alt="Step Icon" className="me-2" width="20" />
+                  </div>
+                  <span className="icon-text">{'Note: '}<small>{section.icon_text}</small></span>                 
+                </div>
               )}
 
               {/* Render Steps (If exists) */}

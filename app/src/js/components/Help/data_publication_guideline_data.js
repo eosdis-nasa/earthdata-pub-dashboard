@@ -159,7 +159,7 @@ const data_publication_guidelines_data = {
           "text":"The table below summarizes the typical activities performed during and after the publication of your data product, as well as your role and the role of the DAAC in these activities."
        },
        {
-          "icon":"sticky-note.svg",
+          "icon":"lightbulb.svg",
           "icon_text":"The activities you may be asked to perform could differ from what is shown here depending on the mission or project requirements, the data Level of Service, and DAAC-specific processes."
        },
        {

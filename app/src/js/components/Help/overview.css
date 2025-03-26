@@ -3,6 +3,29 @@
     font-size: 1.2rem;
   }
 
+  a:link.ext:after, a:visited.ext:after {
+    display: inline-block!important;
+    padding-left: .3em!important;
+    font-family: EUI-Icon-Library;
+    content: "\f111"!important;
+  }
+
+  .nasa-logo {
+    transition: opacity 0.3s ease;
+  }
+
+  .logo2 {
+    display: none;
+  }
+
+  .logo-container:hover .logo3 {
+    display: none;
+  }
+
+  .logo-container:hover .logo2 {
+    display: block;
+  }
+
   .cap-table {
     font-size: 24px;
     margin-bottom: 10px;
@@ -109,6 +132,30 @@
   .styled-table tbody td {
     font-size: 16px;
     line-height: 1.5;
+  }
+
+  .icon_box {
+    background: #F2FAFF 0% 0% no-repeat padding-box;
+    border: 1px solid #195983;
+    width: 1.5rem !important;
+    height: 1.5rem;
+    border-radius: 50%;
+    padding: 0.35rem;
+    text-align: center;
+  }
+
+  .icon_box_bulb {
+    background: #F2FAFF 0% 0% no-repeat padding-box;
+    border: 1px solid #195983;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    padding: 0.35rem;
+    text-align: center;
+  }
+
+  .styled-table tbody tr:nth-child(odd) td {
+    background-color: #e9ecef;
   }
 
   .home h1, .home h2 {
@@ -271,7 +318,7 @@
   .nav-links a {
     color: white;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 1.25rem;
     margin-left: 15px;
   }
   
@@ -403,37 +450,85 @@
     padding-left: 3%;
   }
 
-  @media (max-width: 992px) {
+  /* Responsive Sidebar */
+  @media (max-width: 768px) {
     .siderbar-overview {
-      width: 30%;
+      position: fixed;
+      top: 60px;
+      left: -100%;
+      width: 250px;
+      height: 100vh;
+      background-color: #074872;
+      color: white;
+      padding-top: 20px;
+      transition: all 0.3s ease-in-out;
+      z-index: 1000;
     }
-    
+
+    .siderbar-overview.open {
+      left: 0;
+    }
+
+    .siderbar-overview-toggle {
+      position: absolute;
+      top: 15px;
+      left: 100%;
+      width: 35px;
+      height: 35px;
+      font-size: 16px;
+      background: #2275AA;
+      border: none;
+      border-radius: 50%;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .siderbar-overview-restore {
+      position: fixed;
+      top: 15px;
+      left: 10px;
+      width: 35px;
+      height: 35px;
+      background: #2275AA;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+
     .main-content {
-      width: 70%;
-    }
-
-    .siderbar-overview.hidden {
-      display: none;
-    }
-
-    .main-content.full-width {
       width: 100%;
+      padding: 20px;
+      transition: margin-left 0.3s ease-in-out;
     }
   }
 
+  /* Responsive Header */
   @media (max-width: 768px) {
-    .getting-started {
+    .header {
+      display: flex;
       flex-direction: column;
+      text-align: center;
+      padding: 10px;
     }
 
-    .siderbar-overview {
-      width: 100%;
-      height: auto;
-      position: relative;
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .main-content {
-      width: 100%;
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      padding: 8px;
     }
   }
 }
