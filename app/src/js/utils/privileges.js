@@ -114,7 +114,8 @@ export const requestCanReview = (privileges, stepName) => {
     return privileges.REQUEST.includes("REVIEW_MANAGER");
   }
   else if (stepName && stepName.match(/esdis_final_review/g)) {
-    return privileges.REQUEST.includes('REVIEW_ESDIS');
+    const user = JSON.parse(window.localStorage.getItem('auth-user'));
+    return privileges.REQUEST.includes('REVIEW_ESDIS') && user.user_groups.some((group) => group.short_name === 'root_group');
   }
 
   return privileges.REQUEST.includes("REVIEW");

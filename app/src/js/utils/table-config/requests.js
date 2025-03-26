@@ -106,7 +106,7 @@ export const assignDaacs = (request, formalName) => {
 };
 
 export const esdisReviewLink = (row, formalName, step) => {
-  const allPrivs = getPrivileges();
+  const allPrivs = getPrivileges(step);
   let disabled = false;
   if (typeof allPrivs !== 'undefined' && ( typeof allPrivs.isAdmin !== 'undefined' || allPrivs.canReview === true)) {
     disabled = false;
