@@ -20,37 +20,166 @@ import { AddAttachmentButton, DisplayAttachmentButton } from './attachment';
 
 
 const textRef = React.createRef();
-
-const getConversations = (dispatch, conversationId, lvl) => {
-  if (lvl) {
-    document.getElementById('all_button').classList.add('active');
-    document.getElementById('users_only_button').classList.remove('active');
-  } else {
-    document.getElementById('all_button').classList.remove('active');
-    document.getElementById('users_only_button').classList.add('active');
-  }
-  dispatch(getConversation(conversationId, lvl));
-};
-
-
-
-const Conversation = ({ dispatch, conversation, privileges, match }) => {
+const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
   const current_user_id = JSON.parse(window.localStorage.getItem('auth-user')).id;
   const { conversationId } = match.params;
   const [showSearch, setShowSearch] = useState(false);
+  const [level, setLevel] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  useEffect(() => {
-    dispatch(getConversation(conversationId));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getConversation(conversationId));
+  // }, []);
+  const getConversations = async(dispatch, conversationId, lvl) => {
+    if (lvl) {
+      setLevel(lvl);
+      document.getElementById('all_button').classList.add('active');
+      document.getElementById('users_only_button').classList.remove('active');
+    } else {
+      setLevel(false);
+      document.getElementById('all_button').classList.remove('active');
+      document.getElementById('users_only_button').classList.add('active');
+    }
+
+    const newData = await dispatch(getConversation(conversationId, lvl));
+    if(newData?.data?.notes) setDisplayNotes(newData?.data?.notes);
+  };
   const { data, inflight, meta } = conversation;
-  const { subject, notes, participants } = data;
+  const { subject, notes = [], participants = [] } = data;
   const { queriedAt } = meta;
   const { canReply, canAddUser } = notePrivileges(privileges);
   const visibilityRef = useRef();
   const uploadedFilesRef = useRef();
 
+  const [tempNotes, setTempNotes] = useState([]);
+  const [displayNotes, setDisplayNotes] = useState(data.notes);
+  const [shouldStopRetries, setShouldStopRetries] = useState(false);
+
   const handleVisibilityReset = () => {
     visibilityRef?.current?.resetIdMap();
+  };
+
+  const MAX_RETRIES = 7;
+  // Retry at 3rd, 8th, 18th, 33rd, 48th, 63rd, 78th second
+  const RETRY_INTERVALS = [3000, 5000, 10000, 15000, 15000, 15000, 15000];
+  let currentTimeout = null; // Store timeout ID
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+        const finalNotes = await dispatch(getConversation(conversationId, level));
+        const updatedNotes = finalNotes?.data?.notes.map(note => ({
+            ...note,
+            isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false
+        }));
+
+        setDisplayNotes(updatedNotes);
+    };
+
+    if (shouldStopRetries) return;
+
+    const firstNewNote = notes[0];
+    const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
+
+    if (!firstTempNote) {
+        setDisplayNotes(notes);
+        return;
+    }
+
+    const isTextMatch = firstTempNote.text.trim() === firstNewNote?.text?.trim();
+    const areAttachmentsMatch =
+        new Set(firstTempNote.attachments).size === new Set(firstNewNote?.attachments || []).size &&
+        firstTempNote.attachments.every(att =>
+            (firstNewNote?.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+        );
+
+    if (isTextMatch && areAttachmentsMatch) {
+        setShouldStopRetries(true);
+
+        // Replace temp note with the actual note (No timestamp match required)
+        setDisplayNotes(prevNotes =>
+            prevNotes.map(note =>
+                note.id.startsWith('temp') && isTextMatch && areAttachmentsMatch
+                    ? { ...firstNewNote, isPendingAttachmentMatch: false }
+                    : note
+            )
+        );
+
+        setTempNotes(prevTempNotes => prevTempNotes.slice(1));
+        setDisplayNotes([firstNewNote, ...notes.slice(1)]);
+        clearTimeout(currentTimeout);
+        fetchNotes();
+        return;
+    }
+
+    if (isTextMatch && !areAttachmentsMatch) {
+      // kept this intensionally (can be removed if needed)
+      console.log("Text matches, but attachments are still processing.");
+      setDisplayNotes(prevNotes =>
+          prevNotes.map(note =>
+                note.id.startsWith('temp') && isTextMatch
+                  ? { ...note, isPendingAttachmentMatch: true }
+                  : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
+          )
+      );
+      checkForUpdates();
+      return;
+    }
+  }, [notes, level]);
+
+const checkForUpdates = async (retryCount = 0) => {
+  if (retryCount >= MAX_RETRIES || shouldStopRetries) {
+      clearTimeout(currentTimeout);
+      return;
+  }
+
+  const delay = RETRY_INTERVALS[retryCount];
+  if (currentTimeout) {
+      clearTimeout(currentTimeout);
+  }
+
+  currentTimeout = setTimeout(async () => {
+    if (shouldStopRetries) {
+        clearTimeout(currentTimeout);
+        return;
+    }
+
+    const notesAPI = await dispatch(getConversation(conversationId, level));
+    const latestNotes = notesAPI?.data?.notes?.[0] || null;
+    const firstNewNote = latestNotes ? latestNotes : null;
+    const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
+
+    if (!firstTempNote) {
+        setShouldStopRetries(true);
+        clearTimeout(currentTimeout);
+        return;
+    }
+
+    const isTextMatch = firstTempNote.text.trim() === firstNewNote?.text?.trim();
+    const areAttachmentsMatch = firstNewNote?.attachments
+        ? new Set(firstTempNote.attachments).size === new Set(firstNewNote.attachments).size &&
+          firstTempNote.attachments.every(att =>
+              firstNewNote.attachments.some(newAtt => newAtt.trim() === att.trim())
+          )
+        : false;
+
+    // If attachments now match, remove `isPendingAttachmentMatch`
+    if (isTextMatch && areAttachmentsMatch) {
+      setShouldStopRetries(true);
+      setTempNotes([]);
+      setDisplayNotes(prevNotes =>
+          prevNotes.map(note =>
+              note.id.startsWith('temp') && isTextMatch && areAttachmentsMatch
+                  ? { ...firstNewNote, isPendingAttachmentMatch: false } 
+                  : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
+          )
+      );
+  
+      clearTimeout(currentTimeout);
+      return;
+    }
+
+    // Keep retrying until attachments match
+    checkForUpdates(retryCount + 1);
+    }, delay);
   };
 
   const handleRemoveFile = (fileName) => {
@@ -59,27 +188,53 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
     setUploadedFiles(new Set([...uploadedFiles]));
   };
 
-  const reply = async(dispatch, id) => {
-    const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility()
-    // ensure the person adding the comment is a viewer if they've limited the note
-    if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)){
-      viewer_users.push(current_user_id);
+  const reply = async (dispatch, id) => {
+    const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility();
+
+    if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)) {
+        viewer_users.push(current_user_id);
     }
+
     const resp = encodeURI(textRef.current.value);
+
     const payload = { 
-      conversation_id: id, 
-      text: resp,
-      viewer_users,
-      viewer_roles,
-      attachments: [...uploadedFiles]
+        conversation_id: id, 
+        text: resp,
+        viewer_users,
+        viewer_roles,
+        attachments: [...uploadedFiles]
     };
-    await dispatch(replyConversation(payload));
-    await dispatch(getConversation(conversationId));
-    textRef.current.value = '';
+
+    await dispatch(replyConversation(payload, level));
+
+    setShouldStopRetries(false);
+
+    if ([...uploadedFiles].length > 0) {
+        const tempNote = {
+            id: `temp-${Date.now()}`,
+            sent: new Date().toISOString(),
+            text: resp,
+            createdAt: new Date().toISOString(),
+            attachments: [...uploadedFiles],
+            viewers: { roles: [], users: [] },
+            isTemp: true 
+        };
+        setTempNotes(prev => [tempNote, ...prev]);
+        setDisplayNotes(prev => [tempNote, ...prev]);
+        checkForUpdates(0);
+    }else{
+        setTempNotes(prev => [...prev]);
+        setDisplayNotes(prev => [...prev]);
+    }
+
+    if (textRef.current) {
+        textRef.current.value = '';
+    }
     handleVisibilityReset();
     setUploadedFiles([]);
   };
 
+  
   const cancelCallback = () => setShowSearch(false);
   const submitCallback = (id) => {
     const params = {
@@ -110,7 +265,6 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
       active: true
     }
   ];
-
   return (
     <div className='page__content--shortened'>
       <div className='page__component'>
@@ -181,11 +335,16 @@ const Conversation = ({ dispatch, conversation, privileges, match }) => {
                     </form>
                   }
                 </div>
-                {
-                  notes.map((note, key) => {
-                    return (<Note dispatch={dispatch} conversationId={conversationId} note={note} privileges={privileges} key={key} />);
-                  })
-                }
+                {Array.isArray(displayNotes) && displayNotes.map((note) => (
+                  <Note 
+                    key={note.id} 
+                    dispatch={dispatch} 
+                    conversationId={conversationId} 
+                    note={note} 
+                    privileges={privileges} 
+                    user = {user}
+                  />
+                ))}
               </div>
             </section>
             <section className='page__section flex__item--w-17 flex__item-end'>
@@ -221,10 +380,12 @@ Conversation.propTypes = {
   dispatch: PropTypes.func,
   conversations: PropTypes.object,
   privileges: PropTypes.object,
-  match: PropTypes.object
+  match: PropTypes.object,
+  user: PropTypes.string
 };
 
 export default withRouter(connect(state => ({
   conversation: state.conversations.conversation,
-  privileges: state.api.tokens.privileges
+  privileges: state.api.tokens.privileges,
+  user: state.api.tokens.userName
 }))(Conversation));

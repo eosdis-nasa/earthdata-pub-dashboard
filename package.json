@@ -16,7 +16,7 @@
   "homepage": "https://github.com/eosdis-nasa/earthdata-pub-dashboard",
   "private": true,
   "engines": {
-    "node": "18.14.1"
+    "node": "22.14.0"
   },
   "scripts": {
     "clean-modules": "rm -rf package-lock.json node_modules/",
