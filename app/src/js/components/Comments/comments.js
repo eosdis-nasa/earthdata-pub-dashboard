@@ -116,7 +116,6 @@ class Comment extends React.Component {
       const datetime = date.toLocaleString();
       const comment = `${datetime} - ${encodeURI(this.state.textRef.current.value)}`;
       const reply = `${requestName} - Step: ${stepName}, Comment: ${comment}`;
-      const resp = reply.replace(/[\n\t\r\'\"]/g, '\\$&');
       // if the user has chosen to specify viewers, ensure that they are one of them
       const current_user = JSON.parse(window.localStorage.getItem('auth-user'));
       const viewer_user_list = [...this.state.commentViewers];
@@ -127,7 +126,7 @@ class Comment extends React.Component {
           viewerList.push(current_user.name);
         
       } 
-      const payload = { conversation_id: id, text: resp, step_name: step , viewer_users: viewer_user_list, viewer_roles: this.state.commentViewerRoles};
+      const payload = { conversation_id: id, text: reply, step_name: step , viewer_users: viewer_user_list, viewer_roles: this.state.commentViewerRoles};
       dispatch(replyConversation(payload));
       const author = current_user.name;
       const viewer_str = viewerList && viewerList.length ? `, Viewers: ${viewerList.join(", ")}` : "";
