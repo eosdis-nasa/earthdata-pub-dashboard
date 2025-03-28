@@ -72,7 +72,7 @@ class Comment extends React.Component {
           const viewer_str = viewers && viewers.length ? `, Viewers: ${viewers.join(", ")}` : "";
 
           if (document.getElementById('previously-saved') !== null && typeof note !== 'undefined') {
-            document.getElementById('previously-saved').innerHTML += `${note}, From: ${author} ${viewer_str}<br>`;
+            document.getElementById('previously-saved').innerHTML += `${decodeURI(note)}, From: ${author} ${viewer_str}<br>`;
           }
         }
       });
@@ -114,9 +114,8 @@ class Comment extends React.Component {
     if (this.state.textRef.current.value !== '') {
       const date = new Date();
       const datetime = date.toLocaleString();
-      const comment = `${datetime} - ${this.state.textRef.current.value}`;
+      const comment = `${datetime} - ${encodeURI(this.state.textRef.current.value)}`;
       const reply = `${requestName} - Step: ${stepName}, Comment: ${comment}`;
-      const resp = reply.replace(/[\n\t\r\'\"]/g, '\\$&');
       // if the user has chosen to specify viewers, ensure that they are one of them
       const current_user = JSON.parse(window.localStorage.getItem('auth-user'));
       const viewer_user_list = [...this.state.commentViewers];
@@ -127,7 +126,7 @@ class Comment extends React.Component {
           viewerList.push(current_user.name);
         
       } 
-      const payload = { conversation_id: id, text: resp, step_name: step , viewer_users: viewer_user_list, viewer_roles: this.state.commentViewerRoles};
+      const payload = { conversation_id: id, text: reply, step_name: step , viewer_users: viewer_user_list, viewer_roles: this.state.commentViewerRoles};
       dispatch(replyConversation(payload));
       const author = current_user.name;
       const viewer_str = viewerList && viewerList.length ? `, Viewers: ${viewerList.join(", ")}` : "";
@@ -265,7 +264,7 @@ class Comment extends React.Component {
           {typeof requestId !== 'undefined' &&
             <form className='flex__column flex__item--grow-1'
               onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName, step); }}>
-              <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em' }}></span>
+              <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em', whiteSpace: "pre-wrap"}}></span>
               {requestId !== '' && reviewable && sameFormAsStep
                 ? <><textarea placeholder='Enter a comment'
                   ref={this.state.textRef}
