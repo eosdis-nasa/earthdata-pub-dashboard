@@ -11,6 +11,7 @@ const DataPublicationGuidelines = () => {
   const [dataPublicationData, setDataPublicationData] = useState(null);
   const [isHidden, setIsHidden] = useState(false);
   const location = useLocation();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   // Define section references, pre-populated with the corresponding section names
   const sectionRefs = {
@@ -23,7 +24,12 @@ const DataPublicationGuidelines = () => {
   };
 
   useEffect(() => {
-    setDataPublicationData(DataPublicationGuidelineData)
+    setDataPublicationData(DataPublicationGuidelineData);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Function to scroll smoothly to a section
@@ -64,9 +70,9 @@ const DataPublicationGuidelines = () => {
       {/* Sidebar (Vertical Navigation Bar) */}
       {!isHidden && (
         <nav className="siderbar-overview">
-          <button className="siderbar-overview-toggle openbtn" onClick={() => setIsHidden(true)} id="openButton">
+          {!isMobile && <button className="siderbar-overview-toggle openbtn" onClick={() => setIsHidden(true)} id="openButton">
             <img width="40px" src={chevronLeft} />
-          </button>
+          </button>}
           <ul className="nav flex-column">
             {/* Dynamically create NavLinks based on the sections in the data */}
             {dataPublicationData.paragraphs.map((section, index) => {
@@ -177,9 +183,6 @@ const DataPublicationGuidelines = () => {
               {/* Render Table if exists */}
               {section.table && (
                 <table className="styled-table">
-                  {/* Table Caption */}
-                  {section.table.caption && <caption className="cap-table">{section.table.caption}</caption>}
-
                   {/* Table Header - Different Handling for Table 1 and Table 2 */}
                   {section.table.headers && typeof section.table.headers === "string" ? (
                     // If headers are provided as a full <tr> structure (Table 2), render it directly
@@ -205,6 +208,8 @@ const DataPublicationGuidelines = () => {
                       </tr>
                     ))}
                   </tbody>
+                  {/* Table Caption */}
+                  {section.table.caption && <caption className="cap-table">{section.table.caption}</caption>}
                 </table>
               )}
             </div>

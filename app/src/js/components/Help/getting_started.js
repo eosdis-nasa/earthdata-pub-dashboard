@@ -10,6 +10,8 @@ import GettingStartedData from "./getting_started_data";
 const GettingStarted = () => {
   const [gettingStartedData, setGettingStartedData] = useState(null);
   const [isHidden, setIsHidden] = useState(false); 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  
   // Get current URL location
   const location = useLocation();
 
@@ -24,6 +26,11 @@ const GettingStarted = () => {
 
   useEffect(() => {
     setGettingStartedData(GettingStartedData);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Function to scroll smoothly to a section
@@ -50,7 +57,7 @@ const GettingStarted = () => {
       {/* siderbar-overview (Vertical Navigation Bar) */}
       {!isHidden && (
         <nav className="siderbar-overview">
-          <button className='siderbar-overview-toggle openbtn' onClick={() => setIsHidden(true)} id="openButton"><img width="40px" src={chevronLeft} /></button>
+          {!isMobile && <button className='siderbar-overview-toggle openbtn' onClick={() => setIsHidden(true)} id="openButton"><img width="40px" src={chevronLeft} /></button>}
           <ul className="nav flex-column">
             <li className="nav-item">
               <a href="#account" className="nav-link" onClick={() => scrollToSection("account")}>

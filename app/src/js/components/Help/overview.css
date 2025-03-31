@@ -27,8 +27,12 @@
   }
 
   .cap-table {
-    font-size: 24px;
-    margin-bottom: 10px;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    color: #6c757d;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 400;
   }
 
   .table {
@@ -90,6 +94,8 @@
     border-collapse: collapse;
     font-family: Arial, sans-serif;
     margin-bottom: 10px;
+    caption-side: bottom;
+
   }
 
   .styled-table thead th {
@@ -210,8 +216,8 @@
   }
   
   .hero-title {
-    font-size: 2rem;
-    font-weight: bold;
+    font-weight: 300;
+    font-size: 2.5rem;
     z-index: 10;
     text-align: center;
     color: white;
@@ -340,7 +346,8 @@
 .getting-started {
   .get-started {
     h1{
-      font-size: 2em;
+      font-weight: 300;
+      font-size: 2.5rem;
     }
   }
   display: flex;
