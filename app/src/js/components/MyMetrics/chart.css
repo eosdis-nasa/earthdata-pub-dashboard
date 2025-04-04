@@ -13,7 +13,20 @@
   margin: 10px;
 }
   
-  
+.request-name-warning {
+  color: red;
+  float: right;
+}
+
+.bulleted-links {
+  padding-left: 0.5em;
+  margin: 0;
+}
+
+.bulleted-links li {
+  margin-bottom: 5px;
+}
+
 @media (max-width: 768px) {
   .chart-grid {
     grid-template-columns: 1fr;
