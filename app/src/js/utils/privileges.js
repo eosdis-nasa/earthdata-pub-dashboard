@@ -118,7 +118,7 @@ export const requestCanReview = (privileges, stepName) => {
     return privileges.REQUEST.includes('REVIEW_ESDIS') && user.user_groups.some((group) => group.short_name === 'root_group');
   }
 
-  return privileges.REQUEST.includes("REVIEW");
+  return privileges.REQUEST.includes("REVIEW") || privileges.REQUEST.includes("REVIEW_MANAGER");
 }
 
 export const formPrivileges = (privileges) => {
