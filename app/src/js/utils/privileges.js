@@ -114,7 +114,7 @@ export const requestCanReview = (privileges, stepName) => {
     return privileges.REQUEST.includes("REVIEW_MANAGER");
   }
 
-  return privileges.REQUEST.includes("REVIEW");
+  return privileges.REQUEST.includes("REVIEW") || privileges.REQUEST.includes("REVIEW_MANAGER");
 }
 
 export const formPrivileges = (privileges) => {
