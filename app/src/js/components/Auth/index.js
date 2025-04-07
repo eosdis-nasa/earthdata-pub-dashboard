@@ -109,7 +109,7 @@ class Auth extends React.Component {
       {this.state.showMobile && (
         <div>
           <h2>Steps to Set Up MFA on a Smartphone</h2>
-          <ol>
+          <ol style={{listStyle: auto}}>
             <li>
               <div className="inline-title">
                 Download an Authentication App:
@@ -121,7 +121,7 @@ class Auth extends React.Component {
               <div className="inline-title">
                 Open the Authentication App and Use It to Scan the QR Code:
               </div>{" "}
-              <button onClick={() => setShowQr(true)}>
+              <button onClick={() => this.setState({showQr: true})}>
                 CLICK HERE FOR THE QR CODE.
               </button>{" "}
               If you can't scan the QR code, manually enter the following
@@ -177,7 +177,7 @@ class Auth extends React.Component {
             An internet search should reveal options for a browser-based or web
             extension authentication app.
           </p>
-          <ol>
+          <ol style={{listStyle: auto}}>
             <li>
               <div className="inline-title">
                 Install the App:
