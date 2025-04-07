@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated github repo template assets
 - Updated the My Metrics Page to be a subpage of the Metrics Tab
 - Remove DAAC long name from request details page
+- Adding page for ESDIS final approval
 <!-- Unreleased changes can be added here. -->
 
 ## 1.0.19
