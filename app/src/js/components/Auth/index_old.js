@@ -109,7 +109,7 @@ class Auth extends React.Component {
       {this.state.showMobile && (
         <div>
           <h2>Steps to Set Up MFA on a Smartphone</h2>
-          <ol style={{listStyleType: "decimal", paddingLeft: "2.5em"}}>
+          <ol style={{listStyleType: "decimal"}}>
             <li>
               <div className="inline-title">
                 Download an Authentication App:
@@ -161,8 +161,7 @@ class Auth extends React.Component {
                   showMobile: false,
                   showBrowser: true,
                   showQr: false
-                }, () => {
-                  console.log(this.state)});
+                });
               }}
             >
               here
