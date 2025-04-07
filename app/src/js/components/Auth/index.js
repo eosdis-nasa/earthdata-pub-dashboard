@@ -109,7 +109,7 @@ class Auth extends React.Component {
       {this.state.showMobile && (
         <div>
           <h2>Steps to Set Up MFA on a Smartphone</h2>
-          <ol style={{listStyle: auto}}>
+          <ol style={{listStyleType: decimal}}>
             <li>
               <div className="inline-title">
                 Download an Authentication App:
@@ -177,7 +177,7 @@ class Auth extends React.Component {
             An internet search should reveal options for a browser-based or web
             extension authentication app.
           </p>
-          <ol style={{listStyle: auto}}>
+          <ol style={{listStyleType: decimal}}>
             <li>
               <div className="inline-title">
                 Install the App:
