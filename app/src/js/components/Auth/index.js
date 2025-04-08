@@ -48,9 +48,9 @@ class Auth extends React.Component {
         window.location.href = config.basepath;
       } else this.setState({
         body: <MFA
-              secretCode={secretCode}
-              username={username}
-              issuer={issuer}
+              secretCode={data.mfaSecretCode}
+              username={user.username}
+              issuer={user.issuer}
               api={api}
               dispatch={dispatch}
               queryParams={queryParams}/>
