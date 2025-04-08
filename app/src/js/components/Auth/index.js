@@ -30,7 +30,6 @@ class Auth extends React.Component {
       showBrowser: false
     };
     this.clickLogin = this.clickLogin.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async componentDidMount () {
