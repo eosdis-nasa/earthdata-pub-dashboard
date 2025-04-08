@@ -118,6 +118,8 @@ export const esdisReviewLink = (row, formalName, step) => {
     return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
     return formalName;
+  } else if (step === 'additional_review_question') {
+    return <Link to={`/requests/question?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
   } else {
     return <Link to={`/requests/approval/esdis?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
   }
@@ -220,6 +222,8 @@ export const stepLookup = (row) => {
     return assignWorkflow(request, formalName);
   } else if (stepType.match(/action/g) && stepName.match(/daac_assignment(_final)?/g)) {
     return assignDaacs(request, formalName);
+  } else if (stepName.match(/additional_review_question/g)){
+    return esdisReviewLink(row, formalName, stepName);
   } else if (stepType.match(/action/g) ||  stepType.match(/upload/g)) {
     return existingLink(row, undefined, formalName, stepName, stepType);
   } else if (stepType.match(/review/g) && stepName.match(/esdis_final_review/g)) {
