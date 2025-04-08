@@ -1,4 +1,6 @@
-import { useState } from 'react';
+'use strict';
+
+import React, { useState} from 'react';
 
 export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) => {
 
