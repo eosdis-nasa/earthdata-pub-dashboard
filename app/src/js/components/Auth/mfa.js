@@ -202,8 +202,8 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
               (Using a Smartphone is recommended. Click{" "}
               <button
                 onClick={() => {
-                    setShowMobile(false);
-                    setShowBrowser(true);
+                    setShowMobile(true);
+                    setShowBrowser(false);
                     setShowQr(false);
                 }}
               >
