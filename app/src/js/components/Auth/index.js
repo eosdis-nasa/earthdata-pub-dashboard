@@ -21,12 +21,7 @@ class Auth extends React.Component {
   constructor (props) {
     super(props);
     this.store = ourConfigureStore({});
-    this.state = {
-      body: '',
-      showQr: false,
-      showMobile: true,
-      showBrowser: false
-    };
+    this.state = { body: '' };
     this.clickLogin = this.clickLogin.bind(this);
   }
 
