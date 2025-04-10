@@ -170,7 +170,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                         <div className="inline-title">
                             Enter the Setup Code:
                         </div>{" "}
-                        <ul style={{ listStyleType: "disk", paddingLeft: "2.5em" }}>
+                        <ul style={{ listStyleType: "disc", paddingLeft: "2.5em" }}>
                             <li>Manually enter the setup code: <div style={{fontWeight: "bold", display: "contents"}}>{secretCode}</div></li>
                             <li>
                                 <div className="inline-title">
