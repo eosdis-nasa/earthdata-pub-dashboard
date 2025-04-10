@@ -222,21 +222,21 @@ const checkForUpdates = async (retryCount = 0) => {
     setShouldStopRetries(false);
 
     if ([...uploadedFiles].length > 0) {
-        const tempNote = {
-            id: `temp-${Date.now()}`,
-            sent: new Date().toISOString(),
-            text: resp,
-            createdAt: new Date().toISOString(),
-            attachments: [...uploadedFiles],
-            viewers: { roles: [], users: [] },
-            isTemp: true 
-        };
-        setTempNotes(prev => [tempNote, ...prev]);
-        setDisplayNotes(prev => [tempNote, ...prev]);
-        checkForUpdates(0);
+      const tempNote = {
+          id: `temp-${Date.now()}`,
+          sent: new Date().toISOString(),
+          text: resp,
+          createdAt: new Date().toISOString(),
+          attachments: [...uploadedFiles],
+          viewers: { roles: [], users: [] },
+          isTemp: true 
+      };
+      setTempNotes(prev => [tempNote, ...prev]);
+      setDisplayNotes(prev => [tempNote, ...prev]);
+      checkForUpdates(0);
     }else{
-        setTempNotes(prev => [...prev]);
-        setDisplayNotes(prev => [...prev]);
+      setTempNotes(prev => [...(prev || [])]);
+      setDisplayNotes(prev => [...(prev || [])]);      
     }
 
     if (textRef.current) {
