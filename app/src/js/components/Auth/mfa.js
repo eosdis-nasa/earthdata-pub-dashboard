@@ -79,7 +79,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             CLICK HERE FOR THE QR CODE.
                         </button>{" "}
                         If you can't scan the QR code, manually enter the following
-                        alphanumeric code into your app: <div style={{fontWeight: "bold"}}>{secretCode}</div> Depending on the app
+                        alphanumeric code into your app: <div style={{fontWeight: "bold", display: "contents"}}>{secretCode}</div> Depending on the app
                         you choose, there may be additional steps.
                     </li>
                     <li>
@@ -170,11 +170,11 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                         <div className="inline-title">
                             Enter the Setup Code:
                         </div>{" "}
-                        <ul>
-                            <li>Manually enter the setup code: <div style={{fontWeight: "bold"}}>{secretCode}</div></li>
+                        <ul style={{ listStyleType: "disk", paddingLeft: "2.5em" }}>
+                            <li>Manually enter the setup code: <div style={{fontWeight: "bold", display: "contents"}}>{secretCode}</div></li>
                             <li>
                                 <div className="inline-title">
-                                    Get Your One-Time Password::
+                                    Get Your One-Time Password:
                                 </div>{" "}
                                 Once the account is added, the app will generate a time-based
                                 one-time password (TOTP), usually a 6-digit code that updates
