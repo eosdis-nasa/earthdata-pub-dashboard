@@ -65,65 +65,77 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
 
   useEffect(() => {
     const fetchNotes = async () => {
-        const finalNotes = await dispatch(getConversation(conversationId, level));
-        const updatedNotes = finalNotes?.data?.notes.map(note => ({
-            ...note,
-            isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false
-        }));
+      const finalNotes = await dispatch(getConversation(conversationId, level));
+      const updatedNotes = finalNotes?.data?.notes.map(note => ({
+        ...note,
+        isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false
+      }));
 
-        setDisplayNotes(updatedNotes);
+      setDisplayNotes(updatedNotes);
     };
-
+  
     if (shouldStopRetries) return;
-
+  
     const firstNewNote = notes[0];
     const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
-
+  
+    // Prevent unnecessary state updates that cause re-renders
     if (!firstTempNote) {
+      const existingIds = Array.isArray(displayNotes)
+        ? displayNotes.map(n => n.id).join(',')
+        : '';
+      const newIds = Array.isArray(notes)
+        ? notes.map(n => n.id).join(',')
+        : '';
+    
+      if (existingIds !== newIds) {
         setDisplayNotes(notes);
-        return;
+      }
+      return;
     }
-
+    
+  
     const isTextMatch = firstTempNote.text.trim() === firstNewNote?.text?.trim();
     const areAttachmentsMatch =
-        new Set(firstTempNote.attachments).size === new Set(firstNewNote?.attachments || []).size &&
-        firstTempNote.attachments.every(att =>
-            (firstNewNote?.attachments || []).some(newAtt => newAtt.trim() === att.trim())
-        );
-
+      new Set(firstTempNote.attachments).size === new Set(firstNewNote?.attachments || []).size &&
+      firstTempNote.attachments.every(att =>
+        (firstNewNote?.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+      );
+  
     if (isTextMatch && areAttachmentsMatch) {
-        setShouldStopRetries(true);
-
+      setShouldStopRetries(true);
+  
         // Replace temp note with the actual note (No timestamp match required)
-        setDisplayNotes(prevNotes =>
-            prevNotes.map(note =>
-                note.id.startsWith('temp') && isTextMatch && areAttachmentsMatch
-                    ? { ...firstNewNote, isPendingAttachmentMatch: false }
-                    : note
-            )
-        );
-
-        setTempNotes(prevTempNotes => prevTempNotes.slice(1));
-        setDisplayNotes([firstNewNote, ...notes.slice(1)]);
-        clearTimeout(currentTimeout);
-        fetchNotes();
-        return;
+      setDisplayNotes(prevNotes =>
+        prevNotes.map(note =>
+          note.id.startsWith('temp') && isTextMatch && areAttachmentsMatch
+            ? { ...firstNewNote, isPendingAttachmentMatch: false }
+            : note
+        )
+      );
+  
+      setTempNotes(prevTempNotes => prevTempNotes.slice(1));
+      setDisplayNotes([firstNewNote, ...notes.slice(1)]);
+      clearTimeout(currentTimeout);
+      fetchNotes();
+      return;
     }
-
+  
     if (isTextMatch && !areAttachmentsMatch) {
       // kept this intensionally (can be removed if needed)
       console.log("Text matches, but attachments are still processing.");
       setDisplayNotes(prevNotes =>
-          prevNotes.map(note =>
-                note.id.startsWith('temp') && isTextMatch
-                  ? { ...note, isPendingAttachmentMatch: true }
-                  : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
-          )
+        prevNotes.map(note =>
+          note.id.startsWith('temp') && isTextMatch
+            ? { ...note, isPendingAttachmentMatch: true }
+            : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
+        )
       );
       checkForUpdates();
       return;
     }
-  }, [notes, level]);
+  }, [notes, level, tempNotes, shouldStopRetries]);
+  
 
 const checkForUpdates = async (retryCount = 0) => {
   if (retryCount >= MAX_RETRIES || shouldStopRetries) {
