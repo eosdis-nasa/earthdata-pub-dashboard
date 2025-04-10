@@ -79,12 +79,12 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             CLICK HERE FOR THE QR CODE.
                         </button>{" "}
                         If you can't scan the QR code, manually enter the following
-                        alphanumeric code into your app: {secretCode} Depending on the app
+                        alphanumeric code into your app: <div style={{fontWeight: "bold"}}>{secretCode}</div> Depending on the app
                         you choose, there may be additional steps.
                     </li>
                     <li>
                         <div className="inline-title">
-                            Get Your Code:
+                            Get Your One-Time Password:
                         </div>{" "}
                         After scanning the QR code or entering the setup code, your
                         authenticator app will generate a one-time password (a 6-digit
@@ -92,10 +92,27 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                     </li>
                     <li>
                         <div className="inline-title">
-                            Enter the Code:
+                            Enter Your One-Time Password:
                         </div>{" "}
-                        Type the one-time password from your app into the field below and
-                        click "Submit."
+                        Enter the 6-digit one-time password from the app here.
+                        <input
+                            type="text"
+                            name="totp"
+                            id="totp"
+                            autoFocus="autofocus"
+                            className="default"
+                            style={{ width: "20%" }}
+                        />
+                        <button
+                            className={
+                                "button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white"
+                            }
+                            aria-label="submit your user"
+                            data-disable-with="TOTP"
+                            onClick={handleSubmit}
+                        >
+                            Submit
+                        </button>
                     </li>
                     <li>
                         <a
@@ -123,7 +140,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                 </h3>
             </div>
             <div style={{ display: showBrowser ? "contents" : "none" }}>
-                <h2>Method 2: Steps to Set Up a Browser-Based Authentication App:</h2>
+                <h2>Steps to Set Up a Browser-Based Authentication App:</h2>
                 <p>
                     An internet search should reveal options for a browser-based or web
                     extension authentication app.
@@ -154,10 +171,10 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             Enter the Setup Code:
                         </div>{" "}
                         <ul>
-                            <li>Manually enter the setup code: {secretCode}</li>
+                            <li>Manually enter the setup code: <div style={{fontWeight: "bold"}}>{secretCode}</div></li>
                             <li>
                                 <div className="inline-title">
-                                    Get Your Authentication Code:
+                                    Get Your One-Time Password::
                                 </div>{" "}
                                 Once the account is added, the app will generate a time-based
                                 one-time password (TOTP), usually a 6-digit code that updates
@@ -167,9 +184,9 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                     </li>
                     <li>
                         <div className="inline-title">
-                            Enter the Code:
+                            Enter Your One-Time Password:
                         </div>{" "}
-                        Enter the 6-digit code from the app here.
+                        Enter the 6-digit one-time password from the app here.
                         <input
                             type="text"
                             name="totp"
@@ -223,34 +240,6 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                         viewBox={"0 0 500 500"}
                     />
                 </div>
-            </div>
-            <div style={{ display: showMobile ? 'contents' : 'none' }}>
-                <p>
-                    <label htmlFor="totp">
-                        Enter Authentication Code from Verification App{" "}
-                    </label>
-                    <br />
-                    <input
-                        type="text"
-                        name="totp"
-                        id="totp"
-                        autoFocus="autofocus"
-                        className="default"
-                        style={{ width: "20%" }}
-                    />
-                </p>
-                <p style={{ marginTop: "1rem" }}>
-                    <button
-                        className={
-                            "button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white"
-                        }
-                        aria-label="submit your user"
-                        data-disable-with="TOTP"
-                        onClick={handleSubmit}
-                    >
-                        Submit
-                    </button>
-                </p>
             </div>
         </div>
       );
