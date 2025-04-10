@@ -3,6 +3,7 @@
 import { saveToken, deleteToken } from '../../utils/auth';
 import React, { useState} from 'react';
 import QRCode from 'react-qr-code';
+import './auth.css';
 
 
 export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) => {
