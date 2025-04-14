@@ -14,6 +14,8 @@ import { shortDateShortTimeYearFirstJustValue, storage } from '../../utils/forma
 import Table from '../SortableTable/SortableTable';
 import { Modal, Button } from 'react-bootstrap';
 
+// Request Details Overview Page i.e. /dashboard/requests/id/{id}
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
