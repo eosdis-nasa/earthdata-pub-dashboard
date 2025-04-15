@@ -375,10 +375,10 @@ async componentDidMount() {
                     {this.state.isDropdownOpen && (
                       <div className="dropdown-menu">
                         <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
-                        Data Accession Request
+                        Accession Request
                         </button>
                         <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
-                        Data Publication Request
+                        Publication Request
                         </button>
                       </div>
                     )}
