@@ -75,7 +75,6 @@ class Auth extends React.Component {
               aria-labelledby="modal__oauth-modal"
             >
               <Modal.Header className="oauth-modal__header"></Modal.Header>
-              <Modal.Title id="modal__oauth-modal" className="oauth-modal__title">Welcome To Earthdata Pub Dashboard</Modal.Title>
               <Modal.Body>
               {(!showLoginButton && this.state.body == '') || showAuthMessage ? 
                   <div><LoadingOverlay/></div> : null}
