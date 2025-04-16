@@ -127,6 +127,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                     </li>
                 </ol>
                 <h3>
+                    <br />
                     (Using a Smartphone is recommended. Click{" "}
                     <button
                         className="link-like-button"
@@ -220,6 +221,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                     </li>
                 </ol>
                 <h3>
+                    <br />
                     (Using a Smartphone is recommended. Click{" "}
                     <button
                         className="link-like-button"
