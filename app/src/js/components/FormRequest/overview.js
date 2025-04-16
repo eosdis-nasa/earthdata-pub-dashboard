@@ -26,6 +26,13 @@ const FormsOverview = ({ forms, requests }) => {
         setDaacs(data.data);
         if (requestId){
           dispatch(getRequest(requestId))
+            .then((data) => {
+              if (data.data.step_name ==='daac_assignment'){
+                setRequiresReview(true);
+              } else if (data.data.step_name ==='daac_assignment_final'){
+                setRequiresReview(false);
+              }
+            })
         }
         setLoading(false);
       })
@@ -36,9 +43,31 @@ const FormsOverview = ({ forms, requests }) => {
   }, [dispatch, requestId]);
 
   useEffect(() => {
-    if (requests.detail.data?.assigned_daacs){
-      const assignedDaacs = requests.detail.data.assigned_daacs.map((entry) => entry.daac_id);
-      setSelected(assignedDaacs);
+    if (requests.detail.data?.step_name ==='daac_assignment'){
+    // This is the submission DAAC Assignment step so use the submission DAAC value.
+      if (requests.detail.data.daac_id != null) {
+        const daacInfo = daacs.find((daacObj) => daacObj.id === requests.detail.data.daac_id)
+        setSelectedValues(daacInfo.url, daacInfo.id, daacInfo.short_name, daacInfo.long_name, daacInfo.description);
+      }
+    } else if (requests.detail.data?.step_name ==='daac_assignment_final') {
+      // If codes have already been generated, pre-populate using those. Otherwise use the submission daac
+      if (requests.detail.data.assigned_daacs){
+        const assignedDaacs = requests.detail.data.assigned_daacs.map((entry) => entry.daac_id);
+        const assignedDaacsInfo = daacs.filter((daac) => assignedDaacs.includes(daac.id));
+        const existingSelected = {}
+        assignedDaacsInfo && assignedDaacsInfo.forEach((daacInfo)=> { existingSelected[daacInfo.id] = {
+          url: daacInfo.url, 
+          id: daacInfo.id, 
+          short_name: daacInfo.short_name, 
+          long_name: daacInfo.long_name, 
+          description: daacInfo.description
+        }});
+        setSelectedDaacs(existingSelected);
+        setSelected(assignedDaacs);
+      } else if (requests.detail.data.daac_id != null) {
+        const daacInfo = daacs.find((daacObj) => daacObj.id === requests.detail.data.daac_id)
+        setSelectedValues(daacInfo.url, daacInfo.id, daacInfo.short_name, daacInfo.long_name, daacInfo.description);
+      }
     }
   }, [dispatch, requests]);
 
@@ -273,23 +302,6 @@ const FormsOverview = ({ forms, requests }) => {
       <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
         <div style={responsiveStyles.container}>
           <Form name="daacs_form" onSubmit={submitForm} id="daac-selection" style={responsiveStyles.container}>
-            <FormGroup name="form-group-review" id="form-group-review">
-              <FormLabel style={sectionHeadingStyles}>Requires Additional Review</FormLabel>
-              <div className="mt-3" style={infoSectionStyles}>
-                Does this data require additional review by a DAAC?
-              </div>
-              <div>
-                    <label style={radioLabelStyles}>
-                      <input type="radio" id="review_required_yes" onChange={() => setRequiresReview(true)} checked={requiresReview === true}/>
-                      <label style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="review_required_yes">Yes</label>
-                    </label>
-                    <label style={radioLabelStyles}>
-                      <input type="radio" id="review_required_no" onChange={() => setRequiresReview(false)} checked={requiresReview === false}/>
-                      <label style={{ marginLeft: '5px', marginBottom: '0px', fontSize: '1em' }} htmlFor="review_required_no">No</label>
-                    </label>
-              </div>
-              <br />
-            </FormGroup>
             <FormGroup name="form-group" id="form-group">
               <FormLabel style={sectionHeadingStyles}>{strings.daac_assignment}</FormLabel>
               <div className="mt-3 disabled-daacs" style={infoSectionStyles}>
