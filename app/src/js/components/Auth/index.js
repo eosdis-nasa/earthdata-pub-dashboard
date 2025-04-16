@@ -76,7 +76,7 @@ class Auth extends React.Component {
             >
               <Modal.Header className="oauth-modal__header"></Modal.Header>
               {this.state.body == '' &&
-                <Modal.Title id="modal__oauth-modal" className="oauth-modal__title">Welcome To Earthdata Pub Dashboard</Modal.Title>}
+                <Modal.Title id="modal__oauth-modal" className="oauth-modal__title">Welcome To Earthdata Pub</Modal.Title>}
               <Modal.Body>
               {(!showLoginButton && this.state.body == '') || showAuthMessage ? 
                   <div><LoadingOverlay/></div> : null}

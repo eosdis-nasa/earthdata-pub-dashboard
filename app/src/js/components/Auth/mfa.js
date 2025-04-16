@@ -63,6 +63,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                 </p>
             </div>
             <div style={{ display: showMobile ? 'contents' : 'none' }}>
+                <br/>
                 <h2>Steps to Set Up MFA on a Smartphone</h2>
                 <ol style={{ listStyleType: "decimal", paddingLeft: "2.5em" }}>
                     <li>
@@ -141,6 +142,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                 </h3>
             </div>
             <div style={{ display: showBrowser ? "contents" : "none" }}>
+                <br />
                 <h2>Steps to Set Up a Browser-Based Authentication App:</h2>
                 <p>
                     An internet search should reveal options for a browser-based or web
