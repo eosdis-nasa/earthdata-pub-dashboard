@@ -14,6 +14,8 @@ import { shortDateShortTimeYearFirstJustValue, storage } from '../../utils/forma
 import Table from '../SortableTable/SortableTable';
 import { Modal, Button } from 'react-bootstrap';
 
+// Request Details Overview Page i.e. /dashboard/requests/id/{id}
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -30,7 +32,6 @@ class UploadOverview extends React.Component {
       statusMsg: 'Select a file', 
       uploadFile: '', 
       keys: [],
-      showProgressBar: false, // Added state to control the visibility of the progress bar,
       progressValue: 0, // Initialize progressValue,
       uploadFailed: false,
       uploadFileName: '',
@@ -43,7 +44,7 @@ class UploadOverview extends React.Component {
       showUploadSummaryModal: false,
       uploadResults: {},
       uploadProgress: {},
-      progressBarsVisible: false,
+      progressBarsVisible: true,
       hasSpecifiedCategory: false
     };
     this.handleClick = this.handleClick.bind(this);
@@ -187,9 +188,7 @@ class UploadOverview extends React.Component {
 
   async handleUpload() {
     this.setState({
-      uploadStatusMsg: 'Uploading...',
-      showProgressBar: true,
-      progressBarsVisible: true
+      uploadStatusMsg: 'Uploading...'
     });
   
     const successFiles = [];
@@ -276,11 +275,11 @@ class UploadOverview extends React.Component {
   
     this.setState({
       uploadStatusMsg: '',
-      showProgressBar: false,
       uploadFileFlag: true,
       showUploadSummaryModal: true,
       uploadFiles: [],
-      uploadResults: { success: successFiles, failed: failedFiles }
+      uploadResults: { success: successFiles, failed: failedFiles },
+      uploadProgress: {}
     });
     this.getFileList()
   }
@@ -291,6 +290,10 @@ class UploadOverview extends React.Component {
 
   toggleProgressBars = () => {
     this.setState({ progressBarsVisible: !this.state.progressBarsVisible });
+  };
+
+  handleRemoveFile = (fileName) => {
+    this.setState({uploadFiles: this.state.uploadFiles.filter(elem => elem.name !== fileName)});
   };
 
   async componentDidUpdate(prevProps){
@@ -415,7 +418,7 @@ class UploadOverview extends React.Component {
                 </>
                 : null
               }
-              {this.state.showProgressBar && this.state.progressValue > 0 && 
+              {this.state.progressValue > 0 &&
                 <div style={progressBarStyle}>
                   <div style={progressBarFillStyle}>
                     <span style={numberDisplayStyle}>{this.state.uploadFailed ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={this.state.error}></span></span>: `${this.state.progressValue}%`}</span>
@@ -475,8 +478,8 @@ class UploadOverview extends React.Component {
                   )}                                            
                 </div>
               </div>
-              <button onClick={(e) => this.handleClick(e)} className={`upload-button upload-button-category mt-2 button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${(this.state.categoryType || groupId) && !this.state.showProgressBar? 'button--submit' : 'button--secondary button--disabled'}`}>{this.state.uploadStatusMsg === ''? 'Upload': 'Uploading...'}</button>
-              {this.state.showProgressBar && <span className="d-flex align-items-center">
+              <button onClick={(e) => this.handleClick(e)} className={`upload-button upload-button-category mt-2 button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${(this.state.categoryType || groupId) && this.state.uploadFiles.length !== 0? 'button--submit' : 'button--secondary button--disabled'}`}>{this.state.uploadStatusMsg === ''? 'Upload': 'Uploading...'}</button>
+              {<span className="d-flex align-items-center">
                 <FontAwesomeIcon
                   icon={progressBarsVisible ? faEyeSlash : faEye}
                   style={{ cursor: 'pointer', marginLeft: '10px', fontSize: '20px' }}
@@ -490,7 +493,22 @@ class UploadOverview extends React.Component {
                 <div>
                   {this.state.uploadFiles.map((file, index) => (
                     <div key={index}>
-                      <p>{file.name}</p>
+                      <div style={{display: "flow-root"}}>
+                        {file.name}
+                        <Button
+                          style={{
+                            fontSize: "100%",
+                            padding: "5px",
+                            backgroundColor: "#db1400",
+                            margin: "2px",
+                            float: "inline-end",
+                            border: "none",
+                            borderRadius: "4px",
+                            color: "white",
+                          }}
+                          onClick={() => this.handleRemoveFile(file.name)}
+                          >Remove</Button>
+                      </div>
                       <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
                         <div style={{
                           width: `${uploadProgress[file.name] || 0}%`,

@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Remove DAAC long name from request details page
 - Adding page for ESDIS final approval
 - Moved additional review question from DAAC Assignment prompt to seperate page
+- Added the ability to remove not yet uploaded files from upload list
 <!-- Unreleased changes can be added here. -->
 
 ## 1.0.19
