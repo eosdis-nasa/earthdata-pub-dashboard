@@ -19,8 +19,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
         // const { api, dispatch, queryParams } = this.props;
         const { inflight, tokens } = api;
         const { code } = queryParams;
-        console.log(tokens);
-        console.log(document.getElementById('totp')?.value);
+        console.log(api);
         if (tokens.token!== null && document.getElementById('totp')?.value !== '') {
             console.log('in nested conditional');
           dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {

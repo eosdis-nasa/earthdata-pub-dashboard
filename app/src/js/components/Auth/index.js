@@ -28,12 +28,12 @@ class Auth extends React.Component {
     const { dispatch, api, queryParams } = this.props;
     const { inflight, tokens } = api;
     const { code, state, redirect } = queryParams;
+    console.log(api);
     if (this.store.getState().api.authenticated) {
       redirectWithToken();
     } else if (!inflight && code) {
       const { data } = await dispatch(mfaTokenFetch(code, state));
       const { token, user } = data;
-      console.log(data);
       if (!('mfaSecretCode' in data)) {
         window.localStorage.setItem('auth-token', token);
         const updatedUsr = (Object.keys(user).length > 0 ? {...user, ...{authenticated: true}} : user);
