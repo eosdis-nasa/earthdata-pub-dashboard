@@ -33,8 +33,6 @@ class Auth extends React.Component {
     } else if (!inflight && code) {
       const { data } = await dispatch(mfaTokenFetch(code, state));
       const { token, user } = data;
-      console.log(api);
-      console.log(this.props);
       if (!('mfaSecretCode' in data)) {
         window.localStorage.setItem('auth-token', token);
         const updatedUsr = (Object.keys(user).length > 0 ? {...user, ...{authenticated: true}} : user);
@@ -45,9 +43,11 @@ class Auth extends React.Component {
               secretCode={data.mfaSecretCode}
               username={user.username}
               issuer={user.issuer}
-              api={api}
-              dispatch={dispatch}
-              queryParams={queryParams}/>
+              // Have to call these as a sub-attribute of props directly or they initialize too
+              // early and send invalid values
+              api={this.props.api}
+              dispatch={this.props.dispatch}
+              queryParams={this.props.queryParams}/>
         });
     }
   }
