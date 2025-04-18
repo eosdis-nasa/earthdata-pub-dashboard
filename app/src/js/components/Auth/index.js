@@ -30,6 +30,7 @@ class Auth extends React.Component {
     const { api, dispatch, queryParams } = this.props;
     const { inflight, tokens } = api;
     const { code } = queryParams;
+    console.log(this.props);
     if (tokens.token!== null && document.getElementById('totp')?.value !== '') {
       dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
         const resp = value;
@@ -57,7 +58,7 @@ class Auth extends React.Component {
     } else if (!inflight && code) {
       const { data } = await dispatch(mfaTokenFetch(code, state))
       const { token, user } = data;
-      console.log(data);
+      console.log(this.props);
       if (!('mfaSecretCode' in data)) {
         window.localStorage.setItem('auth-token', token);
         const updatedUsr = (Object.keys(user).length > 0 ? {...user, ...{authenticated: true}} : user);
