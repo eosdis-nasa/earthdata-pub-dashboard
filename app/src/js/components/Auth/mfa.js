@@ -2,6 +2,7 @@
 
 import { saveToken, deleteToken } from '../../utils/auth';
 import React, { useState} from 'react';
+import { verify } from '../../actions';
 import QRCode from 'react-qr-code';
 import './auth.css';
 
@@ -15,13 +16,10 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
     const qrPrefix = `otpauth://totp/${issuer.replace(/(^\w+:|^)\/\//, '')}:${username}?secret=`;
 
     const handleSubmit = async() => {
-        console.log('in handleSubmit');
         // const { api, dispatch, queryParams } = this.props;
         const { inflight, tokens } = api;
         const { code } = queryParams;
-        console.log(api);
         if (tokens.token!== null && document.getElementById('totp')?.value !== '') {
-            console.log('in nested conditional');
           dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
             const resp = value;
             let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message

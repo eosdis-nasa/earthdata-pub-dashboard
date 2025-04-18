@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import withQueryParams from 'react-router-query-params';
 import { withRouter } from 'react-router-dom';
-import { login, mfaTokenFetch, redirectWithToken, verify } from '../../actions';
+import { login, mfaTokenFetch, redirectWithToken } from '../../actions';
 import PropTypes from 'prop-types';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import ErrorReport from '../Errors/report';
