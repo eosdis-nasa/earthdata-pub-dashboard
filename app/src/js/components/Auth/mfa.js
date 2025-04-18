@@ -4,6 +4,7 @@ import { saveToken, deleteToken } from '../../utils/auth';
 import React, { useState} from 'react';
 import { verify } from '../../actions';
 import QRCode from 'react-qr-code';
+import config from '../../config';
 import './auth.css';
 
 
