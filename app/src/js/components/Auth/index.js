@@ -35,7 +35,7 @@ class Auth extends React.Component {
       const { data } = await dispatch(mfaTokenFetch(code, state));
       const { token, user } = data;
       if (!('mfaSecretCode' in data)) {
-        saveToken({ token, user });
+        saveToken({ token, user: { ...user, ...{ authenticated: true } } });
         window.location.href = config.basepath;
       } else this.setState({
         body: <MFA
