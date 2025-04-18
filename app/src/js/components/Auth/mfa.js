@@ -29,7 +29,6 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
             } else {
               deleteToken();
               saveToken({ token: tokens.token, user: tokens.user });
-              this.setState({ body: ''});
               if (!inflight && code) {
                 window.location.href = config.basepath;
               } 
