@@ -4,7 +4,6 @@ import "./overview.css";
 import Logo from "../../../assets/images/nasa-logo.svg";
 import Logo2 from "../../../assets/images/nasa-meatball-new.svg";
 import Logo3 from "../../../assets/images/nasa-outline-new.svg";
-import Tophat2 from "./top_hat";
 
 const Header = () => {
   const location = useLocation();
@@ -34,7 +33,6 @@ const Header = () => {
 
   return (
     <>
-      <Tophat2 />
       <nav className="header">
         <div className="logo-container">
           <img src={Logo3} alt="NASA Logo" className="nasa-logo logo3" />
