@@ -28,7 +28,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
               console.log(`An error has occurred: ${error}.`);
             } else {
               deleteToken();
-              saveToken({ token: tokens.token, user: tokens.user });
+              saveToken({ token: tokens.token, user: {...tokens.user, ...{authenticated: true}} });
               if (!inflight && code) {
                 window.location.href = config.basepath;
               } 

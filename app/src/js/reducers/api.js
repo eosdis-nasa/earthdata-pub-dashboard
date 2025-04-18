@@ -48,7 +48,7 @@ export const initialState = (() => {
   const currentTime = Math.floor(Date.now() / 1000);
   const expired = expiration < currentTime;
   return {
-    authenticated: !expired && token && false,
+    authenticated: !expired && token && user.authenticated,
     inflight: false,
     error: null,
     tokens: {
