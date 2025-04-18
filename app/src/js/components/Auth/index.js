@@ -57,6 +57,7 @@ class Auth extends React.Component {
     } else if (!inflight && code) {
       const { data } = await dispatch(mfaTokenFetch(code, state))
       const { token, user } = data;
+      console.log(data);
       if (!('mfaSecretCode' in data)) {
         window.localStorage.setItem('auth-token', token);
         const updatedUsr = (Object.keys(user).length > 0 ? {...user, ...{authenticated: true}} : user);
