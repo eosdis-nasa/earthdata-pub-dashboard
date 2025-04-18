@@ -38,6 +38,7 @@ import Download from './components/DataDownload';
 import Steps from './components/Steps';
 import config from './config';
 import OverviewApp from './components/Help/app';
+import Tophat2 from './components/Tophat/top_hat';
 
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
 dom.watch();
@@ -158,6 +159,7 @@ class App extends Component {
       <div className="routes">
         <Provider store={this.store}>
           <ConnectedRouter history={history}>
+            <Tophat2 />
             <Switch>
               <Redirect exact from='/login' to='/auth' />
               <Route path='/auth' component={Auth} />
