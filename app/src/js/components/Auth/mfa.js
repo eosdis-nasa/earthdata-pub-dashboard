@@ -2,7 +2,7 @@
 
 import { saveToken, deleteToken } from '../../utils/auth';
 import React, { useState} from 'react';
-import { verify } from '../../actions';
+import { associate } from '../../actions';
 import QRCode from 'react-qr-code';
 import config from '../../config';
 import './auth.css';
@@ -21,7 +21,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
         const { inflight, tokens } = api;
         const { code } = queryParams;
         if (tokens.token!== null && document.getElementById('totp')?.value !== '') {
-          dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
+          dispatch(associate(document.getElementById('totp').value, tokens.token)).then(value => {
             const resp = value;
             let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
             if (error && !config.environment.match(/LOCALHOST/g)) {

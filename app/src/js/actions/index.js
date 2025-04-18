@@ -1234,6 +1234,15 @@ export const verify = (topsToken, token) => ({
   }
 });
 
+export const associate = (token) => ({
+  [CALL_API]: {
+    type: types.MFA,
+    method: 'POST',
+    path: 'data/mfa/associate',
+    body: { auth_token: `${token}` }
+  }
+});
+
 export const getStep = (stepId) => ({
   [CALL_API]: {
     type: types.STEP,
