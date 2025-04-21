@@ -25,7 +25,8 @@ class Comment extends React.Component {
       searchType: 'user', 
       commentViewers: [], 
       commentViewerRoles: [],
-      idMap: {} 
+      idMap: {} ,
+      formsMap: {}
     };
 
     this.openSearch = this.openSearch.bind(this);
@@ -44,14 +45,18 @@ class Comment extends React.Component {
     const { dispatch } = this.props;
     const { formId } = this.props.match.params;
     await dispatch(getRequest(requestId));
-    await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
-    let reviewStepName = `${this.props.forms.map[formId].data.short_name}_form_review`;
+    if (formId) {
+      await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
+      this.setState({formsMap: this.props.forms.map});
+    } else {this.setState({formsMap: {'undefined': {data: {error: 'No formId'}}}});}
+    const formObj = this.state.formsMap[formId];
+    let reviewStepName = `${formObj.data.short_name}_form_review`;
     if (this.props.requests.detail.data.conversation_id) {
       if ( typeof this.props.requests.detail.data.step_name !== 'undefined' && typeof step === 'undefined'){
         reviewStepName = this.props.requests.detail.data.step_name;
-      } else if (typeof this.props.forms.map[formId].data.short_name === 'undefined' && typeof step !== 'undefined') {
+      } else if (typeof formObj.data.short_name === 'undefined' && typeof step !== 'undefined') {
         reviewStepName = step;
-      } else if (typeof this.props.forms.map[formId].data.short_name === 'undefined') {
+      } else if (typeof formObj.data.short_name === 'undefined') {
         reviewStepName = '';
       }
       const payload = { conversation_id: this.props.requests.detail.data.conversation_id, level: true, step_name: reviewStepName };
@@ -221,8 +226,8 @@ class Comment extends React.Component {
       }
     };
     if (this.hasStepData() && request !== undefined) {
-      if (this.props.forms.map !== undefined && this.props.forms.map[formId] !== undefined && this.props.forms.map[formId].data !== undefined) {
-        formName = this.props.forms.map[formId].data.short_name;
+      if(this.state.formsMap[formId]?.data !== undefined) {
+        formName = this.state.formsMap[formId]?.data?.short_name;
         if (this.props.requests.detail.data.forms !== null) {
           if (this.props.requests.detail.data.form_data?.data_product_name_value) {
             requestName = this.props.requests.detail.data.form_data.data_product_name_value;
