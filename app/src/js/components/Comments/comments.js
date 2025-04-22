@@ -49,6 +49,7 @@ class Comment extends React.Component {
       await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
       this.setState({formsMap: this.props.forms.map});
     } else {this.setState({formsMap: {'undefined': {data: {error: 'No formId'}}}});}
+    // TODO - Update the above line to properly handle this error rather than just matching existing functionality
     const formObj = this.state.formsMap[formId];
     let reviewStepName = `${formObj.data.short_name}_form_review`;
     if (this.props.requests.detail.data.conversation_id) {
