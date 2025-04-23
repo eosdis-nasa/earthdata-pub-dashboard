@@ -4,6 +4,7 @@ import Select from "react-select";
 import "./index.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { Modal, Button } from 'react-bootstrap';
 
 const InitNodeDisplay = () => {
   const node = useContext(NodeContext);
@@ -20,13 +21,16 @@ const formatName = (name) =>
     .replace(/_/g, " ") // Replace underscores with spaces
     .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize the first letter of each word
 
-const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
+const Demo = ({ initialFlowData, initialNodeOptions, workflows, onSaveFlow, workflowId }) => {
   const [nodes, setNodes] = useState([]);
   const [nodeOptions, setNodeOptions] = useState([]);
   const [selectedNodes, setSelectedNodes] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
   const [selectedNodeIndex, setSelectedNodeIndex] = useState(null);
+  const [showWarningModal, setShowWarningModal] = useState(false);
+  const [pendingNodesToAdd, setPendingNodesToAdd] = useState([]);
+  const [conflictingStepNames, setConflictingStepNames] = useState([]);
 
   // Metadata fields
   const [metadata, setMetadata] = useState({
@@ -96,27 +100,49 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
     );
     setNodeOptions(availableOptions);
   }, [nodes, initialNodeOptions]);
-
+  
   const handleAddNodesAtPosition = () => {
     if (!selectedNodes.length || selectedNodeIndex === null) return;
-
+  
     const newNodes = selectedNodes.map((selected) => {
       const fullNodeDetails = initialNodeOptions.find(
         (option) => option.step_id === selected.step_id
       );
-
       return {
         ...fullNodeDetails,
         name: formatName(fullNodeDetails.step_name),
       };
     });
-
+  
+    const getConflictingSteps = (workflows, currentWorkflowId, stepList) => {
+      return stepList
+        .filter(({ step_name }) =>
+          workflows.some(({ id, steps }) =>
+            id !== currentWorkflowId && steps?.hasOwnProperty(step_name)
+          )
+        )
+        .map(({ step_name }) => formatName(step_name));
+    };
+    
+    const conflicts = getConflictingSteps(workflows, workflowId, newNodes);
+    
+    if (conflicts.length > 0) {
+      setConflictingStepNames(conflicts);
+      setPendingNodesToAdd(newNodes);
+      setShowWarningModal(true);
+      return;
+    }       
+  
+    insertNodes(newNodes);
+  };
+    
+  const insertNodes = (newNodes) => {
     setNodes((prevNodes) => {
       const newNodesList = [...prevNodes];
       newNodesList.splice(selectedNodeIndex, 0, ...newNodes);
       return newNodesList;
     });
-
+  
     setSelectedNodes([]);
     setPopupPosition({ top: 0, left: 0 });
     setDropdownVisible(false);
@@ -199,6 +225,8 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
           
           <label className='heading--small'>Description</label>
             <textarea
+              rows="6"
+              cols="50"
               value={metadata.description}
               onChange={(e) =>
                 setMetadata({ ...metadata, description: e.target.value })
@@ -276,7 +304,7 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
               className="add-node-button"
               onClick={handleAddNodesAtPosition}
             >
-              Add Nodes
+              Add Steps
             </button>
             <button
               className="node close-node"
@@ -287,6 +315,35 @@ const Demo = ({ initialFlowData, initialNodeOptions, onSaveFlow }) => {
           </div>
         </div>
       )}
+      <Modal show={showWarningModal} onHide={() => setShowWarningModal(false)} className="custom-modal">
+        <Modal.Header closeButton>
+          <Modal.Title>Step in other workflow</Modal.Title>
+        </Modal.Header>
+          <Modal.Body>
+            <p>The following step(s) already exist in other workflows:</p>
+            <ul>
+              {conflictingStepNames.map((name, idx) => (
+                <li key={idx}><strong>{name}</strong></li>
+              ))}
+            </ul>
+            <p>Do you still want to add them?</p>
+          </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => {
+            setShowWarningModal(false);
+            setPendingNodesToAdd([]);
+          }}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={() => {
+            insertNodes(pendingNodesToAdd);
+            setShowWarningModal(false);
+            setPendingNodesToAdd([]);
+          }}>
+            OK
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

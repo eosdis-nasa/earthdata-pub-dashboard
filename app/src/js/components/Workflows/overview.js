@@ -7,23 +7,37 @@ import {
   listWorkflows,
   applyWorkflowToRequest
 } from '../../actions';
+import { Button, Modal } from 'react-bootstrap';
 import { lastUpdated, shortDateNoTimeYearFirst } from '../../utils/format';
 import List from '../Table/Table';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { requestPrivileges } from '../../utils/privileges';
+import { listRequests } from '../../actions';
 
 class WorkflowsOverview extends React.Component {
   constructor () {
     super();
-    this.state = {};
+    this.state = {
+      showConfirmPopup: false,
+      selectedWorkflow: null,
+      workflowCounts: {},
+      selectedWorkflowCount: 0
+    };
     this.setWorkflow = this.setWorkflow.bind(this);
     this.cancelWorkflow = this.cancelWorkflow.bind(this);
+    this.openConfirmPopup = this.openConfirmPopup.bind(this);
+    this.closeConfirmPopup = this.closeConfirmPopup.bind(this);
+    this.proceedToEdit = this.proceedToEdit.bind(this);
+    //this.calculateWorkflowCounts = this.calculateWorkflowCounts(this);
+
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { dispatch } = this.props;
+    await dispatch(listRequests())
     dispatch(listWorkflows());
+    this.setState({ workflowCounts: this.calculateWorkflowCounts(this.props.requests.list.data || [])});
   }
 
   makeSteps (row) {
@@ -34,6 +48,27 @@ class WorkflowsOverview extends React.Component {
     }
   }
 
+  openConfirmPopup(workflow) {
+    const name = workflow.long_name;
+    const count = this.state.workflowCounts[name] || 0;
+    this.setState({
+      showConfirmPopup: true,
+      selectedWorkflow: workflow,
+      selectedWorkflowCount: count
+    });
+  }  
+  
+  closeConfirmPopup() {
+    this.setState({ showConfirmPopup: false, editWorkflowId: null });
+  }
+  
+  proceedToEdit() {
+    const { selectedWorkflow } = this.state;
+    this.setState({ showConfirmPopup: false, selectedWorkflow: null }, () => {
+      this.props.history.push(`/workflows/edit/${selectedWorkflow.id}`);
+    });
+  }  
+  
   getAnySelected () {
     const radios = document.getElementsByTagName('input');
     for (let i = 0; i < radios.length; i++) {
@@ -84,10 +119,22 @@ class WorkflowsOverview extends React.Component {
     this.props.history.goBack();
   }
 
+  calculateWorkflowCounts (data) {
+    const counts = {};
+    data.forEach(item => {
+      if (item.workflow_name) {
+        counts[item.workflow_name] = (counts[item.workflow_name] || 0) + 1;
+      }
+    });
+    return counts;
+  };
+  
   render () {
     const { dispatch } = this.props;
     const workflows = this.props.workflows;
     const requestId = location.search.split('=')[1];
+    const self = this;
+
     if (workflows && !Array.isArray(workflows.list.data)) {
       window.location.reload(true);
     }
@@ -144,9 +191,17 @@ class WorkflowsOverview extends React.Component {
       defaultTableColumns.push({
         Header: 'Options',
         accessor: '',
-        Cell: row => <Link className='button button--small button--edit' to={{ pathname: `/workflows/edit/${row.row.original.id}` }} aria-label="Edit your workflow">Edit</Link>,
+        Cell: ({ row }) => (
+          <button
+            className="button button--small button--edit"
+            onClick={() => self.openConfirmPopup(row.original)}
+            aria-label="Edit your workflow"
+          >
+            Edit
+          </button>
+        ),        
         id: 'required'
-      });
+      });      
     }
 
     let tableColumns = [];
@@ -189,6 +244,7 @@ class WorkflowsOverview extends React.Component {
     }
     const { queriedAt } = workflows.list.meta;
     const disabled = !workflows.list.data.length || !this.getAnySelected();
+
     return (
       <div className='page__component'>
         <section className='page__section page__section__controls'>
@@ -241,6 +297,23 @@ class WorkflowsOverview extends React.Component {
             </section>
             : null }
         </section>
+        <Modal show={this.state.showConfirmPopup} onHide={this.closeConfirmPopup} className="custom-modal">
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Edit Workflow</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {this.state.selectedWorkflowCount > 0 && <>There are currently <strong>{this.state.selectedWorkflowCount}</strong> requests using the <strong>{this.state.selectedWorkflow?.long_name || 'No Name Available'}</strong> and will be affected by this update. Do you wish to continue?</>}
+          {this.state.selectedWorkflowCount === 0 && <p>Are you sure you want to edit <strong>{this.state.selectedWorkflow?.long_name || 'No Name Available'}</strong>?</p>}                 
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.closeConfirmPopup}>
+            NO
+          </Button>
+          <Button variant="primary" onClick={this.proceedToEdit}>
+            YES
+          </Button>
+        </Modal.Footer>
+      </Modal>
       </div>
     );
   }
@@ -254,7 +327,8 @@ WorkflowsOverview.propTypes = {
   config: PropTypes.object,
   privileges: PropTypes.object,
   history: PropTypes.object,
-  roles: PropTypes.array
+  roles: PropTypes.array,
+  requests: PropTypes.object
 };
 
 export { WorkflowsOverview };
@@ -266,4 +340,5 @@ export default withRouter(connect(state => ({
   config: state.config,
   privileges: state.api.tokens.privileges,
   roles: state.api.tokens.roles,
+  requests: state.requests
 }))(WorkflowsOverview));

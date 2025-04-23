@@ -46,6 +46,7 @@
     align-items: center;
     background: red;
     color: white;
+    margin: 0px;
   }
   
   .node-text {
@@ -64,7 +65,7 @@
   .flow-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
   }
   
   .flow-builder-vertical {
@@ -87,11 +88,13 @@
   }
   
   .form-node, 
+  .service-node,
   .review-node, 
   .action-node {
     color: white;
     background-color: #2275AA;
   }
+
   .init-node {
     background-color: #4caf50;
   }
@@ -122,13 +125,14 @@
   .insert-button {
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     z-index: 1;
     cursor: pointer;
+    margin: 0px;
   }
   
   .insert-button:hover {
