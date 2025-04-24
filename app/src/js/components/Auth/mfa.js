@@ -20,8 +20,12 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
         // const { api, dispatch, queryParams } = this.props;
         const { inflight, tokens } = api;
         const { code } = queryParams;
+        console.log(`api`, api);
+        console.log(`dispatch`, dispatch);
+        console.log(`document.getElementById('totp')`, document.getElementById('totp'));
         if (tokens.token!== null && document.getElementById('totp')?.value !== '') {
           dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
+            console.log('value', value);
             const resp = value;
             let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
             if (error && !config.environment.match(/LOCALHOST/g)) {
@@ -29,6 +33,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
             } else {
               deleteToken();
               saveToken({ token: tokens.token, user: {...tokens.user, ...{authenticated: true}} });
+              console.log('inflight');
               if (!inflight && code) {
                 window.location.href = config.basepath;
               } 
