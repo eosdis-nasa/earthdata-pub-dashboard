@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Update MFA to EDPub custom flow
 - Updated github repo template assets
 - Updated the My Metrics Page to be a subpage of the Metrics Tab
+- Added the ability to remove not yet uploaded files from upload list
 <!-- Unreleased changes can be added here. -->
 
 ## 1.0.19

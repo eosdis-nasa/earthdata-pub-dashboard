@@ -19,6 +19,8 @@ import _config from '../../config';
 import localUpload from '@edpub/upload-utility';
 import { format } from "date-fns";
 
+// Form page i.e. /dashboard/form/questions/{id}
+
 const FormQuestions = ({
   cancelLabel = 'Cancel',
   draftLabel = 'Save as draft',
@@ -46,7 +48,6 @@ const FormQuestions = ({
   const [uploadedFiles, setUploadedFiles] = useState({});
   const [validationAttempted, setValidationAttempted] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
-  const [showProgressBar, setShowProgressBar] = useState(false);
   const [uploadFileName, setUploadFileName] = useState('');
   const [uploadFileFlag, setUploadFileFlag] = useState(false);
   const [uploadFailed, setUploadFailed] = useState(false);
@@ -1046,7 +1047,7 @@ const FormQuestions = ({
   const { apiRoot } = _config;
   const [uploadResults, setUploadResults] = useState({ success: [], failed: [] });
   const [showUploadSummaryModal, setShowUploadSummaryModal] = useState(false);
-  const [progressBarsVisible, setProgressBarsVisible] = useState(false); 
+  const [progressBarsVisible, setProgressBarsVisible] = useState(true);
   const [uploadProgress, setUploadProgress] = useState({});
 
   const category_map = {
@@ -1056,8 +1057,6 @@ const FormQuestions = ({
 
   const handleUpload = async (control_id) => {
     setUploadStatusMsg('Uploading...');
-    setShowProgressBar(true);
-    setProgressBarsVisible(true);
     const successFiles = [];
     const failedFiles = [];
 
@@ -1115,8 +1114,6 @@ const FormQuestions = ({
 
     setUploadResults({ success: successFiles, failed: failedFiles });
     setUploadStatusMsg('Upload Complete');
-    setShowProgressBar(false);
-    setProgressBarsVisible(false);
     setUploadProgress({});
     setUploadFileFlag(true);
     setShowUploadSummaryModal(true);
@@ -1262,6 +1259,10 @@ const FormQuestions = ({
         return { ...updatedValues, validation_errors: newValidationErrors };
       });
     }
+  };
+
+  const handleRemoveFile = (fileName) => {
+    setUploadFiles(uploadFiles.filter(elem => elem.name !== fileName));
   };
 
   return !requestData ? (
@@ -2239,11 +2240,11 @@ const FormQuestions = ({
                                           <Button
                                             className="upload-button mt-2"
                                             onClick={(e) => handleUpload(input.control_id)}
-                                            disabled={uploadFiles.length === 0 || showProgressBar || `${fileControlId}_file-upload-input` !== `${input.control_id}_file-upload-input`}
+                                            disabled={uploadFiles.length === 0 || `${fileControlId}_file-upload-input` !== `${input.control_id}_file-upload-input`}
                                           >
                                           Upload
                                           </Button>
-                                          {showProgressBar && 
+                                          {
                                           <span className="d-flex align-items-center">
                                             <FontAwesomeIcon
                                               icon={progressBarsVisible ? faEyeSlash : faEye}
@@ -2258,7 +2259,14 @@ const FormQuestions = ({
                                             <div>
                                               {uploadFiles.map((file, index) => (
                                                 <div key={index}>
-                                                  <p>{file.name}</p>
+                                                  <div style={{display: "flow-root"}}>
+                                                    {file.name}
+                                                    <Button
+                                                      className="upload-button"
+                                                      style={{fontSize: "100%", padding: "5px", backgroundColor: "#db1400", margin: "2px", float: "inline-end"}}
+                                                      onClick={() => handleRemoveFile(file.name)}
+                                                      >Remove</Button>
+                                                  </div>
                                                   <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
                                                     <div style={{
                                                       width: `${uploadProgress[file.name] || 0}%`,
