@@ -13,7 +13,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
     const [showQr, setShowQr] = useState(false);
     const [showMobile, setShowMobile] = useState(true);
     const [showBrowser, setShowBrowser] = useState(false);
-    const [errMessage, setErrMessage] = useState();
+    const [errMessage, setErrMessage] = useState('');
 
     const qrPrefix = `otpauth://totp/${issuer.replace(/(^\w+:|^)\/\//, '')}:${username}?secret=`;
 
@@ -23,7 +23,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
         console.log(`api`, api);
         console.log(`dispatch`, dispatch);
         console.log(`document.getElementById(totpElementName)?.value`, document.getElementById(totpElementName)?.value);
-        if (document.getElementById(totpElementName)?.value !== '') {
+        if (document.getElementById(totpElementName)?.value === '') {
             setErrMessage('Empty TOTP Value');
             return;
         }
@@ -258,8 +258,9 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                     />
                 </div>
             </div>
-            <div style={{backGroundColor: "#ff746c", display: errMessage ? 'contents' : 'none'}}>
-                <h5>Error: {errMessage}</h5>
+            <div style={{ display: errMessage ? 'contents' : 'none'}}>
+                <br />
+                <h5 style={{backgroundColor: "#ffc2c2", textAlign: "center", fontSize: "1.25em"}}>Error: {errMessage}</h5>
             </div>
         </div>
       );
