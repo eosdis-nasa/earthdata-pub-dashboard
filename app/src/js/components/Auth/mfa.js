@@ -116,7 +116,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             }
                             aria-label="submit your user"
                             data-disable-with="TOTP"
-                            onClick={handleSubmit({totpElementName: "mobile-totp"})}
+                            onClick={() => {e.preventDefault(); handleSubmit({totpElementName: "mobile-totp"});}}
                         >
                             Submit
                         </button>
@@ -210,7 +210,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             }
                             aria-label="submit your user"
                             data-disable-with="TOTP"
-                            onClick={handleSubmit({totpElementName: "browser-totp"})}
+                            onClick={() => {e.preventDefault(); handleSubmit({totpElementName: "browser-totp"});}}
                         >
                             Submit
                         </button>
