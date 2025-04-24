@@ -22,7 +22,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
         const { code } = queryParams;
         console.log(`api`, api);
         console.log(`dispatch`, dispatch);
-        console.log(`document.getElementById('totp')`, document.getElementById('totp'));
+        console.log(`document.getElementById('totp')?.value`, document.getElementById('totp')?.value);
         if (tokens.token!== null && document.getElementById('totp')?.value !== '') {
           dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
             console.log('value', value);
