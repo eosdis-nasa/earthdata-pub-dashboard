@@ -14,6 +14,8 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import ErrorReport from '../Errors/report';
 import { workflowToGraph } from './graph-utils';
 import { userPrivileges } from '../../utils/privileges';
+import { Modal, Button } from 'react-bootstrap';
+import { listRequests } from '../../actions';
 
 function onLoad (reactFlowInstance) {
   reactFlowInstance.fitView();
@@ -22,7 +24,14 @@ function onLoad (reactFlowInstance) {
 class Workflows extends React.Component {
   constructor () {
     super();
-    this.state = { view: 'graph', nodes: [], edges: [], renderedGraph: false };
+    this.state = {
+      view: 'graph',
+      nodes: [],
+      edges: [],
+      renderedGraph: false,
+      showConfirmPopup: false,
+      workflowRequestCount: 0
+    };    
     this.renderReadOnlyJson = this.renderReadOnlyJson.bind(this);
     this.renderJson = this.renderJson.bind(this);
     this.showGraph = this.showGraph.bind(this);
@@ -30,20 +39,26 @@ class Workflows extends React.Component {
     this.onConnect = this.onConnect.bind(this);
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { dispatch } = this.props;
     const { workflowId } = this.props.match.params;
     dispatch(getWorkflow(workflowId));
+    await dispatch(listRequests())
+    const count = this.calculateWorkflowRequestCount(this.props.requests.list.data || [], workflowId);
+    this.setState({ workflowRequestCount: count });
     setTimeout(() => {
       const record = this.props.workflows.detail;
-      if (typeof record.data !== 'undefined') {
+      if (record?.data) {
         const graphData = workflowToGraph(record.data.steps);
-        this.setState({ nodes: graphData[0] });
-        this.setState({ edges: graphData[1] });
+        this.setState({ nodes: graphData[0], edges: graphData[1] });
       }
     }, 2000);
-  }
+  }  
 
+  calculateWorkflowRequestCount(data, workflowId) {
+    return data.filter(item => item.workflow_id === workflowId).length;
+  }
+  
   showGraph () {
     if (document.getElementById('graph') !== null) {
       document.getElementById('graph').removeAttribute('class', 'hidden');
@@ -130,9 +145,14 @@ class Workflows extends React.Component {
         </section>
         <section className='page__section'>
           {record.data && canUpdateWorkflow
-            ? <Link
-              className='button button--small button--green button--add-small form-group__element--right new-request-button' to={{ pathname: `/workflows/edit/${record.data.id}` }} aria-label="Edit your workflow">Edit</Link>
-            : null}
+            ? <button
+            className='button button--small button--green button--add-small form-group__element--right new-request-button'
+            onClick={() => this.setState({ showConfirmPopup: true })}
+            aria-label="Edit your workflow"
+          >
+            Edit
+          </button>
+          : null}
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Workflow Overview</h2>
           </div>
@@ -172,6 +192,25 @@ class Workflows extends React.Component {
             </ReactFlow>
           </section>
           : null}
+          <Modal show={this.state.showConfirmPopup} onHide={() => this.setState({ showConfirmPopup: false })} className='custom-modal'>
+            <Modal.Header closeButton>
+              <Modal.Title>Confirm Edit Workflow</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {this.state.workflowRequestCount > 0
+                ? <>There are currently <strong>{this.state.workflowRequestCount}</strong> requests using the workflow <strong>{this.props.workflows?.detail?.data?.long_name || 'No Name Available'}</strong> and will be affected by this update. Do you wish to continue?
+                </>
+                : <>Are you sure you want to edit <strong>{this.props.workflows?.detail?.data?.long_name || 'this workflow'}</strong>?</>
+              }
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => this.setState({ showConfirmPopup: false })}>Cancel</Button>
+              <Button variant="primary" onClick={() => {
+                this.setState({ showConfirmPopup: false });
+                this.props.history.push(`/workflows/edit/${this.props.match.params.workflowId}`);
+              }}>Yes</Button>
+            </Modal.Footer>
+          </Modal>
       </div>
     );
   }
@@ -199,10 +238,12 @@ Workflows.propTypes = {
   match: PropTypes.object,
   workflows: PropTypes.object,
   privileges: PropTypes.object,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  requests: PropTypes.object
 };
 
 export default withRouter(connect(state => ({
   privileges: state.api.tokens.privileges,
-  workflows: state.workflows
+  workflows: state.workflows,
+  requests: state.requests
 }))(Workflows));
