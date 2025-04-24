@@ -13,6 +13,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
     const [showQr, setShowQr] = useState(false);
     const [showMobile, setShowMobile] = useState(true);
     const [showBrowser, setShowBrowser] = useState(false);
+    const [errMessage, setErrMessage] = useState();
 
     const qrPrefix = `otpauth://totp/${issuer.replace(/(^\w+:|^)\/\//, '')}:${username}?secret=`;
 
@@ -22,13 +23,19 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
         console.log(`api`, api);
         console.log(`dispatch`, dispatch);
         console.log(`document.getElementById(totpElementName)?.value`, document.getElementById(totpElementName)?.value);
-        if (tokens.token!== null && document.getElementById(totpElementName)?.value !== '') {
+        if (document.getElementById(totpElementName)?.value !== '') {
+            setErrMessage('Empty TOTP Value');
+            return;
+        }
+        setErrMessage('');
+        if (tokens.token!== null) {
           dispatch(verify(document.getElementById(totpElementName).value, tokens.token)).then(value => {
             console.log('value', value);
             const resp = value;
             let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
             if (error && !config.environment.match(/LOCALHOST/g)) {
               console.log(`An error has occurred: ${error}.`);
+              setErrMessage(error);
             } else {
               deleteToken();
               saveToken({ token: tokens.token, user: {...tokens.user, ...{authenticated: true}} });
@@ -38,7 +45,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
               } 
             }
           })
-        } 
+        }
       }
 
     return (
@@ -116,7 +123,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             }
                             aria-label="submit your user"
                             data-disable-with="TOTP"
-                            onClick={() => {e.preventDefault(); handleSubmit({totpElementName: "mobile-totp"});}}
+                            onClick={(e) => {e.preventDefault(); handleSubmit({totpElementName: "mobile-totp"});}}
                         >
                             Submit
                         </button>
@@ -210,7 +217,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             }
                             aria-label="submit your user"
                             data-disable-with="TOTP"
-                            onClick={() => {e.preventDefault(); handleSubmit({totpElementName: "browser-totp"});}}
+                            onClick={(e) => {e.preventDefault(); handleSubmit({totpElementName: "browser-totp"});}}
                         >
                             Submit
                         </button>
@@ -250,6 +257,9 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                         viewBox={"0 0 500 500"}
                     />
                 </div>
+            </div>
+            <div style={{backGroundColor: "#ff746c", display: errMessage ? 'contents' : 'none'}}>
+                <h5>Error: {errMessage}</h5>
             </div>
         </div>
       );
