@@ -16,15 +16,14 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
 
     const qrPrefix = `otpauth://totp/${issuer.replace(/(^\w+:|^)\/\//, '')}:${username}?secret=`;
 
-    const handleSubmit = async() => {
-        // const { api, dispatch, queryParams } = this.props;
+    const handleSubmit = async({totpElementName}) => {
         const { inflight, tokens } = api;
         const { code } = queryParams;
         console.log(`api`, api);
         console.log(`dispatch`, dispatch);
-        console.log(`document.getElementById('totp')?.value`, document.getElementById('totp')?.value);
-        if (tokens.token!== null && document.getElementById('totp')?.value !== '') {
-          dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
+        console.log(`document.getElementById(totpElementName)?.value`, document.getElementById(totpElementName)?.value);
+        if (tokens.token!== null && document.getElementById(totpElementName)?.value !== '') {
+          dispatch(verify(document.getElementById(totpElementName).value, tokens.token)).then(value => {
             console.log('value', value);
             const resp = value;
             let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
@@ -105,8 +104,8 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                         Enter the 6-digit one-time password from the app here.
                         <input
                             type="text"
-                            name="totp"
-                            id="totp"
+                            name="mobile-totp"
+                            id="mobile-totp"
                             autoFocus="autofocus"
                             className="default"
                             style={{ width: "20%" }}
@@ -117,7 +116,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             }
                             aria-label="submit your user"
                             data-disable-with="TOTP"
-                            onClick={handleSubmit}
+                            onClick={handleSubmit({totpElementName: "mobile-totp"})}
                         >
                             Submit
                         </button>
@@ -199,8 +198,8 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                         Enter the 6-digit one-time password from the app here.
                         <input
                             type="text"
-                            name="totp"
-                            id="totp"
+                            name="browser-totp"
+                            id="browser-totp"
                             autoFocus="autofocus"
                             className="default"
                             style={{ width: "20%" }}
@@ -211,7 +210,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             }
                             aria-label="submit your user"
                             data-disable-with="TOTP"
-                            onClick={handleSubmit}
+                            onClick={handleSubmit({totpElementName: "browser-totp"})}
                         >
                             Submit
                         </button>
