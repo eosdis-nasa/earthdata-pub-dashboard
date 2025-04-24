@@ -20,9 +20,6 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
     const handleSubmit = async({totpElementName}) => {
         const { inflight, tokens } = api;
         const { code } = queryParams;
-        console.log(`api`, api);
-        console.log(`dispatch`, dispatch);
-        console.log(`document.getElementById(totpElementName)?.value`, document.getElementById(totpElementName)?.value);
         if (document.getElementById(totpElementName)?.value === '') {
             setErrMessage('Empty TOTP Value');
             return;
@@ -30,16 +27,13 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
         setErrMessage('');
         if (tokens.token!== null) {
           dispatch(verify(document.getElementById(totpElementName).value, tokens.token)).then(value => {
-            console.log('value', value);
             const resp = value;
             let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
             if (error && !config.environment.match(/LOCALHOST/g)) {
-              console.log(`An error has occurred: ${error}.`);
               setErrMessage(error);
             } else {
               deleteToken();
               saveToken({ token: tokens.token, user: {...tokens.user, ...{authenticated: true}} });
-              console.log('inflight');
               if (!inflight && code) {
                 window.location.href = config.basepath;
               } 
