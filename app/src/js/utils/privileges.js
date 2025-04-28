@@ -75,7 +75,8 @@ export const requestPrivileges = (privileges, stepName) => {
       canReassign: true,
       canWithdraw: true,
       canAddUser: true,
-      canRemoveUser: true
+      canRemoveUser: true,
+      canAssignDaac: true
     };
   } else if (privileges.REQUEST) {
     return {
@@ -88,6 +89,7 @@ export const requestPrivileges = (privileges, stepName) => {
       canWithdraw: privileges.REQUEST.includes('DAACREAD'),
       canAddUser: privileges.REQUEST.includes('ADDUSER'),
       canRemoveUser: privileges.REQUEST.includes('REMOVEUSER'),
+      canAssignDaac: privileges.REQUEST.includes('ASSIGNDAAC')
     };
   }
   return {
@@ -98,7 +100,8 @@ export const requestPrivileges = (privileges, stepName) => {
     canReassign: false,
     canWithdraw: false,
     canAddUser: false,
-    canRemoveUser: false
+    canRemoveUser: false,
+    canAssignDaac: false
   };
 };
 
@@ -109,10 +112,13 @@ export const requestPrivileges = (privileges, stepName) => {
 export const requestCanReview = (privileges, stepName) => {
   if (stepName && stepName.match(/management_review/g)) {
     return privileges.REQUEST.includes("REVIEW_MANAGER");
+  } else if (stepName && (stepName.match(/esdis_final_review/g) || stepName.match(/additional_review_question/g))) {
+    const user = JSON.parse(window.localStorage.getItem('auth-user'));
+    return privileges.REQUEST.includes('REVIEW_ESDIS') && user.user_groups.some((group) => group.short_name === 'root_group');
   }
 
   return privileges.REQUEST.includes("REVIEW") || privileges.REQUEST.includes("REVIEW_MANAGER");
-}
+};
 
 export const formPrivileges = (privileges) => {
   if (privileges.ADMIN) {
