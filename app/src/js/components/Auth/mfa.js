@@ -13,19 +13,24 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
     const [showQr, setShowQr] = useState(false);
     const [showMobile, setShowMobile] = useState(true);
     const [showBrowser, setShowBrowser] = useState(false);
+    const [errMessage, setErrMessage] = useState('');
 
     const qrPrefix = `otpauth://totp/${issuer.replace(/(^\w+:|^)\/\//, '')}:${username}?secret=`;
 
-    const handleSubmit = async() => {
-        // const { api, dispatch, queryParams } = this.props;
+    const handleSubmit = async({totpElementName}) => {
         const { inflight, tokens } = api;
         const { code } = queryParams;
-        if (tokens.token!== null && document.getElementById('totp')?.value !== '') {
-          dispatch(verify(document.getElementById('totp').value, tokens.token)).then(value => {
+        if (document.getElementById(totpElementName)?.value === '') {
+            setErrMessage('Empty TOTP Value');
+            return;
+        }
+        setErrMessage('');
+        if (tokens.token!== null) {
+          dispatch(verify(document.getElementById(totpElementName).value, tokens.token)).then(value => {
             const resp = value;
             let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error || resp?.message
             if (error && !config.environment.match(/LOCALHOST/g)) {
-              console.log(`An error has occurred: ${error}.`);
+              setErrMessage(error);
             } else {
               deleteToken();
               saveToken({ token: tokens.token, user: {...tokens.user, ...{authenticated: true}} });
@@ -34,7 +39,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
               } 
             }
           })
-        } 
+        }
       }
 
     return (
@@ -100,8 +105,8 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                         Enter the 6-digit one-time password from the app here.
                         <input
                             type="text"
-                            name="totp"
-                            id="totp"
+                            name="mobile-totp"
+                            id="mobile-totp"
                             autoFocus="autofocus"
                             className="default"
                             style={{ width: "20%" }}
@@ -112,7 +117,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             }
                             aria-label="submit your user"
                             data-disable-with="TOTP"
-                            onClick={handleSubmit}
+                            onClick={(e) => {e.preventDefault(); handleSubmit({totpElementName: "mobile-totp"});}}
                         >
                             Submit
                         </button>
@@ -194,8 +199,8 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                         Enter the 6-digit one-time password from the app here.
                         <input
                             type="text"
-                            name="totp"
-                            id="totp"
+                            name="browser-totp"
+                            id="browser-totp"
                             autoFocus="autofocus"
                             className="default"
                             style={{ width: "20%" }}
@@ -206,7 +211,7 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                             }
                             aria-label="submit your user"
                             data-disable-with="TOTP"
-                            onClick={handleSubmit}
+                            onClick={(e) => {e.preventDefault(); handleSubmit({totpElementName: "browser-totp"});}}
                         >
                             Submit
                         </button>
@@ -246,6 +251,10 @@ export const MFA = ({secretCode, username, issuer, api, dispatch, queryParams}) 
                         viewBox={"0 0 500 500"}
                     />
                 </div>
+            </div>
+            <div style={{ display: errMessage ? 'contents' : 'none'}}>
+                <br />
+                <h5 style={{backgroundColor: "#ffc2c2", textAlign: "center", fontSize: "1.25em"}}>Error: {errMessage}</h5>
             </div>
         </div>
       );
