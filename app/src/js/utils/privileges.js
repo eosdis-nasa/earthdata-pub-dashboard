@@ -66,6 +66,7 @@ export const groupPrivileges = (privileges) => {
 };
 
 export const requestPrivileges = (privileges, stepName) => {
+  const user = JSON.parse(window.localStorage.getItem('auth-user'));
   if (privileges.ADMIN) {
     return {
       canRead: true,
@@ -84,12 +85,12 @@ export const requestPrivileges = (privileges, stepName) => {
         a === 'READ' || a === 'DAACREAD'),
       canInitialize: privileges.REQUEST.includes('INITIALIZE'),
       canSubmit: privileges.REQUEST.includes('SUBMIT'),
-      canReview: requestCanReview(privileges, stepName),
+      canReview: requestCanReview(privileges, stepName, user),
       canReassign: privileges.REQUEST.includes('REASSIGN'),
       canWithdraw: privileges.REQUEST.includes('DAACREAD'),
       canAddUser: privileges.REQUEST.includes('ADDUSER'),
       canRemoveUser: privileges.REQUEST.includes('REMOVEUSER'),
-      canAssignDaac: privileges.REQUEST.includes('ASSIGNDAAC')
+      canAssignDaac: requestCanAssignDaacs(privileges, stepName, user)
     };
   }
   return {
@@ -109,15 +110,22 @@ export const requestPrivileges = (privileges, stepName) => {
  * Determines if the user has privileges to review the request.
  * Allows for more granular privilege checking based on the step name.
  */
-export const requestCanReview = (privileges, stepName) => {
+export const requestCanReview = (privileges, stepName, user) => {
   if (stepName && stepName.match(/management_review/g)) {
     return privileges.REQUEST.includes("REVIEW_MANAGER");
   } else if (stepName && (stepName.match(/esdis_final_review/g) || stepName.match(/additional_review_question/g))) {
-    const user = JSON.parse(window.localStorage.getItem('auth-user'));
     return privileges.REQUEST.includes('REVIEW_ESDIS') && user.user_groups.some((group) => group.short_name === 'root_group');
   }
 
   return privileges.REQUEST.includes("REVIEW") || privileges.REQUEST.includes("REVIEW_MANAGER");
+};
+
+/**
+ * Determines if the user has privileges to assign a daac to the request.
+ * This verifies that the user has the appropriate permission and group to perform the action
+ */
+export const requestCanAssignDaacs = (privileges, stepName, user) => {
+  return privileges.REQUEST.includes('ASSIGNDAAC') && user.user_groups.some((group) => group.short_name === 'root_group');
 };
 
 export const formPrivileges = (privileges) => {
