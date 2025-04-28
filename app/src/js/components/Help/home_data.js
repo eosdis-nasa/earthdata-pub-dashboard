@@ -28,7 +28,7 @@ const home_data = {
          "text": "DAACs are domain-focused data repositories supporting the specific needs of Earth science disciplines, while also enabling cross-disciplinary data usage. When you publish your data with a DAAC:",
          "list": [
             "Your data are citable, giving you credit for their use in research.",
-            "Your data are discoverable amidst a vast data catalog of complimentary data in NASA’s <a title='Earthdata Search' href='https://search.earthdata.nasa.gov' class='ext' target=_blank>Earthdata Search</a>, increasing the reach and relevance of your data.",
+            "Your data are discoverable amidst a vast data catalog of complimentary data in NASA’s <a title='Earthdata Search' href='https://search.earthdata.nasa.gov/search' class='ext' target=_blank>Earthdata Search</a>, increasing the reach and relevance of your data.",
             "A broader group of scientists and data users can find, understand, and use your data to address a wider variety of questions, now and in the long-term."
          ]
       }
