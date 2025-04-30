@@ -114,7 +114,7 @@ const data_publication_guidelines_data = {
                 {
                    "number":12,
                    "columns":[
-                      "<a title='Socioeconomic Data and Application Data Center (SEDAC)' href='https://www.earthdata.nasa.gov/centers/sedac-daac' class='ext' target=_blank>Socioeconomic Data and Application Data Center (SEDAC)</a>",
+                      "<a title='Socioeconomic Data and Application Data Center (SEDAC)' href='https://sedac.ciesin.columbia.edu/' class='ext' target=_blank>Socioeconomic Data and Application Data Center (SEDAC)</a>",
                       "Synthesized Earth science and socio-economic data"
                    ]
                 }
