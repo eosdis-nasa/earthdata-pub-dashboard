@@ -265,8 +265,9 @@ class RequestOverview extends React.Component {
     const { canEdit } = formPrivileges(this.props.privileges);
     const { roles } = this.props;
     const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
+    const canChangeWorkflow = canWithdraw && role.some((userRole) => userRole !== 'observer')
     let workflowSave;
-    if (canWithdraw) {
+    if (canChangeWorkflow) {
       workflowSave = this.renderWorkflowSave(record);
     }
     let canViewUsers = false;
@@ -365,11 +366,6 @@ class RequestOverview extends React.Component {
       {
         label: 'Data Producer Name',
         accessor: row => row.data_producer_name
-      },
-      {
-        label: 'Daac',
-        accessor: row => row.daac_name && canEdit ? <a href={`/daacs/selection?requestId=${row.id}`} aria-label="View daac selection">{row.daac_name}</a> : row.daac_name ? row.daac_name : row.daac_id,
-        classList: 'hidden'
       },
       {
         label: 'Initiator',

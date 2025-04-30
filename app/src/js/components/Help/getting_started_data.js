@@ -3,7 +3,7 @@ const GettingStartedData = {
     "heading":"<h1>Getting Started<hr></h1>",
     "paragraphs":[
       {
-         "text":"The steps below will guide you through how to use Earthdata Pub to publish your data with a <a title='List of NASA DAACs' href='data_publication_guidelines#daacs'>NASA DAAC</a>."
+         "text":"The steps below will guide you through how to use Earthdata Pub to publish your data with a <a title='List of NASA DAACs' href='data_publication_guidelines#daacs'>NASA Distributed Active Archive Center (DAAC)</a>."
       },
        {
           "text":"For more information on the data publication process, see the <a title='data publication process' href='data_publication_guidelines#publication'>Data Publication Process</a> section of the <a href='data_publication_guidelines' name='Data Publication Guidelines' link_title='Data Publication Guidelines' link_text='Data Publication Guidelines'>Data Publication Guidelines</a>."
@@ -17,19 +17,19 @@ const GettingStartedData = {
       },
        {
           "heading":"<h2 class='display-4' id='accession'>Data Accession Request<hr></h2>",
-          "text":"If your data have not been assigned to a DAAC, you will need to have your data approved through the Data Accession process. For more information on this process, see the <a title='Data Accession Process' href='/data_publication_guidelines#accession'>Data Accession Process</a> section of the <a href='data_publication_guidelines' name='Data Publication Guidelines' link_title='Data Publication Guidelines' link_text='Data Publication Guidelines'>Data Publication Guidelines</a>."
+          "text":"If your data have not been assigned to a DAAC, you will need to have your data approved through the Data Accession process. For more information on this process, see the <a title='Data Accession Process' href='/data_publication_guidelines#accession'>Data Accession Process</a> section of the <a href='data_publication_guidelines' name='Data Publication Guidelines' link_title='Data Publication Guidelines' link_text='Data Publication Guidelines'>Data Publication Guidelines</a>. If your data have already been assigned to a DAAC, and you have received a publication code, you can skip to the Data Publication Request section. If your data have already been assigned to a DAAC and you have <b>not</b> received a publication code, please <a href='javascript:feedback.showForm();' title='Send feedback using feedback form.'>contact us</a>."
        },
        {
           "step":[
              {
                 "number":1,
                 "heading":"<span class='main-width sections'><b>Start a new Data Accession Request</b></span>",
-                "text":"Log into the <a title='Earthdata Pub Dashboard' href='/dashboard'>Earthdata Pub Dashboard</a> with your Earthdata Pub account. To create a Data Accession request, click on “New Request”."
+                "text":"Log into the <a title='Earthdata Pub Dashboard' href='/dashboard'>Earthdata Pub Dashboard</a> with your Earthdata Pub account. To create a Data Accession request, click on “New Request”  and select “Data Accession Request”."
              },
              {
                 "number":2,
                 "heading":"<span class='main-width sections'><b>Fill in the Data Accession Request form</b></span>",
-                "text":"In the <a title='Earthdata Pub Dashboard' href='/dashboard'>Earthdata Pub Dashboard</a>, click on the “Data Accession Request Form” button in the Next Action column. The information you provide about your data will be used to review and approve your Data Accession Request. ",
+                "text":"In the <a title='Earthdata Pub Dashboard' href='/dashboard'>Earthdata Pub Dashboard</a>, click on the “Data Accession Request Form” button in the Next Action column. The information you provide will be used to review and approve your Data Accession Request. ",
                 "icon":"lightbulb.svg",
                 "icon_text":"You can save your progress and return to the form later."
              },
@@ -43,39 +43,64 @@ const GettingStartedData = {
                 "heading":"<span class='main-width sections'><b>Accession request is completed</b></span>",
                 "paragraphs": [
                   {
-                     "text":"Your data will be evaluated by NASA Earth Science Data and Information Systems personnel who will determine whether your data are approved to be published at a DAAC. The decision will be documented in the Earthdata Pub Dashboard, and you will receive an email explaining the decision."
+                     "text":"Your data will be evaluated by NASA Earth Science Data and Information Systems (ESDIS) personnel who will determine whether your data are approved to be published at a DAAC. The decision will be documented in the Earthdata Pub Dashboard, and you will receive an email explaining the decision."
                   },
                   {
-                     "text":"If your Data Accession request has been approved, you can move to the data publication process."
+                     "text":"If your Data Accession request has been approved, you will be assigned to one or more <a title='List of NASA DAACs' href='data_publication_guidelines#daacs'>ESDIS DAACs</a>, and you can move to the data publication process."
+                  },
+                  {
+                     "text": "In some cases, ESDIS may require an additional DAAC-led evaluation of your request, to determine if the ESDIS archive is the appropriate place for your data. If so, you will be asked to complete a Data Evaluation Request, which you will need to complete and submit to the designated DAAC. For more information on the data evaluation process, please see the <a title='Data Evaluation Process' href='/data_publication_guidelines#evaluation'>Data Evaluation Process</a> section of the <a href='data_publication_guidelines' name='Data Publication Guidelines' link_title='Data Publication Guidelines' link_text='Data Publication Guidelines'>Data Publication Guidelines</a>."
                   }
                ]
             }
           ]
        },
        {
+         "heading":"<h2 class='display-4' id='evaluation'>Data Evaluation Request<hr></h2>"
+       },
+       {
+         "step": [
+            {
+               "number":1,
+               "heading":"<span class='main-width sections'><b>Fill in the Data Evaluation Request form.</b></span>",
+               "text": "In the <a title='Earthdata Pub Dashboard' href='/dashboard'>Earthdata Pub Dashboard</a>, click on the “Data Evaluation Request” button in the Next Action column. The information you provide will be used to review and approve your Data Accession Request. You should fill out a Data Evaluation Request for each data product you listed in your Data Accession Request."
+            },
+            {
+               "number":2,
+               "heading":"Upload sample data files.",
+               "text":"Use the file upload feature in the Data Evaluation Form to upload at least one sample data file, if available."
+            }
+         ]
+       },
+       {
           "heading":"<h2 class='display-4' id='publication'>Data Publication Request<hr></h2>",
-          "text":"Once your data have been assigned to a DAAC, you can complete a Data Publication request form when you are ready to work with the DAAC to publish your data product. For more information on the data publication process, see the <a title='data publication process' href='data_publication_guidelines#publication'>Data Publication Process</a> section of the <a href='data_publication_guidelines' name='Data Publication Guidelines' link_title='Data Publication Guidelines' link_text='Data Publication Guidelines'>Data Publication Guidelines</a>."
+          "text":"Once your data have been assigned to a DAAC, you will receive a publication code that will allow you to complete and submit a Data Publication request form when you are ready to work with the DAAC to prepare and publish your data product(s). If you have been assigned to more than one DAAC, you will be given a separate authorization code for each DAAC you are assigned to. You will need to complete a Data Publication Request for each data product you wish to publish. If you are assigned to more than one DAAC, DAAC staff will contact you with instructions on which data to submit to which DAAC. For more information on the data publication process, see the <a title='data publication process' href='data_publication_guidelines#publication'>Data Publication Process</a> section of the <a href='data_publication_guidelines' name='Data Publication Guidelines' link_title='Data Publication Guidelines' link_text='Data Publication Guidelines'>Data Publication Guidelines</a>."
        },
        {
           "step":[
              {
                 "number":1,
                 "heading":"<span class='main-width sections'><b>Fill in the Data Publication Request form</b></span>",
-                 "text":"In the <a title='Earthdata Pub Dashboard' href='dashboard/'>Earthdata Pub Dashboard</a>, click on the “Data Publication Request Form” button in the Next Action column. The form will be pre-populated with the information you provided in the Data Accession form, if you completed that form.",
+                 "text":"In the <a title='Earthdata Pub Dashboard' href='dashboard/'>Earthdata Pub Dashboard</a>, click on the “Data Publication Request Form” button in the Next Action column. You will be prompted to enter a publication code. Enter the code, previously provided, that matches the DAAC to which you want to submit your Request. Complete the form and click on “Submit”. The form will be routed to the appropriate DAAC.",
                 "icon":"lightbulb.svg",
                 "icon_text":"You can save your progress and return to the form later."
              },
              {
-                "number":2,
+               "number":2,
+               "heading": "Upload sample data files.",
+               "text": "Use the file upload feature in the Data Publication Request to upload at least one sample data file, if available."
+             },
+             {
+                "number":3,
                 "heading":"<span class='main-width sections'><b>Submit your request</b></span>",
                 "text":"After you have filled in the Data Publication request form, click on “Submit” to submit the request. This will initiate the data publication process."
              },
              {
-                "number":3,
+                "number":4,
                 "heading":"<span class='main-width sections'><b>Collaborate with the DAAC</b></span>",
                 "paragraphs": [
                   {
-                     "text":"The data publication process is a collaboration between you and the DAAC. The information you provide in the Data Publication form, along with sample data and related documentation, will be reviewed by the DAAC. You may be asked to provide additional information and will receive further instructions for submitting your entire data product."
+                     "text":"The data publication process is a collaboration between you and the DAAC(s) you are assigned to. The information you provide in the Data Publication form, along with sample data and related documentation, will be reviewed by the DAAC. You may be asked to provide additional information and will receive further instructions for submitting your entire data product."
                   },
                   {
                       "text":"For more information on the typical activities performed during data publication, as well as your role and the role of the DAAC, see the <a title='data publication process' href='data_publication_guidelines#publication'>Data Publication Process</a> section of the <a href='data_publication_guidelines' name='Data Publication Guidelines' link_title='Data Publication Guidelines' link_text='Data Publication Guidelines'>Data Publication Guidelines</a>."
@@ -87,7 +112,7 @@ const GettingStartedData = {
                 ]
              },
              {
-               "number":4,
+               "number":5,
                "heading":"<span class='main-width sections'><b>Data product is published</b></span>",
                 "text":"When your data product has been published, you will receive an email from the DAAC and your request status will be updated in the <a title='Earthdata Pub Dashboard' href='dashboard'>Earthdata Pub Dashboard</a>."
             }
@@ -95,14 +120,14 @@ const GettingStartedData = {
        },
        {
           "heading":"<h2 class='display-4' id='status'>Track Your Request Status<hr></h2>",
-           "text":"You can track the status of your Data Accession or Data Publication requests on the Requests page of the <a title='Earthdata Pub Dashboard' href='dashboard'>Earthdata Pub Dashboard</a>. The Status column provides the current status of your request. Clicking on the status will provide additional information. "
+           "text":"You can track the status of any of your requests on the Requests page of the <a title='Earthdata Pub Dashboard' href='dashboard'>Earthdata Pub Dashboard</a>. The Status column provides the current status of your request. Clicking on the status will provide additional information. "
        },
        {
           "text":"You can also filter your requests by status by using the links on the left side of the Requests page. "
        },
        {
          "heading":"<h2 class='display-4' id='communicate'>Communicate with the DAAC<hr></h2>",
-          "text":"You can communicate about your data product using the Conversations page of the <a title='Earthdata Pub Dashboard' href='dashboard'>Earthdata Pub Dashboard</a>. Communication can be conducted on the Conversations page during the Data Accession or Data Publication process."
+          "text":"You can use the Conversations page of the <a title='Earthdata Pub Dashboard' href='dashboard'>Earthdata Pub Dashboard</a> to communicate with ESDIS or your assigned DAAC(s)."
       }
     ]
 };

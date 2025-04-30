@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import withQueryParams from 'react-router-query-params';
-import { listRequests } from '../actions';
+import { listRequests, initialize } from '../actions';
 import {
   nullValue,
 } from '../utils/format';
@@ -12,19 +12,39 @@ import List from './Table/Table';
 import {
   tableColumns
 } from '../utils/table-config/requests';
+import _config from '../config';
 import { overviewUrl } from '../config';
 import Select from 'react-select';
 import { strings } from './locale';
 import { requestPrivileges } from '../utils/privileges';
 import Loading from '../components/LoadingIndicator/loading-indicator';
+import { Modal, Button } from 'react-bootstrap';
+import { faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 class Home extends React.Component {
   constructor (props) {
     super(props);
-    this.state = { producers: [], originalList: {}, list: {}, intervalId: null };
+    this.state = {
+      producers: [],
+      originalList: {},
+      list: {},
+      intervalId: null,
+      isDropdownOpen: false,
+      isModalOpen: false,
+      codeValue: '',
+      codeError:''
+    };
     this.displayName = 'Home';
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleSelection = this.handleSelection.bind(this);
+    this.handleOutsideClick = this.handleOutsideClick.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
+    this.submitCode = this.submitCode.bind(this);
+    this.closeModal = this.closeModal.bind(this);
     this._isMounted = false;
     this.timeoutId = null; 
   }
@@ -108,6 +128,65 @@ async componentDidMount() {
 
   isExternalLink (link) {
     return link && link.match('https?://');
+  }
+
+  toggleDropdown(event) {
+    event.stopPropagation(); 
+
+    const { isDropdownOpen } = this.state;
+    if (!isDropdownOpen) {
+      document.addEventListener('click', this.handleOutsideClick);
+    } else {
+      document.removeEventListener('click', this.handleOutsideClick);
+    }
+
+    this.setState({ isDropdownOpen: !isDropdownOpen });
+  }
+
+  handleOutsideClick() {
+    if(this._isMounted){
+      this.setState({ isDropdownOpen: false });
+      document.removeEventListener('click', this.handleOutsideClick);
+    }
+  }
+
+  handleCodeChange(event) {
+    this.setState({ codeValue: event.target.value });
+  }
+  
+  async submitCode() {
+    const { codeValue } = this.state;
+    const { dispatch } = this.props;  
+  
+      // Log publication code submission
+      console.log('Publication code submitted:', codeValue);
+      const result = await dispatch(initialize({ 'code': codeValue }));
+
+      if(result && result.data && !result.data.error){
+        this.setState({ isModalOpen: false, codeValue: '' });
+        await this.updateList();
+      }else{
+        this.setState({ codeError: result.data.error });
+      }
+  }
+  
+  closeModal() {
+    this.setState({ isModalOpen: false, codeValue: '', codeError:'' });
+  }
+  
+  async handleSelection(e, req) {
+    const { dispatch } = this.props;  
+    e.preventDefault();
+
+    this.setState({ isDropdownOpen: false });
+    if(req === 'DAR'){
+      await dispatch(initialize());
+      await this.updateList();
+    }else if(req === 'DPR'){
+      this.setState({ isModalOpen: true });
+    }
+   
+    //this.props.history.push(path);  // Redirect based on selection
   }
 
   renderOverview () {
@@ -285,12 +364,25 @@ async componentDidMount() {
                 <div className='heading__wrapper--border'>
                   <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
                   { canInitialize ? (
-                    <Link
-                      to='/daac/selection'
+                    <div className='dropdown-container'>
+                    <button
+                      onClick={this.toggleDropdown}
                       className='button button--small button--green button--add-small form-group__element--right new-request-button'
                       aria-label='Create new request'>
                       New Request
-                    </Link>
+                    </button>
+              
+                    {this.state.isDropdownOpen && (
+                      <div className="dropdown-menu">
+                        <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
+                        Accession Request
+                        </button>
+                        <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
+                        Publication Request
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   ) : null}
                   <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                 </div>
@@ -318,7 +410,41 @@ async componentDidMount() {
                 }
               </div>
             </section>
-          </div>
+          </div> 
+
+        {<Modal show={this.state.isModalOpen} onHide={this.closeModal} className="custom-modal">
+          <Modal.Header closeButton>
+            <Modal.Title>Enter Publication Code</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter publication code"
+              value={this.state.codeValue}
+              onChange={this.handleCodeChange}
+            />
+            <span
+              className="error-modal"
+              style={{ color: this.state.codeError && this.state.codeError === '' ? 'green' : 'red' }}
+            >
+              {this.state.codeError !== '' ? (
+                <FontAwesomeIcon icon={faTimes} />
+              ) : this.state.codeError ? (
+                <FontAwesomeIcon icon={faCheck} />
+              ) : null}
+            </span>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button 
+              variant="primary"
+              onClick={this.submitCode}
+              disabled= { this.state.codeValue.trim() === '' ? true : false }>
+              Submit
+            </Button>
+            <Button variant="secondary" onClick={this.closeModal}>Close</Button>
+          </Modal.Footer>
+        </Modal>}       
         </div>
       );
     }

@@ -687,6 +687,7 @@
 
 .questions-component .eui-label {
   margin-top: 10px;
+  pointer-events: none;
 }
 
 .questions-component .form-group-error .form-control:focus .radio-group-error{

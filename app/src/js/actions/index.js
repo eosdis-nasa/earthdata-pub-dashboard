@@ -183,12 +183,30 @@ export const listFileUploadsBySubmission = (submissionId) => ({
   }
 });
 
+export const listFileUploadsBySubmissionStep = (submissionId) => ({
+  [CALL_API]: {
+    type: types.UPLOAD,
+    method: 'GET',
+    id: submissionId,
+    path: `data/upload/listStepUploads/${submissionId}`
+  }
+});
+
 export const listFileDownloadsByKey = (key) => ({
   [CALL_API]: {
     type: types.UPLOAD,
     method: 'GET',
     id: key,
     path: `data/upload/downloadUrl/${key}`
+  }
+});
+
+export const getUploadStep = (uploadStepId) => ({
+  [CALL_API]: {
+    type: types.UPLOAD_STEP,
+    method: 'GET',
+    id: uploadStepId,
+    path: `data/upload/uploadStep/${uploadStepId}`,
   }
 });
 
@@ -272,6 +290,15 @@ export const setWorkflowStep = (payload) => ({
   }
 });
 
+export const promoteStep = (payload) => ({
+  [CALL_API]: {
+    type: types.STEPS,
+    method: 'POST',
+    path: 'data/submission/operation/promoteStep',
+    body: payload
+  }
+});
+
 export const copyRequest = (payload) => ({
   [CALL_API]: {
     type: types.REQUESTS,
@@ -314,6 +341,15 @@ export const reviewRequest = (id, approve) => {
       });
   };
 };
+
+export const esdisReviewRequest = (id, action) => ({
+  [CALL_API]: {
+    type: types.REQUEST_REVIEW,
+    method: 'POST',
+    path: 'data/submission/operation/review/esdis',
+    body: { id, action }
+  }
+});
 
 export const updateRequestMetadata = (payload) => ({
   [CALL_API]: {
@@ -889,10 +925,9 @@ export const createGroup = (groupId, payload) => ({
   }
 });
 
-export const initialize = (id, payload) => ({
+export const initialize = (payload) => ({
   [CALL_API]: {
     type: types.REQUEST,
-    daac_id: id,
     method: 'POST',
     path: 'data/submission/operation/initialize',
     body: payload
@@ -1276,3 +1311,12 @@ export const addStep = (payload) => ({
 });
 
 export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });
+
+export const assignDaacs = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUEST,
+    method: 'POST',
+    path: '/api/data/submission/operation/assignDaacs',
+    body: payload
+  }
+});

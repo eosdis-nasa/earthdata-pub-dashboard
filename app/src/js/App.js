@@ -63,7 +63,7 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/forms', component: Forms },
     { path: '/inputs', component: Input },
     { path: '/sections', component: Sections },
-    { path: '/daac/selection', component: FormRequest },
+    { path: '/daac/assignment', component: FormRequest },
     { path: '/form/questions/:id', component: FormQuestions },
     { path: '/questions', component: Questions },
     { path: '/users', component: Users },
