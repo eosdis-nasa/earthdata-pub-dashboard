@@ -265,8 +265,9 @@ class RequestOverview extends React.Component {
     const { canEdit } = formPrivileges(this.props.privileges);
     const { roles } = this.props;
     const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
+    const canChangeWorkflow = canWithdraw && role.some((userRole) => userRole !== 'observer')
     let workflowSave;
-    if (canWithdraw) {
+    if (canChangeWorkflow) {
       workflowSave = this.renderWorkflowSave(record);
     }
     let canViewUsers = false;
