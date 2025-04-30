@@ -79,7 +79,7 @@ const data_publication_guidelines_data = {
                 {
                    "number":7,
                    "columns":[
-                      "<a title='Level 1 and Atmosphere Archive and Distribution System (LAADS)' href='https://nsidc.org/daac' class='ext' target=_blank>Level 1 and Atmosphere Archive and Distribution System (LAADS)</a>",
+                      "<a title='Level 1 and Atmosphere Archive and Distribution System (LAADS)' href='https://ladsweb.modaps.eosdis.nasa.gov/' class='ext' target=_blank>Level 1 and Atmosphere Archive and Distribution System (LAADS)</a>",
                       "MODIS (Moderate Resolution Imaging Spectrometer) Level 1 data (geolocation, L1A, and radiance L1B) and Atmosphere (Level 2 and Level 3)"
                    ]
                 },
