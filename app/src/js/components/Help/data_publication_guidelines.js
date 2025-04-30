@@ -20,6 +20,7 @@ const DataPublicationGuidelines = () => {
     daacs: useRef(null),
     preparation: useRef(null),
     accession: useRef(null),
+    evaluation: useRef(null),
     publication: useRef(null),
   };
 
