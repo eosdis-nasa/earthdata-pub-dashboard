@@ -417,6 +417,8 @@ async componentDidMount() {
             <Modal.Title>Enter Publication Code</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <p>Enter the publication code previously received in order to initiate a publication request to a DAAC.</p>
+            <br />
             <input
               type="text"
               className="form-control"
@@ -436,13 +438,19 @@ async componentDidMount() {
             </span>
           </Modal.Body>
           <Modal.Footer>
-            <Button 
-              variant="primary"
+            <button
+              className="button button--no-icon"
+              onClick={this.closeModal}
+              style={{backgroundColor: "#db1400"}}>
+              Cancel
+            </button>
+            <button
+              className="button button--no-icon"
+              style={{ backgroundColor: "#158749" }}
               onClick={this.submitCode}
               disabled= { this.state.codeValue.trim() === '' ? true : false }>
               Submit
-            </Button>
-            <Button variant="secondary" onClick={this.closeModal}>Close</Button>
+            </button>
           </Modal.Footer>
         </Modal>}       
         </div>
