@@ -18,7 +18,7 @@ const renderTooltip = (props) => (
 );
 
 const DynamicTable = ({ controlId, values, handleFieldChange, addRow, removeRow, moveUpDown }) => {
-  if(controlId && controlId.startsWith('assignment_')){
+  if(controlId && controlId.startsWith('dar_form_')){
     return <Table bordered responsive hover className="mt-3">
     <thead className="custom-table-header">
       <tr>
