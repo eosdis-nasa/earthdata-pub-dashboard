@@ -86,6 +86,45 @@ export const assignWorkflow = (request, formalName) => {
   }
 };
 
+export const assignDaacs = (request, formalName) => {
+  const allPrivs = getPrivileges();
+  let disabled = false;
+  if (typeof allPrivs !== 'undefined' && ( typeof allPrivs.isAdmin !== 'undefined' || allPrivs.canAssignDaac === true)) {
+    disabled = false;
+  } else {
+    disabled = true;
+  }
+  const isDetailPage = location.href.match(/id/g);
+  if (isDetailPage === null && disabled) {
+    return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
+  } else if (disabled) {
+    return formalName;
+  } else {
+    return <Link className={'button button--medium button--green form-group__element--left button--no-icon assign-workflow'}
+               to={`${request}`} name={'assignButton'} aria-label={formalName || 'DAAC assignment'}>{formalName}</Link>;
+  }
+};
+
+export const esdisReviewLink = (row, formalName, step) => {
+  const allPrivs = getPrivileges(step);
+  let disabled = false;
+  if (typeof allPrivs !== 'undefined' && ( typeof allPrivs.isAdmin !== 'undefined' || allPrivs.canReview === true)) {
+    disabled = false;
+  } else {
+    disabled = true;
+  }
+  const isDetailPage = location.href.match(/id/g);
+  if (isDetailPage === null && disabled) {
+    return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
+  } else if (disabled) {
+    return formalName;
+  } else if (step === 'additional_review_question') {
+    return <Link to={`/requests/question?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+  } else {
+    return <Link to={`/requests/approval/esdis?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+  }
+};
+
 export const existingLink = (row, formId, formalName, step, stepType) => {
   const allPrivs = getPrivileges(step);
   let disabled = false;
@@ -100,7 +139,9 @@ export const existingLink = (row, formId, formalName, step, stepType) => {
   } else if (disabled) {
     return formalName;
   } else {
-    if (typeof formId === 'undefined' || stepType === 'service') {
+    if (stepType === 'upload') {
+      return <Link to={`/upload/${row.id}?uploadStepId=${row.step_data.upload_step_id}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+    } else if (typeof formId === 'undefined' || stepType === 'service') {
         if (row.step_data && row.step_data.action_id) {
         return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
       }
@@ -165,9 +206,13 @@ export const stepLookup = (row) => {
             request = `${basepath}form/questions/${row.id}`;
           } 
           
-        // assign a workflow
+        // handle actions
         } else if (stepType.match(/action/g)) {
-          request = `/workflows?requestId=${row.id}`;
+          if (stepName.match(/assign_a_workflow/g)){
+            request = `/workflows?requestId=${row.id}`;
+          } else if (stepName.match(/daac_assignment(_final)?/g)) {
+            request = `/daac/assignment/${row.id}`;
+          }
         }
         break;
       }
@@ -175,8 +220,14 @@ export const stepLookup = (row) => {
   }
   if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
-  } else if (stepType.match(/action/g)) {
-    return existingLink(row, undefined, formalName, stepName);
+  } else if (stepType.match(/action/g) && stepName.match(/daac_assignment(_final)?/g)) {
+    return assignDaacs(request, formalName);
+  } else if (stepName.match(/additional_review_question/g)){
+    return esdisReviewLink(row, formalName, stepName);
+  } else if (stepType.match(/action/g) ||  stepType.match(/upload/g)) {
+    return existingLink(row, undefined, formalName, stepName, stepType);
+  } else if (stepType.match(/review/g) && stepName.match(/esdis_final_review/g)) {
+    return esdisReviewLink(row, formalName, stepName);
   } else if (stepType.match(/review/g) || stepType.match(/service/g)) {
     return existingLink(row, stepID, formalName, stepName, stepType);
   } else {

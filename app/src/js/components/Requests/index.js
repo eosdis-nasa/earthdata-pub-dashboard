@@ -8,6 +8,8 @@ import RequestsOverview from './overview';
 import InactiveRequestsOverview from './withdrawn';
 import ApprovalStep from './approval';
 import ActionRequestsOverview from './status';
+import EsdisApprovalStep from './esdis-approval';
+import AdditionalReviewQuestion from './additional_review';
 
 const Requests = ({
   location,
@@ -32,8 +34,10 @@ const Requests = ({
               <Route exact path='/requests/id/:requestId' component={RequestOverview} />
               <Route exact path='/requests' component={RequestsOverview} />
               <Route path='/requests/withdrawn' component={InactiveRequestsOverview} />
+              <Route path='/requests/approval/esdis' component={EsdisApprovalStep} />
               <Route path='/requests/approval' component={ApprovalStep} />
               <Route path='/requests/status' component={ActionRequestsOverview} />
+              <Route path='/requests/question' component={AdditionalReviewQuestion} />
             </Switch>
           </div>
         </div>

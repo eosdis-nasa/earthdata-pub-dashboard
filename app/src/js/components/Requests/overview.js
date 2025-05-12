@@ -15,6 +15,7 @@ import {
   // clearStatusesFilter,
   // listWorkflows,
   // getOptionsRequestName,
+  initialize,
 } from '../../actions';
 // import { get } from 'object-path';
 import {
@@ -39,6 +40,9 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 // import pageSizeOptions from '../../utils/page-size';
 import { requestPrivileges } from '../../utils/privileges';
 import Loading from '../LoadingIndicator/loading-indicator';
+import { Modal, Button } from 'react-bootstrap';
+import { faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const breadcrumbConfig = [
   {
@@ -59,11 +63,82 @@ const breadcrumbConfig = [
 class RequestsOverview extends React.Component {
   constructor () {
     super();
-    this.state = { producers: [], originalList: {}, list: {} };
+    this.state = {
+      producers: [],
+      originalList: {},
+      list: {},
+      codeValue: '',
+      codeError:''
+    };
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleSelection = this.handleSelection.bind(this);
+    this.handleOutsideClick = this.handleOutsideClick.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
+    this.submitCode = this.submitCode.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+
     this._isMounted = false;
     this.timeoutId = null; 
+  }
+
+  toggleDropdown(event) {
+    event.stopPropagation(); 
+    const { isDropdownOpen } = this.state;
+    if (!isDropdownOpen) {
+      document.addEventListener('click', this.handleOutsideClick);
+    } else {
+      document.removeEventListener('click', this.handleOutsideClick);
+    }
+
+    this.setState({ isDropdownOpen: !isDropdownOpen });
+  }
+
+  handleOutsideClick() {
+    if(this._isMounted){
+      this.setState({ isDropdownOpen: false });
+      document.removeEventListener('click', this.handleOutsideClick);
+    }
+  }
+
+  handleCodeChange(event) {
+    this.setState({ codeValue: event.target.value });
+  }
+  
+  async submitCode() {
+    const { codeValue } = this.state;
+    const { dispatch } = this.props;  
+  
+      // Log publication code submission
+      console.log('Publication code submitted:', codeValue);
+      const result = await dispatch(initialize({ 'code': codeValue }));
+
+      if(result && result.data && !result.data.error){
+        this.setState({ isModalOpen: false, codeValue: '' });
+        await this.updateList();
+      }else{
+        this.setState({ codeError: result.data.error });
+      }
+  }
+  
+  closeModal() {
+    this.setState({ isModalOpen: false, codeValue: '', codeError:'' });
+  }
+
+  async handleSelection(e, req) {
+    const { dispatch } = this.props;  
+    e.preventDefault();
+
+    this.setState({ isDropdownOpen: false });
+    if(req === 'DAR'){
+      await dispatch(initialize());
+      await this.updateList();
+    }else if(req === 'DPR'){
+      this.setState({ isModalOpen: true });
+    }
+   
+    //this.props.history.push(path);  // Redirect based on selection
   }
 
   async componentDidMount() {
@@ -209,12 +284,25 @@ class RequestsOverview extends React.Component {
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
             {canInitialize ? (
-                    <Link
-                      to='/daac/selection'
+                    <div className='dropdown-container'>
+                    <button
+                      onClick={this.toggleDropdown}
                       className='button button--small button--green button--add-small form-group__element--right new-request-button'
                       aria-label='Create new request'>
                       New Request
-                    </Link>
+                    </button>
+              
+                    {this.state.isDropdownOpen && (
+                      <div className="dropdown-menu">
+                        <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
+                        Accession Request
+                        </button>
+                        <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
+                        Publication Request
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   ) : null}
           </div>
           {!list
@@ -240,6 +328,47 @@ class RequestsOverview extends React.Component {
               </List>
           }
         </section>
+        {<Modal show={this.state.isModalOpen} onHide={this.closeModal} className="custom-modal">
+          <Modal.Header closeButton>
+            <Modal.Title>Enter Publication Code</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Enter the publication code previously received in order to initiate a publication request to a DAAC.</p>
+            <br />
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter publication code"
+              value={this.state.codeValue}
+              onChange={this.handleCodeChange}
+            />
+            <span
+              className="error-modal"
+              style={{ color: this.state.codeError && this.state.codeError === '' ? 'green' : 'red' }}
+            >
+              {this.state.codeError !== '' ? (
+                <FontAwesomeIcon icon={faTimes} />
+              ) : this.state.codeError ? (
+                <FontAwesomeIcon icon={faCheck} />
+              ) : null}
+            </span>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              className="button button--no-icon"
+              onClick={this.closeModal}
+              style={{backgroundColor: "#db1400"}}>
+              Cancel
+            </button>
+            <button
+              className="button button--no-icon"
+              style={{ backgroundColor: "#158749" }}
+              onClick={this.submitCode}
+              disabled= { this.state.codeValue.trim() === '' ? true : false }>
+              Submit
+            </button>
+          </Modal.Footer>
+        </Modal>}
       </div>
       );
     }
