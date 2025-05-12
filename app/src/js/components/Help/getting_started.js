@@ -70,6 +70,11 @@ const GettingStarted = () => {
               </a>
             </li>
             <li className="nav-item">
+              <a href="#evaluation" className="nav-link" onClick={() => scrollToSection("evaluation")}>
+                Data Evaluation Request
+              </a>
+            </li>
+            <li className="nav-item">
               <a href="#publication" className="nav-link" onClick={() => scrollToSection("publication")}>
                 Data Publication Request
               </a>
