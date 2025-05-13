@@ -90,12 +90,13 @@ class FormOverview extends React.Component {
     await dispatch(getRequest(requestId));
     let userReviewList = await dispatch(listRequestReviewers(requestId));
     let allU;
-    if(this.props.requests.detail.data.body){
+    if(!this.props.requests.detail.data || this.props.requests.detail.data.error){
       this.setState({ showErrorModal: true, errorMessage: 'Error fetching form data, please check on the Form/Request ID.'});
     }else{
-      if (this.props.requests.detail.data.step_name.includes('uwg')) {
+      const stepName = this.props.requests?.detail?.data?.step_name;
+      if (stepName && stepName.includes('uwg')) {
         allU = await dispatch(getUsers('19ac227b-e96c-46fa-a378-cf82c461b669'));
-      }else{
+      } else {
         allU = await dispatch(getUsers());
       }
       const dataFilter = this.props.requests.detail.data.step_name;
@@ -368,7 +369,7 @@ class FormOverview extends React.Component {
             }
           }
   
-          const files = resp.data;
+          const files = Array.isArray(resp.data) ? resp.data : [];
 
           files.sort(function (a, b) {
             var keyA = new Date(a.lastModified),
