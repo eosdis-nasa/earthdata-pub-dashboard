@@ -35,7 +35,7 @@ export const AddAttachmentButton = ({ conversationId, uploadedFilesRef, appendTo
             conversationId
         });
 
-        appendToUploadedFiles(resp.failed);
+        appendToUploadedFiles(resp.success);
     };
 
     const clickFileTypeInput = () => {
