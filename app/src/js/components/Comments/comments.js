@@ -17,6 +17,7 @@ import { CustomUpload } from '../DataUpload/customUpload';
 import localUpload from '@edpub/upload-utility';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import _config from '../../config';
+import { loadToken } from '../../utils/auth';
 
 class Comment extends React.Component {
   constructor() {
