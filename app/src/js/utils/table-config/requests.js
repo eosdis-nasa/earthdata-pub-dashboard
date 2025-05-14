@@ -218,21 +218,21 @@ export const stepLookup = (row) => {
       }
     }
   }
-  if (stepType.match(/action/g) && stepName.match(/assign_a_workflow/g)) {
+  if (stepType?.match(/action/g) && stepName?.match(/assign_a_workflow/g)) {
     return assignWorkflow(request, formalName);
-  } else if (stepType.match(/action/g) && stepName.match(/daac_assignment(_final)?/g)) {
+  } else if (stepType?.match(/action/g) && stepName?.match(/daac_assignment(_final)?/g)) {
     return assignDaacs(request, formalName);
-  } else if (stepName.match(/additional_review_question/g)){
+  } else if (stepName?.match(/additional_review_question/g)) {
     return esdisReviewLink(row, formalName, stepName);
-  } else if (stepType.match(/action/g) ||  stepType.match(/upload/g)) {
+  } else if (stepType?.match(/action/g) || stepType?.match(/upload/g)) {
     return existingLink(row, undefined, formalName, stepName, stepType);
-  } else if (stepType.match(/review/g) && stepName.match(/esdis_final_review/g)) {
+  } else if (stepType?.match(/review/g) && stepName?.match(/esdis_final_review/g)) {
     return esdisReviewLink(row, formalName, stepName);
-  } else if (stepType.match(/review/g) || stepType.match(/service/g)) {
+  } else if (stepType?.match(/review/g) || stepType?.match(/service/g)) {
     return existingLink(row, stepID, formalName, stepName, stepType);
   } else {
     return newLink(request, formalName);
-  }
+  }  
 };
 export const tableColumns = [
   {
