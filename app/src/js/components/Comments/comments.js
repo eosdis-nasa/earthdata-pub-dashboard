@@ -16,6 +16,7 @@ import { AddAttachmentButton, DisplayAttachmentButton } from '../Conversations/a
 import { CustomUpload } from '../DataUpload/customUpload';
 import localUpload from '@edpub/upload-utility';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import _config from '../../config';
 
 class Comment extends React.Component {
   constructor() {
@@ -229,7 +230,6 @@ class Comment extends React.Component {
               <div id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em', whiteSpace: "pre-wrap" }}>
                 {
                   this.state.existingNotes.map((note, idx) => {
-                    {console.log('note', note)};
                     return(
                       <div key={idx}>
                         {`${decodeURI(note.note)}, From: ${note.author}${note.viewer_str}`}
