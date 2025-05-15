@@ -371,11 +371,11 @@ const checkForUpdates = async (retryCount = 0) => {
             <section className='page__section flex__item--w-17 flex__item-end'>
               <div className='heading__wrapper--border'>
                 <h2 className='heading--medium heading--shared-content with-description'>
-                  Participants <span className='num--title'>{participants.length}</span>
+                  Participants <span className='num--title'>{participants?.length ?? 0}</span>
                 </h2>
               </div>
               <div className='flex__column'>
-                { participants.map((user, key) => (
+                { participants?.map((user, key) => (
                     <div key={key} className='flex__row sm-border'>
                     <div className='flex__item--w-15' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '200px' }}>
                     <style>
