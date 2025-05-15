@@ -182,6 +182,7 @@
     "react-collapsible": "^2.8.1",
     "react-datepicker": "^7.3.0",
     "react-datetime-picker": "^3.4.3",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^17.0.2",
     "react-flow-builder": "^2.8.0",
     "react-qr-code": "^2.0.12",
