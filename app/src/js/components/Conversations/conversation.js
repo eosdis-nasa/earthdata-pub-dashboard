@@ -194,6 +194,11 @@ const checkForUpdates = async (retryCount = 0) => {
     }, delay);
   };
 
+  const appendToUploadedFiles = (newFiles) => {
+    setUploadedFiles(new Set([...uploadedFiles, ...newFiles]));
+    return uploadedFiles;
+  };
+
   const handleRemoveFile = (fileName) => {
     //Have to ensure a rerender with the state update
     uploadedFiles.delete(fileName);
@@ -338,7 +343,7 @@ const checkForUpdates = async (retryCount = 0) => {
                         <CustomUpload customComponent={AddAttachmentButton}
                         conversationId={conversationId}
                         uploadedFilesRef={uploadedFilesRef}
-                        setUploadedFiles={setUploadedFiles}/>
+                        appendToUploadedFiles={appendToUploadedFiles}/>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                           Send Reply

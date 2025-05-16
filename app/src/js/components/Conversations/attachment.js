@@ -14,7 +14,7 @@ export const DisplayAttachmentButton = ({ fileName, removeFileHandler }) => {
     );
 };
 
-export const AddAttachmentButton = ({ conversationId, uploadedFilesRef, setUploadedFiles }) => {
+export const AddAttachmentButton = ({ conversationId, uploadedFilesRef, appendToUploadedFiles }) => {
     useImperativeHandle(uploadedFilesRef, () => ({
         getUploadedFiles: () => uploadedFiles
     }));
@@ -35,10 +35,7 @@ export const AddAttachmentButton = ({ conversationId, uploadedFilesRef, setUploa
             conversationId
         });
 
-        // Store the actual files, not just names
-        setUploadedFiles((currentState) => 
-            new Set([...currentState, ...resp.success])
-        );
+        appendToUploadedFiles(resp.success);
     };
 
     const clickFileTypeInput = () => {
