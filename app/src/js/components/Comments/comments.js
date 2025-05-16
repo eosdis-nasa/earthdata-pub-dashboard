@@ -249,9 +249,6 @@ class Comment extends React.Component {
                                     <span style={{ cursor: "not-allowed", color: "grey" }}>{attachment}</span>
                                 </OverlayTrigger>
                               )
-                              // <Tooltip title='Attachment temporarily unavailable.'>
-                              //   <a>{attachment}</a>
-                              // </Tooltip>
                             }
                             </>
                           );
