@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import {
   getConversation,
   replyConversation,
-  addUsersToConversation
+  addUsersToConversation,
+  removeUsersFromConversation
 } from '../../actions';
 import { notePrivileges } from '../../utils/privileges';
 import { lastUpdated } from '../../utils/format';
@@ -46,7 +47,7 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
   const { data, inflight, meta } = conversation;
   const { subject, notes = [], participants = [] } = data;
   const { queriedAt } = meta;
-  const { canReply, canAddUser } = notePrivileges(privileges);
+  const { canReply, canAddUser, canRemoveUser } = notePrivileges(privileges);
   const visibilityRef = useRef();
   const uploadedFilesRef = useRef();
 
@@ -194,6 +195,11 @@ const checkForUpdates = async (retryCount = 0) => {
     }, delay);
   };
 
+  const appendToUploadedFiles = (newFiles) => {
+    setUploadedFiles(new Set([...uploadedFiles, ...newFiles]));
+    return uploadedFiles;
+  };
+
   const handleRemoveFile = (fileName) => {
     //Have to ensure a rerender with the state update
     uploadedFiles.delete(fileName);
@@ -257,6 +263,14 @@ const checkForUpdates = async (retryCount = 0) => {
     setShowSearch(false);
   };
 
+  const handleRemoveUser = (conversationId, userId) => {
+    const params = {
+      conversation_id: conversationId,
+      user_id: userId
+    };
+    dispatch(removeUsersFromConversation(params));
+  };
+  
   const searchOptions = {
       entity: 'user',
       submit: submitCallback,
@@ -338,7 +352,7 @@ const checkForUpdates = async (retryCount = 0) => {
                         <CustomUpload customComponent={AddAttachmentButton}
                         conversationId={conversationId}
                         uploadedFilesRef={uploadedFilesRef}
-                        setUploadedFiles={setUploadedFiles}/>
+                        appendToUploadedFiles={appendToUploadedFiles}/>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                           Send Reply
@@ -362,14 +376,45 @@ const checkForUpdates = async (retryCount = 0) => {
             <section className='page__section flex__item--w-17 flex__item-end'>
               <div className='heading__wrapper--border'>
                 <h2 className='heading--medium heading--shared-content with-description'>
-                  Participants <span className='num--title'>{participants.length}</span>
+                  Participants <span className='num--title'>{participants?.length ?? 0}</span>
                 </h2>
               </div>
               <div className='flex__column'>
-                {
-                  participants.map((user, key) => {
-                    return <div className='sm-border' key={key}>{user.name}</div>;
-                  })
+                { participants?.map((user, key) => (
+                    <div key={key} className='flex__row sm-border'>
+                    <div className='flex__item--w-15' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '200px' }}>
+                    <style>
+                        {`                   
+                      .flex__item--w-15 .button--remove {
+                        color: white;
+                      }
+                      
+                      .flex__item--w-15 .button--remove:hover::before {
+                        color: white;
+                        background-color: #2c3e50;
+                        visibility: visible;
+                      }
+
+                      .flex__item--w-15 .button--remove:hover {
+                        background-color: #2c3e50;
+                      }
+                    `}
+                    </style>
+                    <span style={{ width: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={user.name}>
+                        {user.name}
+                    </span>
+                    {canRemoveUser && (
+                        <button
+                            className='button button--remove'
+                            onClick={() => handleRemoveUser(conversationId, user.id)}
+                            style={{ marginLeft: '2px', padding: '0px 10px 20px 25px' }}
+                        >
+                        </button>
+                    )}
+                </div>
+                </div>
+                )
+                  )
                 }
                 {canAddUser &&
                   <div className='flex__item--spacing'>

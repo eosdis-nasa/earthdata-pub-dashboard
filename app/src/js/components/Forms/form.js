@@ -701,7 +701,7 @@ class FormOverview extends React.Component {
                 onChange={this.handleSelectChange}
                 placeholder="Select Reviewers..."
               />
-              <div style={{ textAlign: 'right', 'margin-top': '5px'}}>
+              <div style={{ textAlign: 'right', 'marginTop': '5px'}}>
                 <button
                   className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
                   onClick={() => this.handleAddReviewer()}
