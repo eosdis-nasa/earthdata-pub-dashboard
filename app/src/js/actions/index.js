@@ -1154,6 +1154,24 @@ export const addUsersToConversation = (payload) => {
   };
 };
 
+export const removeUsersFromConversation = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.CONVERSATION_REMOVE_USER,
+        method: 'POST',
+        path: 'notification/remove_user',
+        body: payload
+      }
+    })
+      .then(() => {
+        setTimeout(() => {
+          dispatch(getConversation(payload.conversation_id));
+        }, 1000);
+      });
+  };
+};
+
 export const addUserToNote = (payload, conversationId) => {
   return (dispatch) => {
     dispatch({
