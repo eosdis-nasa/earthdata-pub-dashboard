@@ -74,7 +74,7 @@ class ReviewStep extends React.Component {
     const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
     const reviewers = this.props.rawReviewers.data
       .filter(reviewer => this.props.requests.detail.data.step_data.name === reviewer.step_name);
-    return reviewers.some(reviewer => reviewer.name === this.props.user) || (reviewers.length === 0 && role.some((userRole) => userRole !== 'observer'));
+    return reviewers.some(reviewer => reviewer.name === this.props.user) || reviewers.length === 0;
   }
 
   render() {
