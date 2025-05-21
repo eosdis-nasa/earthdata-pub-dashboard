@@ -117,6 +117,10 @@ class RequestsOverview extends React.Component {
       if(result && result.data && !result.data.error){
         this.setState({ isModalOpen: false, codeValue: '' });
         await this.updateList();
+        const { basepath } = _config;
+    
+        const url = `${basepath}form/questions/${result.data.id}`;
+        window.location.href = url;
       }else{
         this.setState({ codeError: result.data.error });
       }
@@ -132,8 +136,12 @@ class RequestsOverview extends React.Component {
 
     this.setState({ isDropdownOpen: false });
     if(req === 'DAR'){
-      await dispatch(initialize());
+      const init = await dispatch(initialize());
       await this.updateList();
+      const { basepath } = _config;
+    
+      const url = `${basepath}form/questions/${init.data.id}`;
+      window.location.href = url;
     }else if(req === 'DPR'){
       this.setState({ isModalOpen: true });
     }
