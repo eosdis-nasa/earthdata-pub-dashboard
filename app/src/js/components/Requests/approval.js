@@ -97,7 +97,7 @@ class ApprovalStep extends React.Component {
     let showTable = false;
     let reviewReady = false;
     let request = '';
-    let verbage = ['Return', 'Approve'];
+    let verbage = ['Return', 'Continue'];
     if (this.hasStepData()) {
       request = this.props.requests.detail.data;
       if (request.step_data.type === 'action') {
