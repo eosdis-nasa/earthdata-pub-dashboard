@@ -34,7 +34,8 @@ class Home extends React.Component {
       isDropdownOpen: false,
       isModalOpen: false,
       codeValue: '',
-      codeError:''
+      codeError:'',
+      isUpdating: false
     };
     this.displayName = 'Home';
     this.generateQuery = this.generateQuery.bind(this);
@@ -92,23 +93,23 @@ async componentDidMount() {
   this.timeoutId = setTimeout(intervalId, intervals[currentIntervalIndex]);
 }
   
-  async updateList() {
-    const { dispatch } = this.props;
+async updateList() {
+  const { dispatch } = this.props;
 
-    try {
-      await dispatch(listRequests());
-      const { requests } = this.props;
-      const { list } = requests;
-      const originalList = this.filter(list);
+  try {
+    await dispatch(listRequests());
+    const { requests } = this.props;
+    const { list } = requests;
+    const originalList = this.filter(list);
 
       // Only update state if the component is still mounted
-      if (this._isMounted) {
-        this.setState({ originalList, list: originalList });
-      }
-    } catch (error) {
-      console.error('Error updating the list:', error);
+    if (this._isMounted) {
+      this.setState({ originalList, list: originalList });
     }
-  }
+  } catch (error) {
+    console.error('Error updating the list:', error);
+  } 
+}
 
   componentWillUnmount() {
     this._isMounted = false;
@@ -163,8 +164,9 @@ async componentDidMount() {
       const result = await dispatch(initialize({ 'code': codeValue }));
 
       if(result && result.data && !result.data.error){
-        this.setState({ isModalOpen: false, codeValue: '' });
+        this.setState({ isModalOpen: false, isUpdating: true, codeValue: '' });
         await this.updateList();
+        this.setState({ isUpdating: false }); // stop loading
         const { basepath } = _config;
     
         const url = `${basepath}form/questions/${result.data.id}`;
@@ -179,23 +181,23 @@ async componentDidMount() {
   }
   
   async handleSelection(e, req) {
-    const { dispatch } = this.props;  
+    const { dispatch } = this.props;
     e.preventDefault();
-
+  
     this.setState({ isDropdownOpen: false });
     if (req === 'DAR') {
-      const init = await dispatch(initialize());
-      await this.updateList();
-      const { basepath } = _config;
+        this.setState({ isUpdating: true }); // Start loading
+        const init = await dispatch(initialize());
+        await this.updateList();
+        this.setState({ isUpdating: false }); // End loading
+        const { basepath } = _config;
     
-      const url = `${basepath}form/questions/${init.data.id}`;
-      window.location.href = url;
-    }
+        const url = `${basepath}form/questions/${init.data.id}`;
+        window.location.href = url;
+      }
     else if(req === 'DPR'){
       this.setState({ isModalOpen: true });
     }
-   
-    //this.props.history.push(path);  // Redirect based on selection
   }
 
   renderOverview () {
@@ -344,8 +346,12 @@ async componentDidMount() {
     });
     return newList;
   }
-
+  
   render () {
+    if (this.state.isUpdating) {
+      return <Loading />;
+    }
+    
     if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
       if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
         const searchElement = document.querySelector('.request-section input.search');

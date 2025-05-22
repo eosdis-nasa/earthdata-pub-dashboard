@@ -68,7 +68,8 @@ class RequestsOverview extends React.Component {
       originalList: {},
       list: {},
       codeValue: '',
-      codeError:''
+      codeError:'',
+      isUpdating: false
     };
     this.generateQuery = this.generateQuery.bind(this);
     this.handleProducerSelect = this.handleProducerSelect.bind(this);
@@ -115,8 +116,9 @@ class RequestsOverview extends React.Component {
       const result = await dispatch(initialize({ 'code': codeValue }));
 
       if(result && result.data && !result.data.error){
-        this.setState({ isModalOpen: false, codeValue: '' });
+        this.setState({ isModalOpen: false, isUpdating: true, codeValue: '' });
         await this.updateList();
+        this.setState({ isUpdating: false }); // stop loading
         const { basepath } = _config;
     
         const url = `${basepath}form/questions/${result.data.id}`;
@@ -136,8 +138,10 @@ class RequestsOverview extends React.Component {
 
     this.setState({ isDropdownOpen: false });
     if(req === 'DAR'){
+      this.setState({ isUpdating: true }); // Start loading
       const init = await dispatch(initialize());
       await this.updateList();
+      this.setState({ isUpdating: false }); // End loading
       const { basepath } = _config;
     
       const url = `${basepath}form/questions/${init.data.id}`;
@@ -264,6 +268,10 @@ class RequestsOverview extends React.Component {
   }
   
   render () {
+    if (this.state.isUpdating) {
+      return <Loading />;
+    }
+
     if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
       if (document.querySelector('.request-section input.search') !== undefined && document.querySelector('.request-section input.search') !== null) {
         const searchElement = document.querySelector('.request-section input.search');
