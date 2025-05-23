@@ -234,7 +234,7 @@ class Comment extends React.Component {
                     return(
                       <div key={idx}>
                         {`${decodeURI(note.note)}, From: ${note.author}${note.viewer_str}`}
-                        {note.attachments && ', Attachments: '}
+                        {note?.attachments?.length > 0 && ', Attachments: '}
                         { note?.attachments?.map((attachment, idx) => {
                           return (
                             <>
