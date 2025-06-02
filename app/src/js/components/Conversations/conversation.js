@@ -209,10 +209,15 @@ const checkForUpdates = async (retryCount = 0) => {
   const reply = async (dispatch, id) => {
     const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility();
 
-    if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)) {
-        viewer_users.push(current_user_id);
+    if (
+      Array.isArray(viewer_users) &&
+      current_user_id &&
+      !viewer_users.includes(current_user_id) &&
+      !(viewer_users.length > 0 || viewer_roles.length > 0)
+    ) {
+      viewer_users.push(current_user_id);
     }
-
+    
     const resp = encodeURI(textRef.current.value);
 
     const payload = { 
