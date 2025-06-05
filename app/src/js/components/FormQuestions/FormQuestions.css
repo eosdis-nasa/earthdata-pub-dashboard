@@ -1036,3 +1036,8 @@
 .input-error-form::placeholder {
   color: red;
 }
+
+.big-tooltip {
+  font-size: 1em;
+  padding: 2px;
+}

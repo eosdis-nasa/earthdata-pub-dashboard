@@ -1662,16 +1662,17 @@ const FormQuestions = ({
                                             input.control_id || `${input}_${c_key}`
                                           }
                                           className="eui-label"
-                                          style={{
-                                            display:
-                                              input.label !== undefined &&
-                                              input.label !== '' &&
-                                              input.type !== 'checkbox' &&
-                                              input.type !== 'bbox' &&
-                                              input.type !== 'table'
-                                                ? 'block'
-                                                : 'none',
-                                          }}
+                                         style={{
+                                          display:
+                                            input.label !== undefined &&
+                                            input.label !== '' &&
+                                            input.type !== 'checkbox' &&
+                                            input.type !== 'bbox' &&
+                                            input.type !== 'table'
+                                              ? 'block'
+                                              : 'none',
+                                          fontSize: '15px',
+                                        }}
                                         >
                                           {input.label}:
                                         </label>

@@ -39,7 +39,9 @@ export const getPrivileges = (step) => {
       canCreateForm: privileges.find(o => o.match(/ADMIN/g)),
       canUpdateForm: privileges.find(o => o.match(/ADMIN/g)),
       ...requestPrivileges(privilegesByType, step),
-      canReadDaac: daacRead
+      canReadDaac: daacRead,
+      isRootObserver: !!user.user_groups.find(obj => obj.short_name === 'root_group') && !!user.user_roles.find(obj => obj.short_name === 'observer'),
+      userPrivilages: privileges
     };
     return allPrivs;
   }
@@ -133,6 +135,15 @@ export const existingLink = (row, formId, formalName, step, stepType) => {
   } else {
     disabled = true;
   }
+
+  if (typeof allPrivs !== 'undefined' && allPrivs.canReview && (allPrivs.isStaff?.id && step === 'data_accession_request_form_review')) {
+    disabled = true;
+  } 
+
+  if(typeof allPrivs !== 'undefined' && allPrivs.isRootObserver && (step === 'data_publication_request_form_review' || step === 'data_evaluation_request_form_review')) {
+    disabled = true;
+  }
+
   const isDetailPage = location.href.match(/id/g);
   if (isDetailPage === null && disabled) {
     return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
@@ -225,10 +236,12 @@ export const stepLookup = (row) => {
   } else if (stepName?.match(/additional_review_question/g)) {
     return esdisReviewLink(row, formalName, stepName);
   } else if (stepType?.match(/action/g) || stepType?.match(/upload/g)) {
+    console.log('stepType action',stepType);
     return existingLink(row, undefined, formalName, stepName, stepType);
   } else if (stepType?.match(/review/g) && stepName?.match(/esdis_final_review/g)) {
     return esdisReviewLink(row, formalName, stepName);
   } else if (stepType?.match(/review/g) || stepType?.match(/service/g)) {
+    console.log('stepType review',stepType);
     return existingLink(row, stepID, formalName, stepName, stepType);
   } else {
     return newLink(request, formalName);

@@ -326,19 +326,19 @@ export const deleteStepReviewApproval = (payload) => ({
   }
 });
 
+// .then() does the same, for readability and maintainability I am using await/sync
 export const reviewRequest = (id, approve) => {
-  return (dispatch) => {
-    dispatch({
+  return async (dispatch) => {
+    const apiResp = await dispatch({
       [CALL_API]: {
         type: types.REQUEST_REVIEW,
         method: 'POST',
         path: 'data/submission/operation/review',
         body: { id, approve }
       }
-    })
-      .then(() => {
-        dispatch(getRequest(id));
-      });
+    });
+    await dispatch(getRequest(id));
+    return apiResp;
   };
 };
 
