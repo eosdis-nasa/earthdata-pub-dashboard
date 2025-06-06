@@ -236,12 +236,10 @@ export const stepLookup = (row) => {
   } else if (stepName?.match(/additional_review_question/g)) {
     return esdisReviewLink(row, formalName, stepName);
   } else if (stepType?.match(/action/g) || stepType?.match(/upload/g)) {
-    console.log('stepType action',stepType);
     return existingLink(row, undefined, formalName, stepName, stepType);
   } else if (stepType?.match(/review/g) && stepName?.match(/esdis_final_review/g)) {
     return esdisReviewLink(row, formalName, stepName);
   } else if (stepType?.match(/review/g) || stepType?.match(/service/g)) {
-    console.log('stepType review',stepType);
     return existingLink(row, stepID, formalName, stepName, stepType);
   } else {
     return newLink(request, formalName);
