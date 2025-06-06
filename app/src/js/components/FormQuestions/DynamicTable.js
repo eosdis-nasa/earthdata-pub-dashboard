@@ -11,7 +11,7 @@ const ForwardedFontAwesomeIcon = forwardRef((props, ref) => (
 ));
 
 const renderTooltip = (props) => (
-  <Tooltip id="tooltip-volume" {...props}>
+  <Tooltip id="tooltip-volume" {...props} className="big-tooltip">
     The DAAC uses the total volume of the final data product to plan data storage requirements. If the final data
     product is not complete, please provide your best estimate for the total data volume.
   </Tooltip>
