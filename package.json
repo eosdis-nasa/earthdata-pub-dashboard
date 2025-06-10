@@ -34,11 +34,15 @@
     "test": "NODE_ENV=test npm run lint && ava",
     "e2e-tests": "docker-compose -f ./docker-compose.yml -f ./docker-compose-cypress.yml up --exit-code-from=e2e --abort-on-container-exit",
     "validation-tests": "docker-compose -f ./docker-compose.yml -f ./docker-compose-validate.yml up --exit-code-from=validate --abort-on-container-exit",
-    "start-dashboard": "npm run start",
-    "stop-dashboard": "npm run stop",
     "start": "docker-compose -f ./docker-compose.yml up -d",
     "stop": "docker-compose -f ./docker-compose.yml down",
-    "view-logs": "docker-compose -f ./docker-compose.yml up"
+    "view-logs": "docker-compose -f ./docker-compose.yml up",
+    "start-api": "cd ../earthdata-pub-api && npm run start:detached",
+    "stop-api": "cd ../earthdata-pub-api && npm run stop",
+    "start-dashboard": "npm run start",
+    "stop-dashboard": "npm run stop",
+    "start-dev": "npm run start-api && npm run start-dashboard",
+    "stop-dev": "npm run stop-api && npm run stop-dashboard"
   },
   "ava": {
     "babel": {
@@ -182,6 +186,7 @@
     "react-collapsible": "^2.8.1",
     "react-datepicker": "^7.3.0",
     "react-datetime-picker": "^3.4.3",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^17.0.2",
     "react-flow-builder": "^2.8.0",
     "react-qr-code": "^2.0.12",

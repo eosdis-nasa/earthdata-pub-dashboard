@@ -37,6 +37,9 @@ import FormQuestions from './components/FormQuestions';
 import Download from './components/DataDownload';
 import Steps from './components/Steps';
 import config from './config';
+import OverviewApp from './components/Help/app';
+import Tophat2 from './components/Tophat/top_hat';
+
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
 dom.watch();
 
@@ -49,10 +52,9 @@ localStorage.setItem('mobile', check);
 import { useState, useEffect } from 'react';
 
 const MainRoutes = ({ activeRoute }) => {
-  const history = useHistory();  // Use history for programmatic navigation
-  const [redirected, setRedirected] = useState(false); // State to track if redirection has occurred
+  const history = useHistory();
+  const [redirected, setRedirected] = useState(false);
 
-  // Define your routes in an array
   const routes = [
     { path: '/', component: Home, exact: true },
     { path: '/error', component: Error },
@@ -61,7 +63,7 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/forms', component: Forms },
     { path: '/inputs', component: Input },
     { path: '/sections', component: Sections },
-    { path: '/daac/selection', component: FormRequest },
+    { path: '/daac/assignment', component: FormRequest },
     { path: '/form/questions/:id', component: FormQuestions },
     { path: '/questions', component: Questions },
     { path: '/users', component: Users },
@@ -112,47 +114,81 @@ const MainRoutes = ({ activeRoute }) => {
 
 // generate the root App Component
 class App extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      currentPath: window.location.pathname,  // Store current path in state
+    };
     this.store = ourConfigureStore({});
     this.isLoggedIn = this.isLoggedIn.bind(this);
   }
 
-  isLoggedIn () {
+  componentDidMount() {
+    // Listen for route changes
+    this.unlisten = history.listen((location) => {
+      this.setState({ currentPath: location.pathname });  // Update state on path change
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.unlisten) this.unlisten();  // Clean up listener
+  }
+
+  isLoggedIn() {
     return this.store.getState().api.authenticated;
   }
 
-  render () {
-    return (
-    <div className="routes">
-    <Provider store={this.store}>
-      <ConnectedRouter history={history}>
-        <Switch>
-          <Redirect exact from='/login' to='/auth' />
-          <Route path='/auth' component={Auth} />
+  render() {
+    const url = window.location.href;
+    const parts = url.split("/").filter((part, index) => index !== 0 && part !== ""); 
+    
+    let pathValue = parts.length > 1 
+    ? parts[1] && (["getting_started", "data_publication_guidelines", "help"].some(prefix => parts[1].startsWith(prefix)) ? parts[1] : false) 
+    : 'help';
 
-          <Route 
+    if (
+      parts[0].includes("localhost") && 
+      (!parts[1] || 
+      (parts[1] !== 'help' && 
+      !["getting_started", "data_publication_guidelines", "dashboard"].some(prefix => parts[1]?.startsWith(prefix))))
+    ) {
+      pathValue = false;
+    }
+    
+    return (
+      <div className="routes">
+        <Provider store={this.store}>
+          <ConnectedRouter history={history}>
+            <Tophat2 />
+            <Switch>
+              <Redirect exact from='/login' to='/auth' />
+              <Route path='/auth' component={Auth} />
+
+              {pathValue && (
+                <Route path="/" render={() => <OverviewApp keyword={pathValue}/>} />
+              )}
+
+              <Route
             path='/' 
-            render={(props) => {
-              if (this.isLoggedIn()) {
+                render={(props) => {
+                  if (this.isLoggedIn()) {
                 const redirect = localStorage.getItem('redirectAfterLogin') ||  history.location.pathname || '/';
-                return <MainRoutes activeRoute={redirect} />;
-              } else {
+                    return <MainRoutes activeRoute={redirect} />;
+                  } else {
                 // Store the intended URL in localStorage before redirecting to auth
-                const { pathname, search } = props.location;
+                    const { pathname, search } = props.location;
                 // Check if search is not empty or null, then ppend it to pathname
                 const fullPath = search && search !== "" ? `${pathname}${search}` : pathname;
                 // Store the full path in localStorage
-                localStorage.setItem('redirectAfterLogin', fullPath);
+                    localStorage.setItem('redirectAfterLogin', fullPath);
                 return <Redirect to='/auth' />;
-              }
-            }} 
-          />
-        </Switch>
-      </ConnectedRouter>
-    </Provider>
-  </div>
+                  }
+                }}
+              />
+            </Switch>
+          </ConnectedRouter>
+        </Provider>
+      </div>
     );
   }
 }

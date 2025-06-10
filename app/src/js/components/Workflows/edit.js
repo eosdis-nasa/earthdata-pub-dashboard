@@ -14,7 +14,7 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import ErrorReport from '../Errors/report';
 import Demo from './workflow-builder';
-import { listSteps } from '../../actions';
+import { listSteps, listWorkflows } from '../../actions';
 
 class Workflows extends React.Component {
   constructor () {
@@ -28,8 +28,9 @@ class Workflows extends React.Component {
     this.handleSaveFlow = this.handleSaveFlow.bind(this);
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     const { dispatch } = this.props;
+    await dispatch(listWorkflows());
     const { workflowId } = this.props.match.params;
     workflowId ? dispatch(getWorkflow(workflowId)) : null;
     dispatch(listSteps());
@@ -127,7 +128,7 @@ class Workflows extends React.Component {
                                                 onClick={() => this.state.view !== 'flow' && this.setState({ view: 'flow' })}>Workflow Builder</button>
                                     </div>
                                     <div>
-                                    {this.state.view === 'json' ? this.renderJson((this.state.data ? this.state.data : record.data), this.refName):<Demo initialFlowData={record.data && record.data.steps? record.data:null} initialNodeOptions={stepsList}  onSaveFlow={this.handleSaveFlow}/>}
+                                    {this.state.view === 'json' ? this.renderJson((this.state.data ? this.state.data : record.data), this.refName):<Demo initialFlowData={record.data && record.data.steps? record.data:null} initialNodeOptions={stepsList} workflows={this.props.workflows.list.data} onSaveFlow={this.handleSaveFlow} workflowId ={workflowId}/>}
                                     </div>
                                 </div>
                           : null

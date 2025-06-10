@@ -7,31 +7,36 @@ import {
   getRequest,
   replyConversation,
   getForm,
-  getStepConversation,
-  getUser,
-  getRole
+  getStepConversation
 } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
-import { requestPrivileges, formPrivileges, notePrivileges } from '../../utils/privileges';
-import SearchModal from '../SearchModal';
+import { requestPrivileges } from '../../utils/privileges';
+import { NewNoteVisibility } from '../Conversations/visibility';
+import { AddAttachmentButton, DisplayAttachmentButton } from '../Conversations/attachment';
+import { CustomUpload } from '../DataUpload/customUpload';
+import localUpload from '@edpub/upload-utility';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import _config from '../../config';
+import { loadToken } from '../../utils/auth';
 
 class Comment extends React.Component {
   constructor() {
     super();
     this.displayName = 'Comment';
     this.state = { 
-      textRef: React.createRef(), 
-      showSearch: false, 
-      searchType: 'user', 
-      commentViewers: [], 
-      commentViewerRoles: [],
-      idMap: {} 
+      textRef: React.createRef(),
+      visibilityRef: React.createRef(),
+      uploadedFilesRef: React.createRef(),
+      uploadedFiles: [],
+      existingNotes: [],
+      formsMap: {}
     };
 
-    this.openSearch = this.openSearch.bind(this);
-    this.closeSearch = this.closeSearch.bind(this);
-    this.addViewer = this.addViewer.bind(this);
-    this.addRole = this.addRole.bind(this)
+    this.appendToUploadedFiles = this.appendToUploadedFiles.bind(this);
+    this.handleRemoveFile = this.handleRemoveFile.bind(this);
+    this.getStepComments = this.getStepComments.bind(this);
+    this.getReviewStepName = this.getReviewStepName.bind(this);
+    this.handleDownload = this.handleDownload.bind(this);
   }
 
   async componentDidMount() {
@@ -40,43 +45,54 @@ class Comment extends React.Component {
     if (search[1] !== undefined) {
       requestId = search[1].replace(/&step/g, '');
     }
-    const step = search[2];
+    const { dispatch } = this.props;
+    await dispatch(getRequest(requestId));
+    await this.getReviewStepName(search);
+  }
+  async getReviewStepName(search) {
     const { dispatch } = this.props;
     const { formId } = this.props.match.params;
-    await dispatch(getRequest(requestId));
-    await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
-    let reviewStepName = `${this.props.forms.map[formId].data.short_name}_form_review`;
+    const step = search[2];
+    if (formId) {
+      await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
+      this.setState({formsMap: this.props.forms.map});
+    } else {this.setState({formsMap: {'undefined': {data: {error: 'No formId'}}}});}
+    // TODO - Update the above line to properly handle this error rather than just matching existing functionality
     if (this.props.requests.detail.data.conversation_id) {
+      const formObj = this.state.formsMap[formId];
+      this.state.reviewStepName = `${formObj.data.short_name}_form_review`;
       if ( typeof this.props.requests.detail.data.step_name !== 'undefined' && typeof step === 'undefined'){
-        reviewStepName = this.props.requests.detail.data.step_name;
-      } else if (typeof this.props.forms.map[formId].data.short_name === 'undefined' && typeof step !== 'undefined') {
-        reviewStepName = step;
-      } else if (typeof this.props.forms.map[formId].data.short_name === 'undefined') {
-        reviewStepName = '';
+        this.state.reviewStepName = this.props.requests.detail.data.step_name;
+      } else if (typeof formObj.data.short_name === 'undefined' && typeof step !== 'undefined') {
+        this.state.reviewStepName = step;
+      } else if (typeof formObj.data.short_name === 'undefined') {
+        this.state.reviewStepName = '';
       }
-      const payload = { conversation_id: this.props.requests.detail.data.conversation_id, level: true, step_name: reviewStepName };
-      await dispatch(getStepConversation(payload)).then(() => {
-        for (const ea in this.props.conversations.conversation.data.notes) {
-          const note = this.props.conversations.conversation.data.notes[ea].text.split('Comment: ')[1];
-          const author = this.props.conversations.conversation.data.notes[ea].from.name;
-          const viewer_users = this.props.conversations.conversation.data.notes[ea].viewers.users;
-          const viewer_roles = this.props.conversations.conversation.data.notes[ea].viewers.roles;
-          let viewers = [];
-          viewer_users && viewer_users.forEach( function(user){
-            viewers.push(user.name)
-          })
-          viewer_roles && viewer_roles.forEach( function(role){
-            viewers.push(role.name)
-          })
-
-          const viewer_str = viewers && viewers.length ? `, Viewers: ${viewers.join(", ")}` : "";
-
-          if (document.getElementById('previously-saved') !== null && typeof note !== 'undefined') {
-            document.getElementById('previously-saved').innerHTML += `${decodeURI(note)}, From: ${author} ${viewer_str}<br>`;
-          }
-        }
-      });
+      const payload = { conversation_id: this.props.requests.detail.data.conversation_id, level: true, step_name: this.state.reviewStepName };
+      await this.getStepComments(payload);
     }
+  }
+  async getStepComments(payload) {
+    const { dispatch } = this.props;
+    await dispatch(getStepConversation(payload)).then(() => {
+      const notesArr = [];
+      this.props.conversations.conversation.data.notes.forEach((noteElem) => {
+        const note = noteElem.text.split('Comment: ')[1];
+        const author = noteElem.from.name;
+        let viewers = [
+          ...(noteElem.viewers.users?.map((user) => user.name) || []),
+          ...(noteElem.viewers.roles?.map((role) => role.name) || [])
+        ];
+        const viewer_str = viewers?.length ? `, Viewers: ${viewers.join(", ")}` : "";
+        notesArr.push({id: noteElem.id, note, author, viewer_str, attachments: noteElem.attachments});
+        });
+      this.setState({existingNotes: notesArr.reverse()});
+    });
+  }
+
+  appendToUploadedFiles(newFiles) {
+    this.setState({uploadedFiles: new Set([...this.state.uploadedFiles, ...newFiles])});
+    return this.state.uploadedFiles;
   }
 
   getFormalName(str) {
@@ -100,129 +116,78 @@ class Comment extends React.Component {
   }
 
   hasStepData() {
-    if (typeof this.props.requests !== 'undefined' &&
-      typeof this.props.requests.detail.data !== 'undefined' &&
-      typeof this.props.requests.detail.data.step_data !== 'undefined') {
-      return true;
-    } else {
-      return false;
-    }
+    return (typeof this.props?.requests?.detail?.data?.step_data !== 'undefined');
   }
 
-  reply(requestName, id, stepName, step) {
+  handleDownload ({noteId, attachment}) {
+    const download = new localUpload();
+    const { apiRoot } = _config;
+    download.downloadFile(`attachments/${noteId}/${attachment}`, `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
+        let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+        if (error) {
+          console.log(`An error has occurred: ${error}.`);
+        }
+    });
+  }
+
+  async reply(requestName, id, stepName, step) {
     const { dispatch } = this.props;
-    if (this.state.textRef.current.value !== '') {
+    const attachments = [...this.state.uploadedFiles];
+    if (this.state.textRef.current.value !== '' || attachments.length > 0) {
       const date = new Date();
       const datetime = date.toLocaleString();
       const comment = `${datetime} - ${encodeURI(this.state.textRef.current.value)}`;
       const reply = `${requestName} - Step: ${stepName}, Comment: ${comment}`;
-      // if the user has chosen to specify viewers, ensure that they are one of them
       const current_user = JSON.parse(window.localStorage.getItem('auth-user'));
-      const viewer_user_list = [...this.state.commentViewers];
-      let viewerList = Object.values(this.state.idMap);
-      if (!this.state.commentViewers.includes(current_user.id) && 
-        (this.state.commentViewers.length || this.state.commentViewerRoles.length)){
-          viewer_user_list.push(current_user.id); 
-          viewerList.push(current_user.name);
-        
-      } 
-      const payload = { conversation_id: id, text: reply, step_name: step , viewer_users: viewer_user_list, viewer_roles: this.state.commentViewerRoles};
-      dispatch(replyConversation(payload));
-      const author = current_user.name;
-      const viewer_str = viewerList && viewerList.length ? `, Viewers: ${viewerList.join(", ")}` : "";
-      document.getElementById('previously-saved').innerHTML += `${datetime} - ${this.state.textRef.current.value}, From: ${author}${viewer_str}<br>`;
-      this.state.textRef.current.value = '';
-      this.setState({ commentViewers: []})
-      this.setState({ commentViewerRoles: []})
-      this.setState({ idMap: {}})
+      const { viewer_users, viewer_roles, viewer_names } = this.state.visibilityRef.current.getVisibility();
+      // ensure the person adding the comment is a viewer if they've limited the note
+      if (!viewer_users.includes(current_user.id) && (viewer_users.length || viewer_roles.length)){
+        viewer_users.unshift(current_user.id);
+        viewer_names.unshift(current_user.name);
+      }
+      const payload = { conversation_id: id, text: reply, step_name: step , viewer_users, viewer_roles, attachments};
+      await dispatch(replyConversation(payload));
       localStorage.setItem(`${this.props.requests.detail.data.id}_${step}`, 'saved');
-      document.querySelectorAll('button.button--reply')[0].classList.add('hidden');
+      this.setState({
+        existingNotes: [
+          ...this.state.existingNotes,
+          {
+            note: reply.split('Comment: ')[1],
+            author: current_user.name,
+            viewer_str: viewer_names.length > 0 ? `, Viewers: ${viewer_names.join(', ')}`: '',
+            attachments
+          }
+        ],
+        uploadedFiles: []
+      });
+      this.state.textRef.current.value = '';
+      this.state.visibilityRef?.current?.resetIdMap();
     }
   }
 
-  async openSearch(searchEntity) {
-    this.setState({ searchType: searchEntity});
-    this.setState({ showSearch: true });
+  handleRemoveFile(fileName) {
+    //Have to ensure a rerender with the state update
+    this.state.uploadedFiles.delete(fileName);
+    this.setState({uploadedFiles: this.state.uploadedFiles});
   }
-
-  async closeSearch() {
-    this.setState({ showSearch: false });
-  }
-
-  async addViewer(id) {
-    if (!this.state.commentViewers.includes(id)){
-      const { dispatch } = this.props;
-      await dispatch(getUser(id)).then( (user) =>{
-        let mapCopy = { ...this.state.idMap }; 
-        mapCopy[id] = user.data.name;
-        this.setState({idMap: mapCopy});
-        this.setState({ commentViewers: [...this.state.commentViewers, id]})
-      })
-    }
-
-    this.setState({ showSearch: false });
-  };
-
-  async addRole(id) {
-    if (!this.state.commentViewerRoles.includes(id)){
-      const { dispatch } = this.props;
-      await dispatch(getRole(id)).then( (role) =>{
-        let mapCopy = { ...this.state.idMap }; 
-        mapCopy[id] = role.data.long_name;
-        this.setState({idMap: mapCopy});
-        this.setState({ commentViewerRoles: [...this.state.commentViewerRoles, id]})
-
-      })
-    }
-    
-    this.setState({ showSearch: false });
-  };
-
-  async removeViewer(viewerId, viewerType) {
-    switch(viewerType){
-      case "user":
-          const newViewers = this.state.commentViewers.filter((viewer) => viewer !== viewerId);
-          this.setState({ commentViewers: newViewers })
-        break;
-      case "role":
-        const newRoles = this.state.commentViewerRoles.filter((viewer) => viewer !== viewerId);
-        this.setState({ commentViewerRoles: newRoles })
-        break;
-    }
-
-    const mapCopy = { ...this.state.idMap };
-    delete mapCopy[viewerId];
-    this.setState({idMap: mapCopy});
-  };
 
   render() {
+    const { dispatch, privileges } = this.props;
     let reviewable = false;
     let sameFormAsStep = false;
     let request = this.props.requests.detail.data;
     let requestId = request ? request.id : '';
     let step = request?.step_name;
     let stepName = this.getFormalName(step);
-    let { canReview } = requestPrivileges(this.props.privileges, step);
-    const { canAddUser, canRemoveUser } = notePrivileges(this.props.privileges);
+    let { canReview } = requestPrivileges(privileges, step);
     let conversationId = '';
     let requestName = '';
     const formId = this.props.match.params.formId;
     let formName = '';    
-    const searchOptions = {
-      user: {
-        entity: 'user',
-        submit: this.addViewer,
-        cancel: this.closeSearch
-      },
-      role: {
-        entity: 'role',
-        submit: this.addRole,
-        cancel: this.closeSearch
-      }
-    };
+
     if (this.hasStepData() && request !== undefined) {
-      if (this.props.forms.map !== undefined && this.props.forms.map[formId] !== undefined && this.props.forms.map[formId].data !== undefined) {
-        formName = this.props.forms.map[formId].data.short_name;
+      if(this.state.formsMap[formId]?.data !== undefined) {
+        formName = this.state.formsMap[formId]?.data?.short_name;
         if (this.props.requests.detail.data.forms !== null) {
           if (this.props.requests.detail.data.form_data?.data_product_name_value) {
             requestName = this.props.requests.detail.data.form_data.data_product_name_value;
@@ -260,79 +225,61 @@ class Comment extends React.Component {
       }
       return (
         <section className='page_section'>
-          {this.state.showSearch && <SearchModal {...searchOptions[this.state.searchType]} />}
           {typeof requestId !== 'undefined' &&
             <form className='flex__column flex__item--grow-1'
               onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName, step); }}>
-              <span id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em', whiteSpace: "pre-wrap"}}></span>
+              <div id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em', whiteSpace: "pre-wrap" }}>
+                {
+                  this.state.existingNotes.map((note, idx) => {
+                    return(
+                      <div key={idx}>
+                        {`${decodeURI(note.note)}, From: ${note.author}${note.viewer_str}`}
+                        {note?.attachments?.length > 0 && ', Attachments: '}
+                        { note?.attachments?.map((attachment, idx) => {
+                          return (
+                            <>
+                            {idx > 0 ? ', ' : ' '}
+                            { note.id ?
+                              <a onClick={(e) => this.handleDownload({noteId: note.id, attachment})}>{attachment}</a> :
+                              (
+                                <OverlayTrigger
+                                    placement="top"
+                                    overlay={<Tooltip id={`tooltip-${note.id}-${idx}`}>Attachment temporarily unavailable.</Tooltip>}
+                                >
+                                    <span style={{ cursor: "not-allowed", color: "grey" }}>{attachment}</span>
+                                </OverlayTrigger>
+                              )
+                            }
+                            </>
+                          );
+                        })}
+                        <br />
+                      </div>
+                    );
+                  })
+                }
+              </div>
               {requestId !== '' && reviewable && sameFormAsStep
                 ? <><textarea placeholder='Enter a comment'
                   ref={this.state.textRef}
                   id='comment'
                   aria-label="Enter a comment"
                   title="Enter a comment"
-                  onChange={(e) => { e.preventDefault(); this.formatComments(); document.querySelectorAll('button.button--reply')[0].classList.remove('hidden'); }}
+                  onChange={(e) => { e.preventDefault(); this.formatComments(); }}
                 ></textarea>
-                  <p>Comment Visibility:</p>
-                  { this.state.commentViewers && this.state.commentViewers.map((viewer) => {
-                    return (
-                      <div key={viewer} className='flex__row sm-border'>
-                        <div className='flex__item--w-25'>
-                          {this.state.idMap[viewer]}
-                        </div>
-                        <div className='flex__item--w-15'>
-                          {canRemoveUser &&
-                            <button
-                              className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
-                              onClick={(e) => { e.preventDefault(); this.removeViewer(viewer, 'user'); }}
-                              >
-                              Remove
-                            </button>
-                          }
-                        </div>
-                      </div>
-                    )}
-                  )}
-                  { this.state.commentViewerRoles && this.state.commentViewerRoles.map((viewer) => {
-                    return (
-                      <div key={viewer} className='flex__row sm-border'>
-                        <div className='flex__item--w-25'>
-                          {this.state.idMap[viewer]}
-                        </div>
-                        <div className='flex__item--w-15'>
-                          {canRemoveUser &&
-                            <button
-                              className='button button--remove button__animation--md button__arrow button__arrow--md button__animation'
-                              onClick={(e) => { e.preventDefault(); this.removeViewer(viewer, 'role') }}
-                              >
-                              Remove
-                            </button>
-                          }
-                        </div>
-                      </div>
-                    )}
-                  )}
-                  { canAddUser &&
-                    <div className='flex__row'>
-                      <div className='flex__item--spacing'>
-                        <button type='button'
-                          className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
-                          onClick={() => this.openSearch('user')}
-                        >
-                          Add Viewer
-                        </button>
-                      </div>
-                      <div className='flex__item--spacing'>
-                        <button type='button'
-                          className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
-                          onClick={() => this.openSearch('role')}
-                          >
-                          Add Viewer Role
-                        </button>
-                      </div>
-                    </div>
+                  <NewNoteVisibility dispatch={dispatch} privileges={privileges} conversationId={conversationId} visibilityRef={this.state.visibilityRef}/>
+                  <div>
+                    {
+                      [...this.state.uploadedFiles].map((fileName) =>
+                          <DisplayAttachmentButton key={fileName} fileName={fileName} removeFileHandler={this.handleRemoveFile}/>
+                      )
                   }
-                  <div style={{ minHeight: '40px' }}>
+                  </div>
+                  <div style={{textAlign: "right"}}>
+                    <CustomUpload customComponent={AddAttachmentButton}
+                    conversationId={conversationId}
+                    uploadedFilesRef={this.state.uploadedFilesRef}
+                    appendToUploadedFiles={this.appendToUploadedFiles}/>
                     <button type='submit'
                       className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                       Save Comment

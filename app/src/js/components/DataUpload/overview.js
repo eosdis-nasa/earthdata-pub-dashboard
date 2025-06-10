@@ -9,14 +9,19 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import localUpload from '@edpub/upload-utility';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { listFileUploadsBySubmission, listFileDownloadsByKey, refreshToken } from '../../actions';
+import { listFileUploadsBySubmission, listFileDownloadsByKey, listFileUploadsBySubmissionStep, refreshToken } from '../../actions';
 import { shortDateShortTimeYearFirstJustValue, storage } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
 import { Modal, Button } from 'react-bootstrap';
 
+// Request Details Overview Page i.e. /dashboard/requests/id/{id}
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+const defaultHelpText = 'Providing sample data files that are representative of the range of data within this data product will help the DAAC understand and provide feedback on the data format, structure, and content. Documentation files may include descriptions of the variables, filename conventions, processing steps, and/or data quality.  If more than 10 total sample data and documentation files are necessary to represent and describe the data product, please contact the DAAC for assistance.  Files must be less than 5 GB and cannot include .exe or .dll extensions.';
+const defaultUploadDescription = 'Sample Data and Data Product Documentation';
 
 class UploadOverview extends React.Component {
   constructor() {
@@ -27,7 +32,6 @@ class UploadOverview extends React.Component {
       statusMsg: 'Select a file', 
       uploadFile: '', 
       keys: [],
-      showProgressBar: false, // Added state to control the visibility of the progress bar,
       progressValue: 0, // Initialize progressValue,
       uploadFailed: false,
       uploadFileName: '',
@@ -36,12 +40,12 @@ class UploadOverview extends React.Component {
       categoryType: null,
       uploadFiles: [],
       uploadStatusMsg: '',
-      showProgressBar: false,
       uploadFileFlag: false,
       showUploadSummaryModal: false,
       uploadResults: {},
       uploadProgress: {},
-      progressBarsVisible: false
+      progressBarsVisible: true,
+      hasSpecifiedCategory: false
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -80,7 +84,7 @@ class UploadOverview extends React.Component {
     const { dispatch } = this.props;
     const { requestId } = this.props.match.params;
     if (requestId !== '' && requestId != undefined && requestId !== null) {
-      dispatch(listFileUploadsBySubmission(requestId))
+      dispatch(this.props.uploadDestination ? listFileUploadsBySubmissionStep(requestId) : listFileUploadsBySubmission(requestId))
         .then((resp) => {
           if (JSON.stringify(resp) === '{}' || JSON.stringify(resp) === '[]' || (resp.data && resp.data.length === 0)) {
             return
@@ -137,6 +141,10 @@ class UploadOverview extends React.Component {
     if ((requestId !== '' && requestId != undefined && requestId !== null) &&
       (groupId == '' || groupId === undefined || groupId === null)) {
       await this.getFileList()
+      if (this.props.uploadCategory) {
+        this.setCategoryType(this.props.uploadCategory);
+        this.setState({ hasSpecifiedCategory: true })
+      }
       this.setState({ loaded: true })
     }
   }
@@ -180,9 +188,7 @@ class UploadOverview extends React.Component {
 
   async handleUpload() {
     this.setState({
-      uploadStatusMsg: 'Uploading...',
-      showProgressBar: true,
-      progressBarsVisible: true
+      uploadStatusMsg: 'Uploading...'
     });
   
     const successFiles = [];
@@ -208,8 +214,15 @@ class UploadOverview extends React.Component {
           fileObj: file,
           authToken: loadToken().token,
         };
-  
-        if (requestId) {
+        
+        if (this.props.uploadDestination) {
+          payload['apiEndpoint'] = `${apiRoot}data/upload/getUploadStepUrl`;
+          payload['submissionId'] = requestId;
+          payload['endpointParams'] = { 
+            file_category: category,
+            destination: this.props.uploadDestination
+           };
+        } else if (requestId) {
           payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
           payload['submissionId'] = requestId;
           payload['endpointParams'] = { file_category: category };
@@ -262,11 +275,11 @@ class UploadOverview extends React.Component {
   
     this.setState({
       uploadStatusMsg: '',
-      showProgressBar: false,
       uploadFileFlag: true,
       showUploadSummaryModal: true,
       uploadFiles: [],
-      uploadResults: { success: successFiles, failed: failedFiles }
+      uploadResults: { success: successFiles, failed: failedFiles },
+      uploadProgress: {}
     });
     this.getFileList()
   }
@@ -277,6 +290,10 @@ class UploadOverview extends React.Component {
 
   toggleProgressBars = () => {
     this.setState({ progressBarsVisible: !this.state.progressBarsVisible });
+  };
+
+  handleRemoveFile = (fileName) => {
+    this.setState({uploadFiles: this.state.uploadFiles.filter(elem => elem.name !== fileName)});
   };
 
   async componentDidUpdate(prevProps){
@@ -328,6 +345,9 @@ class UploadOverview extends React.Component {
 
   render() {
     const { showUploadSummaryModal, uploadResults, uploadProgress, progressBarsVisible } = this.state;
+    const helpText = this.props.helpText ? this.props.helpText : defaultHelpText;
+    const fileDescription = this.props.uploadStepName ? this.props.uploadStepName : defaultUploadDescription;
+
     const progressBarStyle = {
       width: '100%',
       backgroundColor: this.state.uploadFailed ? '#db1400' : 'white',
@@ -385,9 +405,9 @@ class UploadOverview extends React.Component {
         <div className='page__component'>
           <div className='page__section__header'>
             <h1 className='heading--small' aria-labelledby='Upload Data File'>
-              Sample Data and Data Product Documentation File(s): Add or replace file(s).
+              { fileDescription } File(s): Add or replace file(s).
             </h1>
-            <p>Providing sample data files that are representative of the range of data within this data product will help the DAAC understand and provide feedback on the data format, structure, and content. Documentation files may include descriptions of the variables, filename conventions, processing steps, and/or data quality.  If more than 10 total sample data and documentation files are necessary to represent and describe the data product, please contact the DAAC for assistance.  Files must be less than 5 GB and cannot include .exe or .dll extensions.</p>
+            <p>{ helpText }</p>
           </div>
           <div className='indented__details' style={{ paddingTop: '1rem' }}>
             <div className='form__textarea'>
@@ -398,14 +418,14 @@ class UploadOverview extends React.Component {
                 </>
                 : null
               }
-              {this.state.showProgressBar && this.state.progressValue > 0 && 
+              {this.state.progressValue > 0 &&
                 <div style={progressBarStyle}>
                   <div style={progressBarFillStyle}>
                     <span style={numberDisplayStyle}>{this.state.uploadFailed ? <span>{'Upload Failed'}<span className="info-icon" data-tooltip={this.state.error}></span></span>: `${this.state.progressValue}%`}</span>
                   </div>
                 </div>}
               <div>
-              {requestId !== undefined ?
+              {requestId !== undefined  && !this.state.hasSpecifiedCategory ?
                 <>
                 <p style={{fontWeight: '600'}}>Select File Category:</p>
                 <div>
@@ -458,8 +478,8 @@ class UploadOverview extends React.Component {
                   )}                                            
                 </div>
               </div>
-              <button onClick={(e) => this.handleClick(e)} className={`upload-button upload-button-category mt-2 button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${(this.state.categoryType || groupId) && !this.state.showProgressBar? 'button--submit' : 'button--secondary button--disabled'}`}>{this.state.uploadStatusMsg === ''? 'Upload': 'Uploading...'}</button>
-              {this.state.showProgressBar && <span className="d-flex align-items-center">
+              <button onClick={(e) => this.handleClick(e)} className={`upload-button upload-button-category mt-2 button button__animation--md button__arrow button__arrow--md button__animation button__arrow--white ${(this.state.categoryType || groupId) && this.state.uploadFiles.length !== 0? 'button--submit' : 'button--secondary button--disabled'}`}>{this.state.uploadStatusMsg === ''? 'Upload': 'Uploading...'}</button>
+              {<span className="d-flex align-items-center">
                 <FontAwesomeIcon
                   icon={progressBarsVisible ? faEyeSlash : faEye}
                   style={{ cursor: 'pointer', marginLeft: '10px', fontSize: '20px' }}
@@ -473,7 +493,22 @@ class UploadOverview extends React.Component {
                 <div>
                   {this.state.uploadFiles.map((file, index) => (
                     <div key={index}>
-                      <p>{file.name}</p>
+                      <div style={{display: "flow-root"}}>
+                        {file.name}
+                        <Button
+                          style={{
+                            fontSize: "100%",
+                            padding: "5px",
+                            backgroundColor: "#db1400",
+                            margin: "2px",
+                            float: "inline-end",
+                            border: "none",
+                            borderRadius: "4px",
+                            color: "white",
+                          }}
+                          onClick={() => this.handleRemoveFile(file.name)}
+                          >Remove</Button>
+                      </div>
                       <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
                         <div style={{
                           width: `${uploadProgress[file.name] || 0}%`,
@@ -556,7 +591,11 @@ UploadOverview.propTypes = {
   dispatch: PropTypes.func,
   config: PropTypes.object,
   logs: PropTypes.object,
-  tokens: PropTypes.object
+  tokens: PropTypes.object,
+  uploadStepName: PropTypes.string,
+  helpText: PropTypes.string,
+  uploadCategory: PropTypes.string,
+  uploadDestination: PropTypes.string
 };
 
 export default withRouter(connect(state => ({

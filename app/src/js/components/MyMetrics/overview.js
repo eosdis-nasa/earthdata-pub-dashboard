@@ -169,7 +169,8 @@ const MetricOverview = ({ privileges, dispatch, requests }) => {
       stepNameColors,
       requestMappingDaac: formattedRequestMappingDaac,
       requestMappingStep: formattedRequestMappingStep,
-      requestMappingStacked: formattedRequestMappingStacked
+      requestMappingStacked: formattedRequestMappingStacked,
+      allData: requests.list.data
   });
 }, [requests.list]);
 
@@ -240,6 +241,16 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+const flattenedData = chartsData.stackedData.flatMap(daac =>
+  Object.keys(daac)
+    .filter(step => step !== "daac_name" && daac[step] > 0)
+    .map(step => ({
+      daacName: daac.daac_name,
+      stepName: step,
+      requestIds: chartsData.requestMappingStacked?.[daac.daac_name]?.[step] || []
+    }))
+);
+
 return (
   <div className='page__component'>
     <section className='page__section page__section__controls'>
@@ -272,6 +283,12 @@ return (
         </button>
       </div>
 
+      {viewMode.daac === 'table' && 
+        <span className='request-name-warning'>
+          *Form's Data Product Name field has not yet been populated
+        </span>
+      }
+
       {chartsData.daacData.length === 0 ? (
         <div className="no-data">No Data Available</div>
         ) : viewMode.daac === 'chart' ? (
@@ -302,26 +319,42 @@ return (
             <thead>
               <tr>
                 <th>DAAC Name</th>
-                <th>Request IDs</th>
+                <th>Data Product Name(s)</th>
               </tr>
             </thead>
             <tbody>
-              {chartsData.daacData.slice(0, visibleRows.daac).map((entry) => (
-                <tr key={entry.daac_name}>
-                  <td>{entry.daac_name}</td>
-                  <td>
-                    {chartsData.requestMappingDaac[entry.daac_name]?.length > 0 ? (
-                      chartsData.requestMappingDaac[entry.daac_name].map((id) => (
-                        <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
-                          {id}
-                        </Link>
-                      ))
-                    ) : (
-                      <span style={{ color: 'red' }}>No Requests</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
+            {chartsData.daacData.slice(0, visibleRows.daac).map((entry) => (
+              <tr key={entry.daac_name}>
+                <td>{entry.daac_name}</td>
+                <td>
+                  {chartsData.requestMappingDaac[entry.daac_name]?.length > 0 ? (
+                    <ul className="bulleted-links">
+                      {chartsData.requestMappingDaac[entry.daac_name].map((id) => {
+                          const result = chartsData?.allData?.find(item => item.id === id);
+                          const label = result?.name
+                            ? result.name
+                            : result?.initiator?.name
+                            ? `Request Initialized by ${result.initiator.name}*`
+                            : id;
+
+                          return (
+                            <li key={id} style={{ marginBottom: '5px' }}>
+                              <Link
+                                to={`/requests/id/${id}`}
+                                title={`Request Id: ${id}`}
+                              >
+                                {label}
+                              </Link>
+                            </li>
+                          );
+                      })}
+                    </ul>
+                          ) : (
+                    <span style={{ color: 'red' }}>No Requests</span>
+                  )}
+                </td>
+              </tr>
+            ))}
             </tbody>
           </table>
 
@@ -352,6 +385,7 @@ return (
         <p style={{ textAlign: "center", fontSize: "0.9rem", color: "#555" }}>
         Breakdown of the total count per Step Name.
         </p>
+  
         <div className="toggle-container">
           <button onClick={() => toggleView('step')} className="toggle-switch">
             {viewMode.step === 'chart' ? (
@@ -362,6 +396,12 @@ return (
           </button>
         </div>
   
+        {viewMode.step === 'table' && 
+          <span className='request-name-warning'>
+            *Form's Data Product Name field has not yet been populated
+          </span>
+        }
+
         {chartsData.statusData.length === 0 ? (
             <div className="no-data">No Data Available</div>
           ) : viewMode.step === 'chart' ? (
@@ -392,7 +432,7 @@ return (
                 <thead>
                   <tr>
                     <th>Step Name</th>
-                    <th>Request IDs</th>
+                    <th>Data Product Name(s)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -400,16 +440,32 @@ return (
                     <tr key={entry.step_name}>
                       <td>{entry.step_name}</td>
                       <td>
-                        {chartsData.requestMappingStep[entry.step_name]?.length > 0 ? (
-                          chartsData.requestMappingStep[entry.step_name].map((id) => (
-                            <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
-                              {id}
-                            </Link>
-                          ))
-                        ) : (
-                          <span style={{ color: 'red' }}>No Requests</span>
-                        )}
-                      </td>
+                      {chartsData.requestMappingStep[entry.step_name]?.length > 0 ? (
+                        <ul className='bulleted-links'>
+                          {chartsData.requestMappingStep[entry.step_name].map((id) => {
+                            const step_result = chartsData?.allData?.find(item => item.id === id);
+                            const label = step_result?.name
+                              ? step_result.name
+                              : step_result?.initiator?.name
+                              ? `Request Initialized by ${step_result.initiator.name}*`
+                              : id;
+
+                            return (
+                              <li key={id} style={{ marginBottom: '4px' }}>
+                                <Link
+                                  to={`/requests/id/${id}`}
+                                  title={`Request Id: ${id}`}
+                                >
+                                  {label}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : (
+                        <span style={{ color: 'red' }}>No Requests</span>
+                      )}
+                    </td>
                     </tr>
                   ))}
                 </tbody>
@@ -452,7 +508,11 @@ return (
             )}
           </button>
         </div>
-
+        {viewMode.stacked === 'table' && 
+          <span className='request-name-warning'>
+            *Form's Data Product Name field has not yet been populated
+          </span>
+        }
         {chartsData.stackedData.length === 0 ? (
             <div className="no-data">No Data Available</div>
           ) : viewMode.stacked === 'chart' ? (
@@ -489,20 +549,11 @@ return (
                   <tr>
                     <th>DAAC Name</th>
                     <th>Step Name</th>
-                    <th>Request IDs</th>
+                    <th>Data Product Name(s)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {chartsData.stackedData
-                    .flatMap(daac =>
-                      Object.keys(daac)
-                        .filter(step => step !== "daac_name" && daac[step] > 0)
-                        .map(step => ({
-                          daacName: daac.daac_name,
-                          stepName: step,
-                          requestIds: chartsData.requestMappingStacked[daac.daac_name]?.[step] || []
-                        }))
-                    )
+                  {flattenedData
                     .slice(0, visibleRows.stacked)
                     .map((entry, index) => (
                       <tr key={`${entry.daacName}-${entry.stepName}-${index}`}>
@@ -510,11 +561,27 @@ return (
                         <td>{entry.stepName}</td>
                         <td>
                           {entry.requestIds.length > 0 ? (
-                            entry.requestIds.map(id => (
-                              <Link key={id} to={`/requests/id/${id}`} style={{ marginRight: '10px' }}>
-                                {id}
-                              </Link>
-                            ))
+                            <ul className="bulleted-links">
+                              {entry.requestIds.map((id) => {
+                                const step_per_daac_result = chartsData?.allData?.find(item => item.id === id);
+                                const label = step_per_daac_result?.name
+                                  ? step_per_daac_result.name
+                                  : step_per_daac_result?.initiator?.name
+                                  ? `Request Initialized by ${step_per_daac_result.initiator.name}*`
+                                  : id;
+
+                                return (
+                                  <li key={id} style={{ marginBottom: '4px' }}>
+                                    <Link
+                                      to={`/requests/id/${id}`}
+                                      title={`Request Id: ${id}`}
+                                    >
+                                      {label}
+                                    </Link>
+                                  </li>
+                                );
+                              })}
+                            </ul>
                           ) : (
                             <span style={{ color: 'red' }}>No Requests</span>
                           )}
@@ -525,9 +592,9 @@ return (
               </table>
 
               {/* Show More/Less Buttons */}
-              {chartsData.stackedData.length > ROW_INCREMENT && (
+              {flattenedData.length > ROW_INCREMENT && (
                 <div className="button-container">
-                  {visibleRows.stacked < chartsData.stackedData.length && (
+                  {visibleRows.stacked < flattenedData.length && (
                     <button className="show-more-button" onClick={() => handleShowMore('stacked')}>
                       Show More
                     </button>
@@ -549,14 +616,19 @@ return (
         <h2 style={{ fontSize: "1.4rem", fontWeight: "bold", color: "black", textAlign: "center" }}>
           TOTAL TIME FOR CLOSE REQUESTS
         </h2>
+
         {closeRequests.length === 0 ? (
             <div className="no-data">No Close Requests Data</div>
           ) : (
             <>
+              <span className='request-name-warning'>
+          *Form's Data Product Name field has not yet been populated
+        </span>
+
               <table className="request-table">
                 <thead>
                   <tr>
-                    <th>Request ID</th>
+                    <th>Data Product Name</th>
                     <th>DAAC Name</th>
                     <th>Start Time</th>
                     <th>End Time</th>
@@ -564,21 +636,28 @@ return (
                   </tr>
                 </thead>
                 <tbody>
-                  {closeRequests
-                    .slice(0, visibleRows.close)
-                    .map((req) => (
-                      <tr key={req.id}>
-                        <td>
-                          <Link to={`/requests/id/${req.id}`} aria-label="View your request details">
-                            {req.id}
-                          </Link>
-                        </td>
-                        <td>{req.daacName}</td>
-                        <td>{req.startTime}</td>
-                        <td>{req.endTime}</td>
-                        <td>{req.timeTaken}</td>
-                      </tr>
-                    ))}
+                {closeRequests.slice(0, visibleRows.close).map((req) => {
+                  const close_step_result = chartsData?.allData?.find(item => item.id === req.id);
+                  const label = close_step_result?.name
+                    ? close_step_result.name
+                    : close_step_result?.initiator?.name
+                    ? `Request Initialized by ${close_step_result.initiator.name}*`
+                    : req.id;
+
+                  return (
+                    <tr key={req.id}>
+                      <td>
+                        <Link to={`/requests/id/${req.id}`} aria-label="View your request details">
+                          {label}
+                        </Link>
+                      </td>
+                      <td>{req.daacName}</td>
+                      <td>{req.startTime}</td>
+                      <td>{req.endTime}</td>
+                      <td>{req.timeTaken}</td>
+                    </tr>
+                  );
+                })}
                 </tbody>
               </table>
 

@@ -70,6 +70,8 @@ class ReviewStep extends React.Component {
   }
 
   inReviewers(){
+    const { roles } = this.props;
+    const role = roles ? Object.keys(roles).map(role => roles[role].short_name) : [];
     const reviewers = this.props.rawReviewers.data
       .filter(reviewer => this.props.requests.detail.data.step_data.name === reviewer.step_name);
     return reviewers.some(reviewer => reviewer.name === this.props.user) || reviewers.length === 0;
@@ -105,7 +107,7 @@ class ReviewStep extends React.Component {
               <div className='flex__item--spacing'>
                 <button onClick={() => this.review(requestId, true)}
                   className='button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white form-group__element--right'>
-                  Approve
+                  Continue
                 </button>
               </div>
             </div>
@@ -126,7 +128,8 @@ ReviewStep.propTypes = {
   location: PropTypes.object,
   privileges: PropTypes.object,
   user: PropTypes.string,
-  params: PropTypes.object
+  params: PropTypes.object,
+  roles: PropTypes.array
 };
 
 export default withRouter(connect(state => ({
@@ -134,5 +137,6 @@ export default withRouter(connect(state => ({
   rawReviewers: state.reviewers,
   privileges: state.api.tokens.privileges,
   user: state.api.tokens.userName,
-  logs: state.logs
+  logs: state.logs,
+  roles: state.api.tokens.roles
 }))(ReviewStep));

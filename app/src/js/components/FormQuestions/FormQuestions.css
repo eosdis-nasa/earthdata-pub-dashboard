@@ -687,6 +687,7 @@
 
 .questions-component .eui-label {
   margin-top: 10px;
+  pointer-events: none;
 }
 
 .questions-component .form-group-error .form-control:focus .radio-group-error{
@@ -747,7 +748,6 @@
 
 .questions-component .question_section {
   margin-top: 20px;
-  cursor: pointer;
 }
 
 .questions-component .date_formats {
@@ -1035,4 +1035,9 @@
 
 .input-error-form::placeholder {
   color: red;
+}
+
+.big-tooltip {
+  font-size: 1em;
+  padding: 2px;
 }

@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import {
   getConversation,
   replyConversation,
-  addUsersToConversation
+  addUsersToConversation,
+  removeUsersFromConversation
 } from '../../actions';
 import { notePrivileges } from '../../utils/privileges';
 import { lastUpdated } from '../../utils/format';
@@ -46,7 +47,7 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
   const { data, inflight, meta } = conversation;
   const { subject, notes = [], participants = [] } = data;
   const { queriedAt } = meta;
-  const { canReply, canAddUser } = notePrivileges(privileges);
+  const { canReply, canAddUser, canRemoveUser } = notePrivileges(privileges);
   const visibilityRef = useRef();
   const uploadedFilesRef = useRef();
 
@@ -65,65 +66,77 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
 
   useEffect(() => {
     const fetchNotes = async () => {
-        const finalNotes = await dispatch(getConversation(conversationId, level));
-        const updatedNotes = finalNotes?.data?.notes.map(note => ({
-            ...note,
-            isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false
-        }));
+      const finalNotes = await dispatch(getConversation(conversationId, level));
+      const updatedNotes = finalNotes?.data?.notes.map(note => ({
+        ...note,
+        isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false
+      }));
 
-        setDisplayNotes(updatedNotes);
+      setDisplayNotes(updatedNotes);
     };
-
+  
     if (shouldStopRetries) return;
-
+  
     const firstNewNote = notes[0];
     const firstTempNote = tempNotes.length > 0 ? tempNotes[0] : null;
-
+  
+    // Prevent unnecessary state updates that cause re-renders
     if (!firstTempNote) {
+      const existingIds = Array.isArray(displayNotes)
+        ? displayNotes.map(n => n.id).join(',')
+        : '';
+      const newIds = Array.isArray(notes)
+        ? notes.map(n => n.id).join(',')
+        : '';
+    
+      if (existingIds !== newIds) {
         setDisplayNotes(notes);
-        return;
+      }
+      return;
     }
-
+    
+  
     const isTextMatch = firstTempNote.text.trim() === firstNewNote?.text?.trim();
     const areAttachmentsMatch =
-        new Set(firstTempNote.attachments).size === new Set(firstNewNote?.attachments || []).size &&
-        firstTempNote.attachments.every(att =>
-            (firstNewNote?.attachments || []).some(newAtt => newAtt.trim() === att.trim())
-        );
-
+      new Set(firstTempNote.attachments).size === new Set(firstNewNote?.attachments || []).size &&
+      firstTempNote.attachments.every(att =>
+        (firstNewNote?.attachments || []).some(newAtt => newAtt.trim() === att.trim())
+      );
+  
     if (isTextMatch && areAttachmentsMatch) {
-        setShouldStopRetries(true);
-
+      setShouldStopRetries(true);
+  
         // Replace temp note with the actual note (No timestamp match required)
-        setDisplayNotes(prevNotes =>
-            prevNotes.map(note =>
-                note.id.startsWith('temp') && isTextMatch && areAttachmentsMatch
-                    ? { ...firstNewNote, isPendingAttachmentMatch: false }
-                    : note
-            )
-        );
-
-        setTempNotes(prevTempNotes => prevTempNotes.slice(1));
-        setDisplayNotes([firstNewNote, ...notes.slice(1)]);
-        clearTimeout(currentTimeout);
-        fetchNotes();
-        return;
+      setDisplayNotes(prevNotes =>
+        prevNotes.map(note =>
+          note.id.startsWith('temp') && isTextMatch && areAttachmentsMatch
+            ? { ...firstNewNote, isPendingAttachmentMatch: false }
+            : note
+        )
+      );
+  
+      setTempNotes(prevTempNotes => prevTempNotes.slice(1));
+      setDisplayNotes([firstNewNote, ...notes.slice(1)]);
+      clearTimeout(currentTimeout);
+      fetchNotes();
+      return;
     }
-
+  
     if (isTextMatch && !areAttachmentsMatch) {
       // kept this intensionally (can be removed if needed)
       console.log("Text matches, but attachments are still processing.");
       setDisplayNotes(prevNotes =>
-          prevNotes.map(note =>
-                note.id.startsWith('temp') && isTextMatch
-                  ? { ...note, isPendingAttachmentMatch: true }
-                  : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
-          )
+        prevNotes.map(note =>
+          note.id.startsWith('temp') && isTextMatch
+            ? { ...note, isPendingAttachmentMatch: true }
+            : { ...note, isPendingAttachmentMatch: note.isPendingAttachmentMatch ?? false }
+        )
       );
       checkForUpdates();
       return;
     }
-  }, [notes, level]);
+  }, [notes, level, tempNotes, shouldStopRetries]);
+  
 
 const checkForUpdates = async (retryCount = 0) => {
   if (retryCount >= MAX_RETRIES || shouldStopRetries) {
@@ -182,6 +195,11 @@ const checkForUpdates = async (retryCount = 0) => {
     }, delay);
   };
 
+  const appendToUploadedFiles = (newFiles) => {
+    setUploadedFiles(new Set([...uploadedFiles, ...newFiles]));
+    return uploadedFiles;
+  };
+
   const handleRemoveFile = (fileName) => {
     //Have to ensure a rerender with the state update
     uploadedFiles.delete(fileName);
@@ -190,11 +208,7 @@ const checkForUpdates = async (retryCount = 0) => {
 
   const reply = async (dispatch, id) => {
     const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility();
-
-    if (!viewer_users.includes(current_user_id) && (viewer_users.length || viewer_roles.length)) {
-        viewer_users.push(current_user_id);
-    }
-
+    
     const resp = encodeURI(textRef.current.value);
 
     const payload = { 
@@ -210,21 +224,21 @@ const checkForUpdates = async (retryCount = 0) => {
     setShouldStopRetries(false);
 
     if ([...uploadedFiles].length > 0) {
-        const tempNote = {
-            id: `temp-${Date.now()}`,
-            sent: new Date().toISOString(),
-            text: resp,
-            createdAt: new Date().toISOString(),
-            attachments: [...uploadedFiles],
-            viewers: { roles: [], users: [] },
-            isTemp: true 
-        };
-        setTempNotes(prev => [tempNote, ...prev]);
-        setDisplayNotes(prev => [tempNote, ...prev]);
-        checkForUpdates(0);
+      const tempNote = {
+          id: `temp-${Date.now()}`,
+          sent: new Date().toISOString(),
+          text: resp,
+          createdAt: new Date().toISOString(),
+          attachments: [...uploadedFiles],
+          viewers: { roles: [], users: [] },
+          isTemp: true 
+      };
+      setTempNotes(prev => [tempNote, ...prev]);
+      setDisplayNotes(prev => [tempNote, ...prev]);
+      checkForUpdates(0);
     }else{
-        setTempNotes(prev => [...prev]);
-        setDisplayNotes(prev => [...prev]);
+      setTempNotes(prev => [...(prev || [])]);
+      setDisplayNotes(prev => [...(prev || [])]);      
     }
 
     if (textRef.current) {
@@ -245,6 +259,14 @@ const checkForUpdates = async (retryCount = 0) => {
     setShowSearch(false);
   };
 
+  const handleRemoveUser = (conversationId, userId) => {
+    const params = {
+      conversation_id: conversationId,
+      user_id: userId
+    };
+    dispatch(removeUsersFromConversation(params));
+  };
+  
   const searchOptions = {
       entity: 'user',
       submit: submitCallback,
@@ -326,7 +348,7 @@ const checkForUpdates = async (retryCount = 0) => {
                         <CustomUpload customComponent={AddAttachmentButton}
                         conversationId={conversationId}
                         uploadedFilesRef={uploadedFilesRef}
-                        setUploadedFiles={setUploadedFiles}/>
+                        appendToUploadedFiles={appendToUploadedFiles}/>
                         <button type='submit'
                           className='button button--reply form-group__element--right button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'>
                           Send Reply
@@ -350,14 +372,45 @@ const checkForUpdates = async (retryCount = 0) => {
             <section className='page__section flex__item--w-17 flex__item-end'>
               <div className='heading__wrapper--border'>
                 <h2 className='heading--medium heading--shared-content with-description'>
-                  Participants <span className='num--title'>{participants.length}</span>
+                  Participants <span className='num--title'>{participants?.length ?? 0}</span>
                 </h2>
               </div>
               <div className='flex__column'>
-                {
-                  participants.map((user, key) => {
-                    return <div className='sm-border' key={key}>{user.name}</div>;
-                  })
+                { participants?.map((user, key) => (
+                    <div key={key} className='flex__row sm-border'>
+                    <div className='flex__item--w-15' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '200px' }}>
+                    <style>
+                        {`                   
+                      .flex__item--w-15 .button--remove {
+                        color: white;
+                      }
+                      
+                      .flex__item--w-15 .button--remove:hover::before {
+                        color: white;
+                        background-color: #2c3e50;
+                        visibility: visible;
+                      }
+
+                      .flex__item--w-15 .button--remove:hover {
+                        background-color: #2c3e50;
+                      }
+                    `}
+                    </style>
+                    <span style={{ width: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={user.name}>
+                        {user.name}
+                    </span>
+                    {canRemoveUser && (
+                        <button
+                            className='button button--remove'
+                            onClick={() => handleRemoveUser(conversationId, user.id)}
+                            style={{ marginLeft: '2px', padding: '0px 10px 20px 25px' }}
+                        >
+                        </button>
+                    )}
+                </div>
+                </div>
+                )
+                  )
                 }
                 {canAddUser &&
                   <div className='flex__item--spacing'>

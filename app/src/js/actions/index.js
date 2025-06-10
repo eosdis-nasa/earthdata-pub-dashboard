@@ -183,12 +183,30 @@ export const listFileUploadsBySubmission = (submissionId) => ({
   }
 });
 
+export const listFileUploadsBySubmissionStep = (submissionId) => ({
+  [CALL_API]: {
+    type: types.UPLOAD,
+    method: 'GET',
+    id: submissionId,
+    path: `data/upload/listStepUploads/${submissionId}`
+  }
+});
+
 export const listFileDownloadsByKey = (key) => ({
   [CALL_API]: {
     type: types.UPLOAD,
     method: 'GET',
     id: key,
     path: `data/upload/downloadUrl/${key}`
+  }
+});
+
+export const getUploadStep = (uploadStepId) => ({
+  [CALL_API]: {
+    type: types.UPLOAD_STEP,
+    method: 'GET',
+    id: uploadStepId,
+    path: `data/upload/uploadStep/${uploadStepId}`,
   }
 });
 
@@ -272,6 +290,15 @@ export const setWorkflowStep = (payload) => ({
   }
 });
 
+export const promoteStep = (payload) => ({
+  [CALL_API]: {
+    type: types.STEPS,
+    method: 'POST',
+    path: 'data/submission/operation/promoteStep',
+    body: payload
+  }
+});
+
 export const copyRequest = (payload) => ({
   [CALL_API]: {
     type: types.REQUESTS,
@@ -299,21 +326,30 @@ export const deleteStepReviewApproval = (payload) => ({
   }
 });
 
+// .then() does the same, for readability and maintainability I am using await/sync
 export const reviewRequest = (id, approve) => {
-  return (dispatch) => {
-    dispatch({
+  return async (dispatch) => {
+    const apiResp = await dispatch({
       [CALL_API]: {
         type: types.REQUEST_REVIEW,
         method: 'POST',
         path: 'data/submission/operation/review',
         body: { id, approve }
       }
-    })
-      .then(() => {
-        dispatch(getRequest(id));
-      });
+    });
+    await dispatch(getRequest(id));
+    return apiResp;
   };
 };
+
+export const esdisReviewRequest = (id, action) => ({
+  [CALL_API]: {
+    type: types.REQUEST_REVIEW,
+    method: 'POST',
+    path: 'data/submission/operation/review/esdis',
+    body: { id, action }
+  }
+});
 
 export const updateRequestMetadata = (payload) => ({
   [CALL_API]: {
@@ -889,10 +925,9 @@ export const createGroup = (groupId, payload) => ({
   }
 });
 
-export const initialize = (id, payload) => ({
+export const initialize = (payload) => ({
   [CALL_API]: {
     type: types.REQUEST,
-    daac_id: id,
     method: 'POST',
     path: 'data/submission/operation/initialize',
     body: payload
@@ -1119,6 +1154,24 @@ export const addUsersToConversation = (payload) => {
   };
 };
 
+export const removeUsersFromConversation = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      [CALL_API]: {
+        type: types.CONVERSATION_REMOVE_USER,
+        method: 'POST',
+        path: 'notification/remove_user',
+        body: payload
+      }
+    })
+      .then(() => {
+        setTimeout(() => {
+          dispatch(getConversation(payload.conversation_id));
+        }, 1000);
+      });
+  };
+};
+
 export const addUserToNote = (payload, conversationId) => {
   return (dispatch) => {
     dispatch({
@@ -1276,3 +1329,12 @@ export const addStep = (payload) => ({
 });
 
 export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });
+
+export const assignDaacs = (payload) => ({
+  [CALL_API]: {
+    type: types.REQUEST,
+    method: 'POST',
+    path: '/api/data/submission/operation/assignDaacs',
+    body: payload
+  }
+});

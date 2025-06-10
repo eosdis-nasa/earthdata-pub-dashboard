@@ -16,8 +16,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed funny line from dropdown
 - Added error page form and routes to it if an api return (response.error.code) not 200
 - Update MFA to EDPub custom flow
+- Updated DAAC Assignment prompt to include additional review question
 - Updated github repo template assets
 - Updated the My Metrics Page to be a subpage of the Metrics Tab
+- Remove DAAC long name from request details page
+- Adding page for ESDIS final approval
+- Moved additional review question from DAAC Assignment prompt to seperate page
+- Added the ability to remove not yet uploaded files from upload list
 <!-- Unreleased changes can be added here. -->
 
 ## 1.0.19

@@ -69,7 +69,7 @@ class Header extends React.Component {
           <nav role="navigation">
             { !this.props.minimal
               ? <><ul className="default_header">
-                            {activePaths.map(path => <li
+                            { authenticated && activePaths.map(path => <li
                                 key={path[0]}
                                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
                             <li className='rightalign nav__order-8'>
@@ -77,7 +77,7 @@ class Header extends React.Component {
                                     <li className='overviewLink'>{overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : ''}</li>
                                     {authenticated &&
                                         <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
-                                    <li className='howToUseLink'>{helpPageDefault ? <a href={helpPageDefault} aria-label="View the how to use page">Help</a> : ''}</li>
+                                    <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
                                     <li className='logOut'>{authenticated ? <a onClick={this.logout} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li></ul>
                             </li>
                         </ul><div id="menuToggle">
@@ -94,7 +94,7 @@ class Header extends React.Component {
                                     <li className='overviewLink'>{overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : ''}</li>
                                     {authenticated &&
                                         <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
-                                    <li className='howToUseLink'>{helpPageDefault ? <a href={helpPageDefault} aria-label="View the how to use page">Help</a> : ''}</li>
+                                    <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
                                     <li className='logOut'>{authenticated ? <a onClick={this.logout} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li>
                                 </ul>
                             </div></>
