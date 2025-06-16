@@ -42,7 +42,8 @@
     "start-dashboard": "npm run start",
     "stop-dashboard": "npm run stop",
     "start-dev": "npm run start-api && npm run start-dashboard",
-    "stop-dev": "npm run stop-api && npm run stop-dashboard"
+    "stop-dev": "npm run stop-api && npm run stop-dashboard",
+    "analyze-webpack": "webpack --json > stats.json && webpack-bundle-analyzer stats.json"
   },
   "ava": {
     "babel": {
@@ -137,6 +138,7 @@
     "sinon": "^16.1.1",
     "terser-webpack-plugin": "^5.2.5",
     "webpack": "^5.61.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.6.0",
     "webpack-merge": "^4.2.2"
@@ -181,7 +183,7 @@
     "path": "^0.12.7",
     "prop-types": "^15.5.10",
     "react": "^17.0.2",
-    "react-ace": "^9.5.0",
+    "react-ace": "^14.0.1",
     "react-bootstrap": "^2.0.2",
     "react-collapsible": "^2.8.1",
     "react-datepicker": "^7.3.0",

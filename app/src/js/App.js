@@ -1,9 +1,10 @@
 'use strict';
-import React, { Component } from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import { Provider } from 'react-redux';
 import ourConfigureStore, { history } from './store/configureStore';
 import { Route, Redirect, Switch, useHistory } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
+import Loading from './components/LoadingIndicator/loading-indicator';
 
 //  Fontawesome Icons Library
 import { library, dom } from '@fortawesome/fontawesome-svg-core';
@@ -15,27 +16,47 @@ import NotFound from './components/404';
 import Auth from './components/Auth';
 
 // Components
+const Main = lazy(() => import('../js/main'));
+const Requests = lazy(() => import('./components/Requests'));
+const Users = lazy(() => import('./components/Users'));
+const Groups = lazy(() => import('./components/Groups'));
+const Forms = lazy(() => import('./components/Forms'));
+const Input = lazy(() => import('./components/Input'));
+const Sections = lazy(() => import('./components/Sections'));
+const Questions = lazy(() => import('./components/Questions'));
+const Workflows = lazy(() => import('./components/Workflows'));
+const Metrics = lazy(() => import('./components/Metrics'));
+const Roles = lazy(() => import('./components/Roles'));
+const Conversations = lazy(() => import('./components/Conversations'));
+const Rules = lazy(() => import('./components/Rules'));
+const Modules = lazy(() => import('./components/Modules'));
+const TestApi = lazy(() => import('./components/testApi'));
+const Upload = lazy(() => import('./components/DataUpload'));
+const FormRequest = lazy(() => import('./components/FormRequest'));
+const FormQuestions = lazy(() => import('./components/FormQuestions'));
+const Download = lazy(() => import('./components/DataDownload'));
+const Steps = lazy(() => import('./components/Steps'));
 import Home from './components/home';
-import Main from '../js/main';
-import Requests from './components/Requests';
-import Users from './components/Users';
-import Groups from './components/Groups';
-import Forms from './components/Forms';
-import Input  from './components/Input';
-import Sections from './components/Sections';
-import Questions from './components/Questions';
-import Workflows from './components/Workflows';
-import Metrics from './components/Metrics';
-import Roles from './components/Roles';
-import Conversations from './components/Conversations';
-import Rules from './components/Rules';
-import Modules from './components/Modules';
-import TestApi from './components/testApi';
-import Upload from './components/DataUpload';
-import FormRequest from './components/FormRequest';
-import FormQuestions from './components/FormQuestions';
-import Download from './components/DataDownload';
-import Steps from './components/Steps';
+// import Main from '../js/main';
+// import Requests from './components/Requests';
+// import Users from './components/Users';
+// import Groups from './components/Groups';
+// import Forms from './components/Forms';
+// import Input  from './components/Input';
+// import Sections from './components/Sections';
+// import Questions from './components/Questions';
+// import Workflows from './components/Workflows';
+// import Metrics from './components/Metrics';
+// import Roles from './components/Roles';
+// import Conversations from './components/Conversations';
+// import Rules from './components/Rules';
+// import Modules from './components/Modules';
+// import TestApi from './components/testApi';
+// import Upload from './components/DataUpload';
+// import FormRequest from './components/FormRequest';
+// import FormQuestions from './components/FormQuestions';
+// import Download from './components/DataDownload';
+// import Steps from './components/Steps';
 import config from './config';
 import OverviewApp from './components/Help/app';
 import Tophat2 from './components/Tophat/top_hat';
@@ -59,7 +80,7 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/', component: Home, exact: true },
     { path: '/error', component: Error },
     { path: '/404', component: NotFound },
-    { path: '/requests', component: Requests },
+    { path: '/requests', component: Requests},
     { path: '/forms', component: Forms },
     { path: '/inputs', component: Input },
     { path: '/sections', component: Sections },
@@ -159,6 +180,7 @@ class App extends Component {
       <div className="routes">
         <Provider store={this.store}>
           <ConnectedRouter history={history}>
+            <Suspense fallback={Loading}>
             <Tophat2 />
             <Switch>
               <Redirect exact from='/login' to='/auth' />
@@ -186,6 +208,7 @@ class App extends Component {
                 }}
               />
             </Switch>
+            </Suspense>
           </ConnectedRouter>
         </Provider>
       </div>
