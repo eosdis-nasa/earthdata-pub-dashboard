@@ -329,26 +329,31 @@ class FormOverview extends React.Component {
     }
   };
 
-  getFileList(){
-    // TODO once the api is updated to split the file types this will need to take that into account
-    let files = this.state.files
-    let displayList = [];
 
-    if (Array.isArray(files)){        
-          files.map((item) => (
-            displayList.push (
-              <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
-                <div key={this.getRandom()} style={{ width: '50%', display: 'inline-block', float: 'left' }}>Uploaded File:</div>
-                <div key={this.getRandom()}><a onClick={(e) => this.keyLookup(e, item.file_name)}>{item.file_name}</a></div>
-              </li>
-            )
-        ))
+  getFileList(controlId) {
+  // Make sure files is always an array
+  const files = this.state.files || [];
 
-      return displayList;
-
-    }
-
+  // Filter files based on controlId
+  let filteredFiles = files;
+  if (controlId === 'data_product_documentation') {
+    filteredFiles = files.filter(item => item.category === 'documentation');
+  } else if (controlId === 'example_files') {
+    filteredFiles = files.filter(item => item.category === 'sample');
   }
+
+  // Return the list using map
+  return filteredFiles.map(item => (
+    <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+      <div key={this.getRandom()} style={{ width: '50%', display: 'inline-block', float: 'left' }}>
+        Uploaded File:
+      </div>
+      <div key={this.getRandom()}>
+        <a onClick={e => this.keyLookup(e, item.file_name)}>{item.file_name}</a>
+      </div>
+    </li>
+  ));
+}
 
   async getUploadedFiles(requestId) {
     const { dispatch } = this.props;
@@ -449,7 +454,7 @@ class FormOverview extends React.Component {
                     }
                   } else if (question[b].inputs[a].type === 'file'){
                       sectionQuestions.push(
-                        this.getFileList()
+                        this.getFileList(question[b].inputs[a]?.control_id)
                         );
                   } else {
                     sectionQuestions.push(
