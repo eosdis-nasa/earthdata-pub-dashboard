@@ -5,7 +5,7 @@ ignore:
   SNYK-JS-ELLIPTIC-8187303:
     - '*':
         reason: Waiting for package maintainers to update (https://github.com/indutny/elliptic/issues/331). May eventually be able to replace with something like https://github.com/paulmillr/noble-curves
-        expires: 2025-06-18T17:58:48.024Z
+        expires: 2025-07-18T17:58:48.024Z
         created: 2025-03-18T17:58:48.026Z
-        # Updated monthly: 4/18/25 - 5/19/25
+        # Updated monthly: 4/18/25 - 5/19/25 - 6/20/25
 patch: {}
