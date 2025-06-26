@@ -364,7 +364,7 @@ class RequestOverview extends React.Component {
 
     const metaAccessors = [
       {
-        label: 'Data Producer Name',
+        label: 'Request Contact',
         accessor: row => row.data_producer_name
       },
       {
@@ -372,7 +372,7 @@ class RequestOverview extends React.Component {
         accessor: row => row?.initiator?.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : null
       },
       {
-        label: 'Data Product Name',
+        label: 'Request Name',
         accessor: row => row.data_product_name || (row?.initiator?.name && canViewUsers ? `Request Initialized by ${row.initiator.name}` : null)
       },
       {
