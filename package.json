@@ -174,7 +174,7 @@
     "lodash.omitby": "^4.6.0",
     "lodash.truncate": "^4.4.2",
     "moment": "^2.29.1",
-    "node-polyfill-webpack-plugin": "^1.1.4",
+    "node-polyfill-webpack-plugin": "^4.1.0",
     "numeral": "^2.0.4",
     "object-path": "^0.11.8",
     "paginator": "^1.0.0",
