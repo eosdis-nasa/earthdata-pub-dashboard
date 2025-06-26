@@ -511,107 +511,112 @@ const FormQuestions = ({
     );
   }
 
-  const progressBarStyle = {
-    width: '100%',
-    backgroundColor: uploadFailed ? '#db1400' : 'white',
-    height: '30px',
-    marginBottom: '5px'
-  };
+  const validateRequiredGroup = (question, fieldName, values, newValidationErrors, errorOrder) => {
+    const isTargetField = question.long_name === fieldName;
+    const isEmpty = question.inputs.filter(input => values[input.control_id]).length === 0;
 
-  const progressBarFillStyle = {
-    height: '100%',
-    backgroundColor: uploadFailed ? '#db1400' : '#2275aa', // Set default fill color to blue
-    textAlign: 'center',
-    lineHeight: '30px', 
-    color: 'white', 
-    fontSize: '20px', 
-    width: uploadFailed ? '100%' : `${progressValue}%` // Set width based on progress value
-  };
-
-  const numberDisplayStyle = {
-    fontSize: '20px' 
+    if (isTargetField && isEmpty) {
+      const lastControlId = question.inputs?.[question.inputs.length - 1]?.control_id || null;
+      if (lastControlId) {
+        newValidationErrors[lastControlId] = `${fieldName} is required`;
+        errorOrder.push(lastControlId);
+      }
+    }
   };
 
   const validateFields = (checkAllFields = true, jsonObj) => {
     const newValidationErrors = {};
-    const input2 = questions
-      .flatMap((section) => section.questions)
-      .find(
-        (question) =>
-          question.long_name === 'Data Format' &&
-          question.inputs.filter((input) => values[input.control_id]).length ===
-            0
-      );
-    if (input2)
-      newValidationErrors['data_format_other_info'] =
-        'Data Format section is required';
+    const errorOrder = [];
     questions.forEach((section) => {
       section.questions.forEach((question) => {
-        question.inputs.forEach((input) => {
-          const value = jsonObj.data && jsonObj.data[input.control_id];
-          if (checkAllFields || value) {
-            if (input.type === 'bbox') {
-              const errorMessage = validateField(
-                input.control_id,
-                'direction',
-                question.long_name,
-                ''
-              );
-              for (const element of errorMessage) {
-                newValidationErrors[element.controlId] = element.errorMessage;
-              }
-            } else if (input.type === 'file') {
-              if (uploadedFiles && typeof category_map[input.control_id] !== 'undefined' &&
-                (!(category_map[input.control_id] in uploadedFiles) ||
-                (category_map[input.control_id] in uploadedFiles &&
-                uploadedFiles[category_map[input.control_id]].length === 0))) {
-                let flag;
-                question.inputs.forEach((input) => {
-                  if (jsonObj.data[input.control_id]) {
-                    flag = true;
-                    return;
-                  }
-                });
-                const [errorMessage, fieldId] = validateField(
-                  input.control_id,
-                  flag,
-                  question.long_name,
-                  question
-                );
-                if (errorMessage) {
-                  newValidationErrors[fieldId] = errorMessage;
+      validateRequiredGroup(question, 'Funding Organization', values, newValidationErrors, errorOrder);
+      validateRequiredGroup(question, 'Data Format', values, newValidationErrors, errorOrder);
+      question.inputs.forEach((input) => {
+        const value = jsonObj.data && jsonObj.data[input.control_id];
+        if (checkAllFields || value) {
+          if (input.type === 'bbox') {
+            const errorMessage = validateField(
+              input.control_id,
+              'direction',
+              question.long_name,
+              ''
+            );
+            for (const element of errorMessage) {
+              newValidationErrors[element.controlId] = element.errorMessage;
+              errorOrder.push(element.controlId);
+            }
+          } else if (input.type === 'file') {
+            if (uploadedFiles && typeof category_map[input.control_id] !== 'undefined' &&
+              (!(category_map[input.control_id] in uploadedFiles) ||
+              (category_map[input.control_id] in uploadedFiles &&
+              uploadedFiles[category_map[input.control_id]].length === 0))) {
+              let flag;
+              question.inputs.forEach((input) => {
+                if (jsonObj.data[input.control_id]) {
+                  flag = true;
+                  return;
                 }
-              }
-            } else {
+              });
               const [errorMessage, fieldId] = validateField(
                 input.control_id,
-                value,
+                flag,
                 question.long_name,
                 question
               );
               if (errorMessage) {
                 newValidationErrors[fieldId] = errorMessage;
+                errorOrder.push(input.control_id);
+              }
+            }
+          } else {
+            const [errorMessage, fieldId] = validateField(
+              input.control_id,
+              value,
+              question.long_name,
+              question
+            );
+            if (errorMessage) {
+              newValidationErrors[fieldId] = errorMessage;
+              if(input.type === 'radio' || input.type === 'table'){
+                errorOrder.push(input.control_id+'_group');
+              }else {
+                errorOrder.push(input.control_id);
               }
             }
           }
-        });
+        }
       });
     });
-    setValues((prev) => {
-      const isEmpty = Object.entries(newValidationErrors).length === 0;
+  });
 
-      // Construct the updated object dynamically
-      const updatedValues = { ...prev };
+  setValues((prev) => {
+    const isEmpty = Object.entries(newValidationErrors).length === 0;
 
-      if (!isEmpty) {
-        updatedValues.validation_errors = newValidationErrors;
-      }
-      console.log('Validation Errors', newValidationErrors);
-      return updatedValues;
-    });
+    // Construct the updated object dynamically
+    const updatedValues = { ...prev };
 
-    return Object.keys(newValidationErrors).length === 0;
-  };
+    if (!isEmpty) {
+      updatedValues.validation_errors = newValidationErrors;
+    }
+    console.log('Validation Errors', newValidationErrors);
+    return updatedValues;
+  });
+
+  if (errorOrder.length > 0) {
+    const firstInvalidFieldId = errorOrder[0];
+    const elList = document.querySelectorAll(`[id="${firstInvalidFieldId}"]`);
+    const el = [...elList].find(el => el.type !== 'checkbox');
+    if (el) {
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.focus?.();
+      }, 100);
+    } else {
+      console.warn('Could not scroll to:', firstInvalidFieldId);
+    }
+  }
+  return Object.keys(newValidationErrors).length === 0;
+};
 
   const handleFieldChange = (controlId, value) => {
     setValues((prevValues) => {
@@ -1532,7 +1537,9 @@ const FormQuestions = ({
                           }}
                           dangerouslySetInnerHTML={{ __html: question.help }}
                         />
-                        <div className="checkbox-group">
+                        <div className="checkbox-group"
+                          tabIndex="-1"
+                          id={`${question.inputs?.[0]?.control_id || question.id || 'unknown'}_group`}>
                           {question.long_name === 'Data Evaluation Point of Contact' && (
                             <label className="checkbox-item">
                               Same as Primary Data Producer
