@@ -209,10 +209,10 @@ class ActionRequestsOverview extends React.Component {
                 options={this.state.producers}
                 onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
                 isSearchable={true}
-                placeholder='Select Data Producer'
+                placeholder='Select Contact'
                 className='selectButton'
                 isMulti={true}
-                aria-label='Select Data Producer'
+                aria-label='Select Contact'
               />
             </List>
             }

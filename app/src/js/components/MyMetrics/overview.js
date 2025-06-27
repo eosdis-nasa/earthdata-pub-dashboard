@@ -285,7 +285,7 @@ return (
 
       {viewMode.daac === 'table' && 
         <span className='request-name-warning'>
-          *Form's Data Product Name field has not yet been populated
+          *Form's Request Name field has not yet been populated
         </span>
       }
 
@@ -319,7 +319,7 @@ return (
             <thead>
               <tr>
                 <th>DAAC Name</th>
-                <th>Data Product Name(s)</th>
+                <th>Request Name(s)</th>
               </tr>
             </thead>
             <tbody>
@@ -398,7 +398,7 @@ return (
   
         {viewMode.step === 'table' && 
           <span className='request-name-warning'>
-            *Form's Data Product Name field has not yet been populated
+            *Form's Request Name field has not yet been populated
           </span>
         }
 
@@ -432,7 +432,7 @@ return (
                 <thead>
                   <tr>
                     <th>Step Name</th>
-                    <th>Data Product Name(s)</th>
+                    <th>Request Name(s)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -510,7 +510,7 @@ return (
         </div>
         {viewMode.stacked === 'table' && 
           <span className='request-name-warning'>
-            *Form's Data Product Name field has not yet been populated
+            *Form's Request Name field has not yet been populated
           </span>
         }
         {chartsData.stackedData.length === 0 ? (
@@ -549,7 +549,7 @@ return (
                   <tr>
                     <th>DAAC Name</th>
                     <th>Step Name</th>
-                    <th>Data Product Name(s)</th>
+                    <th>Request Name(s)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -622,13 +622,13 @@ return (
           ) : (
             <>
               <span className='request-name-warning'>
-          *Form's Data Product Name field has not yet been populated
+          *Form's Request Name field has not yet been populated
         </span>
 
               <table className="request-table">
                 <thead>
                   <tr>
-                    <th>Data Product Name</th>
+                    <th>Request Name</th>
                     <th>DAAC Name</th>
                     <th>Start Time</th>
                     <th>End Time</th>
