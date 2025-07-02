@@ -298,28 +298,30 @@ class RequestsOverview extends React.Component {
         </section>
         <section className='page__section page__section__controls request-section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
-            {canInitialize ? (
-                    <div className='dropdown-container'>
-                    <button
-                      onClick={this.toggleDropdown}
-                      className='button button--small button--green button--add-small form-group__element--right new-request-button'
-                      aria-label='Create new request'>
-                      New Request
-                    </button>
-              
-                    {this.state.isDropdownOpen && (
-                      <div className="dropdown-menu">
-                        <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
-                        Accession Request
-                        </button>
-                        <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
-                        Publication Request
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  ) : null}
+            <div className='heading-row'>
+              <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
+              {canInitialize ? (
+                  <div className='dropdown-container'>
+                  <button
+                    onClick={this.toggleDropdown}
+                    className='button button--small button--green button--add-small new-request-btn'
+                    aria-label='Create new request'>
+                    New Request
+                  </button>
+            
+                  {this.state.isDropdownOpen && (
+                    <div className="dropdown-menu show">
+                      <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
+                      Accession Request
+                      </button>
+                      <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
+                      Publication Request
+                      </button>
+                    </div>
+                  )}
+                </div>
+                ) : null}
+            </div>
           </div>
           {!list
             ? <Loading />

@@ -377,29 +377,31 @@ async updateList() {
             <section className='page__section list--requests request-section'>
               <div className='row'>
                 <div className='heading__wrapper--border'>
-                  <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
-                  { canInitialize ? (
-                    <div className='dropdown-container'>
-                    <button
-                      onClick={this.toggleDropdown}
-                      className='button button--small button--green button--add-small form-group__element--right new-request-button'
-                      aria-label='Create new request'>
-                      New Request
-                    </button>
-              
-                    {this.state.isDropdownOpen && (
-                      <div className="dropdown-menu">
-                        <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
-                        Accession Request
-                        </button>
-                        <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
-                        Publication Request
-                        </button>
-                      </div>
-                    )}
+                  <div className='heading-row'>
+                    <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
+                    { canInitialize ? (
+                      <div className='dropdown-container'>
+                      <button
+                        onClick={this.toggleDropdown}
+                        className='button button--small button--green button--add-small new-request-btn'
+                        aria-label='Create new request'>
+                        New Request
+                      </button>
+                
+                      {this.state.isDropdownOpen && (
+                        <div className="dropdown-menu show">
+                          <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
+                          Accession Request
+                          </button>
+                          <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
+                          Publication Request
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    ) : null}
+                    <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                   </div>
-                  ) : null}
-                  <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                 </div>
                 {!list
                   ? <Loading />: 
