@@ -310,7 +310,7 @@ class RequestsOverview extends React.Component {
                   </button>
             
                   {this.state.isDropdownOpen && (
-                    <div className="dropdown-menu show">
+                    <div className="dropdown-menu">
                       <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
                       Accession Request
                       </button>
