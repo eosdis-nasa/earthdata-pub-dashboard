@@ -2036,7 +2036,6 @@ const FormQuestions = ({
                                                 ? 'required'
                                                 : ''
                                             }
-                                            onKeyPress={allowOnlyNumbers}
                                             onChange={(e) =>
                                               handleFieldChange(
                                                 input.control_id,
