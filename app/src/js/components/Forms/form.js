@@ -8,7 +8,7 @@ import {
   getRequest,
   copyRequest,
   listRequestReviewers,
-  getUsers,
+  getDetailedUsers,
   deleteStepReviewApproval,
   createStepReviewApproval
 } from '../../actions';
@@ -29,6 +29,7 @@ import { loadToken } from '../../utils/auth';
 import localUpload from '@edpub/upload-utility';
 import Select from 'react-select';
 import { Modal, Button } from 'react-bootstrap'; 
+import CustomOption from '../SelectOptions/SelectOptions'
 
 const { basepath } = _config;
 
@@ -95,9 +96,9 @@ class FormOverview extends React.Component {
     }else{
       const stepName = this.props.requests?.detail?.data?.step_name;
       if (stepName && stepName.includes('uwg')) {
-        allU = await dispatch(getUsers('19ac227b-e96c-46fa-a378-cf82c461b669'));
+        allU = await dispatch(getDetailedUsers('19ac227b-e96c-46fa-a378-cf82c461b669'));
       } else {
-        allU = await dispatch(getUsers());
+        allU = await dispatch(getDetailedUsers());
       }
       const dataFilter = this.props.requests.detail.data.step_name;
       const filteredData = userReviewList.data.filter(item => item.step_name === dataFilter);
@@ -572,7 +573,7 @@ class FormOverview extends React.Component {
   getReviewerOptions() {
     const existingUserIds = this.state.filteredReviewers.map(user => user.edpuser_id);
     const filteredUsers = this.state.allUsers.data?.filter(user => !existingUserIds.includes(user.id));
-    return filteredUsers ? filteredUsers.map(user => ({ value: user.id, label: user.name })) : [];
+    return filteredUsers ? filteredUsers.map(user => ({ value: user.id, label: user.name, info: { extension: user.extension, groups: user.user_groups, roles: user.user_roles} })) : [];
   }
 
   capitalizeFirstLetter = (string) => {
@@ -705,6 +706,7 @@ class FormOverview extends React.Component {
                 value={this.state.selectedReviewers}
                 onChange={this.handleSelectChange}
                 placeholder="Select Reviewers..."
+                components={{ Option: CustomOption }}
               />
               <div style={{ textAlign: 'right', 'marginTop': '5px'}}>
                 <button

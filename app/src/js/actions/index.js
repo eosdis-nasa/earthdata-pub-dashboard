@@ -798,6 +798,13 @@ export const getUsers = (role_id) => ({
   }
 });
 
+export const getDetailedUsers = (roleId) => ({
+  [CALL_API]: {
+    type: types.USER,
+    method: 'GET',
+    path: roleId ? `data/users/details?role_id=${roleId}` : 'data/users/details'
+  }
+});
 
 export const addUserRole = (payload) => {
   return (dispatch) => {
