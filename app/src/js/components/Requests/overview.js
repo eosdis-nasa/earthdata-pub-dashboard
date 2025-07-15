@@ -311,12 +311,41 @@ class RequestsOverview extends React.Component {
             
                   {this.state.isDropdownOpen && (
                     <div className="dropdown-menu">
-                      <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
-                      Accession Request
-                      </button>
-                      <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
-                      Publication Request
-                      </button>
+                    <div className="dropdown-row">
+                      <div
+                        className="dropdown-text"
+                        onClick={(event) => this.handleSelection(event, 'DAR')}
+                      >
+                        Accession Request
+                      </div>
+                      <a
+                        href="/getting_started#accession"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="dropdown-icon"
+                        title="More info about Accession Request"
+                      >
+                        <i className="fas fa-info-circle"></i>
+                      </a>
+                    </div>
+
+                    <div className="dropdown-row">
+                      <div
+                        className="dropdown-text"
+                        onClick={(event) => this.handleSelection(event, 'DPR')}
+                      >
+                        Publication Request
+                      </div>
+                      <a
+                        href="/getting_started#publication"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="dropdown-icon"
+                        title="More info about Publication Request"
+                      >
+                        <i className="fas fa-info-circle"></i>
+                      </a>
+                    </div>
                     </div>
                   )}
                 </div>

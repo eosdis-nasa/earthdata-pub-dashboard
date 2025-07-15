@@ -159,8 +159,39 @@
     transition: all 0.2s ease-in-out;
     font-family: 'Arial', sans-serif;
     margin: 0 0 5px 0;
-    min-width: 195px;
+    min-width: 215px;
   }
+
+  .dropdown-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-text {
+  flex-basis: 95%;
+  text-align: left;
+  font-size: 16px;
+  color: #212529;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dropdown-row:hover {
+  background-color: #ededed;
+}
+.dropdown-icon {
+  flex-basis: 5%;
+  text-align: right;
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.dropdown-icon:hover {
+  color: #158749;
+  text-decoration: none; 
+}
 
   .new-request-btn::before {
     animation: pulseZoom 1.5s infinite ease-in-out;
