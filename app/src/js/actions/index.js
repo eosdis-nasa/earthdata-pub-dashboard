@@ -197,7 +197,7 @@ export const listFileDownloadsByKey = (key) => ({
     type: types.UPLOAD,
     method: 'GET',
     id: key,
-    path: `data/upload/downloadUrl/${key}`
+    path: `data/upload/downloadUrl?key=${key}`
   }
 });
 

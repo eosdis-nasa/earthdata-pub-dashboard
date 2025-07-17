@@ -316,16 +316,12 @@ class FormOverview extends React.Component {
       if (requestId !== '' && requestId != undefined && requestId !== null) {
         const download = new localUpload();
         const { apiRoot } = _config;
-        dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
-          .then(() => {
-            download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
-              let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
-              if (error) {
-                console.log(`An error has occurred: ${error}.`);
-              }
-            })
+        download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
+          let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+          if (error) {
+            console.log(`An error has occurred: ${error}.`);
           }
-        );
+        })
       }
     }
   };
