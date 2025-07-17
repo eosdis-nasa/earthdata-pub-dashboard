@@ -383,7 +383,7 @@ async updateList() {
                       <div className='dropdown-container'>
                       <button
                         onClick={this.toggleDropdown}
-                        className='button button--small button--green button--add-small new-request-btn'
+                        className='button button--green new-request-btn'
                         aria-label='Create new request'>
                         New Request
                       </button>
