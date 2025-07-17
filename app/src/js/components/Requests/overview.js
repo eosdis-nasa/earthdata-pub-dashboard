@@ -298,28 +298,59 @@ class RequestsOverview extends React.Component {
         </section>
         <section className='page__section page__section__controls request-section'>
           <div className='heading__wrapper--border'>
-            <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
-            {canInitialize ? (
-                    <div className='dropdown-container'>
-                    <button
-                      onClick={this.toggleDropdown}
-                      className='button button--small button--green button--add-small form-group__element--right new-request-button'
-                      aria-label='Create new request'>
-                      New Request
-                    </button>
-              
-                    {this.state.isDropdownOpen && (
-                      <div className="dropdown-menu">
-                        <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
+            <div className='heading-row'>
+              <h2 className='heading--medium heading--shared-content with-description'>{strings.all_requests} <span className='num--title'>{unique.length}</span></h2>
+              {canInitialize ? (
+                  <div className='dropdown-container'>
+                  <button
+                    onClick={this.toggleDropdown}
+                    className='button button--green new-request-btn'
+                    aria-label='Create new request'>
+                    New Request
+                  </button>
+            
+                  {this.state.isDropdownOpen && (
+                    <div className="dropdown-menu">
+                    <div className="dropdown-row">
+                      <div
+                        className="dropdown-text"
+                        onClick={(event) => this.handleSelection(event, 'DAR')}
+                      >
                         Accession Request
-                        </button>
-                        <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
-                        Publication Request
-                        </button>
                       </div>
-                    )}
-                  </div>
-                  ) : null}
+                      <a
+                        href="/getting_started#accession"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="dropdown-icon"
+                        title="More info about Accession Request"
+                      >
+                        <i className="fas fa-info-circle"></i>
+                      </a>
+                    </div>
+
+                    <div className="dropdown-row">
+                      <div
+                        className="dropdown-text"
+                        onClick={(event) => this.handleSelection(event, 'DPR')}
+                      >
+                        Publication Request
+                      </div>
+                      <a
+                        href="/getting_started#publication"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="dropdown-icon"
+                        title="More info about Publication Request"
+                      >
+                        <i className="fas fa-info-circle"></i>
+                      </a>
+                    </div>
+                    </div>
+                  )}
+                </div>
+                ) : null}
+            </div>
           </div>
           {!list
             ? <Loading />
