@@ -62,8 +62,8 @@ const GettingStartedData = {
          "step": [
             {
                "number":1,
-               "heading":"<span class='main-width sections'><b>Fill in the Data Evaluation Request form.</b></span>",
-               "text": "In the <a title='Earthdata Pub Dashboard' href='/dashboard'>Earthdata Pub Dashboard</a>, click on the “Data Evaluation Request” button in the Next Action column. The information you provide will be used to review and approve your Data Accession Request. You should fill out a Data Evaluation Request for each data product you listed in your Data Accession Request."
+               "heading":"<span class='main-width sections'><b>Fill in the Data Evaluation Request form if requested to do so by NASA ESDIS staff.  Otherwise, this step will be skipped.</b></span>",
+               "text": "In the <a title='Earthdata Pub Dashboard' href='/dashboard'>Earthdata Pub Dashboard</a>, click on the “Data Evaluation Request” button in the Next Action column. This button will only appear if NASA ESDIS staff require additional information to evaluate your Data Accession Request. In most cases, this step is not necessary. The information you provide will be used to review and approve your Data Accession Request."
             },
             {
                "number":2,
@@ -81,7 +81,7 @@ const GettingStartedData = {
              {
                 "number":1,
                 "heading":"<span class='main-width sections'><b>Fill in the Data Publication Request form</b></span>",
-                 "text":"In the <a title='Earthdata Pub Dashboard' href='dashboard/'>Earthdata Pub Dashboard</a>, click on the “Data Publication Request Form” button in the Next Action column. You will be prompted to enter a publication code. Enter the code, previously provided, that matches the DAAC to which you want to submit your Request. Complete the form and click on “Submit”. The form will be routed to the appropriate DAAC.",
+                 "text":"In the <a title='Earthdata Pub Dashboard' href='dashboard/'>Earthdata Pub Dashboard</a>, click on the green “New Request” button in the center, about halfway down the page.  Choose “Publication Request” in the drop-down menu. You will be prompted to enter a publication code. Enter the code, previously provided, that matches the DAAC to which you want to submit your Request. Complete the form and click on “Submit”. The form will be routed to the appropriate DAAC.",
                 "icon":"lightbulb.svg",
                 "icon_text":"You can save your progress and return to the form later."
              },

@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { Button, Modal } from 'react-bootstrap';
 import FormQuestions from './questions';
 import { getRequest, getForm } from '../../actions'; // Adjust the import path as necessary
+import ErrorReport from '../Errors/report';
 
 class FormQuestions2 extends React.Component {
   constructor() {
@@ -16,7 +17,8 @@ class FormQuestions2 extends React.Component {
       formData: null, // State to store form data
       requestData: null,
       showErrorModal: false, 
-      errorMessage: '' 
+      errorMessage: '',
+      validForm: true 
     };
   }
 
@@ -31,6 +33,9 @@ class FormQuestions2 extends React.Component {
       const requestResp = await dispatch(getRequest(id));
       const { data: requestData = [] } = requestResp;
       const formResp = await dispatch(getForm(requestData.step_data.form_id, requestData.daac_id));
+      if (requestResp.data.step_data.type !== 'form'){
+        this.setState({validForm: false, errorMessage: 'Current workflow step is not a form. Please navigate to the request to see the current step.' });
+      }
       const { data: formData } = formResp;
       this.setState({ requestData, formData, header: formData.long_name || 'Data Request' });
     } catch (error) {
@@ -48,7 +53,7 @@ class FormQuestions2 extends React.Component {
 
   render() {
     const { pathname } = this.props.location;
-    const { requestData, header, formData, showErrorModal, errorMessage } = this.state;
+    const { requestData, header, formData, showErrorModal, errorMessage, validForm } = this.state;
     const showSidebar = pathname !== '/forms/add';
 
     return (
@@ -64,7 +69,7 @@ class FormQuestions2 extends React.Component {
               <Switch>
                 <Route
                   path='/form/questions/:id'
-                  render={(props) => <FormQuestions {...props} formData={formData} requestData={requestData}/>}
+                  render={(props) => validForm? <FormQuestions {...props} formData={formData} requestData={requestData}/> :  <ErrorReport report={errorMessage} />}
                 />
               </Switch>
             </div>

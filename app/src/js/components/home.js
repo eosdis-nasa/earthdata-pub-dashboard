@@ -377,29 +377,60 @@ async updateList() {
             <section className='page__section list--requests request-section'>
               <div className='row'>
                 <div className='heading__wrapper--border'>
-                  <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
-                  { canInitialize ? (
-                    <div className='dropdown-container'>
-                    <button
-                      onClick={this.toggleDropdown}
-                      className='button button--small button--green button--add-small form-group__element--right new-request-button'
-                      aria-label='Create new request'>
-                      New Request
-                    </button>
-              
-                    {this.state.isDropdownOpen && (
-                      <div className="dropdown-menu">
-                        <button onClick={(event) => this.handleSelection(event,'DAR')} className="dropdown-item">
-                        Accession Request
-                        </button>
-                        <button onClick={(event) => this.handleSelection(event,'DPR')} className="dropdown-item">
-                        Publication Request
-                        </button>
-                      </div>
-                    )}
+                  <div className='heading-row'>
+                    <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
+                    { canInitialize ? (
+                      <div className='dropdown-container'>
+                      <button
+                        onClick={this.toggleDropdown}
+                        className='button button--green new-request-btn'
+                        aria-label='Create new request'>
+                        New Request
+                      </button>
+                
+                      {this.state.isDropdownOpen && (
+                        <div className="dropdown-menu">
+                        <div className="dropdown-row">
+                          <div
+                            className="dropdown-text"
+                            onClick={(event) => this.handleSelection(event, 'DAR')}
+                          >
+                            Accession Request
+                          </div>
+                          <a
+                            href="/getting_started#accession"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="dropdown-icon"
+                            title="More info about Accession Request"
+                          >
+                            <i className="fas fa-info-circle"></i>
+                          </a>
+                        </div>
+
+                        <div className="dropdown-row">
+                          <div
+                            className="dropdown-text"
+                            onClick={(event) => this.handleSelection(event, 'DPR')}
+                          >
+                            Publication Request
+                          </div>
+                          <a
+                            href="/getting_started#publication"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="dropdown-icon"
+                            title="More info about Publication Request"
+                          >
+                            <i className="fas fa-info-circle"></i>
+                          </a>
+                        </div>
+                        </div>
+                      )}
+                    </div>
+                    ) : null}
+                    <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                   </div>
-                  ) : null}
-                  <Link className='link--secondary link--learn-more' to='/logs' aria-label="Learn more about logs">{strings.view_logs}</Link>
                 </div>
                 {!list
                   ? <Loading />: 
@@ -416,9 +447,9 @@ async updateList() {
                       options={this.state.producers}
                       onChange={(e) => this.handleProducerSelect(this.state.originalList, e)}
                       isSearchable={true}
-                      placeholder='Select Data Producer'
+                      placeholder='Select Contact'
                       className='selectButton'
-                      aria-label='Select Data Producer'
+                      aria-label='Select Contact'
                       isMulti={true}
                     />
                   </List>

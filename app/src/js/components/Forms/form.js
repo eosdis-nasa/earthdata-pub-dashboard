@@ -8,7 +8,7 @@ import {
   getRequest,
   copyRequest,
   listRequestReviewers,
-  getUsers,
+  getDetailedUsers,
   deleteStepReviewApproval,
   createStepReviewApproval
 } from '../../actions';
@@ -29,6 +29,7 @@ import { loadToken } from '../../utils/auth';
 import localUpload from '@edpub/upload-utility';
 import Select from 'react-select';
 import { Modal, Button } from 'react-bootstrap'; 
+import CustomOption from '../SelectOptions/SelectOptions'
 
 const { basepath } = _config;
 
@@ -95,9 +96,9 @@ class FormOverview extends React.Component {
     }else{
       const stepName = this.props.requests?.detail?.data?.step_name;
       if (stepName && stepName.includes('uwg')) {
-        allU = await dispatch(getUsers('19ac227b-e96c-46fa-a378-cf82c461b669'));
+        allU = await dispatch(getDetailedUsers('19ac227b-e96c-46fa-a378-cf82c461b669'));
       } else {
-        allU = await dispatch(getUsers());
+        allU = await dispatch(getDetailedUsers());
       }
       const dataFilter = this.props.requests.detail.data.step_name;
       const filteredData = userReviewList.data.filter(item => item.step_name === dataFilter);
@@ -315,40 +316,41 @@ class FormOverview extends React.Component {
       if (requestId !== '' && requestId != undefined && requestId !== null) {
         const download = new localUpload();
         const { apiRoot } = _config;
-        dispatch(listFileDownloadsByKey(this.state.keys[fileName], requestId))
-          .then(() => {
-            download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
-              let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
-              if (error) {
-                console.log(`An error has occurred: ${error}.`);
-              }
-            })
+        download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
+          let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
+          if (error) {
+            console.log(`An error has occurred: ${error}.`);
           }
-        );
+        })
       }
     }
   };
 
-  getFileList(){
-    // TODO once the api is updated to split the file types this will need to take that into account
-    let files = this.state.files
-    let displayList = [];
 
-    if (Array.isArray(files)){        
-          files.map((item) => (
-            displayList.push (
-              <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
-                <div key={this.getRandom()} style={{ width: '50%', display: 'inline-block', float: 'left' }}>Uploaded File:</div>
-                <div key={this.getRandom()}><a onClick={(e) => this.keyLookup(e, item.file_name)}>{item.file_name}</a></div>
-              </li>
-            )
-        ))
+  getFileList(controlId) {
+  // Make sure files is always an array
+  const files = this.state.files || [];
 
-      return displayList;
-
-    }
-
+  // Filter files based on controlId
+  let filteredFiles = files;
+  if (controlId === 'data_product_documentation') {
+    filteredFiles = files.filter(item => item.category === 'documentation');
+  } else if (controlId === 'example_files') {
+    filteredFiles = files.filter(item => item.category === 'sample');
   }
+
+  // Return the list using map
+  return filteredFiles.map(item => (
+    <li key={this.getRandom()} style={{ marginTop: '3px', marginBottom: '3px' }}>
+      <div key={this.getRandom()} style={{ width: '50%', display: 'inline-block', float: 'left' }}>
+        Uploaded File:
+      </div>
+      <div key={this.getRandom()}>
+        <a onClick={e => this.keyLookup(e, item.file_name)}>{item.file_name}</a>
+      </div>
+    </li>
+  ));
+}
 
   async getUploadedFiles(requestId) {
     const { dispatch } = this.props;
@@ -449,7 +451,7 @@ class FormOverview extends React.Component {
                     }
                   } else if (question[b].inputs[a].type === 'file'){
                       sectionQuestions.push(
-                        this.getFileList()
+                        this.getFileList(question[b].inputs[a]?.control_id)
                         );
                   } else {
                     sectionQuestions.push(
@@ -567,7 +569,7 @@ class FormOverview extends React.Component {
   getReviewerOptions() {
     const existingUserIds = this.state.filteredReviewers.map(user => user.edpuser_id);
     const filteredUsers = this.state.allUsers.data?.filter(user => !existingUserIds.includes(user.id));
-    return filteredUsers ? filteredUsers.map(user => ({ value: user.id, label: user.name })) : [];
+    return filteredUsers ? filteredUsers.map(user => ({ value: user.id, label: user.name, info: { extension: user.extension, groups: user.user_groups, roles: user.user_roles} })) : [];
   }
 
   capitalizeFirstLetter = (string) => {
@@ -700,6 +702,7 @@ class FormOverview extends React.Component {
                 value={this.state.selectedReviewers}
                 onChange={this.handleSelectChange}
                 placeholder="Select Reviewers..."
+                components={{ Option: CustomOption }}
               />
               <div style={{ textAlign: 'right', 'marginTop': '5px'}}>
                 <button
