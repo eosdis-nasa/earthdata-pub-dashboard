@@ -16,10 +16,27 @@ import { workflowToGraph } from './graph-utils';
 import { userPrivileges } from '../../utils/privileges';
 import { Modal, Button } from 'react-bootstrap';
 import { listRequests } from '../../actions';
+import WorkflowArrowBreadCrumb from '../../utils/table-config/BreadCrumb';
 
 function onLoad (reactFlowInstance) {
   reactFlowInstance.fitView();
 }
+
+const getStepBreadcrumb = (steps) => {
+  const breadcrumb = [];
+  let currentStep = 'init';
+
+  while (currentStep && steps[currentStep]) {
+    breadcrumb.push(currentStep);
+    currentStep = steps[currentStep].next_step_name;
+  }
+
+  if (!breadcrumb.includes('close') && steps['close']) {
+    breadcrumb.push('close');
+  }
+
+  return breadcrumb;
+};
 
 class Workflows extends React.Component {
   constructor () {
@@ -39,6 +56,7 @@ class Workflows extends React.Component {
     this.onConnect = this.onConnect.bind(this);
   }
 
+
   async componentDidMount () {
     const { dispatch } = this.props;
     const { workflowId } = this.props.match.params;
@@ -46,40 +64,12 @@ class Workflows extends React.Component {
     await dispatch(listRequests())
     const count = this.calculateWorkflowRequestCount(this.props.requests.list.data || [], workflowId);
     this.setState({ workflowRequestCount: count });
-    setTimeout(() => {
-      const record = this.props.workflows.detail;
-      if (record?.data) {
-        const graphData = workflowToGraph(record.data.steps);
-        this.setState({ nodes: graphData[0], edges: graphData[1] });
-      }
-    }, 2000);
   }  
 
   calculateWorkflowRequestCount(data, workflowId) {
     return data.filter(item => item.workflow_id === workflowId).length;
   }
   
-  showGraph () {
-    if (document.getElementById('graph') !== null) {
-      document.getElementById('graph').removeAttribute('class', 'hidden');
-      const section = document.querySelector('section#graph');
-      if (section !== null) {
-        setTimeout(() => {
-          /* const nodes = document.querySelectorAll('g .react-flow__edge'); */
-          const nodes = document.querySelectorAll('.react-flow__node');
-          let count = 1;
-          for (const ea in nodes) {
-            // eslint-disable-next-line no-prototype-builtins
-            if (nodes.hasOwnProperty(ea)) {
-              count++;
-            }
-          }
-          // (edges) + (nodeHeight (mines always the same)) + (top of first node to breadcrumbs)
-          section.style.height = ((count * 54) + (count * 40)) + 220 + 'px';
-        }, '1000');
-      }
-    }
-  }
 
   renderReadOnlyJson (name, data) {
     return (
@@ -173,10 +163,23 @@ class Workflows extends React.Component {
                       onClick={() => this.state.view !== 'json' && this.setState({ view: 'json' })}>JSON View</button>
                   </div>
                   <div>
-                    {this.state.view === 'graph' ? this.showGraph(record.data) : this.renderJson(record.data)}
-                  </div>
+                  {this.state.view === 'graph' && (
+                    <div>
+                      <div style={{ marginTop: '15px' }}>
+
+                        <WorkflowArrowBreadCrumb
+                          steps={getStepBreadcrumb(record.data.steps)}
+                          currentStep={'init'} // or actual current step name
+                          direction="vertical" 
+                        />
+                      </div>
+                      {/* {this.showGraph()} */}
+                    </div>
+                  )}
+                {this.state.view === 'json' && this.renderJson(record.data)}                  
                 </div>
-                : null}
+              </div>
+              : null}
         </section>
         {record.data
           ? <section className='page__section' id='graph'>

@@ -330,3 +330,7 @@
     margin-top: 10px;
     z-index: 1001;
   }
+
+  .assign-workflow{
+    min-width: 100px;
+  }
