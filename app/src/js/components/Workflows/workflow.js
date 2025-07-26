@@ -51,7 +51,6 @@ class Workflows extends React.Component {
     };    
     this.renderReadOnlyJson = this.renderReadOnlyJson.bind(this);
     this.renderJson = this.renderJson.bind(this);
-    this.showGraph = this.showGraph.bind(this);
     this.hideGraph = this.hideGraph.bind(this);
     this.onConnect = this.onConnect.bind(this);
   }
