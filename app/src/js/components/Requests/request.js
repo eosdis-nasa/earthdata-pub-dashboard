@@ -484,7 +484,7 @@ class RequestOverview extends React.Component {
                     );
                   })
                 }
-                <div className='flex__row sm-border'>
+                {canAddUser && <div className='flex__row sm-border'>
                   <div className='flex__item-w-25'>
                     <button
                       className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
@@ -494,6 +494,7 @@ class RequestOverview extends React.Component {
                     </button>
                   </div>
                 </div>
+                }
               </div>
             </section>
             <section className='page__section'>
