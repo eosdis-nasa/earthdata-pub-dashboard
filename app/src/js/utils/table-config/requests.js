@@ -16,6 +16,7 @@ import Dropdown from '../../components/DropDown/simple-dropdown';
 import _config from '../../config';
 import { trigger } from '../../actions/events';
 import { getPrivilegesByType, requestPrivileges, daacPrivileges } from '../privileges';
+import NextActionCell from './NextActionCell';
 
 export const getPrivileges = (step) => {
   const user = JSON.parse(window.localStorage.getItem('auth-user'));
@@ -65,7 +66,7 @@ export const newLink = (request, formalName) => {
   } else {
     // This element was purposefully left as an anchor tag (rather than react Link) since the page is redirected away from
     // the dashboard site to the forms site. Converting to a Link component will result in a malformed url.
-    return <a href={request} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'take action'}>{formalName}</a>;
+    return <a href={request} className={'button button--medium button--green form-group__element--left button--no-icon next-action assign-workflow'} aria-label={formalName || 'take action'}>{formalName}</a>;
   }
 };
 
@@ -121,9 +122,9 @@ export const esdisReviewLink = (row, formalName, step) => {
   } else if (disabled) {
     return formalName;
   } else if (step === 'esdis_additional_review_assessment') {
-    return <Link to={`/requests/question?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+    return <Link to={`/requests/question?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action assign-workflow'} aria-label={formalName || 'review item'}>{formalName}</Link>;
   } else {
-    return <Link to={`/requests/approval/esdis?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+    return <Link to={`/requests/approval/esdis?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action assign-workflow'} aria-label={formalName || 'review item'}>{formalName}</Link>;
   }
 };
 
@@ -151,14 +152,14 @@ export const existingLink = (row, formId, formalName, step, stepType) => {
     return formalName;
   } else {
     if (stepType === 'upload') {
-      return <Link to={`/upload/${row.id}?uploadStepId=${row.step_data.upload_step_id}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+      return <Link to={`/upload/${row.id}?uploadStepId=${row.step_data.upload_step_id}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action assign-workflow'} aria-label={formalName || 'review item'}>{formalName}</Link>;
     } else if (typeof formId === 'undefined' || stepType === 'service') {
         if (row.step_data && row.step_data.action_id) {
         return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
       }
-      return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+      return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action assign-workflow'} aria-label={formalName || 'review item'}>{formalName}</Link>;
     } else {
-      return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'view form details'}>{formalName}</Link>;
+      return <Link to={`/forms/id/${formId}?requestId=${row.id}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action assign-workflow'} aria-label={formalName || 'view form details'}>{formalName}</Link>;
     }
   }
 };
@@ -267,13 +268,7 @@ export const tableColumns = [
     id: 'status_message',
     // width: 170
   },
-  {
-    Header: 'Workflow',
-    accessor: (row) => row.workflow_name,
-    Cell: row => row.row.original.workflow_name ? <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }} aria-label="View your workflow details">{row.row.original.workflow_name}</Link> : null,
-    id: 'workflow_name',
-    // width: 170
-  },
+
   {
     Header: 'Created',
     accessor: row => shortDateNoTimeYearFirst(row.created_at),
@@ -295,8 +290,8 @@ export const tableColumns = [
   {
     Header: 'Next Action',
     accessor: row => stepLookup(row),
+    Cell: row => <NextActionCell value={row.value} row={row.row} workflowId={row.row.original.workflow_id}/>,
     id: 'next_action',
-    // width: 170
   }
 ];
 
