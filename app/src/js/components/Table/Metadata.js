@@ -54,6 +54,10 @@ const Metadata = ({ data, accessors }) => {
       <dl className="metadata__details">
         {accessors.map((item, index) => {
           const { label, property, accessor } = item;
+
+          // Skip if label is 'Workflow'
+          if (label === 'Workflow') return null;
+
           let value = get(data, property);
           if (value !== nullValue && typeof accessor === 'function') {
             value = accessor(value, data);
