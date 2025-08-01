@@ -137,9 +137,10 @@ const Metadata = ({ data, accessors }) => {
                           color: '#545657ff',
                           display: 'flex',
                           alignItems: 'center',
-                          padding: 0
+                          padding: 0,
+                          marginLeft: '10px'
                         }}
-                        title="Copy code"
+                        title="Copy Publication Code"
                       >
                         <i className="fas fa-copy" />
                       </button>
@@ -163,7 +164,7 @@ const Metadata = ({ data, accessors }) => {
                           zIndex: 1000
                         }}
                       >
-                        Publication code copied
+                        Publication Code Copied
                       </div>
                     </div>
                   </li>
