@@ -1552,7 +1552,7 @@ const FormQuestions = ({
                               <span className="checkmark"></span>
                             </label>
                           )}
-                          {question.long_name === 'Data Submission Point of Contact' && (
+                          {question.long_name === 'Data Accession Point of Contact' && (
                             <label className="checkbox-item">
                               Same as Principal Investigator
                               <input
