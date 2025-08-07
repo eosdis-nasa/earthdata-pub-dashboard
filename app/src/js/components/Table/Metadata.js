@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'object-path';
 import { nullValue } from '../../utils/format';
-
 import { useDispatch } from 'react-redux';
 import { getWorkflow } from '../../actions';
 import PopupInfoModal from '../../utils/table-config/PopupInfoModal';
@@ -14,10 +13,11 @@ const Metadata = ({ data, accessors }) => {
   const [workflowSteps, setWorkflowSteps] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState(null);
+
 
   const handleWorkflowClick = async () => {
     if (!data?.workflow?.id) return;
-
     try {
       setLoading(true);
       const result = await dispatch(getWorkflow(data.workflow.id));
@@ -27,6 +27,16 @@ const Metadata = ({ data, accessors }) => {
       console.error('Failed to fetch workflow:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCopy = async (text, index) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
     }
   };
 
@@ -86,6 +96,69 @@ const Metadata = ({ data, accessors }) => {
           );
         })}
 
+        {data.codes.length > 0 && (
+          <div className="meta__row">
+            <dt>Publication Codes</dt>
+            <dd>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {data.codes.map((item, idx) => (
+                  <li
+                    key={idx}
+                    style={{
+                      marginBottom: '8px',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    {item.short_name}
+
+                    {/* Tooltip wrapper */}
+                    <div style={{ position: 'relative'}}>
+                      <button
+                        onClick={() => handleCopy(item.code, idx)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: '#545657ff',
+                          display: 'flex',
+                          alignItems: 'center',
+                          padding: 0,
+                          marginLeft: '10px'
+                        }}
+                        title="Copy Publication Code"
+                      >
+                        <i className="fas fa-copy" />
+                      </button>
+
+                      {/* Tooltip */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: 'calc(100% + 8px)',
+                          transform: 'translateY(-50%)',
+                          backgroundColor: '#333',
+                          color: '#fff',
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          fontSize: '0.75rem',
+                          whiteSpace: 'nowrap',
+                          opacity: copiedIndex === idx ? 1 : 0,
+                          pointerEvents: 'none',
+                          transition: 'opacity 0.2s ease-in-out',
+                          zIndex: 1000
+                        }}
+                      >
+                        Publication Code Copied
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        )}
         {/* Modal for workflow info */}
         {showInfo && (
           <PopupInfoModal

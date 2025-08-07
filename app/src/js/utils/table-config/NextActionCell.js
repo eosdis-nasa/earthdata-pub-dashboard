@@ -53,7 +53,7 @@ const NextActionCell = ({ value, row, workflowId }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        width: '100%'
+        width: value === 'Completed' ? '50%' : '100%'
       }}>
         <div style={{ flex: '1 1 auto', minWidth: 0 }}>
           {value}
@@ -69,7 +69,8 @@ const NextActionCell = ({ value, row, workflowId }) => {
               fontSize: '1rem',
               padding: 0,
               width: '100%',
-              lineHeight: 1
+              lineHeight: 1,
+              marginLeft: '10px'
             }}
             aria-label="More info about this action"
             title="Workflow information"
