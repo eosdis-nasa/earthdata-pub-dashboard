@@ -70,7 +70,7 @@ const Metadata = ({ data, accessors }) => {
 
           let value = get(data, property);
           if (value !== nullValue && typeof accessor === 'function') {
-            value = accessor(value, data, data.codes);
+            value = accessor(value, data);
           }
 
           const isNextAction = label === 'Next Action';
