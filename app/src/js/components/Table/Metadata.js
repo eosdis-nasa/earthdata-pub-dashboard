@@ -1,34 +1,20 @@
 'use strict';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'object-path';
 import { nullValue } from '../../utils/format';
 import { useDispatch } from 'react-redux';
-import { getCodesBySubmissionId, getWorkflow } from '../../actions';
+import { getWorkflow } from '../../actions';
 import PopupInfoModal from '../../utils/table-config/PopupInfoModal';
 import Loading from '../LoadingIndicator/loading-indicator';
 
 const Metadata = ({ data, accessors }) => {
   const dispatch = useDispatch();
-  const [codeData, setCodeData] = useState([]);
   const [workflowSteps, setWorkflowSteps] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  useEffect(() => {
-    if (data?.id) {
-      const fetchCodes = async () => {
-        try {
-          const result = await dispatch(getCodesBySubmissionId(data.id));
-          setCodeData(result?.data || result || []);
-        } catch (error) {
-          console.error('Error fetching code data:', error);
-        }
-      };
-      fetchCodes();
-    }
-  }, [dispatch, data?.id]);
 
   const handleWorkflowClick = async () => {
     if (!data?.workflow?.id) return;
@@ -84,7 +70,7 @@ const Metadata = ({ data, accessors }) => {
 
           let value = get(data, property);
           if (value !== nullValue && typeof accessor === 'function') {
-            value = accessor(value, data, codeData);
+            value = accessor(value, data, data.codes);
           }
 
           const isNextAction = label === 'Next Action';
@@ -110,12 +96,12 @@ const Metadata = ({ data, accessors }) => {
           );
         })}
 
-        {codeData.length > 0 && (
+        {data.codes.length > 0 && (
           <div className="meta__row">
             <dt>Publication Codes</dt>
             <dd>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                {codeData.map((item, idx) => (
+                {data.codes.map((item, idx) => (
                   <li
                     key={idx}
                     style={{

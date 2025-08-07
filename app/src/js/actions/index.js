@@ -368,14 +368,6 @@ export const listRequestReviewers = (id) => ({
     path: `data/submission/getStepReviewDetails/${id}`
 }});
 
-export const getCodesBySubmissionId = (id) => ({
-  [CALL_API]: {
-    type: types.REQUESTS,
-    method: 'GET',
-    id: id,
-    path: `data/submission/getCodesBySubmissionId/${id}`
-}});
-
 export const getQuestion = (questionId) => ({
   [CALL_API]: {
     type: types.QUESTION,
