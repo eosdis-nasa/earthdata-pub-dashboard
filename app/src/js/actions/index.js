@@ -197,7 +197,7 @@ export const listFileDownloadsByKey = (key) => ({
     type: types.UPLOAD,
     method: 'GET',
     id: key,
-    path: `data/upload/downloadUrl/${key}`
+    path: `data/upload/downloadUrl?key=${key}`
   }
 });
 
@@ -798,6 +798,13 @@ export const getUsers = (role_id) => ({
   }
 });
 
+export const getDetailedUsers = (roleId) => ({
+  [CALL_API]: {
+    type: types.USER,
+    method: 'GET',
+    path: roleId ? `data/users/details?role_id=${roleId}` : 'data/users/details'
+  }
+});
 
 export const addUserRole = (payload) => {
   return (dispatch) => {

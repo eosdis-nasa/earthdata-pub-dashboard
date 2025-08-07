@@ -142,7 +142,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "@edpub/upload-utility": "^1.1.0",
+    "@edpub/upload-utility": "^1.1.1",
     "@floating-ui/utils": "^0.2.5",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
@@ -174,7 +174,7 @@
     "lodash.omitby": "^4.6.0",
     "lodash.truncate": "^4.4.2",
     "moment": "^2.29.1",
-    "node-polyfill-webpack-plugin": "^1.1.4",
+    "node-polyfill-webpack-plugin": "^4.1.0",
     "numeral": "^2.0.4",
     "object-path": "^0.11.8",
     "paginator": "^1.0.0",
@@ -209,6 +209,7 @@
     "style-loader": "^3.3.1"
   },
   "overrides": {
-    "yaml": "2.2.2"
+    "yaml": "2.2.2",
+    "pbkdf2": "3.1.3"
   }
 }

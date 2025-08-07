@@ -113,7 +113,7 @@ export const requestPrivileges = (privileges, stepName) => {
 export const requestCanReview = (privileges, stepName, user) => {
   if (stepName && stepName.match(/management_review/g)) {
     return privileges.REQUEST.includes("REVIEW_MANAGER");
-  } else if (stepName && (stepName.match(/esdis_final_review/g) || stepName.match(/additional_review_question/g))) {
+  } else if (stepName && (stepName.match(/esdis_final_review/g) || stepName.match(/esdis_additional_review_assessment/g))) {
     return privileges.REQUEST.includes('REVIEW_ESDIS') && user.user_groups.some((group) => group.short_name === 'root_group');
   }
 

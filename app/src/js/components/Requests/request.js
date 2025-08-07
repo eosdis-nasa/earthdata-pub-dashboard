@@ -187,10 +187,14 @@ class RequestOverview extends React.Component {
     const { requestId } = this.props.match.params;
     const updatedMetadata = await this.props.dispatch(metadataMapper(requestId)); 
     const mappedData = updatedMetadata.data ? JSON.stringify(updatedMetadata.data): "";
+    const fileName = this.props.requests.detail.data?.data_product_name ||
+      (this.props.requests.detail.data?.initiator?.name
+        ? 'Request Initialized by ' + this.props.requests.detail.data.initiator.name
+    : requestId);
     const a = document.createElement('a');
     const file = new Blob([mappedData], { type: 'application/json' });
     a.href = URL.createObjectURL(file);
-    a.download = `${this.props.requests.detail.data.id}`;
+    a.download = `${fileName}`;
     a.click();
   }
 
@@ -364,7 +368,7 @@ class RequestOverview extends React.Component {
 
     const metaAccessors = [
       {
-        label: 'Data Producer Name',
+        label: 'Request Contact',
         accessor: row => row.data_producer_name
       },
       {
@@ -372,7 +376,7 @@ class RequestOverview extends React.Component {
         accessor: row => row?.initiator?.name && canViewUsers ? <Link to={`/users/id/${row.initiator.id}`} aria-label="View request creator">{row.initiator.name}</Link> : null
       },
       {
-        label: 'Data Product Name',
+        label: 'Request Name',
         accessor: row => row.data_product_name || (row?.initiator?.name && canViewUsers ? `Request Initialized by ${row.initiator.name}` : null)
       },
       {

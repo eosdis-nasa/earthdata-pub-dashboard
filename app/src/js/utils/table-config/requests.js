@@ -120,7 +120,7 @@ export const esdisReviewLink = (row, formalName, step) => {
     return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
     return formalName;
-  } else if (step === 'additional_review_question') {
+  } else if (step === 'esdis_additional_review_assessment') {
     return <Link to={`/requests/question?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
   } else {
     return <Link to={`/requests/approval/esdis?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action'} aria-label={formalName || 'review item'}>{formalName}</Link>;
@@ -233,7 +233,7 @@ export const stepLookup = (row) => {
     return assignWorkflow(request, formalName);
   } else if (stepType?.match(/action/g) && stepName?.match(/daac_assignment(_final)?/g)) {
     return assignDaacs(request, formalName);
-  } else if (stepName?.match(/additional_review_question/g)) {
+  } else if (stepName?.match(/esdis_additional_review_assessment/g)) {
     return esdisReviewLink(row, formalName, stepName);
   } else if (stepType?.match(/action/g) || stepType?.match(/upload/g)) {
     return existingLink(row, undefined, formalName, stepName, stepType);
@@ -247,14 +247,14 @@ export const stepLookup = (row) => {
 };
 export const tableColumns = [
   {
-    Header: 'Data Product Name',
+    Header: 'Request Name',
     accessor: row => row.name ? row.name || `Request Initialized by ${row.initiator.name}` : `Request Initialized by ${row.initiator.name}`,
     Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.name ? row.row.original.name || `Request Initialized by ${row.row.original.initiator.name}` : `Request Initialized by ${row.row.original.initiator.name}`}</Link> : `Request Initialized by ${row.row.original.initiator.name}`,
     id: 'name',
     // width: 155
   },
   {
-    Header: 'Data Producer Name',
+    Header: 'Request Contact',
     accessor: row => row.data_producer_name ? row.data_producer_name : null,
     Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.data_producer_name ? row.row.original.data_producer_name : null}</Link> : null,
     id: 'data_producer_info_name',

@@ -41,12 +41,19 @@ const GettingStarted = () => {
   };
 
   // Scroll to section if there's a hash in the URL
-  useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.replace("#", ""); // Remove the #
-      scrollToSection(id);
-    }
-  }, [location]);
+useEffect(() => {
+  if (location.hash) {
+    const id = location.hash.replace("#", ""); // Remove the #
+    const interval = setInterval(() => {
+      if (sectionRefs[id]?.current) {
+        scrollToSection(id);
+        clearInterval(interval);
+      }
+    }, 100);
+    setTimeout(() => clearInterval(interval), 5000);
+  }
+}, [location]);
+
 
   if (!gettingStartedData) {
     return <div className="text-center mt-5">Loading...</div>;
