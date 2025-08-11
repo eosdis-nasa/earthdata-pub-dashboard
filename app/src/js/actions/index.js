@@ -1192,7 +1192,7 @@ export const addUserToNote = (payload, conversationId) => {
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    await dispatch(getConversation(conversationId, true));
+    await dispatch(getConversation(conversationId));
   };
 };
 
@@ -1209,7 +1209,7 @@ export const removeUserFromNote = (payload, conversationId) => {
     });
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await dispatch(getConversation(conversationId, true));
+    await dispatch(getConversation(conversationId));
   };
 };
 
@@ -1225,7 +1225,7 @@ export const addRoleToNote = (payload, conversationId) => {
     });
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await dispatch(getConversation(conversationId, true));
+    await dispatch(getConversation(conversationId));
   };
 };
 
@@ -1241,7 +1241,7 @@ export const removeRoleFromNote = (payload, conversationId) => {
     });
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await dispatch(getConversation(conversationId, true));
+    await dispatch(getConversation(conversationId));
   };
 };
 
