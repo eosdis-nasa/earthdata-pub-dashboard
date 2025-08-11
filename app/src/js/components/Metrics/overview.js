@@ -146,7 +146,7 @@ const uniqueData = data.filter(item => {
   }
 
   // If time_to_publish exists, update the published count and total time components
-  if (item.time_to_publish) {
+  if (item.time_to_publish && item.hidden === false) {
       daacIdInfo[item.daac_id].published++;
       daacIdInfo[item.daac_id].time_to_publish += item.time_to_publish !== "" ? parseInt(item.time_to_publish) : 0;
   }
