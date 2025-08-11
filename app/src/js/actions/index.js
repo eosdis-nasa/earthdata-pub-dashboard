@@ -1180,76 +1180,71 @@ export const removeUsersFromConversation = (payload) => {
 };
 
 export const addUserToNote = (payload, conversationId) => {
-  return (dispatch) => {
-    dispatch({
+  return async (dispatch) => {
+    await dispatch({
       [CALL_API]: {
         type: types.NOTE_ADD_VIEWER,
         method: 'POST',
         path: 'notification/add_viewers',
         body: payload
       }
-    })
-      .then(() => {
-        setTimeout(() => {
-          dispatch(getConversation(conversationId));
-        }, 1000);
-      });
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    await dispatch(getConversation(conversationId, true));
   };
 };
 
+
 export const removeUserFromNote = (payload, conversationId) => {
-  return (dispatch) => {
-    dispatch({
+  return async (dispatch) => {
+    await dispatch({
       [CALL_API]: {
         type: types.NOTE_REMOVE_VIEWER,
         method: 'POST',
         path: 'notification/remove_viewer',
         body: payload
       }
-    })
-      .then(() => {
-        setTimeout(() => {
-          dispatch(getConversation(conversationId));
-        }, 1000);
-      });
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await dispatch(getConversation(conversationId, true));
   };
 };
 
 export const addRoleToNote = (payload, conversationId) => {
-  return (dispatch) => {
-    dispatch({
+  return async (dispatch) => {
+    await dispatch({
       [CALL_API]: {
         type: types.NOTE_ADD_VIEWER_ROLE,
         method: 'POST',
         path: 'notification/add_viewer_roles',
         body: payload
       }
-    })
-      .then(() => {
-        setTimeout(() => {
-          dispatch(getConversation(conversationId));
-        }, 1000);
-      });
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await dispatch(getConversation(conversationId, true));
   };
 };
 
 export const removeRoleFromNote = (payload, conversationId) => {
-  return (dispatch) => {
-    dispatch({
+  return async (dispatch) => {
+    await dispatch({
       [CALL_API]: {
         type: types.NOTE_REMOVE_VIEWER_ROLE,
         method: 'POST',
         path: 'notification/remove_viewer_role',
         body: payload
       }
-    })
-      .then(() => {
-        setTimeout(() => {
-          dispatch(getConversation(conversationId));
-        }, 1000);
-      });
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await dispatch(getConversation(conversationId, true));
   };
 };
+
 
 export const updateSearchModal = (path, query) => ({
   [CALL_API]: {

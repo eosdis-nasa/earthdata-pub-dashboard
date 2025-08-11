@@ -357,14 +357,14 @@ const checkForUpdates = async (retryCount = 0) => {
                     </form>
                   }
                 </div>
-                {Array.isArray(displayNotes) && displayNotes.map((note) => (
-                  <Note 
-                    key={note.id} 
-                    dispatch={dispatch} 
-                    conversationId={conversationId} 
-                    note={note} 
-                    privileges={privileges} 
-                    user = {user}
+                {Array.isArray(notes) && notes.map(n => (
+                  <Note
+                    key={n.id}
+                    dispatch={dispatch}
+                    conversationId={conversationId}
+                    note={n}
+                    privileges={privileges}
+                    user={user}
                   />
                 ))}
               </div>
@@ -399,7 +399,7 @@ const checkForUpdates = async (retryCount = 0) => {
                     <span style={{ width: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={user.name}>
                         {user.name}
                     </span>
-                    {canRemoveUser && (
+                    {canRemoveUser && data.edpuser_id !== user.id && (
                         <button
                             className='button button--remove'
                             onClick={() => handleRemoveUser(conversationId, user.id)}
