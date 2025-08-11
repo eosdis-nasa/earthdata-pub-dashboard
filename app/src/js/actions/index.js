@@ -1179,7 +1179,7 @@ export const removeUsersFromConversation = (payload) => {
   };
 };
 
-export const addUserToNote = (payload, conversationId) => {
+export const addUserToNote = (payload, conversationId, selectedFilter) => {
   return async (dispatch) => {
     await dispatch({
       [CALL_API]: {
@@ -1192,12 +1192,12 @@ export const addUserToNote = (payload, conversationId) => {
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    await dispatch(getConversation(conversationId));
+    await dispatch(getConversation(conversationId, selectedFilter));
   };
 };
 
 
-export const removeUserFromNote = (payload, conversationId) => {
+export const removeUserFromNote = (payload, conversationId, selectedFilter) => {
   return async (dispatch) => {
     await dispatch({
       [CALL_API]: {
@@ -1209,11 +1209,11 @@ export const removeUserFromNote = (payload, conversationId) => {
     });
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await dispatch(getConversation(conversationId));
+    await dispatch(getConversation(conversationId, selectedFilter));
   };
 };
 
-export const addRoleToNote = (payload, conversationId) => {
+export const addRoleToNote = (payload, conversationId, selectedFilter) => {
   return async (dispatch) => {
     await dispatch({
       [CALL_API]: {
@@ -1225,11 +1225,11 @@ export const addRoleToNote = (payload, conversationId) => {
     });
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await dispatch(getConversation(conversationId));
+    await dispatch(getConversation(conversationId, selectedFilter));
   };
 };
 
-export const removeRoleFromNote = (payload, conversationId) => {
+export const removeRoleFromNote = (payload, conversationId, selectedFilter) => {
   return async (dispatch) => {
     await dispatch({
       [CALL_API]: {
@@ -1241,7 +1241,7 @@ export const removeRoleFromNote = (payload, conversationId) => {
     });
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await dispatch(getConversation(conversationId));
+    await dispatch(getConversation(conversationId, selectedFilter));
   };
 };
 

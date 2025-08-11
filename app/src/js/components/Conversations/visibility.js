@@ -12,7 +12,7 @@ import {
     getRole
 } from '../../actions';
 
-export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privileges }) => {
+export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privileges, selectedFilter }) => {
     const noteId = note.id;
 
     const [searchType, setSearchType] = useState('user');
@@ -25,7 +25,7 @@ export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privile
             note_id: noteId,
             viewer_ids: [id]
         };
-        dispatch(addUserToNote(params, conversationId));
+        dispatch(addUserToNote(params, conversationId, selectedFilter));
         setShowSearch(false);
     };
 
@@ -34,7 +34,7 @@ export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privile
             note_id: noteId,
             viewer_roles: [id]
         };
-        dispatch(addRoleToNote(params, conversationId));
+        dispatch(addRoleToNote(params, conversationId, selectedFilter));
         setShowSearch(false);
     };
 
@@ -59,14 +59,14 @@ export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privile
                     "note_id": noteId,
                     "viewer_id": viewerId,
                 }
-                dispatch(removeUserFromNote(payload, conversationId));
+                dispatch(removeUserFromNote(payload, conversationId, selectedFilter));
                 break;
             case "role":
                 payload = {
                     "note_id": noteId,
                     "viewer_role": viewerId,
                 }
-                dispatch(removeRoleFromNote(payload, conversationId));
+                dispatch(removeRoleFromNote(payload, conversationId, selectedFilter));
                 break;
         }
     }
