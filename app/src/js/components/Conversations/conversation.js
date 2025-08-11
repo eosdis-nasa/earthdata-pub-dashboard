@@ -399,7 +399,7 @@ const checkForUpdates = async (retryCount = 0) => {
                     <span style={{ width: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={user.name}>
                         {user.name}
                     </span>
-                    {canRemoveUser && data.edpuser_id !== user.id && (
+                    {canRemoveUser && (
                         <button
                             className='button button--remove'
                             onClick={() => handleRemoveUser(conversationId, user.id)}
