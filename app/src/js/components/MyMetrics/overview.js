@@ -354,13 +354,13 @@ return (
         </select>
 
         {/* DAAC Date Filter */}
-        <label style={{ marginLeft: "20px" }}>Start Time:</label>
+        <label style={{ marginLeft: "20px" }}>Start Date:</label>
         <input
           type="date"
           value={daacFilter.start}
           onChange={(e) => setDaacFilter(prev => ({ ...prev, start: e.target.value }))}
         />
-        <label>End Time:</label>
+        <label>End Date:</label>
         <input
           type="date"
           value={daacFilter.end}
