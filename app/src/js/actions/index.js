@@ -222,7 +222,7 @@ export const getContributers = (payload) => ({
 export const listRequests = (options) => ({
   [CALL_API]: {
     type: types.REQUESTS,
-    method: 'POST',
+    method: 'GET',
     id: null,
     path: 'data/submission/operation/active'
   }
@@ -275,7 +275,7 @@ export const submitFilledForm = (payload) => ({
 export const listInactiveRequests = (options) => ({
   [CALL_API]: {
     type: types.REQUESTS,
-    method: 'POST',
+    method: 'GET',
     id: null,
     path: 'data/submission/operation/inactive'
   }
