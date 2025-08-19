@@ -267,8 +267,6 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
                 placeholder='Select Daac ...'
                 aria-label='Select Daac'
               /></label>)}
-
-              {/* ADDED: date picker fields */}
               {(view === 'Overview' || view === 'DAAC') && (
                 <label className='heading--small'>Start Date
                 <div className='selectButton' >
@@ -276,8 +274,7 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
                     type="date"
                     value={startDate || ''}
                     onChange={(e) => setStartDate(e.target.value)}
-                          style={{ width: '100%', border: 'none', height: '28px' }}
-
+                    style={{ width: '100%', border: 'none', height: '28px' }}
                   />
                 </div>
                 </label>
@@ -289,8 +286,7 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
                     type="date"
                     value={endDate || ''}
                     onChange={(e) => setEndDate(e.target.value)}
-                          style={{ width: '100%', border: 'none', height: '28px'}}
-
+                    style={{ width: '100%', border: 'none', height: '28px'}}
                   />
                 </div>
                 </label>
