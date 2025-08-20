@@ -32,22 +32,25 @@ class Auth extends React.Component {
     if (this.store.getState().api.authenticated) {
       redirectWithToken();
     } else if (!inflight && code) {
-      const { data } = await dispatch(mfaTokenFetch(code, state));
-      const { token, user } = data;
-      if (!('mfaSecretCode' in data)) {
-        saveToken({ token, user: { ...user, ...{ authenticated: true } } });
-        window.location.href = config.basepath;
-      } else this.setState({
-        body: <MFA
-              secretCode={data.mfaSecretCode}
-              username={user.username}
-              issuer={user.issuer}
-              // Have to call these as a sub-attribute of props directly or they initialize too
-              // early and send invalid values
-              api={this.props.api}
-              dispatch={this.props.dispatch}
-              queryParams={this.props.queryParams}/>
-        });
+      saveToken({ token, user: { ...user, ...{ authenticated: true } } });
+      window.location.href = config.basepath;
+      // TODO - Update with IDFS MFA integration
+      // const { data } = await dispatch(mfaTokenFetch(code, state));
+      // const { token, user } = data;
+      // if (!('mfaSecretCode' in data)) {
+      //   saveToken({ token, user: { ...user, ...{ authenticated: true } } });
+      //   window.location.href = config.basepath;
+      // } else this.setState({
+      //   body: <MFA
+      //         secretCode={data.mfaSecretCode}
+      //         username={user.username}
+      //         issuer={user.issuer}
+      //         // Have to call these as a sub-attribute of props directly or they initialize too
+      //         // early and send invalid values
+      //         api={this.props.api}
+      //         dispatch={this.props.dispatch}
+      //         queryParams={this.props.queryParams}/>
+      //   });
     }
   }
 
