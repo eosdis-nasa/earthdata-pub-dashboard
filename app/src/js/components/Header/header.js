@@ -4,7 +4,7 @@ import c from 'classnames';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout, getApiVersion } from '../../actions';
+import { logout, getApiVersion, refreshToken } from '../../actions';
 import { nav, overviewUrl, helpPageDefault} from '../../config';
 import mainLogo from '../../../assets/images/nasa-logo.svg';
 
@@ -32,8 +32,9 @@ class Header extends React.Component {
     dispatch(getApiVersion());
   }
 
-  logout () {
+  async logout () {
     const { dispatch, history } = this.props;
+    await dispatch(refreshToken(true));
     dispatch(logout());
     history.push('/');
   }

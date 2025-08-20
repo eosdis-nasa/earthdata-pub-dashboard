@@ -73,10 +73,20 @@ class TimeoutWarning extends React.Component {
     this.props.dispatch(refreshToken());
   }
 
-  logoutNow () {
-    this.setState({ show: false });
-    this.clearTimers();
+  async performLogout({ hideModal = false, clearTimers = false } = {}) {
+    if (hideModal) this.setState({ show: false });
+    if (clearTimers) this.clearTimers();
+
+    await this.props.dispatch(refreshToken(true));
     this.props.dispatch(logout());
+  }
+
+  logoutNow() {
+    return this.performLogout({ hideModal: true, clearTimers: true });
+  }
+
+  logoutAfterTokenInvalidate() {
+    return this.performLogout();
   }
 
   render () {
@@ -102,10 +112,11 @@ class TimeoutWarning extends React.Component {
             className={'button button__animation--md'}
             onClick={this.extendSession.bind(this)}
             disabled={tokens.inflight}>Extend Session</button>
-          <button
-            className={'button button__animation--md button--secondary button__cancel'}
-            onClick={() => this.props.dispatch(logout())}
-            disabled={tokens.inflight}>Logout Now</button>
+            <button
+              className={'button button__animation--md button--secondary button__cancel'}
+              onClick={() => this.logoutAfterTokenInvalidate()}
+              disabled={tokens.inflight}>Logout Now
+            </button>
         </Modal.Footer>
       </Modal>
     );

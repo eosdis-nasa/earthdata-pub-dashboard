@@ -55,7 +55,7 @@ export const mfaTokenFetch = (code, state) => ({
   }
 });
 
-export const refreshToken = () => {
+export const refreshToken = (logout = false) => {
   return (dispatch) => {
     dispatch({
       [CALL_API]: {
@@ -63,7 +63,7 @@ export const refreshToken = () => {
         method: 'GET',
         id: null,
         path: 'token/refresh',
-        qs: { refresh: true }
+        qs: { refresh: true, logout: logout }
       }
     });
   };
