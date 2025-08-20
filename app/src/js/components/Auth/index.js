@@ -32,11 +32,11 @@ class Auth extends React.Component {
     if (this.store.getState().api.authenticated) {
       redirectWithToken();
     } else if (!inflight && code) {
+      const { data } = await dispatch(mfaTokenFetch(code, state));
+      const { token, user } = data;
       saveToken({ token, user: { ...user, ...{ authenticated: true } } });
       window.location.href = config.basepath;
       // TODO - Update with IDFS MFA integration
-      // const { data } = await dispatch(mfaTokenFetch(code, state));
-      // const { token, user } = data;
       // if (!('mfaSecretCode' in data)) {
       //   saveToken({ token, user: { ...user, ...{ authenticated: true } } });
       //   window.location.href = config.basepath;
