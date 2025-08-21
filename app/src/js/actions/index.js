@@ -73,7 +73,7 @@ export const invalidateToken = (payload) => ({
   [CALL_API]: {
     type: types.FETCH_TOKEN,
     method: 'POST',
-    path: 'token/refresh',
+    path: 'token/invalidate',
     json: payload
   }
 });

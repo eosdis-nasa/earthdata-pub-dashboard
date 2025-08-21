@@ -40,8 +40,8 @@ class Header extends React.Component {
     try {
       await dispatch(invalidateToken(payload));
       await dispatch(refreshToken(true));
-       dispatch(logout());
-       history.push('/');
+       //dispatch(logout());
+       //history.push('/');
     } catch (err) {
       console.error('Logout failed:', err);
     }
