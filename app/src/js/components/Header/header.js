@@ -38,7 +38,6 @@ class Header extends React.Component {
 
     const payload = { token };
     try {
-      await dispatch(invalidateToken(payload));
       await dispatch(refreshToken(true));
        //dispatch(logout());
        //history.push('/');
