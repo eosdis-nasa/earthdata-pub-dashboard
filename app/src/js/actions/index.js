@@ -74,7 +74,7 @@ export const invalidateToken = (payload) => ({
     type: types.FETCH_TOKEN,
     method: 'POST',
     path: 'token/refresh',
-    body: payload
+    json: payload
   }
 });
 
