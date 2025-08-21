@@ -4,8 +4,8 @@ import c from 'classnames';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout, getApiVersion, refreshToken } from '../../actions';
-import { nav, overviewUrl, helpPageDefault} from '../../config';
+import { logout, getApiVersion, refreshToken, invalidateToken } from '../../actions';
+import { nav, overviewUrl, helpPageDefault } from '../../config';
 import mainLogo from '../../../assets/images/nasa-logo.svg';
 
 const paths = [
@@ -19,7 +19,7 @@ const paths = [
 ];
 
 class Header extends React.Component {
-  constructor () {
+  constructor() {
     super();
     this.displayName = 'Header';
     this.logout = this.logout.bind(this);
@@ -27,16 +27,24 @@ class Header extends React.Component {
     this.linkTo = this.linkTo.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch(getApiVersion());
   }
 
-  async logout () {
+  async logout(token) {
     const { dispatch, history } = this.props;
-    await dispatch(refreshToken(true));
-    dispatch(logout());
-    history.push('/');
+    if (!token) return;
+
+    const payload = { token };
+    try {
+      await dispatch(invalidateToken(payload));
+      await dispatch(refreshToken(true));
+       dispatch(logout());
+       history.push('/');
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
   }
 
   className (path) {
@@ -51,8 +59,8 @@ class Header extends React.Component {
 
   linkTo (path) {
     return <Link to={{
-      pathname: path[1],
-      search: this.props.location.search.split('?')[0]
+          pathname: path[1],
+          search: this.props.location.search.split('?')[0]
     }} aria-label={path[0]}>{path[0]}</Link>;
   }
 
@@ -73,22 +81,47 @@ class Header extends React.Component {
                             { authenticated && activePaths.map(path => <li
                                 key={path[0]}
                                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
-                            <li className='rightalign nav__order-8'>
-                                <ul className='right-ul'>
-                                    <li className='overviewLink'>{overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : ''}</li>
-                                    {authenticated &&
-                                        <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
-                                    <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a onClick={this.logout} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li></ul>
-                            </li>
-                        </ul><div id="menuToggle">
-                                <input type="checkbox" />
+                  <li className='rightalign nav__order-8'>
+                    <ul className='right-ul'>
+                      <li className='overviewLink'>
+                        {overviewUrl ? (
+                          <a href={overviewUrl} aria-label="View the overview pages">Overview</a>
+                        ) : ''}
+                      </li>
+                      {authenticated && (
+                        <li>
+                          <Link to={`/users/id/${userId}`} aria-label="View your conversations">
+                            Hi, {user}
+                          </Link>
+                        </li>
+                      )}
+                      <li className='howToUseLink'>
+                        {helpPageDefault ? (
+                          <a href={'/getting_started'} aria-label="View the how to use page">Help</a>
+                        ) : ''}
+                      </li>
+                      <li className='logOut'>
+                        {authenticated ? (
+                          <a
+                            onClick={() => this.logout(tokens?.token)}
+                            aria-label="Log out"
+                          >
+                            <span className="log-icon"></span>Log out
+                          </a>
+                        ) : (
+                          <Link to={'/login'} aria-label="Log in">Log in</Link>
+                        )}
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+                <div id="menuToggle">
+                  <input type="checkbox" />
+                  <span></span>
+                  <span></span>
+                  <span></span>
 
-                                <span></span>
-                                <span></span>
-                                <span></span>
-
-                                <ul id="menu">
+                  <ul id="menu">
                                 {activePaths.map(path => <li
                                 key={path[0]}
                                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
@@ -96,8 +129,8 @@ class Header extends React.Component {
                                     {authenticated &&
                                         <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
                                     <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a onClick={this.logout} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li>
-                                </ul>
+                                    <li className='logOut'>{authenticated ? <a onClick={() => this.logout(tokens?.token)} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li>
+                  </ul>
                             </div></>
               : null }
           </nav>
@@ -114,6 +147,7 @@ Header.propTypes = {
   history: PropTypes.object,
   minimal: PropTypes.bool,
   privileges: PropTypes.object,
+  tokens: PropTypes.object,
   user: PropTypes.string,
   userId: PropTypes.string,
   earthdatapubInstance: PropTypes.object
@@ -121,6 +155,8 @@ Header.propTypes = {
 
 export default withRouter(connect(state => ({
   privileges: state.api.tokens.privileges,
+  tokens: state.api.tokens,
   user: state.api.tokens.userName,
-  userId: state.api.tokens.userId
+  userId: state.api.tokens.userId,
+  api: state.api
 }))(Header));
