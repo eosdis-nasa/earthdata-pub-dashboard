@@ -66,7 +66,7 @@ class Header extends React.Component {
 
   render () {
     const { authenticated } = this.props.api;
-    const { privileges, user, userId } = this.props;
+    const { privileges, user, userId, tokens } = this.props;
     const activePaths = paths.filter(path => {
       return (!!privileges[path[2]] || privileges.ADMIN) || path[2].match(/CONVERSATION/g) || path[2].match(/METRICS/g);
     });
