@@ -959,6 +959,10 @@
   padding-left: 40px;
 }
 
+.questions-component .review-required {
+  margin-right: 0px;
+}
+
 .custom-modal .modal-header {
   display: flex;
   -webkit-box-align: start;
