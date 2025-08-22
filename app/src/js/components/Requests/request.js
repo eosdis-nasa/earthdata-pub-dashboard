@@ -280,9 +280,13 @@ class RequestOverview extends React.Component {
       canReassign = true;
     }
     const requestForms = request.forms;
+    let showTable = false;
     if (requestForms?.length) {
       if (record?.data?.step_name === 'close') {
         canWithdraw = false;
+      }
+      if (requestForms?.length > 0) {
+        showTable = true;
       }
     }
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
@@ -494,6 +498,18 @@ class RequestOverview extends React.Component {
             <section className='page__section'>
               {workflowSave}
             </section>
+            {showTable
+              ? <section className='page__section'>
+                <div className='heading__wrapper--border'>
+                  <h2 className='heading--medium heading--shared-content with-description'>Request Forms</h2>
+                </div>
+                <Table
+                  data={requestForms}
+                  dispatch={this.props.dispatch}
+                  tableColumns={tableColumns}
+                />
+              </section>
+              : null}
           </> : null
         }
         <br />
