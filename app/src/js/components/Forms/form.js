@@ -704,9 +704,9 @@ class FormOverview extends React.Component {
                 placeholder="Select Reviewers..."
                 components={{ Option: CustomOption }}
               />
-              <div className='questions-component' style={{ textAlign: 'right', marginTop: '5px' }}>
+              <div className='questions-component' style={{ textAlign: 'right', marginTop: '5px', backgroundColor: 'unset' }}>
                 <button
-                  className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
+                  className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white review-required'
                   onClick={() => this.handleAddReviewer()}
                   disabled={this.state.isAddReviewerDisabled || (this.state.selectedReviewers && this.state.selectedReviewers.length === 0)}
                 >

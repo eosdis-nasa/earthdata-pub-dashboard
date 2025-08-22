@@ -58,6 +58,7 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
   const handleVisibilityReset = () => {
     visibilityRef?.current?.resetIdMap();
   };
+  const [selectedFilter, setSelectedFilter] = useState(false);
 
   const MAX_RETRIES = 7;
   // Retry at 3rd, 8th, 18th, 33rd, 48th, 63rd, 78th second
@@ -135,7 +136,7 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
       checkForUpdates();
       return;
     }
-  }, [notes, level, tempNotes, shouldStopRetries]);
+  }, [notes, level, tempNotes, shouldStopRetries, selectedFilter]);
   
 
 const checkForUpdates = async (retryCount = 0) => {
@@ -305,13 +306,13 @@ const checkForUpdates = async (retryCount = 0) => {
             <button id='all_button'
                 className={'form-group__element--right' + (status === 'inflight' ? ' button--disabled' : '')}
                 aria-label='Get all conversation detail'
-                onClick={(e) => { e.preventDefault(); getConversations(dispatch, conversationId, true); }}
+                onClick={(e) => { e.preventDefault();  setSelectedFilter(true); getConversations(dispatch, conversationId, true); }}
               >All
             </button>
             <button id='users_only_button'
                 className={'active form-group__element--right' + (status === 'inflight' ? ' button--disabled' : '')}
                 aria-label='Get user conversation detail'
-                onClick={(e) => { e.preventDefault(); getConversations(dispatch, conversationId, false); }}
+                onClick={(e) => { e.preventDefault();  setSelectedFilter(false); getConversations(dispatch, conversationId, false); }}
               >User Comments Only
             </button>
           </div>
@@ -357,14 +358,15 @@ const checkForUpdates = async (retryCount = 0) => {
                     </form>
                   }
                 </div>
-                {Array.isArray(displayNotes) && displayNotes.map((note) => (
-                  <Note 
-                    key={note.id} 
-                    dispatch={dispatch} 
-                    conversationId={conversationId} 
-                    note={note} 
-                    privileges={privileges} 
-                    user = {user}
+                {Array.isArray(notes) && notes.map(n => (
+                  <Note
+                    key={n.id}
+                    dispatch={dispatch}
+                    conversationId={conversationId}
+                    note={n}
+                    privileges={privileges}
+                    user={user}
+                    selectedFilter={selectedFilter}
                   />
                 ))}
               </div>
@@ -399,7 +401,7 @@ const checkForUpdates = async (retryCount = 0) => {
                     <span style={{ width: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={user.name}>
                         {user.name}
                     </span>
-                    {canRemoveUser && (
+                    {canRemoveUser && data.edpuser_id !== user.id && (
                         <button
                             className='button button--remove'
                             onClick={() => handleRemoveUser(conversationId, user.id)}
