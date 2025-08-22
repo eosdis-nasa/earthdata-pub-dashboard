@@ -20,6 +20,7 @@ import {
   shortDateShortTimeYearFirst,
   deleteTextWithType
 } from '../../utils/format';
+import Table from '../SortableTable/SortableTable';
 import {
   stepLookup
 } from '../../utils/table-config/requests';
