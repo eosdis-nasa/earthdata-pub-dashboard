@@ -69,15 +69,6 @@ export const refreshToken = (logout = false) => {
   };
 };
 
-export const invalidateToken = (payload) => ({
-  [CALL_API]: {
-    type: types.FETCH_TOKEN,
-    method: 'POST',
-    path: 'token/invalidate',
-    body: payload
-  }
-});
-
 export const login = (redirect) => {
   return (dispatch) => {
     dispatch({
