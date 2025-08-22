@@ -278,10 +278,10 @@ const FormQuestions = ({
     });
 
     [
-      'dar_form_data_submission_poc_name',
-      'dar_form_data_submission_poc_organization',
-      'dar_form_data_submission_poc_email',
-      'dar_form_data_submission_poc_orcid',
+      'dar_form_data_accession_poc_name',
+      'dar_form_data_accession_poc_organization',
+      'dar_form_data_accession_poc_email',
+      'dar_form_data_accession_poc_orcid',
     ].forEach((fieldId) => {
       
       const field = document.getElementById(fieldId);
