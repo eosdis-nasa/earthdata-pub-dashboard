@@ -55,7 +55,7 @@ export const mfaTokenFetch = (code, state) => ({
   }
 });
 
-export const refreshToken = (logout = false) => {
+export const refreshTokenOrInvalidate = (logout = false) => {
   return (dispatch) => {
     dispatch({
       [CALL_API]: {

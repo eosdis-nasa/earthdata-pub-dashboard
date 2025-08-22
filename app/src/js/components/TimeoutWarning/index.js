@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
-import { logout, refreshToken } from '../../actions';
+import { logout, refreshTokenOrInvalidate } from '../../actions';
 
 class TimeoutWarning extends React.Component {
   constructor (props) {
@@ -70,14 +70,14 @@ class TimeoutWarning extends React.Component {
   extendSession () {
     this.setState({ show: false });
     this.clearTimers();
-    this.props.dispatch(refreshToken());
+    this.props.dispatch(refreshTokenOrInvalidate());
   }
 
   async performLogout({ hideModal = false, clearTimers = false } = {}) {
     if (hideModal) this.setState({ show: false });
     if (clearTimers) this.clearTimers();
 
-    await this.props.dispatch(refreshToken(true));
+    await this.props.dispatch(refreshTokenOrInvalidate(true));
     this.props.dispatch(logout());
   }
 
