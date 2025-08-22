@@ -133,7 +133,7 @@ export const daacTableColumns = [
     Header: 'DAAC',
     accessor: 'daac_id',
     id: 'daac_id',
-    Cell: row => row.row.original.daac_id && getDaac(row.row.original.daac_id, row) ? getDaac(row.row.original.daac_id, row) : null,
+    Cell: row => row.row.original.daac_id && getDaac(row.row.original.daac_id, row) ? getDaac(row.row.original.daac_id, row) : 'EOSDIS (Accession)',
   },
   {
     Header: 'Requests Submitted',
