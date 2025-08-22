@@ -96,7 +96,7 @@ const Metadata = ({ data, accessors }) => {
           );
         })}
 
-        {data.codes.length > 0 && (
+        {data.codes?.length > 0 && (
           <div className="meta__row">
             <dt>Publication Codes</dt>
             <dd>
