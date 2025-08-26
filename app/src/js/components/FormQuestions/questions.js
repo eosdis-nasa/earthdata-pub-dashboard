@@ -278,10 +278,10 @@ const FormQuestions = ({
     });
 
     [
-      'dar_form_data_submission_poc_name',
-      'dar_form_data_submission_poc_organization',
-      'dar_form_data_submission_poc_email',
-      'dar_form_data_submission_poc_orcid',
+      'dar_form_data_accession_poc_name',
+      'dar_form_data_accession_poc_organization',
+      'dar_form_data_accession_poc_email',
+      'dar_form_data_accession_poc_orcid',
     ].forEach((fieldId) => {
       
       const field = document.getElementById(fieldId);
@@ -1315,26 +1315,26 @@ const FormQuestions = ({
         const updatedValues = {
           ...prevValues,
           dar_form_same_as_principal_investigator: checked,
-          dar_form_data_submission_poc_name: prevValues.dar_form_principal_investigator_fullname,
-          dar_form_data_submission_poc_organization: prevValues.dar_form_principal_investigator_organization,
-          dar_form_data_submission_poc_email: prevValues.dar_form_principal_investigator_email,
-          dar_form_data_submission_poc_orcid: prevValues.dar_form_principal_investigator_orcid,
+          dar_form_data_accession_poc_name: prevValues.dar_form_principal_investigator_fullname,
+          dar_form_data_accession_poc_organization: prevValues.dar_form_principal_investigator_organization,
+          dar_form_data_accession_poc_email: prevValues.dar_form_principal_investigator_email,
+          dar_form_data_accession_poc_orcid: prevValues.dar_form_principal_investigator_orcid,
         };
 
         // Clear previous validation errors for dependent fields
         const newValidationErrors = { ...prevValues.validation_errors };
         [
-          'dar_form_data_submission_poc_name',
-          'dar_form_data_submission_poc_organization',
-          'dar_form_data_submission_poc_email',
-          'dar_form_data_submission_poc_orcid',
+          'dar_form_data_accession_poc_name',
+          'dar_form_data_accession_poc_organization',
+          'dar_form_data_accession_poc_email',
+          'dar_form_data_accession_poc_orcid',
         ].forEach((field) => {
           delete newValidationErrors[field];
         });
 
         // Propagate errors from primary data producer to dependent fields
         if (prevValues.validation_errors['dar_form_principal_investigator_fullname']) {
-          newValidationErrors['dar_form_data_submission_poc_name'] =
+          newValidationErrors['dar_form_data_accession_poc_name'] =
             prevValues.validation_errors['dar_form_principal_investigator_fullname'];
         }
 
@@ -1757,7 +1757,7 @@ const FormQuestions = ({
                                                     'long_term_support_poc_'
                                                   )) ||
                                                 (checkboxStatus.sameAsPrincipalInvestigator &&
-                                                  input.control_id.startsWith('dar_form_data_submission_poc_')) 
+                                                  input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                               }
                                               readOnly={
                                                 readonly ||
@@ -1778,7 +1778,7 @@ const FormQuestions = ({
                                                     'long_term_support_poc_'
                                                   )) ||
                                                 (checkboxStatus.sameAsPrincipalInvestigator &&
-                                                  input.control_id.startsWith('dar_form_data_submission_poc_')) 
+                                                  input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                               }
                                               pattern={getAttribute(
                                                 'pattern',
@@ -1856,7 +1856,7 @@ const FormQuestions = ({
                                                   'long_term_support_poc_'
                                                 )) ||
                                                 (checkboxStatus.sameAsPrincipalInvestigator &&
-                                                  input.control_id.startsWith('dar_form_data_submission_poc_')) 
+                                                  input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                             }
                                             readOnly={
                                               readonly ||
@@ -1877,7 +1877,7 @@ const FormQuestions = ({
                                                   'long_term_support_poc_'
                                                 )) ||
                                                 (checkboxStatus.sameAsPrincipalInvestigator &&
-                                                  input.control_id.startsWith('dar_form_data_submission_poc_')) 
+                                                  input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                             }
                                             maxLength={getAttribute(
                                               'maxlength',
@@ -1925,7 +1925,7 @@ const FormQuestions = ({
                                                   'long_term_support_poc_'
                                                 )) ||
                                                 (checkboxStatus.sameAsPrincipalInvestigator &&
-                                                  input.control_id.startsWith('dar_form_data_submission_poc_')) 
+                                                  input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                             }
                                             readOnly={
                                               readonly ||
@@ -1942,7 +1942,7 @@ const FormQuestions = ({
                                                   'long_term_support_poc_'
                                                 )) ||
                                                 (checkboxStatus.sameAsPrincipalInvestigator &&
-                                                  input.control_id.startsWith('dar_form_data_submission_poc_')) 
+                                                  input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                             }
                                             cols={getAttribute(
                                               'cols',
@@ -2004,7 +2004,7 @@ const FormQuestions = ({
                                                   'long_term_support_poc_'
                                                 )) ||
                                                 (checkboxStatus.sameAsPrincipalInvestigator &&
-                                                  input.control_id.startsWith('dar_form_data_submission_poc_')) 
+                                                  input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                             }
                                             readOnly={
                                               readonly ||
@@ -2021,7 +2021,7 @@ const FormQuestions = ({
                                                   'long_term_support_poc_'
                                                 )) ||
                                                 (checkboxStatus.sameAsPrincipalInvestigator &&
-                                                  input.control_id.startsWith('dar_form_data_submission_poc_')) 
+                                                  input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                             }
                                             max={getAttribute(
                                               'max',
