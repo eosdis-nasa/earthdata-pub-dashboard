@@ -34,7 +34,6 @@ import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 import _config from '../../config';
 import SearchModal from '../SearchModal';
 import Select from 'react-select';
-import UploadOverview from '../DataUpload/overview';
 
 class RequestOverview extends React.Component {
   constructor(props) {
@@ -500,7 +499,6 @@ class RequestOverview extends React.Component {
             <section className='page__section'>
               {workflowSave}
             </section>
-            <UploadOverview />
             {showTable
               ? <section className='page__section'>
                 <div className='heading__wrapper--border'>
