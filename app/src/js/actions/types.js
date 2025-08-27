@@ -13,10 +13,6 @@ export const REFRESH_TOKEN_ERROR = 'REFRESH_TOKEN_ERROR';
 export const REFRESH_TOKEN_INFLIGHT = 'REFRESH_TOKEN_INFLIGHT';
 export const ADD_INSTANCE_META = 'ADD_INSTANCE_META';
 export const ADD_MMTLINK = 'ADD_MMTLINK';
-export const MFA = 'MFA';
-export const MFA_INFLIGHT = 'MFA_INFLIGHT';
-export const MFA_ERROR = 'MFA_ERROR';
-export const SET_MFA = 'SET_MFA';
 // Stats
 export const STATS = 'STATS';
 export const STATS_INFLIGHT = 'STATS_INFLIGHT';

@@ -28,24 +28,7 @@ export const redirectWithToken = () => {
     window.location.href = basepath;
 };
 
-export const fetchToken = (code, state) => {
-  return (dispatch) => {
-    dispatch({
-      [CALL_API]: {
-        type: types.FETCH_TOKEN,
-        method: 'GET',
-        id: null,
-        path: 'token',
-        qs: { code, state }
-      }
-    })
-      .then(() => {
-        redirectWithToken();
-      });
-  };
-};
-
-export const mfaTokenFetch = (code, state) => ({
+export const fetchToken = (code, state) => ({
   [CALL_API]: {
     type: types.FETCH_TOKEN,
     method: 'GET',
@@ -1279,15 +1262,6 @@ export const updateUsername = (payload) => {
       });
   };
 };
-
-export const verify = (topsToken, token) => ({
-  [CALL_API]: {
-    type: types.MFA,
-    method: 'POST',
-    path: 'data/mfa/verify',
-    body: { tops_token: topsToken, auth_token: `${token}` }
-  }
-});
 
 export const getStep = (stepId) => ({
   [CALL_API]: {
