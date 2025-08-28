@@ -32,9 +32,8 @@ class Header extends React.Component {
     dispatch(getApiVersion());
   }
 
-  async logout(token) {
+  async logout() {
     const { dispatch, history } = this.props;
-    if (!token) return;
 
     try {
       await dispatch(refreshTokenOrInvalidate(true));
@@ -57,14 +56,14 @@ class Header extends React.Component {
 
   linkTo (path) {
     return <Link to={{
-          pathname: path[1],
-          search: this.props.location.search.split('?')[0]
+      pathname: path[1],
+      search: this.props.location.search.split('?')[0]
     }} aria-label={path[0]}>{path[0]}</Link>;
   }
 
   render () {
     const { authenticated } = this.props.api;
-    const { privileges, user, userId, tokens } = this.props;
+    const { privileges, user, userId } = this.props;
     const activePaths = paths.filter(path => {
       return (!!privileges[path[2]] || privileges.ADMIN) || path[2].match(/CONVERSATION/g) || path[2].match(/METRICS/g);
     });
@@ -74,36 +73,31 @@ class Header extends React.Component {
         <div className='row'>
           <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={mainLogo} /><div>EDPub</div></Link></h1>
           <nav role="navigation">
-            { !this.props.minimal
-              ? <><ul className="default_header">
-                            { authenticated && activePaths.map(path => <li
-                                key={path[0]}
-                                className={this.className(path[1])}>{this.linkTo(path)}</li>)}
-                  <li className='rightalign nav__order-8'>
-                    <ul className='right-ul'>
-                      <li className='overviewLink'>
-                        {overviewUrl ? (
-                          <a href={overviewUrl} aria-label="View the overview pages">Overview</a>
-                        ) : ''}
+            {!this.props.minimal ? (
+              <>
+                <ul className="default_header">
+                  {authenticated &&
+                    activePaths.map((path) => (
+                      <li key={path[0]} className={this.className(path[1])}>
+                        {this.linkTo(path)}
+                      </li>
+                    ))}
+                  <li className="rightalign nav__order-8">
+                    <ul className="right-ul">
+                      <li className="overviewLink">
+                        {overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : ''}
                       </li>
                       {authenticated && (
                         <li>
-                          <Link to={`/users/id/${userId}`} aria-label="View your conversations">
-                            Hi, {user}
-                          </Link>
+                          <Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link>
                         </li>
                       )}
-                      <li className='howToUseLink'>
-                        {helpPageDefault ? (
-                          <a href={'/getting_started'} aria-label="View the how to use page">Help</a>
-                        ) : ''}
+                      <li className="howToUseLink">
+                        {helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}
                       </li>
-                      <li className='logOut'>
+                      <li className="logOut">
                         {authenticated ? (
-                          <a
-                            onClick={() => this.logout(tokens?.token)}
-                            aria-label="Log out"
-                          >
+                          <a onClick={() => this.logout()} aria-label="Log out">
                             <span className="log-icon"></span>Log out
                           </a>
                         ) : (
@@ -113,6 +107,7 @@ class Header extends React.Component {
                     </ul>
                   </li>
                 </ul>
+
                 <div id="menuToggle">
                   <input type="checkbox" />
                   <span></span>
@@ -120,17 +115,19 @@ class Header extends React.Component {
                   <span></span>
 
                   <ul id="menu">
-                                {activePaths.map(path => <li
-                                key={path[0]}
-                                className={this.className(path[1])}>{this.linkTo(path)}</li>)}
-                                    <li className='overviewLink'>{overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : ''}</li>
-                                    {authenticated &&
-                                        <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
-                                    <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a onClick={() => this.logout(tokens?.token)} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li>
+                    {activePaths.map((path) => (
+                      <li key={path[0]} className={this.className(path[1])}>
+                        {this.linkTo(path)}
+                      </li>
+                    ))}
+                    <li className="overviewLink">{overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : ''}</li>
+                    {authenticated && <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
+                    <li className="howToUseLink">{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
+                    <li className="logOut">{authenticated ? <a onClick={() => this.logout()} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li>
                   </ul>
-                            </div></>
-              : null }
+                </div>
+              </>
+            ) : null}
           </nav>
         </div>
       </div>
