@@ -142,7 +142,6 @@ Header.propTypes = {
   history: PropTypes.object,
   minimal: PropTypes.bool,
   privileges: PropTypes.object,
-  tokens: PropTypes.object,
   user: PropTypes.string,
   userId: PropTypes.string,
   earthdatapubInstance: PropTypes.object
@@ -150,8 +149,6 @@ Header.propTypes = {
 
 export default withRouter(connect(state => ({
   privileges: state.api.tokens.privileges,
-  tokens: state.api.tokens,
   user: state.api.tokens.userName,
   userId: state.api.tokens.userId,
-  api: state.api
 }))(Header));
