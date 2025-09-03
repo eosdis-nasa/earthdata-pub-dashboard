@@ -966,13 +966,6 @@ export const getLogs = (options) => {
 
 export const clearLogs = () => ({ type: types.CLEAR_LOGS });
 
-export const logout = () => {
-  return (dispatch) => {
-    dispatch({ type: types.LOGOUT });
-    history.push('/auth');
-  };
-};
-
 export const deleteToken = () => ({ type: types.DELETE_TOKEN });
 
 export const loginError = (error) => {

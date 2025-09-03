@@ -4,9 +4,10 @@ import c from 'classnames';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout, getApiVersion } from '../../actions';
+import { getApiVersion } from '../../actions';
 import { nav, overviewUrl, helpPageDefault} from '../../config';
 import mainLogo from '../../../assets/images/nasa-logo.svg';
+import _config from '../../config/config';
 
 const paths = [
   ['Requests', '/requests', 'REQUEST'],
@@ -18,11 +19,12 @@ const paths = [
   ['Conversations', '/conversations', 'CONVERSATION']
 ];
 
+const { logoutUrl } = _config;
+
 class Header extends React.Component {
   constructor () {
     super();
     this.displayName = 'Header';
-    this.logout = this.logout.bind(this);
     this.className = this.className.bind(this);
     this.linkTo = this.linkTo.bind(this);
   }
@@ -30,12 +32,6 @@ class Header extends React.Component {
   componentDidMount () {
     const { dispatch } = this.props;
     dispatch(getApiVersion());
-  }
-
-  logout () {
-    const { dispatch, history } = this.props;
-    dispatch(logout());
-    history.push('/');
   }
 
   className (path) {
@@ -78,7 +74,7 @@ class Header extends React.Component {
                                     {authenticated &&
                                         <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
                                     <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a onClick={this.logout} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li></ul>
+                                    <li className='logOut'>{authenticated ? <a href={logoutUrl} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li></ul>
                             </li>
                         </ul><div id="menuToggle">
                                 <input type="checkbox" />
@@ -95,7 +91,7 @@ class Header extends React.Component {
                                     {authenticated &&
                                         <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
                                     <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a onClick={this.logout} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li>
+                                    <li className='logOut'>{authenticated ? <a href={logoutUrl} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li>
                                 </ul>
                             </div></>
               : null }

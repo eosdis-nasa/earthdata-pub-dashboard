@@ -2,7 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
-import { logout, refreshToken } from '../../actions';
+import { refreshToken } from '../../actions';
+import _config from '../../config/config';
+import { history } from '../../store/configureStore';
+
+
+const { logoutUrl } = _config;
 
 class TimeoutWarning extends React.Component {
   constructor (props) {
@@ -51,6 +56,7 @@ class TimeoutWarning extends React.Component {
     const remaining = parseInt(this.props.api.tokens.expiration - currentTime);
     if (remaining < 0) {
       this.logoutNow();
+      history.push('/clear-cache');
     } else {
       this.setState({ remaining });
     }
@@ -76,7 +82,6 @@ class TimeoutWarning extends React.Component {
   logoutNow () {
     this.setState({ show: false });
     this.clearTimers();
-    this.props.dispatch(logout());
   }
 
   render () {
@@ -102,10 +107,12 @@ class TimeoutWarning extends React.Component {
             className={'button button__animation--md'}
             onClick={this.extendSession.bind(this)}
             disabled={tokens.inflight}>Extend Session</button>
-          <button
-            className={'button button__animation--md button--secondary button__cancel'}
-            onClick={() => this.props.dispatch(logout())}
-            disabled={tokens.inflight}>Logout Now</button>
+          <a href={logoutUrl} aria-label="Logout">
+            <button
+              className={'button button__animation--md button--secondary button__cancel'}
+              onClick={() => this.logoutNow}
+              disabled={tokens.inflight}>Logout Now</button>
+          </a>
         </Modal.Footer>
       </Modal>
     );
