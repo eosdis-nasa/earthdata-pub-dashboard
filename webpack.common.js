@@ -180,7 +180,8 @@ const CommonConfig = {
         OVERVIEW_URL: config.overviewUrl,
         BASEPATH: config.basepath,
         REQUEST_HIDE_BUTTON_VERBAGE: config.requestHideButtonVerbage,
-        HELP_PAGE_DEFAULT: config.helpPageDefault
+        HELP_PAGE_DEFAULT: config.helpPageDefault,
+        LOGOUT_URL: config.logoutUrl
       }
     )
   ]
