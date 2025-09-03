@@ -107,7 +107,7 @@ class TimeoutWarning extends React.Component {
             className={'button button__animation--md'}
             onClick={this.extendSession.bind(this)}
             disabled={tokens.inflight}>Extend Session</button>
-          <a href={logoutUrl} aria-label="Logout">
+          <a href={logoutUrl} aria-label="Logout" className='link--no-underline'>
             <button
               className={'button button__animation--md button--secondary button__cancel'}
               onClick={() => this.logoutNow}
