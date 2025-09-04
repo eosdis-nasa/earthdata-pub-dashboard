@@ -222,7 +222,7 @@ export const getContributers = (payload) => ({
 export const listRequests = (options) => ({
   [CALL_API]: {
     type: types.REQUESTS,
-    method: 'POST',
+    method: 'GET',
     id: null,
     path: 'data/submission/operation/active'
   }
@@ -275,7 +275,7 @@ export const submitFilledForm = (payload) => ({
 export const listInactiveRequests = (options) => ({
   [CALL_API]: {
     type: types.REQUESTS,
-    method: 'POST',
+    method: 'GET',
     id: null,
     path: 'data/submission/operation/inactive'
   }
@@ -1179,77 +1179,72 @@ export const removeUsersFromConversation = (payload) => {
   };
 };
 
-export const addUserToNote = (payload, conversationId) => {
-  return (dispatch) => {
-    dispatch({
+export const addUserToNote = (payload, conversationId, selectedFilter) => {
+  return async (dispatch) => {
+    await dispatch({
       [CALL_API]: {
         type: types.NOTE_ADD_VIEWER,
         method: 'POST',
         path: 'notification/add_viewers',
         body: payload
       }
-    })
-      .then(() => {
-        setTimeout(() => {
-          dispatch(getConversation(conversationId));
-        }, 1000);
-      });
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    await dispatch(getConversation(conversationId, selectedFilter));
   };
 };
 
-export const removeUserFromNote = (payload, conversationId) => {
-  return (dispatch) => {
-    dispatch({
+
+export const removeUserFromNote = (payload, conversationId, selectedFilter) => {
+  return async (dispatch) => {
+    await dispatch({
       [CALL_API]: {
         type: types.NOTE_REMOVE_VIEWER,
         method: 'POST',
         path: 'notification/remove_viewer',
         body: payload
       }
-    })
-      .then(() => {
-        setTimeout(() => {
-          dispatch(getConversation(conversationId));
-        }, 1000);
-      });
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await dispatch(getConversation(conversationId, selectedFilter));
   };
 };
 
-export const addRoleToNote = (payload, conversationId) => {
-  return (dispatch) => {
-    dispatch({
+export const addRoleToNote = (payload, conversationId, selectedFilter) => {
+  return async (dispatch) => {
+    await dispatch({
       [CALL_API]: {
         type: types.NOTE_ADD_VIEWER_ROLE,
         method: 'POST',
         path: 'notification/add_viewer_roles',
         body: payload
       }
-    })
-      .then(() => {
-        setTimeout(() => {
-          dispatch(getConversation(conversationId));
-        }, 1000);
-      });
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await dispatch(getConversation(conversationId, selectedFilter));
   };
 };
 
-export const removeRoleFromNote = (payload, conversationId) => {
-  return (dispatch) => {
-    dispatch({
+export const removeRoleFromNote = (payload, conversationId, selectedFilter) => {
+  return async (dispatch) => {
+    await dispatch({
       [CALL_API]: {
         type: types.NOTE_REMOVE_VIEWER_ROLE,
         method: 'POST',
         path: 'notification/remove_viewer_role',
         body: payload
       }
-    })
-      .then(() => {
-        setTimeout(() => {
-          dispatch(getConversation(conversationId));
-        }, 1000);
-      });
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await dispatch(getConversation(conversationId, selectedFilter));
   };
 };
+
 
 export const updateSearchModal = (path, query) => ({
   [CALL_API]: {

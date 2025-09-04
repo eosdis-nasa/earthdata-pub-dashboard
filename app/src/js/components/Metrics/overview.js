@@ -9,9 +9,6 @@ import { displayCase } from '../../utils/format';
 import {
   listCloudMetrics,
   listWorkflows,
-  // getRequestDetails,
-  // searchRequests,
-  // clearRequestsSearch,
 } from '../../actions';
 import List from '../Table/Table';
 import Select from 'react-select';
@@ -44,10 +41,12 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
   const [selectedMetrics, setSelectedMetrics] = useState([]);
   const [stateOptions, setStateOptions] = useState([]);
   const [selectedStates, setSelectedStates] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
-        handleSubmit()
-  }, [selectedDaacs, selectedMetrics, selectedWorkflows, selectedStates])
+    handleSubmit()
+  }, [selectedDaacs, selectedMetrics, selectedWorkflows, selectedStates, startDate, endDate])
 
   const handleDaacSelect = (data) => {
     setSelectedDaacs(data);
@@ -74,7 +73,9 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
       daac_id: selectedDaacs?.value,
       workflow_id: selectedWorkflows?.value,
       metric: selectedMetrics?.value,
-      state: selectedStates?.value
+      state: selectedStates?.value,
+      start_date: startDate || null,
+      end_date: endDate ? new Date(new Date(endDate).setDate(new Date(endDate).getDate() + 1)).toISOString().slice(0,10) : null
     };
     history.push(history.location);
     await dispatch(listCloudMetrics(payload))
@@ -95,6 +96,8 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
     setSelectedDaacs(null);
     setSelectedWorkflows(null);
     setSelectedStates(null);
+    setStartDate(null);
+    setEndDate(null);
 
     if (view === 'User') {
       setSelectedMetrics({ value: "user_count", label: "User Count" });
@@ -119,75 +122,75 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
   ];
 
 // Extract the 'data' array from the metrics.list object
-const { data } = metrics.list;
+  const { data } = metrics.list;
 
 
 // Create an object to store counts and total time for each daac_id
-const daacIdInfo = {};
+  const daacIdInfo = {};
 // Filter out duplicates and keep only the first occurrence of each unique daac_id
-const uniqueData = data.filter(item => {
+  const uniqueData = data.filter(item => {
   // Check if the daac_id already exists in the daacIdInfo object
-  if (!daacIdInfo[item.daac_id]) {
+    if (!daacIdInfo[item.daac_id]) {
       // If it doesn't exist, initialize its count to 0 and other properties to 0
-      daacIdInfo[item.daac_id] = {
-          count: 0,
-          completed: 0,
-          published: 0,
-          time_to_publish: 0
-      };
-  }
+        daacIdInfo[item.daac_id] = {
+            count: 0,
+            completed: 0,
+            published: 0,
+            time_to_publish: 0
+        };
+    }
   
   // Increment the count for this daac_id
-  daacIdInfo[item.daac_id].count++;
+    daacIdInfo[item.daac_id].count++;
   
   // If the step_name is "close", increment the completed count
-  if (item.step_name === "close") {
-      daacIdInfo[item.daac_id].completed++;
-  }
+    if (item.step_name === "close") {
+        daacIdInfo[item.daac_id].completed++;
+    }
 
   // If time_to_publish exists, update the published count and total time components
-  if (item.time_to_publish) {
-      daacIdInfo[item.daac_id].published++;
-      daacIdInfo[item.daac_id].time_to_publish += item.time_to_publish !== "" ? parseInt(item.time_to_publish) : 0;
-  }
+    if (item.time_to_publish && item.hidden === false) {
+        daacIdInfo[item.daac_id].published++;
+        daacIdInfo[item.daac_id].time_to_publish += item.time_to_publish !== "" ? parseInt(item.time_to_publish) : 0;
+    }
   
   // Return true if this is the first occurrence of the daac_id, false otherwise
-  return daacIdInfo[item.daac_id].count === 1;
-});
+    return daacIdInfo[item.daac_id].count === 1;
+  });
 
 // Calculate the average time_to_publish for each daac_id group
-Object.keys(daacIdInfo).forEach(daac_id => {
-  const info = daacIdInfo[daac_id];
-  if (info.count >= 1) {
+  Object.keys(daacIdInfo).forEach(daac_id => {
+    const info = daacIdInfo[daac_id];
+    if (info.count >= 1) {
       info.average_time_to_publish = Math.floor(info.time_to_publish / info.published);
-  }
-});
+    }
+  });
 
 // Add the average_time_to_publish property to each object in the filtered data array
-const dataWithAverageTimeToPublish = uniqueData.map(item => ({
-    ...item,
-    request_submitted: daacIdInfo[item.daac_id]?.count || null,
-    average_time_to_publish: daacIdInfo[item.daac_id]?.average_time_to_publish || null,
-    request_completed: daacIdInfo[item.daac_id]?.completed || 0
-}));
+  const dataWithAverageTimeToPublish = uniqueData.map(item => ({
+      ...item,
+      request_submitted: daacIdInfo[item.daac_id]?.count || null,
+      average_time_to_publish: daacIdInfo[item.daac_id]?.average_time_to_publish || null,
+      request_completed: daacIdInfo[item.daac_id]?.completed || 0
+  }));
 
 // Create a new object with the filtered 'data' array containing average_time_to_publish
-const filteredMetricsList = { ...metrics.list, data: dataWithAverageTimeToPublish };
+  const filteredMetricsList = { ...metrics.list, data: dataWithAverageTimeToPublish };
 
-const getTableColumns = (selectedMetrics, view) =>
-  selectedMetrics?.value && selectedMetrics.value.match(/time_to_publish/g)
-    ? timeColumns
-    : view === 'DAAC' ? daacTableColumns 
-    : requestTableColumns;
+  const getTableColumns = (selectedMetrics, view) =>
+    selectedMetrics?.value && selectedMetrics.value.match(/time_to_publish/g)
+      ? timeColumns
+      : view === 'DAAC' ? daacTableColumns 
+      : requestTableColumns;
 
-const tableColumnsFiltered = getTableColumns(selectedMetrics, view);
+  const tableColumnsFiltered = getTableColumns(selectedMetrics, view);
 
-const metricsWorkflow = data.map(item => ({
-  ...item,
-  workflow_name: workflows.find(workflow => workflow.id === item.workflow_id)?.long_name || "Unknown Workflow"
-}));
+  const metricsWorkflow = data.map(item => ({
+    ...item,
+    workflow_name: workflows.find(workflow => workflow.id === item.workflow_id)?.long_name || "Unknown Workflow"
+  }));
 
-const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
+  const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
 
   return (
     <div className='page__component'>
@@ -264,6 +267,30 @@ const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
                 placeholder='Select Daac ...'
                 aria-label='Select Daac'
               /></label>)}
+              {(view === 'Overview' || view === 'DAAC') && (
+                <label className='heading--small'>Start Date
+                <div className='selectButton' >
+                  <input
+                    type="date"
+                    value={startDate || ''}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    style={{ width: '100%', border: 'none', height: '28px' }}
+                  />
+                </div>
+                </label>
+              )}
+              {(view === 'Overview' || view === 'DAAC') && (
+                <label className='heading--small'>End Date
+                <div className='selectButton'>
+                  <input
+                    type="date"
+                    value={endDate || ''}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    style={{ width: '100%', border: 'none', height: '28px'}}
+                  />
+                </div>
+                </label>
+              )}
             </div>
         </List>
           : <Loading />:<div></div>}

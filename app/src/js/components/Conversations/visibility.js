@@ -12,7 +12,7 @@ import {
     getRole
 } from '../../actions';
 
-export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privileges }) => {
+export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privileges, selectedFilter }) => {
     const noteId = note.id;
 
     const [searchType, setSearchType] = useState('user');
@@ -25,7 +25,7 @@ export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privile
             note_id: noteId,
             viewer_ids: [id]
         };
-        dispatch(addUserToNote(params, conversationId));
+        dispatch(addUserToNote(params, conversationId, selectedFilter));
         setShowSearch(false);
     };
 
@@ -34,7 +34,7 @@ export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privile
             note_id: noteId,
             viewer_roles: [id]
         };
-        dispatch(addRoleToNote(params, conversationId));
+        dispatch(addRoleToNote(params, conversationId, selectedFilter));
         setShowSearch(false);
     };
 
@@ -59,106 +59,100 @@ export const RenderedNoteVisibility = ({ dispatch, note, conversationId, privile
                     "note_id": noteId,
                     "viewer_id": viewerId,
                 }
-                dispatch(removeUserFromNote(payload, conversationId));
+                dispatch(removeUserFromNote(payload, conversationId, selectedFilter));
                 break;
             case "role":
                 payload = {
                     "note_id": noteId,
                     "viewer_role": viewerId,
                 }
-                dispatch(removeRoleFromNote(payload, conversationId));
+                dispatch(removeRoleFromNote(payload, conversationId, selectedFilter));
                 break;
         }
     }
 
     return (
         <div>
-            {note.viewers.users || note.viewers.roles ? <h3>Visibility</h3> : null}
+            <h3>Visibility</h3>
             <div className='flex__column'>
-                {
-                    note.viewers.users &&
-                    note.viewers.users.map((user) => {
-                        return (
-                            <div key={user.id} className='flex__row sm-border'>
-                                <div className='flex__item--w-15' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '190px' }}>
-                                    <style>
-                                        {`                   
-                            .flex__item--w-15 .button--remove {
-                              color: white;
-                            }
-                            
-                            .flex__item--w-15 .button--remove:hover::before {
-                              color: white;
-                              background-color: #2c3e50;
-                              visibility: visible;
-                            }
-  
-                            .flex__item--w-15 .button--remove:hover {
-                              background-color: #2c3e50;
-                            }
-                          `}
-                                    </style>
-                                    <span style={{ width: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={user.name}>
-                                        {user.name}
-                                    </span>
-                                    {canRemoveUser && (
-                                        <button
-                                            className='button button--remove'
-                                            onClick={(e) => { e.preventDefault(); handleRemove(dispatch, conversationId, note.id, user.id, 'user'); }}
-                                            style={{ marginLeft: '2px', padding: '0px 10px 20px 25px' }}
-                                        >
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        )
-                    })
-                }
-                {
-                    note.viewers.roles &&
-                    note.viewers.roles.map((role) => {
-                        return (
-                            <div key={role.id} className='flex__row sm-border'>
-                                <div className='flex__item--w-15' style={{ display: 'flex', justifyContent: 'space-between', width: '190px' }}>
-                                    <span style={{ width: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={role.name} >
-                                        {role.name}
-                                    </span>
-                                    {canRemoveUser && (
-                                        <button
-                                            className='button button--remove'
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                handleRemove(dispatch, conversationId, note.id, role.id, 'role');
-                                            }}
-                                            style={{ marginLeft: '2px', padding: '0px 10px 20px 25px' }}
-                                        >
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        )
-                    })
-                }
+            {/* Users Section */}
+            <div style={{ fontWeight: 'bold', fontSize: '14px', marginTop: '8px', marginBottom: '4px', borderBottom: '1px solid #ccc' }}>
+                Viewers
             </div>
-            <div className='flex__item--w-15'>
-                {canAddUser &&
+            {note.viewers.users && note.viewers.users.length > 0 ? (
+                note.viewers.users.map((user) => (
+                    <div key={user.id} className='flex__row sm-border'>
+                        <div className='flex__item--w-15' style={{ display: 'flex', justifyContent: 'space-between', width: '190px' }}>
+                            <span style={{ width: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={user.name}>
+                                {user.name}
+                            </span>
+                            {canRemoveUser && (
+                                <button
+                                    className='button button--remove'
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleRemove(dispatch, conversationId, note.id, user.id, 'user');
+                                    }}
+                                    style={{ marginTop: '0px', marginLeft: '2px', padding: '0px 10px 20px 25px' }}
+                                >
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <div style={{ fontStyle: 'italic', color: '#777' }}>No viewers added</div>
+            )}
+            {canAddUser && (
+                <div style={{ marginTop: '6px' }}>
                     <button
                         className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
                         onClick={() => { setShowSearch(true); setSearchType('user') }}
                     >
                         Add Viewer&nbsp;&nbsp;
                     </button>
-                }
-                <br /><br />
-                {canAddUser &&
+                </div>
+            )}
+
+            {/* Roles Section */}
+            <div style={{ fontWeight: 'bold', fontSize: '14px', marginTop: '12px', marginBottom: '4px', borderBottom: '1px solid #ccc' }}>
+                Viewer Roles
+            </div>
+            {note.viewers.roles && note.viewers.roles.length > 0 ? (
+                note.viewers.roles.map((role) => (
+                    <div key={role.id} className='flex__row sm-border'>
+                        <div className='flex__item--w-15' style={{ display: 'flex', justifyContent: 'space-between', width: '190px' }}>
+                            <span style={{ width: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={role.name}>
+                                {role.name}
+                            </span>
+                            {canRemoveUser && (
+                                <button
+                                    className='button button--remove'
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleRemove(dispatch, conversationId, note.id, role.id, 'role');
+                                    }}
+                                    style={{ marginTop: '0px', marginLeft: '2px', padding: '0px 10px 20px 25px' }}
+                                >
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <div style={{ fontStyle: 'italic', color: '#777' }}>No viewer roles added</div>
+            )}
+            {canAddUser && (
+                <div style={{ marginTop: '6px' }}>
                     <button
                         className='button button--add button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'
                         onClick={() => { setShowSearch(true); setSearchType('role') }}
                     >
                         Add Viewer Role&nbsp;&nbsp;
                     </button>
-                }
-            </div>
+                </div>
+            )}
+        </div>
             {showSearch && <SearchModal {...searchOptions[searchType]} />}
         </div>
     )
