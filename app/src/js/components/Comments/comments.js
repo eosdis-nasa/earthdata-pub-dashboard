@@ -60,7 +60,7 @@ class Comment extends React.Component {
     // TODO - Update the above line to properly handle this error rather than just matching existing functionality
     if (this.props.requests.detail.data.conversation_id) {
       const formObj = this.state.formsMap[formId];
-      this.state.reviewStepName = `${formObj.data.short_name}_form_review`;
+      this.state.reviewStepName = `${formObj?.data?.short_name || ''}_form_review`;
       if ( typeof this.props.requests.detail.data.step_name !== 'undefined' && typeof step === 'undefined'){
         this.state.reviewStepName = this.props.requests.detail.data.step_name;
       } else if (typeof formObj.data.short_name === 'undefined' && typeof step !== 'undefined') {

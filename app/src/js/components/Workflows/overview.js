@@ -12,7 +12,7 @@ import { lastUpdated, shortDateNoTimeYearFirst } from '../../utils/format';
 import List from '../Table/Table';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
-import { requestPrivileges } from '../../utils/privileges';
+import { requestPrivileges, formPrivileges } from '../../utils/privileges';
 import { listRequests } from '../../actions';
 
 class WorkflowsOverview extends React.Component {
@@ -244,6 +244,7 @@ class WorkflowsOverview extends React.Component {
     }
     const { queriedAt } = workflows.list.meta;
     const disabled = !workflows.list.data.length || !this.getAnySelected();
+    const { canRead } = formPrivileges(this.props.privileges);
 
     return (
       <div className='page__component'>
@@ -269,7 +270,7 @@ class WorkflowsOverview extends React.Component {
         </section>
         <section className='page__section'>
           <div>
-            <List
+            {canRead && <List
               list={workflows.list}
               dispatch={dispatch}
               action={listWorkflows}
@@ -280,7 +281,7 @@ class WorkflowsOverview extends React.Component {
               filterIdx='long_name'
               filterPlaceholder='Search Workflows'
             >
-            </List>
+            </List>}
           </div>
           { requestId && canReassign
             ? <section className='page__section'>
