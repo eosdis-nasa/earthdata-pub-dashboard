@@ -20,7 +20,7 @@ const paths = [
 ];
 
 const { logoutUrl, dashboardRoot } = _config;
-const logoutUrlWithRedirect = `${logoutUrl}&post_logout_redirect_uri=${encode(dashboardRoot)}`;
+const logoutUrlWithRedirect = `${logoutUrl}&post_logout_redirect_uri=${encodeURIcomponent(dashboardRoot)}`;
 
 class Header extends React.Component {
   constructor () {
