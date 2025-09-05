@@ -7,7 +7,8 @@ import _config from '../../config/config';
 import { history } from '../../store/configureStore';
 
 
-const { logoutUrl } = _config;
+const { logoutUrl, dashboardRoot } = _config;
+const logoutUrlWithRedirect = `${logoutUrl}&post_logout_redirect_uri=${encode(dashboardRoot)}`;
 
 class TimeoutWarning extends React.Component {
   constructor (props) {
@@ -107,7 +108,7 @@ class TimeoutWarning extends React.Component {
             className={'button button__animation--md'}
             onClick={this.extendSession.bind(this)}
             disabled={tokens.inflight}>Extend Session</button>
-          <a href={logoutUrl} aria-label="Logout" className='link--no-underline'>
+          <a href={logoutUrlWithRedirect} aria-label="Logout" className='link--no-underline'>
             <button
               className={'button button__animation--md button--secondary button__cancel'}
               onClick={() => this.logoutNow}

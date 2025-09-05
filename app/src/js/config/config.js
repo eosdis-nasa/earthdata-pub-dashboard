@@ -24,7 +24,8 @@ const config = {
   requestHideButtonVerbage: process.env.REQUEST_HIDE_BUTTON_VERBAGE || 'Withdraw',
   requestUnHideButtonVerbage: process.env.REQUEST_UNHIDE_BUTTON_VERBAGE || 'Restore',
   helpPageDefault: process.env.BASEPATH  || (process.env.OVERVIEW_URL || '/'),
-  logoutUrl: process.env.LOGOUT_URL || `http://localhost:3000/clear-cache`
+  logoutUrl: process.env.LOGOUT_URL || 'http://localhost:3000/clear-cache',
+  dashboardRoot: process.env.DASHBOARD_ROOT || 'http://localhost:3000/'
 };
 
 module.exports = config;

@@ -19,7 +19,8 @@ const paths = [
   ['Conversations', '/conversations', 'CONVERSATION']
 ];
 
-const { logoutUrl } = _config;
+const { logoutUrl, dashboardRoot } = _config;
+const logoutUrlWithRedirect = `${logoutUrl}&post_logout_redirect_uri=${encode(dashboardRoot)}`;
 
 class Header extends React.Component {
   constructor () {
@@ -74,7 +75,7 @@ class Header extends React.Component {
                                     {authenticated &&
                                         <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
                                     <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a href={logoutUrl} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li></ul>
+                                    <li className='logOut'>{authenticated ? <a href={logoutUrlWithRedirect} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li></ul>
                             </li>
                         </ul><div id="menuToggle">
                                 <input type="checkbox" />
@@ -91,7 +92,7 @@ class Header extends React.Component {
                                     {authenticated &&
                                         <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
                                     <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a href={logoutUrl} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li>
+                                    <li className='logOut'>{authenticated ? <a href={logoutUrlWithRedirect} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li>
                                 </ul>
                             </div></>
               : null }
