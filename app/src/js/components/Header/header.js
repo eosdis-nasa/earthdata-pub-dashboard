@@ -20,8 +20,6 @@ const paths = [
 ];
 
 const { logoutUrl, cognitoClientLogoutUrl } = _config;
-console.log('process.env.COGNITO_CLIENT_LOGOUT_URL', process.env.COGNITO_CLIENT_LOGOUT_URL);
-console.log('cognitoClientLogoutUrl', cognitoClientLogoutUrl);
 const post_logout_redirect_uri = encodeURIComponent(cognitoClientLogoutUrl);
 const logoutUrlWithRedirect = `${logoutUrl}${post_logout_redirect_uri ? `&post_logout_redirect_uri=${post_logout_redirect_uri}` : ''}`;
 
