@@ -7,9 +7,9 @@ import _config from '../../config/config';
 import { history } from '../../store/configureStore';
 
 
-const { logoutUrl, dashboardRoot } = _config;
-const post_logout_redirect_uri = encodeURIComponent(`${dashboardRoot}/clear-cache`)
-const logoutUrlWithRedirect = `${logoutUrl}&post_logout_redirect_uri=${post_logout_redirect_uri}`;
+const { logoutUrl, cognitoClientLogoutUrl } = _config;
+const post_logout_redirect_uri = encodeURIComponent(cognitoClientLogoutUrl);
+const logoutUrlWithRedirect = `${logoutUrl}${post_logout_redirect_uri ? `&post_logout_redirect_uri=${post_logout_redirect_uri}` : ''}`;
 
 class TimeoutWarning extends React.Component {
   constructor (props) {

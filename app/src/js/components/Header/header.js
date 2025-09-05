@@ -19,9 +19,9 @@ const paths = [
   ['Conversations', '/conversations', 'CONVERSATION']
 ];
 
-const { logoutUrl, dashboardRoot } = _config;
-const post_logout_redirect_uri = encodeURIComponent(`${dashboardRoot}/clear-cache`)
-const logoutUrlWithRedirect = `${logoutUrl}&post_logout_redirect_uri=${post_logout_redirect_uri}`;
+const { logoutUrl, cognitoClientLogoutUrl } = _config;
+const post_logout_redirect_uri = encodeURIComponent(cognitoClientLogoutUrl);
+const logoutUrlWithRedirect = `${logoutUrl}${post_logout_redirect_uri ? `&post_logout_redirect_uri=${post_logout_redirect_uri}` : ''}`;
 
 class Header extends React.Component {
   constructor () {

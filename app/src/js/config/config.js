@@ -25,7 +25,7 @@ const config = {
   requestUnHideButtonVerbage: process.env.REQUEST_UNHIDE_BUTTON_VERBAGE || 'Restore',
   helpPageDefault: process.env.BASEPATH  || (process.env.OVERVIEW_URL || '/'),
   logoutUrl: process.env.LOGOUT_URL || 'http://localhost:3000/clear-cache',
-  dashboardRoot: process.env.DASHBOARD_ROOT || 'http://localhost:3000/'
+  cognitoClientLogoutUrl: process.env.COGNITO_CLIENT_LOGOUT_URL || ''
 };
 
 module.exports = config;
