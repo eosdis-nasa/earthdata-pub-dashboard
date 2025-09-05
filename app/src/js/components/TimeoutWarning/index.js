@@ -8,7 +8,7 @@ import { history } from '../../store/configureStore';
 
 
 const { logoutUrl, dashboardRoot } = _config;
-const logoutUrlWithRedirect = `${logoutUrl}&post_logout_redirect_uri=${encodeURIcomponent(dashboardRoot)}`;
+const logoutUrlWithRedirect = `${logoutUrl}&post_logout_redirect_uri=${encodeURIComponent(dashboardRoot)}`;
 
 class TimeoutWarning extends React.Component {
   constructor (props) {
