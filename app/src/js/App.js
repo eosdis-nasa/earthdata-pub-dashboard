@@ -80,7 +80,7 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/test-api', component: TestApi },
     { path: '/steps', component: Steps },
     { path: '/download', component: Download },
-    { path: '/logout', component: Logout }
+    { path: '/logout', component: LogOut }
   ];
 
   // Find the route that matches the activeRoute
