@@ -58,7 +58,7 @@ class TimeoutWarning extends React.Component {
     const remaining = parseInt(this.props.api.tokens.expiration - currentTime);
     if (remaining < 0) {
       this.logoutNow();
-      history.push('/clear-cache');
+      history.push('/logout');
     } else {
       this.setState({ remaining });
     }

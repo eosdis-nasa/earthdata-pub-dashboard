@@ -39,7 +39,7 @@ import Steps from './components/Steps';
 import config from './config';
 import OverviewApp from './components/Help/app';
 import Tophat2 from './components/Tophat/top_hat';
-import { ClearCache } from './components/ClearCache';
+import { LogOut } from './components/LogOut';
 
 
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
@@ -80,7 +80,7 @@ const MainRoutes = ({ activeRoute }) => {
     { path: '/test-api', component: TestApi },
     { path: '/steps', component: Steps },
     { path: '/download', component: Download },
-    { path: '/clear-cache', component: ClearCache }
+    { path: '/logout', component: Logout }
   ];
 
   // Find the route that matches the activeRoute

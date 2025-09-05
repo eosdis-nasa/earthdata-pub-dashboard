@@ -4,7 +4,7 @@ import _config from '../../config/config';
 
 const { basepath } = _config;
 
-export const ClearCache = () => {
+export const Logout = () => {
     const clearCacheAndRedirect = () => {
         deleteToken();
         window.location.href = `${basepath}auth`
