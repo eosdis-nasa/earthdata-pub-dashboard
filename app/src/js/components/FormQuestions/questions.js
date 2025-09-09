@@ -34,6 +34,7 @@ const FormQuestions = ({
   showCancelButton = true,
   formData,
   requestData,
+  sectionHeader
 }) => {
   const [values, setValues] = useState({ validation_errors: {} });
   const [questions, setQuestions] = useState([]);
@@ -74,7 +75,6 @@ const FormQuestions = ({
       formatter: (value) => shortDateShortTimeYearFirstJustValue(value),
     },
   ]);
-  const [timer, setTimer] = useState(null);
   const [logs, setLogs] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -408,14 +408,25 @@ const FormQuestions = ({
           } all fields are required`;
           }
         }else {
-          const result =
-          value && value.some((producer) => areProducerFieldsEmpty(producer));
-          if (result || (value && value.length === 0)) {
-          errorMessage = `${
-            input.label && input.label !== 'undefined'
-              ? input.label
-              : long_name
-          } both First Name and Last Name are required`;
+          if (sectionHeader === 'Data Evaluation Request') {
+             const result = value && value.some((producer) => areProductFieldsEmpty(producer));
+            if (result || (value && value.length === 0)) {
+              errorMessage = `${
+                input.label && input.label !== 'undefined'
+                  ? input.label
+                  : long_name
+              } fill out all the required fileds in the form`;
+            }
+          }
+          else {
+            const result = value && value.some((producer) => areProducerFieldsEmpty(producer));
+            if (result || (value && value.length === 0)) {
+              errorMessage = `${
+                input.label && input.label !== 'undefined'
+                  ? input.label
+                  : long_name
+              } fill out all the fields in the table`;
+            }
           }
         }
       } else if (input.type === 'bbox') {
@@ -496,12 +507,41 @@ const FormQuestions = ({
   };
 
   const areProducerFieldsEmpty = (producer) => {
-    return (
-      producer.producer_first_name === '' ||
-      producer.producer_last_name_or_organization === ''
-    );
+    if (!producer) return true;
+
+    const requiredFields = [
+      "data_product_name",
+      "data_prod_timeline",
+      "data_prod_volume",
+      "instrument_collect_data",
+    ];
+
+    return requiredFields.some((field) => !producer[field]?.trim());
   };
 
+
+const areProductFieldsEmpty = (producer) => {
+  if (!producer) return true;
+
+  const requiredFields = [
+    "data_product_name",
+    "data_prod_timeline",
+    "data_prod_volume",
+    "instrument_collect_data",
+    "data_prod_doi",
+    "data_prod_grid",
+    "data_prod_file_format",
+    "data_prod_granule",
+    "data_prod_params",
+    "data_prod_temporal_coverage",
+    "data_prod_spatial_coverage",
+    "data_prod_ingest_frequency",
+  ];
+
+  return requiredFields.some((field) => !producer[field] || producer[field].toString().trim() === "");
+};
+
+  
   const areAssignmentFieldsEmpty = (producer) => {
     return (
       producer.data_product_name === '' ||
@@ -525,6 +565,7 @@ const FormQuestions = ({
   };
 
   const validateFields = (checkAllFields = true, jsonObj) => {
+
     const newValidationErrors = {};
     const errorOrder = [];
     questions.forEach((section) => {
@@ -626,6 +667,19 @@ const FormQuestions = ({
         validation_errors: { ...prevValues.validation_errors },
       };
 
+      if (checkboxStatus.sameAsPrincipalInvestigator) {
+        const piToPocMap = {
+          dar_form_principal_investigator_fullname: "dar_form_data_accession_poc_name",
+          dar_form_principal_investigator_organization: "dar_form_data_accession_poc_organization",
+          dar_form_principal_investigator_email: "dar_form_data_accession_poc_email",
+          dar_form_principal_investigator_orcid: "dar_form_data_accession_poc_orcid",
+        };
+
+        if (piToPocMap[controlId]) {
+          newValues[piToPocMap[controlId]] = value;
+        }
+      }
+
       if (
         checkboxStatus.sameAsPrimaryDataProducer &&
         controlId.startsWith('data_producer_info_')
@@ -703,20 +757,26 @@ const FormQuestions = ({
     }
   };
 
-  const handleTableFieldChange = (controlId, rowIndex, key, value) => {
-    setValues((prevValues) => {
-      const updatedTable = [...(prevValues[controlId] || [])];
-      const updatedRow = { ...updatedTable[rowIndex] };
-      updatedRow[key] = value;
-      updatedTable[rowIndex] = updatedRow;
-      return {
-        ...prevValues,
-        [controlId]: updatedTable,
-      };
-    });
+ const handleTableFieldChange = (controlId, rowIndex, key, value) => {
+  setValues(prevValues => {
+    const updatedTable = [...(prevValues[controlId] || [])];
+    const updatedRow = { ...updatedTable[rowIndex] };
+    updatedRow[key] = value;
+    updatedTable[rowIndex] = updatedRow;
 
-    handleInvalid({ target: { name: controlId, validationMessage: '' } });
-  };
+    const newValues = {
+      ...prevValues,
+      [controlId]: updatedTable,
+    };
+
+    // also update history here
+    saveToHistory(newValues);
+
+    return newValues;
+  });
+  handleInvalid({ target: { name: controlId, validationMessage: '' } });
+};
+
 
   const handleInvalid = (evt) => {
     const { name, validationMessage } = evt.target;
@@ -964,7 +1024,7 @@ const FormQuestions = ({
   };
 
   const addRow = (tableId) => {
-    const updatedTable = [...(values[tableId] || []), clearProducerData(values[tableId])];
+    const updatedTable = [...(values[tableId] || []), {}];
     setValues((prevValues) => {
       const newValues = { ...prevValues, [tableId]: updatedTable };
       saveToHistory(newValues);
@@ -1310,7 +1370,6 @@ const FormQuestions = ({
       });
     } else if (name === 'sameAsPrincipalInvestigator') {
       setCheckboxStatus((prev) => ({ ...prev, [name]: checked }));
-
       setValues((prevValues) => {
         const updatedValues = {
           ...prevValues,
@@ -1545,8 +1604,8 @@ const FormQuestions = ({
                               Same as Primary Data Producer
                               <input
                                 type="checkbox"
-                                name="sameAsPrimaryDataProducer"
-                                checked={checkboxStatus.sameAsPrimaryDataProducer}
+                                name="sameAsPrincipalInvestigator"
+                                checked={checkboxStatus.sameAsPrincipalInvestigator}
                                 onChange={handleCheckboxChange}
                               />
                               <span className="checkmark"></span>
@@ -2307,11 +2366,13 @@ const FormQuestions = ({
                                               <DynamicTable
                                                 controlId={input.control_id}
                                                 values={values}
-                                                handleFieldChange={handleTableFieldChange}
+                                                handleFieldChange={handleFieldChange}
+                                                handleTableFieldChange={handleTableFieldChange}
                                                 addRow={addRow}
                                                 removeRow={removeRow}
                                                 moveUpDown={moveUpDown}
                                                 readonly={false}
+                                                sectionHeader={sectionHeader}
                                               />
                                             </div>
                                           )}
