@@ -26,7 +26,7 @@ import { requestPrivileges } from '../../utils/privileges';
 import Comments from '../Comments/comments';
 import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
 import { loadToken } from '../../utils/auth';
-import localUpload from '@edpub/upload-utility';
+import CueFileUtility from '@edpub/upload-utility';
 import Select from 'react-select';
 import { Modal, Button } from 'react-bootstrap'; 
 import CustomOption from '../SelectOptions/SelectOptions'
@@ -314,7 +314,7 @@ class FormOverview extends React.Component {
       const requestId = this.props.location.search.split('=')[1];
 
       if (requestId !== '' && requestId != undefined && requestId !== null) {
-        const download = new localUpload();
+        const download = new CueFileUtility();
         const { apiRoot } = _config;
         download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
           let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error

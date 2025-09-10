@@ -16,7 +16,7 @@ import {
 import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
-import localUpload from '@edpub/upload-utility';
+import CueFileUtility from '@edpub/upload-utility';
 import { format } from "date-fns";
 
 // Form page i.e. /dashboard/form/questions/{id}
@@ -1130,7 +1130,7 @@ const FormQuestions = ({
           }
         };
 
-        const upload = new localUpload();
+        const upload = new CueFileUtility();
         upload.uploadFile(payload, updateProgress).then((resp) => {
           const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
           if (error) {

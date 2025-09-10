@@ -1,5 +1,5 @@
 'use strict';
-import localUpload from '@edpub/upload-utility';
+import CueFileUtility from '@edpub/upload-utility';
 import { loadToken } from '../utils/auth';
 import _config from '../config';
 
@@ -23,7 +23,7 @@ export const handleUpload = async ({ files, categoryType, groupId, conversationI
           endpointParams: { conversation_id: conversationId }
         };
   
-        const upload = new localUpload();
+        const upload = new CueFileUtility();
         upload.uploadFile(payload, updateProgress)
           .then((resp) => {
             const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;

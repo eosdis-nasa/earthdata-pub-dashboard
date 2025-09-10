@@ -14,7 +14,7 @@ import { requestPrivileges } from '../../utils/privileges';
 import { NewNoteVisibility } from '../Conversations/visibility';
 import { AddAttachmentButton, DisplayAttachmentButton } from '../Conversations/attachment';
 import { CustomUpload } from '../DataUpload/customUpload';
-import localUpload from '@edpub/upload-utility';
+import CueFileUtility from '@edpub/upload-utility';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
@@ -120,7 +120,7 @@ class Comment extends React.Component {
   }
 
   handleDownload ({noteId, attachment}) {
-    const download = new localUpload();
+    const download = new CueFileUtility();
     const { apiRoot } = _config;
     download.downloadFile(`attachments/${noteId}/${attachment}`, `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
         let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error

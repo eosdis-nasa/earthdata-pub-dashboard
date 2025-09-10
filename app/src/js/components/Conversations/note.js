@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import localUpload from '@edpub/upload-utility';
+import CueFileUtility from '@edpub/upload-utility';
 import { lastUpdated } from '../../utils/format';
 import { RenderedNoteVisibility } from './visibility';
 import { loadToken } from '../../utils/auth';
@@ -8,7 +8,7 @@ import _config from '../../config';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const Note = ({ dispatch, note, conversationId, privileges, user, selectedFilter }) => {
-    const download = new localUpload();
+    const download = new CueFileUtility();
 
     const handleDownload = ({ noteId, attachment }) => {
         if (!noteId || noteId.startsWith('temp')) return;

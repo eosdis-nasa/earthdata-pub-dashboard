@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import Loading from '../LoadingIndicator/loading-indicator';
-import localUpload from '@edpub/upload-utility';
+import CueFileUtility from '@edpub/upload-utility';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { listFileUploadsBySubmission, listFileDownloadsByKey, listFileUploadsBySubmissionStep, refreshToken } from '../../actions';
@@ -64,7 +64,7 @@ class UploadOverview extends React.Component {
       const { dispatch } = this.props;
       const { requestId } = this.props.match.params;
       if (requestId !== '' && requestId != undefined && requestId !== null) {
-        const download = new localUpload();
+        const download = new CueFileUtility();
         const { apiRoot } = _config;
         download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
           let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
@@ -232,7 +232,7 @@ class UploadOverview extends React.Component {
           };
         }
   
-        const upload = new localUpload();
+        const upload = new CueFileUtility();
         upload.uploadFile(payload, updateProgress)
           .then((resp) => {
             const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
