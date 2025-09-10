@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CueFileUtility from '@edpub/upload-utility';
+import { CueFileUtility } from '@edpub/upload-utility';
 import { lastUpdated } from '../../utils/format';
 import { RenderedNoteVisibility } from './visibility';
 import { loadToken } from '../../utils/auth';

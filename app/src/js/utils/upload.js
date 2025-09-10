@@ -1,5 +1,5 @@
 'use strict';
-import CueFileUtility from '@edpub/upload-utility';
+import { CueFileUtility } from '@edpub/upload-utility';
 import { loadToken } from '../utils/auth';
 import _config from '../config';
 

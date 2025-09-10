@@ -16,7 +16,7 @@ import {
 import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
-import CueFileUtility from '@edpub/upload-utility';
+import { CueFileUtility } from '@edpub/upload-utility';
 import { format } from "date-fns";
 
 // Form page i.e. /dashboard/form/questions/{id}

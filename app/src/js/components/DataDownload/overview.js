@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
-import CueFileUtility from '@edpub/upload-utility';
+import { CueFileUtility } from '@edpub/upload-utility';
 import { Alert } from 'react-bootstrap';
 
 class DownloadOverview extends React.Component {

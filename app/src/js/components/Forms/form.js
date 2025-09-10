@@ -26,7 +26,7 @@ import { requestPrivileges } from '../../utils/privileges';
 import Comments from '../Comments/comments';
 import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
 import { loadToken } from '../../utils/auth';
-import CueFileUtility from '@edpub/upload-utility';
+import { CueFileUtility } from '@edpub/upload-utility';
 import Select from 'react-select';
 import { Modal, Button } from 'react-bootstrap'; 
 import CustomOption from '../SelectOptions/SelectOptions'

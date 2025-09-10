@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CueFileUtility from '@edpub/upload-utility';
+import { CueFileUtility } from '@edpub/upload-utility';
 import _config from '../../config';
 
 const FileUploader = ({ requestId, store, refreshFileList }) => {

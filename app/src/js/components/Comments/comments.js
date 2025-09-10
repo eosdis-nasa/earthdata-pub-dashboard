@@ -14,7 +14,7 @@ import { requestPrivileges } from '../../utils/privileges';
 import { NewNoteVisibility } from '../Conversations/visibility';
 import { AddAttachmentButton, DisplayAttachmentButton } from '../Conversations/attachment';
 import { CustomUpload } from '../DataUpload/customUpload';
-import CueFileUtility from '@edpub/upload-utility';
+import { CueFileUtility } from '@edpub/upload-utility';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
