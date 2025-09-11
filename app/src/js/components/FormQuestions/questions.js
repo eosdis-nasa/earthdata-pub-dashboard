@@ -1023,8 +1023,8 @@ const areProductFieldsEmpty = (producer) => {
     return emptyProducer;
   };
 
-  const addRow = (tableId) => {
-    const updatedTable = [...(values[tableId] || []), {}];
+  const addRow = (tableId, row = {}) => {
+    const updatedTable = [...(values[tableId] || []), row];
     setValues((prevValues) => {
       const newValues = { ...prevValues, [tableId]: updatedTable };
       saveToHistory(newValues);

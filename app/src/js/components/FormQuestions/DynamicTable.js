@@ -90,19 +90,15 @@ const DynamicTable = ({
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-     if (editIndex !== null) {
-  const updatedRow = formData;
-  Object.keys(updatedRow).forEach((field) => {
-    if (controlId.startsWith("dar_form_")) {
-      handleTableFieldChange(controlId, editIndex, field, updatedRow[field]);
-    } else {
-      handleFieldChange(controlId, updatedRow[field]);
-    }
-  });
-} else {
-  addRow(controlId, formData);
-}
-
+      if (editIndex !== null) {
+        // update existing row
+        Object.keys(formData).forEach((field) => {
+          handleTableFieldChange(controlId, editIndex, field, formData[field]);
+        });
+      } else {
+        // add new row with formData
+        addRow(controlId, { ...formData });
+      }
 
       setShowModal(false);
       setEditIndex(null);
