@@ -304,7 +304,7 @@ const FormQuestions = ({
   useEffect(() => {
     const intervalId = setInterval(() => {
       saveFile('draft', false);
-    }, 600000);
+    }, 300000);
 
     return () => clearInterval(intervalId);
   }, [values]);
