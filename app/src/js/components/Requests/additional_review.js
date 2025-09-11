@@ -99,7 +99,6 @@ class AdditionalReviewQuestion extends React.Component {
 
       if (this.props.requests.detail.data.forms !== null) {
         requestForms = this.props.requests.detail.data.forms;
-        showTable = true;
       }
     }
     const breadcrumbConfig = [
