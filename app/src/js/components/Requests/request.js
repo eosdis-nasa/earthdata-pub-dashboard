@@ -292,6 +292,14 @@ class RequestOverview extends React.Component {
     }
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
+    let displayClone = true;
+    if (
+      request?.step_data?.name?.startsWith("data_accession") ||
+      request?.step_data?.name?.startsWith("data_evaluation")
+    ) {
+      displayClone = false;
+    }
+
     let dropdownConfig = [];
     if (canWithdraw && !isHidden) {
       dropdownConfig = [
@@ -306,7 +314,7 @@ class RequestOverview extends React.Component {
       ];
     }
 
-    if (canInitialize && !isHidden) {
+    if (displayClone && canInitialize && !isHidden) {
       dropdownConfig.push({
         text: 'Clone Request',
         action: this.cloneRequest,
