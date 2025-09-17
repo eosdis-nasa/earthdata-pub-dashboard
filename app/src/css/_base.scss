@@ -109,7 +109,7 @@ a:active {
   outline: 0;
 }
 
-.link--no-underline {
+.link--no-underline, .link--no-underline:hover, .link--no-underline:visited {
   border-bottom: 0;
 }
 
