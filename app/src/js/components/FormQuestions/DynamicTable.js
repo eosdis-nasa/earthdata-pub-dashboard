@@ -213,7 +213,7 @@ const DynamicTable = ({
                 {/* DOI (optional) */}
                 <Form.Group className="mb-3 custom-input">
                   <Form.Label className="fw-bold">
-                    Data Product DOI(s): If applicable, for any existing Data Products. Do not list any journal article DOIs here.
+                    Data Product DOI(s): If applicable, for any existing Data Products. Do not list any journal article DOI's here.
                   </Form.Label>
                   <Form.Control
                     type="text"
@@ -228,7 +228,7 @@ const DynamicTable = ({
                 {/* Grid */}
                 <Form.Group className="mb-3 custom-input">
                   <Form.Label className="fw-bold">
-                    Is this a gridded data product? <span className="text-danger">*</span>
+                    Gridded Data Product? <span className="text-danger">*</span>
                   </Form.Label>
                   <div className="d-flex gap-3 align-items-center">
                     <label className="form-check form-check-inline">
@@ -264,7 +264,7 @@ const DynamicTable = ({
                 {/* File Format */}
                 <Form.Group className="mb-3 custom-input">
                   <Form.Label className="fw-bold">
-                    File format(s) of the data product <span className="text-danger">*</span>
+                    Data Product File Format <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="text"
@@ -283,7 +283,7 @@ const DynamicTable = ({
                 {/* Granule */}
                 <Form.Group className="mb-3 custom-input">
                   <Form.Label className="fw-bold">
-                    Granule definition (spatial/temporal granularity) <span className="text-danger">*</span>
+                    Data Product Granule/File Size <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="text"
@@ -597,10 +597,10 @@ const DynamicTable = ({
       ),
       instrument_collect_data: 'Instrument: What instrument is used to collect data?',
       data_prod_doi:
-        'Data Product DOI(s): If applicable, for any existing Data Products. Do not list any journal article DOIs here.',
-      data_prod_grid: 'Is this a gridded data product?',
-      data_prod_file_format: 'File format(s) of the data product',
-      data_prod_granule: 'Granule definition (spatial/temporal granularity)',
+        'Data Product DOI(s): If applicable, for any existing Data Products. Do not list any journal article DOI\'s here.',
+      data_prod_grid: 'Gridded Data Product?',
+      data_prod_file_format: 'Data Product File Format',
+      data_prod_granule: 'Data Product Granule/File Size',
       data_prod_params: (
         <>
           Data Product Parameters/Science Variables: List all parameters/science variable names found
