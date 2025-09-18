@@ -468,7 +468,7 @@ const DynamicTable = ({
                 variant="secondary"
                 size="sm"
                 aria-label="add row button"
-                onClick={() => addRow(controlId)}   // ✅ no second arg
+                onClick={() => addRow(controlId)}
                 className="action-button add-row"
               >
                 <FontAwesomeIcon icon={faPlus} />
@@ -759,61 +759,96 @@ const DynamicTable = ({
   // ----------------------
   return (
     <>
-      <Table bordered responsive hover className="mt-3">
-        <thead className="custom-table-header">
-          <tr>
-            <th>First Name</th>
-            <th>Middle Initial</th>
-            <th>Last Name/Group</th>
-            <th style={{ width: '60px', textAlign: 'center' }}>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  handleOpenModal([
-                    { name: 'producer_first_name', label: 'First Name' },
-                    { name: 'producer_middle_initial', label: 'Middle Initial' },
-                    { name: 'producer_last_name_or_organization', label: 'Last Name or Group' },
-                  ])
-                }
-                className="action-button add-row"
-              >
-                <FontAwesomeIcon icon={faPlus} />
-              </Button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(values[controlId]) &&
-            values[controlId]?.map((row, index) => (
-              <tr key={index}>
-                {['producer_first_name', 'producer_middle_initial', 'producer_last_name_or_organization'].map(
-                  (field) => (
-                    <td key={field}>
-                      <FormControl
-                        className="tableDynamic"
-                        type="text"
-                        value={row[field] || ''}
-                        onChange={(e) => handleFieldChange(controlId, index, field, e.target.value)}
-                      />
-                    </td>
-                  )
-                )}
-                <td>
+<Table bordered responsive hover className="mt-3">
+      <thead className="custom-table-header">
+        <tr>
+          <th>First Name</th>
+          <th>Middle Initial</th>
+          <th>Last Name or Group</th>
+          <th style={{ width: '120px', textAlign: 'center' }}>
+            <Button
+              variant="secondary"
+              size="sm"
+              aria-label="add row button"
+              onClick={() => addRow(controlId)}
+              className="action-button add-row"
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </Button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {Array.isArray(values[controlId]) &&
+          values[controlId]?.map((row, index) => (
+            <tr key={index}>
+              <td>
+                <FormControl
+                  className='tableDynamic'
+                  type="text"
+                  name="firstName"
+                  value={row.producer_first_name || ''}
+                  onChange={(e) => handleTableFieldChange(controlId, index, 'producer_first_name', e.target.value)}
+                />
+              </td>
+              <td>
+                <FormControl
+                  className='tableDynamic'
+                  type="text"
+                  name="middleInitial"
+                  value={row.producer_middle_initial || ''}
+                  onChange={(e) => handleTableFieldChange(controlId, index, 'producer_middle_initial', e.target.value)}
+                />
+              </td>
+              <td>
+                <FormControl
+                  className='tableDynamic'
+                  type="text"
+                  name="lastName"
+                  value={row.producer_last_name_or_organization || ''}
+                  onChange={(e) => handleTableFieldChange(controlId, index, 'producer_last_name_or_organization', e.target.value)}
+                />
+              </td>
+              <td style={{ width: '120px', textAlign: 'center' }}>
+                <div className="button-group">
                   <Button
                     variant="secondary"
                     size="sm"
+                    aria-label="remove row button"
                     onClick={() => removeRow(controlId, index)}
                     disabled={values[controlId].length === 1}
+                    className="action-button"
                   >
                     <FontAwesomeIcon icon={faTrashAlt} />
                   </Button>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </Table>
-      {renderModal()}
+                  {index > 0 && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      aria-label="move up button"
+                      onClick={() => moveUpDown(controlId, index, 'up')}
+                      className="action-button"
+                    >
+                      <FontAwesomeIcon icon={faArrowUp} />
+                    </Button>
+                  )}
+                  {index < values[controlId].length - 1 && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      aria-label="move down button"
+                      onClick={() => moveUpDown(controlId, index, 'down')}
+                      className="action-button"
+                    >
+                      <FontAwesomeIcon icon={faArrowDown} />
+                    </Button>
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))}
+      </tbody>
+    </Table>
     </>
   );
 };

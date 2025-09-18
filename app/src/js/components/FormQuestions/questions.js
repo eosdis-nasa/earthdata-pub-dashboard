@@ -83,6 +83,8 @@ const FormQuestions = ({
     sameAsPrimaryLongTermSupport: false,
     sameAsPrimaryDataAccession: false,
     sameAsPrincipalInvestigator: false,
+    sameAsPrimaryDataProducerDER: false,
+    sameAsPrimaryDataProducerDPR: false
   });
 
   const formRef = useRef(null);
@@ -213,6 +215,22 @@ const FormQuestions = ({
               setCheckboxStatus((prev) => ({
                 ...prev,
                 sameAsPrincipalInvestigator: requestData.form_data[key],
+              }));
+            } else if (
+              key === 'dar_form_same_as_primary_data_producer_DER'
+            ) {
+              initialValues[key] = requestData.form_data[key];
+              setCheckboxStatus((prev) => ({
+                ...prev,
+                sameAsPrimaryDataProducerDER: requestData.form_data[key],
+              }));
+            } else if (
+              key === 'dar_form_same_as_primary_data_producer_DPR'
+            ) {
+              initialValues[key] = requestData.form_data[key];
+              setCheckboxStatus((prev) => ({
+                ...prev,
+                sameAsPrimaryDataProducerDPR: requestData.form_data[key],
               }));
             } else if (key && typeof requestData.form_data[key] !== 'object') {
               initialValues[key] = requestData.form_data[key];
@@ -417,9 +435,18 @@ const FormQuestions = ({
                   : long_name
               } fill out all the required fileds in the form`;
             }
+          } else if (sectionHeader === 'Data Accession Request') {
+              const result = value && value.some((producer) => areProducerFieldsEmpty(producer));
+              if (result || (value && value.length === 0)) {
+                errorMessage = `${
+                  input.label && input.label !== 'undefined'
+                    ? input.label
+                    : long_name
+                } fill out all the fields in the table`;
+              }
           }
           else {
-            const result = value && value.some((producer) => areProducerFieldsEmpty(producer));
+            const result = value && value.some((producer) => areProducersEmpty(producer));
             if (result || (value && value.length === 0)) {
               errorMessage = `${
                 input.label && input.label !== 'undefined'
@@ -519,6 +546,17 @@ const FormQuestions = ({
     return requiredFields.some((field) => !producer[field]?.trim());
   };
 
+  const areProducersEmpty = (producer) => {
+    if (!producer) return true;
+
+    const requiredFields = [
+      "producer_first_name",
+      "producer_middle_initial",
+      "producer_last_name_or_organization",
+    ];
+
+    return requiredFields.some((field) => !producer[field]?.trim());
+  };
 
 const areProductFieldsEmpty = (producer) => {
   if (!producer) return true;
@@ -667,12 +705,54 @@ const areProductFieldsEmpty = (producer) => {
         validation_errors: { ...prevValues.validation_errors },
       };
 
-      if (checkboxStatus.sameAsPrincipalInvestigator) {
+      if (sectionHeader !== 'Data Evaluation Request' && sectionHeader !== 'Data Publication Request' && checkboxStatus.sameAsPrincipalInvestigator) {
         const piToPocMap = {
           dar_form_principal_investigator_fullname: "dar_form_data_accession_poc_name",
           dar_form_principal_investigator_organization: "dar_form_data_accession_poc_organization",
           dar_form_principal_investigator_email: "dar_form_data_accession_poc_email",
           dar_form_principal_investigator_orcid: "dar_form_data_accession_poc_orcid",
+        };
+
+        if (piToPocMap[controlId]) {
+          newValues[piToPocMap[controlId]] = value;
+        }
+      }
+
+      if (checkboxStatus.sameAsPrimaryDataProducerDER || checkboxStatus.sameAsPrimaryDataProducerDPR) {
+        const piToPocMap = {
+          dar_form_principal_investigator_fullname: "dar_form_data_accession_poc_name",
+          dar_form_principal_investigator_organization: "dar_form_data_accession_poc_organization",
+          dar_form_principal_investigator_email: "dar_form_data_accession_poc_email",
+          dar_form_principal_investigator_orcid: "dar_form_data_accession_poc_orcid",
+          data_producer_info_department : "poc_department"
+        };
+
+        if (piToPocMap[controlId]) {
+          newValues[piToPocMap[controlId]] = value;
+        }
+      }
+
+      if (checkboxStatus.sameAsPrimaryLongTermSupport) {
+        const piToPocMap = {
+          dar_form_principal_investigator_fullname: "long_term_support_poc_name",
+          dar_form_principal_investigator_organization: "long_term_support_poc_organization",
+          dar_form_principal_investigator_email: "long_term_support_poc_email",
+          dar_form_principal_investigator_orcid: "long_term_support_poc_orcid",
+          data_producer_info_department : "long_term_support_poc_department"
+        };
+
+        if (piToPocMap[controlId]) {
+          newValues[piToPocMap[controlId]] = value;
+        }
+      }
+
+      if (checkboxStatus.sameAsPrimaryDataAccession) {
+        const piToPocMap = {
+          dar_form_data_accession_poc_name: "long_term_support_poc_name",
+          dar_form_data_accession_poc_organization: "long_term_support_poc_organization",
+          dar_form_data_accession_poc_email: "long_term_support_poc_email",
+          dar_form_data_accession_poc_orcid: "long_term_support_poc_orcid",
+          poc_department : "long_term_support_poc_department"
         };
 
         if (piToPocMap[controlId]) {
@@ -1296,13 +1376,13 @@ const areProductFieldsEmpty = (producer) => {
           same_as_long_term_support_poc_name_poc_name: checked
             ? false
             : prevValues.same_as_long_term_support_poc_name_poc_name,
-          long_term_support_poc_name: prevValues.data_producer_info_name,
+          long_term_support_poc_name: prevValues.dar_form_principal_investigator_fullname,
           long_term_support_poc_organization:
-            prevValues.data_producer_info_organization,
+            prevValues.dar_form_principal_investigator_organization,
           long_term_support_poc_department:
             prevValues.data_producer_info_department,
-          long_term_support_poc_email: prevValues.data_producer_info_email,
-          long_term_support_poc_orcid: prevValues.data_producer_info_orcid,
+          long_term_support_poc_email: prevValues.dar_form_principal_investigator_email,
+          long_term_support_poc_orcid: prevValues.dar_form_principal_investigator_orcid,
         };
 
         // Clear previous validation errors for dependent fields
@@ -1341,11 +1421,11 @@ const areProductFieldsEmpty = (producer) => {
             ? false
             : prevValues.same_as_long_term_support_poc_name_data_producer_info_name,
           same_as_long_term_support_poc_name_poc_name: checked,
-          long_term_support_poc_name: prevValues.poc_name,
-          long_term_support_poc_organization: prevValues.poc_organization,
+          long_term_support_poc_name: prevValues.dar_form_data_accession_poc_name,
+          long_term_support_poc_organization: prevValues.dar_form_data_accession_poc_organization,
           long_term_support_poc_department: prevValues.poc_department,
-          long_term_support_poc_email: prevValues.poc_email,
-          long_term_support_poc_orcid: prevValues.poc_orcid,
+          long_term_support_poc_email: prevValues.dar_form_data_accession_poc_email,
+          long_term_support_poc_orcid: prevValues.dar_form_data_accession_poc_orcid,
         };
 
         // Clear previous validation errors for dependent fields
@@ -1378,6 +1458,70 @@ const areProductFieldsEmpty = (producer) => {
           dar_form_data_accession_poc_organization: prevValues.dar_form_principal_investigator_organization,
           dar_form_data_accession_poc_email: prevValues.dar_form_principal_investigator_email,
           dar_form_data_accession_poc_orcid: prevValues.dar_form_principal_investigator_orcid,
+        };
+
+        // Clear previous validation errors for dependent fields
+        const newValidationErrors = { ...prevValues.validation_errors };
+        [
+          'dar_form_data_accession_poc_name',
+          'dar_form_data_accession_poc_organization',
+          'dar_form_data_accession_poc_email',
+          'dar_form_data_accession_poc_orcid',
+        ].forEach((field) => {
+          delete newValidationErrors[field];
+        });
+
+        // Propagate errors from primary data producer to dependent fields
+        if (prevValues.validation_errors['dar_form_principal_investigator_fullname']) {
+          newValidationErrors['dar_form_data_accession_poc_name'] =
+            prevValues.validation_errors['dar_form_principal_investigator_fullname'];
+        }
+
+        return { ...updatedValues, validation_errors: newValidationErrors };
+      });
+    } else if (name === 'sameAsPrimaryDataProducerDER') {
+      setCheckboxStatus((prev) => ({ ...prev, [name]: checked }));
+      setValues((prevValues) => {
+        const updatedValues = {
+          ...prevValues,
+          dar_form_same_as_primary_data_producer_DER: checked,
+          dar_form_data_accession_poc_name: prevValues.dar_form_principal_investigator_fullname,
+          dar_form_data_accession_poc_organization: prevValues.dar_form_principal_investigator_organization,
+          dar_form_data_accession_poc_email: prevValues.dar_form_principal_investigator_email,
+          dar_form_data_accession_poc_orcid: prevValues.dar_form_principal_investigator_orcid,
+          poc_department: prevValues.data_producer_info_department
+        };
+
+        // Clear previous validation errors for dependent fields
+        const newValidationErrors = { ...prevValues.validation_errors };
+        [
+          'dar_form_data_accession_poc_name',
+          'dar_form_data_accession_poc_organization',
+          'dar_form_data_accession_poc_email',
+          'dar_form_data_accession_poc_orcid',
+        ].forEach((field) => {
+          delete newValidationErrors[field];
+        });
+
+        // Propagate errors from primary data producer to dependent fields
+        if (prevValues.validation_errors['dar_form_principal_investigator_fullname']) {
+          newValidationErrors['dar_form_data_accession_poc_name'] =
+            prevValues.validation_errors['dar_form_principal_investigator_fullname'];
+        }
+
+        return { ...updatedValues, validation_errors: newValidationErrors };
+      });
+    } else if (name === 'sameAsPrimaryDataProducerDPR') {
+      setCheckboxStatus((prev) => ({ ...prev, [name]: checked }));
+      setValues((prevValues) => {
+        const updatedValues = {
+          ...prevValues,
+          dar_form_same_as_primary_data_producer_DPR: checked,
+          dar_form_data_accession_poc_name: prevValues.dar_form_principal_investigator_fullname,
+          dar_form_data_accession_poc_organization: prevValues.dar_form_principal_investigator_organization,
+          dar_form_data_accession_poc_email: prevValues.dar_form_principal_investigator_email,
+          dar_form_data_accession_poc_orcid: prevValues.dar_form_principal_investigator_orcid,
+          poc_department: prevValues.data_producer_info_department
         };
 
         // Clear previous validation errors for dependent fields
@@ -1599,13 +1743,25 @@ const areProductFieldsEmpty = (producer) => {
                         <div className="checkbox-group"
                           tabIndex="-1"
                           id={`${question.inputs?.[0]?.control_id || question.id || 'unknown'}_group`}>
-                          {question.long_name === 'Data Evaluation Point of Contact' && (
+                          {question.long_name === 'Data Evaluation Point of Contact' && sectionHeader === 'Data Evaluation Request' && (
                             <label className="checkbox-item">
                               Same as Primary Data Producer
                               <input
                                 type="checkbox"
-                                name="sameAsPrincipalInvestigator"
-                                checked={checkboxStatus.sameAsPrincipalInvestigator}
+                                name="sameAsPrimaryDataProducerDER"
+                                checked={checkboxStatus.sameAsPrimaryDataProducerDER}
+                                onChange={handleCheckboxChange}
+                              />
+                              <span className="checkmark"></span>
+                            </label>
+                          )}
+                          {question.long_name === 'Data Evaluation Point of Contact' && sectionHeader === 'Data Publication Request' && (
+                            <label className="checkbox-item">
+                              Same as Primary Data Producer
+                              <input
+                                type="checkbox"
+                                name="sameAsPrimaryDataProducerDPR"
+                                checked={checkboxStatus.sameAsPrimaryDataProducerDPR}
                                 onChange={handleCheckboxChange}
                               />
                               <span className="checkmark"></span>
@@ -1637,7 +1793,7 @@ const areProductFieldsEmpty = (producer) => {
                                   <span className="checkmark"></span>
                                 </label>
                                 <label className="checkbox-item">
-                                  Same as Data Accession Point of Contact
+                                  Same as Data Evaluation Point of Contact
                                   <input
                                     type="checkbox"
                                     name="sameAsPrimaryDataAccession"
@@ -1805,6 +1961,10 @@ const areProductFieldsEmpty = (producer) => {
                                                     question.inputs[c_key]
                                                   )
                                                 ) ||
+                                                (sectionHeader === 'Data Publication Request' && checkboxStatus.sameAsPrimaryDataProducerDPR &&
+                                                  (input.control_id.startsWith('poc_') || input.control_id.startsWith('dar_form_data_'))) ||
+                                                (sectionHeader === 'Data Evaluation Request' && checkboxStatus.sameAsPrimaryDataProducerDER &&
+                                                  (input.control_id.startsWith('poc_') || input.control_id.startsWith('dar_form_data_'))) ||
                                                 (checkboxStatus.sameAsPrimaryDataProducer &&
                                                   input.control_id.startsWith('poc_')) ||
                                                 (checkboxStatus.sameAsPrimaryLongTermSupport &&
@@ -1815,7 +1975,7 @@ const areProductFieldsEmpty = (producer) => {
                                                   input.control_id.startsWith(
                                                     'long_term_support_poc_'
                                                   )) ||
-                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                (sectionHeader === 'Data Accession Request' && checkboxStatus.sameAsPrincipalInvestigator &&
                                                   input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                               }
                                               readOnly={
@@ -1826,7 +1986,11 @@ const areProductFieldsEmpty = (producer) => {
                                                     question.inputs[c_key]
                                                   )
                                                 ) ||
-                                                (checkboxStatus.sameAsPrimaryDataProducer &&
+                                                (sectionHeader === 'Data Publication Request' && checkboxStatus.sameAsPrimaryDataProducerDPR &&
+                                                  (input.control_id.startsWith('poc_') || input.control_id.startsWith('dar_form_data_'))) ||
+                                                 (sectionHeader === 'Data Evaluation Request' && checkboxStatus.sameAsPrimaryDataProducerDER &&
+                                                  (input.control_id.startsWith('poc_') || input.control_id.startsWith('dar_form_data_'))) ||
+                                                (sectionHeader !== 'Data Publication Request' && checkboxStatus.sameAsPrimaryDataProducer &&
                                                   input.control_id.startsWith('poc_')) ||
                                                 (checkboxStatus.sameAsPrimaryLongTermSupport &&
                                                   input.control_id.startsWith(
@@ -1836,7 +2000,7 @@ const areProductFieldsEmpty = (producer) => {
                                                   input.control_id.startsWith(
                                                     'long_term_support_poc_'
                                                   )) ||
-                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                (sectionHeader === 'Data Accession Request' && checkboxStatus.sameAsPrincipalInvestigator &&
                                                   input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                               }
                                               pattern={getAttribute(
@@ -1904,7 +2068,11 @@ const areProductFieldsEmpty = (producer) => {
                                                   question.inputs[c_key]
                                                 )
                                               ) ||
-                                              (checkboxStatus.sameAsPrimaryDataProducer &&
+                                              (sectionHeader === 'Data Publication Request' && checkboxStatus.sameAsPrimaryDataProducerDPR &&
+                                                  (input.control_id.startsWith('poc_') || input.control_id.startsWith('dar_form_data_'))) ||
+                                              (sectionHeader === 'Data Evaluation Request' && checkboxStatus.sameAsPrimaryDataProducerDER &&
+                                                  (input.control_id.startsWith('poc_') || input.control_id.startsWith('dar_form_data_'))) ||
+                                              (sectionHeader !== 'Data Publication Request' && checkboxStatus.sameAsPrimaryDataProducer &&
                                                 input.control_id.startsWith('poc_')) ||
                                               (checkboxStatus.sameAsPrimaryLongTermSupport &&
                                                 input.control_id.startsWith(
@@ -1914,7 +2082,7 @@ const areProductFieldsEmpty = (producer) => {
                                                 input.control_id.startsWith(
                                                   'long_term_support_poc_'
                                                 )) ||
-                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                (sectionHeader === 'Data Accession Request' && checkboxStatus.sameAsPrincipalInvestigator &&
                                                   input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                             }
                                             readOnly={
@@ -1925,7 +2093,11 @@ const areProductFieldsEmpty = (producer) => {
                                                   question.inputs[c_key]
                                                 )
                                               ) ||
-                                              (checkboxStatus.sameAsPrimaryDataProducer &&
+                                              (sectionHeader === 'Data Publication Request' && checkboxStatus.sameAsPrimaryDataProducerDPR &&
+                                                  (input.control_id.startsWith('poc_') || input.control_id.startsWith('dar_form_data_'))) ||
+                                              (sectionHeader === 'Data Evaluation Request' && checkboxStatus.sameAsPrimaryDataProducerDER &&
+                                                  (input.control_id.startsWith('poc_') || input.control_id.startsWith('dar_form_data_'))) ||
+                                              (sectionHeader !== 'Data Publication Request' && checkboxStatus.sameAsPrimaryDataProducer &&
                                                 input.control_id.startsWith('poc_')) ||
                                               (checkboxStatus.sameAsPrimaryLongTermSupport &&
                                                 input.control_id.startsWith(
@@ -1935,7 +2107,7 @@ const areProductFieldsEmpty = (producer) => {
                                                 input.control_id.startsWith(
                                                   'long_term_support_poc_'
                                                 )) ||
-                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                (sectionHeader === 'Data Accession Request' && checkboxStatus.sameAsPrincipalInvestigator &&
                                                   input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                             }
                                             maxLength={getAttribute(
