@@ -700,34 +700,6 @@ const areProductFieldsEmpty = (producer) => {
         }
       }
 
-      if (checkboxStatus.sameAsPrimaryLongTermSupport) {
-        const piToPocMap = {
-          dar_form_principal_investigator_fullname: "long_term_support_poc_name",
-          dar_form_principal_investigator_organization: "long_term_support_poc_organization",
-          dar_form_principal_investigator_email: "long_term_support_poc_email",
-          dar_form_principal_investigator_orcid: "long_term_support_poc_orcid",
-          data_producer_info_department : "long_term_support_poc_department"
-        };
-
-        if (piToPocMap[controlId]) {
-          newValues[piToPocMap[controlId]] = value;
-        }
-      }
-
-      if (checkboxStatus.sameAsPrimaryDataAccession) {
-        const piToPocMap = {
-          dar_form_data_accession_poc_name: "long_term_support_poc_name",
-          dar_form_data_accession_poc_organization: "long_term_support_poc_organization",
-          dar_form_data_accession_poc_email: "long_term_support_poc_email",
-          dar_form_data_accession_poc_orcid: "long_term_support_poc_orcid",
-          poc_department : "long_term_support_poc_department"
-        };
-
-        if (piToPocMap[controlId]) {
-          newValues[piToPocMap[controlId]] = value;
-        }
-      }
-
       if (
         checkboxStatus.sameAsPrimaryDataProducer &&
         controlId.startsWith('data_producer_info_')
@@ -1453,7 +1425,6 @@ const areProductFieldsEmpty = (producer) => {
   const handleRemoveFile = (fileName) => {
     setUploadFiles(uploadFiles.filter(elem => elem.name !== fileName));
   };
-console.log('checkboxStatus', checkboxStatus)
   return !requestData ? (
     <Loading />
   ) : (
