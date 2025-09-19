@@ -240,7 +240,7 @@ const DynamicTable = ({
                         checked={formData.data_prod_grid === "Yes"}
                         onChange={() => setFormData({ ...formData, data_prod_grid: "Yes" })}
                       />
-                      <span className="form-check-label">Yes</span>
+                      <span className="form-check-label"> Yes</span>
                     </label>
 
                     <label className="form-check form-check-inline">
@@ -252,7 +252,7 @@ const DynamicTable = ({
                         checked={formData.data_prod_grid === "No"}
                         onChange={() => setFormData({ ...formData, data_prod_grid: "No" })}
                       />
-                      <span className="form-check-label">No</span>
+                      <span className="form-check-label"> No</span>
                     </label>
                   </div>
 
