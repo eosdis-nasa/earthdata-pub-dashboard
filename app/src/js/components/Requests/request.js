@@ -293,10 +293,7 @@ class RequestOverview extends React.Component {
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
     let displayClone = true;
-    if (
-      request?.step_data?.name?.startsWith("data_accession") ||
-      request?.step_data?.name?.startsWith("data_evaluation")
-    ) {
+    if (request?.workflow?.id === '3335970e-8a9b-481b-85b7-dfaaa3f5dbd9') {
       displayClone = false;
     }
 
