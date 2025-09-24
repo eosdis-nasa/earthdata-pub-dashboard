@@ -1137,6 +1137,7 @@
   color: #fff;
   z-index: 5;
   max-width: 80px;
+  border: none;
 }
 
 .table-wrapper {
