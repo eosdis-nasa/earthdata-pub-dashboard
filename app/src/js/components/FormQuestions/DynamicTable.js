@@ -287,7 +287,7 @@ const DynamicTable = ({
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Data Product Granule/File Size"
+                    placeholder="Enter Data Product Granule/File Size"
                     value={formData.data_prod_granule || ""}
                     onChange={(e) =>
                       setFormData({ ...formData, data_prod_granule: e.target.value })
@@ -408,7 +408,7 @@ const DynamicTable = ({
                 <Form.Control
                   as="textarea"
                   rows={3}
-                  placeholder="Enter comments"
+                  placeholder="Enter Comments"
                   value={formData.data_prod_comments || ""}
                   onChange={(e) =>
                     setFormData({ ...formData, data_prod_comments: e.target.value })
