@@ -63,7 +63,7 @@
   }
   
   .table td a {
-    color: #007bff;
+    color: #2275aa;
     text-decoration: none;
   }
   
@@ -101,6 +101,7 @@
   .styled-table thead th {
     background-color: #f8f9fa; /* Light gray background */
     font-weight: bold;
+    color: #212529; 
     text-align: center;
     padding: 12px;
     border: 1px solid #ddd;
@@ -544,4 +545,125 @@
       padding: 8px;
     }
   }
+}
+
+.mfa-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.mfa-tooltip .mfa-tooltiptext {
+  visibility: hidden;
+  width: 450px;
+  background-color: #555;
+  text-align: center; 
+  color: #fff;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  left: 50%;
+  margin-left: -150px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 1rem;
+}
+
+.mfa-tooltip .mfa-tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+}
+
+.mfa-tooltip:hover .mfa-tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.daac-table caption {
+  caption-side: bottom;
+  text-align: left;
+  font-weight: 500;
+  padding-top: 8px;
+}
+
+.bullet ul {
+  list-style-type: disc;     /* outer list = solid disc */
+  margin-left: 20px;
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.bullet ul ul {
+  list-style-type: circle;   /* inner list = hollow circle */
+  margin-left: 0px;
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.bullet ul li {
+  display: list-item !important;
+  margin-bottom: 8px;
+}
+
+.settings-color {
+  background-color: #2275AA !important;
+  margin-right: 5px !important;
+  padding: 0.4em 1.5em 0.4em 2.5em !important;
+}
+
+.info-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.info-tooltip .info-tooltip-text {
+  visibility: hidden;
+  width: 250px;
+  background-color: #555;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* show above the icon */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.9rem;
+}
+
+.info-tooltip .info-tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* arrow */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.info-tooltip:hover .info-tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.info-color {
+  background-color: unset;
+  margin: -10px;
+}
+
+.info-color:hover {
+  background-color: unset;
+  margin: -10px;
 }
