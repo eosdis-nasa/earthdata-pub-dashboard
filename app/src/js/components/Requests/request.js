@@ -292,6 +292,11 @@ class RequestOverview extends React.Component {
     }
     const deleteStatus = get(this.props.requests.deleted, [requestId, 'status']);
     const openStatus = get(this.props.requests.openStatus, [requestId, 'status']);
+    let displayClone = true;
+    if (request?.workflow?.id === '3335970e-8a9b-481b-85b7-dfaaa3f5dbd9') {
+      displayClone = false;
+    }
+
     let dropdownConfig = [];
     if (canWithdraw && !isHidden) {
       dropdownConfig = [
@@ -306,7 +311,7 @@ class RequestOverview extends React.Component {
       ];
     }
 
-    if (canInitialize && !isHidden) {
+    if (displayClone && canInitialize && !isHidden) {
       dropdownConfig.push({
         text: 'Clone Request',
         action: this.cloneRequest,
