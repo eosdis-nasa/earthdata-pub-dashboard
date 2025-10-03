@@ -4,6 +4,7 @@ import "./overview.css";
 import chevronRight from "../../../assets/images/layout/chevron-right-icon.svg";
 import chevronLeft from "../../../assets/images/layout/chevron-left.svg";
 import DataPublicationGuidelinesData from "./data_publication_guideline_data";
+import ScrollToTop from '../FormQuestions/ScrollToTop';
 
 const DataPublicationGuidelines = () => {
   const [isHidden, setIsHidden] = useState(false);
@@ -106,6 +107,7 @@ const DataPublicationGuidelines = () => {
           </div>
         ))}
       </main>
+      <ScrollToTop />
     </div>
   );
 };

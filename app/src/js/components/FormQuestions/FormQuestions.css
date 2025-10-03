@@ -615,6 +615,7 @@
 }
 
 
+.getting-started .scroll-to-top,
 .questions-component .scroll-to-top {
   position: fixed;
   bottom: 70px;
@@ -622,6 +623,7 @@
   z-index: 1000;
 }
 
+.getting-started .scroll-to-top button,
 .questions-component .scroll-to-top button {
   background-color: #333;
   color: white;
@@ -634,9 +636,11 @@
   cursor: pointer;
 }
 
+.getting-started .scroll-to-top button:hover,
 .questions-component .scroll-to-top button:hover {
   background-color: #555;
 }
+
 
 .questions-component .react-datepicker__calendar-icon {
   right: 0.2rem;

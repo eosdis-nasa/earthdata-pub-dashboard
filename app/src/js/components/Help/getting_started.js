@@ -4,6 +4,7 @@ import "./overview.css";
 import chevronRight from "../../../assets/images/layout/chevron-right-icon.svg";
 import chevronLeft from "../../../assets/images/layout/chevron-left.svg";
 import GettingStartedData from "./getting_started_data";
+import ScrollToTop from '../FormQuestions/ScrollToTop';
 
 const GettingStarted = () => {
   const [isHidden, setIsHidden] = useState(false);
@@ -104,6 +105,7 @@ const GettingStarted = () => {
           </div>
         ))}
       </main>
+      <ScrollToTop />
     </div>
   );
 };
