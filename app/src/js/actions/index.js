@@ -211,6 +211,15 @@ export const listRequests = (options) => ({
   }
 });
 
+export const submissionsByWorkflowId = (id) => ({
+  [CALL_API]: {
+    type: types.REQUESTS,
+    method: 'GET',
+    id: id,
+    path: `data/submission/submissionsByWorkflowId/${id}`
+  }
+});
+
 export const getFormDetails = (key) => ({
   [CALL_API]: {
     type: types.REQUESTS,
