@@ -13,7 +13,7 @@ import {
   shortDateShortTimeYearFirstJustValue,
   calculateStorage,
 } from '../../utils/format';
-import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission } from '../../actions';
+import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission, copyRequest } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import localUpload from '@edpub/upload-utility';
@@ -28,6 +28,8 @@ const FormQuestions = ({
   undoLabel = 'Undo',
   redoLabel = 'Redo',
   submitLabel = 'Submit',
+  cloneByField = 'Clone By Field',
+  clone = 'Clone',
   enterSubmit = false,
   readonly = false,
   disabled = false,
@@ -1425,6 +1427,28 @@ const areProductFieldsEmpty = (producer) => {
   const handleRemoveFile = (fileName) => {
     setUploadFiles(uploadFiles.filter(elem => elem.name !== fileName));
   };
+
+  const cloneRequest = async () => {
+    const name = JSON.parse(window.localStorage.getItem('auth-user')).name;
+    const id = JSON.parse(window.localStorage.getItem('auth-user')).id;
+    const payload = {
+      id: requestData?.id,
+      copy_context: `Copied from bulk actions button by ${name} (${id})`
+    };
+    await dispatch(copyRequest(payload));
+    history.push('/requests');
+  }
+
+  const cloneRequestByField = async () => {
+   history.push({
+      pathname: `/forms/id/${formData?.id}`,
+      search: `?requestId=${requestData?.id}`,
+      state: {
+        clone: true,
+      },
+    });
+  };
+
   return !requestData ? (
     <Loading />
   ) : (
@@ -1491,6 +1515,35 @@ const areProductFieldsEmpty = (producer) => {
               >
                 {draftLabel}
               </Button>
+              {requestData?.workflow_id !== "3335970e-8a9b-481b-85b7-dfaaa3f5dbd9" && (
+                <>
+                  <Button
+                    className="eui-btn--blue"
+                    disabled={Object.keys(values).length === 0}
+                    onClick={() => {
+                      logAction('clone request');
+                      saveFile('draft', false);
+                      cloneRequest();
+                    }}
+                    aria-label="clone button"
+                  >
+                    {clone}
+                  </Button>
+
+                  <Button
+                    className="eui-btn--blue"
+                    disabled={Object.keys(values).length === 0}
+                    onClick={() => {
+                      logAction('cloneByField');
+                      saveFile('draft', false);
+                      cloneRequestByField();
+                    }}
+                    aria-label="save button"
+                  >
+                    {cloneByField}
+                  </Button>
+                </>
+              )}
               <Button
                 className="eui-btn--green"
                 disabled={Object.keys(values).length === 0}
