@@ -23,7 +23,9 @@ const config = {
   APP_ID: process.env.APP_ID || 'Value is null',
   requestHideButtonVerbage: process.env.REQUEST_HIDE_BUTTON_VERBAGE || 'Withdraw',
   requestUnHideButtonVerbage: process.env.REQUEST_UNHIDE_BUTTON_VERBAGE || 'Restore',
-  helpPageDefault: process.env.BASEPATH  || (process.env.OVERVIEW_URL || '/')
+  helpPageDefault: process.env.BASEPATH  || (process.env.OVERVIEW_URL || '/'),
+  logoutUrl: process.env.LOGOUT_URL || 'http://localhost:3000/logout',
+  cognitoClientLogoutUrl: process.env.COGNITO_CLIENT_LOGOUT_URL || ''
 };
 
 module.exports = config;

@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import withQueryParams from 'react-router-query-params';
 import { withRouter } from 'react-router-dom';
-import { login, mfaTokenFetch, redirectWithToken } from '../../actions';
+import { login, fetchToken, redirectWithToken } from '../../actions';
 import PropTypes from 'prop-types';
 import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import ErrorReport from '../Errors/report';
@@ -13,7 +13,6 @@ import Modal from 'react-bootstrap/Modal';
 import config from '../../config';
 import ourConfigureStore from '../../store/configureStore';
 import { saveToken } from '../../utils/auth';
-import { MFA } from './mfa';
 // unused import but this adds nasa png image to the build as we use png image for email notification
 import nasaLogo from '../../../assets/images/nasa-logo.png';
 
@@ -27,27 +26,15 @@ class Auth extends React.Component {
 
   async componentDidMount () {
     const { dispatch, api, queryParams } = this.props;
-    const { inflight, tokens } = api;
-    const { code, state, redirect } = queryParams;
+    const { inflight } = api;
+    const { code, state } = queryParams;
     if (this.store.getState().api.authenticated) {
       redirectWithToken();
     } else if (!inflight && code) {
-      const { data } = await dispatch(mfaTokenFetch(code, state));
+      const { data } = await dispatch(fetchToken(code, state));
       const { token, user } = data;
-      if (!('mfaSecretCode' in data)) {
-        saveToken({ token, user: { ...user, ...{ authenticated: true } } });
-        window.location.href = config.basepath;
-      } else this.setState({
-        body: <MFA
-              secretCode={data.mfaSecretCode}
-              username={user.username}
-              issuer={user.issuer}
-              // Have to call these as a sub-attribute of props directly or they initialize too
-              // early and send invalid values
-              api={this.props.api}
-              dispatch={this.props.dispatch}
-              queryParams={this.props.queryParams}/>
-        });
+      saveToken({ token, user: { ...user, ...{ authenticated: true } } });
+      window.location.href = config.basepath;
     }
   }
 
