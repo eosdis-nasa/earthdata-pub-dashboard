@@ -1045,3 +1045,110 @@
   font-size: 1em;
   padding: 2px;
 }
+
+.wide-modal .modal-dialog {
+  max-width: 1200px; 
+  width: 95%;
+}
+
+.modal-body {
+  padding: 2rem;     
+}
+
+.custom-input {
+  margin-bottom: 1.5rem;  
+}
+
+.custom-input .form-control {
+  width: 100%;           
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  padding: 14px 16px;      
+  font-size: 1rem;
+  background-color: #fafafa; 
+  transition: all 0.2s ease-in-out;
+}
+
+
+.custom-input .form-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 1rem;
+}
+
+.custom-input .form-control:focus {
+  border-color: #0d6efd;
+  background-color: #fff;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.text-danger{
+  color: red;
+}
+
+.custom-table {
+  table-layout: fixed;   
+  min-width: 1200px;    
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th,
+.custom-table td {
+  width: 180px;
+  min-width: 180px;
+  max-width: 180px;
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+  padding: 4px;
+}
+
+.custom-table-header th {
+  background: #2275AA;
+  color: #fff;
+  font-weight: 600;
+  text-align: left;
+  white-space: normal;      
+  overflow: visible;       
+  text-overflow: unset;     
+  line-height: 1.2;
+  word-wrap: break-word; 
+}
+
+.custom-table td {
+  white-space: nowrap;      
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Sticky last action column */
+.custom-table th.sticky-col,
+.custom-table td.sticky-col {
+  position: sticky;
+  right: 0;
+  background: #f8f9fa;
+  z-index: 3;
+  text-align: center;
+}
+
+.custom-table thead th.sticky-col {
+  background: #2275AA;
+  color: #fff;
+  z-index: 5;
+  max-width: 80px;
+  border: none;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.action-button.add-row {
+  white-space: nowrap; 
+}
+
+.dataprod {
+  margin-left: 5px;
+}
