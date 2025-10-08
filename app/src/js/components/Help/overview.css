@@ -562,6 +562,7 @@
   border-radius: 6px;
   padding: 10px;
   position: absolute;
+  transform: translateX(-17%);
   z-index: 1;
   top: 125%;
   left: 50%;
@@ -577,6 +578,7 @@
   bottom: 100%;
   left: 50%;
   margin-left: -5px;
+  transform: translateX(-17%);
   border-width: 5px;
   border-style: solid;
   border-color: transparent transparent #555 transparent;
@@ -659,13 +661,13 @@
 }
 
 .info-color {
-  background-color: unset;
-  margin: -10px;
+  background-color: unset !important;
+  margin: -10px !important;
 }
 
 .info-color:hover {
-  background-color: unset;
-  margin: -10px;
+  background-color: unset !important;
+  margin: -10px !important;
 }
 
 .homepage ul {
