@@ -67,10 +67,13 @@ const FormQuestions = ({
       label: 'Size',
       formatter: (value) => calculateStorage(value),
     },
-    {
-      key: 'sha256Checksum',
-      label: 'sha256Checksum',
-    },
+    // CUE does not currently return the sha256Checksum so we're commenting for now
+    // TODO - request as a feature to CUE that the sha256Checksum is pushed to the s3 object
+    // metadata
+    // {
+    //   key: 'sha256Checksum',
+    //   label: 'sha256Checksum',
+    // },
     {
       key: 'lastModified',
       label: 'Last Modified',

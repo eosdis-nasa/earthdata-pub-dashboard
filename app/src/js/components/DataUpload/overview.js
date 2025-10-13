@@ -381,11 +381,14 @@ class UploadOverview extends React.Component {
         accessor: row => row.category.charAt(0).toUpperCase() + row.category.substring(1).toLowerCase(),
         id: 'category',
       },
-      {
-        Header: 'sha256Checksum',
-        accessor: row => row.sha256Checksum,
-        id: 'sha256Checksum'
-      },
+      // CUE does not currently return the sha256Checksum so we're commenting for now
+      // TODO - request as a feature to CUE that the sha256Checksum is pushed to the s3 object
+      // metadata
+      // {
+      //   Header: 'sha256Checksum',
+      //   accessor: row => row.sha256Checksum,
+      //   id: 'sha256Checksum'
+      // },
       {
         Header: 'Last Modified',
         accessor: row => shortDateShortTimeYearFirstJustValue(row.lastModified),
