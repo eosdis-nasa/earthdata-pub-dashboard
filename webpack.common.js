@@ -183,7 +183,7 @@ const CommonConfig = {
         HELP_PAGE_DEFAULT: config.helpPageDefault,
         LOGOUT_URL: config.logoutUrl,
         COGNITO_CLIENT_LOGOUT_URL: config.cognitoClientLogoutUrl,
-        USE_CLOUD_UPLOAD: config.useCUEUpload
+        USE_CUE_UPLOAD: config.useCUEUpload
       }
     )
   ]

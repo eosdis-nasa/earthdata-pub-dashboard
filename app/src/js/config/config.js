@@ -27,7 +27,7 @@ const config = {
   logoutUrl: process.env.LOGOUT_URL || 'http://localhost:3000/logout',
   cognitoClientLogoutUrl: process.env.COGNITO_CLIENT_LOGOUT_URL || '',
   // TODO - Remove once CUE is stable
-  useCUEUpload: process.env.USE_CLOUD_UPLOAD || 'true'
+  useCUEUpload: process.env.USE_CUE_UPLOAD || 'true'
 };
 
 module.exports = config;
