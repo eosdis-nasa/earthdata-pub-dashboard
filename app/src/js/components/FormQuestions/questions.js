@@ -13,7 +13,7 @@ import {
   shortDateShortTimeYearFirstJustValue,
   calculateStorage,
 } from '../../utils/format';
-import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission } from '../../actions';
+import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission, copyRequest } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import { CueFileUtility } from '@edpub/upload-utility';
@@ -28,12 +28,15 @@ const FormQuestions = ({
   undoLabel = 'Undo',
   redoLabel = 'Redo',
   submitLabel = 'Submit',
+  cloneByField = 'Clone By Field',
+  clone = 'Clone',
   enterSubmit = false,
   readonly = false,
   disabled = false,
   showCancelButton = true,
   formData,
   requestData,
+  sectionHeader
 }) => {
   const [values, setValues] = useState({ validation_errors: {} });
   const [questions, setQuestions] = useState([]);
@@ -74,7 +77,6 @@ const FormQuestions = ({
       formatter: (value) => shortDateShortTimeYearFirstJustValue(value),
     },
   ]);
-  const [timer, setTimer] = useState(null);
   const [logs, setLogs] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -304,7 +306,7 @@ const FormQuestions = ({
   useEffect(() => {
     const intervalId = setInterval(() => {
       saveFile('draft', false);
-    }, 600000);
+    }, 300000);
 
     return () => clearInterval(intervalId);
   }, [values]);
@@ -408,14 +410,34 @@ const FormQuestions = ({
           } all fields are required`;
           }
         }else {
-          const result =
-          value && value.some((producer) => areProducerFieldsEmpty(producer));
-          if (result || (value && value.length === 0)) {
-          errorMessage = `${
-            input.label && input.label !== 'undefined'
-              ? input.label
-              : long_name
-          } both First Name and Last Name are required`;
+          if (sectionHeader === 'Data Evaluation Request') {
+             const result = value && value.some((producer) => areProductFieldsEmpty(producer));
+            if (result || (value && value.length === 0)) {
+              errorMessage = `${
+                input.label && input.label !== 'undefined'
+                  ? input.label
+                  : long_name
+              } fill out all the required fileds in the form`;
+            }
+          } else if (sectionHeader === 'Data Accession Request') {
+              const result = value && value.some((producer) => areProducerFieldsEmpty(producer));
+              if (result || (value && value.length === 0)) {
+                errorMessage = `${
+                  input.label && input.label !== 'undefined'
+                    ? input.label
+                    : long_name
+                } fill out all the fields in the table`;
+              }
+          }
+          else {
+            const result = value && value.some((producer) => areProducersEmpty(producer));
+            if (result || (value && value.length === 0)) {
+              errorMessage = `${
+                input.label && input.label !== 'undefined'
+                  ? input.label
+                  : long_name
+              } fill out all the fields in the table`;
+            }
           }
         }
       } else if (input.type === 'bbox') {
@@ -496,12 +518,52 @@ const FormQuestions = ({
   };
 
   const areProducerFieldsEmpty = (producer) => {
-    return (
-      producer.producer_first_name === '' ||
-      producer.producer_last_name_or_organization === ''
-    );
+    if (!producer) return true;
+
+    const requiredFields = [
+      "data_product_name",
+      "data_prod_timeline",
+      "data_prod_volume",
+      "instrument_collect_data",
+    ];
+
+    return requiredFields.some((field) => !producer[field]?.trim());
   };
 
+  const areProducersEmpty = (producer) => {
+    if (!producer) return true;
+
+    const requiredFields = [
+      "producer_first_name",
+      "producer_middle_initial",
+      "producer_last_name_or_organization",
+    ];
+
+    return requiredFields.some((field) => !producer[field]?.trim());
+  };
+
+const areProductFieldsEmpty = (producer) => {
+  if (!producer) return true;
+
+  const requiredFields = [
+    "data_product_name",
+    "data_prod_timeline",
+    "data_prod_volume",
+    "instrument_collect_data",
+    "data_prod_doi",
+    "data_prod_grid",
+    "data_prod_file_format",
+    "data_prod_granule",
+    "data_prod_params",
+    "data_prod_temporal_coverage",
+    "data_prod_spatial_coverage",
+    "data_prod_ingest_frequency",
+  ];
+
+  return requiredFields.some((field) => !producer[field] || producer[field].toString().trim() === "");
+};
+
+  
   const areAssignmentFieldsEmpty = (producer) => {
     return (
       producer.data_product_name === '' ||
@@ -525,6 +587,7 @@ const FormQuestions = ({
   };
 
   const validateFields = (checkAllFields = true, jsonObj) => {
+
     const newValidationErrors = {};
     const errorOrder = [];
     questions.forEach((section) => {
@@ -626,6 +689,19 @@ const FormQuestions = ({
         validation_errors: { ...prevValues.validation_errors },
       };
 
+      if (sectionHeader !== 'Data Publication Request' && checkboxStatus.sameAsPrincipalInvestigator) {
+        const piToPocMap = {
+          dar_form_principal_investigator_fullname: "dar_form_data_accession_poc_name",
+          dar_form_principal_investigator_organization: "dar_form_data_accession_poc_organization",
+          dar_form_principal_investigator_email: "dar_form_data_accession_poc_email",
+          dar_form_principal_investigator_orcid: "dar_form_data_accession_poc_orcid",
+        };
+
+        if (piToPocMap[controlId]) {
+          newValues[piToPocMap[controlId]] = value;
+        }
+      }
+
       if (
         checkboxStatus.sameAsPrimaryDataProducer &&
         controlId.startsWith('data_producer_info_')
@@ -703,20 +779,26 @@ const FormQuestions = ({
     }
   };
 
-  const handleTableFieldChange = (controlId, rowIndex, key, value) => {
-    setValues((prevValues) => {
-      const updatedTable = [...(prevValues[controlId] || [])];
-      const updatedRow = { ...updatedTable[rowIndex] };
-      updatedRow[key] = value;
-      updatedTable[rowIndex] = updatedRow;
-      return {
-        ...prevValues,
-        [controlId]: updatedTable,
-      };
-    });
+ const handleTableFieldChange = (controlId, rowIndex, key, value) => {
+  setValues(prevValues => {
+    const updatedTable = [...(prevValues[controlId] || [])];
+    const updatedRow = { ...updatedTable[rowIndex] };
+    updatedRow[key] = value;
+    updatedTable[rowIndex] = updatedRow;
 
-    handleInvalid({ target: { name: controlId, validationMessage: '' } });
-  };
+    const newValues = {
+      ...prevValues,
+      [controlId]: updatedTable,
+    };
+
+    // also update history here
+    saveToHistory(newValues);
+
+    return newValues;
+  });
+  handleInvalid({ target: { name: controlId, validationMessage: '' } });
+};
+
 
   const handleInvalid = (evt) => {
     const { name, validationMessage } = evt.target;
@@ -963,8 +1045,8 @@ const FormQuestions = ({
     return emptyProducer;
   };
 
-  const addRow = (tableId) => {
-    const updatedTable = [...(values[tableId] || []), clearProducerData(values[tableId])];
+  const addRow = (tableId, row = {}) => {
+    const updatedTable = [...(values[tableId] || []), row];
     setValues((prevValues) => {
       const newValues = { ...prevValues, [tableId]: updatedTable };
       saveToHistory(newValues);
@@ -1310,7 +1392,6 @@ const FormQuestions = ({
       });
     } else if (name === 'sameAsPrincipalInvestigator') {
       setCheckboxStatus((prev) => ({ ...prev, [name]: checked }));
-
       setValues((prevValues) => {
         const updatedValues = {
           ...prevValues,
@@ -1345,6 +1426,27 @@ const FormQuestions = ({
 
   const handleRemoveFile = (fileName) => {
     setUploadFiles(uploadFiles.filter(elem => elem.name !== fileName));
+  };
+
+  const cloneRequest = async () => {
+    const name = JSON.parse(window.localStorage.getItem('auth-user')).name;
+    const id = JSON.parse(window.localStorage.getItem('auth-user')).id;
+    const payload = {
+      id: requestData?.id,
+      copy_context: `Copied from bulk actions button by ${name} (${id})`
+    };
+    await dispatch(copyRequest(payload));
+    history.push('/requests');
+  }
+
+  const cloneRequestByField = async () => {
+   history.push({
+      pathname: `/forms/id/${formData?.id}`,
+      search: `?requestId=${requestData?.id}`,
+      state: {
+        clone: true,
+      },
+    });
   };
 
   return !requestData ? (
@@ -1413,6 +1515,35 @@ const FormQuestions = ({
               >
                 {draftLabel}
               </Button>
+              {requestData?.workflow_id !== "3335970e-8a9b-481b-85b7-dfaaa3f5dbd9" && (
+                <>
+                  <Button
+                    className="eui-btn--blue"
+                    disabled={Object.keys(values).length === 0}
+                    onClick={() => {
+                      logAction('clone request');
+                      saveFile('draft', false);
+                      cloneRequest();
+                    }}
+                    aria-label="clone button"
+                  >
+                    {clone}
+                  </Button>
+
+                  <Button
+                    className="eui-btn--blue"
+                    disabled={Object.keys(values).length === 0}
+                    onClick={() => {
+                      logAction('cloneByField');
+                      saveFile('draft', false);
+                      cloneRequestByField();
+                    }}
+                    aria-label="save button"
+                  >
+                    {cloneByField}
+                  </Button>
+                </>
+              )}
               <Button
                 className="eui-btn--green"
                 disabled={Object.keys(values).length === 0}
@@ -1540,7 +1671,7 @@ const FormQuestions = ({
                         <div className="checkbox-group"
                           tabIndex="-1"
                           id={`${question.inputs?.[0]?.control_id || question.id || 'unknown'}_group`}>
-                          {question.long_name === 'Data Evaluation Point of Contact' && (
+                          {question.long_name === 'Data Evaluation Point of Contact' && sectionHeader === 'Data Publication Request' && (
                             <label className="checkbox-item">
                               Same as Primary Data Producer
                               <input
@@ -1578,7 +1709,7 @@ const FormQuestions = ({
                                   <span className="checkmark"></span>
                                 </label>
                                 <label className="checkbox-item">
-                                  Same as Data Accession Point of Contact
+                                  Same as Data Evaluation Point of Contact
                                   <input
                                     type="checkbox"
                                     name="sameAsPrimaryDataAccession"
@@ -1767,7 +1898,7 @@ const FormQuestions = ({
                                                     question.inputs[c_key]
                                                   )
                                                 ) ||
-                                                (checkboxStatus.sameAsPrimaryDataProducer &&
+                                                (sectionHeader !== 'Data Publication Request' && checkboxStatus.sameAsPrimaryDataProducer &&
                                                   input.control_id.startsWith('poc_')) ||
                                                 (checkboxStatus.sameAsPrimaryLongTermSupport &&
                                                   input.control_id.startsWith(
@@ -1777,7 +1908,7 @@ const FormQuestions = ({
                                                   input.control_id.startsWith(
                                                     'long_term_support_poc_'
                                                   )) ||
-                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                (sectionHeader !== 'Data Publication Request' && checkboxStatus.sameAsPrincipalInvestigator &&
                                                   input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                               }
                                               pattern={getAttribute(
@@ -1845,7 +1976,7 @@ const FormQuestions = ({
                                                   question.inputs[c_key]
                                                 )
                                               ) ||
-                                              (checkboxStatus.sameAsPrimaryDataProducer &&
+                                              (sectionHeader === 'Data Publication Request' && checkboxStatus.sameAsPrimaryDataProducer &&
                                                 input.control_id.startsWith('poc_')) ||
                                               (checkboxStatus.sameAsPrimaryLongTermSupport &&
                                                 input.control_id.startsWith(
@@ -1855,7 +1986,7 @@ const FormQuestions = ({
                                                 input.control_id.startsWith(
                                                   'long_term_support_poc_'
                                                 )) ||
-                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                (sectionHeader !== 'Data Publication Request' && checkboxStatus.sameAsPrincipalInvestigator &&
                                                   input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                             }
                                             readOnly={
@@ -1866,7 +1997,7 @@ const FormQuestions = ({
                                                   question.inputs[c_key]
                                                 )
                                               ) ||
-                                              (checkboxStatus.sameAsPrimaryDataProducer &&
+                                              (sectionHeader === 'Data Publication Request' && checkboxStatus.sameAsPrimaryDataProducer &&
                                                 input.control_id.startsWith('poc_')) ||
                                               (checkboxStatus.sameAsPrimaryLongTermSupport &&
                                                 input.control_id.startsWith(
@@ -1876,7 +2007,7 @@ const FormQuestions = ({
                                                 input.control_id.startsWith(
                                                   'long_term_support_poc_'
                                                 )) ||
-                                                (checkboxStatus.sameAsPrincipalInvestigator &&
+                                                (sectionHeader !== 'Data Publication Request' && checkboxStatus.sameAsPrincipalInvestigator &&
                                                   input.control_id.startsWith('dar_form_data_accession_poc_')) 
                                             }
                                             maxLength={getAttribute(
@@ -2307,11 +2438,13 @@ const FormQuestions = ({
                                               <DynamicTable
                                                 controlId={input.control_id}
                                                 values={values}
-                                                handleFieldChange={handleTableFieldChange}
+                                                handleFieldChange={handleFieldChange}
+                                                handleTableFieldChange={handleTableFieldChange}
                                                 addRow={addRow}
                                                 removeRow={removeRow}
                                                 moveUpDown={moveUpDown}
                                                 readonly={false}
+                                                sectionHeader={sectionHeader}
                                               />
                                             </div>
                                           )}

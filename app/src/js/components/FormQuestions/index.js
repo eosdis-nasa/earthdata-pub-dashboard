@@ -69,7 +69,7 @@ class FormQuestions2 extends React.Component {
               <Switch>
                 <Route
                   path='/form/questions/:id'
-                  render={(props) => validForm? <FormQuestions {...props} formData={formData} requestData={requestData}/> :  <ErrorReport report={errorMessage} />}
+                  render={(props) => validForm? <FormQuestions {...props} formData={formData} requestData={requestData} sectionHeader = {header}/> :  <ErrorReport report={errorMessage} />}
                 />
               </Switch>
             </div>
