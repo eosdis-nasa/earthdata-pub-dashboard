@@ -22,7 +22,7 @@ import { requestPrivileges } from '../../utils/privileges';
 import Comments from '../Comments/comments';
 import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
 import { loadToken } from '../../utils/auth';
-import { CueFileUtility } from '@edpub/upload-utility';
+import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 
 const metaAccessors = [
   {
@@ -280,8 +280,9 @@ class FormOverview extends React.Component {
       const requestId = this.props.location.search.split('=')[1];
 
       if (requestId !== '' && requestId != undefined && requestId !== null) {
-        const download = new CueFileUtility();
-        const { apiRoot } = _config;
+        const { apiRoot, useCUEUpload } = _config;
+        const download = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
+
         download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
           let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
           if (error) {

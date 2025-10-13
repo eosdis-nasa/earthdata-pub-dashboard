@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { CueFileUtility } from '@edpub/upload-utility';
+import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import _config from '../../config';
 
 const FileUploader = ({ requestId, store, refreshFileList }) => {
   const [uploadStatusMsg, setUploadStatusMsg] = useState('');
-  const { apiRoot } = _config;
+  const { apiRoot, useCUEUpload } = _config;
   const validateFile = (file) => {
     let valid = false;
     let msg = '';
@@ -49,7 +49,7 @@ const FileUploader = ({ requestId, store, refreshFileList }) => {
     if (validateFile(file)) {
       setUploadStatusMsg('Uploading');
 
-      const upload = new CueFileUtility();
+      const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
 
       try {
         ///await refreshAuth();

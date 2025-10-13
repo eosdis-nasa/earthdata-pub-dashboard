@@ -25,7 +25,9 @@ const config = {
   requestUnHideButtonVerbage: process.env.REQUEST_UNHIDE_BUTTON_VERBAGE || 'Restore',
   helpPageDefault: process.env.BASEPATH  || (process.env.OVERVIEW_URL || '/'),
   logoutUrl: process.env.LOGOUT_URL || 'http://localhost:3000/logout',
-  cognitoClientLogoutUrl: process.env.COGNITO_CLIENT_LOGOUT_URL || ''
+  cognitoClientLogoutUrl: process.env.COGNITO_CLIENT_LOGOUT_URL || '',
+  // TODO - Remove once CUE is stable
+  useCUEUpload: process.env.USE_CLOUD_UPLOAD || 'true'
 };
 
 module.exports = config;

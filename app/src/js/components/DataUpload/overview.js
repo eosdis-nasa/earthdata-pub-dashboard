@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import Loading from '../LoadingIndicator/loading-indicator';
-import { CueFileUtility } from '@edpub/upload-utility';
+import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { listFileUploadsBySubmission, listFileDownloadsByKey, listFileUploadsBySubmissionStep, refreshToken } from '../../actions';
@@ -64,8 +64,9 @@ class UploadOverview extends React.Component {
       const { dispatch } = this.props;
       const { requestId } = this.props.match.params;
       if (requestId !== '' && requestId != undefined && requestId !== null) {
-        const download = new CueFileUtility();
-        const { apiRoot } = _config;
+        const { apiRoot, useCUEUpload } = _config;
+        const download = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
+
         download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
           let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
           if (error) {
@@ -191,7 +192,7 @@ class UploadOverview extends React.Component {
     const failedFiles = [];
     const { requestId } = this.props.match.params;
     const { groupId } = this.props.match.params;
-    const { apiRoot } = _config;
+    const { apiRoot, useCUEUpload } = _config;
     const category = this.state.categoryType;
   
     const uploadFileAsync = (file) => {
@@ -232,7 +233,7 @@ class UploadOverview extends React.Component {
           };
         }
   
-        const upload = new CueFileUtility();
+        const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
         upload.uploadFile(payload, updateProgress)
           .then((resp) => {
             const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;

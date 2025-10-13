@@ -1,5 +1,5 @@
 'use strict';
-import { CueFileUtility } from '@edpub/upload-utility';
+import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import { loadToken } from '../utils/auth';
 import _config from '../config';
 
@@ -8,7 +8,7 @@ export const handleUpload = async ({ files, categoryType, groupId, conversationI
     // components rather than having x number of components and repeated methods
     const successFiles = [];
     const failedFiles = [];
-    const { apiRoot } = _config;
+    const { apiRoot, useCUEUpload } = _config;
   
     const uploadFileAsync = (file) => {
       return new Promise((resolve, reject) => {
@@ -23,7 +23,7 @@ export const handleUpload = async ({ files, categoryType, groupId, conversationI
           endpointParams: { conversation_id: conversationId }
         };
   
-        const upload = new CueFileUtility();
+        const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
         upload.uploadFile(payload, updateProgress)
           .then((resp) => {
             const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
