@@ -1302,3 +1302,26 @@ div.selectButton div input {
 div.selectButton div div span {
   width: 0;
 }
+
+.banner {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: .825rem 2rem;
+  overflow: hidden;
+}
+
+.banner--warning {
+  background-color: #ffcc00;
+}
+
+.banner--error, .banner--error h2 {
+  background-color: #b60109;
+  color: white;
+}
+
+.textIconWrapper {
+  display: inline-flex;
+  vertical-align: center;
+}
