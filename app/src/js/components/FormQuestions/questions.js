@@ -16,7 +16,7 @@ import {
 import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission, copyRequest } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
-import localUpload from '@edpub/upload-utility';
+import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import { format } from "date-fns";
 
 // Form page i.e. /dashboard/form/questions/{id}
@@ -67,10 +67,13 @@ const FormQuestions = ({
       label: 'Size',
       formatter: (value) => calculateStorage(value),
     },
-    {
-      key: 'sha256Checksum',
-      label: 'sha256Checksum',
-    },
+    // CUE does not currently return the sha256Checksum so we're commenting for now
+    // TODO - request as a feature to CUE that the sha256Checksum is pushed to the s3 object
+    // metadata
+    // {
+    //   key: 'sha256Checksum',
+    //   label: 'sha256Checksum',
+    // },
     {
       key: 'lastModified',
       label: 'Last Modified',
@@ -1176,7 +1179,7 @@ const areProductFieldsEmpty = (producer) => {
     }
   };
 
-  const { apiRoot } = _config;
+  const { apiRoot, useCUEUpload } = _config;
   const [uploadResults, setUploadResults] = useState({ success: [], failed: [] });
   const [showUploadSummaryModal, setShowUploadSummaryModal] = useState(false);
   const [progressBarsVisible, setProgressBarsVisible] = useState(true);
@@ -1212,7 +1215,7 @@ const areProductFieldsEmpty = (producer) => {
           }
         };
 
-        const upload = new localUpload();
+        const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
         upload.uploadFile(payload, updateProgress).then((resp) => {
           const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
           if (error) {

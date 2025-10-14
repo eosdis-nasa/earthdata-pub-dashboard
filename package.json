@@ -142,7 +142,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "@edpub/upload-utility": "^1.1.1",
+    "@edpub/upload-utility": "^2.0.1",
     "@floating-ui/utils": "^0.2.5",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
