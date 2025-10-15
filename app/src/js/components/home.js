@@ -19,7 +19,7 @@ import { strings } from './locale';
 import { requestPrivileges } from '../utils/privileges';
 import Loading from '../components/LoadingIndicator/loading-indicator';
 import { Modal, Button } from 'react-bootstrap';
-import { faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faCheck, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
@@ -381,13 +381,26 @@ async updateList() {
                     <h2 className='heading--medium heading--shared-content--right'>{strings.requests_inprogress}</h2>
                     { canInitialize ? (
                       <div className='dropdown-container'>
-                      <button
-                        onClick={this.toggleDropdown}
-                        className='button button--green new-request-btn'
-                        aria-label='Create new request'>
-                        New Request
-                      </button>
-                
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <button
+                          onClick={this.toggleDropdown}
+                          className="button button--green new-request-btn"
+                          aria-label="Create new request"
+                        >
+                          New Request
+                        </button>
+    
+                        {/* Info Tooltip */}
+                        <div className="info-tooltip">
+                          <FontAwesomeIcon icon={faInfoCircle} style={{ color: "#2276ac", cursor: "pointer" }} />
+                          <span className="info-tooltip-text">
+                            If you are submitting Data Publication Requests for multiple, similar data products, 
+                            you can clone an existing request and use it as a template for additional requests. 
+                            Click on the request you want to clone. Click on the <span className='dropdown__options__btn button--green button button--small info-color'></span> {' '}icon in the upper right corner 
+                            and select "Clone Request". Edit the cloned request.
+                          </span>
+                        </div>
+                      </div>
                       {this.state.isDropdownOpen && (
                         <div className="dropdown-menu">
                         <div className="dropdown-row">
@@ -398,7 +411,7 @@ async updateList() {
                             Accession Request
                           </div>
                           <a
-                            href="/getting_started#accession"
+                            href="/getting_started#Data Accession Request"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="dropdown-icon"
@@ -416,7 +429,7 @@ async updateList() {
                             Publication Request
                           </div>
                           <a
-                            href="/getting_started#publication"
+                            href="/getting_started#Data Publication Request"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="dropdown-icon"

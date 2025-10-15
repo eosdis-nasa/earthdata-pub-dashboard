@@ -182,7 +182,10 @@ const CommonConfig = {
         REQUEST_HIDE_BUTTON_VERBAGE: config.requestHideButtonVerbage,
         HELP_PAGE_DEFAULT: config.helpPageDefault,
         LOGOUT_URL: config.logoutUrl,
-        COGNITO_CLIENT_LOGOUT_URL: config.cognitoClientLogoutUrl
+        COGNITO_CLIENT_LOGOUT_URL: config.cognitoClientLogoutUrl,
+        USE_CUE_UPLOAD: config.useCUEUpload,
+        ADDITIONAL_BANNER_CLASS_NAMES: config.additional_banner_class_names,
+        BANNER_TEXT: config.banner_text
       }
     )
   ]

@@ -15,7 +15,7 @@ import ErrorReport from '../Errors/report';
 import { workflowToGraph } from './graph-utils';
 import { userPrivileges } from '../../utils/privileges';
 import { Modal, Button } from 'react-bootstrap';
-import { listRequests } from '../../actions';
+import { submissionsByWorkflowId } from '../../actions';
 import WorkflowArrowBreadCrumb from '../../utils/table-config/BreadCrumb';
 
 function onLoad (reactFlowInstance) {
@@ -55,20 +55,31 @@ class Workflows extends React.Component {
     this.onConnect = this.onConnect.bind(this);
   }
 
+  // Fetch submission count for a workflow (called on Edit click)
+  async fetchWorkflowSubmissionCount(workflowId) {
+    const { dispatch } = this.props;
+    try {
+      const workflowCount = await dispatch(submissionsByWorkflowId(workflowId));
+      const count = workflowCount?.data?.submission_count;
+
+      this.setState({
+        workflowRequestCount: count,
+        showConfirmPopup: true
+      });
+    } catch (error) {
+      console.error('Error fetching workflow count:', error);
+      this.setState({
+        workflowRequestCount: 0,
+        showConfirmPopup: false
+      });
+    }
+  }
 
   async componentDidMount () {
     const { dispatch } = this.props;
     const { workflowId } = this.props.match.params;
     dispatch(getWorkflow(workflowId));
-    await dispatch(listRequests())
-    const count = this.calculateWorkflowRequestCount(this.props.requests.list.data || [], workflowId);
-    this.setState({ workflowRequestCount: count });
   }  
-
-  calculateWorkflowRequestCount(data, workflowId) {
-    return data.filter(item => item.workflow_id === workflowId).length;
-  }
-  
 
   renderReadOnlyJson (name, data) {
     return (
@@ -135,12 +146,15 @@ class Workflows extends React.Component {
         <section className='page__section'>
           {record.data && canUpdateWorkflow
             ? <button
-            className='button button--small button--green button--add-small form-group__element--right new-request-button'
-            onClick={() => this.setState({ showConfirmPopup: true })}
-            aria-label="Edit your workflow"
-          >
-            Edit
-          </button>
+              className='button button--small button--green button--add-small form-group__element--right new-request-button'
+              onClick={() => {
+                const { workflowId } = this.props.match.params;
+                this.fetchWorkflowSubmissionCount(workflowId);
+              }}
+              aria-label="Edit your workflow"
+            >
+              Edit
+            </button>
           : null}
           <div className='heading__wrapper--border'>
             <h2 className='heading--medium heading--shared-content with-description'>Workflow Overview</h2>
