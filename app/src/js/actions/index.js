@@ -170,7 +170,7 @@ export const createTempUploadFile = (payload) => ({
   [CALL_API]: {
     type: types.UPLOAD,
     method: 'POST',
-    path: `data/upload/list/createTempUploadFile`,
+    path: `data/upload/createTempUploadFile`,
     body: payload
   }
 });

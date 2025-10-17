@@ -1225,7 +1225,6 @@ const areProductFieldsEmpty = (producer) => {
 
         const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
         upload.uploadFile(payload, updateProgress).then( async (resp) => {
-          createTempUploadFile
           const payload = {
             fileId: resp.file_id, submissionId: daacInfo.id
           }
