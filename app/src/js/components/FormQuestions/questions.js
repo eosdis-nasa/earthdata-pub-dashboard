@@ -153,20 +153,72 @@ const FormQuestions = ({
         // Filter into categories for display
         const categoryFiles = {};
         files.forEach((f) => {
-          if (f.category in categoryFiles){
+          if (f.category in categoryFiles) {
             categoryFiles[f.category].push(f);
           } else {
-            categoryFiles[f.category] = [f]
+            categoryFiles[f.category] = [f];
           }
-        })
+        });
 
         // Set the files in state
         setUploadedFiles(categoryFiles);
+
+        // -----------------------------------------------------
+        // Polling logic
+        // -----------------------------------------------------
+        const activeFiles = files.filter(
+          f =>
+            f.status &&
+            !['failed', 'distributed'].includes(f.status.toLowerCase())
+        );
+
+        if (activeFiles.length > 0) {
+          const latest = activeFiles.reduce((a, b) =>
+            new Date(a.lastModified) > new Date(b.lastModified) ? a : b
+          );
+          const lastModifiedTime = new Date(latest.lastModified).getTime();
+          const now = Date.now();
+          const within7Minutes = now - lastModifiedTime < 7 * 60 * 1000; // 7 min
+
+          if (within7Minutes) {
+            console.log('Detected active files — starting polling for 7 min');
+            startPolling();
+          } else {
+            console.log('All files are stable — no polling needed');
+          }
+        } else {
+          console.log('No active files found — skipping polling');
+        }
+
       } catch (error) {
         console.error('Failed to fetch file uploads:', error);
       }
     }
     setUploadFileFlag(false);
+  };
+
+  let pollTimer = null;
+
+  const startPolling = () => {
+    if (pollTimer) clearInterval(pollTimer);
+
+    const start = Date.now();
+
+    pollTimer = setInterval(async () => {
+      const elapsed = Date.now() - start;
+
+      // Stop after 7 minutes
+      if (elapsed > 7 * 60 * 1000) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+        console.log('Polling stopped (7-minute timeout)');
+        return;
+      }
+
+      console.log('Polling fetchFileUploads...');
+      await fetchFileUploads();
+
+    }, 30 * 1000);
   };
 
   useEffect(() => {
