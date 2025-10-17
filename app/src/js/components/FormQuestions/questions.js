@@ -13,7 +13,7 @@ import {
   shortDateShortTimeYearFirstJustValue,
   calculateStorage,
 } from '../../utils/format';
-import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission, copyRequest } from '../../actions';
+import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission, copyRequest, createTempUploadFile } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
@@ -79,6 +79,14 @@ const FormQuestions = ({
       label: 'Last Modified',
       formatter: (value) => shortDateShortTimeYearFirstJustValue(value),
     },
+    {
+      key: 'status',
+      label: 'File Upload Status',
+      formatter: (value) => {
+        if (!value) return 'File Uploaded';
+        return value;                    
+      }
+    }
   ]);
   const [logs, setLogs] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -1216,7 +1224,12 @@ const areProductFieldsEmpty = (producer) => {
         };
 
         const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
-        upload.uploadFile(payload, updateProgress).then((resp) => {
+        upload.uploadFile(payload, updateProgress).then( async (resp) => {
+          createTempUploadFile
+          const payload = {
+            fileId: resp.file_id, submissionId: daacInfo.id
+          }
+          await dispatch(createTempUploadFile(payload));
           const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
           if (error) {
             console.error(`Error uploading file ${file.name}: ${error}`);

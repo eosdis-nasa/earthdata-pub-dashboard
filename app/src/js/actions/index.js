@@ -166,6 +166,15 @@ export const listFileUploadsBySubmission = (submissionId) => ({
   }
 });
 
+export const createTempUploadFile = (payload) => ({
+  [CALL_API]: {
+    type: types.UPLOAD,
+    method: 'POST',
+    path: `data/upload/list/createTempUploadFile`,
+    body: payload
+  }
+});
+
 export const listFileUploadsBySubmissionStep = (submissionId) => ({
   [CALL_API]: {
     type: types.UPLOAD,
