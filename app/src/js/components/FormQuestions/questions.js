@@ -142,8 +142,9 @@ const FormQuestions = ({
           }
         }
 
-        const files = resp.data;
+        const files = resp?.data?.errorType ? [] : resp?.data || [];
 
+        // Sort files based on lastModified
         files.sort((a, b) => {
           const keyA = new Date(a.lastModified);
           const keyB = new Date(b.lastModified);
@@ -167,27 +168,35 @@ const FormQuestions = ({
         // Polling logic
         // -----------------------------------------------------
         const activeFiles = files.filter(
-          f =>
-            f.status &&
-            !['failed', 'distributed'].includes(f.status.toLowerCase())
+          f => f.status && !['failed', 'distributed'].includes(f.status.toLowerCase())
         );
 
-        if (activeFiles.length > 0) {
-          const latest = activeFiles.reduce((a, b) =>
-            new Date(a.lastModified) > new Date(b.lastModified) ? a : b
-          );
-          const lastModifiedTime = new Date(latest.lastModified).getTime();
-          const now = Date.now();
-          const within7Minutes = now - lastModifiedTime < 7 * 60 * 1000; // 7 min
-
-          if (within7Minutes) {
-            console.log('Detected active files — starting polling for 7 min');
-            startPolling();
-          } else {
-            console.log('All files are stable — no polling needed');
-          }
-        } else {
+        if (activeFiles.length === 0) {
           console.log('No active files found — skipping polling');
+          if (pollTimer) {
+            clearInterval(pollTimer); // Stop polling immediately
+            pollTimer = null;
+            console.log('Polling stopped immediately due to no active files');
+          }
+          return; // Exit without starting polling
+        }
+
+        const latest = activeFiles.reduce((a, b) =>
+          new Date(a.lastModified) > new Date(b.lastModified) ? a : b
+        );
+
+        const lastModifiedTime = new Date(latest.lastModified).getTime();
+        const now = Date.now();
+        const within7Minutes = now - lastModifiedTime < 7 * 60 * 1000; // 7 min
+
+        console.log('Latest file:', latest);
+        console.log('Within 7 minutes:', within7Minutes);
+
+        if (within7Minutes) {
+          console.log('Detected active files — starting polling for 7 minutes');
+          startPolling();
+        } else {
+          console.log('All files are stable — no polling needed');
         }
 
       } catch (error) {
@@ -200,6 +209,7 @@ const FormQuestions = ({
   let pollTimer = null;
 
   const startPolling = () => {
+    // Clear any previous polling timer to prevent multiple timers
     if (pollTimer) clearInterval(pollTimer);
 
     const start = Date.now();
@@ -207,7 +217,7 @@ const FormQuestions = ({
     pollTimer = setInterval(async () => {
       const elapsed = Date.now() - start;
 
-      // Stop after 7 minutes
+      // Stop polling after 7 minutes
       if (elapsed > 7 * 60 * 1000) {
         clearInterval(pollTimer);
         pollTimer = null;
@@ -218,8 +228,9 @@ const FormQuestions = ({
       console.log('Polling fetchFileUploads...');
       await fetchFileUploads();
 
-    }, 30 * 1000);
+    }, 30 * 1000); // Poll every 30 seconds
   };
+
 
   useEffect(() => {
     fetchFileUploads();
