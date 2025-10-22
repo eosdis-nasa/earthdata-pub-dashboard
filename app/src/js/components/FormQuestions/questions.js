@@ -1326,7 +1326,7 @@ const areProductFieldsEmpty = (producer) => {
     setUploadResults({ success: successFiles, failed: failedFiles });
     setUploadStatusMsg('Upload Complete');
     setUploadProgress({});
-    setUploadFileFlag(true);
+    setUploadFileFlag(prev => !prev);
     setShowUploadSummaryModal(true);
     setUploadFiles([]); 
     setUploadStatusMsg('No files selected');
