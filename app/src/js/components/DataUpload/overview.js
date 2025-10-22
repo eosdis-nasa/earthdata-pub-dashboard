@@ -551,7 +551,7 @@ class UploadOverview extends React.Component {
           </Modal.Header>
           
           <Modal.Body>
-            <h5>Successful Uploads</h5>
+            <h5>Successful Uploads for Scanning</h5>
             {uploadResults.success && uploadResults.success.length > 0 ? (
               <ul aria-live="polite">
                 {uploadResults.success.map((fileName, index) => (

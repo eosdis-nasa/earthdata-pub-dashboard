@@ -1249,6 +1249,7 @@ const areProductFieldsEmpty = (producer) => {
     } else {
       setUploadStatusMsg('No files selected');
     }
+    event.target.value = null;
   };
 
   const { apiRoot, useCUEUpload } = _config;
@@ -2555,7 +2556,6 @@ const areProductFieldsEmpty = (producer) => {
                                               </p>
                                             )}                                            
                                           </div>
-                                         
                                         </div>
                                           
                                         <div  style={{
@@ -2689,7 +2689,7 @@ const areProductFieldsEmpty = (producer) => {
           <Modal.Title>Upload Summary</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h5>Successful Uploads</h5>
+          <h5>Successful Uploads for Scanning</h5>
           {uploadResults.success.length > 0 ? (
             <ul>
               {uploadResults.success.map((fileName, index) => (
