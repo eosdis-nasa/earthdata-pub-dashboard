@@ -173,11 +173,9 @@ const FormQuestions = ({
         );
 
         if (activeFiles.length === 0) {
-          console.log('No active files found — skipping polling');
           if (pollTimer) {
             clearInterval(pollTimer); // Stop polling immediately
             pollTimer = null;
-            console.log('Polling stopped immediately due to no active files');
           }
           return; // Exit without starting polling
         }
@@ -190,14 +188,11 @@ const FormQuestions = ({
         const now = Date.now();
         const within7Minutes = now - lastModifiedTime < 7 * 60 * 1000; // 7 min
 
-        console.log('Latest file:', latest);
-        console.log('Within 7 minutes:', within7Minutes);
-
         if (within7Minutes) {
           console.log('Detected active files — starting polling for 7 minutes');
           startPolling();
         } else {
-          console.log('All files are stable — no polling needed');
+          console.log('No polling needed');
         }
 
       } catch (error) {
