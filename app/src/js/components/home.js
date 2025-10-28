@@ -178,7 +178,6 @@ async updateList() {
   }
 
   async initializeAccession() {
-    console.log('in initializeAccesion');
     const { dispatch } = this.props;
 
     this.setState({ isUpdating: true, isAccessionModalOpen: false }); // Start loading
