@@ -32,8 +32,8 @@ const Note = ({ note, user }) => {
                 <h3>{note.from?.name || user}</h3>
                 {lastUpdated(note.sent, 'Sent')}
             </div>
-            <div className='flex__item--grow-1-wrap'>
-                <div style={{fontSize: '.79em', fontStyle: 'italic'}}>
+            <div className='flex__item--grow-1-wrap' style={{padding: '0em 1em'}}>
+                <div style={{fontSize: '.85em', fontStyle: 'italic'}}>
                     { show_visibility ? 'Restricted' : 'Open'} Visibility {show_visibility ? `: ${note.viewer_str}` : ''}
                 </div>
                 <br/>
@@ -45,10 +45,10 @@ const Note = ({ note, user }) => {
                 >
                     {decodeURI(note.text)}
                 </div>
-
+            </div>
+            <div className='flex__item--w-15'>
                 {note?.attachments?.length > 0 && (
                     <>
-                        <br/>
                         <label>Attachments:</label>
                         <div>
                             {note.attachments.map((attachment, idx) => (
