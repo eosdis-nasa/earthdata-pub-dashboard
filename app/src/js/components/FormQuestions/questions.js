@@ -84,7 +84,7 @@ const FormQuestions = ({
       label: 'File Status',
       formatter: (value) => {
         if (!value) return 'Available';
-        if (['uploading', 'unscanned', 'clean'].includes(value)) return 'Scanning';
+        if (['uploading', 'unscanned', 'clean', 'scanning'].includes(value)) return 'Scanning';
         return value;
       }
     }
