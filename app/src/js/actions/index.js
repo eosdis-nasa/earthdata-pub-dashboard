@@ -1044,15 +1044,6 @@ export const clearWorkflowsSearch = () => ({ type: types.CLEAR_WORKFLOWS_SEARCH 
 export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });
 export const clearMetricsSearch = () => ({ type: types.CLEAR_METRICS_SEARCH });
 
-export const getCloudMetric = (cloudMetricId) => ({
-  [CALL_API]: {
-    type: types.CLOUD_METRIC,
-    method: 'GET',
-    id: cloudMetricId,
-    path: `metrics/report/${cloudMetricId}`
-  }
-});
-
 export const listCloudMetrics = (options) => ({
   [CALL_API]: {
     type: types.METRICS,
