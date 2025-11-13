@@ -43,6 +43,7 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import { Modal, Button } from 'react-bootstrap';
 import { faTimes, faCheck, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ModalWrapper from '../Modal/modal';
 
 const breadcrumbConfig = [
   {
@@ -78,7 +79,7 @@ class RequestsOverview extends React.Component {
     this.handleOutsideClick = this.handleOutsideClick.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
     this.submitCode = this.submitCode.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    this.initializeAccession = this.initializeAccession.bind(this);
 
     this._isMounted = false;
     this.timeoutId = null; 
@@ -116,7 +117,7 @@ class RequestsOverview extends React.Component {
       const result = await dispatch(initialize({ 'code': codeValue }));
 
       if(result && result.data && !result.data.error){
-        this.setState({ isModalOpen: false, isUpdating: true, codeValue: '' });
+        this.setState({ isPublicationModalOpen: false, isUpdating: true, codeValue: '' });
         await this.updateList();
         this.setState({ isUpdating: false }); // stop loading
         const { basepath } = _config;
@@ -127,27 +128,28 @@ class RequestsOverview extends React.Component {
         this.setState({ codeError: result.data.error });
       }
   }
+
+  async initializeAccession() {
+    const { dispatch } = this.props;
+
+    this.setState({ isUpdating: true }); // Start loading
+    const init = await dispatch(initialize());
+    await this.updateList();
+    this.setState({ isUpdating: false }); // End loading
+    const { basepath } = _config;
   
-  closeModal() {
-    this.setState({ isModalOpen: false, codeValue: '', codeError:'' });
+    const url = `${basepath}form/questions/${init.data.id}`;
+    window.location.href = url;
   }
 
   async handleSelection(e, req) {
-    const { dispatch } = this.props;  
     e.preventDefault();
 
     this.setState({ isDropdownOpen: false });
     if(req === 'DAR'){
-      this.setState({ isUpdating: true }); // Start loading
-      const init = await dispatch(initialize());
-      await this.updateList();
-      this.setState({ isUpdating: false }); // End loading
-      const { basepath } = _config;
-    
-      const url = `${basepath}form/questions/${init.data.id}`;
-      window.location.href = url;
+      this.setState({ isAccessionModalOpen: true });
     }else if(req === 'DPR'){
-      this.setState({ isModalOpen: true });
+      this.setState({ isPublicationModalOpen: true });
     }
    
     //this.props.history.push(path);  // Redirect based on selection
@@ -388,7 +390,11 @@ class RequestsOverview extends React.Component {
               </List>
           }
         </section>
-        {<Modal show={this.state.isModalOpen} onHide={this.closeModal} className="custom-modal">
+        {<Modal
+          show={this.state.isPublicationModalOpen}
+          onHide={() => this.setState({isPublicationModalOpen: false, codeError: '', codeValue: ''})}
+          className="custom-modal"
+          dialogClassName="custom-modal modal-md modal-dialog-centered">
           <Modal.Header closeButton>
             <Modal.Title>Enter Publication Code</Modal.Title>
           </Modal.Header>
@@ -416,7 +422,7 @@ class RequestsOverview extends React.Component {
           <Modal.Footer>
             <button
               className="button button--no-icon"
-              onClick={this.closeModal}
+              onClick={() => this.setState({isPublicationModalOpen: false, codeError: '', codeValue: ''})}
               style={{backgroundColor: "#db1400"}}>
               Cancel
             </button>
@@ -429,6 +435,20 @@ class RequestsOverview extends React.Component {
             </button>
           </Modal.Footer>
         </Modal>}
+        {
+          <ModalWrapper
+              className="custom-modal"
+              children={<p>If your mission/campaign has already been assigned to a DAAC, please use the Publication Request option.</p>}
+              title="Accession Workflow Confirmation"
+              confirmButtonText="Continue"
+              showModal={this.state.isAccessionModalOpen}
+              onCloseModal={() => this.setState({isAccessionModalOpen: false})}
+              onConfirm={() => this.initializeAccession()}
+              onCancel={() => this.setState({isAccessionModalOpen: false})}
+              confirmButtonClass="button button--no-icon button--green"
+              cancelButtonClass="button button--no-icon button--red"
+          />
+        }
       </div>
       );
     }

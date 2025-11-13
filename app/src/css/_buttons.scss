@@ -120,6 +120,15 @@
     }
   }
 
+  &--red, &--red:visited {
+    background-color: $error-red;
+
+    &:hover {
+      background-color: $error-red;
+      color: #fff;
+    }
+  }
+
   &--primary, &--primary:visited {
     &:hover {
       background-color: $light-green;
