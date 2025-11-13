@@ -81,10 +81,10 @@ const FormQuestions = ({
     },
     {
       key: 'status',
-      label: 'File Upload Status',
+      label: 'File Status',
       formatter: (value) => {
-        if (!value) return 'File Uploaded';
-        if (['uploading', 'unscanned', 'clean'].includes(value)) return 'File Uploading';
+        if (!value) return 'Available';
+        if (['uploading', 'unscanned', 'clean'].includes(value)) return 'Scanning';
         return value;
       }
     }
