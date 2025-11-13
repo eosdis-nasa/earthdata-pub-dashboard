@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
 import Loading from '../LoadingIndicator/loading-indicator';
-import localUpload from '@edpub/upload-utility';
+import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { listFileUploadsBySubmission, listFileDownloadsByKey, listFileUploadsBySubmissionStep, refreshToken } from '../../actions';
@@ -64,8 +64,9 @@ class UploadOverview extends React.Component {
       const { dispatch } = this.props;
       const { requestId } = this.props.match.params;
       if (requestId !== '' && requestId != undefined && requestId !== null) {
-        const download = new localUpload();
-        const { apiRoot } = _config;
+        const { apiRoot, useCUEUpload } = _config;
+        const download = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
+
         download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
           let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
           if (error) {
@@ -191,7 +192,7 @@ class UploadOverview extends React.Component {
     const failedFiles = [];
     const { requestId } = this.props.match.params;
     const { groupId } = this.props.match.params;
-    const { apiRoot } = _config;
+    const { apiRoot, useCUEUpload } = _config;
     const category = this.state.categoryType;
   
     const uploadFileAsync = (file) => {
@@ -232,7 +233,7 @@ class UploadOverview extends React.Component {
           };
         }
   
-        const upload = new localUpload();
+        const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
         upload.uploadFile(payload, updateProgress)
           .then((resp) => {
             const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
@@ -381,11 +382,14 @@ class UploadOverview extends React.Component {
         accessor: row => row.category.charAt(0).toUpperCase() + row.category.substring(1).toLowerCase(),
         id: 'category',
       },
-      {
-        Header: 'sha256Checksum',
-        accessor: row => row.sha256Checksum,
-        id: 'sha256Checksum'
-      },
+      // CUE does not currently return the sha256Checksum so we're commenting for now
+      // TODO - request as a feature to CUE that the sha256Checksum is pushed to the s3 object
+      // metadata
+      // {
+      //   Header: 'sha256Checksum',
+      //   accessor: row => row.sha256Checksum,
+      //   id: 'sha256Checksum'
+      // },
       {
         Header: 'Last Modified',
         accessor: row => shortDateShortTimeYearFirstJustValue(row.lastModified),

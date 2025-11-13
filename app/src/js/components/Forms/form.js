@@ -26,7 +26,7 @@ import { requestPrivileges } from '../../utils/privileges';
 import Comments from '../Comments/comments';
 import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
 import { loadToken } from '../../utils/auth';
-import localUpload from '@edpub/upload-utility';
+import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import Select from 'react-select';
 import { Modal, Button } from 'react-bootstrap'; 
 import CustomOption from '../SelectOptions/SelectOptions'
@@ -314,8 +314,9 @@ class FormOverview extends React.Component {
       const requestId = this.props.location.search.split('=')[1];
 
       if (requestId !== '' && requestId != undefined && requestId !== null) {
-        const download = new localUpload();
-        const { apiRoot } = _config;
+        const { apiRoot, useCUEUpload } = _config;
+        const download = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
+
         download.downloadFile(this.state.keys[fileName], `${apiRoot}data/upload/downloadUrl`, loadToken().token).then((resp) => {
           let error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error
           if (error) {
@@ -399,7 +400,7 @@ class FormOverview extends React.Component {
       }
   }
 
-  renderQuestions (sections, whatSection) {
+  renderQuestions (formName, sections, whatSection) {
     let section = '';
     const sectionQuestions = [];
     const hasAnswers = this.hasSavedAnswers();
@@ -434,7 +435,9 @@ class FormOverview extends React.Component {
                       </li>
                     );
                   } else if (question[b].inputs[a].type === 'table') {
-                    const keys = question[b].inputs[a].enums.map(e => e.key);
+                    let limitedEnums  = question[b].inputs[a].enums;
+                    if (formName === 'Data Accession Request') limitedEnums = [...question[b].inputs[a].enums].slice(0, 4);
+                    const keys = limitedEnums.map(e => e.key);
                     let data = [];
                     if (hasAnswers) {
                       data = this.props.requests.detail.data.form_data;
@@ -442,11 +445,11 @@ class FormOverview extends React.Component {
                     sectionQuestions.push(<li key={this.getRandom()}><br /></li>);
                     if (typeof data[question[b].inputs[a].control_id] !== 'undefined' && data[question[b].inputs[a].control_id].length !== 0) {
                       sectionQuestions.push(
-                        this.getQuestionEnums(question[b].inputs[a].control_id, keys, question[b].inputs[a].enums, data[question[b].inputs[a].control_id], question[b].long_name)
+                        this.getQuestionEnums(question[b].inputs[a].control_id, keys, limitedEnums, data[question[b].inputs[a].control_id], question[b].long_name)
                       );
                     } else {
                       sectionQuestions.push(
-                        this.getTableEnums(question[b].inputs[a].control_id, keys, question[b].inputs[a].enums, question[b].long_name)
+                        this.getTableEnums(question[b].inputs[a].control_id, keys, limitedEnums, question[b].long_name)
                       );
                     }
                   } else if (question[b].inputs[a].type === 'file'){
@@ -619,7 +622,7 @@ class FormOverview extends React.Component {
     for (const ea in sections) {
       for (const i in sections[ea]) {
         if (JSON.stringify(sections[ea][i]) !== '[]' && typeof sections[ea][i] === 'string') {
-          newSections.push(this.renderQuestions(sections, sections[ea][i]));
+          newSections.push(this.renderQuestions(form.long_name, sections, sections[ea][i]));
         }
       }
     }

@@ -13,7 +13,7 @@ import List from '../Table/Table';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import { requestPrivileges, formPrivileges } from '../../utils/privileges';
-import { listRequests } from '../../actions';
+import { submissionsByWorkflowId } from '../../actions';
 
 class WorkflowsOverview extends React.Component {
   constructor () {
@@ -26,18 +26,34 @@ class WorkflowsOverview extends React.Component {
     };
     this.setWorkflow = this.setWorkflow.bind(this);
     this.cancelWorkflow = this.cancelWorkflow.bind(this);
-    this.openConfirmPopup = this.openConfirmPopup.bind(this);
     this.closeConfirmPopup = this.closeConfirmPopup.bind(this);
     this.proceedToEdit = this.proceedToEdit.bind(this);
-    //this.calculateWorkflowCounts = this.calculateWorkflowCounts(this);
+  }
 
+    // Fetch submission count for a workflow (called on Edit click)
+  async fetchWorkflowSubmissionCount(workflow) {
+    const { dispatch } = this.props;
+    try {
+      const workflowCount = await dispatch(submissionsByWorkflowId(workflow?.id));
+      const count = workflowCount?.data?.submission_count;
+
+      this.setState({
+        selectedWorkflowCount: count,
+        showConfirmPopup: true,
+        selectedWorkflow: workflow
+      });
+    } catch (error) {
+      console.error('Error fetching workflow count:', error);
+      this.setState({
+        workflowRequestCount: 0,
+        showConfirmPopup: false
+      });
+    }
   }
 
   async componentDidMount () {
     const { dispatch } = this.props;
-    await dispatch(listRequests())
     dispatch(listWorkflows());
-    this.setState({ workflowCounts: this.calculateWorkflowCounts(this.props.requests.list.data || [])});
   }
 
   makeSteps (row) {
@@ -48,15 +64,6 @@ class WorkflowsOverview extends React.Component {
     }
   }
 
-  openConfirmPopup(workflow) {
-    const name = workflow.long_name;
-    const count = this.state.workflowCounts[name] || 0;
-    this.setState({
-      showConfirmPopup: true,
-      selectedWorkflow: workflow,
-      selectedWorkflowCount: count
-    });
-  }  
   
   closeConfirmPopup() {
     this.setState({ showConfirmPopup: false, editWorkflowId: null });
@@ -194,7 +201,7 @@ class WorkflowsOverview extends React.Component {
         Cell: ({ row }) => (
           <button
             className="button button--small button--edit"
-            onClick={() => self.openConfirmPopup(row.original)}
+            onClick={() =>  this.fetchWorkflowSubmissionCount(row.original)}
             aria-label="Edit your workflow"
           >
             Edit
@@ -304,7 +311,7 @@ class WorkflowsOverview extends React.Component {
         </Modal.Header>
         <Modal.Body>
           {this.state.selectedWorkflowCount > 0 && <>There are currently <strong>{this.state.selectedWorkflowCount}</strong> requests using the <strong>{this.state.selectedWorkflow?.long_name || 'No Name Available'}</strong> and will be affected by this update. Do you wish to continue?</>}
-          {this.state.selectedWorkflowCount === 0 && <p>Are you sure you want to edit <strong>{this.state.selectedWorkflow?.long_name || 'No Name Available'}</strong>?</p>}                 
+          {this.state.selectedWorkflowCount == 0 && <p>Are you sure you want to edit <strong>{this.state.selectedWorkflow?.long_name || 'No Name Available'}</strong>?</p>}                 
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.closeConfirmPopup}>
