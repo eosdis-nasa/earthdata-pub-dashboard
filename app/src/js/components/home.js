@@ -21,6 +21,7 @@ import Loading from '../components/LoadingIndicator/loading-indicator';
 import { Modal, Button } from 'react-bootstrap';
 import { faTimes, faCheck, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ModalWrapper from '../components/Modal/modal';
 
 
 class Home extends React.Component {
@@ -32,7 +33,7 @@ class Home extends React.Component {
       list: {},
       intervalId: null,
       isDropdownOpen: false,
-      isModalOpen: false,
+      isPublicationModalOpen: false,
       codeValue: '',
       codeError:'',
       isUpdating: false
@@ -45,7 +46,7 @@ class Home extends React.Component {
     this.handleOutsideClick = this.handleOutsideClick.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
     this.submitCode = this.submitCode.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    this.initializeAccession = this.initializeAccession.bind(this);
     this._isMounted = false;
     this.timeoutId = null; 
   }
@@ -164,7 +165,7 @@ async updateList() {
       const result = await dispatch(initialize({ 'code': codeValue }));
 
       if(result && result.data && !result.data.error){
-        this.setState({ isModalOpen: false, isUpdating: true, codeValue: '' });
+        this.setState({ isPublicationModalOpen: false, isUpdating: true, codeValue: '' });
         await this.updateList();
         this.setState({ isUpdating: false }); // stop loading
         const { basepath } = _config;
@@ -175,28 +176,29 @@ async updateList() {
         this.setState({ codeError: result.data.error });
       }
   }
+
+  async initializeAccession() {
+    const { dispatch } = this.props;
+
+    this.setState({ isUpdating: true, isAccessionModalOpen: false }); // Start loading
+    const init = await dispatch(initialize());
+    await this.updateList();
+    this.setState({ isUpdating: false }); // End loading
+    const { basepath } = _config;
   
-  closeModal() {
-    this.setState({ isModalOpen: false, codeValue: '', codeError:'' });
+    const url = `${basepath}form/questions/${init.data.id}`;
+    window.location.href = url;
   }
   
   async handleSelection(e, req) {
-    const { dispatch } = this.props;
     e.preventDefault();
   
     this.setState({ isDropdownOpen: false });
     if (req === 'DAR') {
-        this.setState({ isUpdating: true }); // Start loading
-        const init = await dispatch(initialize());
-        await this.updateList();
-        this.setState({ isUpdating: false }); // End loading
-        const { basepath } = _config;
-    
-        const url = `${basepath}form/questions/${init.data.id}`;
-        window.location.href = url;
+        this.setState({ isAccessionModalOpen: true });
       }
     else if(req === 'DPR'){
-      this.setState({ isModalOpen: true });
+      this.setState({ isPublicationModalOpen: true });
     }
   }
 
@@ -470,48 +472,65 @@ async updateList() {
               </div>
             </section>
           </div> 
-
-        {<Modal show={this.state.isModalOpen} onHide={this.closeModal} className="custom-modal">
-          <Modal.Header closeButton>
-            <Modal.Title>Enter Publication Code</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>Enter the publication code previously received in order to initiate a publication request to a DAAC.</p>
-            <br />
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter publication code"
-              value={this.state.codeValue}
-              onChange={this.handleCodeChange}
+          {<Modal
+            show={this.state.isPublicationModalOpen}
+            onHide={() => this.setState({isPublicationModalOpen: false, codeError: '', codeValue: ''})}
+            className="custom-modal"
+            dialogClassName="custom-modal modal-md modal-dialog-centered">
+            <Modal.Header closeButton>
+              <Modal.Title>Enter Publication Code</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>Enter the publication code previously received in order to initiate a publication request to a DAAC.</p>
+              <br />
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter publication code"
+                value={this.state.codeValue}
+                onChange={this.handleCodeChange}
+              />
+              <span
+                className="error-modal"
+                style={{ color: this.state.codeError && this.state.codeError === '' ? 'green' : 'red' }}
+              >
+                {this.state.codeError !== '' ? (
+                  <FontAwesomeIcon icon={faTimes} />
+                ) : this.state.codeError ? (
+                  <FontAwesomeIcon icon={faCheck} />
+                ) : null}
+              </span>
+            </Modal.Body>
+            <Modal.Footer>
+              <button
+                className="button button--no-icon"
+                onClick={() => this.setState({isPublicationModalOpen: false, codeError: '', codeValue: ''})}
+                style={{backgroundColor: "#db1400"}}>
+                Cancel
+              </button>
+              <button
+                className="button button--no-icon"
+                style={{ backgroundColor: "#158749" }}
+                onClick={this.submitCode}
+                disabled= { this.state.codeValue.trim() === '' ? true : false }>
+                Submit
+              </button>
+            </Modal.Footer>
+          </Modal>}
+          {
+            <ModalWrapper
+                className="custom-modal"
+                children={<p>If your mission/campaign has already been assigned to a DAAC, please use the Publication Request option.</p>}
+                title="Accession Workflow Confirmation"
+                confirmButtonText="Continue"
+                showModal={this.state.isAccessionModalOpen}
+                onCloseModal={() => this.setState({isAccessionModalOpen: false})}
+                onConfirm={() => this.initializeAccession()}
+                onCancel={() => this.setState({isAccessionModalOpen: false})}
+                confirmButtonClass="button button--no-icon button--green"
+                cancelButtonClass="button button--no-icon button--red"
             />
-            <span
-              className="error-modal"
-              style={{ color: this.state.codeError && this.state.codeError === '' ? 'green' : 'red' }}
-            >
-              {this.state.codeError !== '' ? (
-                <FontAwesomeIcon icon={faTimes} />
-              ) : this.state.codeError ? (
-                <FontAwesomeIcon icon={faCheck} />
-              ) : null}
-            </span>
-          </Modal.Body>
-          <Modal.Footer>
-            <button
-              className="button button--no-icon"
-              onClick={this.closeModal}
-              style={{backgroundColor: "#db1400"}}>
-              Cancel
-            </button>
-            <button
-              className="button button--no-icon"
-              style={{ backgroundColor: "#158749" }}
-              onClick={this.submitCode}
-              disabled= { this.state.codeValue.trim() === '' ? true : false }>
-              Submit
-            </button>
-          </Modal.Footer>
-        </Modal>}       
+          }
         </div>
       );
     }
