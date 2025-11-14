@@ -13,7 +13,7 @@ import {
   shortDateShortTimeYearFirstJustValue,
   calculateStorage,
 } from '../../utils/format';
-import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission, copyRequest } from '../../actions';
+import { saveForm, submitFilledForm, setTokenState, listFileUploadsBySubmission, copyRequest, createTempUploadFile } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
@@ -79,6 +79,15 @@ const FormQuestions = ({
       label: 'Last Modified',
       formatter: (value) => shortDateShortTimeYearFirstJustValue(value),
     },
+    {
+      key: 'status',
+      label: 'File Status',
+      formatter: (value) => {
+        if (!value) return 'Available';
+        if (['uploading', 'unscanned', 'clean', 'scanning'].includes(value)) return 'Scanning';
+        return value;
+      }
+    }
   ]);
   const [logs, setLogs] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -134,8 +143,9 @@ const FormQuestions = ({
           }
         }
 
-        const files = resp.data;
+        const files = resp?.data?.errorType ? [] : resp?.data || [];
 
+        // Sort files based on lastModified
         files.sort((a, b) => {
           const keyA = new Date(a.lastModified);
           const keyB = new Date(b.lastModified);
@@ -145,21 +155,78 @@ const FormQuestions = ({
         // Filter into categories for display
         const categoryFiles = {};
         files.forEach((f) => {
-          if (f.category in categoryFiles){
+          if (f.category in categoryFiles) {
             categoryFiles[f.category].push(f);
           } else {
-            categoryFiles[f.category] = [f]
+            categoryFiles[f.category] = [f];
           }
-        })
+        });
 
         // Set the files in state
         setUploadedFiles(categoryFiles);
+
+        // -----------------------------------------------------
+        // Polling logic
+        // -----------------------------------------------------
+        const activeFiles = files.filter(
+          f => f.status && !['failed', 'distributed'].includes(f.status.toLowerCase())
+        );
+
+        if (activeFiles.length === 0) {
+          if (pollTimer) {
+            clearInterval(pollTimer); // Stop polling immediately
+            pollTimer = null;
+          }
+          return; // Exit without starting polling
+        }
+
+        const latest = activeFiles.reduce((a, b) =>
+          new Date(a.lastModified) > new Date(b.lastModified) ? a : b
+        );
+
+        const lastModifiedTime = new Date(latest.lastModified).getTime();
+        const now = Date.now();
+        const within7Minutes = now - lastModifiedTime < 7 * 60 * 1000; // 7 min
+
+        if (within7Minutes) {
+          console.log('Detected active files — starting polling for 7 minutes');
+          startPolling();
+        } else {
+          console.log('No polling needed');
+        }
+
       } catch (error) {
         console.error('Failed to fetch file uploads:', error);
       }
     }
     setUploadFileFlag(false);
   };
+
+  let pollTimer = null;
+
+  const startPolling = () => {
+    // Clear any previous polling timer to prevent multiple timers
+    if (pollTimer) clearInterval(pollTimer);
+
+    const start = Date.now();
+
+    pollTimer = setInterval(async () => {
+      const elapsed = Date.now() - start;
+
+      // Stop polling after 7 minutes
+      if (elapsed > 7 * 60 * 1000) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+        console.log('Polling stopped (7-minute timeout)');
+        return;
+      }
+
+      console.log('Polling fetchFileUploads...');
+      await fetchFileUploads();
+
+    }, 30 * 1000); // Poll every 30 seconds
+  };
+
 
   useEffect(() => {
     fetchFileUploads();
@@ -1177,6 +1244,7 @@ const areProductFieldsEmpty = (producer) => {
     } else {
       setUploadStatusMsg('No files selected');
     }
+    event.target.value = null;
   };
 
   const { apiRoot, useCUEUpload } = _config;
@@ -1216,7 +1284,11 @@ const areProductFieldsEmpty = (producer) => {
         };
 
         const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
-        upload.uploadFile(payload, updateProgress).then((resp) => {
+        upload.uploadFile(payload, updateProgress).then( async (resp) => {
+          const payload = {
+            fileId: resp.file_id, submissionId: daacInfo.id
+          }
+          await dispatch(createTempUploadFile(payload));
           const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
           if (error) {
             console.error(`Error uploading file ${file.name}: ${error}`);
@@ -1251,7 +1323,7 @@ const areProductFieldsEmpty = (producer) => {
     setUploadResults({ success: successFiles, failed: failedFiles });
     setUploadStatusMsg('Upload Complete');
     setUploadProgress({});
-    setUploadFileFlag(true);
+    setUploadFileFlag(prev => !prev);
     setShowUploadSummaryModal(true);
     setUploadFiles([]); 
     setUploadStatusMsg('No files selected');
@@ -2479,7 +2551,6 @@ const areProductFieldsEmpty = (producer) => {
                                               </p>
                                             )}                                            
                                           </div>
-                                         
                                         </div>
                                           
                                         <div  style={{
@@ -2613,7 +2684,7 @@ const areProductFieldsEmpty = (producer) => {
           <Modal.Title>Upload Summary</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h5>Successful Uploads</h5>
+          <h5>Successful Uploads for Scanning</h5>
           {uploadResults.success.length > 0 ? (
             <ul>
               {uploadResults.success.map((fileName, index) => (
