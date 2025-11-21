@@ -18,6 +18,7 @@ import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import _config from '../../config';
 import { loadToken } from '../../utils/auth';
+import Note from './note';
 
 class Comment extends React.Component {
   constructor() {
@@ -77,14 +78,13 @@ class Comment extends React.Component {
     await dispatch(getStepConversation(payload)).then(() => {
       const notesArr = [];
       this.props.conversations.conversation.data.notes.forEach((noteElem) => {
-        const note = noteElem.text.split('Comment: ')[1];
-        const author = noteElem.from.name;
+        const note = this.getNoteComment(noteElem.text);
         let viewers = [
           ...(noteElem.viewers.users?.map((user) => user.name) || []),
           ...(noteElem.viewers.roles?.map((role) => role.name) || [])
         ];
-        const viewer_str = viewers?.length ? `, Viewers: ${viewers.join(", ")}` : "";
-        notesArr.push({id: noteElem.id, note, author, viewer_str, attachments: noteElem.attachments});
+        const viewer_str = viewers?.length ? `${viewers.join(", ")}` : "";
+        notesArr.push({id: noteElem.id, text: note, from: noteElem.from, sent: noteElem.sent, viewer_str, attachments: noteElem.attachments});
         });
       this.setState({existingNotes: notesArr.reverse()});
     });
@@ -130,6 +130,22 @@ class Comment extends React.Component {
     });
   }
 
+  getNoteComment(commentString) {
+    /*
+    Notes are currently formatted in the following structure
+    <Request Name/Id> - Step: <Step Name>, Comment: <date string> - <User's Comment>
+
+    For display purposes we need to isolate the user's comment
+    */
+    
+    // Split off the request name and step name
+    let stripped_comment = commentString.split('Comment: ')[1];  
+    //Split off the timestamp info
+    stripped_comment = stripped_comment.split('-')[1]; 
+
+    return stripped_comment;
+  }
+
   async reply(requestName, id, stepName, step) {
     const { dispatch } = this.props;
     const attachments = [...this.state.uploadedFiles];
@@ -152,9 +168,13 @@ class Comment extends React.Component {
         existingNotes: [
           ...this.state.existingNotes,
           {
-            note: reply.split('Comment: ')[1],
-            author: current_user.name,
-            viewer_str: viewer_names.length > 0 ? `, Viewers: ${viewer_names.join(', ')}`: '',
+            id: `temp-${Date.now()}`,
+            text: this.getNoteComment(reply),
+            from: {
+              name: current_user.name
+            },
+            sent: date.toISOString(),
+            viewer_str: viewer_names.length > 0 ? `${viewer_names.join(', ')}`: '',
             attachments
           }
         ],
@@ -172,7 +192,7 @@ class Comment extends React.Component {
   }
 
   render() {
-    const { dispatch, privileges } = this.props;
+    const { dispatch, privileges, user} = this.props;
     let reviewable = false;
     let sameFormAsStep = false;
     let request = this.props.requests.detail.data;
@@ -228,34 +248,18 @@ class Comment extends React.Component {
           {typeof requestId !== 'undefined' &&
             <form className='flex__column flex__item--grow-1'
               onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName, step); }}>
+              <h1 style={{textAlign: 'center', backgroundColor:'#2275AA', color: '#fff'}}>{stepName} Comments</h1>
+              
               <div id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em', whiteSpace: "pre-wrap" }}>
                 {
-                  this.state.existingNotes.map((note, idx) => {
+                  this.state.existingNotes.map((note) => {
                     return(
-                      <div key={idx}>
-                        {`${decodeURI(note.note)}, From: ${note.author}${note.viewer_str}`}
-                        {note?.attachments?.length > 0 && ', Attachments: '}
-                        { note?.attachments?.map((attachment, idx) => {
-                          return (
-                            <>
-                            {idx > 0 ? ', ' : ' '}
-                            { note.id ?
-                              <a onClick={(e) => this.handleDownload({noteId: note.id, attachment})}>{attachment}</a> :
-                              (
-                                <OverlayTrigger
-                                    placement="top"
-                                    overlay={<Tooltip id={`tooltip-${note.id}-${idx}`}>Attachment temporarily unavailable.</Tooltip>}
-                                >
-                                    <span style={{ cursor: "not-allowed", color: "grey" }}>{attachment}</span>
-                                </OverlayTrigger>
-                              )
-                            }
-                            </>
-                          );
-                        })}
-                        <br />
-                      </div>
-                    );
+                      <Note
+                        key={note.id}
+                        note={note}
+                        user={user}
+                      />
+                    )
                   })
                 }
               </div>
@@ -305,7 +309,8 @@ Comment.propTypes = {
   history: PropTypes.object,
   location: PropTypes.object,
   privileges: PropTypes.object,
-  params: PropTypes.object
+  params: PropTypes.object,
+  user: PropTypes.string
 };
 
 export default withRouter(connect(state => ({
@@ -313,5 +318,6 @@ export default withRouter(connect(state => ({
   conversations: state.conversations,
   requests: state.requests,
   privileges: state.api.tokens.privileges,
-  logs: state.logs
+  logs: state.logs,
+  user: state.api.tokens.userName
 }))(Comment));

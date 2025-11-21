@@ -46,17 +46,18 @@ const DefaultModal = ({
 
   return (
     <Modal
-      dialogClassName={`default-modal ${className}`}
+      dialogClassName={className || `default-modal`}
       show={showModal}
       onHide={handleCloseModal}
       centered
       size="md"
       aria-labelledby={`modal__${className}`}
     >
-      <Modal.Header className={`${className}__header`} closeButton></Modal.Header>
-      <Modal.Title id={`modal__${className}`} className={`${className}__title`}>
-        { title }
-      </Modal.Title>
+      <Modal.Header className={`${className}__header`} closeButton>
+        <Modal.Title id={`modal__${className}`} className={`${className}__title`}>
+          { title }
+        </Modal.Title>
+      </Modal.Header>
       <Modal.Body>
         { children }
       </Modal.Body>
@@ -67,12 +68,12 @@ const DefaultModal = ({
             <label htmlFor={'dontShowAgain'}>{dontShowAgainVerbage}</label>
           </div>}
         {hasCancelButton && <button
-          className={`button ${cancelButtonClass} button__animation--md button__arrow button__animation button--secondary form-group__element--left button__cancel`}
+          className={`button ${cancelButtonClass} form-group__element--left button__cancel`}
           onClick={handleCancel}>
           { cancelButtonText }
         </button>}
         {hasConfirmButton && <button
-          className={`button ${confirmButtonClass} button__animation--md button__arrow button__animation form-group__element--left`}
+          className={`button ${confirmButtonClass} form-group__element--left`}
           onClick={handleConfirm}>
           { confirmButtonText }
         </button>}
