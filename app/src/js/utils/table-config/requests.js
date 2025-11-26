@@ -59,6 +59,8 @@ export const newLink = (request, formalName) => {
     disabled = true;
   }
   const isDetailPage = location.href.match(/id/g);
+      return <a href={request} className={'button button--medium button--green form-group__element--left button--no-icon next-action assign-workflow'} aria-label={formalName || 'take action'}>{formalName}</a>;
+
   if (isDetailPage === null && disabled) {
     return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
@@ -79,6 +81,8 @@ export const assignWorkflow = (request, formalName) => {
     disabled = true;
   }
   const isDetailPage = location.href.match(/id/g);
+   return <Link className={'button button--medium button--green form-group__element--left button--no-icon assign-workflow'}
+               to={`${request}`} name={'assignButton'} aria-label={formalName || 'assign workflow'}>{formalName}</Link>;
   if (isDetailPage === null && disabled) {
     return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
@@ -98,6 +102,8 @@ export const assignDaacs = (request, formalName) => {
     disabled = true;
   }
   const isDetailPage = location.href.match(/id/g);
+   return <Link className={'button button--medium button--green form-group__element--left button--no-icon assign-workflow'}
+               to={`${request}`} name={'assignButton'} aria-label={formalName || 'DAAC assignment'}>{formalName}</Link>;
   if (isDetailPage === null && disabled) {
     return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
