@@ -62,7 +62,7 @@ export const newLink = (request, formalName) => {
   if (isDetailPage === null && disabled) {
     return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
-    return formalName;
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
   } else {
     // This element was purposefully left as an anchor tag (rather than react Link) since the page is redirected away from
     // the dashboard site to the forms site. Converting to a Link component will result in a malformed url.
@@ -82,7 +82,7 @@ export const assignWorkflow = (request, formalName) => {
   if (isDetailPage === null && disabled) {
     return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
-    return formalName;
+    return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else {
     return <Link className={'button button--medium button--green form-group__element--left button--no-icon assign-workflow'}
                to={`${request}`} name={'assignButton'} aria-label={formalName || 'assign workflow'}>{formalName}</Link>;
@@ -101,7 +101,7 @@ export const assignDaacs = (request, formalName) => {
   if (isDetailPage === null && disabled) {
     return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
-    return formalName;
+    return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else {
     return <Link className={'button button--medium button--green form-group__element--left button--no-icon assign-workflow'}
                to={`${request}`} name={'assignButton'} aria-label={formalName || 'DAAC assignment'}>{formalName}</Link>;
@@ -120,7 +120,7 @@ export const esdisReviewLink = (row, formalName, step) => {
   if (isDetailPage === null && disabled) {
     return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
-    return formalName;
+    return <Link to={'#'} className={'button button--medium button--clear form-group__element--left button--no-icon assign-workflow'} aria-label={formalName}>{formalName}</Link>;
   } else if (step === 'esdis_additional_review_assessment') {
     return <Link to={`/requests/question?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action assign-workflow'} aria-label={formalName || 'review item'}>{formalName}</Link>;
   } else {
@@ -149,7 +149,7 @@ export const existingLink = (row, formId, formalName, step, stepType) => {
   if (isDetailPage === null && disabled) {
     return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
-    return formalName;
+    return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
   } else {
     if (stepType === 'upload') {
       return <Link to={`/upload/${row.id}?uploadStepId=${row.step_data.upload_step_id}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action assign-workflow'} aria-label={formalName || 'review item'}>{formalName}</Link>;
