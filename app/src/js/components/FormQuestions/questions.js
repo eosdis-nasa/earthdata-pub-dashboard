@@ -1266,6 +1266,19 @@ const areProductFieldsEmpty = (producer) => {
 
     const uploadFileAsync = async (file) => {
       return new Promise((resolve, reject) => {
+        if (!file.type) {
+          if (file.name.endsWith('.docx')) {
+            file = new File([file], file.name, {
+              type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            });
+          }
+          if (file.name.endsWith('.doc')) {
+            file = new File([file], file.name, {
+              type: 'application/msword'
+            });
+          }
+        }
+        console.log('file', file);
         const updateProgress = (progress, fileObj) => {
           setUploadProgress((prev) => ({
             ...prev,
