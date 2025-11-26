@@ -152,6 +152,8 @@ export const existingLink = (row, formId, formalName, step, stepType) => {
   }
 
   const isDetailPage = location.href.match(/id/g);
+        return <Link to={`/requests/approval?requestId=${row.id}&step=${step}`} className={'button button--medium button--green form-group__element--left button--no-icon next-action assign-workflow'} aria-label={formalName || 'review item'}>{formalName}</Link>;
+
   if (isDetailPage === null && disabled) {
     return <Link to={''} className={'button button--medium button--clear form-group__element--left button--no-icon next-action'} aria-label={formalName}>{formalName}</Link>;
   } else if (disabled) {
