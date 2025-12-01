@@ -1156,3 +1156,9 @@
 .dataprod {
   margin-left: 5px;
 }
+
+@media print {
+  .dropdown__menu {
+    display: none !important;
+  }
+}
