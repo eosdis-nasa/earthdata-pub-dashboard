@@ -1265,11 +1265,13 @@ const areProductFieldsEmpty = (producer) => {
     const failedFiles = [];
 
     const uploadFileAsync = async (file) => {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         if (!file.type) {
           if (file.name.endsWith('.docx')) {
-            file = new File([file], file.name, {
-              type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            const buffer = await file.arrayBuffer();
+            file = new File([buffer], file.name, {
+              type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+              lastModified: file.lastModified
             });
           }
           if (file.name.endsWith('.doc')) {
