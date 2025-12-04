@@ -512,7 +512,14 @@ class FormOverview extends React.Component {
           }
         }
       }
-      window.print();
+      
+      const fileName = this.props.requests.detail.data?.form_data?.dar_form_project_name_info ||
+        (this.props.requests.detail.data?.form_data?.data_product_name_value
+          ? this.props.requests.detail.data?.form_data?.data_product_name_value
+      : 'Request Initialized by ' + this.props.requests.detail.data.initiator.name);
+
+      document.title = fileName;
+      window.print(); 
     }
   }
 
