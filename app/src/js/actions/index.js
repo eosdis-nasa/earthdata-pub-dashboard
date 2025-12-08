@@ -6,17 +6,10 @@ import { history } from '../store/configureStore';
 import { configureRequest } from './helpers';
 import _config from '../config';
 import { fetchCurrentTimeFilters } from '../utils/datepicker';
-import { authHeader } from '../utils/basic-auth';
-import { apiGatewaySearchTemplate } from './action-config/apiGatewaySearch';
-import { apiLambdaSearchTemplate } from './action-config/apiLambdaSearch';
-import { teaLambdaSearchTemplate } from './action-config/teaLambdaSearch';
-import { s3AccessSearchTemplate } from './action-config/s3AccessSearch';
 import * as types from './types';
 
 const CALL_API = types.CALL_API;
 const {
-  esRoot,
-  showDistributionAPIMetrics,
   apiRoot: root,
   defaultPageLimit,
   minCompatibleApiVersion,
@@ -77,11 +70,6 @@ export const interval = function (action, wait, immediate) {
   return () => clearInterval(intervalId);
 };
 
-export const timeout = function (action, wait) {
-  const timeoutId = setTimeout(action, wait);
-  return () => clearTimeout(timeoutId);
-};
-
 export const getApiVersion = () => {
   return (dispatch) => {
     const config = configureRequest({
@@ -139,24 +127,6 @@ export const getRequestDetails = (requestId) => ({
   }
 });
 
-export const getRequestByStepType = (stepType) => ({
-  [CALL_API]: {
-    type: types.REQUESTS,
-    method: 'GET',
-    id: null,
-    url: new URL(`data/submissions?step_type=${stepType}`, root).href,
-  }
-});
-
-export const getInProgressRequests = () => ({
-  [CALL_API]: {
-    type: types.REQUESTS,
-    method: 'GET',
-    id: null,
-    url: new URL('data/submissions?step_type=%21close', root).href,
-  }
-});
-
 export const listFileUploadsBySubmission = (submissionId) => ({
   [CALL_API]: {
     type: types.UPLOAD,
@@ -184,30 +154,12 @@ export const listFileUploadsBySubmissionStep = (submissionId) => ({
   }
 });
 
-export const listFileDownloadsByKey = (key) => ({
-  [CALL_API]: {
-    type: types.UPLOAD,
-    method: 'GET',
-    id: key,
-    path: `data/upload/downloadUrl?key=${key}`
-  }
-});
-
 export const getUploadStep = (uploadStepId) => ({
   [CALL_API]: {
     type: types.UPLOAD_STEP,
     method: 'GET',
     id: uploadStepId,
     path: `data/upload/uploadStep/${uploadStepId}`,
-  }
-});
-
-export const getContributers = (payload) => ({
-  [CALL_API]: {
-    type: types.USERS,
-    method: 'POST',
-    path: 'user/get_users',
-    body: payload
   }
 });
 
@@ -352,15 +304,6 @@ export const esdisReviewRequest = (id, action) => ({
   }
 });
 
-export const updateRequestMetadata = (payload) => ({
-  [CALL_API]: {
-    type: types.REQUEST_UPDATE_METADATA,
-    method: 'POST',
-    path: 'data/submission/operation/metadata',
-    body: payload
-  }
-});
-
 export const listRequestReviewers = (id) => ({
   [CALL_API]: {
     type: types.REQUEST_REVIEWERS,
@@ -410,15 +353,6 @@ export const addQuestion = (payload) => ({
   }
 });
 
-export const updateInputs = (questionId, payload) => ({
-  [CALL_API]: {
-    type: types.INPUTS,
-    method: 'POST',
-    path: `data/question/${questionId}/inputs`,
-    json: payload
-  }
-});
-
 export const listInputs = (options) => {
   return (dispatch, getState) => {
     return dispatch({
@@ -457,17 +391,6 @@ export const updateInput = (payload) => ({
     method: 'POST',
     path: `data/input/${payload.question_id}/${payload.control_id}`,
     json: payload
-  }
-});
-
-export const clearUpdateQuestion = (questionId) => ({ type: types.UPDATE_QUESTIONS_CLEAR, id: questionId });
-
-export const getModel = (model) => ({
-  [CALL_API]: {
-    type: types.MODEL,
-    method: 'GET',
-    id: model,
-    path: `model/${model}`
   }
 });
 
@@ -555,26 +478,6 @@ export const deleteRequest = (requestId) => ({
   }
 });
 
-export const searchRequests = (prefix) => ({ type: types.SEARCH_REQUESTS, prefix });
-export const clearRequestsSearch = () => ({ type: types.CLEAR_REQUESTS_SEARCH });
-export const filterRequests = (param) => ({ type: types.FILTER_REQUESTS, param });
-export const clearRequestsFilter = (paramKey) => ({ type: types.CLEAR_REQUESTS_FILTER, paramKey });
-
-export const filterStages = (param) => ({ type: types.FILTER_STAGES, param });
-export const clearStagesFilter = (paramKey) => ({ type: types.CLEAR_STAGES_FILTER, paramKey });
-
-export const filterStatuses = (param) => ({ type: types.FILTER_STATUSES, param });
-export const clearStatusesFilter = (paramKey) => ({ type: types.CLEAR_STATUSES_FILTER, paramKey });
-
-export const getOptionsRequestName = (options) => ({
-  [CALL_API]: {
-    type: types.OPTIONS_REQUESTNAME,
-    method: 'GET',
-    url: new URL('data/submissions', root).href,
-    qs: { limit: 100, fields: 'long_name' }
-  }
-});
-
 export const getStats = (options) => {
   return (dispatch, getState) => {
     const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
@@ -584,103 +487,6 @@ export const getStats = (options) => {
         method: 'GET',
         url: new URL('stats', root).href,
         qs: { ...options, ...timeFilters }
-      }
-    });
-  };
-};
-
-export const getDistApiGatewayMetrics = (earthdatapubInstanceMeta) => {
-  if (!esRoot) return { type: types.NOOP };
-  return (dispatch, getState) => {
-    const stackName = earthdatapubInstanceMeta.stackName;
-    const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
-    const endTime = timeFilters.timestamp__to || Date.now();
-    const startTime = timeFilters.timestamp__from || 0;
-    return dispatch({
-      [CALL_API]: {
-        type: types.DIST_APIGATEWAY,
-        skipAuth: true,
-        method: 'POST',
-        url: `${esRoot}/_search/`,
-        headers: authHeader(),
-        body: JSON.parse(apiGatewaySearchTemplate(stackName, startTime, endTime))
-      }
-    });
-  };
-};
-
-export const getDistApiLambdaMetrics = (earthdatapubInstanceMeta) => {
-  if (!esRoot) return { type: types.NOOP };
-  if (!showDistributionAPIMetrics) return { type: types.NOOP };
-  return (dispatch, getState) => {
-    const stackName = earthdatapubInstanceMeta.stackName;
-    const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
-    const endTime = timeFilters.timestamp__to || Date.now();
-    const startTime = timeFilters.timestamp__from || 0;
-    return dispatch({
-      [CALL_API]: {
-        type: types.DIST_API_LAMBDA,
-        skipAuth: true,
-        method: 'POST',
-        url: `${esRoot}/_search/`,
-        headers: authHeader(),
-        body: JSON.parse(apiLambdaSearchTemplate(stackName, startTime, endTime))
-      }
-    });
-  };
-};
-
-export const getTEALambdaMetrics = (earthdatapubInstanceMeta) => {
-  if (!esRoot) return { type: types.NOOP };
-  return (dispatch, getState) => {
-    const stackName = earthdatapubInstanceMeta.stackName;
-    const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
-    const endTime = timeFilters.timestamp__to || Date.now();
-    const startTime = timeFilters.timestamp__from || 0;
-    return dispatch({
-      [CALL_API]: {
-        type: types.DIST_TEA_LAMBDA,
-        skipAuth: true,
-        method: 'POST',
-        url: `${esRoot}/_search/`,
-        headers: authHeader(),
-        body: JSON.parse(teaLambdaSearchTemplate(stackName, startTime, endTime))
-      }
-    });
-  };
-};
-
-export const getDistS3AccessMetrics = (earthdatapubInstanceMeta) => {
-  if (!esRoot) return { type: types.NOOP };
-  return (dispatch, getState) => {
-    const stackName = earthdatapubInstanceMeta.stackName;
-    const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
-    const endTime = timeFilters.timestamp__to || Date.now();
-    const startTime = timeFilters.timestamp__from || 0;
-    return dispatch({
-      [CALL_API]: {
-        type: types.DIST_S3ACCESS,
-        skipAuth: true,
-        method: 'POST',
-        url: `${esRoot}/_search/`,
-        headers: authHeader(),
-        body: JSON.parse(s3AccessSearchTemplate(stackName, startTime, endTime))
-      }
-    });
-  };
-};
-
-// count queries *must* include type and field properties.
-export const getCount = (options) => {
-  return (dispatch, getState) => {
-    const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
-    return dispatch({
-      [CALL_API]: {
-        type: types.COUNT,
-        method: 'GET',
-        id: null,
-        url: new URL('stats/aggregate', root).href,
-        qs: Object.assign({ type: 'must-include-type', field: 'status' }, options, timeFilters)
       }
     });
   };
@@ -699,15 +505,6 @@ export const listForms = (options) => {
     });
   };
 };
-
-export const getOptionsFormGroup = () => ({
-  [CALL_API]: {
-    type: types.OPTIONS_FORMGROUP,
-    method: 'GET',
-    url: new URL('data/forms', root).href,
-    qs: { limit: 100, fields: 'long_name' }
-  }
-});
 
 export const getForm = (formId, daacId) => ({
   [CALL_API]: {
@@ -758,11 +555,6 @@ export const updateSection = (payload, key) => ({
   }
 });
 
-export const searchForms = (prefix) => ({ type: types.SEARCH_FORMS, prefix });
-export const clearFormsSearch = () => ({ type: types.CLEAR_FORMS_SEARCH });
-export const filterForms = (param) => ({ type: types.FILTER_FORMS, param });
-export const clearFormsFilter = (paramKey) => ({ type: types.CLEAR_FORMS_FILTER, paramKey });
-
 export const listUsers = (options) => ({
   [CALL_API]: {
     type: types.USERS,
@@ -773,29 +565,12 @@ export const listUsers = (options) => ({
   }
 });
 
-export const getOptionsUserGroup = () => ({
-  [CALL_API]: {
-    type: types.OPTIONS_USERGROUP,
-    method: 'GET',
-    url: new URL('users', root).href,
-    qs: { limit: 100, fields: 'long_name' }
-  }
-});
-
 export const getUser = (userId) => ({
   [CALL_API]: {
     type: types.USER,
     method: 'GET',
     id: userId,
     path: `data/user/${userId}`
-  }
-});
-
-export const getUsers = (role_id) => ({
-  [CALL_API]: {
-    type: types.USER,
-    method: 'GET',
-    path: role_id ? `data/users?role_id=${role_id}` : 'data/users'  
   }
 });
 
@@ -871,20 +646,6 @@ export const removeUserGroup = (payload) => {
   };
 };
 
-export const searchUsers = (prefix) => ({ type: types.SEARCH_USERS, prefix });
-export const clearUsersSearch = () => ({ type: types.CLEAR_USERS_SEARCH });
-export const filterUsers = (param) => ({ type: types.FILTER_USERS, param });
-export const clearUsersFilter = (paramKey) => ({ type: types.CLEAR_USERS_FILTER, paramKey });
-
-export const getDaac = (daacId) => ({
-  [CALL_API]: {
-    type: types.DAAC,
-    id: daacId,
-    method: 'GET',
-    path: `data/daac/${daacId}`
-  }
-});
-
 export const listDaacs = (options) => ({
   [CALL_API]: {
     type: types.DAACS,
@@ -902,15 +663,6 @@ export const listGroups = (options) => ({
     id: null,
     path: 'data/groups',
     qs: Object.assign({ per_page: defaultPageLimit }, options)
-  }
-});
-
-export const getOptionsGroupGroup = () => ({
-  [CALL_API]: {
-    type: types.OPTIONS_GROUPGROUP,
-    method: 'GET',
-    url: new URL('groups', root).href,
-    qs: { limit: 100, fields: 'long_name' }
   }
 });
 
@@ -953,36 +705,6 @@ export const updateGroup = (groupId, payload) => ({
 });
 
 export const clearUpdateGroup = (groupId) => ({ type: types.UPDATE_GROUP_CLEAR, id: groupId });
-
-export const deleteGroup = (groupId) => ({
-  [CALL_API]: {
-    type: types.GROUP_DELETE,
-    id: groupId,
-    method: 'DELETE',
-    path: `data/group/${groupId}`
-  }
-});
-
-export const searchGroups = (prefix) => ({ type: types.SEARCH_GROUPS, prefix });
-export const clearGroupsSearch = () => ({ type: types.CLEAR_GROUPS_SEARCH });
-export const filterGroups = (param) => ({ type: types.FILTER_GROUPS, param });
-export const clearGroupsFilter = (paramKey) => ({ type: types.CLEAR_GROUPS_FILTER, paramKey });
-
-export const getLogs = (options) => {
-  return (dispatch, getState) => {
-    const timeFilters = fetchCurrentTimeFilters(getState().datepicker);
-    return dispatch({
-      [CALL_API]: {
-        type: types.LOGS,
-        method: 'GET',
-        url: new URL('logs', root).href,
-        qs: Object.assign({ limit: 100 }, options, timeFilters)
-      }
-    });
-  };
-};
-
-export const clearLogs = () => ({ type: types.CLEAR_LOGS });
 
 export const deleteToken = () => ({ type: types.DELETE_TOKEN });
 
@@ -1038,12 +760,6 @@ export const addWorkflow = (payload) => ({
   }
 });
 
-export const searchWorkflows = (searchString) => ({ type: types.SEARCH_WORKFLOWS, searchString });
-export const clearWorkflowsSearch = () => ({ type: types.CLEAR_WORKFLOWS_SEARCH });
-
-export const searchMetrics = (searchString) => ({ type: types.SEARCH_METRICS, searchString });
-export const clearMetricsSearch = () => ({ type: types.CLEAR_METRICS_SEARCH });
-
 export const listCloudMetrics = (options) => ({
   [CALL_API]: {
     type: types.METRICS,
@@ -1052,8 +768,6 @@ export const listCloudMetrics = (options) => ({
     body: options
   }
 });
-export const searchCloudMetrics = (searchString) => ({ type: types.SEARCH_CLOUD_METRICS, searchString });
-export const clearCloudMetricsSearch = () => ({ type: types.CLEAR_CLOUD_METRICS_SEARCH });
 
 export const getRole = (roleId) => ({
   [CALL_API]: {
@@ -1072,8 +786,6 @@ export const listRoles = (options) => ({
     qs: Object.assign({ limit: defaultPageLimit }, options)
   }
 });
-export const searchRoles = (searchString) => ({ type: types.SEARCH_ROLES, searchString });
-export const clearRolesSearch = () => ({ type: types.CLEAR_ROLES_SEARCH });
 
 export const getConversation = (conversationId, level = false) => ({
   [CALL_API]: {
@@ -1097,15 +809,6 @@ export const getStepConversation = (payload) => ({
     type: types.CONVERSATION,
     method: 'GET',
     path: `notification/conversation/${payload.conversation_id}?detailed=${payload.level}&step_name=${payload.step_name}`,
-    body: payload
-  }
-});
-
-export const createConversation = (payload) => ({
-  [CALL_API]: {
-    type: types.CONVERSATION_CREATE,
-    method: 'POST',
-    path: 'notification/send',
     body: payload
   }
 });
@@ -1181,7 +884,6 @@ export const addUserToNote = (payload, conversationId, selectedFilter) => {
   };
 };
 
-
 export const removeUserFromNote = (payload, conversationId, selectedFilter) => {
   return async (dispatch) => {
     await dispatch({
@@ -1229,7 +931,6 @@ export const removeRoleFromNote = (payload, conversationId, selectedFilter) => {
     await dispatch(getConversation(conversationId, selectedFilter));
   };
 };
-
 
 export const updateSearchModal = (path, query) => ({
   [CALL_API]: {
@@ -1305,8 +1006,6 @@ export const addStep = (payload) => ({
     json: payload
   }
 });
-
-export const setAuthenticatedState = (authenticated) => ({ type: types.SET_TOKEN, authenticated });
 
 export const assignDaacs = (payload) => ({
   [CALL_API]: {

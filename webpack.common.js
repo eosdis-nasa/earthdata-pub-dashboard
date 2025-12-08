@@ -169,8 +169,6 @@ const CommonConfig = {
         STAGE: config.environment,
         AUTH_METHOD: config.oauthMethod,
         KIBANAROOT: config.kibanaRoot,
-        ESROOT: config.esRoot,
-        SHOW_DISTRIBUTION_API_METRICS: config.showDistributionAPIMetrics,
         BUCKET: config.graphicsPath,
         ENABLE_RECOVERY: config.enableRecovery,
         ES_USER: config.esUser,
