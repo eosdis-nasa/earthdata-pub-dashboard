@@ -7,7 +7,8 @@ import {
   getConversation,
   replyConversation,
   addUsersToConversation,
-  removeUsersFromConversation
+  removeUsersFromConversation,
+  getRequest
 } from '../../actions';
 import { notePrivileges } from '../../utils/privileges';
 import { lastUpdated } from '../../utils/format';
@@ -208,6 +209,7 @@ const checkForUpdates = async (retryCount = 0) => {
   };
 
   const reply = async (dispatch, id) => {
+    const resps = await dispatch(getRequest(subject.split(' ')[2]));
     const { viewer_users, viewer_roles } = visibilityRef.current.getVisibility();
     
     const resp = encodeURI(textRef.current.value);
@@ -217,7 +219,8 @@ const checkForUpdates = async (retryCount = 0) => {
         text: resp,
         viewer_users,
         viewer_roles,
-        attachments: [...uploadedFiles]
+        attachments: [...uploadedFiles],
+        request_name: resps?.data?.name
     };
 
     await dispatch(replyConversation(payload, level));
