@@ -220,7 +220,8 @@ const checkForUpdates = async (retryCount = 0) => {
         viewer_users,
         viewer_roles,
         attachments: [...uploadedFiles],
-        request_name: resps?.data?.name
+        request_name: resps?.data?.name,
+        request_id: resps?.data?.id
     };
 
     await dispatch(replyConversation(payload, level));
