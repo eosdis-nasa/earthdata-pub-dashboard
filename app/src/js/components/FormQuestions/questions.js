@@ -2581,30 +2581,83 @@ const areProductFieldsEmpty = (producer) => {
 
                                           {progressBarsVisible && uploadFiles.length > 0 && `${fileControlId}_file-upload-input` === `${input.control_id}_file-upload-input` && (
                                             <div>
-                                              {uploadFiles.map((file, index) => (
-                                                <div key={index}>
-                                                  <div style={{display: "flow-root"}}>
-                                                    {file.name}
-                                                    <Button
-                                                      className="upload-button"
-                                                      style={{fontSize: "100%", padding: "5px", backgroundColor: "#db1400", margin: "2px", float: "inline-end"}}
-                                                      onClick={() => handleRemoveFile(file.name)}
-                                                      >Remove</Button>
-                                                  </div>
-                                                  <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
-                                                    <div style={{
-                                                      width: `${uploadProgress[file.name]?.percent || 0}%`,
-                                                      backgroundColor: '#2275aa',
-                                                      height: '100%',
-                                                      textAlign: 'center',
-                                                      lineHeight: '30px',
-                                                      color: 'white',
-                                                    }}>
-                                                      {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name].percent || 0}%` : '0%'}
+                                              {uploadFiles.map((file, index) => {
+                                                const progress = uploadProgress[file.name];
+                                                const p = progress?.percent ?? 0;
+                                                const eta = progress?.etaSeconds;
+
+                                                // Scale visual width so checksum phase moves the bar
+                                                const visualWidth =
+                                                  p < 20
+                                                    ? (p / 20) * 100          // checksum phase
+                                                    : ((p - 20) / 80) * 100;  // upload phase
+
+                                                // Text inside progress bar
+                                                let progressText;
+                                                if (!progress) {
+                                                  progressText = '0%';
+                                                } else if (p < 20) {
+                                                  progressText = 'Calculating checksum…';
+                                                } else {
+                                                  progressText = `${p}%`;
+                                                }
+
+                                                return (
+                                                  <div key={index} style={{ marginBottom: '12px' }}>
+                                                    {/* File name + remove */}
+                                                    <div style={{ display: 'flow-root' }}>
+                                                      {file.name}
+                                                      <Button
+                                                        className="upload-button"
+                                                        style={{
+                                                          fontSize: '100%',
+                                                          padding: '5px',
+                                                          backgroundColor: '#db1400',
+                                                          margin: '2px',
+                                                          float: 'inline-end'
+                                                        }}
+                                                        onClick={() => handleRemoveFile(file.name)}
+                                                      >
+                                                        Remove
+                                                      </Button>
                                                     </div>
+
+                                                    {/* Progress bar */}
+                                                    <div
+                                                      style={{
+                                                        width: '100%',
+                                                        backgroundColor: progress === 'Failed' ? 'red' : '#f1f1f1',
+                                                        height: '30px',
+                                                        marginBottom: '4px',
+                                                        borderRadius: '4px',
+                                                        overflow: 'hidden'
+                                                      }}
+                                                    >
+                                                      <div
+                                                        style={{
+                                                          width: `${visualWidth}%`,
+                                                          backgroundColor: '#2275aa',
+                                                          height: '100%',
+                                                          textAlign: 'center',
+                                                          lineHeight: '30px',
+                                                          color: 'white',
+                                                          transition: 'width 250ms ease-out',
+                                                          fontSize: '14px',
+                                                          whiteSpace: 'nowrap'
+                                                        }}
+                                                      >
+                                                        {progressText}
+                                                      </div>
+                                                    </div>
+
+                                                    {p >= 20 && eta != null && (
+                                                      <div style={{ fontSize: '12px', color: '#555' }}>
+                                                        ETA: {eta}s remaining
+                                                      </div>
+                                                    )}
                                                   </div>
-                                                </div>
-                                              ))}
+                                                );
+                                              })}
                                             </div>
                                           )}
                                         </div>
