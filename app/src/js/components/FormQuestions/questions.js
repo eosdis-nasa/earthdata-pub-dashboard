@@ -1267,9 +1267,14 @@ const areProductFieldsEmpty = (producer) => {
     const uploadFileAsync = async (file) => {
       return new Promise((resolve, reject) => {
         const updateProgress = (progress, fileObj) => {
+          console.log('progress',progress);
+          console.log('fileObj', fileObj);
           setUploadProgress((prev) => ({
             ...prev,
-            [fileObj.name]: Math.min(progress, 100),
+            [fileObj.name]: {
+              percent: progress.percent,
+              etaSeconds: progress.etaSeconds
+            }
           }));
         };
         let uploadCategory = typeof category_map[control_id] !== 'undefined' ? category_map[control_id] : "";
@@ -1322,7 +1327,7 @@ const areProductFieldsEmpty = (producer) => {
 
     setUploadResults({ success: successFiles, failed: failedFiles });
     setUploadStatusMsg('Upload Complete');
-    setUploadProgress({});
+    setTimeout(() => setUploadProgress({}), 1500);
     setUploadFileFlag(prev => !prev);
     setShowUploadSummaryModal(true);
     setUploadFiles([]); 
@@ -2588,14 +2593,14 @@ const areProductFieldsEmpty = (producer) => {
                                                   </div>
                                                   <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
                                                     <div style={{
-                                                      width: `${uploadProgress[file.name] || 0}%`,
+                                                      width: `${uploadProgress[file.name]?.percent || 0}%`,
                                                       backgroundColor: '#2275aa',
                                                       height: '100%',
                                                       textAlign: 'center',
                                                       lineHeight: '30px',
                                                       color: 'white',
                                                     }}>
-                                                      {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '0%'}
+                                                      {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name].percent || 0}%` : '0%'}
                                                     </div>
                                                   </div>
                                                 </div>
