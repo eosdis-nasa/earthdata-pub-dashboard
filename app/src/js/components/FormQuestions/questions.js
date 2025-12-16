@@ -2610,30 +2610,28 @@ const areProductFieldsEmpty = (producer) => {
 
                                                     {/* Progress bar container */}
                                                       <div style={{
-                                                      width: '100%',
-                                                      height: '30px',
-                                                      backgroundColor: progress === 'Failed' ? 'red' : '#f1f1f1',
-                                                      borderRadius: '4px',
-                                                      position: 'relative',
-                                                      overflow: 'hidden'
-                                                    }}>
-                                                      <div style={{
-                                                        width: `${progressText}%`,
-                                                        height: '100%',
-                                                        backgroundColor: '#2275aa',
-                                                        transition: 'width 250ms ease-out'
-                                                      }} />
-
-                                                      <div style={{
-                                                        position: 'absolute',
-                                                        inset: 0,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        color: 'white',
-                                                        fontWeight: 500,
-                                                        pointerEvents: 'none'
+                                                        width: '100%',
+                                                        height: '30px',
+                                                        backgroundColor: progress === 'Failed' ? 'red' : '#f1f1f1',
+                                                        borderRadius: '4px',
+                                                        position: 'relative',
+                                                        overflow: 'hidden'
                                                       }}>
+                                                      <div
+                                                        style={{
+                                                          width: `${percent}%`,
+                                                          height: '100%',
+                                                          backgroundColor: percent > 0 ? '#2275aa' : '#fff',
+                                                          transition: 'width 250ms ease-out',
+                                                          display: 'flex',
+                                                          alignItems: 'center',
+                                                          justifyContent: percent < 15 ? 'flex-start' : 'center',
+                                                          paddingLeft: percent < 15 ? '8px' : '0',
+                                                          color: percent === 0 ? 'black' : '#fff',
+                                                          fontWeight: 600,
+                                                          whiteSpace: 'nowrap'
+                                                        }}
+                                                      >
                                                         {progressText}
                                                       </div>
                                                     </div>
