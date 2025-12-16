@@ -2585,28 +2585,27 @@ const areProductFieldsEmpty = (producer) => {
                                               {uploadFiles.map((file, index) => {
                                                 const progress = uploadProgress[file.name];
                                                 const percent = progress?.percent ?? 0;
-                                                const phase = progress?.phase;
+                                                const phase = progress?.phase ?? 'checksum';
                                                 const eta = progress?.etaSeconds;
 
                                                 let visualWidth = 0;
 
                                                 if (phase === 'checksum') {
-                                                  visualWidth = (percent / 20) * 30;
-                                                } else if (phase === 'upload') {
+                                                  visualWidth = Math.max(2, (percent / 20) * 30);
+                                                } else {
                                                   visualWidth = 30 + ((percent - 20) / 80) * 70;
                                                 }
 
                                                 let progressText = '';
-
                                                 if (phase === 'checksum') {
                                                   progressText = 'Calculating checksum…';
-                                                } else if (phase === 'upload') {
+                                                } else {
                                                   progressText = `${percent}%`;
                                                 }
 
                                                 return (
                                                   <div key={index} style={{ marginBottom: '16px' }}>
-                                                    {/* File name + Remove button */}
+                                                    {/* File name + Remove */}
                                                     <div style={{ display: 'flow-root', marginBottom: '6px' }}>
                                                       {file.name}
                                                       <Button
@@ -2624,32 +2623,47 @@ const areProductFieldsEmpty = (producer) => {
                                                       </Button>
                                                     </div>
 
-                                                    {/* Progress bar container */}
-                                                      <div style={{
-                                                      width: '100%',
-                                                      height: '30px',
-                                                      backgroundColor: progress === 'Failed' ? 'red' : '#f1f1f1',
-                                                      borderRadius: '4px',
-                                                      position: 'relative',
-                                                      overflow: 'hidden'
-                                                    }}>
-                                                      <div style={{
-                                                        width: `${visualWidth}%`,
-                                                        height: '100%',
-                                                        backgroundColor: '#2275aa',
-                                                        transition: 'width 250ms ease-out'
-                                                      }} />
+                                                    {/* Progress bar */}
+                                                    <div
+                                                      style={{
+                                                        width: '100%',
+                                                        height: '30px',
+                                                        backgroundColor: progress === 'Failed' ? 'red' : '#f1f1f1',
+                                                        borderRadius: '4px',
+                                                        position: 'relative',
+                                                        overflow: 'hidden'
+                                                      }}
+                                                    >
+                                                      {/* Filled bar */}
+                                                      <div
+                                                        style={{
+                                                          width: `${visualWidth}%`,
+                                                          height: '100%',
+                                                          backgroundColor:
+                                                            phase === 'checksum' ? '#5b93c4' : '#2275aa',
+                                                          transition: 'width 250ms ease-out'
+                                                        }}
+                                                      />
 
-                                                      <div style={{
-                                                        position: 'absolute',
-                                                        inset: 0,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        color: 'white',
-                                                        fontWeight: 500,
-                                                        pointerEvents: 'none'
-                                                      }}>
+                                                      {/* Overlay text */}
+                                                      <div
+                                                        style={{
+                                                          position: 'absolute',
+                                                          inset: 0,
+                                                          display: 'flex',
+                                                          alignItems: 'center',
+                                                          justifyContent: 'center',
+                                                          color: '#ffffff',
+                                                          fontSize: '14px',
+                                                          fontWeight: 600,
+                                                          pointerEvents: 'none',
+                                                          textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+                                                          background:
+                                                            phase === 'checksum'
+                                                              ? 'rgba(0,0,0,0.15)'
+                                                              : 'transparent'
+                                                        }}
+                                                      >
                                                         {progressText}
                                                       </div>
                                                     </div>
