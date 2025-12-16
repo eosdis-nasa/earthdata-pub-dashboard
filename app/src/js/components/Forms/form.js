@@ -558,8 +558,7 @@ class FormOverview extends React.Component {
     const payload = {
       'id': this.props.location.search.split('=')[1],
       'step_name': this.props.requests.detail.data.step_name,
-      'user_list': reviewerValues,
-      'daac_id': this.props.requests.detail.data.daac_id
+      'user_list': reviewerValues
     }
 
     await this.props.dispatch(createStepReviewApproval(payload));
