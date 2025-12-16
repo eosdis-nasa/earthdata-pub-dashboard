@@ -1273,7 +1273,8 @@ const areProductFieldsEmpty = (producer) => {
             ...prev,
             [fileObj.name]: {
               percent: progress.percent,
-              etaSeconds: progress.etaSeconds
+              etaSeconds: progress.etaSeconds,
+              phase: progress.phase
             }
           }));
         };
@@ -2586,26 +2587,16 @@ const areProductFieldsEmpty = (producer) => {
                                                 const p = progress?.percent ?? 0;
                                                 const eta = progress?.etaSeconds;
 
-                                                // Scale visual width so checksum phase moves the bar
+                                                // Scale visual width so checksum phase animates smoothly
                                                 const visualWidth =
                                                   p < 20
                                                     ? (p / 20) * 100          // checksum phase
-                                                    : ((p - 20) / 80) * 100;  // upload phase
-
-                                                // Text inside progress bar
-                                                let progressText;
-                                                if (!progress) {
-                                                  progressText = '0%';
-                                                } else if (p < 20) {
-                                                  progressText = 'Calculating checksum…';
-                                                } else {
-                                                  progressText = `${p}%`;
-                                                }
+                                                    : ((p - 20) / 80) * 100; // upload phase
 
                                                 return (
-                                                  <div key={index} style={{ marginBottom: '12px' }}>
-                                                    {/* File name + remove */}
-                                                    <div style={{ display: 'flow-root' }}>
+                                                  <div key={index} style={{ marginBottom: '16px' }}>
+                                                    {/* File name + Remove button */}
+                                                    <div style={{ display: 'flow-root', marginBottom: '6px' }}>
                                                       {file.name}
                                                       <Button
                                                         className="upload-button"
@@ -2622,36 +2613,61 @@ const areProductFieldsEmpty = (producer) => {
                                                       </Button>
                                                     </div>
 
-                                                    {/* Progress bar */}
+                                                    {/* Progress bar container */}
                                                     <div
                                                       style={{
                                                         width: '100%',
-                                                        backgroundColor: progress === 'Failed' ? 'red' : '#f1f1f1',
                                                         height: '30px',
-                                                        marginBottom: '4px',
+                                                        backgroundColor: progress === 'Failed' ? 'red' : '#f1f1f1',
                                                         borderRadius: '4px',
-                                                        overflow: 'hidden'
+                                                        overflow: 'hidden',
+                                                        position: 'relative'
                                                       }}
                                                     >
+                                                      {/* Filled progress bar */}
                                                       <div
                                                         style={{
                                                           width: `${visualWidth}%`,
-                                                          backgroundColor: '#2275aa',
                                                           height: '100%',
-                                                          textAlign: 'center',
-                                                          lineHeight: '30px',
-                                                          color: 'white',
+                                                          backgroundColor: '#2275aa',
                                                           transition: 'width 250ms ease-out',
+                                                          display: 'flex',
+                                                          alignItems: 'center',
+                                                          justifyContent: p >= 20 ? 'center' : 'flex-start',
+                                                          color: 'white',
                                                           fontSize: '14px',
+                                                          fontWeight: 500,
                                                           whiteSpace: 'nowrap'
                                                         }}
                                                       >
-                                                        {progressText}
+                                                        {/* Show % only during upload */}
+                                                        {p > 20 && `${p}%`}
                                                       </div>
+
+                                                      {/* Centered overlay ONLY during checksum */}
+                                                      {p <= 20 && (
+                                                        <div
+                                                          style={{
+                                                            position: 'absolute',
+                                                            inset: 0,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            color: 'white',
+                                                            fontWeight: 500,
+                                                            fontSize: '14px',
+                                                            pointerEvents: 'none',
+                                                            textShadow: '0 1px 2px rgba(0,0,0,0.4)'
+                                                          }}
+                                                        >
+                                                          Calculating checksum…
+                                                        </div>
+                                                      )}
                                                     </div>
 
-                                                    {p >= 20 && eta != null && (
-                                                      <div style={{ fontSize: '12px', color: '#555' }}>
+                                                    {/* ETA only after upload starts */}
+                                                    {p > 20 && eta != null && (
+                                                      <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
                                                         ETA: {eta}s remaining
                                                       </div>
                                                     )}
