@@ -1271,22 +1271,14 @@ const areProductFieldsEmpty = (producer) => {
         const updateProgress = (progress, fileObj) => {
           console.log('progress',progress);
           console.log('fileObj', fileObj);
-          cancelAnimationFrame(rafRef.current);
-
-          rafRef.current = requestAnimationFrame(() => {
-            setUploadProgress(prev => {
-              const prevPercent = prev[fileObj.name]?.percent || 0;
-
-              return {
-                ...prev,
-                [fileObj.name]: {
-                  percent: Math.max(progress.percent, prevPercent),
-                  etaSeconds: progress.etaSeconds,
-                  phase: progress.phase
-                }
-              };
-            });
-          });
+          setUploadProgress((prev) => ({
+            ...prev,
+            [fileObj.name]: {
+              percent: progress.percent,
+              etaSeconds: progress.etaSeconds,
+              phase: progress.phase
+            }
+          }));
         };
 
         let uploadCategory = typeof category_map[control_id] !== 'undefined' ? category_map[control_id] : "";
