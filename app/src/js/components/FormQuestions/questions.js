@@ -2584,14 +2584,25 @@ const areProductFieldsEmpty = (producer) => {
                                             <div>
                                               {uploadFiles.map((file, index) => {
                                                 const progress = uploadProgress[file.name];
-                                                const p = progress?.percent ?? 0;
+                                                const percent = progress?.percent ?? 0;
+                                                const phase = progress?.phase;
                                                 const eta = progress?.etaSeconds;
 
-                                                // Scale visual width so checksum phase animates smoothly
-                                                const visualWidth =
-                                                  p < 20
-                                                    ? (p / 20) * 100          // checksum phase
-                                                    : ((p - 20) / 80) * 100; // upload phase
+                                                let visualWidth = 0;
+
+                                                if (phase === 'checksum') {
+                                                  visualWidth = (percent / 20) * 30;
+                                                } else if (phase === 'upload') {
+                                                  visualWidth = 30 + ((percent - 20) / 80) * 70;
+                                                }
+
+                                                let progressText = '';
+
+                                                if (phase === 'checksum') {
+                                                  progressText = 'Calculating checksum…';
+                                                } else if (phase === 'upload') {
+                                                  progressText = `${percent}%`;
+                                                }
 
                                                 return (
                                                   <div key={index} style={{ marginBottom: '16px' }}>
@@ -2614,59 +2625,36 @@ const areProductFieldsEmpty = (producer) => {
                                                     </div>
 
                                                     {/* Progress bar container */}
-                                                    <div
-                                                      style={{
-                                                        width: '100%',
-                                                        height: '30px',
-                                                        backgroundColor: progress === 'Failed' ? 'red' : '#f1f1f1',
-                                                        borderRadius: '4px',
-                                                        overflow: 'hidden',
-                                                        position: 'relative'
-                                                      }}
-                                                    >
-                                                      {/* Filled progress bar */}
-                                                      <div
-                                                        style={{
-                                                          width: `${visualWidth}%`,
-                                                          height: '100%',
-                                                          backgroundColor: '#2275aa',
-                                                          transition: 'width 250ms ease-out',
-                                                          display: 'flex',
-                                                          alignItems: 'center',
-                                                          justifyContent: p >= 20 ? 'center' : 'flex-start',
-                                                          color: 'white',
-                                                          fontSize: '14px',
-                                                          fontWeight: 500,
-                                                          whiteSpace: 'nowrap'
-                                                        }}
-                                                      >
-                                                        {/* Show % only during upload */}
-                                                        {p > 20 && `${p}%`}
-                                                      </div>
+                                                      <div style={{
+                                                      width: '100%',
+                                                      height: '30px',
+                                                      backgroundColor: progress === 'Failed' ? 'red' : '#f1f1f1',
+                                                      borderRadius: '4px',
+                                                      position: 'relative',
+                                                      overflow: 'hidden'
+                                                    }}>
+                                                      <div style={{
+                                                        width: `${visualWidth}%`,
+                                                        height: '100%',
+                                                        backgroundColor: '#2275aa',
+                                                        transition: 'width 250ms ease-out'
+                                                      }} />
 
-                                                      {/* Centered overlay ONLY during checksum */}
-                                                      {p <= 20 && (
-                                                        <div
-                                                          style={{
-                                                            position: 'absolute',
-                                                            inset: 0,
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            color: 'white',
-                                                            fontWeight: 500,
-                                                            fontSize: '14px',
-                                                            pointerEvents: 'none',
-                                                            textShadow: '0 1px 2px rgba(0,0,0,0.4)'
-                                                          }}
-                                                        >
-                                                          Calculating checksum…
-                                                        </div>
-                                                      )}
+                                                      <div style={{
+                                                        position: 'absolute',
+                                                        inset: 0,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        color: 'white',
+                                                        fontWeight: 500,
+                                                        pointerEvents: 'none'
+                                                      }}>
+                                                        {progressText}
+                                                      </div>
                                                     </div>
 
-                                                    {/* ETA only after upload starts */}
-                                                    {p > 20 && eta != null && (
+                                                    {phase === 'upload' && eta != null && (
                                                       <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
                                                         ETA: {eta}s remaining
                                                       </div>
