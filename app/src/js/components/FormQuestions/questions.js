@@ -1266,7 +1266,6 @@ const areProductFieldsEmpty = (producer) => {
 
     const uploadFileAsync = async (file) => {
       return new Promise((resolve, reject) => {
-        const rafRef = useRef(null);
 
         const updateProgress = (progress, fileObj) => {
           console.log('progress',progress);
@@ -1303,7 +1302,11 @@ const areProductFieldsEmpty = (producer) => {
             console.error(`Error uploading file ${file.name}: ${error}`);
             setUploadProgress((prev) => ({
               ...prev,
-              [file.name]: 'Failed',
+              [file.name]: {
+                percent: prev[file.name]?.percent ?? 0,
+                etaSeconds: null,
+                phase: 'failed'
+              }
             }));
             reject(file.name);
           } else {
