@@ -11,10 +11,10 @@ import { useLocation } from "react-router-dom";
 
 const App = ({ keyword }) => {
   const location = useLocation();
-  const routes = {
+  const routes = React.useMemo(() => ({
     "/getting_started": <GettingStarted location={location} />,
     "/data_publication_guidelines": <DataPubGuidelines location={location} />
-  };
+  }), [location]);
   
   const renderComponent = () => routes[location.pathname] || (
     <>
