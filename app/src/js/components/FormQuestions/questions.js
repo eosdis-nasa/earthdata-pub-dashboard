@@ -50,7 +50,7 @@ const FormQuestions = ({
   const [uploadStatusMsg, setUploadStatusMsg] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState({});
   const [validationAttempted, setValidationAttempted] = useState(false);
-  const [progressValue, setProgressValue] = useState(0);
+  const [uploadFlag, setUploadFlag] = useState(false);
   const [uploadFileName, setUploadFileName] = useState('');
   const [uploadFileFlag, setUploadFileFlag] = useState(false);
   const [uploadFailed, setUploadFailed] = useState(false);
@@ -112,6 +112,15 @@ const FormQuestions = ({
         values,
       },
     }));
+  };
+
+  const formatETA = (seconds) => {
+    if (seconds == null || Number.isNaN(seconds) || seconds < 0) return null;
+
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+
+    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
   };
 
   const fetchFileUploads = async () => {
@@ -1261,6 +1270,7 @@ const areProductFieldsEmpty = (producer) => {
 
   const handleUpload = async (control_id) => {
     setUploadStatusMsg('Uploading...');
+    setUploadFlag(true);
     const successFiles = [];
     const failedFiles = [];
 
@@ -1333,6 +1343,7 @@ const areProductFieldsEmpty = (producer) => {
     await Promise.all(uploadPromises);
 
     setUploadResults({ success: successFiles, failed: failedFiles });
+    setUploadFlag(false);
     setUploadStatusMsg('Upload Complete');
     setTimeout(() => setUploadProgress({}), 1500);
     setUploadFileFlag(prev => !prev);
@@ -2571,7 +2582,7 @@ const areProductFieldsEmpty = (producer) => {
                                           <Button
                                             className="upload-button mt-2"
                                             onClick={(e) => handleUpload(input.control_id)}
-                                            disabled={uploadFiles.length === 0 || `${fileControlId}_file-upload-input` !== `${input.control_id}_file-upload-input`}
+                                            disabled={uploadFlag || uploadFiles.length === 0 || `${fileControlId}_file-upload-input` !== `${input.control_id}_file-upload-input`}
                                           >
                                           Upload
                                           </Button>
@@ -2643,9 +2654,9 @@ const areProductFieldsEmpty = (producer) => {
                                                       </div>
                                                     </div>
 
-                                                    { eta != null && (
+                                                    {eta != null && (
                                                       <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
-                                                        ETA: {eta}s remaining
+                                                        ETA: {formatETA(eta)} remaining
                                                       </div>
                                                     )}
                                                   </div>
