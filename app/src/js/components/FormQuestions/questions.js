@@ -2671,7 +2671,7 @@ const areProductFieldsEmpty = (producer) => {
                                             <div>
                                               {uploadFiles.map((file, index) => {
                                                 const progress = uploadProgress[file.name];
-                                                console.log('progress inside',progress);
+                                               // console.log('progress inside',progress);
                                                 const percent = progress?.percent ?? 0;
                                                 const eta = progress?.etaSeconds;
                                                 let progressText = `${percent}%`;
