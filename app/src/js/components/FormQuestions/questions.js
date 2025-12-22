@@ -18,8 +18,46 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import { format } from "date-fns";
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-// Form page i.e. /dashboard/form/questions/{id}
+
+const FileStatusHeader = () => (
+  <span
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '6px',
+    }}
+  >
+    File Status
+
+    <OverlayTrigger
+      placement="right"
+      overlay={
+        <Tooltip id="file-status-tooltip">
+          <div>
+            <strong>Available</strong>: Uploaded to EDPub bucket
+            <br />
+            <strong>Scanning</strong>: Uploaded to CUE for file scanning
+          </div>
+        </Tooltip>
+      }
+    >
+      {/* OverlayTrigger REQUIRES a single DOM child */}
+      <span style={{ display: 'inline-flex' }}>
+        <FontAwesomeIcon
+          icon={faQuestionCircle}
+          style={{
+            cursor: 'pointer',
+            color: 'white',
+          }}
+          aria-label="File status help"
+        />
+      </span>
+    </OverlayTrigger>
+  </span>
+);
 
 const FormQuestions = ({
   cancelLabel = 'Cancel',
@@ -81,12 +119,14 @@ const FormQuestions = ({
     },
     {
       key: 'status',
-      label: 'File Status',
+      label: <FileStatusHeader />,
       formatter: (value) => {
         if (!value) return 'Available';
-        if (['uploading', 'unscanned', 'clean', 'scanning'].includes(value)) return 'Scanning';
+        if (['uploading', 'unscanned', 'clean', 'scanning'].includes(value)) {
+          return 'Scanning';
+        }
         return value;
-      }
+      },
     }
   ]);
   const [logs, setLogs] = useState({});
@@ -1302,30 +1342,60 @@ const areProductFieldsEmpty = (producer) => {
         };
 
         const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
-        upload.uploadFile(payload, updateProgress).then( async (resp) => {
-          const payload = {
-            fileId: resp.file_id, submissionId: daacInfo.id
-          }
-          await dispatch(createTempUploadFile(payload));
-          const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
-          if (error) {
-            console.error(`Error uploading file ${file.name}: ${error}`);
+        upload.uploadFile(payload, updateProgress)
+          .then(async (resp) => {
+            const error =
+              resp?.data?.error ||
+              resp?.error ||
+              resp?.data?.[0]?.error;
+
+            if (error) {
+              console.error(`Error uploading file ${file.name}: ${error}`);
+
+              setUploadProgress((prev) => ({
+                ...prev,
+                [file.name]: {
+                  percent: prev[file.name]?.percent ?? 0,
+                  etaSeconds: null,
+                  phase: 'failed',
+                },
+              }));
+
+              reject({
+                fileName: file.name,
+                error: error || 'Upload failed due to an unknown error',
+              });
+
+              return;
+            }
+
+            // Only runs on successful upload
+            const tempPayload = {
+              fileId: resp.file_id,
+              submissionId: daacInfo.id,
+            };
+
+            await dispatch(createTempUploadFile(tempPayload));
+            resolve(file.name);
+          })
+          .catch((err) => {
+            console.error(`Error uploading file ${file.name}: ${err}`);
+
             setUploadProgress((prev) => ({
               ...prev,
               [file.name]: {
                 percent: prev[file.name]?.percent ?? 0,
                 etaSeconds: null,
-                phase: 'failed'
-              }
+                phase: 'failed',
+              },
             }));
-            reject(file.name);
-          } else {
-            resolve(file.name);
-          }
-        }).catch((err) => {
-          console.error(`Error uploading file ${file.name}: ${err}`);
-          reject(file.name);
-        });
+
+            reject({
+              fileName: file.name,
+              error: err?.message || 'Network or server error during upload',
+            });
+          });
+
       });
     };
 
@@ -2575,7 +2645,7 @@ const areProductFieldsEmpty = (producer) => {
                                             )}                                            
                                           </div>
                                         </div>
-                                          
+                                        
                                         <div  style={{
                                             display: input.type === 'file' ? 'block' : 'none',
                                           }}>
@@ -2760,8 +2830,37 @@ const areProductFieldsEmpty = (producer) => {
           <h5>Failed Uploads</h5>
           {uploadResults.failed.length > 0 ? (
             <ul>
-              {uploadResults.failed.map((fileName, index) => (
-                <li key={index}>{fileName}</li>
+              {uploadResults.failed.map(({ fileName, error }, index) => (
+                <li
+                  key={index}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  {fileName}
+
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={
+                      <Tooltip id={`upload-error-${index}`}>
+                        {error}
+                      </Tooltip>
+                    }
+                  >
+                    <span style={{ display: 'inline-flex' }}>
+                      <FontAwesomeIcon
+                        icon={faQuestionCircle}
+                        style={{
+                          cursor: 'pointer',
+                          color: '#d54309',
+                        }}
+                        aria-label={`Upload error for ${fileName}`}
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </li>
               ))}
             </ul>
           ) : (
