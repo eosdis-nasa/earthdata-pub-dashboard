@@ -1318,8 +1318,8 @@ const areProductFieldsEmpty = (producer) => {
       return new Promise((resolve, reject) => {
 
         const updateProgress = (progress, fileObj) => {
-          console.log('progress',progress);
-          console.log('fileObj', fileObj);
+          // console.log('progress',progress);
+          // console.log('fileObj', fileObj);
           setUploadProgress((prev) => ({
             ...prev,
             [fileObj.name]: {
