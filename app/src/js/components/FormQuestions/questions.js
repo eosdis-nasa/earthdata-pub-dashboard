@@ -421,7 +421,7 @@ const FormQuestions = ({
 
       if (
         fieldRequired &&
-        (!value || value === '') &&
+        (!value || (typeof(value) === 'string' && value.trim() === '')) &&
         input.type !== 'bbox' &&
         input.type !== 'table'
       ) {
@@ -978,8 +978,8 @@ const areProductFieldsEmpty = (producer) => {
     Object.keys(fieldValues).forEach((key) => {
       if (Array.isArray(fieldValues[key])) {
         jsonObject.data[key] = filterEmptyObjects(key, fieldValues[key]);
-      } else if (fieldValues[key] !== '') {
-        jsonObject.data[key] = fieldValues[key];
+      } else if ( typeof(fieldValues[key]) == 'string' && fieldValues[key].trim() !== '') {
+        jsonObject.data[key] = typeof(fieldValues[key]) == 'string' ? fieldValues[key].trim() : fieldValues[key];
       }
     });
 
