@@ -20,6 +20,7 @@ import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import { format } from "date-fns";
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 const FileStatusHeader = () => (
@@ -2679,7 +2680,7 @@ const areProductFieldsEmpty = (producer) => {
                                                 return (
                                                   <div key={index} style={{ marginBottom: '16px' }}>
                                                     {/* File name + Remove button */}
-                                                    <div style={{ display: 'flow-root', marginBottom: '6px' }}>
+                                                    <div style={{ display: 'flow-root' }}>
                                                       {file.name}
                                                       <Button
                                                         className="upload-button"
@@ -2724,11 +2725,21 @@ const areProductFieldsEmpty = (producer) => {
                                                       </div>
                                                     </div>
 
-                                                    {eta != null && (
-                                                      <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
-                                                        ETA: {formatETA(eta)} remaining
-                                                      </div>
-                                                    )}
+                                                    <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
+                                                      {eta != null ? (
+                                                        <>ETA: {formatETA(eta)} remaining</>
+                                                      ) : (
+                                                        uploadFlag && <>
+                                                          <FontAwesomeIcon
+                                                            icon={faSpinner}
+                                                            spin
+                                                            style={{ marginLeft: '4px', marginRight: '4px' }}
+                                                          />
+                                                          Calculating ETA…
+                                                        </>
+                                                      )}
+                                                    </div>
+
                                                   </div>
                                                 );
                                               })}
