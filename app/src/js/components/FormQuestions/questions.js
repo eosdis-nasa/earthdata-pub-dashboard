@@ -1319,8 +1319,6 @@ const areProductFieldsEmpty = (producer) => {
       return new Promise((resolve, reject) => {
 
         const updateProgress = (progress, fileObj) => {
-          // console.log('progress',progress);
-          // console.log('fileObj', fileObj);
           setUploadProgress((prev) => ({
             ...prev,
             [fileObj.name]: {
@@ -1607,6 +1605,8 @@ const areProductFieldsEmpty = (producer) => {
     await dispatch(copyRequest(payload));
     history.push('/requests');
   }
+
+  const isHtmlError = (err) => typeof err === 'string' && /<\/?[a-z][\s\S]*>/i.test(err);
 
   const cloneRequestByField = async () => {
    history.push({
@@ -2672,7 +2672,6 @@ const areProductFieldsEmpty = (producer) => {
                                             <div>
                                               {uploadFiles.map((file, index) => {
                                                 const progress = uploadProgress[file.name];
-                                               // console.log('progress inside',progress);
                                                 const percent = progress?.percent ?? 0;
                                                 const eta = progress?.etaSeconds;
                                                 let progressText = `${percent}%`;
@@ -2842,38 +2841,46 @@ const areProductFieldsEmpty = (producer) => {
           <h5>Failed Uploads</h5>
           {uploadResults.failed.length > 0 ? (
             <ul>
-              {uploadResults.failed.map(({ fileName, error }, index) => (
-                <li
-                  key={index}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                  }}
-                >
-                  {fileName}
+              {uploadResults.failed.map(({ fileName, error }, index) => {
+                const isHtml = isHtmlError(error);
 
-                  <OverlayTrigger
-                    placement="right"
-                    overlay={
-                      <Tooltip id={`upload-error-${index}`}>
-                        {error}
-                      </Tooltip>
-                    }
+                const tooltipText = isHtml
+                  ? 'Upload failed due to authentication or network error (403)'
+                  : error;
+
+                return (
+                  <li
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
                   >
-                    <span style={{ display: 'inline-flex' }}>
-                      <FontAwesomeIcon
-                        icon={faQuestionCircle}
-                        style={{
-                          cursor: 'pointer',
-                          color: '#d54309',
-                        }}
-                        aria-label={`Upload error for ${fileName}`}
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </li>
-              ))}
+                    {fileName}
+
+                    <OverlayTrigger
+                      placement="right"
+                      overlay={
+                        <Tooltip id={`upload-error-${index}`}>
+                          {tooltipText}
+                        </Tooltip>
+                      }
+                    >
+                      <span style={{ display: 'inline-flex' }}>
+                        <FontAwesomeIcon
+                          icon={faQuestionCircle}
+                          style={{
+                            cursor: 'pointer',
+                            color: '#d54309',
+                          }}
+                          aria-label={`Upload error for ${fileName}`}
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <p>No files failed to upload.</p>
