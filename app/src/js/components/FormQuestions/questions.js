@@ -2727,7 +2727,7 @@ const areProductFieldsEmpty = (producer) => {
 
                                                     <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
                                                       {eta != null ? (
-                                                        <>ETA: {formatETA(eta)} remaining</>
+                                                        <>Time Remaining: {formatETA(eta)} remaining</>
                                                       ) : (
                                                         uploadFlag && <>
                                                           <FontAwesomeIcon
@@ -2735,7 +2735,7 @@ const areProductFieldsEmpty = (producer) => {
                                                             spin
                                                             style={{ marginLeft: '4px', marginRight: '4px' }}
                                                           />
-                                                          Calculating ETA…
+                                                          Calculating Time Remaining...
                                                         </>
                                                       )}
                                                     </div>
