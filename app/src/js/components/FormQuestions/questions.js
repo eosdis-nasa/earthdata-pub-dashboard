@@ -2687,9 +2687,10 @@ const areProductFieldsEmpty = (producer) => {
                                                         style={{
                                                           fontSize: '100%',
                                                           padding: '5px',
-                                                          backgroundColor: '#db1400',
+                                                          backgroundColor: uploadFlag ? '#c0c0c0':'#db1400',
                                                           margin: '2px',
-                                                          float: 'inline-end'
+                                                          float: 'inline-end',
+                                                          cursor: uploadFlag ? "not-allowed": ''
                                                         }}
                                                         onClick={() => handleRemoveFile(file.name)}
                                                       >
@@ -2727,7 +2728,7 @@ const areProductFieldsEmpty = (producer) => {
 
                                                     <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
                                                       {eta != null ? (
-                                                        <>Time Remaining: {formatETA(eta)} remaining</>
+                                                        <>Time Remaining: {formatETA(eta)}</>
                                                       ) : (
                                                         uploadFlag && <>
                                                           <FontAwesomeIcon
