@@ -1606,8 +1606,6 @@ const areProductFieldsEmpty = (producer) => {
     history.push('/requests');
   }
 
-  const isHtmlError = (err) => typeof err === 'string' && /<\/?[a-z][\s\S]*>/i.test(err);
-
   const cloneRequestByField = async () => {
    history.push({
       pathname: `/forms/id/${formData?.id}`,
@@ -2841,46 +2839,38 @@ const areProductFieldsEmpty = (producer) => {
           <h5>Failed Uploads</h5>
           {uploadResults.failed.length > 0 ? (
             <ul>
-              {uploadResults.failed.map(({ fileName, error }, index) => {
-                const isHtml = isHtmlError(error);
+              {uploadResults.failed.map(({ fileName, error }, index) => (
+                <li
+                  key={index}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  {fileName}
 
-                const tooltipText = isHtml
-                  ? 'Upload failed due to authentication or network error (403)'
-                  : error;
-
-                return (
-                  <li
-                    key={index}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                    }}
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={
+                      <Tooltip id={`upload-error-${index}`}>
+                        {error}
+                      </Tooltip>
+                    }
                   >
-                    {fileName}
-
-                    <OverlayTrigger
-                      placement="right"
-                      overlay={
-                        <Tooltip id={`upload-error-${index}`}>
-                          {tooltipText}
-                        </Tooltip>
-                      }
-                    >
-                      <span style={{ display: 'inline-flex' }}>
-                        <FontAwesomeIcon
-                          icon={faQuestionCircle}
-                          style={{
-                            cursor: 'pointer',
-                            color: '#d54309',
-                          }}
-                          aria-label={`Upload error for ${fileName}`}
-                        />
-                      </span>
-                    </OverlayTrigger>
-                  </li>
-                );
-              })}
+                    <span style={{ display: 'inline-flex' }}>
+                      <FontAwesomeIcon
+                        icon={faQuestionCircle}
+                        style={{
+                          cursor: 'pointer',
+                          color: '#d54309',
+                        }}
+                        aria-label={`Upload error for ${fileName}`}
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </li>
+              ))}
             </ul>
           ) : (
             <p>No files failed to upload.</p>
