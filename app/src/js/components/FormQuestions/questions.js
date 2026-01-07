@@ -1233,8 +1233,8 @@ const areProductFieldsEmpty = (producer) => {
     let msg = '';
     if (file.name.match(/\.([^.]+)$/) !== null) {
       var ext = file.name.match(/\.([^.]+)$/)[1];
-      if (ext.match(/exe/gi)) {
-        msg = 'exe is an invalid file type.';
+      if (ext.match(/exe/gi) || ext.match(/dll/gi)) {
+        msg = '.exe and .dll is an invalid file type.';
         resetUploads(msg, 'Please select a different file.');
       } else {
         valid = true;
@@ -1404,13 +1404,12 @@ const areProductFieldsEmpty = (producer) => {
           .then((fileName) => successFiles.push(fileName))
           .catch((fileName) => failedFiles.push(fileName));
       } else {
-        failedFiles.push(file.name); 
+        failedFiles.push({'fileName':file.name, error: 'invalid file type'}); 
         return Promise.resolve(); 
       }
     });    
 
     await Promise.all(uploadPromises);
-
     setUploadResults({ success: successFiles, failed: failedFiles });
     setUploadFlag(false);
     setUploadStatusMsg('Upload Complete');
