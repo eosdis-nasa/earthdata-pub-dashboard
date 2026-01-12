@@ -505,7 +505,7 @@ const FormQuestions = ({
                   input.label && input.label !== 'undefined'
                     ? input.label
                     : long_name
-                } fill out First and Last Name fields in the table`;
+                } fill out First and Last Name or Group fields in the table`;
               }
           }
           else {
