@@ -1256,7 +1256,8 @@ const areProductFieldsEmpty = (producer) => {
   const category_map = {
     "data_product_documentation": "documentation",
     "dar_form_project_documentation": "documentation",
-    "example_files": "sample"
+    "example_files": "sample",
+    "der_example_files": "sample"
   };
 
   const handleUpload = async (control_id) => {
