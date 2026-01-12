@@ -15,11 +15,12 @@ export const handleUpload = async ({ files, categoryType, groupId, conversationI
         // Update progress function
         const updateProgress = (progress, fileObj) => {
         };
-
+        
+        const uploadType = 'attachment';
         let payload = {
           fileObj: file,
           authToken: loadToken().token,
-          apiEndpoint: `${apiRoot}data/upload/getAttachmentUploadUrl`,
+          apiEndpoint: `${apiRoot}data/upload/${uploadType}/getUrl`,
           endpointParams: { conversation_id: conversationId }
         };
   
