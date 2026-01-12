@@ -498,6 +498,15 @@ const FormQuestions = ({
                     : long_name
                 } fill out all the fields in the table`;
               }
+          } else if (sectionHeader === 'Data Publication Request') {
+              const result = value && value.some((producer) => arePublicationProducerFieldsEmpty(producer));
+              if (result || (value && value.length === 0)) {
+                errorMessage = `${
+                  input.label && input.label !== 'undefined'
+                    ? input.label
+                    : long_name
+                } fill out First and Last Name fields in the table`;
+              }
           }
           else {
             const result = value && value.some((producer) => areProducersEmpty(producer));
@@ -600,6 +609,17 @@ const FormQuestions = ({
     return requiredFields.some((field) => !producer[field]?.trim());
   };
 
+    const arePublicationProducerFieldsEmpty = (producer) => {
+      if (!producer) return true;
+
+      const requiredFields = [
+        "producer_first_name",
+        "producer_last_name_or_organization",
+      ];
+
+    return requiredFields.some((field) => !producer[field]?.trim());
+  };
+
   const areProducersEmpty = (producer) => {
     if (!producer) return true;
 
@@ -620,7 +640,6 @@ const areProductFieldsEmpty = (producer) => {
     "data_prod_timeline",
     "data_prod_volume",
     "instrument_collect_data",
-    "data_prod_doi",
     "data_prod_grid",
     "data_prod_file_format",
     "data_prod_granule",
@@ -931,18 +950,8 @@ const areProductFieldsEmpty = (producer) => {
       if (!obj || typeof obj !== 'object') {
         return false;
       }
-
       if(k.startsWith('assignment_')) return Object.values(obj).some(value => value !== '');
-
-      const keys = Object.keys(obj);
-      if (keys.length < 2) {
-        return true;
-      }
-
-      const firstKey = keys[0];
-      const lastKey = keys[keys.length - 1];
-
-      return obj[firstKey] !== '' || obj[lastKey] !== '';
+      return true;
     });
   };
 
