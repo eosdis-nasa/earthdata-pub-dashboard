@@ -973,6 +973,7 @@ const areProductFieldsEmpty = (producer) => {
       form_id: daacInfo.step_data && daacInfo.step_data.form_id,
       id: daacInfo.id,
       daac_id: daacInfo.daac_id,
+      daac_name: daacInfo.daac_name      
     };
 
     Object.keys(fieldValues).forEach((key) => {
