@@ -421,7 +421,7 @@ const FormQuestions = ({
 
       if (
         fieldRequired &&
-        (!value || value === '') &&
+        (!value || (typeof(value) === 'string' && value.trim() === '')) &&
         input.type !== 'bbox' &&
         input.type !== 'table'
       ) {
@@ -982,13 +982,14 @@ const areProductFieldsEmpty = (producer) => {
       form_id: daacInfo.step_data && daacInfo.step_data.form_id,
       id: daacInfo.id,
       daac_id: daacInfo.daac_id,
+      daac_name: daacInfo.daac_name      
     };
 
     Object.keys(fieldValues).forEach((key) => {
       if (Array.isArray(fieldValues[key])) {
         jsonObject.data[key] = filterEmptyObjects(key, fieldValues[key]);
-      } else if (fieldValues[key] !== '') {
-        jsonObject.data[key] = fieldValues[key];
+      } else if ( typeof(fieldValues[key]) == 'string' && fieldValues[key].trim() !== '') {
+        jsonObject.data[key] = typeof(fieldValues[key]) == 'string' ? fieldValues[key].trim() : fieldValues[key];
       }
     });
 
@@ -1191,9 +1192,11 @@ const areProductFieldsEmpty = (producer) => {
     let valid = false;
     let msg = '';
     if (file.name.match(/\.([^.]+)$/) !== null) {
-      var ext = file.name.match(/\.([^.]+)$/)[1];
-      if (ext.match(/exe/gi)) {
-        msg = 'exe is an invalid file type.';
+      var ext = file.name.match(/\.([^.]+)$/)[1].toLowerCase();
+      
+      // Check if the extension is either .exe or .dll
+      if (['exe', 'dll'].includes(ext)) {
+        msg = `${ext} is an invalid file type.`;
         resetUploads(msg, 'Please select a different file.');
       } else {
         valid = true;
