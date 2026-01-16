@@ -421,7 +421,7 @@ const FormQuestions = ({
 
       if (
         fieldRequired &&
-        (!value || value === '') &&
+        (!value || (typeof(value) === 'string' && value.trim() === '')) &&
         input.type !== 'bbox' &&
         input.type !== 'table'
       ) {
@@ -497,6 +497,15 @@ const FormQuestions = ({
                     ? input.label
                     : long_name
                 } fill out all the fields in the table`;
+              }
+          } else if (sectionHeader === 'Data Publication Request') {
+              const result = value && value.some((producer) => arePublicationProducerFieldsEmpty(producer));
+              if (result || (value && value.length === 0)) {
+                errorMessage = `${
+                  input.label && input.label !== 'undefined'
+                    ? input.label
+                    : long_name
+                } fill out First and Last Name or Group fields in the table`;
               }
           }
           else {
@@ -600,6 +609,17 @@ const FormQuestions = ({
     return requiredFields.some((field) => !producer[field]?.trim());
   };
 
+    const arePublicationProducerFieldsEmpty = (producer) => {
+      if (!producer) return true;
+
+      const requiredFields = [
+        "producer_first_name",
+        "producer_last_name_or_organization",
+      ];
+
+    return requiredFields.some((field) => !producer[field]?.trim());
+  };
+
   const areProducersEmpty = (producer) => {
     if (!producer) return true;
 
@@ -620,7 +640,6 @@ const areProductFieldsEmpty = (producer) => {
     "data_prod_timeline",
     "data_prod_volume",
     "instrument_collect_data",
-    "data_prod_doi",
     "data_prod_grid",
     "data_prod_file_format",
     "data_prod_granule",
@@ -931,18 +950,8 @@ const areProductFieldsEmpty = (producer) => {
       if (!obj || typeof obj !== 'object') {
         return false;
       }
-
       if(k.startsWith('assignment_')) return Object.values(obj).some(value => value !== '');
-
-      const keys = Object.keys(obj);
-      if (keys.length < 2) {
-        return true;
-      }
-
-      const firstKey = keys[0];
-      const lastKey = keys[keys.length - 1];
-
-      return obj[firstKey] !== '' || obj[lastKey] !== '';
+      return true;
     });
   };
 
@@ -973,13 +982,14 @@ const areProductFieldsEmpty = (producer) => {
       form_id: daacInfo.step_data && daacInfo.step_data.form_id,
       id: daacInfo.id,
       daac_id: daacInfo.daac_id,
+      daac_name: daacInfo.daac_name      
     };
 
     Object.keys(fieldValues).forEach((key) => {
       if (Array.isArray(fieldValues[key])) {
         jsonObject.data[key] = filterEmptyObjects(key, fieldValues[key]);
-      } else if (fieldValues[key] !== '') {
-        jsonObject.data[key] = fieldValues[key];
+      } else if ( typeof(fieldValues[key]) == 'string' && fieldValues[key].trim() !== '') {
+        jsonObject.data[key] = typeof(fieldValues[key]) == 'string' ? fieldValues[key].trim() : fieldValues[key];
       }
     });
 
@@ -1182,9 +1192,11 @@ const areProductFieldsEmpty = (producer) => {
     let valid = false;
     let msg = '';
     if (file.name.match(/\.([^.]+)$/) !== null) {
-      var ext = file.name.match(/\.([^.]+)$/)[1];
-      if (ext.match(/exe/gi)) {
-        msg = 'exe is an invalid file type.';
+      var ext = file.name.match(/\.([^.]+)$/)[1].toLowerCase();
+      
+      // Check if the extension is either .exe or .dll
+      if (['exe', 'dll'].includes(ext)) {
+        msg = `${ext} is an invalid file type.`;
         resetUploads(msg, 'Please select a different file.');
       } else {
         valid = true;
