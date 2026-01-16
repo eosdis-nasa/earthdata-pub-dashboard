@@ -16,7 +16,7 @@ class Forms extends React.Component {
 
   render () {
     const { pathname } = this.props.location;
-    const showSidebar = pathname !== '/formss/add';
+    const showSidebar = /\/forms\/id/.test(pathname);
     return (
       <div className='page__forms'>
         <div className='content__header'>
@@ -32,7 +32,7 @@ class Forms extends React.Component {
               params={this.props.params}
             />
               : null}
-            <div className={showSidebar ? 'page__content--shortened' : 'page__content'}>
+            <div className='page__content--shortened'>
               <Switch>
                 <Route exact path='/forms' component={FormsOverview} />
                 <Route path='/forms/id/:formId' component={FormOverview} />
