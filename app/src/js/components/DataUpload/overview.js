@@ -212,26 +212,29 @@ class UploadOverview extends React.Component {
           authToken: loadToken().token,
         };
         
+        let uploadType = '';
         if (this.props.uploadDestination) {
-          payload['apiEndpoint'] = `${apiRoot}data/upload/getUploadStepUrl`;
+          uploadType = 'step'
           payload['submissionId'] = requestId;
           payload['endpointParams'] = { 
             file_category: category,
             destination: this.props.uploadDestination
            };
         } else if (requestId) {
-          payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
+          uploadType = 'form'
           payload['submissionId'] = requestId;
           payload['endpointParams'] = { file_category: category };
         } else if (groupId) {
+          uploadType = 'group'
           const prefixElement = document.getElementById('prefix');
           const prefix = prefixElement ? prefixElement.value : '';
-          payload['apiEndpoint'] = `${apiRoot}data/upload/getGroupUploadUrl`;
           payload['endpointParams'] = {
             prefix: prefix,
             group_id: groupId
           };
         }
+
+        payload['apiEndpoint'] = `${apiRoot}data/upload/${uploadType}/getUrl`;
   
         const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
         upload.uploadFile(payload, updateProgress)

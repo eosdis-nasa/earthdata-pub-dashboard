@@ -1316,7 +1316,8 @@ const areProductFieldsEmpty = (producer) => {
   const category_map = {
     "data_product_documentation": "documentation",
     "dar_form_project_documentation": "documentation",
-    "example_files": "sample"
+    "example_files": "sample",
+    "der_example_files": "sample"
   };
 
   const handleUpload = async (control_id) => {
@@ -1340,10 +1341,11 @@ const areProductFieldsEmpty = (producer) => {
         };
 
         let uploadCategory = typeof category_map[control_id] !== 'undefined' ? category_map[control_id] : "";
+        const uploadType = 'form';
         const payload = {
           fileObj: file,
           authToken: localStorage.getItem('auth-token'),
-          apiEndpoint: `${apiRoot}data/upload/getPostUrl`,
+          apiEndpoint: `${apiRoot}data/upload/${uploadType}/getUrl`,
           submissionId: daacInfo.id, 
           endpointParams: {
             file_category: uploadCategory
