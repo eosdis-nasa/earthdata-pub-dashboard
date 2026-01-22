@@ -18,8 +18,47 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import _config from '../../config';
 import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import { format } from "date-fns";
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-// Form page i.e. /dashboard/form/questions/{id}
+
+const FileStatusHeader = () => (
+  <span
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '6px',
+    }}
+  >
+    File Status
+
+    <OverlayTrigger
+      placement="right"
+      overlay={
+        <Tooltip id="file-status-tooltip">
+          <div>
+            <strong>Available</strong>: Uploaded to EDPub bucket
+            <br />
+            <strong>Scanning</strong>: Uploaded to CUE for file scanning
+          </div>
+        </Tooltip>
+      }
+    >
+      {/* OverlayTrigger REQUIRES a single DOM child */}
+      <span style={{ display: 'inline-flex' }}>
+        <FontAwesomeIcon
+          icon={faQuestionCircle}
+          style={{
+            cursor: 'pointer',
+            color: 'white',
+          }}
+          aria-label="File status help"
+        />
+      </span>
+    </OverlayTrigger>
+  </span>
+);
 
 const FormQuestions = ({
   cancelLabel = 'Cancel',
@@ -50,7 +89,7 @@ const FormQuestions = ({
   const [uploadStatusMsg, setUploadStatusMsg] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState({});
   const [validationAttempted, setValidationAttempted] = useState(false);
-  const [progressValue, setProgressValue] = useState(0);
+  const [uploadFlag, setUploadFlag] = useState(false);
   const [uploadFileName, setUploadFileName] = useState('');
   const [uploadFileFlag, setUploadFileFlag] = useState(false);
   const [uploadFailed, setUploadFailed] = useState(false);
@@ -81,12 +120,14 @@ const FormQuestions = ({
     },
     {
       key: 'status',
-      label: 'File Status',
+      label: <FileStatusHeader />,
       formatter: (value) => {
         if (!value) return 'Available';
-        if (['uploading', 'unscanned', 'clean', 'scanning'].includes(value)) return 'Scanning';
+        if (['uploading', 'unscanned', 'clean', 'scanning'].includes(value)) {
+          return 'Scanning';
+        }
         return value;
-      }
+      },
     }
   ]);
   const [logs, setLogs] = useState({});
@@ -112,6 +153,15 @@ const FormQuestions = ({
         values,
       },
     }));
+  };
+
+  const formatETA = (seconds) => {
+    if (seconds == null || Number.isNaN(seconds) || seconds < 0) return null;
+
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+
+    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
   };
 
   const fetchFileUploads = async () => {
@@ -1192,11 +1242,9 @@ const areProductFieldsEmpty = (producer) => {
     let valid = false;
     let msg = '';
     if (file.name.match(/\.([^.]+)$/) !== null) {
-      var ext = file.name.match(/\.([^.]+)$/)[1].toLowerCase();
-      
-      // Check if the extension is either .exe or .dll
-      if (['exe', 'dll'].includes(ext)) {
-        msg = `${ext} is an invalid file type.`;
+      var ext = file.name.match(/\.([^.]+)$/)[1];
+      if (ext.match(/exe/gi) || ext.match(/dll/gi)) {
+        msg = '.exe and .dll is an invalid file type.';
         resetUploads(msg, 'Please select a different file.');
       } else {
         valid = true;
@@ -1274,17 +1322,24 @@ const areProductFieldsEmpty = (producer) => {
 
   const handleUpload = async (control_id) => {
     setUploadStatusMsg('Uploading...');
+    setUploadFlag(true);
     const successFiles = [];
     const failedFiles = [];
 
     const uploadFileAsync = async (file) => {
       return new Promise((resolve, reject) => {
+
         const updateProgress = (progress, fileObj) => {
           setUploadProgress((prev) => ({
             ...prev,
-            [fileObj.name]: Math.min(progress, 100),
+            [fileObj.name]: {
+              percent: progress.percent,
+              etaSeconds: progress.etaSeconds,
+              phase: progress.phase
+            }
           }));
         };
+
         let uploadCategory = typeof category_map[control_id] !== 'undefined' ? category_map[control_id] : "";
         const uploadType = 'form';
         const payload = {
@@ -1298,26 +1353,60 @@ const areProductFieldsEmpty = (producer) => {
         };
 
         const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
-        upload.uploadFile(payload, updateProgress).then( async (resp) => {
-          const payload = {
-            fileId: resp.file_id, submissionId: daacInfo.id
-          }
-          await dispatch(createTempUploadFile(payload));
-          const error = resp?.data?.error || resp?.error || resp?.data?.[0]?.error;
-          if (error) {
-            console.error(`Error uploading file ${file.name}: ${error}`);
+        upload.uploadFile(payload, updateProgress)
+          .then(async (resp) => {
+            const error =
+              resp?.data?.error ||
+              resp?.error ||
+              resp?.data?.[0]?.error;
+
+            if (error) {
+              console.error(`Error uploading file ${file.name}: ${error}`);
+
+              setUploadProgress((prev) => ({
+                ...prev,
+                [file.name]: {
+                  percent: prev[file.name]?.percent ?? 0,
+                  etaSeconds: null,
+                  phase: 'failed',
+                },
+              }));
+
+              reject({
+                fileName: file.name,
+                error: error || 'Upload failed due to an unknown error',
+              });
+
+              return;
+            }
+
+            // Only runs on successful upload
+            const tempPayload = {
+              fileId: resp.file_id,
+              submissionId: daacInfo.id,
+            };
+
+            await dispatch(createTempUploadFile(tempPayload));
+            resolve(file.name);
+          })
+          .catch((err) => {
+            console.error(`Error uploading file ${file.name}: ${err}`);
+
             setUploadProgress((prev) => ({
               ...prev,
-              [file.name]: 'Failed',
+              [file.name]: {
+                percent: prev[file.name]?.percent ?? 0,
+                etaSeconds: null,
+                phase: 'failed',
+              },
             }));
-            reject(file.name);
-          } else {
-            resolve(file.name);
-          }
-        }).catch((err) => {
-          console.error(`Error uploading file ${file.name}: ${err}`);
-          reject(file.name);
-        });
+
+            reject({
+              fileName: file.name,
+              error: err?.message || 'Network or server error during upload',
+            });
+          });
+
       });
     };
 
@@ -1327,16 +1416,16 @@ const areProductFieldsEmpty = (producer) => {
           .then((fileName) => successFiles.push(fileName))
           .catch((fileName) => failedFiles.push(fileName));
       } else {
-        failedFiles.push(file.name); 
+        failedFiles.push({'fileName':file.name, error: 'invalid file type'}); 
         return Promise.resolve(); 
       }
     });    
 
     await Promise.all(uploadPromises);
-
     setUploadResults({ success: successFiles, failed: failedFiles });
+    setUploadFlag(false);
     setUploadStatusMsg('Upload Complete');
-    setUploadProgress({});
+    setTimeout(() => setUploadProgress({}), 1500);
     setUploadFileFlag(prev => !prev);
     setShowUploadSummaryModal(true);
     setUploadFiles([]); 
@@ -2566,14 +2655,14 @@ const areProductFieldsEmpty = (producer) => {
                                             )}                                            
                                           </div>
                                         </div>
-                                          
+                                        
                                         <div  style={{
                                             display: input.type === 'file' ? 'block' : 'none',
                                           }}>
                                           <Button
                                             className="upload-button mt-2"
                                             onClick={(e) => handleUpload(input.control_id)}
-                                            disabled={uploadFiles.length === 0 || `${fileControlId}_file-upload-input` !== `${input.control_id}_file-upload-input`}
+                                            disabled={uploadFlag || uploadFiles.length === 0 || `${fileControlId}_file-upload-input` !== `${input.control_id}_file-upload-input`}
                                           >
                                           Upload
                                           </Button>
@@ -2590,30 +2679,79 @@ const areProductFieldsEmpty = (producer) => {
 
                                           {progressBarsVisible && uploadFiles.length > 0 && `${fileControlId}_file-upload-input` === `${input.control_id}_file-upload-input` && (
                                             <div>
-                                              {uploadFiles.map((file, index) => (
-                                                <div key={index}>
-                                                  <div style={{display: "flow-root"}}>
-                                                    {file.name}
-                                                    <Button
-                                                      className="upload-button"
-                                                      style={{fontSize: "100%", padding: "5px", backgroundColor: "#db1400", margin: "2px", float: "inline-end"}}
-                                                      onClick={() => handleRemoveFile(file.name)}
-                                                      >Remove</Button>
-                                                  </div>
-                                                  <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
-                                                    <div style={{
-                                                      width: `${uploadProgress[file.name] || 0}%`,
-                                                      backgroundColor: '#2275aa',
-                                                      height: '100%',
-                                                      textAlign: 'center',
-                                                      lineHeight: '30px',
-                                                      color: 'white',
-                                                    }}>
-                                                      {uploadProgress[file.name] && uploadProgress[file.name] !== 'Failed'? `${uploadProgress[file.name]}%` : '0%'}
+                                              {uploadFiles.map((file, index) => {
+                                                const progress = uploadProgress[file.name];
+                                                const percent = progress?.percent ?? 0;
+                                                const eta = progress?.etaSeconds;
+                                                let progressText = `${percent}%`;
+
+                                                return (
+                                                  <div key={index} style={{ marginBottom: '16px' }}>
+                                                    {/* File name + Remove button */}
+                                                    <div style={{ display: 'flow-root' }}>
+                                                      {file.name}
+                                                      <Button
+                                                        className="upload-button"
+                                                        style={{
+                                                          fontSize: '100%',
+                                                          padding: '5px',
+                                                          backgroundColor: uploadFlag ? '#c0c0c0':'#db1400',
+                                                          margin: '2px',
+                                                          float: 'inline-end',
+                                                          cursor: uploadFlag ? "not-allowed": ''
+                                                        }}
+                                                        onClick={() => handleRemoveFile(file.name)}
+                                                      >
+                                                        Remove
+                                                      </Button>
                                                     </div>
+
+                                                    {/* Progress bar container */}
+                                                      <div style={{
+                                                        width: '100%',
+                                                        height: '30px',
+                                                        backgroundColor: progress === 'Failed' ? 'red' : '#f1f1f1',
+                                                        borderRadius: '4px',
+                                                        position: 'relative',
+                                                        overflow: 'hidden'
+                                                      }}>
+                                                      <div
+                                                        style={{
+                                                          width: `${percent}%`,
+                                                          height: '100%',
+                                                          backgroundColor: percent > 0 ? '#2275aa' : '#fff',
+                                                          transition: 'width 250ms ease-out',
+                                                          display: 'flex',
+                                                          alignItems: 'center',
+                                                          justifyContent: percent < 15 ? 'flex-start' : 'center',
+                                                          paddingLeft: percent < 15 ? '8px' : '0',
+                                                          color: percent === 0 ? 'black' : '#fff',
+                                                          fontWeight: 600,
+                                                          whiteSpace: 'nowrap'
+                                                        }}
+                                                      >
+                                                        {progressText}
+                                                      </div>
+                                                    </div>
+
+                                                    <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
+                                                      {eta != null ? (
+                                                        <>Time Remaining: {formatETA(eta)}</>
+                                                      ) : (
+                                                        uploadFlag && <>
+                                                          <FontAwesomeIcon
+                                                            icon={faSpinner}
+                                                            spin
+                                                            style={{ marginLeft: '4px', marginRight: '4px' }}
+                                                          />
+                                                          Calculating Time Remaining...
+                                                        </>
+                                                      )}
+                                                    </div>
+
                                                   </div>
-                                                </div>
-                                              ))}
+                                                );
+                                              })}
                                             </div>
                                           )}
                                         </div>
@@ -2712,8 +2850,37 @@ const areProductFieldsEmpty = (producer) => {
           <h5>Failed Uploads</h5>
           {uploadResults.failed.length > 0 ? (
             <ul>
-              {uploadResults.failed.map((fileName, index) => (
-                <li key={index}>{fileName}</li>
+              {uploadResults.failed.map(({ fileName, error }, index) => (
+                <li
+                  key={index}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  {fileName}
+
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={
+                      <Tooltip id={`upload-error-${index}`}>
+                        {error}
+                      </Tooltip>
+                    }
+                  >
+                    <span style={{ display: 'inline-flex' }}>
+                      <FontAwesomeIcon
+                        icon={faQuestionCircle}
+                        style={{
+                          cursor: 'pointer',
+                          color: '#d54309',
+                        }}
+                        aria-label={`Upload error for ${fileName}`}
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </li>
               ))}
             </ul>
           ) : (
