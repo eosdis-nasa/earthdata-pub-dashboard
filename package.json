@@ -207,9 +207,5 @@
     "stream-http": "^3.2.0",
     "stubborn-queue": "^2.0.0",
     "style-loader": "^3.3.1"
-  },
-  "overrides": {
-    "@babel/runtime": "7.26.10",
-    "min-document": "2.19.1"
   }
 }
