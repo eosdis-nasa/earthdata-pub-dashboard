@@ -164,17 +164,12 @@ class UploadOverview extends React.Component {
 
   validateFile(file) {
     let valid = false;
-    if (file.name.match(/\.([^\.]+)$/) !== null) {
-      var ext = file.name.match(/\.([^\.]+)$/)[1];
-      if (ext.match(/exe/gi) || ext.match(/dll/gi)) {
-        this.setState({ statusMsg: 'exe and dll is an invalid file type.' });
-        this.resetInputWithTimeout('Please select a different file.', 2000)
-      } else {
-        valid = true
-      }
-    } else {
-      this.setState({ statusMsg: 'The file must have an extension.' });
+    var ext = file.name.match(/\.([^\.]+)$/)?.[1];
+    if (ext && (ext.match(/exe/gi) || ext.match(/dll/gi))) {
+      this.setState({ statusMsg: 'exe and dll is an invalid file type.' });
       this.resetInputWithTimeout('Please select a different file.', 2000)
+    } else {
+      valid = true
     }
     return valid;
   }
