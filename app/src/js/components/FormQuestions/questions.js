@@ -1241,17 +1241,12 @@ const areProductFieldsEmpty = (producer) => {
   const validateFile = (file) => {
     let valid = false;
     let msg = '';
-    if (file.name.match(/\.([^.]+)$/) !== null) {
-      var ext = file.name.match(/\.([^.]+)$/)[1];
-      if (ext.match(/exe/gi) || ext.match(/dll/gi)) {
-        msg = '.exe and .dll is an invalid file type.';
-        resetUploads(msg, 'Please select a different file.');
-      } else {
-        valid = true;
-      }
-    } else {
-      msg = 'The file must have an extension.';
+    var ext = file.name.match(/\.([^.]+)$/)?.[1];
+    if (ext && (ext.match(/exe/gi) || ext.match(/dll/gi))) {
+      msg = '.exe and .dll is an invalid file type.';
       resetUploads(msg, 'Please select a different file.');
+    } else {
+      valid = true;
     }
     return valid;
   };
