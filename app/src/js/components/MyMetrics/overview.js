@@ -23,13 +23,7 @@ const STATUS_COLORS = [
   '#e6a8ff', '#ffa07a', '#b5e7a0', '#f7cac9', '#ffdd94', '#98ddca', '#ffb3ba', '#c4a7e7', '#b0d7ff'
 ];
 
-const MetricOverview = ({ privileges, dispatch, requests, metrics }) => {  useEffect(() => {
-    if (!(requests && requests.list.data && requests.list.data.length > 0)) {
-      dispatch(listRequests())
-      dispatch(listInactiveRequests())
-    };
-  }, [dispatch, requests]);
-
+const MetricOverview = ({ privileges, dispatch, requests, metrics }) => {
   const [viewMode, setViewMode] = useState({ daac: 'chart', step: 'chart', stacked: 'chart', close: 'table' });
   const [hoveredStep, setHoveredStep] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -57,29 +51,33 @@ const MetricOverview = ({ privileges, dispatch, requests, metrics }) => {  useEf
 const [statusFilter, setStatusFilter] = useState("all"); // all | active | withdrawn | closed
 
 useEffect(() => {
+  let cancelled = false;
+
   const fetchBoth = async () => {
-    setDataReady(false);  // Start loading
-
     try {
-      const activeResponse = await dispatch(listRequests());
-      const inactiveResponse = await dispatch(listInactiveRequests());
+      const [active, inactive] = await Promise.all([
+        dispatch(listRequests()),
+        dispatch(listInactiveRequests())
+      ]);
 
-      const activeData = activeResponse?.data || [];
-      const inactiveData = inactiveResponse?.data || [];
-
-      const mergedData = [...activeData, ...inactiveData];
-      setSourceData(mergedData);
-      setDataReady(true);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching request data:', error);
-      setSourceData([]); // fallback
-      setDataReady(true);
-      setLoading(false);
+      if (!cancelled) {
+        setSourceData([
+          ...(active?.data || []),
+          ...(inactive?.data || [])
+        ]);
+        setDataReady(true);
+      }
+    } catch (e) {
+      if (!cancelled) {
+        console.error(e);
+        setSourceData([]);
+        setDataReady(true);
+      }
     }
   };
 
   fetchBoth();
+  return () => { cancelled = true; };
 }, [dispatch]);
 
 

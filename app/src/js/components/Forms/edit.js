@@ -112,7 +112,7 @@ class EditForm extends React.Component {
     const breadcrumbConfig = [
       {
         label: 'Dashboard Home',
-        href: '/index'
+        href: '/'
       },
       {
         label: 'Forms',

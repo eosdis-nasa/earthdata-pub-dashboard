@@ -20,7 +20,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const defaultHelpText = 'Providing sample data files that are representative of the range of data within this data product will help the DAAC understand and provide feedback on the data format, structure, and content. Documentation files may include descriptions of the variables, filename conventions, processing steps, and/or data quality.  If more than 10 total sample data and documentation files are necessary to represent and describe the data product, please contact the DAAC for assistance.  Files must be less than 5 GB and cannot include .exe or .dll extensions.';
+const defaultHelpText = 'Providing sample data files that are representative of the range of data within this data product will help the DAAC understand and provide feedback on the data format, structure, and content. Documentation files may include descriptions of the variables, filename conventions, processing steps, and/or data quality.  If more than 10 total sample data and documentation files are necessary to represent and describe the data product, please contact the DAAC for assistance.  Files cannot include .exe or .dll extensions.';
 const defaultUploadDescription = 'Sample Data and Data Product Documentation';
 
 class UploadOverview extends React.Component {
@@ -166,8 +166,8 @@ class UploadOverview extends React.Component {
     let valid = false;
     if (file.name.match(/\.([^\.]+)$/) !== null) {
       var ext = file.name.match(/\.([^\.]+)$/)[1];
-      if (ext.match(/exe/gi)) {
-        this.setState({ statusMsg: 'exe is an invalid file type.' });
+      if (ext.match(/exe/gi) || ext.match(/dll/gi)) {
+        this.setState({ statusMsg: 'exe and dll is an invalid file type.' });
         this.resetInputWithTimeout('Please select a different file.', 2000)
       } else {
         valid = true
@@ -212,26 +212,29 @@ class UploadOverview extends React.Component {
           authToken: loadToken().token,
         };
         
+        let uploadType = '';
         if (this.props.uploadDestination) {
-          payload['apiEndpoint'] = `${apiRoot}data/upload/getUploadStepUrl`;
+          uploadType = 'step'
           payload['submissionId'] = requestId;
           payload['endpointParams'] = { 
             file_category: category,
             destination: this.props.uploadDestination
            };
         } else if (requestId) {
-          payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
+          uploadType = 'form'
           payload['submissionId'] = requestId;
           payload['endpointParams'] = { file_category: category };
         } else if (groupId) {
+          uploadType = 'group'
           const prefixElement = document.getElementById('prefix');
           const prefix = prefixElement ? prefixElement.value : '';
-          payload['apiEndpoint'] = `${apiRoot}data/upload/getGroupUploadUrl`;
           payload['endpointParams'] = {
             prefix: prefix,
             group_id: groupId
           };
         }
+
+        payload['apiEndpoint'] = `${apiRoot}data/upload/${uploadType}/getUrl`;
   
         const upload = (useCUEUpload?.toLowerCase?.() === 'false' ? new LocalUpload() : new CueFileUtility());
         upload.uploadFile(payload, updateProgress)
