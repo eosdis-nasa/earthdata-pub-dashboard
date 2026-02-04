@@ -48,6 +48,7 @@ const DynamicTable = ({
   removeRow,
   moveUpDown,
   sectionHeader,
+  handleEnterKey
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({});
@@ -133,6 +134,7 @@ const DynamicTable = ({
                       setFormData({ ...formData, data_product_name: e.target.value })
                     }
                     isInvalid={!!errors.data_product_name}
+                    onKeyDown={handleEnterKey}
                   />
                   {errors.data_product_name && (
                     <div className="text-danger small mt-1">{errors.data_product_name}</div>
@@ -490,6 +492,7 @@ const DynamicTable = ({
                       onChange={(e) =>
                         handleTableFieldChange(controlId, index, 'data_product_name', e.target.value)
                       }
+                      onKeyDown={handleEnterKey}
                     />
                   </td>
                   <td>
@@ -501,6 +504,7 @@ const DynamicTable = ({
                       onChange={(e) =>
                         handleTableFieldChange(controlId, index, 'data_prod_timeline', e.target.value)
                       }
+                      onKeyDown={handleEnterKey}
                     />
                   </td>
                   <td>
@@ -512,6 +516,7 @@ const DynamicTable = ({
                       onChange={(e) =>
                         handleTableFieldChange(controlId, index, 'data_prod_volume', e.target.value)
                       }
+                      onKeyDown={handleEnterKey}
                     />
                   </td>
                   <td>
@@ -523,6 +528,7 @@ const DynamicTable = ({
                       onChange={(e) =>
                         handleTableFieldChange(controlId, index, 'instrument_collect_data', e.target.value)
                       }
+                      onKeyDown={handleEnterKey}
                     />
                   </td>
                   <td style={{ width: '120px', textAlign: 'center' }}>
@@ -789,6 +795,7 @@ const DynamicTable = ({
                   name="firstName"
                   value={row.producer_first_name || ''}
                   onChange={(e) => handleTableFieldChange(controlId, index, 'producer_first_name', e.target.value)}
+                  onKeyDown={handleEnterKey}
                 />
               </td>
               <td>
@@ -798,6 +805,7 @@ const DynamicTable = ({
                   name="middleInitial"
                   value={row.producer_middle_initial || ''}
                   onChange={(e) => handleTableFieldChange(controlId, index, 'producer_middle_initial', e.target.value)}
+                  onKeyDown={handleEnterKey}
                 />
               </td>
               <td>
@@ -807,6 +815,7 @@ const DynamicTable = ({
                   name="lastName"
                   value={row.producer_last_name_or_organization || ''}
                   onChange={(e) => handleTableFieldChange(controlId, index, 'producer_last_name_or_organization', e.target.value)}
+                  onKeyDown={handleEnterKey}
                 />
               </td>
               <td style={{ width: '120px', textAlign: 'center' }}>
