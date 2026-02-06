@@ -41,7 +41,6 @@ To locate environment variables, see webpack.common.js:
 | LABELS | gitc or daac localization. | *daac* |
 | REQUEST_HIDE_BUTTON_VERBAGE | The hide button verbage displayed on the request detail page. | Withdraw |
 | REQUEST_UNHIDE_BUTTON_VERBAGE | The hide button verbage displayed on the request detail page. | Restore |
-| SHOW_DISTRIBUTION_API_METRICS | \<optional\> Display metrics from Earthdata Pub Distribution API.| *false* |
 | HELP_PAGE_DEFAULT | URL of the instructional how to use Earthdata Pub in Overview | *<https://pub.earthdata.nasa.gov/getting_started>* |
 
 ## Installing
@@ -196,7 +195,7 @@ npm run start-localstack
 Serve the dashboard web application (another terminal)
 
 ```bash
-[SHOW_DISTRIBUTION_API_METRICS=true ESROOT=http://example.com APIROOT=http://localhost:8080] npm run serve
+[APIROOT=http://localhost:8080] npm run serve
 ```
 
 If you're just testing dashboard code, you can generally run all of the above

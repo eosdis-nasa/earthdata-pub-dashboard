@@ -9,7 +9,6 @@ import {
   getQuestion,
   updateQuestion,
   addQuestion,
-  updateInputs,
   listDaacs,
   listQuestions
 } from '../../actions';

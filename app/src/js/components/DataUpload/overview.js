@@ -9,7 +9,7 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { listFileUploadsBySubmission, listFileDownloadsByKey, listFileUploadsBySubmissionStep, refreshToken } from '../../actions';
+import { listFileUploadsBySubmission, listFileUploadsBySubmissionStep, refreshToken } from '../../actions';
 import { shortDateShortTimeYearFirstJustValue, storage } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
 import { Modal, Button } from 'react-bootstrap';
