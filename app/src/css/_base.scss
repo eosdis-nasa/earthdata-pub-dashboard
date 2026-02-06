@@ -1251,6 +1251,7 @@ textarea {
 div.selectButton {
   padding: 0;
   z-index: 10;
+  min-width: 200px;
 }
 div#producerSelect.selectButton {
   width: inherit;
