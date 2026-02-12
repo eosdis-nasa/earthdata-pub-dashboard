@@ -10,6 +10,7 @@ import {
 import log from '../utils/log';
 import { isValidApiRequestAction } from './validate';
 import Error from '../components/error';
+import { history } from '../store/configureStore';
 
 const handleError = ({ id, type, error, requestAction }, next) => {
   console.groupCollapsed('handleError');
@@ -40,7 +41,8 @@ const handleError = ({ id, type, error, requestAction }, next) => {
   const errorType = type + '_ERROR';
   log((id ? errorType + ': ' + id : errorType));
   log(error);
-
+  if (localStorage.getItem('auth-token')) history.push('/logout');
+  
   return next({
     id,
     config: requestAction,
