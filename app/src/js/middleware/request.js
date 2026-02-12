@@ -42,7 +42,6 @@ const handleError = ({ id, type, error, requestAction }, next) => {
   log((id ? errorType + ': ' + id : errorType));
   log(error);
   if (localStorage.getItem('auth-token')) history.push('/logout');
-  
   return next({
     id,
     config: requestAction,
