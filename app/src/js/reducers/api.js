@@ -1,5 +1,5 @@
 'use strict';
-import * as jwt from 'jsonwebtoken';
+import { jwtDecode } from 'jwt-decode';
 import { set } from 'object-path';
 import { loadToken, saveToken, deleteToken } from '../utils/auth';
 
@@ -14,7 +14,7 @@ import {
 import { createReducer } from '@reduxjs/toolkit';
 
 function getExpiration (token) {
-  const decoded = jwt.decode(token);
+  const decoded = jwtDecode(token);
   if (decoded && decoded.exp) {
     return decoded.exp;
   }
