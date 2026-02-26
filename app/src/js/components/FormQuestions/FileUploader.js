@@ -58,7 +58,8 @@ const FileUploader = ({ requestId, store, refreshFileList }) => {
           authToken: localStorage.getItem('auth-token'),
         };
         if (requestId) {
-          payload['apiEndpoint'] = `${apiRoot}data/upload/getPostUrl`;
+          const uploadType = 'form';
+          payload['apiEndpoint'] = `${apiRoot}data/upload/${uploadType}/getUrl`;
           payload['submissionId'] = requestId;
         }
         const resp = await upload.uploadFile(payload);
