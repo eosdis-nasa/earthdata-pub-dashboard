@@ -3,9 +3,7 @@ import { set } from 'object-path';
 import {
   METRICS,
   METRICS_INFLIGHT,
-  METRICS_ERROR,
-  SEARCH_METRICS,
-  CLEAR_METRICS_SEARCH
+  METRICS_ERROR
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 
@@ -53,11 +51,5 @@ export default createReducer(initialState, {
   [METRICS_ERROR]: (state, action) => {
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], action.error);
-  },
-  [SEARCH_METRICS]: (state, action) => {
-    set(state, ['searchString'], action.searchString);
-  },
-  [CLEAR_METRICS_SEARCH]: (state) => {
-    set(state, ['searchString'], null);
   }
 });

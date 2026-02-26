@@ -9,7 +9,7 @@ import Loading from '../LoadingIndicator/loading-indicator';
 import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { listFileUploadsBySubmission, listFileDownloadsByKey, listFileUploadsBySubmissionStep, refreshToken } from '../../actions';
+import { listFileUploadsBySubmission, listFileUploadsBySubmissionStep, refreshToken } from '../../actions';
 import { shortDateShortTimeYearFirstJustValue, storage } from '../../utils/format';
 import Table from '../SortableTable/SortableTable';
 import { Modal, Button } from 'react-bootstrap';
@@ -164,17 +164,12 @@ class UploadOverview extends React.Component {
 
   validateFile(file) {
     let valid = false;
-    if (file.name.match(/\.([^\.]+)$/) !== null) {
-      var ext = file.name.match(/\.([^\.]+)$/)[1];
-      if (ext.match(/exe/gi) || ext.match(/dll/gi)) {
-        this.setState({ statusMsg: 'exe and dll is an invalid file type.' });
-        this.resetInputWithTimeout('Please select a different file.', 2000)
-      } else {
-        valid = true
-      }
-    } else {
-      this.setState({ statusMsg: 'The file must have an extension.' });
+    var ext = file.name.match(/\.([^\.]+)$/)?.[1];
+    if (ext && (ext.match(/exe/gi) || ext.match(/dll/gi))) {
+      this.setState({ statusMsg: 'exe and dll is an invalid file type.' });
       this.resetInputWithTimeout('Please select a different file.', 2000)
+    } else {
+      valid = true
     }
     return valid;
   }

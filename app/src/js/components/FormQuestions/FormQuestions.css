@@ -1156,3 +1156,9 @@
 .dataprod {
   margin-left: 5px;
 }
+
+.is-invalid,
+.form-control.is-invalid {
+  border: 1px solid #dc3545 !important;
+  box-shadow: none !important;
+}

@@ -4,17 +4,8 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  // getCount,
-  // searchRequests,
-  // clearRequestsSearch,
-  // filterRequests,
-  // clearRequestsFilter,
   listRequests,
-  // filterStatuses,
-  // clearStagesFilter,
-  // clearStatusesFilter,
   // listWorkflows,
-  // getOptionsRequestName,
   initialize,
 } from '../../actions';
 // import { get } from 'object-path';

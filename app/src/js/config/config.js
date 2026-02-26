@@ -13,8 +13,6 @@ const config = {
   awsRegion: process.env.AWS_REGION || 'us-west-2',
   oauthMethod: process.env.AUTH_METHOD || 'earthdata',
   kibanaRoot: process.env.KIBANAROOT || '',
-  esRoot: process.env.ESROOT || '',
-  showDistributionAPIMetrics: process.env.SHOW_DISTRIBUTION_API_METRICS || false,
   graphicsPath: (process.env.BUCKET || ''),
   enableRecovery: process.env.ENABLE_RECOVERY || false,
   esUser: process.env.ES_USER || '',

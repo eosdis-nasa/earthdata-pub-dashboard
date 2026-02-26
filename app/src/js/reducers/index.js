@@ -3,7 +3,6 @@ import { connectRouter } from 'connected-react-router';
 import api from './api';
 import apiVersion from './api-version';
 import config from './config';
-import dist from './dist';
 import datepicker from './datepicker';
 import requests from './requests';
 import stats from './stats';
@@ -14,7 +13,6 @@ import questions from './questions';
 import sections from './sections.js';
 import users from './users';
 import groups from './groups';
-import logs from './logs';
 import schema from './schema';
 import workflows from './workflows';
 import metrics from './metrics';
@@ -33,7 +31,6 @@ export const reducers = {
   api,
   apiVersion,
   config,
-  dist,
   datepicker,
   earthdatapubInstance,
   requests,
@@ -46,7 +43,6 @@ export const reducers = {
   questions,
   users,
   groups,
-  logs,
   schema,
   workflows,
   metrics,

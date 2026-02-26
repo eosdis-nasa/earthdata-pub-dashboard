@@ -820,6 +820,13 @@ const areProductFieldsEmpty = (producer) => {
   return Object.keys(newValidationErrors).length === 0;
 };
 
+const handleEnterKey = (event) => {
+  if (event.key === 'Enter') {
+    // Prevent the default form submission
+    event.preventDefault(); 
+  }
+};
+
   const handleFieldChange = (controlId, value) => {
     setValues((prevValues) => {
       const newValues = {
@@ -1241,17 +1248,12 @@ const areProductFieldsEmpty = (producer) => {
   const validateFile = (file) => {
     let valid = false;
     let msg = '';
-    if (file.name.match(/\.([^.]+)$/) !== null) {
-      var ext = file.name.match(/\.([^.]+)$/)[1];
-      if (ext.match(/exe/gi) || ext.match(/dll/gi)) {
-        msg = '.exe and .dll is an invalid file type.';
-        resetUploads(msg, 'Please select a different file.');
-      } else {
-        valid = true;
-      }
-    } else {
-      msg = 'The file must have an extension.';
+    var ext = file.name.match(/\.([^.]+)$/)?.[1];
+    if (ext && (ext.match(/exe/gi) || ext.match(/dll/gi))) {
+      msg = '.exe and .dll is an invalid file type.';
       resetUploads(msg, 'Please select a different file.');
+    } else {
+      valid = true;
     }
     return valid;
   };
@@ -1857,6 +1859,7 @@ const areProductFieldsEmpty = (producer) => {
                                 name="sameAsPrimaryDataProducer"
                                 checked={checkboxStatus.sameAsPrimaryDataProducer}
                                 onChange={handleCheckboxChange}
+                                onKeyDown={handleEnterKey}
                               />
                               <span className="checkmark"></span>
                             </label>
@@ -1869,6 +1872,7 @@ const areProductFieldsEmpty = (producer) => {
                                 name="sameAsPrincipalInvestigator"
                                 checked={checkboxStatus.sameAsPrincipalInvestigator}
                                 onChange={handleCheckboxChange}
+                                onKeyDown={handleEnterKey}
                               />
                               <span className="checkmark"></span>
                             </label>
@@ -1883,6 +1887,7 @@ const areProductFieldsEmpty = (producer) => {
                                     name="sameAsPrimaryLongTermSupport"
                                     checked={checkboxStatus.sameAsPrimaryLongTermSupport}
                                     onChange={handleCheckboxChange}
+                                    onKeyDown={handleEnterKey}
                                   />
                                   <span className="checkmark"></span>
                                 </label>
@@ -1893,6 +1898,7 @@ const areProductFieldsEmpty = (producer) => {
                                     name="sameAsPrimaryDataAccession"
                                     checked={checkboxStatus.sameAsPrimaryDataAccession}
                                     onChange={handleCheckboxChange}
+                                    onKeyDown={handleEnterKey}
                                   />
                                   <span className="checkmark"></span>
                                 </label>
@@ -1938,6 +1944,7 @@ const areProductFieldsEmpty = (producer) => {
                                   onChange={(e) =>
                                     handleFieldChange(input.control_id, e.target.checked)
                                   }
+                                  onKeyDown={handleEnterKey}
                                 />
                                 <label
                                   htmlFor={input.control_id}
@@ -2120,6 +2127,7 @@ const areProductFieldsEmpty = (producer) => {
                                                   e.target.value
                                                 )
                                               }
+                                              onKeyDown={handleEnterKey}
                                             />
                                             <p
                                               id={`${input.control_id}_invalid`}
@@ -2203,6 +2211,7 @@ const areProductFieldsEmpty = (producer) => {
                                                 e.target.value
                                               )
                                             }
+                                            onKeyDown={handleEnterKey}
                                           />
                                         )}
                                         {input.type === 'textarea' && (
@@ -2351,6 +2360,7 @@ const areProductFieldsEmpty = (producer) => {
                                                 e.target.value
                                               )
                                             }
+                                            onKeyDown={handleEnterKey}
                                           />
                                         )}
                                         {input.type === 'datetimePicker' && (
@@ -2446,6 +2456,7 @@ const areProductFieldsEmpty = (producer) => {
                                                 e.target.value
                                               )
                                             }
+                                            onKeyDown={handleEnterKey}
                                           />
                                         )}
                                         {input.type === 'radio' && (
@@ -2490,6 +2501,7 @@ const areProductFieldsEmpty = (producer) => {
                                                       )
                                                     )
                                                   }
+                                                  onKeyDown={handleEnterKey}
                                                 />
                                                 <label
                                                   htmlFor={`${input.control_id}_${o_key}`}
@@ -2573,6 +2585,7 @@ const areProductFieldsEmpty = (producer) => {
                                                         e.target.value
                                                       )
                                                     }
+                                                    onKeyDown={handleEnterKey}
                                                   />
                                                 </div>
                                               )
@@ -2623,6 +2636,7 @@ const areProductFieldsEmpty = (producer) => {
                                                 moveUpDown={moveUpDown}
                                                 readonly={false}
                                                 sectionHeader={sectionHeader}
+                                                handleEnterKey={handleEnterKey}
                                               />
                                             </div>
                                           )}
@@ -2644,6 +2658,7 @@ const areProductFieldsEmpty = (producer) => {
                                           onClick={() =>
                                             document.getElementById(`${input.control_id}_file-upload-input`).click()
                                           }
+                                          onKeyDown={handleEnterKey}
                                         >
                                           <div className="upload-container">
                                             <p>Drag & drop files here, or click to select files</p>
