@@ -41,8 +41,7 @@ const handleError = ({ id, type, error, requestAction }, next) => {
   const errorType = type + '_ERROR';
   log((id ? errorType + ': ' + id : errorType));
   log(error);
-  // Temp removal until UAT review form signout loop fixed
-  // if (localStorage.getItem('auth-token')) history.push('/logout');
+  if (localStorage.getItem('auth-token')) history.push('/logout');
   return next({
     id,
     config: requestAction,
