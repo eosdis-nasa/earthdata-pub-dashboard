@@ -1,21 +1,35 @@
 'use strict';
 import React from 'react';
 import { Link } from 'react-router-dom';
-export const tableColumns = [
+export const getTableColumns = (requestsList) => { 
+  return [
   {
     Header: 'Subject',
-    accessor: (row) => (
-      <div className='flex__column'>
-        <div>
-          <Link to={`/conversations/id/${row.id}`} aria-label="View your conversation details">
-            {row.subject}
-          </Link>
+    accessor: (row) => {
+      const matchedRequest = requestsList?.find(
+        (req) => req.id === row.subject.split('Request ID ')[1]
+      );
+      return (
+        <div className='flex__column'>
+          {matchedRequest && (
+            <div>
+               <Link to={`/conversations/id/${row.id}`} aria-label="View your conversation details">
+                {
+                  matchedRequest?.name ??
+                  (matchedRequest?.initiator?.name
+                    ? `Request Initialized by ${matchedRequest.initiator.name}`
+                    : row.subject)
+                }
+              </Link>
+            </div>
+          )}
+
+          <span className='text__green'>
+            {row.unread ? '*new messages*' : ' '}
+          </span>
         </div>
-        <span className='text__green'>
-          {row.unread ? '*new messages*' : ' '}
-        </span>
-      </div>
-    ),
+      );
+    },
     id: 'conversation_subject'
   },
   {
@@ -29,3 +43,4 @@ export const tableColumns = [
     id: 'creation_date'
   }
 ];
+};

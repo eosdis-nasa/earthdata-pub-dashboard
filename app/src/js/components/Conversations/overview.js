@@ -5,10 +5,12 @@ import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { lastUpdated } from '../../utils/format';
 import {
-  listConversations
+  listConversations,
+  listRequests,
+  listInactiveRequests
 } from '../../actions';
 import List from '../Table/Table';
-import { tableColumns } from '../../utils/table-config/conversations';
+import { getTableColumns } from '../../utils/table-config/conversations';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
@@ -24,9 +26,29 @@ const breadcrumbConfig = [
 ];
 
 const ConversationOverview = ({ dispatch, conversations }) => {
+  const [mergedRequests, setMergedRequests] = React.useState([]);
+
   useEffect(() => {
-    dispatch(listConversations());
-  }, []);
+      (async () => {
+        dispatch(listConversations());
+
+        const [active, inactive] = await Promise.all([
+          dispatch(listRequests()),
+          dispatch(listInactiveRequests())
+        ]);
+
+        setMergedRequests([
+          ...(active?.data || []),
+          ...(inactive?.data || [])
+        ]);
+      })();
+  }, [dispatch]);
+
+  const columns = React.useMemo(
+    () => getTableColumns(mergedRequests),
+    [mergedRequests]
+  );
+
   const { queriedAt } = conversations.list.meta;
   return (
     <div className='page__content--shortened'>
@@ -46,7 +68,7 @@ const ConversationOverview = ({ dispatch, conversations }) => {
           </div>
           <List
             list={conversations.list}
-            tableColumns={tableColumns}
+            tableColumns={columns}
             rowId='name'
           />
         </section>
@@ -57,9 +79,13 @@ const ConversationOverview = ({ dispatch, conversations }) => {
 
 ConversationOverview.propTypes = {
   dispatch: PropTypes.func,
-  conversations: PropTypes.object
+  conversations: PropTypes.object,
+  requests: PropTypes.object
 };
 
 export default withRouter(connect(
-  (state) => ({ conversations: state.conversations })
+  (state) => ({
+    conversations: state.conversations,
+    requests: state.requests
+  })
 )(ConversationOverview));
