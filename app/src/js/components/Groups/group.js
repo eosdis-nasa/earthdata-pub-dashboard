@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import {
   getGroup,
+  getUsers
 } from '../../actions';
 import Loading from '../LoadingIndicator/loading-indicator';
 import { groupPrivileges } from '../../utils/privileges';
@@ -15,6 +16,8 @@ import Metadata from '../Table/Metadata';
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 import _config from '../../config';
+import { tableColumns } from '../../utils/table-config/users';
+import List from '../Table/Table';
 
 const metaAccessors = [
   {
@@ -31,6 +34,8 @@ const metaAccessors = [
   }
 ];
 
+const userQueryFields = 'id,name,email,registered,last_login,group_ids,role_ids,detailed';
+
 class GroupOverview extends React.Component {
   constructor (props) {
     super(props);
@@ -42,6 +47,11 @@ class GroupOverview extends React.Component {
     const { dispatch } = this.props;
     const { groupId } = this.props.match.params;
     dispatch(getGroup(groupId));
+    const queryStringArgs = {
+      query_fields: userQueryFields,
+      group_id: groupId
+    };
+    dispatch(getUsers(queryStringArgs));
   }
 
   componentWillUnmount () {
@@ -56,6 +66,7 @@ class GroupOverview extends React.Component {
   render () {
     const groupId = this.props.match.params.groupId;
     const record = this.props.groups.map[groupId];
+    const { dispatch, users } = this.props;
     let { canUpload } = groupPrivileges(this.props.privileges);
     if (!record || (record.inflight && !record.data)) {
       return <Loading />;
@@ -96,9 +107,31 @@ class GroupOverview extends React.Component {
               {strings.group_overview}
             </h1>
           </div>
-          <div className='indented__details'><Metadata data={group} accessors={metaAccessors} /></div>
-          {record.data && canUpload ? <UploadOverview /> : null }
+          <div><Metadata data={group} accessors={metaAccessors} /></div>
+          <div style= {{ padding: '2em 0' }}>
+            <List
+              list={users}
+              dispatch={dispatch}
+              action={() => getUsers({ query_fields: userQueryFields })}
+              tableColumns={tableColumns}
+              query={{}}
+              rowId='id'
+              filterIdx='name'
+              filterPlaceholder='Search Users'
+            >
+            </List>
+          </div>
         </section>
+        {record.data && canUpload
+          ? <section className='page__section'>
+              <div className='heading__wrapper--border'>
+                <h1 className='heading--small' aria-labelledby={'Group Upload'}>
+                  Group Uploads
+                </h1>
+              </div>
+              <UploadOverview />
+          </section>
+          : null }
       </div>
     );
   }
@@ -111,11 +144,14 @@ GroupOverview.propTypes = {
   logs: PropTypes.object,
   history: PropTypes.object,
   privileges: PropTypes.object,
-  roles: PropTypes.array
+  roles: PropTypes.array,
+  users: PropTypes.object
+
 };
 
 export default withRouter(connect(state => ({
   groups: state.groups,
+  users: state.users.list,
   privileges: state.api.tokens.privileges,
   logs: state.logs
 }))(GroupOverview));
