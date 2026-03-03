@@ -23,10 +23,6 @@ export const getTableColumns = (requestsList) => {
               </Link>
             </div>
           )}
-
-          <span className='text__green'>
-            {row.unread ? '*new messages*' : ' '}
-          </span>
         </div>
       );
     },
