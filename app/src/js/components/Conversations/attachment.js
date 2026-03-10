@@ -1,41 +1,101 @@
 'use strict';
-import React, { useImperativeHandle } from 'react';
+
+import React, { useImperativeHandle, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperclip, faFile, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+    faPaperclip,
+    faFile,
+    faTimesCircle,
+    faSpinner
+} from '@fortawesome/free-solid-svg-icons';
 import { handleUpload } from '../../utils/upload';
 
 export const DisplayAttachmentButton = ({ fileName, removeFileHandler }) => {
     return (
-        <button type="button" className='attachment-display-button'>
-            <FontAwesomeIcon icon={faFile} style={{ paddingRight: "10px" }} />
+        <button type="button" className="attachment-display-button">
+            <FontAwesomeIcon icon={faFile} style={{ paddingRight: '10px' }} />
             {fileName}
-            <FontAwesomeIcon icon={faTimesCircle} style={{ paddingLeft: "10px" }} onClick={() => removeFileHandler(fileName)} />
+            <FontAwesomeIcon
+                icon={faTimesCircle}
+                style={{ paddingLeft: '10px', cursor: 'pointer' }}
+                onClick={() => removeFileHandler(fileName)}
+            />
         </button>
     );
 };
 
-export const AddAttachmentButton = ({ conversationId, uploadedFilesRef, appendToUploadedFiles }) => {
+export const AddAttachmentButton = ({
+    conversationId,
+    uploadedFilesRef,
+    appendToUploadedFiles
+}) => {
+    // Set this to false when you want real upload behavior.
+    const SIMULATE_UPLOAD = false;
+
+    const uploadedFiles = useRef(new Set());
+
+    const [uploadProgress, setUploadProgress] = useState({});
+    const [uploadStatusMsg, setUploadStatusMsg] = useState('No files selected');
+    const [uploadFlag, setUploadFlag] = useState(false);
+    const [uploadResults, setUploadResults] = useState({ success: [], failed: [] });
+
     useImperativeHandle(uploadedFilesRef, () => ({
-        getUploadedFiles: () => uploadedFiles
+        getUploadedFiles: () => [...uploadedFiles.current]
     }));
 
-    let uploadedFiles = new Set();
+    const clearFailedProgress = () => {
+        setUploadProgress((prev) => {
+            const updated = {};
+
+            Object.entries(prev).forEach(([fileName, data]) => {
+                if (data.phase !== 'failed') {
+                    updated[fileName] = data;
+                }
+            });
+
+            return updated;
+        });
+    };
+
+    const hasFailedUploads = Object.values(uploadProgress).some(
+        (item) => item.phase === 'failed'
+    );
 
     const handleChange = async (e) => {
         e.preventDefault();
-        const newFiles = Array.from(e.target.files).map(file => {
-            const sanitizedFile = new File([file], file.name.replace(/,/g, "-"), { type: file.type });
-            return sanitizedFile;
+
+        const newFiles = Array.from(e.target.files || []).map((file) => {
+            return new File(
+                [file],
+                file.name.replace(/,/g, '-'),
+                { type: file.type }
+            );
         });
 
-        uploadedFiles = new Set([...uploadedFiles, ...newFiles]);
+        uploadedFiles.current = new Set([
+            ...uploadedFiles.current,
+            ...newFiles
+        ]);
 
         const resp = await handleUpload({
-            files: [...uploadedFiles],
-            conversationId
+            files: [...uploadedFiles.current],
+            conversationId,
+            uploadType: 'attachment',
+
+            // pass UI setters so upload util can update component state
+            setUploadStatusMsg,
+            setUploadFlag,
+            setUploadProgress,
+            setUploadResults,
+
+            // DEV SIMULATION
+            simulateUpload: SIMULATE_UPLOAD
         });
 
         appendToUploadedFiles(resp.success);
+
+        // reset input so same file can be selected again if needed
+        e.target.value = '';
     };
 
     const clickFileTypeInput = () => {
@@ -44,17 +104,108 @@ export const AddAttachmentButton = ({ conversationId, uploadedFilesRef, appendTo
 
     return (
         <>
-            <input 
+            <input
                 id="hiddenFileInputType"
-                type="file" 
-                onChange={(e) => handleChange(e)}
-                style={{ display: "none" }}
-                multiple 
+                type="file"
+                onChange={handleChange}
+                style={{ display: 'none' }}
+                multiple
             />
-            <button type="button" className="button button--attachment" onClick={clickFileTypeInput}
-                style={{ backgroundColor: "#158749", color: "white", padding: "8px" }}>
-                <FontAwesomeIcon icon={faPaperclip} />
+
+            <button
+                type="button"
+                className="button button--attachment"
+                onClick={clickFileTypeInput}
+                disabled={uploadFlag}
+                style={{
+                    backgroundColor: '#158749',
+                    color: 'white',
+                    padding: '8px'
+                }}
+            >
+                <FontAwesomeIcon icon={uploadFlag ? faSpinner : faPaperclip} spin={uploadFlag} />
             </button>
+
+            {Object.keys(uploadProgress).length > 0 && (
+                <div style={{ marginTop: '12px', position: 'relative' }}>
+                    {hasFailedUploads && (
+                        <FontAwesomeIcon
+                            icon={faTimesCircle}
+                            onClick={clearFailedProgress}
+                            style={{
+                                position: 'absolute',
+                                right: 0,
+                                top: -8,
+                                cursor: 'pointer',
+                                color: '#dc3545',
+                                zIndex: 1
+                            }}
+                            title="Clear failed uploads"
+                        />
+                    )}
+
+                    {Object.entries(uploadProgress).map(([fileName, progressData]) => {
+                        const percent = progressData?.percent ?? 0;
+                        const phase = progressData?.phase ?? 'uploading';
+                        const etaSeconds = progressData?.etaSeconds;
+
+                        return (
+                            <div key={fileName} style={{ marginBottom: '12px' }}>
+                                <div style={{ fontSize: '13px', marginBottom: '4px', paddingRight: hasFailedUploads ? '24px' : 0 }}>
+                                    <strong>{fileName}</strong>
+                                </div>
+
+                                <div
+                                    style={{
+                                        width: '100%',
+                                        height: '10px',
+                                        borderRadius: '6px',
+                                        backgroundColor: '#e5e5e5',
+                                        overflow: 'hidden'
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            width: `${percent}%`,
+                                            height: '100%',
+                                            transition: 'width 0.3s ease',
+                                            backgroundColor:
+                                                phase === 'failed'
+                                                    ? '#dc3545'
+                                                    : phase === 'completed'
+                                                    ? '#158749'
+                                                    : '#007bff'
+                                        }}
+                                    />
+                                </div>
+
+                                <div style={{ fontSize: '12px', marginTop: '4px' }}>
+                                    {percent}% | {phase}
+                                    {etaSeconds != null && phase === 'uploading'
+                                        ? ` | ETA: ${etaSeconds}s`
+                                        : ''}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+
+            {/* {uploadResults.failed.length > 0 && (
+                <div style={{ marginTop: '10px', color: '#dc3545', fontSize: '13px' }}>
+                    {uploadResults.failed.map((item, index) => (
+                        <div key={index}>
+                            Failed: {item.fileName} ({item.error})
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {uploadResults.success.length > 0 && (
+                <div style={{ marginTop: '10px', color: '#158749', fontSize: '13px' }}>
+                    Uploaded: {uploadResults.success.join(', ')}
+                </div>
+            )} */}
         </>
     );
 };
