@@ -72,29 +72,27 @@ export const AddAttachmentButton = ({
             );
         });
 
-        uploadedFiles.current = new Set([
-            ...uploadedFiles.current,
-            ...newFiles
-        ]);
+        uploadedFiles.current = new Set(newFiles);
 
         const resp = await handleUpload({
             files: [...uploadedFiles.current],
             conversationId,
             uploadType: 'attachment',
 
-            // pass UI setters so upload util can update component state
             setUploadStatusMsg,
             setUploadFlag,
             setUploadProgress,
             setUploadResults,
 
-            // DEV SIMULATION
             simulateUpload: SIMULATE_UPLOAD
         });
 
         appendToUploadedFiles(resp.success);
 
-        // reset input so same file can be selected again if needed
+        // Clear stored files after upload completes
+        uploadedFiles.current = new Set();
+
+        // Reset input so same file can be selected again
         e.target.value = '';
     };
 
