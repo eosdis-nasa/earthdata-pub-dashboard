@@ -209,7 +209,7 @@ export const AddAttachmentButton = ({
                                     {percent}% | {phase}
                                 </div>
 
-                                {phase === 'uploading' && (
+                                {phase !== 'completed' && phase !== 'failed' && (
                                     <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
                                         {etaSeconds != null ? (
                                             <>Time Remaining: {formatETA(etaSeconds)}</>
