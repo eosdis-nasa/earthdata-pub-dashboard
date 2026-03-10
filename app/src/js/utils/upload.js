@@ -130,7 +130,9 @@ export const handleUpload = async ({
           [fileObj.name]: {
             percent: progress?.percent ?? 0,
             etaSeconds: progress?.etaSeconds ?? null,
-            phase: progress?.phase ?? 'uploading'
+            phase:
+              progress?.phase === 'upload' ? 'uploading' :
+              progress?.phase ?? 'uploading'
           }
         }));
       };
