@@ -32,6 +32,19 @@ export const AddAttachmentButton = ({
     // Set this to false when you want real upload behavior.
     const SIMULATE_UPLOAD = false;
 
+    const formatETA = (seconds) => {
+        if (!seconds) return '0s';
+
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+
+        if (mins > 0) {
+            return `${mins}m ${secs}s`;
+        }
+
+        return `${secs}s`;
+    };
+
     const uploadedFiles = useRef(new Set());
 
     const [uploadProgress, setUploadProgress] = useState({});
@@ -72,24 +85,39 @@ export const AddAttachmentButton = ({
             );
         });
 
+        // Clear previous completed progress bars before starting a new upload.
+        // Keep failed ones if you still want user to manually close them.
+        setUploadProgress((prev) => {
+            const updated = {};
+
+            Object.entries(prev).forEach(([fileName, data]) => {
+                if (data.phase === 'failed') {
+                    updated[fileName] = data;
+                }
+            });
+
+            return updated;
+        });
+
+        setUploadResults({ success: [], failed: [] });
+
+        // Only upload the current selection
         uploadedFiles.current = new Set(newFiles);
 
         const resp = await handleUpload({
             files: [...uploadedFiles.current],
             conversationId,
             uploadType: 'attachment',
-
             setUploadStatusMsg,
             setUploadFlag,
             setUploadProgress,
             setUploadResults,
-
             simulateUpload: SIMULATE_UPLOAD
         });
 
         appendToUploadedFiles(resp.success);
 
-        // Clear stored files after upload completes
+        // Clear stored file batch after upload finishes
         uploadedFiles.current = new Set();
 
         // Reset input so same file can be selected again
@@ -179,10 +207,26 @@ export const AddAttachmentButton = ({
 
                                 <div style={{ fontSize: '12px', marginTop: '4px' }}>
                                     {percent}% | {phase}
-                                    {etaSeconds != null && phase === 'uploading'
-                                        ? ` | ETA: ${etaSeconds}s`
-                                        : ''}
                                 </div>
+
+                                {phase === 'uploading' && (
+                                    <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
+                                        {etaSeconds != null ? (
+                                            <>Time Remaining: {formatETA(etaSeconds)}</>
+                                        ) : (
+                                            uploadFlag && (
+                                                <>
+                                                    <FontAwesomeIcon
+                                                        icon={faSpinner}
+                                                        spin
+                                                        style={{ marginLeft: '4px', marginRight: '4px' }}
+                                                    />
+                                                    Calculating Time Remaining...
+                                                </>
+                                            )
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         );
                     })}

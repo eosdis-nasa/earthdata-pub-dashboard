@@ -124,6 +124,7 @@ export const handleUpload = async ({
   const uploadFileAsync = (file) => {
     return new Promise((resolve, reject) => {
       const updateProgress = (progress, fileObj) => {
+        console.log('progress object:', progress);
         setUploadProgress?.((prev) => ({
           ...prev,
           [fileObj.name]: {
