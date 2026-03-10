@@ -131,8 +131,8 @@ export const handleUpload = async ({
             percent: progress?.percent ?? 0,
             etaSeconds: progress?.etaSeconds ?? null,
             phase:
-              progress?.phase === 'upload' ? 'uploading' :
-              progress?.phase ?? 'uploading'
+              progress?.phase === 'upload' ? 'uploading...' :
+              progress?.phase ?? 'uploading...'
           }
         }));
       };

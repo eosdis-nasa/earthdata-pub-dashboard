@@ -200,33 +200,33 @@ export const AddAttachmentButton = ({
                                                     ? '#dc3545'
                                                     : phase === 'completed'
                                                     ? '#158749'
-                                                    : '#007bff'
+                                                    : '#2275aa'
                                         }}
                                     />
                                 </div>
 
-                                <div style={{ fontSize: '12px', marginTop: '4px' }}>
+                               <div style={{ fontSize: '12px', marginTop: '4px', color: '#555' }}>
                                     {percent}% | {phase}
+                                    {phase !== 'completed' && phase !== 'failed' && (
+                                        <>
+                                            {" | "}
+                                            {etaSeconds != null ? (
+                                                <>Time Remaining: {formatETA(etaSeconds)}</>
+                                            ) : (
+                                                uploadFlag && (
+                                                    <>
+                                                        <FontAwesomeIcon
+                                                            icon={faSpinner}
+                                                            spin
+                                                            style={{ marginLeft: '4px', marginRight: '4px' }}
+                                                        />
+                                                        Calculating Time Remaining...
+                                                    </>
+                                                )
+                                            )}
+                                        </>
+                                    )}
                                 </div>
-
-                                {phase !== 'completed' && phase !== 'failed' && (
-                                    <div style={{ fontSize: '12px', color: '#555', marginTop: '4px' }}>
-                                        {etaSeconds != null ? (
-                                            <>Time Remaining: {formatETA(etaSeconds)}</>
-                                        ) : (
-                                            uploadFlag && (
-                                                <>
-                                                    <FontAwesomeIcon
-                                                        icon={faSpinner}
-                                                        spin
-                                                        style={{ marginLeft: '4px', marginRight: '4px' }}
-                                                    />
-                                                    Calculating Time Remaining...
-                                                </>
-                                            )
-                                        )}
-                                    </div>
-                                )}
                             </div>
                         );
                     })}
