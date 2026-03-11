@@ -488,6 +488,7 @@ const DynamicTable = ({
                   onChange={(e) =>
                     setFormData({ ...formData, data_prod_comments: e.target.value })
                   }
+                  style={{ fieldSizing: 'content'}}
                 />
               </Form.Group>
             </div>
