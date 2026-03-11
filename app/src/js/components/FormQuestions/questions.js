@@ -21,6 +21,7 @@ import { format } from "date-fns";
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { controlIdCategoryMap } from '../../utils/upload-categories'
 
 
 const FileStatusHeader = () => (
@@ -748,10 +749,10 @@ const areProductFieldsEmpty = (producer) => {
               errorOrder.push(element.controlId);
             }
           } else if (input.type === 'file') {
-            if (uploadedFiles && typeof category_map[input.control_id] !== 'undefined' &&
-              (!(category_map[input.control_id] in uploadedFiles) ||
-              (category_map[input.control_id] in uploadedFiles &&
-              uploadedFiles[category_map[input.control_id]].length === 0))) {
+            if (uploadedFiles && typeof controlIdCategoryMap[input.control_id] !== 'undefined' &&
+              (!(controlIdCategoryMap[input.control_id] in uploadedFiles) ||
+              (controlIdCategoryMap[input.control_id] in uploadedFiles &&
+              uploadedFiles[controlIdCategoryMap[input.control_id]].length === 0))) {
               let flag;
               question.inputs.forEach((input) => {
                 if (jsonObj.data[input.control_id]) {
@@ -1315,13 +1316,6 @@ const handleEnterKey = (event) => {
   const [progressBarsVisible, setProgressBarsVisible] = useState(true);
   const [uploadProgress, setUploadProgress] = useState({});
 
-  const category_map = {
-    "data_product_documentation": "documentation",
-    "dar_form_project_documentation": "documentation",
-    "example_files": "sample",
-    "der_example_files": "sample"
-  };
-
   const handleUpload = async (control_id) => {
     setUploadStatusMsg('Uploading...');
     setUploadFlag(true);
@@ -1342,7 +1336,7 @@ const handleEnterKey = (event) => {
           }));
         };
 
-        let uploadCategory = typeof category_map[control_id] !== 'undefined' ? category_map[control_id] : "";
+        let uploadCategory = typeof controlIdCategoryMap[control_id] !== 'undefined' ? controlIdCategoryMap[control_id] : "";
         const uploadType = 'form';
         const payload = {
           fileObj: file,
@@ -2789,10 +2783,10 @@ const handleEnterKey = (event) => {
                                             </thead>
                                             <tbody>
                                               {Object.keys(uploadedFiles).length > 0 && 
-                                              typeof category_map[input.control_id] !== 'undefined' &&
-                                              category_map[input.control_id] in uploadedFiles &&
-                                              uploadedFiles[category_map[input.control_id]].length > 0 ? (
-                                                uploadedFiles[category_map[input.control_id]].map((file, index) => (
+                                              typeof controlIdCategoryMap[input.control_id] !== 'undefined' &&
+                                              controlIdCategoryMap[input.control_id] in uploadedFiles &&
+                                              uploadedFiles[controlIdCategoryMap[input.control_id]].length > 0 ? (
+                                                uploadedFiles[controlIdCategoryMap[input.control_id]].map((file, index) => (
                                                   <tr
                                                     key={index}
                                                     className="uploaded-files-row"
