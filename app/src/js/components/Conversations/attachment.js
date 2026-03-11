@@ -30,7 +30,7 @@ export const AddAttachmentButton = ({
     appendToUploadedFiles
 }) => {
     // Set this to false when you want real upload behavior.
-    const SIMULATE_UPLOAD = false;
+    const SIMULATE_UPLOAD = true;
 
     const formatETA = (seconds) => {
         if (!seconds) return '0s';

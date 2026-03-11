@@ -117,38 +117,20 @@ export const handleUpload = async ({
     });
   };
 
-  let dotCounter = 0;
-
-  const getUploadingPhase = () => {
-    dotCounter = (dotCounter + 1) % 4;
-    return `uploading${'.'.repeat(dotCounter)}`;
-  };
   
-  /**
-   * REAL UPLOAD MODE
-   * This is your original upload logic, kept and enhanced.
-   */
+  
   const uploadFileAsync = (file) => {
     return new Promise((resolve, reject) => {
       const updateProgress = (progress, fileObj) => {
         console.log('progress object:', progress);
-
-        let phase;
-
-        if (progress?.phase === 'upload') {
-          phase = getUploadingPhase(); 
-        } else if (progress?.phase) {
-          phase = progress.phase; // processing, completed, failed
-        } else {
-          phase = getUploadingPhase(); // default
-        }
-
         setUploadProgress?.((prev) => ({
           ...prev,
           [fileObj.name]: {
             percent: progress?.percent ?? 0,
             etaSeconds: progress?.etaSeconds ?? null,
-            phase
+            phase:
+              progress?.phase === 'upload' ? 'uploading...' :
+              progress?.phase ?? 'uploading...'
           }
         }));
       };
