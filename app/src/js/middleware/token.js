@@ -1,5 +1,5 @@
 import { get } from 'object-path';
-import { decode as jwtDecode } from 'jsonwebtoken';
+import { jwtDecode } from 'jwt-decode'; 
 
 import { loginError, refreshAccessToken } from '../actions';
 import config from '../config';
