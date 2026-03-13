@@ -16,6 +16,16 @@ export const tableColumns = [
     id: 'email'
   },
   {
+    Header: 'Roles',
+    accessor: row => row.user_roles.join(", "),
+    id: 'roles'
+  },
+  {
+    Header: 'Groups',
+    accessor: row => row.user_groups.join(", "),
+    id: 'groups'
+  },
+  {
     Header: 'Registered',
     accessor: row => shortDateNoTimeYearFirst(row.registered),
     id: 'registered'

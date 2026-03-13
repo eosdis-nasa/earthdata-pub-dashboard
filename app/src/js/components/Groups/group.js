@@ -34,7 +34,7 @@ const metaAccessors = [
   }
 ];
 
-const userQueryFields = 'id,name,email,registered,last_login,group_ids,role_ids,detailed';
+const userQueryFields = 'id,name,email,registered,last_login,user_groups,user_roles';
 
 class GroupOverview extends React.Component {
   constructor (props) {
