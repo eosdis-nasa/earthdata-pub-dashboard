@@ -46,6 +46,7 @@ export const handleUpload = async ({
 
   /**
    * DEV SIMULATION MODE
+   * I am leaving it here as this task might need some more update with error handling in the future sprints
    */
   const simulateUploadFileAsync = (file) => {
     return new Promise((resolve, reject) => {
@@ -122,7 +123,6 @@ export const handleUpload = async ({
   const uploadFileAsync = (file) => {
     return new Promise((resolve, reject) => {
       const updateProgress = (progress, fileObj) => {
-        console.log('progress object:', progress);
         setUploadProgress?.((prev) => ({
           ...prev,
           [fileObj.name]: {
