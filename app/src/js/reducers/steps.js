@@ -7,12 +7,7 @@ import {
   STEP_INFLIGHT,
 
   STEPS,
-  STEPS_INFLIGHT,
-  SEARCH_STEPS,
-  CLEAR_STEPS_SEARCH,
-
-  FILTER_STEPS,
-  CLEAR_STEPS_FILTER
+  STEPS_INFLIGHT
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 
@@ -42,17 +37,5 @@ export default createReducer(initialState, {
   },
   [STEPS_INFLIGHT]: (state, action) => {
     set(state, ['list', 'inflight'], true);
-  },
-  [SEARCH_STEPS]: (state, action) => {
-    set(state, ['list', 'params', 'prefix'], action.prefix);
-  },
-  [CLEAR_STEPS_SEARCH]: (state, action) => {
-    set(state, ['list', 'params', 'prefix'], null);
-  },
-  [FILTER_STEPS]: (state, action) => {
-    set(state, ['list', 'params', action.param.key], action.param.value);
-  },
-  [CLEAR_STEPS_FILTER]: (state, action) => {
-    set(state, ['list', 'params', action.paramKey], null);
   }
 });

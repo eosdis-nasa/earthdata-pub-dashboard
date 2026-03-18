@@ -30,17 +30,24 @@ const CommonConfig = {
     alias: {
       Fonts: path.join(__dirname, 'app/src/assets/fonts'),
       Images: path.join(__dirname, 'app/src/assets/images'),
-      zlib: 'browserify-zlib'
+      zlib: 'browserify-zlib',
+      'crypto': path.resolve(__dirname, 'crypto-mock.js')
     },
     fallback: {
       // console: true,
       fs: false,
       net: false,
       tls: false,
-      crypto: require.resolve('crypto-browserify'),
+      crypto: false,
+      assert: require.resolve('assert'),
+      url: require.resolve('url'), 
+      stream: require.resolve("stream-browserify"), 
+      util: require.resolve("util"),
+      zlib: require.resolve('browserify-zlib'),
       http: require.resolve('stream-http'),
       https: require.resolve('https-browserify'),
       buffer: require.resolve('buffer'),
+      path: require.resolve('path-browserify'),
       querystring: require.resolve('querystring-es3'),
       vm: require.resolve('vm-browserify')
     }
@@ -169,8 +176,6 @@ const CommonConfig = {
         STAGE: config.environment,
         AUTH_METHOD: config.oauthMethod,
         KIBANAROOT: config.kibanaRoot,
-        ESROOT: config.esRoot,
-        SHOW_DISTRIBUTION_API_METRICS: config.showDistributionAPIMetrics,
         BUCKET: config.graphicsPath,
         ENABLE_RECOVERY: config.enableRecovery,
         ES_USER: config.esUser,

@@ -4,11 +4,6 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import {
-  // getCount,
-  // searchUsers,
-  // clearUsersSearch,
-  // filterUsers,
-  // clearUsersFilter,
   listUsers
 } from '../../actions';
 import { lastUpdated } from '../../utils/format';

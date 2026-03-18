@@ -16,15 +16,6 @@ import {
   USER_ADDGROUP_INFLIGHT,
   USER_REMOVEGROUP_INFLIGHT,
 
-  SEARCH_USERS,
-  CLEAR_USERS_SEARCH,
-
-  FILTER_USERS,
-  CLEAR_USERS_FILTER,
-
-  OPTIONS_USERGROUP,
-  OPTIONS_USERGROUP_INFLIGHT,
-  OPTIONS_USERGROUP_ERROR,
   USER_CREATE
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
@@ -95,41 +86,9 @@ export default createReducer(initialState, {
     set(state, ['detail', 'inflight'], true);
   },
 
-  [SEARCH_USERS]: (state, action) => {
-    set(state, ['list', 'params', 'prefix'], action.prefix);
-  },
-  [CLEAR_USERS_SEARCH]: (state, action) => {
-    set(state, ['list', 'params', 'prefix'], null);
-  },
-
-  [FILTER_USERS]: (state, action) => {
-    set(state, ['list', 'params', action.param.key], action.param.value);
-  },
-  [CLEAR_USERS_FILTER]: (state, action) => {
-    set(state, ['list', 'params', action.paramKey], null);
-  },
   [USER_CREATE]: (state, action) => {
     const { data, id } = action;
     set(state, ['detail', 'data'], data);
     set(state, ['map', id, 'data'], data);
-  },
-
-  [OPTIONS_USERGROUP]: (state, action) => {
-    const { data } = action;
-    // Map the list response to an object with key-value pairs like:
-    // displayValue: optionElementValue
-    const options = data.reduce((obj, user) => {
-      // Several `results` items can share a `userName`, but
-      // these are de-duplciated by the key-value structure
-      obj[user.name] = user.name;
-      obj[user.id] = user.id;
-      return obj;
-    }, { '': '' });
-    set(state, ['dropdowns', 'groups', 'options'], options);
-  },
-  [OPTIONS_USERGROUP_INFLIGHT]: () => { },
-  [OPTIONS_USERGROUP_ERROR]: (state, action) => {
-    set(state, ['dropdowns', 'group', 'options'], []);
-    set(state, ['list', 'error'], action.error);
   }
 });

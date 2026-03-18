@@ -18,21 +18,7 @@ import {
 
   GROUPS,
   GROUPS_INFLIGHT,
-  GROUPS_ERROR,
-
-  SEARCH_GROUPS,
-  CLEAR_GROUPS_SEARCH,
-
-  FILTER_GROUPS,
-  CLEAR_GROUPS_FILTER,
-
-  GROUP_DELETE,
-  GROUP_DELETE_INFLIGHT,
-  GROUP_DELETE_ERROR,
-
-  OPTIONS_GROUPGROUP,
-  OPTIONS_GROUPGROUP_INFLIGHT,
-  OPTIONS_GROUPGROUP_ERROR
+  GROUPS_ERROR
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 
@@ -119,52 +105,6 @@ export default createReducer(initialState, {
   [GROUPS_ERROR]: (state, action) => {
     set(state, ['list', 'inflight'], false);
     set(state, ['list', 'error'], action.error);
-  },
-
-  [SEARCH_GROUPS]: (state, action) => {
-    set(state, ['list', 'params', 'prefix'], action.prefix);
-  },
-  [CLEAR_GROUPS_SEARCH]: (state, action) => {
-    set(state, ['list', 'params', 'prefix'], null);
-  },
-
-  [FILTER_GROUPS]: (state, action) => {
-    set(state, ['list', 'params', action.param.key], action.param.value);
-  },
-  [CLEAR_GROUPS_FILTER]: (state, action) => {
-    set(state, ['list', 'params', action.paramKey], null);
-  },
-
-  [GROUP_DELETE]: (state, action) => {
-    const { id } = action;
-    set(state, ['deleted', id, 'status'], 'success');
-    set(state, ['deleted', id, 'error'], null);
-  },
-  [GROUP_DELETE_INFLIGHT]: (state, action) => {
-    const { id } = action;
-    set(state, ['deleted', id, 'status'], 'inflight');
-  },
-  [GROUP_DELETE_ERROR]: (state, action) => {
-    const { id } = action;
-    set(state, ['deleted', id, 'status'], 'error');
-    set(state, ['deleted', id, 'error'], action.error);
-  },
-
-  [OPTIONS_GROUPGROUP]: (state, action) => {
-    const { data } = action;
-    // Map the list response to an object with key-value pairs like:
-    // displayValue: optionElementValue
-    const options = data.reduce((obj, group) => {
-      // Several `results` items can share a `groupName`, but
-      // these are de-duplciated by the key-value structure
-      obj[group.long_name] = group.long_name;
-      return obj;
-    }, { '': '' });
-    set(state, ['dropdowns', 'group', 'options'], options);
-  },
-  [OPTIONS_GROUPGROUP_INFLIGHT]: () => { },
-  [OPTIONS_GROUPGROUP_ERROR]: (state, action) => {
-    set(state, ['dropdowns', 'group', 'options'], []);
-    set(state, ['list', 'error'], action.error);
   }
+
 });

@@ -7,12 +7,7 @@ import {
   QUESTION_INFLIGHT,
 
   QUESTIONS,
-  QUESTIONS_INFLIGHT,
-  SEARCH_QUESTIONS,
-  CLEAR_QUESTIONS_SEARCH,
-
-  FILTER_QUESTIONS,
-  CLEAR_QUESTIONS_FILTER
+  QUESTIONS_INFLIGHT
 } from '../actions/types';
 import { createReducer } from '@reduxjs/toolkit';
 
@@ -46,17 +41,5 @@ export default createReducer(initialState, {
   },
   [QUESTIONS_INFLIGHT]: (state, action) => {
     set(state, ['list', 'inflight'], true);
-  },
-  [SEARCH_QUESTIONS]: (state, action) => {
-    set(state, ['list', 'params', 'prefix'], action.prefix);
-  },
-  [CLEAR_QUESTIONS_SEARCH]: (state, action) => {
-    set(state, ['list', 'params', 'prefix'], null);
-  },
-  [FILTER_QUESTIONS]: (state, action) => {
-    set(state, ['list', 'params', action.param.key], action.param.value);
-  },
-  [CLEAR_QUESTIONS_FILTER]: (state, action) => {
-    set(state, ['list', 'params', action.paramKey], null);
   }
 });

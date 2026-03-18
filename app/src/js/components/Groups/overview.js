@@ -4,11 +4,6 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import {
-  // getCount,
-  // searchGroups,
-  // clearGroupsSearch,
-  // filterGroups,
-  // clearGroupsFilter,
   listGroups
 } from '../../actions';
 import { lastUpdated } from '../../utils/format';

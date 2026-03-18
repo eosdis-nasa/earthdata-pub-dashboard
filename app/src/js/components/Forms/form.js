@@ -24,7 +24,7 @@ import ReviewStep from '../Review/review';
 import _config from '../../config';
 import { requestPrivileges } from '../../utils/privileges';
 import Comments from '../Comments/comments';
-import { listFileUploadsBySubmission, listFileDownloadsByKey } from '../../actions';
+import { listFileUploadsBySubmission } from '../../actions';
 import { loadToken } from '../../utils/auth';
 import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import Select from 'react-select';

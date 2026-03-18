@@ -4,7 +4,6 @@ import test from 'ava';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import {
-  getLogs,
   getStats,
   listWorkflows
 } from '../../app/src/js/actions';
@@ -16,7 +15,6 @@ const mockStore = configureMockStore(middlewares);
 
 test('Each of these list action creators will pull data from datepicker state when calling the Earthdata Pub API.', (t) => {
   const endpoints = [
-    { action: 'LOGS_INFLIGHT', dispatcher: getLogs },
     { action: 'STATS_INFLIGHT', dispatcher: getStats }
   ];
 

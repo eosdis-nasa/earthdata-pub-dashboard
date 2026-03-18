@@ -6,8 +6,6 @@ import { connect, useDispatch } from 'react-redux';
 import { lastUpdated } from '../../utils/format';
 import {
   listRoles,
-  // searchRoles,
-  // clearRolesSearch
 } from '../../actions';
 import List from '../Table/Table';
 // import Search from '../Search/search';

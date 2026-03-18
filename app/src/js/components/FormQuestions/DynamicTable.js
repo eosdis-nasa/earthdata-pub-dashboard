@@ -8,7 +8,7 @@ import {
   faEdit,
   faArrowDown,
 } from '@fortawesome/free-solid-svg-icons';
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useState, useRef } from 'react';
 
 // Wrap FontAwesomeIcon inside forwardRef
 const ForwardedFontAwesomeIcon = forwardRef((props, ref) => (
@@ -48,6 +48,7 @@ const DynamicTable = ({
   removeRow,
   moveUpDown,
   sectionHeader,
+  handleEnterKey
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({});
@@ -64,6 +65,7 @@ const DynamicTable = ({
   };
 
   const handleCloseModal = () => setShowModal(false);
+  const fieldRefs = useRef({});
 
   const handleSaveRow = () => {
     const requiredFields = [
@@ -89,6 +91,19 @@ const DynamicTable = ({
 
     setErrors(newErrors);
 
+    if (Object.keys(newErrors).length > 0) {
+      const firstErrorField = Object.keys(newErrors)[0];
+
+      const firstInput = fieldRefs.current[firstErrorField];
+
+      if (firstInput) {
+        firstInput.focus();
+        firstInput.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      return;
+    }
+
     if (Object.keys(newErrors).length === 0) {
       if (editIndex !== null) {
         // update existing row
@@ -102,6 +117,24 @@ const DynamicTable = ({
 
       setShowModal(false);
       setEditIndex(null);
+    }
+  };
+
+  const inputErrorClass = (field) => errors[field] ? "is-invalid" : "";
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+
+    // Remove error for that field immediately
+    if (errors[field]) {
+      setErrors(prev => {
+        const updatedErrors = { ...prev };
+        delete updatedErrors[field];
+        return updatedErrors;
+      });
     }
   };
 
@@ -126,13 +159,16 @@ const DynamicTable = ({
                     <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.data_product_name = el)}
                     type="text"
                     placeholder="Enter Name of Data Product"
+                    className={inputErrorClass("data_product_name")}
                     value={formData.data_product_name || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, data_product_name: e.target.value })
+                      handleInputChange("data_product_name", e.target.value)
                     }
                     isInvalid={!!errors.data_product_name}
+                    onKeyDown={handleEnterKey}
                   />
                   {errors.data_product_name && (
                     <div className="text-danger small mt-1">{errors.data_product_name}</div>
@@ -145,11 +181,13 @@ const DynamicTable = ({
                     Data Production Timeline: Include the start date and when you expect data production to be complete. <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.data_prod_timeline = el)}
+                    className={inputErrorClass("data_prod_timeline")}
                     type="text"
                     placeholder="Enter Data Production Timeline"
                     value={formData.data_prod_timeline || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, data_prod_timeline: e.target.value })
+                       handleInputChange("data_prod_timeline", e.target.value)
                     }
                     isInvalid={!!errors.data_prod_timeline}
                   />
@@ -177,11 +215,13 @@ const DynamicTable = ({
                     <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.data_prod_volume = el)}
+                    className={inputErrorClass("data_prod_volume")}
                     type="text"
                     placeholder="Enter Data Product Volume"
                     value={formData.data_prod_volume || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, data_prod_volume: e.target.value })
+                       handleInputChange("data_prod_volume", e.target.value)
                     }
                     isInvalid={!!errors.data_prod_volume}
                   />
@@ -197,11 +237,13 @@ const DynamicTable = ({
                     <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.instrument_collect_data = el)}
+                    className={inputErrorClass("instrument_collect_data")}
                     type="text"
                     placeholder="Enter Instrument"
                     value={formData.instrument_collect_data || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, instrument_collect_data: e.target.value })
+                       handleInputChange("instrument_collect_data", e.target.value)
                     }
                     isInvalid={!!errors.instrument_collect_data}
                   />
@@ -216,48 +258,69 @@ const DynamicTable = ({
                     Data Product DOI(s): If applicable, for any existing Data Products. Do not list any journal article DOI's here.
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.data_prod_doi = el)}
+                    className={inputErrorClass("data_prod_doi")}
                     type="text"
                     placeholder="Enter Data Product DOI(s)"
                     value={formData.data_prod_doi || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, data_prod_doi: e.target.value })
+                       handleInputChange("data_prod_doi", e.target.value)
                     }
                   />
                 </Form.Group>
 
                 {/* Grid */}
-                <Form.Group className="mb-3 custom-input">
+               <Form.Group className="mb-3 custom-input">
                   <Form.Label className="fw-bold">
                     Gridded Data Product? <span className="text-danger">*</span>
                   </Form.Label>
-                  <div className="d-flex gap-3 align-items-center">
-                    <label className="form-check form-check-inline">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="data_prod_grid"
-                        value="Yes"
-                        checked={formData.data_prod_grid === "Yes"}
-                        onChange={() => setFormData({ ...formData, data_prod_grid: "Yes" })}
-                      />
-                      <span className="form-check-label"> Yes</span>
-                    </label>
 
-                    <label className="form-check form-check-inline">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="data_prod_grid"
-                        value="No"
-                        checked={formData.data_prod_grid === "No"}
-                        onChange={() => setFormData({ ...formData, data_prod_grid: "No" })}
-                      />
-                      <span className="form-check-label"> No</span>
-                    </label>
+                  <div
+                    ref={(el) => (fieldRefs.current.data_prod_grid = el)}
+                    className="p-3 rounded"
+                    style={{
+                      border: errors.data_prod_grid
+                        ? "1px solid #dc3545"
+                        : "",
+                      transition: "all 0.2s ease-in-out",
+                      padding: "1px"
+                    }}
+                  >
+                    <div className="d-flex gap-4 align-items-center">
+                      <label className="form-check form-check-inline m-0">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="data_prod_grid"
+                          value="Yes"
+                          checked={formData.data_prod_grid === "Yes"}
+                          onChange={() =>
+                            handleInputChange("data_prod_grid", "Yes")
+                          }
+                        />
+                        <span className="form-check-label"> Yes</span>
+                      </label>
+
+                      <label className="form-check form-check-inline m-0">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="data_prod_grid"
+                          value="No"
+                          checked={formData.data_prod_grid === "No"}
+                          onChange={() =>
+                            handleInputChange("data_prod_grid", "No")
+                          }
+                        />
+                        <span className="form-check-label"> No</span>
+                      </label>
+                    </div>
                   </div>
 
                   {errors.data_prod_grid && (
-                    <div className="text-danger small mt-1">{errors.data_prod_grid}</div>
+                    <div className="text-danger small mt-1">
+                      {errors.data_prod_grid}
+                    </div>
                   )}
                 </Form.Group>
 
@@ -267,11 +330,13 @@ const DynamicTable = ({
                     Data Product File Format <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.data_prod_file_format = el)}
+                    className={inputErrorClass("data_prod_file_format")}
                     type="text"
                     placeholder="Enter File Format"
                     value={formData.data_prod_file_format || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, data_prod_file_format: e.target.value })
+                      handleInputChange("data_prod_file_format", e.target.value)
                     }
                     isInvalid={!!errors.data_prod_file_format}
                   />
@@ -286,11 +351,13 @@ const DynamicTable = ({
                     Data Product Granule/File Size <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.data_prod_granule = el)}
+                    className={inputErrorClass("data_prod_granule")}
                     type="text"
                     placeholder="Enter Data Product Granule/File Size"
                     value={formData.data_prod_granule || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, data_prod_granule: e.target.value })
+                      handleInputChange("data_prod_granule", e.target.value)
                     }
                     isInvalid={!!errors.data_prod_granule}
                   />
@@ -317,11 +384,13 @@ const DynamicTable = ({
                     <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.data_prod_params = el)}
+                    className={inputErrorClass("data_prod_params")}
                     type="text"
                     placeholder="Enter Parameters"
                     value={formData.data_prod_params || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, data_prod_params: e.target.value })
+                       handleInputChange("data_prod_params", e.target.value)
                     }
                     isInvalid={!!errors.data_prod_params}
                   />
@@ -337,11 +406,13 @@ const DynamicTable = ({
                     <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.data_prod_temporal_coverage = el)}
+                    className={inputErrorClass("data_prod_temporal_coverage")}
                     type="text"
                     placeholder="Enter Temporal Coverage"
                     value={formData.data_prod_temporal_coverage || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, data_prod_temporal_coverage: e.target.value })
+                      handleInputChange("data_prod_temporal_coverage", e.target.value)
                     }
                     isInvalid={!!errors.data_prod_temporal_coverage}
                   />
@@ -356,11 +427,13 @@ const DynamicTable = ({
                     Spatial Coverage and Resolution <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.data_prod_spatial_coverage = el)}
+                    className={inputErrorClass("data_prod_spatial_coverage")}
                     type="text"
                     placeholder="Enter Spatial Coverage"
                     value={formData.data_prod_spatial_coverage || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, data_prod_spatial_coverage: e.target.value })
+                      handleInputChange("data_prod_spatial_coverage", e.target.value)
                     }
                     isInvalid={!!errors.data_prod_spatial_coverage}
                   />
@@ -384,11 +457,13 @@ const DynamicTable = ({
           </OverlayTrigger>  {" "}<span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
+                    ref={(el) => (fieldRefs.current.data_prod_ingest_frequency = el)}
+                    className={inputErrorClass("data_prod_ingest_frequency")}
                     type="text"
                     placeholder="Enter Ingest Frequency"
                     value={formData.data_prod_ingest_frequency || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, data_prod_ingest_frequency: e.target.value })
+                      handleInputChange("data_prod_ingest_frequency", e.target.value)
                     }
                     isInvalid={!!errors.data_prod_ingest_frequency}
                   />
@@ -490,6 +565,7 @@ const DynamicTable = ({
                       onChange={(e) =>
                         handleTableFieldChange(controlId, index, 'data_product_name', e.target.value)
                       }
+                      onKeyDown={handleEnterKey}
                     />
                   </td>
                   <td>
@@ -501,6 +577,7 @@ const DynamicTable = ({
                       onChange={(e) =>
                         handleTableFieldChange(controlId, index, 'data_prod_timeline', e.target.value)
                       }
+                      onKeyDown={handleEnterKey}
                     />
                   </td>
                   <td>
@@ -512,6 +589,7 @@ const DynamicTable = ({
                       onChange={(e) =>
                         handleTableFieldChange(controlId, index, 'data_prod_volume', e.target.value)
                       }
+                      onKeyDown={handleEnterKey}
                     />
                   </td>
                   <td>
@@ -523,6 +601,7 @@ const DynamicTable = ({
                       onChange={(e) =>
                         handleTableFieldChange(controlId, index, 'instrument_collect_data', e.target.value)
                       }
+                      onKeyDown={handleEnterKey}
                     />
                   </td>
                   <td style={{ width: '120px', textAlign: 'center' }}>
@@ -789,6 +868,7 @@ const DynamicTable = ({
                   name="firstName"
                   value={row.producer_first_name || ''}
                   onChange={(e) => handleTableFieldChange(controlId, index, 'producer_first_name', e.target.value)}
+                  onKeyDown={handleEnterKey}
                 />
               </td>
               <td>
@@ -798,6 +878,7 @@ const DynamicTable = ({
                   name="middleInitial"
                   value={row.producer_middle_initial || ''}
                   onChange={(e) => handleTableFieldChange(controlId, index, 'producer_middle_initial', e.target.value)}
+                  onKeyDown={handleEnterKey}
                 />
               </td>
               <td>
@@ -807,6 +888,7 @@ const DynamicTable = ({
                   name="lastName"
                   value={row.producer_last_name_or_organization || ''}
                   onChange={(e) => handleTableFieldChange(controlId, index, 'producer_last_name_or_organization', e.target.value)}
+                  onKeyDown={handleEnterKey}
                 />
               </td>
               <td style={{ width: '120px', textAlign: 'center' }}>

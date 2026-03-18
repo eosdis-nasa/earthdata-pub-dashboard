@@ -14,7 +14,6 @@ services:
       - OVERVIEW_URL=/
       - DAAC_NAME=local
       - STAGE=LOCALHOST-Development
-      - SHOW_DISTRIBUTION_API_METRICS=false
       - AUTH_METHOD=earthdata
       - REQUEST_HIDE_BUTTON_VERBAGE=Withdraw
       - REQUEST_UNHIDE_BUTTON_VERBAGE=Restore
