@@ -53,7 +53,7 @@ const Conversation = ({ dispatch, conversation, privileges, match, user }) => {
   const uploadedFilesRef = useRef();
 
   const [tempNotes, setTempNotes] = useState([]);
-  const [displayNotes, setDisplayNotes] = useState(data.notes);
+  const [displayNotes, setDisplayNotes] = useState(Array.isArray(data.notes) ? data.notes : []);
   const [shouldStopRetries, setShouldStopRetries] = useState(false);
 
   const handleVisibilityReset = () => {
@@ -239,11 +239,11 @@ const checkForUpdates = async (retryCount = 0) => {
           isTemp: true 
       };
       setTempNotes(prev => [tempNote, ...prev]);
-      setDisplayNotes(prev => [tempNote, ...prev]);
+      setDisplayNotes(prev => [tempNote, ...(Array.isArray(prev) ? prev : [])]);
       checkForUpdates(0);
-    }else{
-      setTempNotes(prev => [...(prev || [])]);
-      setDisplayNotes(prev => [...(prev || [])]);      
+    }else {
+      setTempNotes(prev => Array.isArray(prev) ? prev : []);
+      setDisplayNotes(prev => Array.isArray(prev) ? prev : []);
     }
 
     if (textRef.current) {
