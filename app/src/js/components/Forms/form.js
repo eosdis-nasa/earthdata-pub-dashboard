@@ -30,6 +30,7 @@ import { CueFileUtility, LocalUpload } from '@edpub/upload-utility';
 import Select from 'react-select';
 import { Modal, Button } from 'react-bootstrap'; 
 import CustomOption from '../SelectOptions/SelectOptions'
+import { controlIdCategoryMap } from '../../utils/upload-categories'
 
 const { basepath } = _config;
 
@@ -334,10 +335,11 @@ class FormOverview extends React.Component {
 
   // Filter files based on controlId
   let filteredFiles = files;
-  if (controlId === 'data_product_documentation') {
-    filteredFiles = files.filter(item => item.category === 'documentation');
-  } else if (controlId === 'example_files') {
-    filteredFiles = files.filter(item => item.category === 'sample');
+  if (controlId in controlIdCategoryMap){
+    filteredFiles = files.filter(item => item.category === controlIdCategoryMap[controlId]);
+  } else {
+    console.error(`No category mapping specified for controlId: ${controlId}`);
+    filteredFiles = [];
   }
 
   // Return the list using map
