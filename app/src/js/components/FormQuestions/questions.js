@@ -2277,7 +2277,7 @@ const handleEnterKey = (event) => {
                                                 ? 'required'
                                                 : ''
                                             }
-                                            style={{ overflow: 'hidden' }}
+                                            style={{ overflow: 'hidden', fieldSizing: 'content' }}
                                             onChange={(e) => {
                                               handleFieldChange(
                                                 input.control_id,
