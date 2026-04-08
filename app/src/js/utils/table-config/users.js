@@ -17,12 +17,12 @@ export const tableColumns = [
   },
   {
     Header: 'Roles',
-    accessor: row => row.user_roles.join(", "),
+    accessor: row => row.user_roles?.join(", "),
     id: 'roles'
   },
   {
     Header: 'Groups',
-    accessor: row => row.user_groups.join(", "),
+    accessor: row => row.user_groups?.join(", "),
     id: 'groups'
   },
   {
