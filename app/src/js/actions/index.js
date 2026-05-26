@@ -574,6 +574,15 @@ export const getUser = (userId) => ({
   }
 });
 
+export const getUsers = (options) => ({
+  [CALL_API]: {
+    type: types.USERS,
+    method: 'GET',
+    path: `data/users`,
+    qs: Object.assign({ per_page: defaultPageLimit}, options) 
+  }
+});
+
 export const getDetailedUsers = (roleId) => ({
   [CALL_API]: {
     type: types.USER,
