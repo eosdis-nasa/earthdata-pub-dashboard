@@ -214,5 +214,16 @@
     "url": "^0.11.4",
     "util": "^0.12.5",
     "vm-browserify": "^1.1.2"
+  },
+  "overrides": {
+    "connected-react-router": {
+      "immutable": "4.3.9"
+    },
+    "@edpub/upload-utility": {
+      "form-data": "4.0.6"
+    },
+    "url": {
+      "qs": "6.15.2"
+    }
   }
 }
