@@ -1046,8 +1046,13 @@ const handleEnterKey = (event) => {
     Object.keys(fieldValues).forEach((key) => {
       if (Array.isArray(fieldValues[key])) {
         jsonObject.data[key] = filterEmptyObjects(key, fieldValues[key]);
-      } else if ( typeof(fieldValues[key]) == 'string' && fieldValues[key].trim() !== '') {
-        jsonObject.data[key] = typeof(fieldValues[key]) == 'string' ? fieldValues[key].trim() : fieldValues[key];
+      } else if ( typeof(fieldValues[key]) == 'string') {
+        const trimmedValue = fieldValues[key].trim()
+        if ( trimmedValue !== ''){
+          jsonObject.data[key] = trimmedValue;
+        }
+      } else {
+        jsonObject.data[key] = fieldValues[key];
       }
     });
 
