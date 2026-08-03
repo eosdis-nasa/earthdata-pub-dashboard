@@ -2,7 +2,6 @@
 
 import compareVersions from 'compare-versions';
 import requestPromise from 'request-promise';
-import { history } from '../store/configureStore';
 import { configureRequest } from './helpers';
 import _config from '../config';
 import { fetchCurrentTimeFilters } from '../utils/datepicker';
@@ -729,9 +728,11 @@ export const loginError = (error) => {
 
 export const confirmAuthInvalidLogout = () => {
   return (dispatch) => {
-    dispatch(deleteToken());
     dispatch({ type: types.CLEAR_LOGIN_ERROR });
-    history.push('/auth');
+    dispatch(deleteToken());
+    // Hard redirect so auth state fully resets (same as /logout route)
+    const authPath = `${basepath}`.endsWith('/') ? `${basepath}auth` : `${basepath}/auth`;
+    window.location.href = authPath;
   };
 };
 

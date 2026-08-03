@@ -8,7 +8,6 @@ import Header from './components/Header/header';
 import Footer from './components/Footer/footer';
 import TopButton from './components/TopButton/TopButton';
 import TimeoutWarning from './components/TimeoutWarning';
-import AuthInvalidModal from './components/AuthInvalidModal';
 
 const { target, environment } = _config;
 
@@ -22,7 +21,6 @@ class Main extends Component {
     return (
       <div className='app'>
         <TimeoutWarning />
-        <AuthInvalidModal />
         {target !== 'earthdata-pub'
           ? (
           <div className='app__target--container' role="banner">

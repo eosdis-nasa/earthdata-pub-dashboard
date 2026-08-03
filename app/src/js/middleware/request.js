@@ -12,13 +12,20 @@ import { isValidApiRequestAction } from './validate';
 import Error from '../components/error';
 import { history } from '../store/configureStore';
 
-const handleError = ({ id, type, error, requestAction }, next) => {
+const isAuthFailureMessage = (message = '') => (
+  message.includes('Your session has expired. Please login again.') ||
+  message.includes('Invalid Authorization token') ||
+  message.includes('Access token has expired')
+);
+
+const handleError = ({ id, type, error, requestAction }, { dispatch, getState, next }) => {
   console.groupCollapsed('handleError');
   console.log(`id: ${id}`);
   console.log(`type: ${type}`);
   console.dir(error);
   console.dir(requestAction);
   console.groupEnd();
+
   if (error.message) {
     // Temporary fix until the 'logs' endpoint is fixed
     // TODO: is this still relevant?
@@ -28,20 +35,24 @@ const handleError = ({ id, type, error, requestAction }, next) => {
       return next({ id, type, data, config: requestAction });
     }
 
-    // Catch the session expired error
-    // Weirdly error.message shows up as " : Session expired"
-    // So it's using indexOf instead of a direct comparison
-    if (error.message.includes('Your session has expired. Please login again.') ||
-        error.message.includes('Invalid Authorization token') ||
-        error.message.includes('Access token has expired')) {
-      return next(loginError(error.message.replace('Bad Request: ', '')));
+    // Invalid IDFS/auth key (or expired access token) while EDPub session may still be present.
+    // Show notification modal before signing out — do not hard-redirect here.
+    if (isAuthFailureMessage(error.message)) {
+      dispatch(loginError(error.message.replace('Bad Request: ', '')));
+      return;
     }
   }
 
   const errorType = type + '_ERROR';
   log((id ? errorType + ': ' + id : errorType));
   log(error);
-  if (localStorage.getItem('auth-token')) history.push('/logout');
+
+  // Preserve original auto-logout for non-auth API errors, but do not interrupt
+  // an in-progress auth-invalid notification modal.
+  if (localStorage.getItem('auth-token') && !getState().api.authInvalidNotification) {
+    history.push('/logout');
+  }
+
   return next({
     id,
     config: requestAction,
@@ -80,14 +91,14 @@ export const requestMiddleware = ({ dispatch, getState }) => next => action => {
         const { body } = response;
         if (+response.statusCode >= 400) {
           const error = new Error(getErrorMessage(response));
-          return handleError({ id, type, error, requestAction }, next);
+          return handleError({ id, type, error, requestAction }, { dispatch, getState, next });
         }
 
         const duration = new Date() - start;
         log((id ? type + ': ' + id : type), duration + 'ms');
         return next({ id, type, data: body, config: requestAction });
       })
-      .catch((error) => handleError({ id, type, error, requestAction }, next));
+      .catch((error) => handleError({ id, type, error, requestAction }, { dispatch, getState, next }));
   }
   return next(action);
 };
