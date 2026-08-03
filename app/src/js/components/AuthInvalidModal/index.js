@@ -29,14 +29,14 @@ class AuthInvalidModal extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <div>
-            Your authentication credentials are no longer valid. You will be signed out and redirected to log in again.
+            Your authentication credentials are no longer valid. You will be redirected to sign in again.
           </div>
         </Modal.Body>
         <Modal.Footer>
           <button
-            className={'button button__animation--md'}
+            className={'button button--submit button__animation--md button__arrow button__arrow--md button__animation button__arrow--white'}
             onClick={this.handleConfirm}>
-            Sign Out
+            Sign In
           </button>
         </Modal.Footer>
       </Modal>
