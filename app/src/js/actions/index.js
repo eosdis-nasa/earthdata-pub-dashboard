@@ -718,10 +718,20 @@ export const clearUpdateGroup = (groupId) => ({ type: types.UPDATE_GROUP_CLEAR, 
 export const deleteToken = () => ({ type: types.DELETE_TOKEN });
 
 export const loginError = (error) => {
+  return (dispatch, getState) => {
+    // Avoid stacking multiple notifications if concurrent requests fail auth
+    if (getState().api.authInvalidNotification) {
+      return;
+    }
+    dispatch({ type: types.LOGIN_ERROR, error });
+  };
+};
+
+export const confirmAuthInvalidLogout = () => {
   return (dispatch) => {
-    return dispatch(deleteToken())
-      .then(() => dispatch({ type: 'LOGIN_ERROR', error }))
-      .then(() => history.push('/auth'));
+    dispatch(deleteToken());
+    dispatch({ type: types.CLEAR_LOGIN_ERROR });
+    history.push('/auth');
   };
 };
 
