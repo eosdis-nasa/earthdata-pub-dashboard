@@ -44,6 +44,16 @@ export const refreshToken = () => {
   };
 };
 
+// Lightweight IDFS/OIDC validity probe (does not refresh the EDPub session)
+export const checkIdfsSession = () => ({
+  [CALL_API]: {
+    type: types.CHECK_IDFS_SESSION,
+    method: 'GET',
+    id: null,
+    path: 'auth/idfssession'
+  }
+});
+
 export const login = (redirect) => {
   return (dispatch) => {
     dispatch({

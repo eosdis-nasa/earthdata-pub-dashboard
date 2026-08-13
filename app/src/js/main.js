@@ -8,6 +8,7 @@ import Header from './components/Header/header';
 import Footer from './components/Footer/footer';
 import TopButton from './components/TopButton/TopButton';
 import TimeoutWarning from './components/TimeoutWarning';
+import IdfsSessionCheck from './components/IdfsSessionCheck';
 
 const { target, environment } = _config;
 
@@ -21,6 +22,7 @@ class Main extends Component {
     return (
       <div className='app'>
         <TimeoutWarning />
+        <IdfsSessionCheck />
         {target !== 'earthdata-pub'
           ? (
           <div className='app__target--container' role="banner">

@@ -70,6 +70,16 @@ const handleError = ({ id, type, error, requestAction, statusCode }, { dispatch,
   log((id ? errorType + ': ' + id : errorType));
   log(error);
 
+  // IDFS probe: only auth failures should interrupt the user (CORS/404/network must not logout).
+  if (type === 'CHECK_IDFS_SESSION') {
+    return next({
+      id,
+      config: requestAction,
+      type: errorType,
+      error: error.message || 'IDFS session check failed'
+    });
+  }
+
   // Preserve original auto-logout for non-auth API errors, but do not interrupt
   // an in-progress auth-invalid notification modal.
   if (localStorage.getItem('auth-token') && !getState().api.authInvalidNotification) {
