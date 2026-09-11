@@ -6,6 +6,8 @@ import { loadToken, saveToken, deleteToken } from '../utils/auth';
 import {
   DELETE_TOKEN,
   LOGIN,
+  LOGIN_ERROR,
+  CLEAR_LOGIN_ERROR,
   FETCH_TOKEN,
   FETCH_TOKEN_INFLIGHT,
   FETCH_TOKEN_ERROR,
@@ -50,6 +52,7 @@ export const initialState = (() => {
     authenticated: !expired && token && user.authenticated,
     inflight: false,
     error: null,
+    authInvalidNotification: false,
     tokens: {
       error: null,
       inflight: false,
@@ -72,11 +75,21 @@ export default createReducer(initialState, {
   [LOGIN]: (state, action) => {
     set(state, 'inflight', false);
   },
+  [LOGIN_ERROR]: (state, action) => {
+    set(state, 'error', action.error);
+    set(state, 'authInvalidNotification', true);
+  },
+  [CLEAR_LOGIN_ERROR]: (state) => {
+    set(state, 'error', null);
+    set(state, 'authInvalidNotification', false);
+  },
   [FETCH_TOKEN]: (state, action) => {
     const { token, user } = action.data;
     saveToken({ token, user: { ...user, ...{ authenticated: true } } });
     set(state, 'authenticated', true);
     set(state, 'inflight', false);
+    set(state, 'error', null);
+    set(state, 'authInvalidNotification', false);
     set(state, 'tokens.token', action.data.token);
     set(state, 'tokens.userName', user.name);
     set(state, 'tokens.userId', user.id);

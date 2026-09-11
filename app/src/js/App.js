@@ -41,6 +41,7 @@ import OverviewApp from './components/Help/app';
 import Tophat2 from './components/Tophat/top_hat';
 import { Logout } from './components/Logout';
 import StatusBanner from './components/StatusBanner/status_banner';
+import AuthInvalidModal from './components/AuthInvalidModal';
 
 
 library.add(faSignOutAlt, faSearch, faSync, faRedo, faPlus, faInfoCircle, faTimesCircle, faSave, faCalendar, faExpand, faCompress, faClock, faCaretDown, faSort, faChevronDown, faSortDown, faSortUp, faArrowAltCircleLeft, faArrowAltCircleRight, faArrowAltCircleDown, faArrowAltCircleUp, faArrowRight, faCopy, faEdit, faArchive, faLaptopCode, faServer, faHdd, faExternalLinkSquareAlt, faToggleOn, faToggleOff, faExclamationTriangle, faCoins, faCheckCircle, faCircle);
@@ -163,6 +164,7 @@ class App extends Component {
       <div className="routes">
         <Provider store={this.store}>
           <ConnectedRouter history={history}>
+            <AuthInvalidModal />
             <Suspense fallback={<div className="loading">Loading...</div>}>
               <Tophat2 />
               <StatusBanner />
