@@ -56,9 +56,13 @@ class Auth extends React.Component {
         <main className='main' role='main'>
           <div className="modal-content">
             <Modal
+              className="oauth-modal-root"
               dialogClassName="oauth-modal"
               show={true}
               centered
+              backdrop={true}
+              backdropClassName="oauth-modal-backdrop"
+              enforceFocus={false}
               size={this.state.body ? 'xl': 'sm'}
               aria-labelledby="modal__oauth-modal"
             >
