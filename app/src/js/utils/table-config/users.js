@@ -27,10 +27,26 @@ export const tableColumns = [
   },
   {
     Header: 'Status',
-    accessor: (row) => {
-      if (row.enabled === true) return 'Active';
-      if (row.enabled === false) return 'Disabled';
-      return 'Unknown';
+    accessor: (row) => row.enabled,
+    Cell: (row) => {
+      const enabled = row.row?.original?.enabled;
+      let label = 'Unknown';
+      let modifier = 'unknown';
+      if (enabled === true) {
+        label = 'Active';
+        modifier = 'enabled';
+      } else if (enabled === false) {
+        label = 'Disabled';
+        modifier = 'disabled';
+      }
+      return (
+        <span
+          className={`status--badge status--badge__${modifier}`}
+          aria-label={`User status: ${label}`}
+        >
+          {label}
+        </span>
+      );
     },
     id: 'enabled'
   },

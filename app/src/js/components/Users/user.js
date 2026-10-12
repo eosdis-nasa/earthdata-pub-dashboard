@@ -155,9 +155,23 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
     {
       label: 'Status',
       accessor: (enabled) => {
-        if (enabled === true) return 'Active';
-        if (enabled === false) return 'Disabled';
-        return 'Unknown';
+        let label = 'Unknown';
+        let modifier = 'unknown';
+        if (enabled === true) {
+          label = 'Active';
+          modifier = 'enabled';
+        } else if (enabled === false) {
+          label = 'Disabled';
+          modifier = 'disabled';
+        }
+        return (
+          <span
+            className={`status--badge status--badge__${modifier}`}
+            aria-label={`User status: ${label}`}
+          >
+            {label}
+          </span>
+        );
       },
       property: 'enabled'
     }
