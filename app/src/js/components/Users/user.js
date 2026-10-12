@@ -151,6 +151,15 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
         return (shortDateNoTimeYearFirst(d));
       },
       property: 'last_login'
+    },
+    {
+      label: 'Status',
+      accessor: (enabled) => {
+        if (enabled === true) return 'Active';
+        if (enabled === false) return 'Disabled';
+        return 'Unknown';
+      },
+      property: 'enabled'
     }
   ];
   return (

@@ -31,7 +31,7 @@ const breadcrumbConfig = [
 const UsersOverview = ({ users, privileges, groups, roles }) => {
   const [groupOptions, setGroupOptions] = useState([]);
   const [roleOptions, setRoleOptions] = useState([]);
-  const userQueryFields = 'id,name,email,registered,last_login,user_groups,user_roles';
+  const userQueryFields = 'id,name,email,registered,last_login,user_groups,user_roles,enabled';
 
   const dispatch = useDispatch();
   const [selectedGroup, setSelectedGroup] = useState(null);

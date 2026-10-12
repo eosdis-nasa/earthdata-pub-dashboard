@@ -26,6 +26,15 @@ export const tableColumns = [
     id: 'groups'
   },
   {
+    Header: 'Status',
+    accessor: (row) => {
+      if (row.enabled === true) return 'Active';
+      if (row.enabled === false) return 'Disabled';
+      return 'Unknown';
+    },
+    id: 'enabled'
+  },
+  {
     Header: 'Registered',
     accessor: row => shortDateNoTimeYearFirst(row.registered),
     id: 'registered'
