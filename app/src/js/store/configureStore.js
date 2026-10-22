@@ -51,5 +51,11 @@ export default function ourConfigureStore (preloadedState) {
     window.appStore = store;
   }
 
+  // Always expose in non-production so the auth-invalid modal can be smoke-tested:
+  // window.appStore.dispatch({ type: 'LOGIN_ERROR', error: 'test' })
+  if (config.environment !== 'production') {
+    window.appStore = store;
+  }
+
   return store;
 }

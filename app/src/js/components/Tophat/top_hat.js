@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import React from "react";
+import { ensureFeedbackScrollIntoView } from "../../utils/feedback";
 
 const Tophat2 = () => {
   useEffect(() => {
@@ -14,8 +15,11 @@ const Tophat2 = () => {
         fbmScript.onload = () => {
           if (window.feedback) {
             window.feedback.init();
+            ensureFeedbackScrollIntoView();
           }
         };
+      } else if (window.feedback) {
+        ensureFeedbackScrollIntoView();
       }
       
     // Check if the script is already present
