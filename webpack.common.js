@@ -57,7 +57,7 @@ const CommonConfig = {
       {
         test: /\.(js|jsx)$/,
         exclude: [
-          /node_modules\/(?!(map-obj|snakecase-keys|strict-uri-encode|qs|fast-xml-parser)\/).*/,
+          /node_modules\/(?!(map-obj|snakecase-keys|strict-uri-encode|decode-uri-component|qs|fast-xml-parser)\/).*/,
           /font-awesome.config.js/
         ],
         use: [

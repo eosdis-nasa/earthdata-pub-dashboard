@@ -187,6 +187,7 @@
     "react-ace": "^9.5.0",
     "react-bootstrap": "^2.0.2",
     "react-collapsible": "^2.8.1",
+    "decode-uri-component": "file:vendor/decode-uri-component",
     "react-datepicker": "^7.3.0",
     "react-datetime-picker": "^3.4.3",
     "react-dom": "^17.0.2",
@@ -222,7 +223,11 @@
       "form-data": "4.0.6"
     },
     "url": {
-      "qs": "6.16.1"
-    }
+      "qs": "6.16.2"
+    },
+    "react-flow-builder": {
+      "uuid": "11.1.1"
+    },
+    "decode-uri-component": "$decode-uri-component"
   }
 }
