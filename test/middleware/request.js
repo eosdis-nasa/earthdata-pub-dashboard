@@ -10,6 +10,7 @@ test.beforeEach((t) => {
   const doDispatch = () => {};
   const doGetState = () => ({
     api: {
+      authInvalidNotification: false,
       tokens: {
         token: 'fake-token'
       }

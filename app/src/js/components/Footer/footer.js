@@ -2,15 +2,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import { openFeedbackForm } from '../../utils/feedback';
 
 class Footer extends React.Component {
   constructor () {
     super();
     this.displayName = 'Footer';
-  }
-
-  handler () {
-    this.feedback.showForm();
   }
 
   render () {
@@ -35,7 +32,14 @@ class Footer extends React.Component {
               <li><a href="https://www.nasa.gov/FOIA/index.html">FOIA</a></li>
               <li><a href="https://www.nasa.gov/about/highlights/HP_Privacy.html">NASA Privacy Policy</a></li>
               <li><a href="https://www.usa.gov/">USA.gov</a></li>
-              <li><a onClick={() => this.handler}>Feedback</a></li>
+              <li>
+                <a
+                  href="#"
+                  onClick={openFeedbackForm}
+                  aria-label="Send feedback using Feedback form">
+                  Feedback
+                </a>
+              </li>
             </ul>
           </div>
         </div>

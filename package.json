@@ -16,7 +16,7 @@
   "homepage": "https://github.com/eosdis-nasa/earthdata-pub-dashboard",
   "private": true,
   "engines": {
-    "node": "22.14.0"
+    "node": "22.23.4"
   },
   "scripts": {
     "clean-modules": "rm -rf package-lock.json node_modules/",
@@ -160,7 +160,6 @@
     "compare-versions": "^4.1.1",
     "connected-react-router": "^6.6.1",
     "date-fns": "^3.6.0",
-    "deepmerge": "^4.2.2",
     "global": "^4.3.1",
     "hash-wasm": "4.9.0",
     "history": "^4.10.1",
@@ -175,7 +174,7 @@
     "lodash.isnil": "^4.0.0",
     "lodash.omitby": "^4.6.0",
     "lodash.truncate": "^4.4.2",
-    "moment": "^2.29.1",
+    "moment": "2.31.0",
     "numeral": "^2.0.4",
     "object-path": "^0.11.8",
     "paginator": "^1.0.0",
@@ -188,6 +187,7 @@
     "react-ace": "^9.5.0",
     "react-bootstrap": "^2.0.2",
     "react-collapsible": "^2.8.1",
+    "decode-uri-component": "file:vendor/decode-uri-component",
     "react-datepicker": "^7.3.0",
     "react-datetime-picker": "^3.4.3",
     "react-dom": "^17.0.2",
@@ -214,5 +214,20 @@
     "url": "^0.11.4",
     "util": "^0.12.5",
     "vm-browserify": "^1.1.2"
+  },
+  "overrides": {
+    "connected-react-router": {
+      "immutable": "4.3.9"
+    },
+    "@edpub/upload-utility": {
+      "form-data": "4.0.6"
+    },
+    "url": {
+      "qs": "6.16.2"
+    },
+    "react-flow-builder": {
+      "uuid": "11.1.1"
+    },
+    "decode-uri-component": "$decode-uri-component"
   }
 }

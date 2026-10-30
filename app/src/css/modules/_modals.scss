@@ -87,6 +87,20 @@
   width: 500px;
 }
 
+// Dimmed overlay stays, but Tophat header / left Feedback stay clickable.
+// The full-screen .modal wrapper sits above those; pass clicks through it.
+.oauth-modal-root {
+  pointer-events: none;
+}
+
+.oauth-modal-root .modal-dialog {
+  pointer-events: auto;
+}
+
+.oauth-modal-backdrop {
+  pointer-events: none;
+}
+
 .oauth-modal .modal-footer{
   display: flex;
   justify-content: center;

@@ -77,7 +77,8 @@ class Comment extends React.Component {
     const { dispatch } = this.props;
     await dispatch(getStepConversation(payload)).then(() => {
       const notesArr = [];
-      this.props.conversations.conversation.data.notes.forEach((noteElem) => {
+      const notes = this.props.conversations?.conversation?.data?.notes || [];
+      notes.forEach((noteElem) => {
         const note = this.getNoteComment(noteElem.text);
         let viewers = [
           ...(noteElem.viewers.users?.map((user) => user.name) || []),
