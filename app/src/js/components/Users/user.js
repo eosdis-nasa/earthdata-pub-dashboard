@@ -151,6 +151,29 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
         return (shortDateNoTimeYearFirst(d));
       },
       property: 'last_login'
+    },
+    {
+      label: 'Status',
+      accessor: (enabled) => {
+        let label = 'Unknown';
+        let modifier = 'unknown';
+        if (enabled === true) {
+          label = 'Active';
+          modifier = 'enabled';
+        } else if (enabled === false) {
+          label = 'Disabled';
+          modifier = 'disabled';
+        }
+        return (
+          <span
+            className={`status--badge status--badge__${modifier}`}
+            aria-label={`User status: ${label}`}
+          >
+            {label}
+          </span>
+        );
+      },
+      property: 'enabled'
     }
   ];
   return (

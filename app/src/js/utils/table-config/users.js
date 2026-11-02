@@ -26,6 +26,31 @@ export const tableColumns = [
     id: 'groups'
   },
   {
+    Header: 'Status',
+    accessor: (row) => row.enabled,
+    Cell: (row) => {
+      const enabled = row.row?.original?.enabled;
+      let label = 'Unknown';
+      let modifier = 'unknown';
+      if (enabled === true) {
+        label = 'Active';
+        modifier = 'enabled';
+      } else if (enabled === false) {
+        label = 'Disabled';
+        modifier = 'disabled';
+      }
+      return (
+        <span
+          className={`status--badge status--badge__${modifier}`}
+          aria-label={`User status: ${label}`}
+        >
+          {label}
+        </span>
+      );
+    },
+    id: 'enabled'
+  },
+  {
     Header: 'Registered',
     accessor: row => shortDateNoTimeYearFirst(row.registered),
     id: 'registered'
