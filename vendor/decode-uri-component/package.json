@@ -1,0 +1,8 @@
+{
+  "name": "decode-uri-component",
+  "version": "0.5.1",
+  "private": true,
+  "description": "CommonJS build of decode-uri-component 0.5.1. query-string 6 loads this package with require().",
+  "license": "MIT",
+  "main": "index.js"
+}

@@ -45,7 +45,7 @@ To locate environment variables, see webpack.common.js:
 
 ## Installing
 
-The dashboard uses node v22.14.0. To build/run the dashboard on your local
+The dashboard uses node v22.23.4. To build/run the dashboard on your local
 machine, install nvm following the [nvm Install & Update Script](https://github.com/nvm-sh/nvm#install--update-script)
 instructions.
 
@@ -55,7 +55,7 @@ step is to clone the repo!
 ```bash
 git clone https://github.com/eosdis-nasa/earthdata-pub-dashboard.git
 cd api
-nvm install 22.14.0
+nvm install 22.23.4
 nvm use
 npm install
 ```

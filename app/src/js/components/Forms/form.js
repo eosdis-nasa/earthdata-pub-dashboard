@@ -77,7 +77,8 @@ class FormOverview extends React.Component {
       selectedReviewers: [],
       loading: false,
       showErrorModal: false, 
-      errorMessage: '', 
+      errorMessage: '',
+      reviewerError: '',
     };
   }
   async componentDidMount () {
@@ -102,7 +103,7 @@ class FormOverview extends React.Component {
         allU = await dispatch(getDetailedUsers());
       }
       const dataFilter = this.props.requests.detail.data.step_name;
-      const filteredData = userReviewList.data.filter(item => item.step_name === dataFilter);
+      const filteredData = (userReviewList?.data || []).filter(item => item.step_name === dataFilter);
       this.setState({filteredReviewers: filteredData, allUsers: allU});
       await dispatch(getForm(formId, this.props.requests.detail.data.daac_id));
       await this.getUploadedFiles(requestId);
@@ -536,7 +537,7 @@ class FormOverview extends React.Component {
     
     let reviewersList = await this.props.dispatch(listRequestReviewers(review.submission_id));
     const dataFilter = this.props.requests.detail.data.step_name;
-    const filteredData = reviewersList.data.filter(item => item.step_name === dataFilter);
+    const filteredData = (reviewersList?.data || []).filter(item => item.step_name === dataFilter);
 
     this.setState({filteredReviewers: filteredData});
     this.setState({isAddReviewerDisabled: false, loading: false});
@@ -555,18 +556,33 @@ class FormOverview extends React.Component {
   };
 
   async handleAddReviewer() {
-    this.setState({isAddReviewerDisabled: true, loading: true});
+    const stepName = this.props.requests.detail.data.step_name;
+    if (!stepName || stepName === 'close') {
+      this.setState({
+        reviewerError: 'Reviewers cannot be assigned after the request is closed.'
+      });
+      return;
+    }
+    this.setState({isAddReviewerDisabled: true, loading: true, reviewerError: ''});
     const reviewerValues = this.state.selectedReviewers.map(reviewer => reviewer.value);  
     const payload = {
       'id': this.props.location.search.split('=')[1],
-      'step_name': this.props.requests.detail.data.step_name,
+      'step_name': stepName,
       'user_list': reviewerValues
     }
-    await this.props.dispatch(createStepReviewApproval(payload));
+    const result = await this.props.dispatch(createStepReviewApproval(payload));
+    if (result?.data?.error) {
+      this.setState({
+        isAddReviewerDisabled: false,
+        loading: false,
+        reviewerError: result.data.error
+      });
+      return;
+    }
 
     let reviewersList = await this.props.dispatch(listRequestReviewers(this.props.location.search.split('=')[1]));
     const dataFilter = this.props.requests.detail.data.step_name;
-    const filteredData = reviewersList.data.filter(item => item.step_name === dataFilter);
+    const filteredData = (reviewersList?.data || []).filter(item => item.step_name === dataFilter);
 
     this.setState({filteredReviewers: filteredData});
     this.setState({ selectedReviewers: [] });
@@ -670,7 +686,7 @@ class FormOverview extends React.Component {
               </button>
             : null}
         </section>
-        {canReview ? 
+        {reviewable ? 
         <div className="review-section" style={{ marginTop: '10px', float: 'right', fontSize: '90%' }}>
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <table className='review-table' style={{ borderCollapse: 'collapse', width: '100%' }}>
@@ -730,6 +746,7 @@ class FormOverview extends React.Component {
         <div style={{ clear: 'both' }}></div>
 
         <section className='page__section'>
+          {this.state.reviewerError ? <ErrorReport report={this.state.reviewerError} truncate={true} /> : null}
           {errors.length ? <ErrorReport report={errors} truncate={true} /> : null}
           <div>
             <ul>
