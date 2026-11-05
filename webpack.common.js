@@ -31,7 +31,8 @@ const CommonConfig = {
       Fonts: path.join(__dirname, 'app/src/assets/fonts'),
       Images: path.join(__dirname, 'app/src/assets/images'),
       zlib: 'browserify-zlib',
-      'crypto': path.resolve(__dirname, 'crypto-mock.js')
+      'crypto': path.resolve(__dirname, 'crypto-mock.js'),
+      'decode-uri-component': path.resolve(__dirname, 'vendor/decode-uri-component')
     },
     fallback: {
       // console: true,
