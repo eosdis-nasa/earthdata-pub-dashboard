@@ -40,13 +40,6 @@ import config from './config';
 import OverviewApp from './components/Help/app';
 import Tophat2 from './components/Tophat/top_hat';
 import ErrorBoundary from './components/Errors/ErrorBoundary';
-
-function Edpub1802Probe () {
-  if (typeof window !== 'undefined' && /(?:^|[?&])edpub1802=1(?:&|$)/.test(window.location.search)) {
-    throw new Error('form answer secret-token');
-  }
-  return null;
-}
 import { Logout } from './components/Logout';
 import StatusBanner from './components/StatusBanner/status_banner';
 import AuthInvalidModal from './components/AuthInvalidModal';
@@ -176,7 +169,6 @@ class App extends Component {
               <Tophat2 />
               <StatusBanner />
               <ErrorBoundary>
-                <Edpub1802Probe />
                 <AuthInvalidModal />
                 <Switch>
                 <Redirect exact from='/login' to='/auth' />
