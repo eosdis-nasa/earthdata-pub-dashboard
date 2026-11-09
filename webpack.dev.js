@@ -19,6 +19,13 @@ const DevConfig = merge.smartStrategy(
     // watchContentBase: true, // no longer valid with webpack-dev-server@4.4.0
     compress: true,
     port: process.env.PORT || 3000,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+        runtimeErrors: false
+      }
+    },
     // contentBase: 'dist', // no longer valid with webpack-dev-server@4.4.0
   },
   module: {

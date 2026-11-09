@@ -39,6 +39,7 @@ const Steps = lazy(() => import('./components/Steps'));
 import config from './config';
 import OverviewApp from './components/Help/app';
 import Tophat2 from './components/Tophat/top_hat';
+import ErrorBoundary from './components/Errors/ErrorBoundary';
 import { Logout } from './components/Logout';
 import StatusBanner from './components/StatusBanner/status_banner';
 import AuthInvalidModal from './components/AuthInvalidModal';
@@ -164,11 +165,12 @@ class App extends Component {
       <div className="routes">
         <Provider store={this.store}>
           <ConnectedRouter history={history}>
-            <AuthInvalidModal />
             <Suspense fallback={<div className="loading">Loading...</div>}>
               <Tophat2 />
               <StatusBanner />
-              <Switch>
+              <ErrorBoundary>
+                <AuthInvalidModal />
+                <Switch>
                 <Redirect exact from='/login' to='/auth' />
                 <Route path='/auth' component={Auth} />
 
@@ -193,7 +195,8 @@ class App extends Component {
                     }
                   }}
                 />
-              </Switch>
+                </Switch>
+              </ErrorBoundary>
             </Suspense>
           </ConnectedRouter>
         </Provider>
