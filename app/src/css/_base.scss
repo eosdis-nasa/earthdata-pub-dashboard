@@ -106,7 +106,7 @@ a:hover {
 }
 
 a:active {
-  outline: 0;
+  outline: none;
 }
 
 .link--no-underline, .link--no-underline:hover, .link--no-underline:visited {
@@ -320,7 +320,7 @@ a:active {
 }
 #menuToggle #menu .logOut span.log-icon:before
 {
-  color:darkgrey!important;
+  color: #595959 !important;
   right: 6.75em;
   top:10px;
 }
@@ -492,7 +492,7 @@ a:active {
   margin-left: 2rem;
   &:before {
     position: absolute;
-    color: gray;
+    color: #595959;
     font-family: 'FontAwesome';
     content: '\f044';
     font-weight: 900;
@@ -1051,7 +1051,7 @@ textarea {
 }
 
 .page-link, .page-item {
-  color: #696969!important;
+  color: #696969 !important;
 }
 
 .width--three-quarters {

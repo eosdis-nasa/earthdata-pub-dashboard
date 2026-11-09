@@ -105,8 +105,11 @@ q:before, q:after {
   content:none;
   }
 
-/* remember to define focus styles! */
-:focus { outline:0px; }
+/* Keyboard focus only. A mouse click should not leave this ring behind. */
+:focus-visible {
+  outline: 3px solid #000000;
+  outline-offset: 2px;
+}
 
 /* remember to highlight inserts somehow! */
 ins { text-decoration:none; }

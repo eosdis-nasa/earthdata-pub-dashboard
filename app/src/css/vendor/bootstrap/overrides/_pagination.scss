@@ -7,7 +7,9 @@
     display: inline-block;
     margin: 0 .4em;
   }
-  a, a:visited {
+  a, a:visited,
+  button.page-link,
+  button.page-item {
     color: $lighter-grey;
     transition: all 0.3s ease 0s;
     -webkit-transition: all 0.3s;
@@ -61,7 +63,21 @@
     color: darken($lightest-grey, 45%);
     text-decoration: none;
   }
-  .pagination__link--active a, .pagination__link--active a:visited {
+  button.page-link,
+  button.page-item {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    padding: 0 .3em;
+  }
+  button.page-link:disabled,
+  button.page-item:disabled {
+    cursor: default;
+    opacity: 0.65;
+  }
+  .pagination__link--active a, .pagination__link--active a:visited,
+  .pagination__link--active button {
     color: $ocean-blue;
     font-weight: $base-font-semibold;
     border-bottom: 2px solid $ocean-blue;
