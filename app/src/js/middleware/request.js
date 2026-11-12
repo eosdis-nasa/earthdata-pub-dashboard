@@ -7,9 +7,44 @@ import {
   getErrorMessage
 } from '../actions/helpers';
 import log from '../utils/log';
+import { createErrorReferenceId, isReferenceId } from '../utils/feedback';
 import { isValidApiRequestAction } from './validate';
-import Error from '../components/error';
 import { history } from '../store/configureStore';
+
+function referenceFromResponse (response) {
+  const body = response && response.body;
+  const error = body && body.error;
+  const candidates = [
+    body && body.referenceId,
+    error && typeof error === 'object' && error.referenceId,
+    response && response.error && response.error.referenceId
+  ];
+  return candidates.find((value) => isReferenceId(value)) || '';
+}
+
+function errorCodeFromResponse (response) {
+  const body = response && response.body;
+  const bodyError = body && body.error;
+  const code = (response && response.error && response.error.code)
+    || (bodyError && typeof bodyError === 'object' && bodyError.code);
+  const parsed = Number(code);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function pageToReport () {
+  const page = window.location.pathname;
+  if (typeof page !== 'string' || !page.startsWith('/') || page.length > 200) return '';
+  if (/[?#\s]/.test(page) || page === '/error') return '';
+  return page;
+}
+
+function sendToErrorPage (referenceId) {
+  const redirectUrl = new URL(`${window.location.origin}/error`);
+  redirectUrl.searchParams.set('ref', referenceId);
+  const page = pageToReport();
+  if (page) redirectUrl.searchParams.set('from', page);
+  window.location.assign(redirectUrl.toString());
+}
 
 const isAuthFailureMessage = (message = '') => (
   message.includes('Your session has expired. Please login again.') ||
@@ -116,10 +151,11 @@ export const requestMiddleware = ({ dispatch, getState }) => next => action => {
     const start = new Date();
     return requestPromise(requestAction)
       .then((response) => {
-        const errorCode = response?.error?.code || 200
-        if(errorCode !== 200){
-            const redirectUrl = new URL(`${window.location.origin}/error`);
-            window.location.href=redirectUrl
+        const statusCode = +response.statusCode;
+        const errorCode = errorCodeFromResponse(response);
+        if (statusCode >= 500 || errorCode >= 500) {
+          sendToErrorPage(referenceFromResponse(response) || createErrorReferenceId());
+          return;
         }
         const { body } = response;
         if (+response.statusCode >= 400) {
