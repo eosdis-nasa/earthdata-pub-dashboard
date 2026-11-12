@@ -5,7 +5,7 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import React from 'react';
 import { mount, configure } from 'enzyme';
 import ErrorBoundary from '../../../app/src/js/components/Errors/ErrorBoundary';
-import { crashReportPayload, crashReportSubject, openFeedbackForm } from '../../../app/src/js/utils/feedback';
+import { crashReportPayload, crashReportSubject, createErrorReferenceId, openFeedbackForm } from '../../../app/src/js/utils/feedback';
 
 configure({ adapter: new Adapter() });
 
@@ -22,9 +22,25 @@ test.beforeEach(() => {
 
 test('crashReportSubject keeps only a reference id', (t) => {
   t.is(crashReportSubject('EDP-A1B2C3D4'), 'Earthdata Pub problem EDP-A1B2C3D4');
+  t.is(crashReportSubject('EDP-20261109T151305Z-A1B2C3D4'), 'Earthdata Pub problem EDP-20261109T151305Z-A1B2C3D4');
   t.is(crashReportSubject('secret-token form answer'), 'Earthdata Pub problem');
   t.is(crashReportSubject('EDP-A1B2C3D4 secret-token'), 'Earthdata Pub problem');
   t.is(crashReportSubject(''), 'Earthdata Pub problem');
+});
+
+test('an error reference is a time plus a short id', (t) => {
+  const id = createErrorReferenceId(new Date('2026-11-09T15:13:05.123Z'));
+  t.regex(id, /^EDP-20261109T151305Z-[0-9A-F]{8}$/);
+  const payload = crashReportPayload(id, {
+    page: '/error?token=secret-token',
+    kind: 'request',
+    errorMessage: 'form answer secret-token'
+  });
+  t.is(payload.subject, `Earthdata Pub problem ${id}`);
+  t.true(payload.details.includes('A request failed, so I opened this report.'));
+  t.true(payload.details.includes(`Reference: ${id}`));
+  t.true(payload.details.includes('Page: /'));
+  t.false(payload.details.includes('secret-token'));
 });
 
 test('crash report drops query strings, stacks, and form answers', (t) => {
