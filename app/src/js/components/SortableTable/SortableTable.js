@@ -25,7 +25,7 @@ const IndeterminateCheckbox = forwardRef(
     }, [resolvedRef, indeterminate]);
 
     return (
-      <input type="checkbox" ref={resolvedRef} {...rest} />
+      <input type="checkbox" ref={resolvedRef} aria-label="Select row" {...rest} />
     );
   }
 );
@@ -36,7 +36,7 @@ IndeterminateCheckbox.propTypes = {
 };
 
 const Header = ({ getToggleAllRowsSelectedProps }) => (
-  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+  <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} aria-label="Select all rows" />
 );
 
 Header.propTypes = {

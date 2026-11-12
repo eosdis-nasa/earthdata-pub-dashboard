@@ -20,7 +20,7 @@ class Footer extends React.Component {
     return (
       <footer className="mt-auto">
         <div className="container">
-          <div className='api__summary' aria-label="Earthdata Pub API Version">
+          <div className='api__summary'>
             { authenticated &&
               <h2 className='api__version'>Earthdata Pub API Version: { versionNumber }</h2>
             }

@@ -51,7 +51,7 @@ const ReviewerOption = ({ innerProps, data, isFocused }) => {
       onMouseLeave={() => setHovered(false)}
       style={{
         padding: '10px',
-        backgroundColor: isFocused ? '#2275AA' : 'white',
+        backgroundColor: isFocused ? '#206EA7' : 'white',
         color: isFocused ? 'white' : 'black',
         position: 'relative',
         cursor: 'pointer',

@@ -269,12 +269,12 @@ async updateList() {
                   <li key={d[1]}>
                     {this.isExternalLink(d[2])
                       ? (
-                      <a id={d[1]} href={d[2]} className='overview-num' target='_blank' aria-label={d[1]}>
+                      <a id={d[1]} href={d[2]} className='overview-num' target='_blank'>
                         <span className='num--large'>{value}</span> {d[1]}
-                      </a>
+                      <span className="visually-hidden"> (opens in a new window)</span></a>
                         )
                       : (
-                      <Link id={d[1]} className='overview-num' to={{ pathname: d[2], search: this.props.location.search }} aria-label="View your overview">
+                      <Link id={d[1]} className='overview-num' to={{ pathname: d[2], search: this.props.location.search }}>
                         <span className='num--large'>{value}</span> {d[1]}
                       </Link>
                         )}
@@ -394,7 +394,7 @@ async updateList() {
     
                         {/* Info Tooltip */}
                         <div className="info-tooltip">
-                          <FontAwesomeIcon icon={faInfoCircle} style={{ color: "#2276ac", cursor: "pointer" }} />
+                          <FontAwesomeIcon icon={faInfoCircle} style={{ color: "#206EA7", cursor: "pointer" }} />
                           <span className="info-tooltip-text">
                             If you are submitting Data Publication Requests for multiple, similar data products, 
                             you can clone an existing request and use it as a template for additional requests. 
@@ -420,7 +420,7 @@ async updateList() {
                             title="More info about Accession Request"
                           >
                             <i className="fas fa-info-circle"></i>
-                          </a>
+                          <span className="visually-hidden"> (opens in a new window)</span></a>
                         </div>
 
                         <div className="dropdown-row">
@@ -438,7 +438,7 @@ async updateList() {
                             title="More info about Publication Request"
                           >
                             <i className="fas fa-info-circle"></i>
-                          </a>
+                          <span className="visually-hidden"> (opens in a new window)</span></a>
                         </div>
                         </div>
                       )}

@@ -63,7 +63,7 @@
   }
   
   .table td a {
-    color: #2275aa;
+    color: #1A557B;
     text-decoration: none;
   }
   
@@ -196,7 +196,7 @@
   .hero {
     position: relative;
     height: 350px;
-    background: #2276ac;
+    background: #206EA7;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -231,7 +231,7 @@
 
   .hero button {
     margin-top: 15px;
-    background-color: #28a745;
+    background-color: #158749;
     color: white;
     padding: 10px 22px;
     font-size: 1.1rem;
@@ -305,7 +305,7 @@
   }
       
   .header {
-    background: #2276ac;
+    background: #206EA7;
     color: white;
     display: flex;
     justify-content: space-between;
@@ -392,7 +392,7 @@
     font-size: 20px;
     position: sticky;
     left: 100%;
-    background-color: #2275AA;
+    background-color: #206EA7;
     border: none;
     border-radius: 50%;
     text-align: center;
@@ -443,7 +443,7 @@
     font-size: 18px;
     font-weight: bold;
     border-radius: 50%;
-    background: #2276AC;
+    background: #206EA7;
     border: 1px solid #195983;
     color: white;
     display: flex;
@@ -490,7 +490,7 @@
       width: 35px;
       height: 35px;
       font-size: 16px;
-      background: #2275AA;
+      background: #206EA7;
       border: none;
       border-radius: 50%;
       text-align: center;
@@ -504,7 +504,7 @@
       left: 10px;
       width: 35px;
       height: 35px;
-      background: #2275AA;
+      background: #206EA7;
       border: none;
       border-radius: 50%;
       cursor: pointer;
@@ -616,7 +616,7 @@
 }
 
 .settings-color {
-  background-color: #2275AA !important;
+  background-color: #206EA7 !important;
   margin-right: 5px !important;
   padding: 0.4em 1.5em 0.4em 2.5em !important;
 }

@@ -77,23 +77,23 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel, filters = {} })
         <ul className="pagination" style={{ display: 'flex' }}>
           {
             inflight || page - 1 === 0
-              ? <li className="page-item button--disabled" disabled>
-              <a className="page-link" aria-label="View previous page">{'<'} Previous</a>
+              ? <li className="page-item button--disabled">
+              <button type="button" className="page-link" disabled>{'<'} Previous</button>
             </li>
-              : <li className="page-item" onClick={() => setPage(page - 1)}>
-              <a className="page-link" aria-label="View previous page">{'<'} Previous</a>
+              : <li className="page-item">
+              <button type="button" className="page-link" onClick={() => setPage(page - 1)}>{'<'} Previous</button>
             </li>
           }
           <li className="page-item">
-            <a className="page-link" aria-label="Current page">{page}</a>
+            <button type="button" className="page-link" aria-current="page">{page}</button>
           </li>
           {
             inflight || (page * listSize) >= list.length
-              ? <li className="page-item button--disabled" disabled>
-              <a className="page-link" aria-label="View next page">Next {'>'}</a>
+              ? <li className="page-item button--disabled">
+              <button type="button" className="page-link" disabled>Next {'>'}</button>
             </li>
-              : <li className="page-item" onClick={() => setPage(page + 1)}>
-              <a className="page-link" aria-label="View next page">Next {'>'}</a>
+              : <li className="page-item">
+              <button type="button" className="page-link" onClick={() => setPage(page + 1)}>Next {'>'}</button>
             </li>
           }
         </ul>

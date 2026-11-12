@@ -27,8 +27,8 @@ const PaginationTableHeader = ({
       <li className="total-records" style={{ textAlign: 'left', flex: 1 }}>Page {pageOptions.length ? pageIndex + 1 : 0} of {pageOptions.length}</li>
       <li>
         <ul style={{ textAlign: 'center', flex: 1 }}>
-        <li className="page-item" onClick={() => previousPage()} disabled={!canPreviousPage}>
-          <a className="page-link" aria-label="View previous page">{'<'} Previous</a>
+        <li className="page-item">
+          <button type="button" className="page-link" onClick={() => previousPage()} disabled={!canPreviousPage}>{'<'} Previous</button>
         </li>
         <li>
           <select
@@ -46,8 +46,8 @@ const PaginationTableHeader = ({
             ))}
           </select>
         </li>
-        <li className="page-item" onClick={() => nextPage()} disabled={!canNextPage}>
-          <a className="page-link" aria-label="View next page">Next {'>'}</a>
+        <li className="page-item">
+          <button type="button" className="page-link" onClick={() => nextPage()} disabled={!canNextPage}>Next {'>'}</button>
         </li>
         </ul>
       </li>

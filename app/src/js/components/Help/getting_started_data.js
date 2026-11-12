@@ -73,7 +73,7 @@ const GettingStartedData = [
         <span className="mfa-tooltip">
          <FontAwesomeIcon
             icon={faInfoCircle }
-            style={{ color: "#2276ac", marginLeft: "5px", width: "15px", height: "15px" }}
+            style={{ color: "#206EA7", marginLeft: "5px", width: "15px", height: "15px" }}
          />
          <span className="mfa-tooltiptext">
             Earthdata Pub uses MFA, a security system that requires users to provide two or more verification factors to gain access to an account or system. 

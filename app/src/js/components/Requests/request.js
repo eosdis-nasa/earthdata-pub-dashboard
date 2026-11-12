@@ -360,7 +360,7 @@ class RequestOverview extends React.Component {
     const tableColumns = [
       {
         Header: 'Name',
-        accessor: row => <Link to={`/forms/id/${row.id}?requestId=${request.id}`} aria-label="View your form details">{row.long_name}</Link>,
+        accessor: row => <Link to={`/forms/id/${row.id}?requestId=${request.id}`}>{row.long_name}</Link>,
         id: 'long_name'
       },
       {
@@ -385,7 +385,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Workflow',
-        accessor: row => row?.workflow?.name ? <Link to={`/workflows/id/${row.workflow.id}`} aria-label="View your workflows">{row.workflow.name}</Link> : row?.workflow?.name
+        accessor: row => row?.workflow?.name ? <Link to={`/workflows/id/${row.workflow.id}`}>{row.workflow.name}</Link> : row?.workflow?.name
       },
       {
         label: 'Created',
@@ -403,7 +403,7 @@ class RequestOverview extends React.Component {
       },
       {
         label: 'Communication',
-        accessor: conversationId => <Link to={`/conversations/id/${conversationId}`} aria-label="View your conversations">{conversationId ? 'Conversation' : null}</Link>,
+        accessor: conversationId => <Link to={`/conversations/id/${conversationId}`}>{conversationId ? 'Conversation' : null}</Link>,
         property: 'conversation_id'
       }
     ];

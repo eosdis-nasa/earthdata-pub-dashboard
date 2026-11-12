@@ -53,7 +53,7 @@ class Auth extends React.Component {
     return (
       <div className='app'>
         <Header dispatch={dispatch} api={api} apiVersion={apiVersion} minimal={true} />
-        <main className='main' role='main'>
+        <main className='main'>
           <div className="modal-content">
             <Modal
               className="oauth-modal-root"

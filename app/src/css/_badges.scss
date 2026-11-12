@@ -24,7 +24,7 @@
   font-weight: $base-font-regular;
   display: inline-block;
   &__enabled {
-    background-color: #30AD66; // Active — green
+    background-color: #2C8063; // Active — green, white text is 4.8:1
   }
   &__disabled {
     background-color: $error-red; // Disabled — red

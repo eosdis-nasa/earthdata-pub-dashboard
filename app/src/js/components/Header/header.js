@@ -61,10 +61,10 @@ class Header extends React.Component {
     });
 
     return (
-      <div className='header' aria-label="Header">
+      <div className='header'>
         <div className='row'>
-          <h1 className='logo' aria-label="Earthdata pub logo"><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="Logo" src={mainLogo} /><div>EDPub</div></Link></h1>
-          <nav role="navigation">
+          <h1 className='logo'><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="" src={mainLogo} /><div>EDPub</div></Link></h1>
+          <nav>
             { !this.props.minimal
               ? <><ul className="default_header">
                             { authenticated && activePaths.map(path => <li
@@ -72,14 +72,14 @@ class Header extends React.Component {
                                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
                             <li className='rightalign nav__order-8'>
                                 <ul className='right-ul'>
-                                    <li className='overviewLink'>{overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : ''}</li>
+                                    <li className='overviewLink'>{overviewUrl ? <a href={overviewUrl}>Overview</a> : ''}</li>
                                     {authenticated &&
-                                        <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
-                                    <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a href={logoutUrlWithRedirect} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li></ul>
+                                        <li><Link to={`/users/id/${userId}`}>Hi, {user}</Link></li>}
+                                    <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'}>Help</a> : ''}</li>
+                                    <li className='logOut'>{authenticated ? <a href={logoutUrlWithRedirect}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link>}</li></ul>
                             </li>
                         </ul><div id="menuToggle">
-                                <input type="checkbox" />
+                                <input type="checkbox" aria-label="Open the menu" />
 
                                 <span></span>
                                 <span></span>
@@ -89,11 +89,11 @@ class Header extends React.Component {
                                 {activePaths.map(path => <li
                                 key={path[0]}
                                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
-                                    <li className='overviewLink'>{overviewUrl ? <a href={overviewUrl} aria-label="View the overview pages">Overview</a> : ''}</li>
+                                    <li className='overviewLink'>{overviewUrl ? <a href={overviewUrl}>Overview</a> : ''}</li>
                                     {authenticated &&
-                                        <li><Link to={`/users/id/${userId}`} aria-label="View your conversations">Hi, {user}</Link></li>}
-                                    <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'} aria-label="View the how to use page">Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a href={logoutUrlWithRedirect} aria-label="Log out"><span className="log-icon"></span>Log out</a> : <Link to={'/login'} aria-label="Log in">Log in</Link>}</li>
+                                        <li><Link to={`/users/id/${userId}`}>Hi, {user}</Link></li>}
+                                    <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'}>Help</a> : ''}</li>
+                                    <li className='logOut'>{authenticated ? <a href={logoutUrlWithRedirect}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link>}</li>
                                 </ul>
                             </div></>
               : null }

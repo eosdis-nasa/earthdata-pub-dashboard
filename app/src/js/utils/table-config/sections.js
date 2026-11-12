@@ -10,7 +10,6 @@ export const tableColumns = [
     Cell: row => (
       <Link
         to={{ pathname: `/sections/edit/${row.row.original.id}` }}
-        aria-label="View your form details"
       >
         {row.row.original.id}
       </Link>

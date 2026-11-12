@@ -6,7 +6,7 @@ const HomeData = [
     id: "intro",
     content: (
       <>
-        <h1 className="display-4">What is Earthdata Pub?</h1>
+        <h2 className="display-4">What is Earthdata Pub?</h2>
         <hr />
         <p>
           Earthdata Pub is a resource center providing information and online tools
@@ -69,7 +69,7 @@ const HomeData = [
               className="ext"
             >
               Earthdata Search
-            </a>
+            <span className="visually-hidden"> (opens in a new window)</span></a>
             , increasing the reach and relevance of your data.
           </li>
           <li>

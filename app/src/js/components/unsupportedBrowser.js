@@ -8,7 +8,7 @@ class UnsupportedBrowser extends React.Component {
     return (
       <div>
         <Tophat2 />
-        <div className='header' aria-label="Header">
+        <div className='header'>
         <div className='row'>
           <h1 className='logo' aria-label="Earthdata pub logo"><img alt="Logo" src={mainLogo} /><div>EDPub</div></h1>
         </div>

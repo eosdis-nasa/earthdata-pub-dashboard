@@ -168,7 +168,7 @@ class WorkflowsOverview extends React.Component {
       {
         Header: 'Name',
         accessor: (row) => row.long_name,
-        Cell: row => <Link to={{ pathname: `/workflows/id/${row.row.original.id}` }} aria-label="View your workflows">{row.row.original.long_name}</Link>,
+        Cell: row => <Link to={{ pathname: `/workflows/id/${row.row.original.id}` }}>{row.row.original.long_name}</Link>,
         id: 'long_name'
       },
       {

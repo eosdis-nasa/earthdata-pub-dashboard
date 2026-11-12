@@ -54,7 +54,7 @@ class Sidebar extends React.Component {
               if (!!d[4] === false || !!this.props.privileges.ADMIN || (!!d[4] === true && !!d[5] === true && this.props.privileges[d[4]]?.includes(d[5]))) {
                 return (
                   <li key={base + i}>
-                      <Link className={classes} to={path} title={title} aria-label={d[0]}>
+                      <Link className={classes} to={path} title={title}>
                           {d[0]}
                       </Link>
                   </li>
@@ -101,9 +101,9 @@ class Sidebar extends React.Component {
       // If items exist and if user is on mobile device
       const mobile = localStorage.getItem('mobile');
       return (
-            <><button className={mobile === 'true' || document.querySelectorAll('div.sidebar.hidden').length > 0 ? 'openbtn' : 'openbtn hidden'} onClick={this.openNav} id="openButton"><img width="30px" src={chevronRight} /></button>
+            <><button className={mobile === 'true' || document.querySelectorAll('div.sidebar.hidden').length > 0 ? 'openbtn' : 'openbtn hidden'} onClick={this.openNav} id="openButton" aria-label="Open sidebar"><img width="30px" src={chevronRight} alt="" /></button>
             <div className={mobile === 'true' ? 'sidebar hidden' : 'sidebar'}>
-                <button onClick={this.closeNav} className='closebtn' id="closeButton"><img width="30px" src={chevronLeft} /></button>
+                <button onClick={this.closeNav} className='closebtn' id="closeButton" aria-label="Close sidebar"><img width="30px" src={chevronLeft} alt="" /></button>
                 <div className='sidebar__row'>
                   {sections.map(this.renderNavSection)}
                 </div>

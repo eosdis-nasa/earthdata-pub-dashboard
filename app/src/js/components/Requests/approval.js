@@ -131,7 +131,7 @@ class ApprovalStep extends React.Component {
     const tableColumns = [
       {
         Header: 'Name',
-        accessor: row => <Link to={`/forms/id/${row.id}?requestId=${request.id}`} aria-label="View your form details">{row.long_name}</Link>,
+        accessor: row => <Link to={`/forms/id/${row.id}?requestId=${request.id}`}>{row.long_name}</Link>,
         id: 'long_name'
       },
       {

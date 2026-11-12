@@ -351,7 +351,7 @@ class UploadOverview extends React.Component {
 
     const progressBarFillStyle = {
       height: '100%',
-      backgroundColor: this.state.uploadFailed ? '#db1400' : '#2275aa', // Set default fill color to blue
+      backgroundColor: this.state.uploadFailed ? '#db1400' : '#206EA7', // Set default fill color to blue
       textAlign: 'center',
       lineHeight: '30px', 
       color: 'white', 
@@ -510,7 +510,7 @@ class UploadOverview extends React.Component {
                       <div style={{ width: '100%', backgroundColor: uploadProgress[file.name] !== 'Failed'?'#f1f1f1':'red', height: '30px', marginBottom: '5px' }}>
                         <div style={{
                           width: `${uploadProgress[file.name] || 0}%`,
-                          backgroundColor: '#2275aa',
+                          backgroundColor: '#206EA7',
                           height: '100%',
                           textAlign: 'center',
                           lineHeight: '30px',

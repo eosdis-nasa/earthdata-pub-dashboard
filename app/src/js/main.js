@@ -31,7 +31,7 @@ class Main extends Component {
             )
           : null}
         <Header dispatch={this.props.dispatch} api={this.props.api} location={this.props.location} earthdatapubInstance={this.props.earthdatapubInstance}/>
-        <main className='main' role='main'>
+        <main className='main'>
           {this.props.children}
         </main>
         <section className='page__section--top' role="navigation" aria-label="Click to go to top of page">

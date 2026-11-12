@@ -119,51 +119,51 @@ export const lastUpdated = function (datestring, text) {
 
 export const requestLink = function (requestId) {
   if (!requestId) return nullValue;
-  return <Link to={{ pathname: `/requests/id/${requestId}` }} aria-label="View your request details">{requestId}</Link>;
+  return <Link to={{ pathname: `/requests/id/${requestId}` }}>{requestId}</Link>;
 };
 export const questionLink = function (questionId, questionName) {
   if (!questionId) return nullValue;
-  return <Link to={{ pathname: `/questions/id/${questionId}` }} aria-label="View your question details">{questionName}</Link>;
+  return <Link to={{ pathname: `/questions/id/${questionId}` }}>{questionName}</Link>;
 };
 export const inputLink = function (questionId, controlId) {
   if (!questionId) return nullValue;
-  return <Link to={{ pathname: `/inputs/edit/${questionId}/${controlId}` }} aria-label="View your input details">{controlId}</Link>;
+  return <Link to={{ pathname: `/inputs/edit/${questionId}/${controlId}` }}>{controlId}</Link>;
 };
 export const groupLink = function (groupId) {
   if (!groupId) return nullValue;
-  return <Link to={`/groups/id/${groupId}`} aria-label="View your group details">{groupId}</Link>;
+  return <Link to={`/groups/id/${groupId}`}>{groupId}</Link>;
 };
 export const userLink = function (userId) {
   if (!userId) return nullValue;
-  return <Link to={`/users/id/${userId}`} aria-label="View your user details">{userId}</Link>;
+  return <Link to={`/users/id/${userId}`}>{userId}</Link>;
 };
 export const formLink = function (formId) {
   if (!formId) return nullValue;
-  return <Link to={`/forms/id/${formId}`} aria-label="View your form details">{formId}</Link>;
+  return <Link to={`/forms/id/${formId}`}>{formId}</Link>;
 };
 export const workflowLink = function (name) {
   if (!name) return nullValue;
-  return <Link to={`/workflows/id/${name}`} aria-label="View your workflow details">{name}</Link>;
+  return <Link to={`/workflows/id/${name}`}>{name}</Link>;
 };
 export const metricLink = function (metricId) {
   if (metricId) return nullValue;
-  return <Link to={`/metrics/id/${metricId}`} aria-label="View your metric details">{metricId}</Link>;
+  return <Link to={`/metrics/id/${metricId}`}>{metricId}</Link>;
 };
 export const roleLink = function (roleId) {
   if (roleId) return nullValue;
-  return <Link to={`/roles/id/${roleId}`} aria-label="View your role details">{roleId}</Link>;
+  return <Link to={`/roles/id/${roleId}`}>{roleId}</Link>;
 };
 export const conversationLink = function (conversationId) {
   if (conversationId) return nullValue;
-  return <Link to={`/notes/id/${conversationId}`} aria-label="View your conversation details">{conversationId}</Link>;
+  return <Link to={`/notes/id/${conversationId}`}>{conversationId}</Link>;
 };
 export const messageLink = function (message) {
   if (!message) return nullValue;
-  return <Link to={`/messages/id/${message}`} aria-label="View your message details">{message}</Link>;
+  return <Link to={`/messages/id/${message}`}>{message}</Link>;
 };
 export const stepLink = function (stepId, stepName) {
   if (!stepId) return nullValue;
-  return <Link to={{ pathname: `/steps/id/${stepId}` }} aria-label="View your step details">{stepName}</Link>;
+  return <Link to={{ pathname: `/steps/id/${stepId}` }}>{stepName}</Link>;
 };
 export const bool = function (bool) {
   return bool ? 'Yes' : 'No';
@@ -186,7 +186,7 @@ export const storage = (n) => {
   return `${(number / 1e15).toFixed(2)} PB`;
 };
 
-export const link = (url) => <a href={url} target='_blank' aria-label={url}>Link</a>;
+export const link = (url) => <a href={url} target='_blank'>Link<span className="visually-hidden"> (opens in a new window)</span></a>;
 
 export const truncate = function (string, to) {
   if (!string) return nullValue;

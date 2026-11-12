@@ -250,21 +250,34 @@ export const tableColumns = [
   {
     Header: 'Request Name',
     accessor: row => row.name ? row.name || `Request Initialized by ${row.initiator.name}` : `Request Initialized by ${row.initiator.name}`,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.name ? row.row.original.name || `Request Initialized by ${row.row.original.initiator.name}` : `Request Initialized by ${row.row.original.initiator.name}`}</Link> : `Request Initialized by ${row.row.original.initiator.name}`,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }}  id={row.row.original.id}>{row.row.original.name ? row.row.original.name || `Request Initialized by ${row.row.original.initiator.name}` : `Request Initialized by ${row.row.original.initiator.name}`}</Link> : `Request Initialized by ${row.row.original.initiator.name}`,
     id: 'name',
     // width: 155
   },
   {
     Header: 'Request Contact',
     accessor: row => row.data_producer_name ? row.data_producer_name : null,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details" id={row.row.original.id}>{row.row.original.data_producer_name ? row.row.original.data_producer_name : null}</Link> : null,
+    Cell: row => {
+      const request = row.row && row.row.original;
+      if (!request) return null;
+      const name = request.data_producer_name;
+      return (
+        <Link
+          to={{ pathname: `/requests/id/${request.id}` }}
+          id={request.id}
+          aria-label={name ? undefined : 'View request'}
+        >
+          {name || null}
+        </Link>
+      );
+    },
     id: 'data_producer_info_name',
     // width: 155
   },
   {
     Header: 'Status',
     accessor: (row) => row.status,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.step_status_label ?? row.row.original.status}</Link> : null,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} >{row.row.original.step_status_label ?? row.row.original.status}</Link> : null,
     id: 'status_message',
     // width: 170
   },
@@ -283,7 +296,7 @@ export const tableColumns = [
   },
   {
     Header: 'Conversation',
-    accessor: (row) => row.conversation_id ? <Link to={{ pathname: `/conversations/id/${row.conversation_id}` }} aria-label="View your conversation details">View</Link> : null,
+    accessor: (row) => row.conversation_id ? <Link to={{ pathname: `/conversations/id/${row.conversation_id}` }}>View</Link> : null,
     id: 'conversation_id',
     // width: 120
   },
