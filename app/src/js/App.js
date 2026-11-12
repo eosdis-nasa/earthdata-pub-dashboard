@@ -173,6 +173,7 @@ class App extends Component {
                 <Switch>
                 <Redirect exact from='/login' to='/auth' />
                 <Route path='/auth' component={Auth} />
+                <Route path='/error' component={Error} />
 
                 {pathValue && (
                   <Route path="/" render={() => <OverviewApp keyword={pathValue}/>} />

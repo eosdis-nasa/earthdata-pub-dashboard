@@ -21,14 +21,37 @@ export function ensureFeedbackScrollIntoView () {
   window.feedback.__edpubScrollWrapped = true;
 }
 
-const REFERENCE_ID = /^EDP-[0-9A-F]{8}$/;
+const CRASH_REFERENCE_ID = /^EDP-[0-9A-F]{8}$/;
+const ERROR_REFERENCE_ID = /^EDP-\d{8}T\d{6}Z-[0-9A-F]{8}$/;
 const SAFE_NAME = /^[A-Za-z][A-Za-z0-9]{0,40}$/;
+const REPORT_LEADS = {
+  crash: 'The page stopped loading, so I opened this report.',
+  request: 'A request failed, so I opened this report.'
+};
+
+export function isReferenceId (value) {
+  return typeof value === 'string' && (CRASH_REFERENCE_ID.test(value) || ERROR_REFERENCE_ID.test(value));
+}
+
+export function createErrorReferenceId (now = new Date()) {
+  const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const bytes = new Uint8Array(4);
+  if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+    window.crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < bytes.length; i += 1) {
+      bytes[i] = Math.floor(Math.random() * 256);
+    }
+  }
+  const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('').toUpperCase();
+  return `EDP-${stamp}-${hex}`;
+}
 
 /**
  * Subject for a crash report. Only a generated reference id is allowed through.
  */
 export function crashReportSubject (referenceId) {
-  if (typeof referenceId !== 'string' || !REFERENCE_ID.test(referenceId)) {
+  if (!isReferenceId(referenceId)) {
     return 'Earthdata Pub problem';
   }
   return `Earthdata Pub problem ${referenceId}`;
@@ -57,13 +80,14 @@ function safeTime (value) {
  */
 export function crashReportPayload (referenceId, context) {
   const info = context || {};
-  const id = typeof referenceId === 'string' && REFERENCE_ID.test(referenceId) ? referenceId : '';
+  const id = isReferenceId(referenceId) ? referenceId : '';
   const page = safePage(info.page);
   const errorName = safeName(info.errorName);
   const component = safeName(info.component);
   const when = safeTime(info.when);
+  const lead = REPORT_LEADS[info.kind] || REPORT_LEADS.crash;
   const details = [
-    'The page stopped loading, so I opened this report.',
+    lead,
     '',
     id ? `Reference: ${id}` : 'Reference: unavailable',
     `Page: ${page}`,

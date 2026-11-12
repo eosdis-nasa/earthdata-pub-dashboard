@@ -38,6 +38,12 @@ export const configureRequest = (params = {}) => {
 
   config.headers = config.headers || {};
   config.headers['Content-Type'] = 'application/json';
+  if (typeof window !== 'undefined' && window.location) {
+    const page = window.location.pathname;
+    if (typeof page === 'string' && page.startsWith('/') && page.length <= 200 && !/[?#\s]/.test(page)) {
+      config.headers['X-Edpub-Page'] = page;
+    }
+  }
 
   if (config.path) {
     if (typeof config.path !== 'string') {
