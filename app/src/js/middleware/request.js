@@ -10,6 +10,13 @@ import log from '../utils/log';
 import { createErrorReferenceId, isReferenceId } from '../utils/feedback';
 import { isValidApiRequestAction } from './validate';
 import { history } from '../store/configureStore';
+import _config from '../config';
+
+function appBase () {
+  const basepath = _config.basepath || '/';
+  if (!basepath || basepath === '/') return '';
+  return String(basepath).replace(/\/$/, '');
+}
 
 function referenceFromResponse (response) {
   const body = response && response.body;
@@ -34,12 +41,12 @@ function errorCodeFromResponse (response) {
 function pageToReport () {
   const page = window.location.pathname;
   if (typeof page !== 'string' || !page.startsWith('/') || page.length > 200) return '';
-  if (/[?#\s]/.test(page) || page === '/error') return '';
+  if (/[?#\s]/.test(page) || page === '/error' || page === `${appBase()}/error`) return '';
   return page;
 }
 
 function sendToErrorPage (referenceId) {
-  const redirectUrl = new URL(`${window.location.origin}/error`);
+  const redirectUrl = new URL(`${window.location.origin}${appBase()}/error`);
   redirectUrl.searchParams.set('ref', referenceId);
   const page = pageToReport();
   if (page) redirectUrl.searchParams.set('from', page);
