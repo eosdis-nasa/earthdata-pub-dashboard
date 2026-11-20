@@ -216,6 +216,8 @@
     "vm-browserify": "^1.1.2"
   },
   "overrides": {
+    "browserslist": "4.28.7",
+    "fast-uri": "3.1.7",
     "connected-react-router": {
       "immutable": "4.3.9"
     },
