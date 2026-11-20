@@ -26,12 +26,12 @@ class Main extends Component {
         {target !== 'earthdata-pub'
           ? (
           <div className='app__target--container' role="banner">
-            <h4 className='app__target'>{displayCase(target)} ({displayCase(environment)})</h4>
+            <p className='app__target'>{displayCase(target)} ({displayCase(environment)})</p>
           </div>
             )
           : null}
         <Header dispatch={this.props.dispatch} api={this.props.api} location={this.props.location} earthdatapubInstance={this.props.earthdatapubInstance}/>
-        <main className='main'>
+        <main id="main-content" className='main' tabIndex={-1}>
           {this.props.children}
         </main>
         <section className='page__section--top' role="navigation" aria-label="Click to go to top of page">

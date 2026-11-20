@@ -14,7 +14,7 @@ import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 function Step ({ step_id, step_name, step_status_label, type, action_id, form_id, service_id }) {
   return (
     <div>
-      <h1>ID: {step_id}</h1>
+      <h2>ID: {step_id}</h2>
       <h2>Name: {step_name}</h2>
       <h3>Status Label: {step_status_label}</h3>
       <h3>Type: {type}</h3>

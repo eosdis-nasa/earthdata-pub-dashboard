@@ -8,6 +8,7 @@
     margin: 0 .4em;
   }
   a, a:visited,
+  button,
   button.page-link,
   button.page-item {
     color: $lighter-grey;
@@ -63,6 +64,7 @@
     color: darken($lightest-grey, 45%);
     text-decoration: none;
   }
+  button,
   button.page-link,
   button.page-item {
     background: none;

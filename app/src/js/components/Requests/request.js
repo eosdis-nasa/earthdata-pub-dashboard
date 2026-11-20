@@ -217,9 +217,9 @@ class RequestOverview extends React.Component {
       <>
         <br></br>
         <div className='page__section__header'>
-          <h1 className='heading--small' aria-labelledby='Set the current workflow step'>
+          <h2 className='heading--small'>
             Set the current workflow step
-          </h1>
+          </h2>
         </div>
         <div className='indented__details'>
           <div className="request-section">
@@ -438,7 +438,7 @@ class RequestOverview extends React.Component {
         </section>
 
         <section className='page__section'>
-          <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
+          <h2 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h2>
           {this.state.showSearch && <SearchModal {...searchOptions} />}
           {canWithdraw || canInitialize ? <AsyncCommands config={dropdownConfig} /> : null}
           {request && lastUpdated(request.last_change, 'Updated')}
@@ -451,9 +451,9 @@ class RequestOverview extends React.Component {
           <>
             <section className='page__section'>
               <div className='heading__wrapper--border'>
-                <h1 className='heading--small' aria-labelledby={strings.request_overview}>
+                <h2 className='heading--small'>
                   {strings.request_overview}
-                </h1>
+                </h2>
               </div>
               <div className='indented__details'>
                 <Metadata data={request} accessors={metaAccessors} />
@@ -462,9 +462,9 @@ class RequestOverview extends React.Component {
             <section className='page__section'>
               <br></br>
               <div className='page__section__header'>
-                <h1 className='heading--small' aria-labelledby='contributers'>
+                <h2 className='heading--small'>
                   Contributors
-                </h1>
+                </h2>
               </div>
               <div className='page__content--shortened flex__column'>
                 {

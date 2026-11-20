@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://pub.earthdata.nasa.gov/</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/help</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/getting_started</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/data_publication_guidelines</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/requests</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/workflows</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/metrics</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/users</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/groups</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/roles</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/questions</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/conversations</loc></url>
+  <url><loc>https://pub.earthdata.nasa.gov/modules</loc></url>
+</urlset>

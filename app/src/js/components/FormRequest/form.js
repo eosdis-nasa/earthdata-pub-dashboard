@@ -525,7 +525,7 @@ class FormOverview extends React.Component {
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{form.long_name}</h1>
+          <h2 className='heading--large heading--shared-content with-description'>{form.long_name}</h2>
           {requestId !== ''
             ? <button onClick={() => { this.printForm(); window.location.reload(); }}
                 className='button button--small button--green button--print form-group__element--right'>

@@ -3,21 +3,36 @@ import React from 'react';
 import Paginator from 'paginator';
 import PropTypes from 'prop-types';
 
-const noop = (e) => e.preventDefault();
 const disabled = ' pagination__link--disabled';
+
+function PageButton ({ page, label, className, current, onClick }) {
+  return (
+    <button
+      type="button"
+      className={className}
+      aria-label={label}
+      aria-current={current ? 'page' : undefined}
+      disabled={!onClick}
+      onClick={onClick}
+    >
+      {page}
+    </button>
+  );
+}
+
+PageButton.propTypes = {
+  page: PropTypes.node,
+  label: PropTypes.string,
+  className: PropTypes.string,
+  current: PropTypes.bool,
+  onClick: PropTypes.func
+};
 
 class Pagination extends React.Component {
   constructor () {
     super();
     this.displayName = 'Pagination';
-    this.onPageClick = this.onPageClick.bind(this);
     this.setPage = this.setPage.bind(this);
-  }
-
-  onPageClick (e) {
-    e.preventDefault();
-    const newPage = +e.currentTarget.getAttribute('data-value');
-    this.setPage(newPage);
   }
 
   setPage (newPage) {
@@ -35,30 +50,52 @@ class Pagination extends React.Component {
       const meta = paginator.build(count, currentPage);
       const pages = [];
       for (let i = meta.first_page; i <= meta.last_page; ++i) { pages.push(i); }
-      const jumpToFirst = meta.first_page > 1 && <li><a href='#' data-value={1} onClick={this.onPageClick}>1</a> ... </li>;
-      const jumpToLast = meta.last_page < meta.total_pages &&
-        <li> ... <a href='#' data-value={meta.total_pages} onClick={this.onPageClick}>{meta.total_pages}</a> </li>;
+      const jumpToFirst = meta.first_page > 1 && (
+        <li>
+          <PageButton page="1" label="Page 1" onClick={() => this.setPage(1)} />
+          <span aria-hidden="true"> ... </span>
+        </li>
+      );
+      const jumpToLast = meta.last_page < meta.total_pages && (
+        <li>
+          <span aria-hidden="true"> ... </span>
+          <PageButton page={meta.total_pages} label={`Page ${meta.total_pages}`} onClick={() => this.setPage(meta.total_pages)} />
+        </li>
+      );
 
       return (
-        <div className='pagination'>
+        <nav className='pagination' aria-label="Pagination">
           <ol>
-            <li><a
-              className={'previous' + (meta.has_previous_page ? '' : disabled)}
-              data-value={meta.previous_page}
-              onClick={(meta.has_previous_page ? this.onPageClick : noop)}>Previous</a></li>
+            <li>
+              <PageButton
+                page="Previous"
+                label="Previous page"
+                className={'previous' + (meta.has_previous_page ? '' : disabled)}
+                onClick={meta.has_previous_page ? () => this.setPage(meta.previous_page) : null}
+              />
+            </li>
             {jumpToFirst}
             {pages.map(d => (
               <li key={d} className={d === currentPage ? 'pagination__link--active' : ''}>
-                <a href='#' data-value={d} onClick={this.onPageClick}>{d}</a>
+                <PageButton
+                  page={d}
+                  label={`Page ${d}`}
+                  current={d === currentPage}
+                  onClick={() => this.setPage(d)}
+                />
               </li>
             ))}
             {jumpToLast}
-            <li><a
-              className={'next' + (meta.has_next_page ? '' : disabled)}
-              data-value={meta.next_page}
-              onClick={(meta.has_next_page ? this.onPageClick : noop)}>Next</a></li>
+            <li>
+              <PageButton
+                page="Next"
+                label="Next page"
+                className={'next' + (meta.has_next_page ? '' : disabled)}
+                onClick={meta.has_next_page ? () => this.setPage(meta.next_page) : null}
+              />
+            </li>
           </ol>
-        </div>
+        </nav>
       );
     } else return <div></div>;
   }

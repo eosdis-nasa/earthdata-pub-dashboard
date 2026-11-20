@@ -61,7 +61,7 @@ class Metric extends React.Component {
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{metricName}</h1>
+          <h2 className='heading--large heading--shared-content with-description'>{metricName}</h2>
         </section>
         <section className='page__section'>
           <div className='tab--wrapper'>

@@ -10,6 +10,13 @@ import log from '../utils/log';
 import { createErrorReferenceId, isReferenceId } from '../utils/feedback';
 import { isValidApiRequestAction } from './validate';
 import { history } from '../store/configureStore';
+import _config from '../config';
+
+function appBase () {
+  const basepath = _config.basepath || '/';
+  if (!basepath || basepath === '/') return '';
+  return String(basepath).replace(/\/$/, '');
+}
 
 function referenceFromResponse (response) {
   const body = response && response.body;
@@ -31,15 +38,23 @@ function errorCodeFromResponse (response) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function inside508Check () {
+  try {
+    return window.parent !== window && window.parent.__edpub508 === true;
+  } catch (e) {
+    return false;
+  }
+}
+
 function pageToReport () {
   const page = window.location.pathname;
   if (typeof page !== 'string' || !page.startsWith('/') || page.length > 200) return '';
-  if (/[?#\s]/.test(page) || page === '/error') return '';
+  if (/[?#\s]/.test(page) || page === '/error' || page === `${appBase()}/error`) return '';
   return page;
 }
 
 function sendToErrorPage (referenceId) {
-  const redirectUrl = new URL(`${window.location.origin}/error`);
+  const redirectUrl = new URL(`${window.location.origin}${appBase()}/error`);
   redirectUrl.searchParams.set('ref', referenceId);
   const page = pageToReport();
   if (page) redirectUrl.searchParams.set('from', page);
@@ -117,7 +132,7 @@ const handleError = ({ id, type, error, requestAction, statusCode }, { dispatch,
 
   // Preserve original auto-logout for non-auth API errors, but do not interrupt
   // an in-progress auth-invalid notification modal.
-  if (localStorage.getItem('auth-token') && !getState().api.authInvalidNotification) {
+  if (!inside508Check() && localStorage.getItem('auth-token') && !getState().api.authInvalidNotification) {
     history.push('/logout');
   }
 

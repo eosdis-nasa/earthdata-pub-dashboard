@@ -10,13 +10,13 @@ class UnsupportedBrowser extends React.Component {
         <Tophat2 />
         <div className='header'>
         <div className='row'>
-          <h1 className='logo' aria-label="Earthdata pub logo"><img alt="Logo" src={mainLogo} /><div>EDPub</div></h1>
+          <div className='logo'><img alt="" src={mainLogo} /><div>EDPub</div></div>
         </div>
       </div>
-        <div style={{ textAlign: 'center' }}>
+        <main id="main-content" style={{ textAlign: 'center' }} tabIndex={-1}>
           <h1 style={{ fontSize: '5em', marginBottom: '0' }}>Unsupported Browser</h1>
           <p style={{ fontSize: '2em' }}>You are attempting to access EDPUB with an unsupported browser. Please use an alternative browser for access.</p>
-        </div>
+        </main>
       </div>
     );
   }

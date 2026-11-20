@@ -9,7 +9,7 @@ const DatePickerHeader = ({ heading, onChange }) => {
         <ul className='datetimeheader'>
           <li>
             <div className='datetimeheader__content'>
-              <h1 className='heading--xlarge'>{heading}</h1>
+              <h2 className='heading--xlarge'>{heading}</h2>
             </div>
           </li>
           <li>

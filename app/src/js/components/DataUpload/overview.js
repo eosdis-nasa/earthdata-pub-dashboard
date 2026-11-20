@@ -402,9 +402,9 @@ class UploadOverview extends React.Component {
         <br></br>
         <div className='page__component'>
           <div className='page__section__header'>
-            <h1 className='heading--small' aria-labelledby='Upload Data File'>
+            <h2 className='heading--small'>
               { fileDescription } File(s): Add or replace file(s).
-            </h1>
+            </h2>
             <p>{ helpText }</p>
           </div>
           <div className='indented__details' style={{ paddingTop: '1rem' }}>

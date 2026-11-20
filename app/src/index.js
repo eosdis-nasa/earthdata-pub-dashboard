@@ -29,4 +29,4 @@ const isSafari = () => {
 // This is a variable because it will allow for additonal browser checks in the future if necessary
 const validBrowser = !isSafari();
 
-ReactDOM.render( validBrowser ? <App />: <UnsupportedBrowser />, document.getElementById('site-canvas'));
+ReactDOM.render(validBrowser ? <App /> : <UnsupportedBrowser />, document.getElementById('site-canvas'));

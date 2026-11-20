@@ -178,7 +178,7 @@ class Sections extends Component {
     if (!hasPrivilege) {
       return (
         <div className="unauthorized">
-          <h1>Unauthorized</h1>
+          <h2>Unauthorized</h2>
           <p>You do not have the required privileges to {this.props.match.params.id ? 'edit this section' : 'create a new section'}.</p>
         </div>
       );
@@ -200,9 +200,9 @@ class Sections extends Component {
           </Alert>
           <section className="page__section page__section__header-wrapper">
             <div className="page__section__header">
-              <h1 className="heading--large heading--shared-content with-description">
+              <h2 className="heading--large heading--shared-content with-description">
                 {this.props.match.params.id ? 'Edit Section' : 'Add Section'}
-              </h1>
+              </h2>
             </div>
           </section>
           {loading ? (

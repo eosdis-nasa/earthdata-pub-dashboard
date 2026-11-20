@@ -79,7 +79,7 @@ class Error extends React.Component {
   render () {
     const { referenceId, copied, reportPreview } = this.state;
     return (
-      <div className="crash-screen" role="alert">
+      <div id="main-content" className="crash-screen" role="alert" tabIndex={-1}>
         <div className="crash-screen__card">
           <div className="crash-screen__brand">
             <img src={mainLogo} alt="" />

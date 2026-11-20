@@ -18,6 +18,7 @@ import Select from 'react-select';
 import { strings } from './locale';
 import { requestPrivileges } from '../utils/privileges';
 import Loading from '../components/LoadingIndicator/loading-indicator';
+import BrandLoading from '../components/BrandLoading';
 import { Modal, Button } from 'react-bootstrap';
 import { faTimes, faCheck, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -351,7 +352,16 @@ async updateList() {
   
   render () {
     if (this.state.isUpdating) {
-      return <Loading />;
+      return (
+        <div className='page__home page__home--loading'>
+          <div className='content__header content__header--lg'>
+            <div className='row'>
+              <h1 className='heading--xlarge'>{strings.dashboard}</h1>
+            </div>
+          </div>
+          <BrandLoading />
+        </div>
+      );
     }
     
     if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
@@ -534,7 +544,16 @@ async updateList() {
         </div>
       );
     }
-    return <Loading />;
+    return (
+      <div className='page__home page__home--loading'>
+        <div className='content__header content__header--lg'>
+          <div className='row'>
+            <h1 className='heading--xlarge'>{strings.dashboard}</h1>
+          </div>
+        </div>
+        <BrandLoading />
+      </div>
+    );
   }
 }
 

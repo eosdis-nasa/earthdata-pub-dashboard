@@ -138,7 +138,7 @@ class InactiveRequestsOverview extends React.Component {
           </section>
           <section className='page__section page__section__header-wrapper'>
             <div className='page__section__header'>
-              <h1 className='heading--large heading--shared-content with-description '>{strings.requests}</h1>
+              <h2 className='heading--large heading--shared-content with-description '>{strings.requests}</h2>
               {lastUpdated(queriedAt)}
               {/* <Overview items={overviewItems} inflight={false} /> */}
             </div>
@@ -173,7 +173,7 @@ class InactiveRequestsOverview extends React.Component {
         </div>
       );
     }
-    return null;
+    return <Loading />;
   }
 }
 

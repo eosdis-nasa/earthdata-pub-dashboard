@@ -18,7 +18,7 @@ const PaginationTableFooter = ({
   return (
     <ul className="pagination">
       <li className="page-item">
-        <button type="button" className="page-link" onClick={() => previousPage()} disabled={!canPreviousPage}>{'<'} Previous</button>
+        <button type="button" className="page-link" aria-label="Previous page" onClick={() => previousPage()} disabled={!canPreviousPage}>{'<'} Previous</button>
       </li>
       {pageOptions.map((page) => {
         const firstPage = 1;
@@ -43,14 +43,14 @@ const PaginationTableFooter = ({
             key={page}
             className={page === pageIndex ? 'pagination__link--active' : ''}
           >
-            <button type="button" data-value={pageNumber} onClick={() => gotoPage(page)} className="page-item" aria-current={page === pageIndex ? 'page' : undefined}>
+            <button type="button" data-value={pageNumber} onClick={() => gotoPage(page)} className="page-item" aria-label={`Page ${pageNumber}`} aria-current={page === pageIndex ? 'page' : undefined}>
               {pageNumber}
             </button>
           </li>
         );
       })}
       <li className="page-item">
-        <button type="button" className="page-link" onClick={() => nextPage()} disabled={!canNextPage}>Next {'>'}</button>
+        <button type="button" className="page-link" aria-label="Next page" onClick={() => nextPage()} disabled={!canNextPage}>Next {'>'}</button>
       </li>
     </ul>
   );

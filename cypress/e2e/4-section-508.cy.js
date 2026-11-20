@@ -98,6 +98,10 @@ describe('Section 508', () => {
       cy.visit(pageUrl);
       cy.get('main', { timeout: 20000 }).should('have.length', 1);
       cy.get('main main').should('have.length', 0);
+      cy.get('.skip-link').should('have.attr', 'href', '#main-content');
+      cy.get('#main-content').should('have.attr', 'tabindex', '-1');
+      cy.title().should('match', /Earthdata Pub/);
+      cy.get('.pagination a[href="#"]').should('not.exist');
       cy.get('.loading', { timeout: 20000 }).should('not.exist');
       cy.get('body').then(($body) => {
         const header = $body.find('div.header');
@@ -113,6 +117,18 @@ describe('Section 508', () => {
           }
         });
         expect(emptyHeadings, `${name} empty headings`).to.deep.equal([]);
+
+        const headings = [];
+        $body.find('h1, h2, h3, h4, h5, h6').each((_, el) => {
+          if (isNasa(el) || isHiddenFromAt(el)) return;
+          headings.push(Number(el.tagName.slice(1)));
+        });
+        const h1Count = headings.filter((level) => level === 1).length;
+        expect(h1Count, `${name} has one h1`).to.equal(1);
+        headings.forEach((level, index) => {
+          if (index === 0) return;
+          expect(level, `${name} heading levels`).to.be.at.most(headings[index - 1] + 1);
+        });
 
         const unnamed = [];
         $body.find('a, button, [role="button"], [role="link"]').each((_, el) => {

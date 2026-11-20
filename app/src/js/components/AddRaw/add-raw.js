@@ -105,7 +105,7 @@ const AddRaw = ({
     <div className='page__component page__content--shortened--centered'>
       <section className='page__section page__section--fullpage-form'>
         <div className='page__section__header'>
-          <h1 className='heading--large'>{title}</h1>
+          <h2 className='heading--large'>{title}</h2>
           <form>
             <TextArea
               value={data}

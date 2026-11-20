@@ -6,6 +6,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getApiVersion } from '../../actions';
 import { nav, overviewUrl, helpPageDefault} from '../../config';
+import { isAdminUser } from '../../utils/privileges';
 import mainLogo from '../../../assets/images/nasa-logo.svg';
 import _config from '../../config/config';
 
@@ -53,17 +54,31 @@ class Header extends React.Component {
     }} aria-label={path[0]}>{path[0]}</Link>;
   }
 
+  logoutControl () {
+    const label = <><span className="log-icon"></span>Log out</>;
+    let localPath = '';
+    try {
+      const parsed = new URL(logoutUrlWithRedirect, window.location.origin);
+      if (parsed.origin === window.location.origin && parsed.pathname.endsWith('/logout') && !parsed.search) localPath = '/logout';
+    } catch (e) {
+      localPath = '';
+    }
+    if (localPath) return <Link to={localPath}>{label}</Link>;
+    return <a href={logoutUrlWithRedirect}>{label}</a>;
+  }
+
   render () {
     const { authenticated } = this.props.api;
-    const { privileges, user, userId } = this.props;
+    const { privileges, user, userId, isAdmin } = this.props;
     const activePaths = paths.filter(path => {
       return (!!privileges[path[2]] || privileges.ADMIN) || path[2].match(/CONVERSATION/g) || path[2].match(/METRICS/g);
     });
+    const show508 = authenticated && isAdmin;
 
     return (
       <div className='header'>
         <div className='row'>
-          <h1 className='logo'><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="" src={mainLogo} /><div>EDPub</div></Link></h1>
+          <div className='logo'><Link to={{ pathname: '/', search: this.props.location.search }}><img alt="" src={mainLogo} /><div>EDPub</div></Link></div>
           <nav>
             { !this.props.minimal
               ? <><ul className="default_header">
@@ -72,11 +87,13 @@ class Header extends React.Component {
                                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
                             <li className='rightalign nav__order-8'>
                                 <ul className='right-ul'>
+                                    {show508 &&
+                                    <li className={this.props.location.pathname.indexOf('/508-report') === 0 ? 'nav-508 active' : 'nav-508'}><Link to="/508-report">508 compliance</Link></li>}
                                     <li className='overviewLink'>{overviewUrl ? <a href={overviewUrl}>Overview</a> : ''}</li>
                                     {authenticated &&
                                         <li><Link to={`/users/id/${userId}`}>Hi, {user}</Link></li>}
                                     <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'}>Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a href={logoutUrlWithRedirect}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link>}</li></ul>
+                                    <li className='logOut'>{authenticated ? this.logoutControl() : <Link to={'/login'}>Log in</Link>}</li></ul>
                             </li>
                         </ul><div id="menuToggle">
                                 <input type="checkbox" aria-label="Open the menu" />
@@ -89,11 +106,13 @@ class Header extends React.Component {
                                 {activePaths.map(path => <li
                                 key={path[0]}
                                 className={this.className(path[1])}>{this.linkTo(path)}</li>)}
+                                    {show508 &&
+                                    <li className={this.props.location.pathname.indexOf('/508-report') === 0 ? 'nav-508 active' : 'nav-508'}><Link to="/508-report">508 compliance</Link></li>}
                                     <li className='overviewLink'>{overviewUrl ? <a href={overviewUrl}>Overview</a> : ''}</li>
                                     {authenticated &&
                                         <li><Link to={`/users/id/${userId}`}>Hi, {user}</Link></li>}
                                     <li className='howToUseLink'>{helpPageDefault ? <a href={'/getting_started'}>Help</a> : ''}</li>
-                                    <li className='logOut'>{authenticated ? <a href={logoutUrlWithRedirect}><span className="log-icon"></span>Log out</a> : <Link to={'/login'}>Log in</Link>}</li>
+                                    <li className='logOut'>{authenticated ? this.logoutControl() : <Link to={'/login'}>Log in</Link>}</li>
                                 </ul>
                             </div></>
               : null }
@@ -113,11 +132,13 @@ Header.propTypes = {
   privileges: PropTypes.object,
   user: PropTypes.string,
   userId: PropTypes.string,
+  isAdmin: PropTypes.bool,
   earthdatapubInstance: PropTypes.object
 };
 
 export default withRouter(connect(state => ({
   privileges: state.api.tokens.privileges,
   user: state.api.tokens.userName,
-  userId: state.api.tokens.userId
+  userId: state.api.tokens.userId,
+  isAdmin: isAdminUser(state.api.tokens)
 }))(Header));

@@ -124,7 +124,7 @@
            <Breadcrumbs config={breadcrumbConfig} />
          </section>
          <section className='page__section'>
-           <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
+           <h2 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h2>
            {request && lastUpdated(request.last_change, 'Updated')}
            {request
              ? <dl className='status--process'>

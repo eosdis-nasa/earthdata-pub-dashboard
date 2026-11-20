@@ -10,11 +10,11 @@ import LoadingOverlay from '../LoadingIndicator/loading-overlay';
 import ErrorReport from '../Errors/report';
 import Header from '../Header/header';
 import Modal from 'react-bootstrap/Modal';
-import config from '../../config';
 import ourConfigureStore from '../../store/configureStore';
 import { saveToken } from '../../utils/auth';
 // unused import but this adds nasa png image to the build as we use png image for email notification
 import nasaLogo from '../../../assets/images/nasa-logo.png';
+import mainLogo from '../../../assets/images/nasa-logo.svg';
 
 class Auth extends React.Component {
   constructor (props) {
@@ -34,7 +34,7 @@ class Auth extends React.Component {
       const { data } = await dispatch(fetchToken(code, state));
       const { token, user } = data;
       saveToken({ token, user: { ...user, ...{ authenticated: true } } });
-      window.location.href = config.basepath;
+      redirectWithToken();
     }
   }
 
@@ -53,7 +53,7 @@ class Auth extends React.Component {
     return (
       <div className='app'>
         <Header dispatch={dispatch} api={api} apiVersion={apiVersion} minimal={true} />
-        <main className='main'>
+        <main id="main-content" className='main' tabIndex={-1}>
           <div className="modal-content">
             <Modal
               className="oauth-modal-root"
@@ -63,13 +63,17 @@ class Auth extends React.Component {
               backdrop={true}
               backdropClassName="oauth-modal-backdrop"
               enforceFocus={false}
-              size={this.state.body ? 'xl': 'sm'}
+              size={this.state.body ? 'xl' : undefined}
               aria-labelledby="modal__oauth-modal"
             >
-              <Modal.Header className="oauth-modal__header"></Modal.Header>
-              {this.state.body == '' &&
-                <Modal.Title id="modal__oauth-modal" className="oauth-modal__title">Welcome To Earthdata Pub</Modal.Title>}
-              <Modal.Body>
+              <Modal.Header className="oauth-modal__header" closeButton={false}>
+                <img src={mainLogo} alt="" />
+                {this.state.body == '' &&
+                  <Modal.Title as="h1" id="modal__oauth-modal" className="oauth-modal__title">Welcome to Earthdata Pub</Modal.Title>}
+                {this.state.body == '' &&
+                  <p className="oauth-modal__lead">Sign in with your Earthdata Login account.</p>}
+              </Modal.Header>
+              <Modal.Body className={this.state.body || api.error || showAuthMessage ? undefined : 'oauth-modal__body--quiet'}>
               {(!showLoginButton && this.state.body == '') || showAuthMessage ? 
                   <div><LoadingOverlay/></div> : null}
                 {showAuthMessage &&

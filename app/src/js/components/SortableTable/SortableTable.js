@@ -186,59 +186,59 @@ const SortableTable = ({
           pageIndex={pageIndex}
           pageSize={pageSize}
         />
-        <div className='table' {...getTableProps()}>
-          <div className='thead'>
-            <div className='tr'>
-              {headerGroups.map(headerGroup => (
-                <div {...headerGroup.getHeaderGroupProps()} className="tr">
-                  {headerGroup.headers.map(column => {
-                    let columnClassName = '';
-                    if (column.canSort) {
-                      let columnClassNameSuffix;
+        <div className='table' {...getTableProps()} role="table">
+          <div className='thead' role="rowgroup">
+            {headerGroups.map(headerGroup => (
+              <div {...headerGroup.getHeaderGroupProps()} className="tr" role="row">
+                {headerGroup.headers.map((column, columnIndex) => {
+                  let columnClassName = '';
+                  if (column.canSort) {
+                    let columnClassNameSuffix;
 
-                      if (column.isSortedDesc === true) {
-                        columnClassNameSuffix = '--desc';
-                      } else if (column.isSortedDesc === false) {
-                        columnClassNameSuffix = '--asc';
-                      } else {
-                        columnClassNameSuffix = '';
-                      }
-
-                      columnClassName = `table__sort${columnClassNameSuffix}`;
+                    if (column.isSortedDesc === true) {
+                      columnClassNameSuffix = '--desc';
+                    } else if (column.isSortedDesc === false) {
+                      columnClassNameSuffix = '--asc';
+                    } else {
+                      columnClassNameSuffix = '';
                     }
-                    return (
-                      <div {...column.getHeaderProps()} className='th'>
-                        <div {...column.getSortByToggleProps()} className={`${column.canSort ? columnClassName : ''}`}>
-                          {column.render('Header')}
-                        </div>
-                        <div
-                          {...column.getResizerProps()}
-                          className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
-                        />
+
+                    columnClassName = `table__sort${columnClassNameSuffix}`;
+                  }
+                  const headerId = `col-${columnIndex}-${String(column.id).replace(/[^A-Za-z0-9_-]/g, '')}`;
+                  return (
+                    <div {...column.getHeaderProps()} className='th' role="columnheader" id={headerId}>
+                      <div {...column.getSortByToggleProps()} className={`${column.canSort ? columnClassName : ''}`}>
+                        {column.render('Header')}
                       </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
+                      <div
+                        {...column.getResizerProps()}
+                        className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
-          <div className='tbody'>
+          <div className='tbody' role={page.length ? 'rowgroup' : undefined}>
             {page.map((row, i) => {
               prepareRow(row);
               return (
-                <div className='tr' data-value={row.id} {...row.getRowProps()} key={i}>
+                <div className='tr' data-value={row.id} {...row.getRowProps()} role="row" key={i}>
                   {row.cells.map((cell, cellIndex) => {
                     const primaryIdx = canSelect ? 1 : 0;
+                    const headerId = `col-${cellIndex}-${String(cell.column.id).replace(/[^A-Za-z0-9_-]/g, '')}`;
                     return (
-                      <React.Fragment key={cellIndex}>
-                        <div
-                          className={`td ${cellIndex === primaryIdx ? 'table__main-asset' : ''}`}
-                          {...cell.getCellProps()}
-                          key={cellIndex}
-                        >
-                          {cell.render('Cell')}
-                        </div>
-                      </React.Fragment>
+                      <div
+                        className={`td ${cellIndex === primaryIdx ? 'table__main-asset' : ''}`}
+                        {...cell.getCellProps()}
+                        role="cell"
+                        headers={headerId}
+                        key={cellIndex}
+                      >
+                        {cell.render('Cell')}
+                      </div>
                     );
                   })}
                 </div>
