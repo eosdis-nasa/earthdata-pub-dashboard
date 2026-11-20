@@ -7,6 +7,14 @@ export const saveToken = function ({ token, user }) {
     window.localStorage.setItem('auth-user', JSON.stringify(user));
   }
 };
+export function pathAfterLogin (saved) {
+  const value = typeof saved === 'string' ? saved : '';
+  const path = value.split('?')[0];
+  const blocked = path === '/auth' || path.startsWith('/auth/') || path === '/logout' || path.startsWith('/logout/');
+  if (!value.startsWith('/') || value.startsWith('//') || blocked) return '';
+  return value;
+}
+
 export const loadToken = function () {
   if (window.localStorage && typeof window.localStorage.getItem === 'function') {
     const token = window.localStorage.getItem('auth-token') || null;

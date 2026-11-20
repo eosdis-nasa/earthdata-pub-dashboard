@@ -13,7 +13,7 @@ export const getTableColumns = (requestsList) => {
         <div className='flex__column'>
           {matchedRequest && (
             <div>
-               <Link to={`/conversations/id/${row.id}`} aria-label="View your conversation details">
+               <Link to={`/conversations/id/${row.id}`}>
                 {
                   matchedRequest?.name ??
                   (matchedRequest?.initiator?.name

@@ -27,12 +27,12 @@ const PaginationTableHeader = ({
       <li className="total-records" style={{ textAlign: 'left', flex: 1 }}>Page {pageOptions.length ? pageIndex + 1 : 0} of {pageOptions.length}</li>
       <li>
         <ul style={{ textAlign: 'center', flex: 1 }}>
-        <li className="page-item" onClick={() => previousPage()} disabled={!canPreviousPage}>
-          <a className="page-link" aria-label="View previous page">{'<'} Previous</a>
+        <li className="page-item">
+          <button type="button" className="page-link" aria-label="Previous page" onClick={() => previousPage()} disabled={!canPreviousPage}>{'<'} Previous</button>
         </li>
         <li>
           <select
-            aria-label="page-dropdown select"
+            aria-label="Choose page"
             className="page-dropdown"
             value={pageIndex + 1}
             onChange={e => {
@@ -40,20 +40,20 @@ const PaginationTableHeader = ({
               gotoPage(page);
             }}>
             {[...Array(pageCount).keys()].map(pageNumber => (
-              <option key={pageNumber + 1} value={pageNumber + 1}>
+              <option key={pageNumber + 1} value={pageNumber + 1} aria-current={pageNumber === pageIndex ? 'page' : undefined}>
                 {pageNumber + 1}
               </option>
             ))}
           </select>
         </li>
-        <li className="page-item" onClick={() => nextPage()} disabled={!canNextPage}>
-          <a className="page-link" aria-label="View next page">Next {'>'}</a>
+        <li className="page-item">
+          <button type="button" className="page-link" aria-label="Next page" onClick={() => nextPage()} disabled={!canNextPage}>Next {'>'}</button>
         </li>
         </ul>
       </li>
       <li className="page-navigation" style={{ textAlign: 'right', flex: 1 }}>
           Show <select
-          aria-label="page-size select"
+          aria-label="Rows per page"
           className="form-control"
           value={pageSize}
           onChange={e => {

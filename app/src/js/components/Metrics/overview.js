@@ -17,12 +17,18 @@ import { tableColumns, requestTableColumns, timeColumns, daacTableColumns } from
 import { strings } from '../locale';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
+function viewFromPath (pathname) {
+  if (pathname === '/metrics/daacs') return 'DAAC';
+  if (pathname === '/metrics/users') return 'User';
+  if (pathname === '/metrics') return 'Overview';
+  return 'all';
+}
+
 const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, states }) => {
   const { requestId } = match.params.requestId ? match.params.requestId : '';
-  const metric = match.params.metric ? match.params.metric : undefined;
+  const history = useHistory();
   useEffect(() => {
     dispatch(listWorkflows());
-    dispatch(listCloudMetrics(metric));
   }, []);
 
   useEffect(() => {
@@ -32,13 +38,16 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
     setStateOptions(stateOptionNames);
   }, [daacs, workflows, requests, metrics, states]);
 
-  const history = useHistory();
   const [daacOptions, setDaacOptions] = useState([]);
   const [selectedDaacs, setSelectedDaacs] = useState([]);
   const [workflowOptions, setWorkflowOptions] = useState([]);
   const [selectedWorkflows, setSelectedWorkflows] = useState([]);
   const [metricOptions, setMetricOptions] = useState([]);
-  const [selectedMetrics, setSelectedMetrics] = useState([]);
+  const [selectedMetrics, setSelectedMetrics] = useState(
+    viewFromPath(history.location.pathname) === 'User'
+      ? { value: 'user_count', label: 'User Count' }
+      : []
+  );
   const [stateOptions, setStateOptions] = useState([]);
   const [selectedStates, setSelectedStates] = useState([]);
   const [startDate, setStartDate] = useState(null);
@@ -187,7 +196,7 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
 
   const metricsWorkflow = data.map(item => ({
     ...item,
-    workflow_name: workflows.find(workflow => workflow.id === item.workflow_id)?.long_name || "Unknown Workflow"
+    workflow_name: (workflows || []).find(workflow => workflow.id === item.workflow_id)?.long_name || "Unknown Workflow"
   }));
 
   const metricsWorkflows = { ...metrics.list, data: metricsWorkflow };
@@ -199,10 +208,10 @@ const MetricOverview = ({ dispatch, match, daacs, workflows, requests, metrics, 
       </section>
       <section className='page__section page__section__header-wrapper'>
       {view !== 'DAAC' && <div className='page__section__header'>
-          <h1 className='heading--large heading--shared-content with-description '>{strings.metric_overview}</h1>
+          <h2 className='heading--large heading--shared-content with-description '>{strings.metric_overview}</h2>
         </div>}
         {view === 'DAAC' && <div className='page__section__header'>
-          <h1 className='heading--large heading--shared-content with-description '>{strings.daacs_onboarded}</h1>
+          <h2 className='heading--large heading--shared-content with-description '>{strings.daacs_onboarded}</h2>
         </div>}
       </section>
       <section className='page__section'>

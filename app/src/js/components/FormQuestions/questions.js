@@ -1631,7 +1631,7 @@ const handleEnterKey = (event) => {
   return !requestData ? (
     <Loading />
   ) : (
-    <div role="main" className="questions-component">
+    <div className="questions-component">
       <Form
         ref={formRef}
         name="questions_form"
@@ -2733,7 +2733,7 @@ const handleEnterKey = (event) => {
                                                         style={{
                                                           width: `${percent}%`,
                                                           height: '100%',
-                                                          backgroundColor: percent > 0 ? '#2275aa' : '#fff',
+                                                          backgroundColor: percent > 0 ? '#206EA7' : '#fff',
                                                           transition: 'width 250ms ease-out',
                                                           display: 'flex',
                                                           alignItems: 'center',

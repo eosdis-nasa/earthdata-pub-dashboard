@@ -40,7 +40,7 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel, filters = {} })
       <div className='search-modal'
         onClick={(e) => e.stopPropagation()}>
         <div className='search-modal__title'>
-          <h1 className=' heading--large'>{title}</h1>
+          <h2 className=' heading--large'>{title}</h2>
         </div>
         <div className='search-modal__body'>
           <ul className='search-modal__list'>
@@ -77,23 +77,23 @@ const SearchModal = ({ dispatch, search, entity, submit, cancel, filters = {} })
         <ul className="pagination" style={{ display: 'flex' }}>
           {
             inflight || page - 1 === 0
-              ? <li className="page-item button--disabled" disabled>
-              <a className="page-link" aria-label="View previous page">{'<'} Previous</a>
+              ? <li className="page-item button--disabled">
+              <button type="button" className="page-link" aria-label="Previous page" disabled>{'<'} Previous</button>
             </li>
-              : <li className="page-item" onClick={() => setPage(page - 1)}>
-              <a className="page-link" aria-label="View previous page">{'<'} Previous</a>
+              : <li className="page-item">
+              <button type="button" className="page-link" aria-label="Previous page" onClick={() => setPage(page - 1)}>{'<'} Previous</button>
             </li>
           }
           <li className="page-item">
-            <a className="page-link" aria-label="Current page">{page}</a>
+            <button type="button" className="page-link" aria-label={`Page ${page}`} aria-current="page">{page}</button>
           </li>
           {
             inflight || (page * listSize) >= list.length
-              ? <li className="page-item button--disabled" disabled>
-              <a className="page-link" aria-label="View next page">Next {'>'}</a>
+              ? <li className="page-item button--disabled">
+              <button type="button" className="page-link" aria-label="Next page" disabled>Next {'>'}</button>
             </li>
-              : <li className="page-item" onClick={() => setPage(page + 1)}>
-              <a className="page-link" aria-label="View next page">Next {'>'}</a>
+              : <li className="page-item">
+              <button type="button" className="page-link" aria-label="Next page" onClick={() => setPage(page + 1)}>Next {'>'}</button>
             </li>
           }
         </ul>

@@ -81,9 +81,9 @@ class Steps extends React.Component {
                     <Breadcrumbs config={breadcrumbConfig} />
                 </section>
                 <div className='heading__wrapper--border'>
-                  <h1 className='heading--large heading--shared-content with-description'>
+                  <h2 className='heading--large heading--shared-content with-description'>
                       {record.data ? (record.data.step_id ? 'Edit Step' : 'Add Step') : '...'}
-                  </h1>
+                  </h2>
                 </div>
                 <section className='page__section page__section__controls step-section'>
                   {stepId ?

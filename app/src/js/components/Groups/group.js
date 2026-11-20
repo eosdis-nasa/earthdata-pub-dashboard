@@ -96,16 +96,16 @@ class GroupOverview extends React.Component {
         </section>
         <section className='page__section page__section__header-wrapper'>
           <div className='page__section__header'>
-            <h1 className='heading--large heading--shared-content with-description '>
+            <h2 className='heading--large heading--shared-content with-description '>
               Group Overview
-            </h1>
+            </h2>
           </div>
         </section>
         <section className='page__section'>
           <div className='heading__wrapper--border'>
-            <h1 className='heading--small' aria-labelledby={strings.group_overview}>
+            <h2 className='heading--small'>
               {strings.group_overview}
-            </h1>
+            </h2>
           </div>
           <div><Metadata data={group} accessors={metaAccessors} /></div>
           <div style= {{ padding: '2em 0' }}>
@@ -125,9 +125,9 @@ class GroupOverview extends React.Component {
         {record.data && canUpload
           ? <section className='page__section'>
               <div className='heading__wrapper--border'>
-                <h1 className='heading--small' aria-labelledby={'Group Upload'}>
+                <h2 className='heading--small'>
                   Group Uploads
-                </h1>
+                </h2>
               </div>
               <UploadOverview />
           </section>

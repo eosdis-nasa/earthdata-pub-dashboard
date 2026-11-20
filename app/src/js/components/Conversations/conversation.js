@@ -300,9 +300,9 @@ const checkForUpdates = async (retryCount = 0) => {
         </section>
         <section className='page__section page__section__header-wrapper'>
           <div className='page__section__header'>
-            <h1 className='heading--large heading--shared-content with-description '>
+            <h2 className='heading--large heading--shared-content with-description '>
               Conversation: {subject}
-            </h1>
+            </h2>
             {lastUpdated(queriedAt)}
           </div>
           <div className="filter_buttons_div">

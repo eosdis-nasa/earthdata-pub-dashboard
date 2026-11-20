@@ -46,7 +46,7 @@
 }
 
 .questions-component .eui-btn--blue {
-  background-color: #2276ac;
+  background-color: #206EA7;
   margin-right: 10px;
   padding: 0.5em 1em;
   text-align: center;
@@ -54,7 +54,6 @@
   border: 1px solid rgba(50, 50, 50, 0.2);
   color: white;
   transition: background 0.15s ease-in-out;
-  outline: none;
   min-height: 45px;
   font-weight: 400;
 }
@@ -74,7 +73,6 @@
   border: 1px solid rgba(50, 50, 50, 0.2);
   color: white;
   transition: background 0.15s ease-in-out;
-  outline: none;
   min-height: 45px;
   font-weight: 400;
 }
@@ -102,7 +100,6 @@
   border: 1px solid rgba(50, 50, 50, 0.2);
   color: white;
   transition: background 0.15s ease-in-out;
-  outline: none;
   min-height: 45px;
   font-weight: 400;
 }
@@ -182,7 +179,7 @@
 }
 
 .questions-component .date_formats {
-  color: gray;
+  color: #595959;
   font-size: 0.9em;
 }
 
@@ -191,7 +188,7 @@
 }
 
 .questions-component .eui-link {
-  color: #007bff;
+  color: #1A557B;
   text-decoration: none;
 }
 
@@ -262,7 +259,8 @@
 
 .questions-component .form-control-questions:focus {
   border-color: #80bdff;
-  outline: 0;
+  outline: 3px solid #000000;
+  outline-offset: 2px;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
@@ -628,7 +626,6 @@
   background-color: #333;
   color: white;
   border: none;
-  outline: none;
   width: 70px;
   height: 70px;
   border-radius: 50%;
@@ -673,7 +670,7 @@
 }
 
 .questions-component .uploaded-files-table th {
-  background-color: #2276ac;
+  background-color: #206EA7;
   color: white;
 }
 
@@ -836,7 +833,7 @@
 }
 
 .questions-component .upload-button {
-  background-color: #2276ac;
+  background-color: #206EA7;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -892,11 +889,11 @@
 }
 
 .questions-component .daac_name {
-  color: #007bff;
+  color: #1A557B;
 }
 
 .custom-table-header {
-  background-color: #2276ac;
+  background-color: #206EA7;
   color: white;
   text-align: center;
 }
@@ -1109,7 +1106,7 @@
 }
 
 .custom-table-header th {
-  background: #2275AA;
+  background: #206EA7;
   color: #fff;
   font-weight: 600;
   text-align: left;
@@ -1137,7 +1134,7 @@
 }
 
 .custom-table thead th.sticky-col {
-  background: #2275AA;
+  background: #206EA7;
   color: #fff;
   z-index: 5;
   max-width: 80px;

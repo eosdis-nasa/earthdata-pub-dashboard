@@ -139,7 +139,7 @@ class GranuleRecipe extends React.Component {
     return (
       <div className='page__component'>
         <section className='page__section page__section__header-wrapper'>
-          <h1 className='heading--large heading--shared-content with-description'>{granuleId}</h1>
+          <h2 className='heading--large heading--shared-content with-description'>{granuleId}</h2>
           <AsyncCommands config={dropdownConfig} />
           {lastUpdated(granule.queriedAt)}
         </section>

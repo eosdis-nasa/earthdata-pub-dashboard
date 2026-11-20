@@ -323,7 +323,7 @@ div.th {
     display: inline-block;
     margin: 0 .4em;
   }
-  a, a:visited {
+  a, a:visited, button {
     color: $lighter-grey;
     transition: all 0.3s ease 0s;
     -webkit-transition: all 0.3s;
@@ -377,7 +377,8 @@ div.th {
     color: darken($lightest-grey, 45%);
     text-decoration: none;
   }
-  .pagination__link--active a, .pagination__link--active a:visited {
+  .pagination__link--active a, .pagination__link--active a:visited,
+  .pagination__link--active button {
     color: $ocean-blue;
     font-weight: $base-font-semibold;
     border-bottom: 2px solid $ocean-blue;

@@ -103,7 +103,7 @@ class EditForm extends React.Component {
     if (!hasPrivilege) {
       return (
         <div className="unauthorized">
-          <h1>Unauthorized</h1>
+          <h2>Unauthorized</h2>
           <p>You do not have the required privileges to {id ? 'edit this form' : 'create a new form'}.</p>
         </div>
       );
@@ -132,9 +132,9 @@ class EditForm extends React.Component {
           </section>
           <section className='page__section page__section__header-wrapper'>
             <div className='page__section__header'>
-              <h1 className='heading--large heading--shared-content with-description '>
+              <h2 className='heading--large heading--shared-content with-description '>
                 Form Overview
-              </h1>
+              </h2>
             </div>
           </section>
           <div className='page__content'>

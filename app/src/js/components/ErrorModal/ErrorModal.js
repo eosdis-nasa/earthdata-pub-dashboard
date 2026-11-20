@@ -4,7 +4,7 @@ class ErrorModal extends React.Component {
   render () {
     return (
       <div className="ErrorModal">
-        <h1>Future Home For Component</h1>
+        <h2>Future Home For Component</h2>
       </div>
     );
   }

@@ -71,6 +71,16 @@ export const initialState = (() => {
 export default createReducer(initialState, {
   [DELETE_TOKEN]: (state) => {
     deleteToken();
+    set(state, 'authenticated', false);
+    set(state, 'inflight', false);
+    set(state, 'tokens.token', null);
+    set(state, 'tokens.expiration', 0);
+    set(state, 'tokens.userName', '');
+    set(state, 'tokens.userId', '');
+    set(state, 'tokens.user', '');
+    set(state, 'tokens.roles', []);
+    set(state, 'tokens.groups', []);
+    set(state, 'tokens.privileges', {});
   },
   [LOGIN]: (state, action) => {
     set(state, 'inflight', false);

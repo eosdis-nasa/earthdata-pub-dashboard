@@ -18,6 +18,7 @@ import Select from 'react-select';
 import { strings } from './locale';
 import { requestPrivileges } from '../utils/privileges';
 import Loading from '../components/LoadingIndicator/loading-indicator';
+import BrandLoading from '../components/BrandLoading';
 import { Modal, Button } from 'react-bootstrap';
 import { faTimes, faCheck, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -269,12 +270,12 @@ async updateList() {
                   <li key={d[1]}>
                     {this.isExternalLink(d[2])
                       ? (
-                      <a id={d[1]} href={d[2]} className='overview-num' target='_blank' aria-label={d[1]}>
+                      <a id={d[1]} href={d[2]} className='overview-num' target='_blank'>
                         <span className='num--large'>{value}</span> {d[1]}
-                      </a>
+                      <span className="visually-hidden"> (opens in a new window)</span></a>
                         )
                       : (
-                      <Link id={d[1]} className='overview-num' to={{ pathname: d[2], search: this.props.location.search }} aria-label="View your overview">
+                      <Link id={d[1]} className='overview-num' to={{ pathname: d[2], search: this.props.location.search }}>
                         <span className='num--large'>{value}</span> {d[1]}
                       </Link>
                         )}
@@ -351,7 +352,16 @@ async updateList() {
   
   render () {
     if (this.state.isUpdating) {
-      return <Loading />;
+      return (
+        <div className='page__home page__home--loading'>
+          <div className='content__header content__header--lg'>
+            <div className='row'>
+              <h1 className='heading--xlarge'>{strings.dashboard}</h1>
+            </div>
+          </div>
+          <BrandLoading />
+        </div>
+      );
     }
     
     if (this.state.list !== undefined && this.state.list.meta !== undefined && this.state.list.data !== undefined) {
@@ -394,7 +404,7 @@ async updateList() {
     
                         {/* Info Tooltip */}
                         <div className="info-tooltip">
-                          <FontAwesomeIcon icon={faInfoCircle} style={{ color: "#2276ac", cursor: "pointer" }} />
+                          <FontAwesomeIcon icon={faInfoCircle} style={{ color: "#206EA7", cursor: "pointer" }} />
                           <span className="info-tooltip-text">
                             If you are submitting Data Publication Requests for multiple, similar data products, 
                             you can clone an existing request and use it as a template for additional requests. 
@@ -420,7 +430,7 @@ async updateList() {
                             title="More info about Accession Request"
                           >
                             <i className="fas fa-info-circle"></i>
-                          </a>
+                          <span className="visually-hidden"> (opens in a new window)</span></a>
                         </div>
 
                         <div className="dropdown-row">
@@ -438,7 +448,7 @@ async updateList() {
                             title="More info about Publication Request"
                           >
                             <i className="fas fa-info-circle"></i>
-                          </a>
+                          <span className="visually-hidden"> (opens in a new window)</span></a>
                         </div>
                         </div>
                       )}
@@ -534,7 +544,16 @@ async updateList() {
         </div>
       );
     }
-    return <Loading />;
+    return (
+      <div className='page__home page__home--loading'>
+        <div className='content__header content__header--lg'>
+          <div className='row'>
+            <h1 className='heading--xlarge'>{strings.dashboard}</h1>
+          </div>
+        </div>
+        <BrandLoading />
+      </div>
+    );
   }
 }
 

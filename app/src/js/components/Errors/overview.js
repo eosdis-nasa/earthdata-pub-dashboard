@@ -11,7 +11,7 @@ class ErrorsOverview extends React.Component {
   render () {
     return (
       <div className='page__component'>
-        <h1>This is an error overview page</h1>
+        <h2>This is an error overview page</h2>
       </div>
     );
   }

@@ -22,9 +22,9 @@ const PopupInfoModal = ({ title, message, onClose, workflowData, currentStep }) 
   return ReactDOM.createPortal(
     <div style={overlayStyle}>
       <div style={modalStyle}>
-        <h1 style={titleStyle}>
+        <h2 style={titleStyle}>
           <span style={titleText}>{workflowData.data?.long_name} {title}</span>
-        </h1>
+        </h2>
 
         <WorkflowArrowBreadCrumb
           steps={getStepBreadcrumb(workflowData.data.steps)}

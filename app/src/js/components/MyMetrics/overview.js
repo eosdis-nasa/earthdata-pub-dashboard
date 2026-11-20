@@ -8,6 +8,7 @@ import {
 } from 'recharts';
 import { listRequests, listCloudMetrics, listInactiveRequests } from '../../actions';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
+import Loading from '../LoadingIndicator/loading-indicator';
 import { daacOptionNames } from '../../selectors';
 import './chart.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -321,7 +322,7 @@ return (
     </section>
 
     {loading ? (
-          <div className="loading-spinner">Loading Metrics...</div>
+          <Loading />
         ) : (
               <div className="metrics-overview-wrapper">
       {/* ===== Total Count ===== */}

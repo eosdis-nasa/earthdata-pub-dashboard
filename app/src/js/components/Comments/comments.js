@@ -249,7 +249,7 @@ class Comment extends React.Component {
           {typeof requestId !== 'undefined' &&
             <form className='flex__column flex__item--grow-1'
               onSubmit={(e) => { e.preventDefault(); this.reply(requestName, conversationId, stepName, step); }}>
-              <h1 style={{textAlign: 'center', backgroundColor:'#2275AA', color: '#fff'}}>{stepName} Comments</h1>
+              <h2 style={{textAlign: 'center', backgroundColor:'#206EA7', color: '#fff'}}>{stepName} Comments</h2>
               
               <div id='previously-saved' style={{ padding: '0.3em 2em 0.4em 0.7em', whiteSpace: "pre-wrap" }}>
                 {

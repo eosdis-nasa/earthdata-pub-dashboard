@@ -67,9 +67,9 @@ class Roles extends React.Component {
         <section className='page__section page__section__controls'>
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
-        <h1 className='heading--large heading--shared-content with-description '>
+        <h2 className='heading--large heading--shared-content with-description '>
           Role Overview
-        </h1>
+        </h2>
         <br /><br />
         <section className='page__section'>
           { record.inflight

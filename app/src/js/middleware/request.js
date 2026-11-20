@@ -38,6 +38,14 @@ function errorCodeFromResponse (response) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function inside508Check () {
+  try {
+    return window.parent !== window && window.parent.__edpub508 === true;
+  } catch (e) {
+    return false;
+  }
+}
+
 function pageToReport () {
   const page = window.location.pathname;
   if (typeof page !== 'string' || !page.startsWith('/') || page.length > 200) return '';
@@ -124,7 +132,7 @@ const handleError = ({ id, type, error, requestAction, statusCode }, { dispatch,
 
   // Preserve original auto-logout for non-auth API errors, but do not interrupt
   // an in-progress auth-invalid notification modal.
-  if (localStorage.getItem('auth-token') && !getState().api.authInvalidNotification) {
+  if (!inside508Check() && localStorage.getItem('auth-token') && !getState().api.authInvalidNotification) {
     history.push('/logout');
   }
 

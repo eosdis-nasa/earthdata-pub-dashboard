@@ -25,7 +25,7 @@ const DataPublicationGuidelinesData = [
             rel="noreferrer"
           >
             ESD Data and Information Guidance
-          </a>
+          <span className="visually-hidden"> (opens in a new window)</span></a>
           . For most ESD-funded researchers, the designated repository will be a
           NASA Distributed Active Archive Center (
           <a
@@ -36,7 +36,7 @@ const DataPublicationGuidelinesData = [
             rel="noreferrer"
           >
             DAAC
-          </a>
+          <span className="visually-hidden"> (opens in a new window)</span></a>
           ). NASA DAACs are managed by NASA's Earth Science Data and Information
           System (
           <a
@@ -47,7 +47,7 @@ const DataPublicationGuidelinesData = [
             rel="noreferrer"
           >
             ESDIS
-          </a>
+          <span className="visually-hidden"> (opens in a new window)</span></a>
           ) Project, part of NASA's Earth Science Data System (
           <a
             title="ESDS"
@@ -57,7 +57,7 @@ const DataPublicationGuidelinesData = [
             rel="noreferrer"
           >
             ESDS
-          </a>
+          <span className="visually-hidden"> (opens in a new window)</span></a>
           ) Program.
         </p>
         <p>
@@ -122,23 +122,23 @@ const DataPublicationGuidelinesData = [
         <table className="styled-table  table table-bordered daac-table">
           <thead>
             <tr>
-              <th>NASA DAAC</th>
-              <th>Scientific Disciplines</th>
+              <th scope="col">NASA DAAC</th>
+              <th scope="col">Scientific Disciplines</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td><a href="https://asf.alaska.edu/" className="ext" target="_blank" rel="noreferrer">Alaska Satellite Facility (ASF)</a></td><td>SAR Products, Change Detection, Sea Ice, Polar Processes</td></tr>
-            <tr><td><a href="https://asdc.larc.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Atmospheric Science Data Center (ASDC)</a></td><td>Radiation Budget, Clouds, Aerosols, Tropospheric Composition</td></tr>
-            <tr><td><a href="https://cddis.nasa.gov/index.htmls" className="ext" target="_blank" rel="noreferrer">Crustal Dynamics Data Information System (CDDIS)</a></td><td>Space Geodesy, Solid Earth</td></tr>
-            <tr><td><a href="https://www.earthdata.nasa.gov/centers/ghrc-daac" className="ext" arget="_blank" rel="noreferrer">Global Hydrometeorology Resource Center (GHRC)</a></td><td>Lightning, Severe Weather Interactions, Atmospheric Convection, Hurricanes, Storm-induced Hazards</td></tr>
-            <tr><td><a href="https://disc.gsfc.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Goddard Earth Sciences Data and Information Services Center (GES DISC)</a></td><td>Global Precipitation, Solar Irradiance, Atmospheric Composition and Dynamics, Water and Energy</td></tr>
-            <tr><td><a href="https://lpdaac.usgs.gov/" className="ext" target="_blank" rel="noreferrer">Land Processes DAAC (LPDAAC)</a></td><td>Land data products</td></tr>
-            <tr><td><a href="https://ladsweb.modaps.eosdis.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Level 1 and Atmosphere Archive and Distribution System (LAADS)</a></td><td>MODIS (Moderate Resolution Imaging Spectrometer) Level 1 data (geolocation, L1A, and radiance L1B) and Atmosphere (Level 2 and Level 3)</td></tr>
-            <tr><td><a href="https://nsidc.org/data/data-programs/nsidc-daac" className="ext" target="_blank" rel="noreferrer">National Snow and Ice Data Center DAAC (NSIDC DAAC)</a></td><td>Cryospheric Processes, Sea Ice, Snow, Ice Sheets, Frozen Ground, Glaciers, Soil Moisture</td></tr>
-            <tr><td><a href="https://daac.ornl.gov/" className="ext" target="_blank" rel="noreferrer">Oak Ridge National Laboratory (ORNL)</a></td><td>Biogeochemical Dynamics, Ecological Data, Environmental Processes</td></tr>
-            <tr><td><a href="https://oceancolor.gsfc.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Ocean Biology DAAC (OB.DAAC)</a></td><td>Ocean Biology</td></tr>
-            <tr><td><a href="https://podaac.jpl.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Physical Oceanography DAAC (PO.DAAC)</a></td><td>Gravity, Ocean Circulation, Ocean Heat Budget, Ocean Surface Topography, Ocean Temperature, Ocean Waves, Ocean Winds, Ocean Salinity, Surface Water</td></tr>
-            <tr><td><a href="https://sedac.ciesin.columbia.edu/" className="ext" target="_blank" rel="noreferrer">Socioeconomic Data and Application Data Center (SEDAC)</a></td><td>Synthesized Earth science and socio-economic data</td></tr>
+            <tr><td><a href="https://asf.alaska.edu/" className="ext" target="_blank" rel="noreferrer">Alaska Satellite Facility (ASF)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>SAR Products, Change Detection, Sea Ice, Polar Processes</td></tr>
+            <tr><td><a href="https://asdc.larc.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Atmospheric Science Data Center (ASDC)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>Radiation Budget, Clouds, Aerosols, Tropospheric Composition</td></tr>
+            <tr><td><a href="https://cddis.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Crustal Dynamics Data Information System (CDDIS)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>Space Geodesy, Solid Earth</td></tr>
+            <tr><td><a href="https://www.earthdata.nasa.gov/centers/ghrc-daac" className="ext" target="_blank" rel="noreferrer">Global Hydrometeorology Resource Center (GHRC)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>Lightning, Severe Weather Interactions, Atmospheric Convection, Hurricanes, Storm-induced Hazards</td></tr>
+            <tr><td><a href="https://disc.gsfc.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Goddard Earth Sciences Data and Information Services Center (GES DISC)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>Global Precipitation, Solar Irradiance, Atmospheric Composition and Dynamics, Water and Energy</td></tr>
+            <tr><td><a href="https://lpdaac.usgs.gov/" className="ext" target="_blank" rel="noreferrer">Land Processes DAAC (LPDAAC)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>Land data products</td></tr>
+            <tr><td><a href="https://ladsweb.modaps.eosdis.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Level 1 and Atmosphere Archive and Distribution System (LAADS)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>MODIS (Moderate Resolution Imaging Spectrometer) Level 1 data (geolocation, L1A, and radiance L1B) and Atmosphere (Level 2 and Level 3)</td></tr>
+            <tr><td><a href="https://nsidc.org/data/data-programs/nsidc-daac" className="ext" target="_blank" rel="noreferrer">National Snow and Ice Data Center DAAC (NSIDC DAAC)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>Cryospheric Processes, Sea Ice, Snow, Ice Sheets, Frozen Ground, Glaciers, Soil Moisture</td></tr>
+            <tr><td><a href="https://daac.ornl.gov/" className="ext" target="_blank" rel="noreferrer">Oak Ridge National Laboratory (ORNL)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>Biogeochemical Dynamics, Ecological Data, Environmental Processes</td></tr>
+            <tr><td><a href="https://oceancolor.gsfc.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Ocean Biology DAAC (OB.DAAC)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>Ocean Biology</td></tr>
+            <tr><td><a href="https://podaac.jpl.nasa.gov/" className="ext" target="_blank" rel="noreferrer">Physical Oceanography DAAC (PO.DAAC)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>Gravity, Ocean Circulation, Ocean Heat Budget, Ocean Surface Topography, Ocean Temperature, Ocean Waves, Ocean Winds, Ocean Salinity, Surface Water</td></tr>
+            <tr><td><a href="https://sedac.ciesin.columbia.edu/" className="ext" target="_blank" rel="noreferrer">Socioeconomic Data and Application Data Center (SEDAC)<span className="visually-hidden"> (opens in a new window)</span></a></td><td>Synthesized Earth science and socio-economic data</td></tr>
           </tbody>
             <caption style={{ captionSide: "bottom", textAlign: "left", fontWeight: "500", paddingTop: "8px" }}>
                Table 1. NASA DAACs and Science Disciplines
@@ -154,7 +154,7 @@ const DataPublicationGuidelinesData = [
             rel="noreferrer"
           >
             Earthdata EOSDIS DAACs
-          </a>{" "}
+          <span className="visually-hidden"> (opens in a new window)</span></a>{" "}
           page.
         </p>
       </span>
@@ -171,8 +171,8 @@ const DataPublicationGuidelinesData = [
           <li>
             Review guidance on how to create data and metadata that align with NASA standards
             <ul>
-              <li><a href="https://www.earthdata.nasa.gov/about/standards" className="ext" target="_blank" rel="noreferrer">Earth Science Data Standards, Requirements, and References</a></li>
-              <li><a href="https://www.earthdata.nasa.gov/esdis/esco/standards-and-practices/data-product-development-guide-for-data-producers" className="ext" target="_blank" rel="noreferrer">Data Product Development Guide for Data Producers</a></li>
+              <li><a href="https://www.earthdata.nasa.gov/about/standards" className="ext" target="_blank" rel="noreferrer">Earth Science Data Standards, Requirements, and References<span className="visually-hidden"> (opens in a new window)</span></a></li>
+              <li><a href="https://www.earthdata.nasa.gov/esdis/esco/standards-and-practices/data-product-development-guide-for-data-producers" className="ext" target="_blank" rel="noreferrer">Data Product Development Guide for Data Producers<span className="visually-hidden"> (opens in a new window)</span></a></li>
             </ul>
           </li>
           <li>Create a sample data file and browse file (if applicable)</li>
@@ -190,7 +190,7 @@ const DataPublicationGuidelinesData = [
         <p>All data archived and distributed at DAACs must be formally approved by NASA and assigned to one or more DAACs. This process is called “Accession”.</p>
         <p>The NASA Data Accession process is initiated by submitting a Data Accession request in Earthdata Pub. Your request will be routed to NASA’s Earth Science Data and Information Systems project. An assessment of the following will be conducted:</p>
         <ul>
-          <li>The alignment of the data with NASA’s <a href="data_publication_guidelines#acceptance" className="ext" target="_blank" rel="noreferrer">Data Acceptance Guidelines</a></li>
+          <li>The alignment of the data with NASA’s <a href="data_publication_guidelines#acceptance" className="ext" target="_blank" rel="noreferrer">Data Acceptance Guidelines<span className="visually-hidden"> (opens in a new window)</span></a></li>
           <li>The program(s) and funding source(s) under which the data were, or will be, created.</li>
         </ul>
         <p>
@@ -223,7 +223,7 @@ const DataPublicationGuidelinesData = [
         <hr />
         <p>
           The goal of the data publication process is to make your data Findable, Accessible, Interoperable, and Reusable (
-          <a href="https://www.go-fair.org/fair-principles/" className="ext" target="_blank" rel="noreferrer">FAIR</a>). 
+          <a href="https://www.go-fair.org/fair-principles/" className="ext" target="_blank" rel="noreferrer">FAIR<span className="visually-hidden"> (opens in a new window)</span></a>). 
           
           The data publication process is a collaboration between you and a DAAC and is initiated by submitting the Data Publication request form in Earthdata Pub. Once your data product has been published, the DAAC will continue to provide support and on-going stewardship of your data product while it remains available to the public.
         </p>
@@ -239,20 +239,20 @@ The table below summarizes the typical activities performed during and after the
 <table className="table table-bordered styled-table">
   <thead>
     <tr>
-      <th rowSpan="2">ROLE</th>
-      <th colSpan="3">PUBLICATION</th>
-      <th rowSpan="1">POST-PUBLICATION</th>
+      <th id="role" rowSpan="2" scope="col">ROLE</th>
+      <th id="publication" colSpan="3" scope="colgroup">PUBLICATION</th>
+      <th id="post" scope="col">POST-PUBLICATION</th>
     </tr>
     <tr>
-      <th>Review</th>
-      <th>Document &amp; Archive</th>
-      <th>Release</th>
-      <th>Support &amp; Maintain</th>
+      <th id="review" headers="publication" scope="col">Review</th>
+      <th id="document" headers="publication" scope="col">Document &amp; Archive</th>
+      <th id="release" headers="publication" scope="col">Release</th>
+      <th id="support" headers="post" scope="col">Support &amp; Maintain</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><b>Data Producer</b></td>
+      <th id="producer" scope="row">Data Producer</th>
       <td>
         <ul>
           <li>Complete Data Accession Request</li>
@@ -281,10 +281,10 @@ The table below summarizes the typical activities performed during and after the
       </td>
     </tr>
     <tr>
-      <td><b>Data Producer &amp; DAAC</b></td>
+      <th id="producer-daac" scope="row">Data Producer &amp; DAAC</th>
       <td>
         <ul>
-          <li>Determine appropriate data product <a href="https://www.earthdata.nasa.gov/engage/submit-data/level-service-model" className="ext" target="_blank" rel="noreferrer">Level of Service (LoS)</a></li>
+          <li>Determine appropriate data product <a href="https://www.earthdata.nasa.gov/engage/submit-data/level-service-model" className="ext" target="_blank" rel="noreferrer">Level of Service (LoS)<span className="visually-hidden"> (opens in a new window)</span></a></li>
           <li>Determine appropriate data and metadata requirements</li>
         </ul>
       </td>
@@ -309,7 +309,7 @@ The table below summarizes the typical activities performed during and after the
       </td>
     </tr>
     <tr>
-      <td><b>DAAC</b></td>
+      <th id="daac" scope="row">DAAC</th>
       <td>
         <ul>
           <li>Review Data Evaluation Request, if applicable.</li>
@@ -322,10 +322,10 @@ The table below summarizes the typical activities performed during and after the
           <li>Establish data product DOI and citation</li>
           <li>Curate metadata to support data ingest and discovery</li>
           <li>Ingest all data files</li>
-          <li>Configure existing or create new tools and services, per the <a href="https://www.earthdata.nasa.gov/engage/submit-data/level-service-model" className="ext" target="_blank" rel="noreferrer">Level of Service (LoS)</a></li>
+          <li>Configure existing or create new tools and services, per the <a href="https://www.earthdata.nasa.gov/engage/submit-data/level-service-model" className="ext" target="_blank" rel="noreferrer">Level of Service (LoS)<span className="visually-hidden"> (opens in a new window)</span></a></li>
           <li>Verify data accessibility in all supported distribution methods</li>
           <li>Generate data product landing page</li>
-          <li>Create outreach materials, per the <a href="https://www.earthdata.nasa.gov/engage/submit-data/level-service-model" className="ext" target="_blank" rel="noreferrer">Level of Service (LoS)</a></li>
+          <li>Create outreach materials, per the <a href="https://www.earthdata.nasa.gov/engage/submit-data/level-service-model" className="ext" target="_blank" rel="noreferrer">Level of Service (LoS)<span className="visually-hidden"> (opens in a new window)</span></a></li>
         </ul>
       </td>
       <td>
@@ -340,7 +340,7 @@ The table below summarizes the typical activities performed during and after the
         <ul>
           <li>Serve as primary point-of-contact with data users</li>
           <li>When data creation is ongoing, continue to ingest data and make accessible in all supported distribution methods</li>
-          <li>Conduct data product outreach, per the <a href="https://www.earthdata.nasa.gov/engage/submit-data/level-service-model" className="ext" target="_blank" rel="noreferrer">Level of Service (LoS)</a></li>
+          <li>Conduct data product outreach, per the <a href="https://www.earthdata.nasa.gov/engage/submit-data/level-service-model" className="ext" target="_blank" rel="noreferrer">Level of Service (LoS)<span className="visually-hidden"> (opens in a new window)</span></a></li>
           <li>Maintain and update tools and services, as needed</li>
           <li>Track data product usage metrics</li>
         </ul>

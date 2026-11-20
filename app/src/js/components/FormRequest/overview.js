@@ -289,7 +289,7 @@ const FormsOverview = ({ forms, requests }) => {
   };
 
   return (
-    <div role="main">
+    <div>
       <Alert
         className="sticky-alert"
         show={dismissCountDown > 0}
@@ -345,9 +345,9 @@ const FormsOverview = ({ forms, requests }) => {
                       {selectedDaacs[element].long_name !== 'Example DAAC'  && (
                         <div className="mt-3 link-to-daac">
                           For more information, visit{' '}
-                          <a href={selectedDaacs[element].url} id="selected_daac_link" target="_blank" aria-label="Link to selected DAAC">
+                          <a href={selectedDaacs[element].url} id="selected_daac_link" target="_blank">
                             <span id="selected_daac">{selectedDaacs[element].short_name}</span>'s website
-                          </a>
+                          <span className="visually-hidden"> (opens in a new window)</span></a>
                         </div>
                       )}
                       <br/>

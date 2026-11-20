@@ -6,7 +6,7 @@ export const tableColumns = [
   {
     Header: 'Event',
     accessor: (row) => row.id,
-    Cell: row => <Link to={{ pathname: `/metrics/id/${row.row.original.id}` }} aria-label="View your event details">{row.row.original.id}</Link>,
+    Cell: row => <Link to={{ pathname: `/metrics/id/${row.row.original.id}` }}>{row.row.original.id}</Link>,
     id: 'id'
   },
   {
@@ -82,7 +82,7 @@ export const requestTableColumns = [
   {
     Header: 'Request ID',
     accessor: (row) => row.request_id,
-    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} aria-label="View your request details">{row.row.original.id}</Link> : null,
+    Cell: row => row.row ? <Link to={{ pathname: `/requests/id/${row.row.original.id}` }} >{row.row.original.id}</Link> : null,
     id: 'id'
   },
   {
@@ -93,7 +93,7 @@ export const requestTableColumns = [
   {
     Header: 'Workflow',
     accessor: (row) => row.workflow_name,
-    Cell: row => row.row.original.workflow_id ? <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }} aria-label="View your workflow details">{row.row.original.workflow_name}</Link> : null,
+    Cell: row => row.row.original.workflow_id ? <Link to={{ pathname: `/workflows/id/${row.row.original.workflow_id}` }}>{row.row.original.workflow_name}</Link> : null,
     id: 'workflow_name'
   },
   {
@@ -118,7 +118,7 @@ export const timeColumns = [
   {
     Header: 'DAAC',
     accessor: (row) => row.daac_id,
-    Cell: row => row.row.original.daac_id ? <Link to={{ pathname: `/daacs/id/${row.row.original.daac_id}` }} aria-label="View your daac details">{row.row.original.daac_id}</Link> : null,
+    Cell: row => row.row.original.daac_id ? <Link to={{ pathname: `/daacs/id/${row.row.original.daac_id}` }}>{row.row.original.daac_id}</Link> : null,
     id: 'daac_id'
   },
   {

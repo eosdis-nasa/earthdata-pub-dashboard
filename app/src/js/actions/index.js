@@ -5,6 +5,7 @@ import requestPromise from 'request-promise';
 import { configureRequest } from './helpers';
 import _config from '../config';
 import { fetchCurrentTimeFilters } from '../utils/datepicker';
+import { pathAfterLogin } from '../utils/auth';
 import * as types from './types';
 
 const CALL_API = types.CALL_API;
@@ -17,7 +18,11 @@ const {
 
 
 export const redirectWithToken = () => {
-    window.location.href = basepath;
+  const saved = localStorage.getItem('redirectAfterLogin') || '';
+  localStorage.removeItem('redirectAfterLogin');
+  const next = pathAfterLogin(saved) || '/';
+  const base = !basepath || basepath === '/' ? '' : String(basepath).replace(/\/$/, '');
+  window.location.assign(`${base}${next}`);
 };
 
 export const fetchToken = (code, state) => ({

@@ -195,7 +195,8 @@ button {
 }
 
 .show-more-button:focus, .show-less-button:focus {
-  outline: none;
+  outline: 3px solid #000000;
+  outline-offset: 2px;
 }
 
 .show-more-button:disabled, .show-less-button:disabled {

@@ -199,7 +199,7 @@ class Questions extends React.Component {
     if (!hasPrivilege) {
       return (
         <div className="unauthorized">
-          <h1>Unauthorized</h1>
+          <h2>Unauthorized</h2>
           <p>You do not have the required privileges to {inputId ? 'edit this Input' : 'create a new Input'}.</p>
         </div>
       );

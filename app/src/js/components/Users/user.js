@@ -184,9 +184,9 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
         </section>
         <section className='page__section page__section__header-wrapper'>
           <div className='page__section__header'>
-            <h1 className='heading--large heading--shared-content with-description '>
+            <h2 className='heading--large heading--shared-content with-description '>
               User Overview
-            </h1>
+            </h2>
             {meta && lastUpdated(meta.queriedAt)}
           </div>
         </section>
@@ -196,9 +196,9 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
           ? <div className='page__content'>
             <section className='page__section page__section__header-wrapper'>
               <div className='heading__wrapper--border'>
-                <h1 className='heading--small' aria-labelledby={strings.user_overview}>
+                <h2 className='heading--small'>
                   {strings.user_overview}
-                </h1>
+                </h2>
               </div>
               <div className='indented__details'>
               <MetadataEditable data={data} accessors={metaAccessors} userId={userId} dispatch={dispatch} updateUser={updateUser}/>
@@ -206,16 +206,16 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
             </section><br />
             <section className='page__section'>
               <div className='page__section__header'>
-                <h1 className='heading--small heading--shared-content with-description '>
+                <h2 className='heading--small heading--shared-content with-description '>
                   Settings
-                </h1>
+                </h2>
               </div>
             </section>
             <section className='page__section'>
               <div className='page__section__header'>
-                <h1 className='heading--small heading--shared-content with-description '>
+                <h2 className='heading--small heading--shared-content with-description '>
                   Groups
-                </h1>
+                </h2>
               </div>
               <div className='page__content--shortened flex__column'>
                 {
@@ -255,9 +255,9 @@ const User = ({ dispatch, user, privileges, match, groups }) => {
             </section>
             <section className='page__section'>
               <div className='page__section__header'>
-                <h1 className='heading--small heading--shared-content with-description '>
+                <h2 className='heading--small heading--shared-content with-description '>
                   Roles
-                </h1>
+                </h2>
               </div>
               <div className='page__content--shortened flex__column'>
                 {

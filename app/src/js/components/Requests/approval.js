@@ -131,7 +131,7 @@ class ApprovalStep extends React.Component {
     const tableColumns = [
       {
         Header: 'Name',
-        accessor: row => <Link to={`/forms/id/${row.id}?requestId=${request.id}`} aria-label="View your form details">{row.long_name}</Link>,
+        accessor: row => <Link to={`/forms/id/${row.id}?requestId=${request.id}`}>{row.long_name}</Link>,
         id: 'long_name'
       },
       {
@@ -146,7 +146,7 @@ class ApprovalStep extends React.Component {
           <Breadcrumbs config={breadcrumbConfig} />
         </section>
         <section className='page__section'>
-          <h1 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h1>
+          <h2 className='heading--large heading--shared-content with-description width--three-quarters'>{requestId}</h2>
           {request && lastUpdated(request.last_change, 'Updated')}
           {request
             ? <dl className='status--process'>

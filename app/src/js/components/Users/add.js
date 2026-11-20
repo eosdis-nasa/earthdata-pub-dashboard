@@ -129,9 +129,9 @@ const AddUser = ({ dispatch, match, groups, roles, privileges, newUserStatus }) 
         </section>
         <section className='page__section page__section__header-wrapper'>
           <div className='page__section__header'>
-            <h1 className='heading--large heading--shared-content with-description '>
+            <h2 className='heading--large heading--shared-content with-description '>
               User Overview
-            </h1>
+            </h2>
           </div>
         </section>
         { showSearch && <SearchModal { ...searchOptions }/> }

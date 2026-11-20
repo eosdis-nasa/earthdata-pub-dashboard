@@ -178,6 +178,18 @@ export const daacPrivileges = (privileges) => {
  * 
  * @example given an array of privileges ['USER_READ', 'GROUP_READ', 'GROUP_CREATE'], will return { USER: ['READ'], GROUP: ['READ', 'CREATE'] }
  */
+export const isAdminUser = (tokens) => {
+  if (!tokens) return false;
+  const privileges = tokens.privileges || {};
+  if (privileges.ADMIN) return true;
+  const raw = tokens.user && tokens.user.user_privileges;
+  if (Array.isArray(raw) && raw.some((item) => String(item).toUpperCase() === 'ADMIN')) return true;
+  const roles = Array.isArray(tokens.roles) ? tokens.roles : [];
+  if (roles.some((role) => role && String(role.short_name || '').toLowerCase() === 'admin')) return true;
+  const groups = Array.isArray(tokens.groups) ? tokens.groups : [];
+  return groups.some((group) => group && group.short_name === 'root_group');
+};
+
 export const getPrivilegesByType = (privileges) => {
     return privileges.reduce((acc, privilege) => {
         const [type, action] = privilege.split(/_(.+)/);

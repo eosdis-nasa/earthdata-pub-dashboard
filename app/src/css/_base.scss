@@ -106,7 +106,7 @@ a:hover {
 }
 
 a:active {
-  outline: 0;
+  outline: none;
 }
 
 .link--no-underline, .link--no-underline:hover, .link--no-underline:visited {
@@ -196,7 +196,7 @@ a:active {
   background-color: $ocean-blue;
   border-bottom: 1px solid rgba(255, 255, 255, .06);
   z-index: 2;
-  h1 {
+  .logo {
     float: left;
     margin-right: 2.5em;
     color:white;
@@ -320,7 +320,7 @@ a:active {
 }
 #menuToggle #menu .logOut span.log-icon:before
 {
-  color:darkgrey!important;
+  color: #595959 !important;
   right: 6.75em;
   top:10px;
 }
@@ -465,6 +465,10 @@ a:active {
 .right-ul{
   margin-top:0rem!important;
 }
+.nav-508 {
+  order: 0;
+  white-space: nowrap;
+}
 .logOut{
   margin-right: 0em!important;
 }
@@ -492,7 +496,7 @@ a:active {
   margin-left: 2rem;
   &:before {
     position: absolute;
-    color: gray;
+    color: #595959;
     font-family: 'FontAwesome';
     content: '\f044';
     font-weight: 900;
@@ -718,9 +722,12 @@ a:active {
 }
 
 .page__section--top{
-  padding: 25px 0 25px 0;
-  background-color: #1E6B9D;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+  display: none;
+  padding: 0.55rem 0 0.35rem;
+  background-color: #2276ac;
+}
+.page__section--top.is-visible{
+  display: block;
 }
 .home_requests_table {
   margin-bottom:3em;
@@ -1051,7 +1058,7 @@ textarea {
 }
 
 .page-link, .page-item {
-  color: #696969!important;
+  color: #696969 !important;
 }
 
 .width--three-quarters {
@@ -1106,8 +1113,11 @@ textarea {
 
 .api__version{
   font-weight: 400;
+  font-size: 0.9rem;
+  line-height: 1.4;
   color: $white;
-  padding: 10px 0 2px 0;
+  margin: 0;
+  padding: 0;
 }
 
 .api__warning {
@@ -1165,7 +1175,7 @@ textarea {
   height: 4em;
   color: $white;
   background-color: $ocean-blue;
-  &>h1 {
+  &>h1, &>h2 {
     color: $white;
   }
 }

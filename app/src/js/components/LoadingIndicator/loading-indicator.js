@@ -2,18 +2,10 @@
 import React from 'react';
 
 const Loading = () => (
-  <div className='loading'>
-    <div className='sk-cube-grid'>
-      <div className='sk-cube sk-cube1'></div>
-      <div className='sk-cube sk-cube2'></div>
-      <div className='sk-cube sk-cube3'></div>
-      <div className='sk-cube sk-cube4'></div>
-      <div className='sk-cube sk-cube5'></div>
-      <div className='sk-cube sk-cube6'></div>
-      <div className='sk-cube sk-cube7'></div>
-      <div className='sk-cube sk-cube8'></div>
-      <div className='sk-cube sk-cube9'></div>
-    </div>
+  <div className="app-loading" role="status">
+    <span className="app-loading__spinner" aria-hidden="true" />
+    <p className="app-loading__status">Loading...</p>
   </div>
 );
+
 export default Loading;

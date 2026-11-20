@@ -73,7 +73,7 @@ const GettingStartedData = [
         <span className="mfa-tooltip">
          <FontAwesomeIcon
             icon={faInfoCircle }
-            style={{ color: "#2276ac", marginLeft: "5px", width: "15px", height: "15px" }}
+            style={{ color: "#206EA7", marginLeft: "5px", width: "15px", height: "15px" }}
          />
          <span className="mfa-tooltiptext">
             Earthdata Pub uses MFA, a security system that requires users to provide two or more verification factors to gain access to an account or system. 
@@ -123,7 +123,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">1</div>
           <div>
-            <h5>Start a new Data Accession Request</h5>
+            <h3>Start a new Data Accession Request</h3>
             <p>
               Log into the{" "}
               <a href="/dashboard">Earthdata Pub Dashboard</a> with your Earthdata Pub account. To create a Data Accession request, click on “New Request” and select “Data Accession Request”.
@@ -134,7 +134,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">2</div>
           <div>
-            <h5>Fill in the Data Accession Request form</h5>
+            <h3>Fill in the Data Accession Request form</h3>
             <p>
               In the <a href="/dashboard">Earthdata Pub Dashboard</a>, click on the “Data Accession Request Form” button in the Next Action column. 
               The information you provide will be used to review and approve your Data Accession Request.
@@ -149,7 +149,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">3</div>
           <div>
-            <h5>Submit your request</h5>
+            <h3>Submit your request</h3>
             <p>After you have filled in the Data Accession Request form, click on “Submit” to submit the request. 
                This will initiate the Data Accession process. For more information on this process, see the {''}
                <a href="/data_publication_guidelines#accession">
@@ -165,7 +165,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">4</div>
           <div>
-            <h5>Accession request is completed</h5>
+            <h3>Accession request is completed</h3>
             <p>Your data will be evaluated by NASA Earth Science Data and Information Systems (ESDIS) personnel who will determine whether your data are approved to be published at a DAAC. 
                The decision will be documented in the Earthdata Pub Dashboard, and you will receive an email explaining the decision.</p>
             <p>If your Data Accession request has been approved, you will be assigned to one or more {''} 
@@ -198,7 +198,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">1</div>
           <div>
-            <h5>Fill in the Data Evaluation Request form if requested to do so by NASA ESDIS staff. Otherwise, this step will be skipped</h5>
+            <h3>Fill in the Data Evaluation Request form if requested to do so by NASA ESDIS staff. Otherwise, this step will be skipped</h3>
             <p>
               In the <a href="/dashboard">Earthdata Pub Dashboard</a>,  click on the “Data Evaluation Request” button in the Next Action column. 
               This button will only appear if NASA ESDIS staff require additional information to evaluate your Data Accession Request. 
@@ -209,7 +209,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">2</div>
           <div>
-            <h5>Upload sample data files</h5>
+            <h3>Upload sample data files</h3>
             <p>
               Use the file upload feature in the Data Evaluation Form to upload at least one sample data file, if available.
             </p>
@@ -243,7 +243,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">1</div>
           <div>
-            <h5>Fill in the Data Publication Request form</h5>
+            <h3>Fill in the Data Publication Request form</h3>
             <p>
               In the{" "}
               <a href="/dashboard">Earthdata Pub Dashboard</a>,  click on the green “New Request” button in the center, about halfway down the page. Choose “Publication Request” in the drop-down menu. 
@@ -261,7 +261,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">2</div>
           <div>
-            <h5>Upload sample data files</h5>
+            <h3>Upload sample data files</h3>
             <p>
              Use the file upload feature in the Data Publication Request to upload at least one sample data file, if available.
             </p>
@@ -271,7 +271,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">3</div>
           <div>
-            <h5>Submit your request</h5>
+            <h3>Submit your request</h3>
             <p>
                After you have filled in the Data Publication request form, click on “Submit” to submit the request. This will initiate the data publication process.
             </p>
@@ -281,7 +281,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">4</div>
           <div>
-            <h5>Collaborate with the DAAC</h5>
+            <h3>Collaborate with the DAAC</h3>
             <p>
                The data publication process is a collaboration between you and the DAAC(s) you are assigned to. The information you provide in the Data Publication form, 
                along with sample data and related documentation, will be reviewed by the DAAC. 
@@ -308,7 +308,7 @@ const GettingStartedData = [
         <div className="step-container">
           <div className="step-number">5</div>
           <div>
-            <h5>Data product is published</h5>
+            <h3>Data product is published</h3>
             <p>
                When your data product has been published, you will receive an email from the DAAC and your request status will be updated in the <a href="/dashboard">Earthdata Pub Dashboard</a>.
             </p>

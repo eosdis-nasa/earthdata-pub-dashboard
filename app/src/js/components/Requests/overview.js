@@ -285,7 +285,7 @@ class RequestsOverview extends React.Component {
         </section>
         <section className='page__section page__section__header-wrapper'>
           <div className='page__section__header'>
-            <h1 className='heading--large heading--shared-content with-description '>{strings.requests}</h1>
+            <h2 className='heading--large heading--shared-content with-description '>{strings.requests}</h2>
             {lastUpdated(queriedAt)}
           </div>
         </section>
@@ -306,7 +306,7 @@ class RequestsOverview extends React.Component {
 
                     {/* Info Tooltip */}
                     <div className="info-tooltip">
-                      <FontAwesomeIcon icon={faInfoCircle} style={{ color: "#2276ac", cursor: "pointer" }} />
+                      <FontAwesomeIcon icon={faInfoCircle} style={{ color: "#206EA7", cursor: "pointer" }} />
                       <span className="info-tooltip-text">
                         If you are submitting Data Publication Requests for multiple, similar data products, 
                         you can clone an existing request and use it as a template for additional requests. 
@@ -332,7 +332,7 @@ class RequestsOverview extends React.Component {
                         title="More info about Accession Request"
                       >
                         <i className="fas fa-info-circle"></i>
-                      </a>
+                      <span className="visually-hidden"> (opens in a new window)</span></a>
                     </div>
 
                     <div className="dropdown-row">
@@ -350,7 +350,7 @@ class RequestsOverview extends React.Component {
                         title="More info about Publication Request"
                       >
                         <i className="fas fa-info-circle"></i>
-                      </a>
+                      <span className="visually-hidden"> (opens in a new window)</span></a>
                     </div>
                     </div>
                   )}
@@ -443,7 +443,7 @@ class RequestsOverview extends React.Component {
       </div>
       );
     }
-    return null;
+    return <Loading />;
   }
 }
 

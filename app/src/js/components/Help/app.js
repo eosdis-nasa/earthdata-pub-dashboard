@@ -26,7 +26,7 @@ const App = ({ keyword }) => {
   return (
     <div className="help">
       <Header keyword={keyword} />
-      <main className="home">{renderComponent()}</main>
+      <main id="main-content" className="home" tabIndex={-1}>{renderComponent()}</main>
       <section className='page__section--top' role="navigation" aria-label="Click to go to top of page">
         <TopButton />
       </section>

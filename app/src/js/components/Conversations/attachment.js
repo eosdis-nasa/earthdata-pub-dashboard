@@ -199,7 +199,7 @@ export const AddAttachmentButton = ({
                               backgroundColor:
                                   phase === 'failed'
                                       ? '#dc3545'
-                                      : '#2275aa'
+                                      : '#206EA7'
                           }}
                         />
                     </div>

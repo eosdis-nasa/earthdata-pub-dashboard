@@ -92,7 +92,7 @@
   .review-node, 
   .action-node {
     color: white;
-    background-color: #2275AA;
+    background-color: #206EA7;
   }
 
   .init-node {
@@ -136,7 +136,7 @@
   }
   
   .insert-button:hover {
-    background-color: #2275AA;
+    background-color: #206EA7;
     color: white;
   }
   
@@ -224,7 +224,7 @@
     padding: 10px;
     font-size: 14px;
     color: #fff;
-    background-color: #2275AA;
+    background-color: #206EA7;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -236,7 +236,7 @@
   }
   
   .save-flow-button {
-    background-color: #28a745;
+    background-color: #158749;
   }
   
   .add-node-button:hover:not(:disabled),
@@ -272,7 +272,7 @@
   
   
   .save-flow-button {
-    background-color: #28a745;
+    background-color: #158749;
     color: white;
   }
   

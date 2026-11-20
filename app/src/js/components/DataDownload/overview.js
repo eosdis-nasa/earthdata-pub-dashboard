@@ -92,7 +92,7 @@ class DownloadOverview extends React.Component {
                     </Alert>
                 )}
 
-                <h1
+                <h2
                     className="heading--shared-content"
                     style={{
                         fontWeight: 600,
@@ -102,7 +102,7 @@ class DownloadOverview extends React.Component {
                     }}
                 >
                     {permanentMessage}
-                </h1>
+                </h2>
             </div>
         );
     }

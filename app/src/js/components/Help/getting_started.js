@@ -58,8 +58,9 @@ const GettingStarted = () => {
               className="siderbar-overview-toggle openbtn"
               onClick={() => setIsHidden(true)}
               id="openButton"
+              aria-label="Collapse sidebar"
             >
-              <img width="40px" src={chevronLeft} alt="Collapse Sidebar" />
+              <img width="40px" src={chevronLeft} alt="" />
             </button>
           )}
           <ul className="nav flex-column">
@@ -87,13 +88,14 @@ const GettingStarted = () => {
           className="siderbar-overview-restore closebtn"
           onClick={() => setIsHidden(false)}
           id="closeButton"
+          aria-label="Expand sidebar"
         >
-          <img width="20px" src={chevronRight} alt="Expand Sidebar" />
+          <img width="20px" src={chevronRight} alt="" />
         </button>
       )}
 
       {/* Main Content */}
-      <main className={`main-content ${isHidden ? "full-width" : ""}`}>
+      <div className={`main-content ${isHidden ? "full-width" : ""}`}>
         {GettingStartedData.map((section) => (
           <div
             key={section.id}
@@ -104,7 +106,7 @@ const GettingStarted = () => {
             {section.content}
           </div>
         ))}
-      </main>
+      </div>
       <ScrollToTop />
     </div>
   );
